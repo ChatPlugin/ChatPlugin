@@ -51,14 +51,9 @@ public class JarLibraryLoader extends URLClassLoader {
 				
 				instance.addURL(jar);
 				
-				for (String clazz : getClasses(new JarFile(new File(jar.toURI())), spigot ? MainSpigot.getExcludedClasspaths() : MainBungee.getExcludedClasspaths())) {
-//				for (String clazz : getClasses(new JarFile(new File(jar.toURI())))) {
-	//				System.out.println("loading " + clazz + "...");
+				for (String clazz : getClasses(new JarFile(new File(jar.toURI())), spigot ? MainSpigot.getExcludedClasspaths() : MainBungee.getExcludedClasspaths()))
 					loader.loadClass(clazz);
-				}
-			}
-			
-			if (spigot)
+			} if (spigot)
 				Class.forName("me.remigio07_.chatplugin.ChatPlugin", true, instance).getMethod("onEnable", JavaPlugin.class).invoke(null, plugin);
 			else Class.forName("me.remigio07_.chatplugin.bungee.ChatPluginBungee", true, instance).getMethod("onEnable", Plugin.class).invoke(null, plugin);
 		} catch (IOException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | URISyntaxException e) {
@@ -94,12 +89,10 @@ public class JarLibraryLoader extends URLClassLoader {
 			instance.add(target.toURI().toURL());
 			
 			for (String clazz2 : getClasses(new JarFile(target), null)) {
-//				System.out.println("loading " + clazz2 + "...");
 				try {
-//					instance.loadClass(clazz2);
 					Class.forName(clazz2, false, instance);
 				} catch (ClassNotFoundException | NoClassDefFoundError e) {
-					//*me ne faro` una ragione*
+					// no problem: they will be loaded if needed
 				}
 			}
 		} catch (IOException e) {
@@ -124,16 +117,6 @@ public class JarLibraryLoader extends URLClassLoader {
 				return false;
 		return true;
 	}
-	
-//	public static boolean isIncluded(String entryName, List<String> excludedClasspaths) {
-//		for (String excludedClasspath : excludedClasspaths) {
-//			System.out.println("is " + entryName + " included:");
-//			System.out.println(entryName.startsWith(excludedClasspath));
-//			if (entryName.replace('/', '.') .startsWith(excludedClasspath)) {
-//				return false;
-//			}
-//		} return true;
-//	}
 	
 	public static JarLibraryLoader getInstance() {
 		return instance;

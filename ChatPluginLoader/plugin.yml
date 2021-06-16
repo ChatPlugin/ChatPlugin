@@ -106,6 +106,10 @@ commands:
     description: Broadcast command.
     usage: /broadcast <message>
     aliases: [bcast, shout, local, bc]
+  rawbroadcast:
+    description: Raw broadcast command.
+    usage: /rawbroadcast <message>
+    aliases: [rawbcast, rbcast, rawshout, rawlocal, rawbc, rbc]
   globalbroadcast:
     description: Global broadcast command.
     usage: /globalbroadcast <message>

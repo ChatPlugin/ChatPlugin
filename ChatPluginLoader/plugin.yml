@@ -60,11 +60,11 @@ commands:
     aliases: [tmpban, tban]
   banip:
     description: Ban IP command.
-    usage: /banip <player/IP address> [reason] [-s] [-t]
+    usage: /banip <player|IP address> [reason] [-s] [-t]
     aliases: [ban-ip, bip, banaddress, baddress, banadd]
   tempbanip:
     description: Tempban IP command.
-    usage: /tempbanip <player/IP address> <time> [reason] [-s] [-t]
+    usage: /tempbanip <player|IP address> <time> [reason] [-s] [-t]
     aliases: [tempban-ip, tempbip, tempbanaddress, tempbaddress, tempbanadd, tbip, tbanip]
   unban:
     description: Unban command.
@@ -82,6 +82,14 @@ commands:
     description: Ban list command.
     usage: /banlist [refresh|next|previous|ids]
     aliases: [blist, banl, bl, bans]
+  addbanwaveentry:
+    description: Add banwave entry command.
+    usage: /addbanwaveentry <player|IP address> <time> [reason] [-s] [-t]
+    aliases: [addbwentry, newbanwaveentry, newbwentry]
+  removebanwaveentry:
+    description: Remove banwave entry command.
+    usage: /removebanwaveentry <player|IP address>
+    aliases: [removebwentry]
   warning:
     description: Warning command.
     usage: /warning <player> [reason] [-s] [-t]

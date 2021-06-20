@@ -1,4 +1,4 @@
-name: ChatPluginBungee
+name: ChatPlugin
 main: me.remigio07_.chatplugin.Main$Bungee$MainBungee
 version: '∞'
 author: Remigio07_

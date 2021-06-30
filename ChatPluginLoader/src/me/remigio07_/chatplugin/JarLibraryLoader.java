@@ -16,46 +16,41 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
-import me.remigio07_.chatplugin.Main.Bungee.MainBungee;
-import me.remigio07_.chatplugin.Main.Spigot.MainSpigot;
-import net.md_5.bungee.api.plugin.Plugin;
-
 public class JarLibraryLoader extends URLClassLoader {
 
 	private static JarLibraryLoader instance;
-	private static Object plugin;
-	private static boolean spigot;
+	private static Object plugin, velocityServer, logger;
 	
 	static {
 		registerAsParallelCapable();
 	}
 	
 	public JarLibraryLoader() {
-		super(new URL[0] , Main.class.getClassLoader());
+		super(new URL[0], Main.class.getClassLoader());
 	}
 	
 	public void add(URL path) {
 		addURL(path);
 	}
 	
-	public static void init(Object plugin) {
+	public static void init(Object... args) {
 		try (JarLibraryLoader loader = new JarLibraryLoader()) {
-			JarLibraryLoader.plugin = plugin;
+			APIType apiType = Main.getAPIType();
 			instance = loader;
-			spigot = plugin.getClass().getSimpleName().equals("MainSpigot");
+			plugin = args[0];
 			
+			if (apiType == APIType.VELOCITY) {
+				velocityServer = args[1];
+				logger = args[2];
+			} else logger = args[1];
 			if (instance.getURLs().length == 0) {
 				URL jar = extract();
 				
 				instance.addURL(jar);
 				
-				for (String clazz : getClasses(new JarFile(new File(jar.toURI())), spigot ? MainSpigot.getExcludedClasspaths() : MainBungee.getExcludedClasspaths()))
+				for (String clazz : getClasses(new JarFile(new File(jar.toURI())), apiType.getExcludedClasspaths()))
 					loader.loadClass(clazz);
-			} if (spigot)
-				Class.forName("me.remigio07_.chatplugin.ChatPlugin", true, instance).getMethod("onEnable", JavaPlugin.class).invoke(null, plugin);
-			else Class.forName("me.remigio07_.chatplugin.bungee.ChatPluginBungee", true, instance).getMethod("onEnable", Plugin.class).invoke(null, plugin);
+			} Class.forName(apiType.getMainClass(), true, instance).getMethod("onEnable", apiType.getOnEnableTypes()).invoke(null, args);
 		} catch (IOException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | URISyntaxException e) {
 			e.printStackTrace();
 		}
@@ -63,9 +58,11 @@ public class JarLibraryLoader extends URLClassLoader {
 	
 	public static void disable() {
 		try {
-			if (spigot)
-				Class.forName("me.remigio07_.chatplugin.ChatPlugin", false, instance).getMethod("onDisable").invoke(null);
-			else Class.forName("me.remigio07_.chatplugin.bungee.ChatPluginBungee", false, instance).getMethod("onDisable").invoke(null);
+			if (Main.isSpigot())
+				Class.forName(APIType.SPIGOT.getMainClass(), false, instance).getMethod("onDisable").invoke(null);
+			else if (Main.isBungee())
+				Class.forName(APIType.BUNGEECORD.getMainClass(), false, instance).getMethod("onDisable").invoke(null);
+			else Class.forName(APIType.VELOCITY.getMainClass(), false, instance).getMethod("onDisable").invoke(null);
 			plugin = null;
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
 			e.printStackTrace();
@@ -126,7 +123,11 @@ public class JarLibraryLoader extends URLClassLoader {
 		return plugin;
 	}
 	
-	public static boolean isSpigot() {
-		return spigot;
+	public static Object getVelocityServer() {
+		return velocityServer;
+	}
+	
+	public static Object getLogger() {
+		return logger;
 	}
 }

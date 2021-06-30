@@ -3,7 +3,8 @@ main: me.remigio07_.chatplugin.Main$Spigot$MainSpigot
 version: '∞'
 api-version: 1.13
 author: Remigio07_
-description: Well, it has so many features that the chat would be filled... visit the Spigot page for info.
+website: https://megaproserver.com/chatplugin
+description: 'A lightweight yet complete plugin which handles just too many features! Check the website for info: https://megaproserver.com/ChatPlugin'
 softdepend: [Essentials, ViaVersion, ProtocolSupport, Rewards, Vault, PlaceholderAPI, MVdWPlaceholderAPI, CombatLogX, GadgetsMenu, PlayerParticles, Matrix, Vulcan]
 commands:
   chatplugin:

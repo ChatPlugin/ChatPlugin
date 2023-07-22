@@ -1,0 +1,14 @@
+[
+	{
+		"modid": "chatplugin",
+		"name": "ChatPlugin",
+		"version": "${version}",
+		"url": "https://megaproserver.com/chatplugin",
+		"description": "A lightweight yet complete plugin which handles just too many features! Check the wiki for info: https://github.com/Remigio07/ChatPlugin",
+		"authorList": ["Remigio07_"],
+		"dependencies": [
+            "negativity@[1.9.0,)",
+			"viaversion@[4.0.0,)"
+        ]
+	}
+]

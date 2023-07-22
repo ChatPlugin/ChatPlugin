@@ -1,0 +1,11 @@
+rootProject.name = 'chatplugin'
+
+include (
+		'loader',
+        'api',
+        'free'
+)
+
+if (new File(rootDir.absolutePath + '/premium/').isDirectory()) {
+	include 'premium'
+}

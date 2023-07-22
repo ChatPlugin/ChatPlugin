@@ -1,0 +1,874 @@
+/*
+ * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
+ * 	Copyright 2023  Remigio07_
+ * 	
+ * 	This program is distributed in the hope that it will be useful,
+ * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * 	GNU Affero General Public License for more details.
+ * 	
+ * 	You should have received a copy of the GNU Affero General Public License
+ * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * 	
+ * 	<https://github.com/Remigio07/ChatPlugin>
+ */
+
+package me.remigio07_.chatplugin.api.common.discord;
+
+import static java.lang.annotation.ElementType.FIELD;
+
+import java.lang.annotation.Target;
+import java.lang.management.ManagementFactory;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
+import me.remigio07_.chatplugin.api.ChatPlugin;
+import me.remigio07_.chatplugin.api.common.ip_lookup.IPLookup;
+import me.remigio07_.chatplugin.api.common.player.PlayerManager;
+import me.remigio07_.chatplugin.api.common.punishment.warning.WarningManager;
+import me.remigio07_.chatplugin.api.common.storage.DataContainer;
+import me.remigio07_.chatplugin.api.common.storage.StorageConnector;
+import me.remigio07_.chatplugin.api.common.storage.StorageConnector.WhereCondition;
+import me.remigio07_.chatplugin.api.common.storage.StorageConnector.WhereCondition.WhereOperator;
+import me.remigio07_.chatplugin.api.common.storage.configuration.ConfigurationMappings;
+import me.remigio07_.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07_.chatplugin.api.common.util.MemoryUtils;
+import me.remigio07_.chatplugin.api.common.util.Utils;
+import me.remigio07_.chatplugin.api.common.util.VersionUtils;
+import me.remigio07_.chatplugin.api.common.util.adapter.user.PlayerAdapter;
+import me.remigio07_.chatplugin.api.common.util.manager.ChatPluginManagers;
+import me.remigio07_.chatplugin.api.common.util.text.ChatColor;
+
+/**
+ * Class containing implementations of {@link DiscordMessage}.
+ */
+public class DiscordMessages {
+	
+	/**
+	 * Array containing the supported embed options. The "fields" option
+	 * is also supported but unlike the others it represents a map of keys-values
+	 * and not just a key-value pair, so it is handled in a different way.
+	 * 
+	 * <p><strong>Content:</strong> ["title.text", "title.url", "description", "image", "thumbnail", "author.text", "author.url", "author.icon-url", "footer.text", "footer.icon-url", "color"]</p>
+	 */
+	public static final String[] EMBED_OPTIONS = new String[] { "title.text", "title.url", "description", "image", "thumbnail", "author.text", "author.url", "author.icon-url", "footer.text", "footer.icon-url", "color" };
+	private static ConfigurationMappings mappings = ConfigurationType.DISCORD_INTEGRATION.get().getMappings();
+	
+	public enum Main implements DiscordMessage {
+		
+		HELP,
+		INFO,
+		RELOAD_START,
+		RELOAD_END,
+		STATUS,
+		VERSION;
+		
+		@Override
+		public String getPath() {
+			return "messages.main." + name().toLowerCase().replace('_', '-') + ".";
+		}
+		
+		@Override
+		public Object getEmbed(Object... args) {
+			return DiscordBot.getInstance().newEmbedMessage(this == STATUS ? getStatusValues() : getVersionValues(), this == STATUS ? getStatusFields() : getVersionFields());
+		}
+		
+		private List<String> getVersionValues() {
+			List<String> values = new ArrayList<>(EMBED_OPTIONS.length);
+			
+			for (String option : EMBED_OPTIONS)
+				values.add(translateVersion(mappings.getString(getPath() + option, null)));
+			return values;
+		}
+		
+		private List<String> getStatusValues() {
+			List<String> values = new ArrayList<>(EMBED_OPTIONS.length);
+			
+			for (String option : EMBED_OPTIONS)
+				values.add(translateStatus(mappings.getString(getPath() + option, null)));
+			return values;
+		}
+		
+		private List<FieldAdapter> getVersionFields() {
+			List<FieldAdapter> fields = getFields(getPath());
+			
+			for (FieldAdapter field : fields) {
+				field.setTitle(translateVersion(field.getTitle()));
+				field.setText(translateVersion(field.getText()));
+			} return fields;
+		}
+		
+		private List<FieldAdapter> getStatusFields() {
+			List<FieldAdapter> fields = getFields(getPath());
+			
+			for (FieldAdapter field : fields) {
+				field.setTitle(translateStatus(field.getTitle()));
+				field.setText(translateStatus(field.getText()));
+			} return fields;
+		}
+		
+		private String translateVersion(String input) {
+			return input == null ? null : input
+					.replace("{chatplugin_version}", ChatPlugin.VERSION)
+					.replace("{jda_version}", DiscordIntegrationManager.getInstance().getJDAVersion())
+					.replace("{last_reload_time}", String.valueOf(DiscordIntegrationManager.getInstance().getLastReloadTime()));
+		}
+		
+		/**
+		 * Translates an input String with the server's status' placeholders.
+		 * Unlike other methods of this class, this one is public just because
+		 * it needs to be visible to the {@link DiscordIntegrationManager#run()}.
+		 * 
+		 * @param input Input containing placeholders
+		 * @return Translated placeholders
+		 */
+		public String translateStatus(String input) {
+			Runtime runtime = Runtime.getRuntime();
+			
+			return input == null ? null : translateVersion(input
+					.replace("{online_minecraft}", String.valueOf(PlayerAdapter.getOnlinePlayers().size()))
+					.replace("{online_discord}", String.valueOf(DiscordBot.getInstance().getOnlinePlayers()))
+					.replace("{enabled_players}", String.valueOf(PlayerManager.getInstance().getTotalPlayers()))
+					.replace("{enabled_managers}", String.valueOf(ChatPluginManagers.getInstance().getEnabledManagers().size()))
+					.replace("{max_players}", String.valueOf(Utils.getMaxPlayers()))
+					.replace("{date}", formatDate(System.currentTimeMillis()))
+					.replace("{startup_time}", String.valueOf(ChatPlugin.getInstance().getStartupTime()))
+					.replace("{java_version}", System.getProperty("java.version"))
+					.replace("{environment}", VersionUtils.getImplementationName())
+					.replace("{environment_version}", VersionUtils.getImplementationVersion())
+					.replace("{uptime}", formatTime(ManagementFactory.getRuntimeMXBean().getUptime(), false, false))
+					.replace("{max_memory}", MemoryUtils.formatMemory(runtime.maxMemory(), MemoryUtils.MEGABYTE))
+					.replace("{total_memory}", MemoryUtils.formatMemory(runtime.totalMemory(), MemoryUtils.MEGABYTE))
+					.replace("{used_memory}", MemoryUtils.formatMemory(runtime.totalMemory() - runtime.freeMemory(), MemoryUtils.MEGABYTE))
+					.replace("{free_memory}", MemoryUtils.formatMemory(runtime.freeMemory(), MemoryUtils.MEGABYTE))
+					.replace("{total_storage}", MemoryUtils.formatMemory(Utils.getTotalStorage(), MemoryUtils.GIGABYTE))
+					.replace("{used_storage}", MemoryUtils.formatMemory(Utils.getTotalStorage() - Utils.getFreeStorage(), MemoryUtils.GIGABYTE))
+					.replace("{free_storage}", MemoryUtils.formatMemory(Utils.getFreeStorage(), MemoryUtils.GIGABYTE))
+					.replace("{os_name}", System.getProperty("os.name"))
+					.replace("{os_arch}", System.getProperty("os.arch"))
+					.replace("{os_version}", System.getProperty("os.version"))
+					.replace("{active_threads}", String.valueOf(Thread.activeCount()))
+					);
+		}
+		
+	}
+	
+	public enum OnlinePlayer implements DiscordMessage {
+		
+		PLAYER_INFO;
+		
+		@Override
+		public String getPath() {
+			throw new UnsupportedOperationException("Not available");
+		}
+		
+		@Override
+		public Object getEmbed(Object... args) {
+			throw new UnsupportedOperationException("Not available");
+		}
+		
+	}
+	
+	public enum OfflinePlayer implements DiscordMessage {
+		
+		PLAYER_PUNISHMENTS;
+		
+		@Override
+		public String getPath() {
+			throw new UnsupportedOperationException("Not available");
+		}
+		
+		@Override
+		public Object getEmbed(Object... args) {
+			throw new UnsupportedOperationException("Not available");
+		}
+		
+	}
+	
+	public enum Misc implements DiscordMessage {
+		
+		INEXISTENT_ID,
+		NO_PERMISSION,
+		DISABLED_FEATURE,
+		INVALID_IP_ADDRESS,
+		AT_LEAST_ONE_ONLINE,
+		@MessageArguments(types = IPLookup.class, descriptions = "Related IP lookup's object")
+		IP_LOOKUP;
+		
+		@Override
+		public String getPath() {
+			return "messages." + name().toLowerCase().replace('_', '-') + ".";
+		}
+		
+		@Override
+		public Object getEmbed(Object... args) {
+			return DiscordBot.getInstance().newEmbedMessage(this == IP_LOOKUP ? ((IPLookup) args[0]).formatPlaceholders(getValues(getPath())) : getValues(getPath()), this == IP_LOOKUP ? getIPLookupFields((IPLookup) args[0]) : getFields(getPath()));
+		}
+		
+		private List<FieldAdapter> getIPLookupFields(IPLookup ipLookup) {
+			List<FieldAdapter> fields = getFields(getPath());
+			
+			for (FieldAdapter field : fields) {
+				field.setTitle(field.getTitle() == null ? null : ipLookup.formatPlaceholders(field.getTitle()));
+				field.setText(field.getText() == null ? null : ipLookup.formatPlaceholders(field.getText()));
+			} return fields;
+		}
+		
+	}
+	
+	public enum Ban implements DiscordMessage {
+		
+		@MessageArguments(types = me.remigio07_.chatplugin.api.common.punishment.ban.Ban.class, descriptions = "Related ban's object")
+		INFO,
+		LIST,
+		EMPTY_LIST,
+		@MessageArguments(types = me.remigio07_.chatplugin.api.common.punishment.ban.Ban.class, descriptions = "Related ban's object")
+		BANNED,
+		@MessageArguments(types = me.remigio07_.chatplugin.api.common.punishment.ban.Ban.class, descriptions = "Related ban's object")
+		UPDATED,
+		@MessageArguments(types = me.remigio07_.chatplugin.api.common.punishment.ban.Ban.class, descriptions = "Related ban's object")
+		UNBANNED,
+		@MessageArguments(types = me.remigio07_.chatplugin.api.common.punishment.ban.Ban.class, descriptions = "Related ban's object")
+		EXPIRED;
+		
+		@Override
+		public String getPath() {
+			return "messages.ban." + name().toLowerCase().replace('_', '-') + ".";
+		}
+		
+		@Override
+		public Object getEmbed(Object... args) {
+			return DiscordBot.getInstance().newEmbedMessage(name().endsWith("LIST") ? this == LIST ? getBanlistValues() : getValues(getPath()) : formatValues((me.remigio07_.chatplugin.api.common.punishment.ban.Ban) args[0]), name().endsWith("LIST") ? this == LIST ? getBanlistFields() : getFields(getPath()) : formatFields((me.remigio07_.chatplugin.api.common.punishment.ban.Ban) args[0]));
+		}
+		
+		private List<String> getBanlistValues() {
+			List<Number> ids;
+			List<String> values = new ArrayList<>(EMBED_OPTIONS.length);
+			
+			try {
+				ids = StorageConnector.getInstance().getColumnValues(DataContainer.BANS, "id", Number.class, new WhereCondition("active", WhereOperator.EQUAL, 1));
+			} catch (SQLException e) {
+				ids = Collections.emptyList();
+			} if (ids.isEmpty())
+				return getValues(getPath());
+			String bans = Utils.getStringFromList(Utils.integerListToStringList(Utils.numberListToIntegerList(ids)), false, true);
+			
+			for (String value : getValues(getPath()))
+				values.add(value == null ? null : value.replace("{bans}", bans));
+			return values;
+		}
+		
+		private List<FieldAdapter> getBanlistFields() {
+			List<Number> ids;
+			List<FieldAdapter> fields = getFields(getPath());
+			
+			try {
+				ids = StorageConnector.getInstance().getColumnValues(DataContainer.BANS, "id", Number.class, new WhereCondition("active", WhereOperator.EQUAL, 1));
+			} catch (SQLException e) {
+				ids = Collections.emptyList();
+			} if (ids.isEmpty())
+				return getFields(getPath());
+			String bans = Utils.getStringFromList(Utils.integerListToStringList(Utils.numberListToIntegerList(ids)), false, true);
+			
+			for (FieldAdapter field : fields) {
+				field.setTitle(field.getTitle() == null ? null : field.getTitle().replace("{bans}", bans));
+				field.setText(field.getText() == null ? null : field.getText().replace("{bans}", bans));
+			} return fields;
+		}
+		
+		private List<String> formatValues(me.remigio07_.chatplugin.api.common.punishment.ban.Ban ban) {
+			int id = ban.getID();
+			List<String> values = new ArrayList<>(EMBED_OPTIONS.length);
+			String whoUnbanned = StorageConnector.getInstance().safeSelect(DataContainer.BANS, "who_unbanned", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Number unbanDate = StorageConnector.getInstance().safeSelect(DataContainer.BANS, "unban_date", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Boolean active = StorageConnector.getInstance().safeSelect(DataContainer.BANS, "active", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			long duration = ban.getDuration();
+			
+			for (String value : getValues(getPath()))
+				values.add(value == null ? null :
+					value
+						.replace("{id}", String.valueOf(id))
+						.replace("{player}", ban.getPlayer().getName())
+						.replace("{player_uuid}", ban.getPlayer().getUUID().toString())
+						.replace("{ip_address}", ban.getIPAddress() == null ? Utils.NOT_APPLICABLE : ban.getIPAddress().getHostAddress())
+						.replace("{staff_member}", ban.getStaffMember())
+						.replace("{who_unbanned}", whoUnbanned == null ? Utils.NOT_APPLICABLE : whoUnbanned)
+						.replace("{reason}", ban.getReason() == null ? mappings.getString("messages.ban.unspecified-reason") : ChatColor.stripColor(ban.getReason()))
+						.replace("{server}", ban.getServer())
+						.replace("{type}", getFormat("types." + ban.getType().name().toLowerCase()))
+						.replace("{date}", formatDate(ban.getDate()))
+						.replace("{unban_date}", unbanDate == null ? Utils.NOT_APPLICABLE : formatDate(unbanDate.longValue()))
+						.replace("{expiration_date}", duration == -1 ? Utils.NOT_APPLICABLE : formatDate(ban.getDate() + duration))
+						.replace("{duration}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(duration, true, false))
+						.replace("{remaining_time}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(ban.getRemainingTime(), false, true))
+						.replace("{active}", getFormat(active == null ? "active.no" : (active ? "active.yes" : "active.no")))
+						.replace("{global}", getFormat(ban.isGlobal() ? "global.yes" : "global.no"))
+						.replace("{silent}", getFormat(ban.isSilent() ? "silent.yes" : "silent.no"))
+						);
+			return values;
+		}
+		
+		private List<FieldAdapter> formatFields(me.remigio07_.chatplugin.api.common.punishment.ban.Ban ban) {
+			int id = ban.getID();
+			List<FieldAdapter> fields = getFields(getPath());
+			String whoUnbanned = StorageConnector.getInstance().safeSelect(DataContainer.BANS, "who_unbanned", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Number unbanDate = StorageConnector.getInstance().safeSelect(DataContainer.BANS, "unban_date", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Boolean active = StorageConnector.getInstance().safeSelect(DataContainer.BANS, "active", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			me.remigio07_.chatplugin.api.common.player.OfflinePlayer player = ban.getPlayer();
+			long duration = ban.getDuration();
+			
+			for (FieldAdapter field : fields) {
+				field.setTitle(field.getTitle() == null ? null : field.getTitle()
+						.replace("{id}", String.valueOf(id))
+						.replace("{player}", player.getName())
+						.replace("{player_uuid}", player.getUUID().toString())
+						.replace("{ip_address}", ban.getIPAddress() == null ? Utils.NOT_APPLICABLE : ban.getIPAddress().getHostAddress())
+						.replace("{staff_member}", ban.getStaffMember())
+						.replace("{who_unbanned}", whoUnbanned == null ? Utils.NOT_APPLICABLE : whoUnbanned)
+						.replace("{reason}", ban.getReason() == null ? mappings.getString("messages.ban.unspecified-reason") : ChatColor.stripColor(ban.getReason()))
+						.replace("{server}", ban.getServer())
+						.replace("{type}", getFormat("types." + ban.getType().name().toLowerCase()))
+						.replace("{date}", formatDate(ban.getDate()))
+						.replace("{unban_date}", unbanDate == null ? Utils.NOT_APPLICABLE : formatDate(unbanDate.longValue()))
+						.replace("{expiration_date}", duration == -1 ? Utils.NOT_APPLICABLE : formatDate(ban.getDate() + duration))
+						.replace("{duration}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(duration, true, false))
+						.replace("{remaining_time}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(ban.getRemainingTime(), false, true))
+						.replace("{active}", getFormat(active == null ? "active.no" : (active ? "active.yes" : "active.no")))
+						.replace("{global}", getFormat(ban.isGlobal() ? "global.yes" : "global.no"))
+						.replace("{silent}", getFormat(ban.isSilent() ? "silent.yes" : "silent.no"))
+						);
+				field.setText(field.getText() == null ? null : field.getText()
+						.replace("{id}", String.valueOf(id))
+						.replace("{player}", player.getName())
+						.replace("{player_uuid}", player.getUUID().toString())
+						.replace("{ip_address}", ban.getIPAddress() == null ? Utils.NOT_APPLICABLE : ban.getIPAddress().getHostAddress())
+						.replace("{staff_member}", ban.getStaffMember())
+						.replace("{who_unbanned}", whoUnbanned == null ? Utils.NOT_APPLICABLE : whoUnbanned)
+						.replace("{reason}", ban.getReason() == null ? mappings.getString("messages.ban.unspecified-reason") : ChatColor.stripColor(ban.getReason()))
+						.replace("{server}", ban.getServer())
+						.replace("{type}", getFormat("types." + ban.getType().name().toLowerCase()))
+						.replace("{date}", formatDate(ban.getDate()))
+						.replace("{unban_date}", unbanDate == null ? Utils.NOT_APPLICABLE : formatDate(unbanDate.longValue()))
+						.replace("{expiration_date}", duration == -1 ? Utils.NOT_APPLICABLE : formatDate(ban.getDate() + duration))
+						.replace("{duration}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(duration, true, false))
+						.replace("{remaining_time}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(ban.getRemainingTime(), false, true))
+						.replace("{active}", getFormat(active == null ? "active.no" : (active ? "active.yes" : "active.no")))
+						.replace("{global}", getFormat(ban.isGlobal() ? "global.yes" : "global.no"))
+						.replace("{silent}", getFormat(ban.isSilent() ? "silent.yes" : "silent.no"))
+						);
+			} return fields;
+		}
+		
+		private static String getFormat(String type) {
+			return mappings.getString("messages.ban.formats." + type);
+		}
+		
+	}
+	
+	public enum Warning implements DiscordMessage {
+		
+		@MessageArguments(types = me.remigio07_.chatplugin.api.common.punishment.warning.Warning.class, descriptions = "Related warning's object")
+		INFO,
+		LIST,
+		EMPTY_LIST,
+		@MessageArguments(types = me.remigio07_.chatplugin.api.common.punishment.warning.Warning.class, descriptions = "Related warning's object")
+		WARNED,
+		@MessageArguments(types = me.remigio07_.chatplugin.api.common.punishment.warning.Warning.class, descriptions = "Related warning's object")
+		REMOVED,
+		@MessageArguments(types = { me.remigio07_.chatplugin.api.common.player.OfflinePlayer.class, String.class }, descriptions = { "Player whose warnings got cleared", "Who unwarned the player" })
+		CLEARED,
+		@MessageArguments(types = me.remigio07_.chatplugin.api.common.punishment.warning.Warning.class, descriptions = "Related warning's object")
+		EXPIRED;
+		
+		@Override
+		public String getPath() {
+			return "messages.warning." + name().toLowerCase().replace('_', '-') + ".";
+		}
+		
+		@Override
+		public Object getEmbed(Object... args) {
+			switch (this) {
+			case LIST:
+				return DiscordBot.getInstance().newEmbedMessage(getWarnlistValues(), getWarnlistFields());
+			case EMPTY_LIST:
+				return DiscordBot.getInstance().newEmbedMessage(getValues(getPath()), getFields(getPath()));
+			case CLEARED:
+				return DiscordBot.getInstance().newEmbedMessage(getClearWarningsValues((String) args[0], (me.remigio07_.chatplugin.api.common.player.OfflinePlayer) args[1]), getClearWarningsFields((String) args[0], (me.remigio07_.chatplugin.api.common.player.OfflinePlayer) args[1]));
+			default:
+				return DiscordBot.getInstance().newEmbedMessage(formatValues((me.remigio07_.chatplugin.api.common.punishment.warning.Warning) args[0]), formatFields((me.remigio07_.chatplugin.api.common.punishment.warning.Warning) args[0]));
+			}
+		}
+		
+		private List<String> getWarnlistValues() {
+			List<Number> ids;
+			List<String> list = new ArrayList<>(EMBED_OPTIONS.length);
+			
+			try {
+				ids = StorageConnector.getInstance().getColumnValues(DataContainer.WARNINGS, "id", Number.class, new WhereCondition("active", WhereOperator.EQUAL, 1));
+			} catch (SQLException e) {
+				ids = Collections.emptyList();
+			} if (ids.isEmpty())
+				return getValues(getPath());
+			String values = Utils.getStringFromList(Utils .integerListToStringList(Utils.numberListToIntegerList(ids)), false, true);
+			
+			for (String value : getValues(getPath()))
+				list.add(value == null ? null : value.replace("{warnings}", values));
+			return list;
+		}
+		
+		private List<FieldAdapter> getWarnlistFields() {
+			List<Number> ids;
+			List<FieldAdapter> fields = getFields(getPath());
+			
+			try {
+				ids = StorageConnector.getInstance().getColumnValues(DataContainer.WARNINGS, "id", Number.class, new WhereCondition("active", WhereOperator.EQUAL, 1));
+			} catch (SQLException e) {
+				ids = Collections.emptyList();
+			} if (ids.isEmpty())
+				return getFields(getPath());
+			String warnings = Utils.getStringFromList(Utils.integerListToStringList(Utils.numberListToIntegerList(ids)), false, true);
+			
+			for (FieldAdapter field : fields) {
+				field.setTitle(field.getTitle() == null ? null : field.getTitle().replace("{bans}", warnings));
+				field.setText(field.getText() == null ? null : field.getText().replace("{bans}", warnings));
+			} return fields;
+		}
+		
+		private List<String> formatValues(me.remigio07_.chatplugin.api.common.punishment.warning.Warning warning) {
+			int id = warning.getID();
+			List<String> values = new ArrayList<>(EMBED_OPTIONS.length);
+			String whoUnwarned = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "who_unwarned", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Number unwarnDate = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "unwarn_date", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Boolean active = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "active", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			me.remigio07_.chatplugin.api.common.player.OfflinePlayer player = warning.getPlayer();
+			
+			for (String value : getValues(getPath()))
+				values.add(value == null ? null :
+						value
+						.replace("{id}", String.valueOf(id))
+						.replace("{player}", player.getName())
+						.replace("{player_uuid}", player.getUUID().toString())
+						.replace("{staff_member}", warning.getStaffMember())
+						.replace("{who_unwarned}", whoUnwarned == null ? Utils.NOT_APPLICABLE : whoUnwarned)
+						.replace("{reason}", warning.getReason() == null ? mappings.getString("messages.warning.unspecified-reason") : ChatColor.stripColor(warning.getReason()))
+						.replace("{server}", warning.getServer())
+						.replace("{date}", formatDate(warning.getDate()))
+						.replace("{unwarn_date}", unwarnDate == null ? Utils.NOT_APPLICABLE : formatDate(unwarnDate.longValue()))
+						.replace("{expiration_date}", formatDate(warning.getDate() + warning.getDuration()))
+						.replace("{duration}", formatTime(warning.getDuration(), true, false))
+						.replace("{remaining_time}", formatTime(warning.getRemainingTime(), false, true))
+						.replace("{amount}", String.valueOf(WarningManager.getInstance().getActiveWarnings(player, warning.getServer()).stream().filter(other -> other.getDate() <= warning.getDate()).count()))
+						.replace("{max_amount}", String.valueOf(ConfigurationType.CONFIG.get().getInt("warning.max-warnings-placeholder." + warning.getServer())))
+						.replace("{active}", getFormat(active == null ? "active.no" : (active ? "active.yes" : "active.no")))
+						.replace("{global}", getFormat(warning.isSilent() ? "global.yes" : "global.no"))
+						.replace("{silent}", getFormat(warning.isSilent() ? "silent.yes" : "silent.no"))
+						);
+			return values;
+		}
+		
+		private List<FieldAdapter> formatFields(me.remigio07_.chatplugin.api.common.punishment.warning.Warning warning) {
+			int id = warning.getID();
+			List<FieldAdapter> fields = getFields(getPath());
+			String whoUnwarned = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "who_unwarned", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Number unwarnDate = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "unwarn_date", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Boolean active = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "active", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			me.remigio07_.chatplugin.api.common.player.OfflinePlayer player = warning.getPlayer();
+			
+			for (FieldAdapter field : fields) {
+				field.setTitle(field.getTitle() == null ? null : field.getTitle()
+						.replace("{id}", String.valueOf(id))
+						.replace("{player}", player.getName())
+						.replace("{player_uuid}", player.getUUID().toString())
+						.replace("{staff_member}", warning.getStaffMember())
+						.replace("{who_unwarned}", whoUnwarned == null ? Utils.NOT_APPLICABLE : whoUnwarned)
+						.replace("{reason}", warning.getReason() == null ? mappings.getString("messages.warning.unspecified-reason") : ChatColor.stripColor(warning.getReason()))
+						.replace("{server}", warning.getServer())
+						.replace("{date}", formatDate(warning.getDate()))
+						.replace("{unwarn_date}", unwarnDate == null ? Utils.NOT_APPLICABLE : formatDate(unwarnDate.longValue()))
+						.replace("{expiration_date}", formatDate(warning.getDate() + warning.getDuration()))
+						.replace("{duration}", formatTime(warning.getDuration(), true, false))
+						.replace("{remaining_time}", formatTime(warning.getRemainingTime(), false, true))
+						.replace("{amount}", String.valueOf(WarningManager.getInstance().getActiveWarnings(player, warning.getServer()).stream().filter(other -> other.getDate() <= warning.getDate()).count()))
+						.replace("{max_amount}", String.valueOf(ConfigurationType.CONFIG.get().getInt("warning.max-warnings-placeholder." + warning.getServer())))
+						.replace("{active}", getFormat(active == null ? "active.no" : (active ? "active.yes" : "active.no")))
+						.replace("{global}", getFormat(warning.isSilent() ? "global.yes" : "global.no"))
+						.replace("{silent}", getFormat(warning.isSilent() ? "silent.yes" : "silent.no"))
+						);
+				field.setText(field.getText() == null ? null : field.getText()
+						.replace("{id}", String.valueOf(id))
+						.replace("{player}", player.getName())
+						.replace("{player_uuid}", player.getUUID().toString())
+						.replace("{staff_member}", warning.getStaffMember())
+						.replace("{who_unwarned}", whoUnwarned == null ? Utils.NOT_APPLICABLE : whoUnwarned)
+						.replace("{reason}", warning.getReason() == null ? mappings.getString("messages.warning.unspecified-reason") : ChatColor.stripColor(warning.getReason()))
+						.replace("{server}", warning.getServer())
+						.replace("{date}", formatDate(warning.getDate()))
+						.replace("{unwarn_date}", unwarnDate == null ? Utils.NOT_APPLICABLE : formatDate(unwarnDate.longValue()))
+						.replace("{expiration_date}", formatDate(warning.getDate() + warning.getDuration()))
+						.replace("{duration}", formatTime(warning.getDuration(), true, false))
+						.replace("{remaining_time}", formatTime(warning.getRemainingTime(), false, true))
+						.replace("{amount}", String.valueOf(WarningManager.getInstance().getActiveWarnings(player, warning.getServer()).stream().filter(other -> other.getDate() <= warning.getDate()).count()))
+						.replace("{max_amount}", String.valueOf(ConfigurationType.CONFIG.get().getInt("warning.max-warnings-placeholder." + warning.getServer())))
+						.replace("{active}", getFormat(active == null ? "active.no" : (active ? "active.yes" : "active.no")))
+						.replace("{global}", getFormat(warning.isSilent() ? "global.yes" : "global.no"))
+						.replace("{silent}", getFormat(warning.isSilent() ? "silent.yes" : "silent.no"))
+						);
+			} return fields;
+		}
+		
+		private List<String> getClearWarningsValues(String staff_member, me.remigio07_.chatplugin.api.common.player.OfflinePlayer user) {
+			List<String> list = new ArrayList<>(EMBED_OPTIONS.length);
+			
+			for (String option : EMBED_OPTIONS) {
+				String value = mappings.getString(getPath() + option, null);
+				list.add(value == null ? null : value
+						.replace("{player}", user.getName())
+						.replace("{player_uuid}", user.getUUID().toString())
+						);
+			} return list;
+		}
+		
+		private List<FieldAdapter> getClearWarningsFields(String whoUnwarned, me.remigio07_.chatplugin.api.common.player.OfflinePlayer user) {
+			List<FieldAdapter> fields = getFields(getPath());
+			
+			for (FieldAdapter field : fields) {
+				field.setTitle(field.getTitle() == null ? null : field.getTitle()
+						.replace("{player}", user.getName())
+						.replace("{player_uuid}", user.getUUID().toString())
+						.replace("{who_unwarned}", whoUnwarned == null ? Utils.NOT_APPLICABLE : whoUnwarned)
+						);
+				field.setText(field.getText() == null ? null : field.getText()
+						.replace("{player}", user.getName())
+						.replace("{player_uuid}", user.getUUID().toString())
+						.replace("{who_unwarned}", whoUnwarned == null ? Utils.NOT_APPLICABLE : whoUnwarned)
+						);
+			} return fields;
+		}
+		
+		private static String getFormat(String type) {
+			return mappings.getString("messages.warning.formats." + type);
+		}
+		
+	}
+	
+	public enum Kick implements DiscordMessage {
+		
+		@MessageArguments(types = me.remigio07_.chatplugin.api.common.punishment.kick.Kick.class, descriptions = "Related kick's object")
+		INFO,
+		@MessageArguments(types = me.remigio07_.chatplugin.api.common.punishment.kick.Kick.class, descriptions = "Related kick's object")
+		KICKED;
+		
+		@Override
+		public String getPath() {
+			return "messages.kick." + name().toLowerCase().replace('_', '-') + ".";
+		}
+		
+		@Override
+		public Object getEmbed(Object... args) {
+			return DiscordBot.getInstance().newEmbedMessage(formatValues((me.remigio07_.chatplugin.api.common.punishment.kick.Kick) args[0]), formatFields((me.remigio07_.chatplugin.api.common.punishment.kick.Kick) args[0]));
+		}
+		
+		private List<String> formatValues(me.remigio07_.chatplugin.api.common.punishment.kick.Kick kick) {
+			List<String> values = new ArrayList<>(EMBED_OPTIONS.length);
+			me.remigio07_.chatplugin.api.common.player.OfflinePlayer player = kick.getPlayer();
+			
+			for (String value : getValues(getPath()))
+				values.add(value == null ? null :
+						value
+						.replace("{id}", String.valueOf(kick.getID()))
+						.replace("{player}", player.getName())
+						.replace("{player_uuid}", player.getUUID().toString())
+						.replace("{ip_address}", kick.getIPAddress() == null ? Utils.NOT_APPLICABLE : kick.getIPAddress().getHostAddress())
+						.replace("{staff_member}", kick.getStaffMember())
+						.replace("{reason}", kick.getReason() == null ? mappings.getString("messages.kick.unspecified-reason") : ChatColor.stripColor(kick.getReason()))
+						.replace("{server}", kick.getServer())
+						.replace("{type}", getFormat("types." + kick.getType().name().toLowerCase()))
+						.replace("{date}", formatDate(kick.getDate()))
+						.replace("{silent}", getFormat(kick.isSilent() ? "silent.yes" : "silent.no"))
+						);
+			return values;
+		}
+		
+		private List<FieldAdapter> formatFields(me.remigio07_.chatplugin.api.common.punishment.kick.Kick kick) {
+			List<FieldAdapter> fields = getFields(getPath());
+			me.remigio07_.chatplugin.api.common.player.OfflinePlayer player = kick.getPlayer();
+			
+			for (FieldAdapter field : fields) {
+				field.setTitle(field.getTitle() == null ? null : field.getTitle()
+						.replace("{id}", String.valueOf(kick.getID()))
+						.replace("{player}", player.getName())
+						.replace("{player_uuid}", player.getUUID().toString())
+						.replace("{ip_address}", kick.getIPAddress() == null ? Utils.NOT_APPLICABLE : kick.getIPAddress().getHostAddress())
+						.replace("{staff_member}", kick.getStaffMember())
+						.replace("{reason}", kick.getReason() == null ? mappings.getString("messages.kick.unspecified-reason") : ChatColor.stripColor(kick.getReason()))
+						.replace("{server}", kick.getServer())
+						.replace("{type}", getFormat("types." + kick.getType().name().toLowerCase()))
+						.replace("{date}", formatDate(kick.getDate()))
+						.replace("{silent}", getFormat(kick.isSilent() ? "silent.yes" : "silent.no"))
+						);
+				field.setText(field.getText() == null ? null : field.getText()
+						.replace("{id}", String.valueOf(kick.getID()))
+						.replace("{player}", player.getName())
+						.replace("{player_uuid}", player.getUUID().toString())
+						.replace("{ip_address}", kick.getIPAddress() == null ? Utils.NOT_APPLICABLE : kick.getIPAddress().getHostAddress())
+						.replace("{staff_member}", kick.getStaffMember())
+						.replace("{reason}", kick.getReason() == null ? mappings.getString("messages.kick.unspecified-reason") : ChatColor.stripColor(kick.getReason()))
+						.replace("{server}", kick.getServer())
+						.replace("{type}", getFormat("types." + kick.getType().name().toLowerCase()))
+						.replace("{date}", formatDate(kick.getDate()))
+						.replace("{silent}", getFormat(kick.isSilent() ? "silent.yes" : "silent.no"))
+						);
+			} return fields;
+		}
+		
+		private static String getFormat(String type) {
+			return mappings.getString("messages.kick.formats." + type);
+		}
+		
+	}
+	
+	public enum Mute implements DiscordMessage {
+		
+		@MessageArguments(types = me.remigio07_.chatplugin.api.common.punishment.mute.Mute.class, descriptions = "Related mute's object")
+		INFO,
+		LIST,
+		EMPTY_LIST,
+		@MessageArguments(types = me.remigio07_.chatplugin.api.common.punishment.mute.Mute.class, descriptions = "Related mute's object")
+		MUTED,
+		@MessageArguments(types = me.remigio07_.chatplugin.api.common.punishment.mute.Mute.class, descriptions = "Related mute's object")
+		UPDATED,
+		@MessageArguments(types = me.remigio07_.chatplugin.api.common.punishment.mute.Mute.class, descriptions = "Related mute's object")
+		UNMUTED,
+		@MessageArguments(types = me.remigio07_.chatplugin.api.common.punishment.mute.Mute.class, descriptions = "Related mute's object")
+		EXPIRED;
+		
+		@Override
+		public String getPath() {
+			return "messages.mute." + name().toLowerCase().replace('_', '-') + ".";
+		}
+		
+		@Override
+		public Object getEmbed(Object... args) {
+			return DiscordBot.getInstance().newEmbedMessage(name().endsWith("LIST") ? this == LIST ? getMutelistValues() : getValues(getPath()) : formatValues((me.remigio07_.chatplugin.api.common.punishment.mute.Mute) args[0]), name().endsWith("LIST") ? this == LIST ? getMutelistFields() : getFields(getPath()) : formatFields((me.remigio07_.chatplugin.api.common.punishment.mute.Mute) args[0]));
+		}
+		
+		private List<String> getMutelistValues() {
+			List<Number> ids;
+			List<String> values = new ArrayList<>();
+			
+			try {
+				ids = StorageConnector.getInstance().getColumnValues(DataContainer.MUTES, "id", Number.class, new WhereCondition("active", WhereOperator.EQUAL, 1));
+			} catch (SQLException e) {
+				ids = Collections.emptyList();
+			} if (ids.isEmpty())
+				return getValues(getPath());
+			String mutes = Utils.getStringFromList(Utils.integerListToStringList(Utils.numberListToIntegerList(ids)), false, true);
+			
+			for (String value : getValues(getPath()))
+				values.add(value == null ? null : value.replace("{mutes}", mutes));
+			return values;
+		}
+		
+		private List<FieldAdapter> getMutelistFields() {
+			List<Number> ids;
+			List<FieldAdapter> fields = getFields(getPath());
+			
+			try {
+				ids = StorageConnector.getInstance().getColumnValues(DataContainer.MUTES, "id", Number.class, new WhereCondition("active", WhereOperator.EQUAL, 1));
+			} catch (SQLException e) {
+				ids = Collections.emptyList();
+			} if (ids.isEmpty())
+				return getFields(getPath());
+			String mutes = Utils.getStringFromList(Utils.integerListToStringList(Utils.numberListToIntegerList(ids)), false, true);
+			
+			for (FieldAdapter field : fields) {
+				field.setTitle(field.getTitle() == null ? null : field.getTitle().replace("{mutes}", mutes));
+				field.setText(field.getText() == null ? null : field.getText().replace("{mutes}", mutes));
+			} return fields;
+		}
+		
+		private List<String> formatValues(me.remigio07_.chatplugin.api.common.punishment.mute.Mute mute) {
+			int id = mute.getID();
+			List<String> values = new ArrayList<>();
+			String whoUnmuted = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "who_unmuted", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Number unmuteDate = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "unmute_date", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Boolean active = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "active", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			me.remigio07_.chatplugin.api.common.player.OfflinePlayer player = mute.getPlayer();
+			long duration = mute.getDuration();
+			
+			for (String value : getValues(getPath()))
+				values.add(value == null ? null :
+						value
+						.replace("{id}", String.valueOf(id))
+						.replace("{player}", player.getName())
+						.replace("{player_uuid}", player.getUUID().toString())
+						.replace("{staff_member}", mute.getStaffMember())
+						.replace("{who_unmuted}", whoUnmuted == null ? Utils.NOT_APPLICABLE : whoUnmuted)
+						.replace("{reason}", mute.getReason() == null ? mappings.getString("messages.mute.unspecified-reason") : ChatColor.stripColor(mute.getReason()))
+						.replace("{server}", mute.getServer())
+						.replace("{date}", formatDate(mute.getDate()))
+						.replace("{unmute_date}", unmuteDate == null ? Utils.NOT_APPLICABLE : formatDate(unmuteDate.longValue()))
+						.replace("{expiration_date}", duration == -1 ? Utils.NOT_APPLICABLE : formatDate(mute.getDate() + duration))
+						.replace("{duration}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(duration, true, false))
+						.replace("{remaining_time}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(mute.getRemainingTime(), false, true))
+						.replace("{active}", getFormat(active == null ? "active.no" : (active ? "active.yes" : "active.no")))
+						.replace("{global}", getFormat(mute.isGlobal() ? "global.yes" : "global.no"))
+						.replace("{silent}", getFormat(mute.isSilent() ? "silent.yes" : "silent.no"))
+						);
+			return values;
+		}
+		
+		private List<FieldAdapter> formatFields(me.remigio07_.chatplugin.api.common.punishment.mute.Mute mute) {
+			int id = mute.getID();
+			List<FieldAdapter> fields = getFields(getPath());
+			String whoUnmuted = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "who_unmuted", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Number unmuteDate = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "unmute_date", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Boolean active = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "active", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			me.remigio07_.chatplugin.api.common.player.OfflinePlayer player = mute.getPlayer();
+			long duration = mute.getDuration();
+			
+			for (FieldAdapter field : fields) {
+				field.setTitle(field.getTitle() == null ? null : field.getTitle()
+						.replace("{id}", String.valueOf(id))
+						.replace("{player}", player.getName())
+						.replace("{player_uuid}", player.getUUID().toString())
+						.replace("{staff_member}", mute.getStaffMember())
+						.replace("{who_unmuted}", whoUnmuted == null ? Utils.NOT_APPLICABLE : whoUnmuted)
+						.replace("{reason}", mute.getReason() == null ? mappings.getString("messages.mute.unspecified-reason") : ChatColor.stripColor(mute.getReason()))
+						.replace("{server}", mute.getServer())
+						.replace("{date}", formatDate(mute.getDate()))
+						.replace("{unmute_date}", unmuteDate == null ? Utils.NOT_APPLICABLE : formatDate(unmuteDate.longValue()))
+						.replace("{expiration_date}", duration == -1 ? Utils.NOT_APPLICABLE : formatDate(mute.getDate() + duration))
+						.replace("{duration}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(duration, true, false))
+						.replace("{remaining_time}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(mute.getRemainingTime(), false, true))
+						.replace("{active}", getFormat(active == null ? "active.no" : (active ? "active.yes" : "active.no")))
+						.replace("{global}", getFormat(mute.isGlobal() ? "global.yes" : "global.no"))
+						.replace("{silent}", getFormat(mute.isSilent() ? "silent.yes" : "silent.no"))
+						);
+				field.setText(field.getText() == null ? null : field.getText()
+						.replace("{id}", String.valueOf(id))
+						.replace("{player}", player.getName())
+						.replace("{player_uuid}", player.getUUID().toString())
+						.replace("{staff_member}", mute.getStaffMember())
+						.replace("{who_unmuted}", whoUnmuted == null ? Utils.NOT_APPLICABLE : whoUnmuted)
+						.replace("{reason}", mute.getReason() == null ? mappings.getString("messages.mute.unspecified-reason") : ChatColor.stripColor(mute.getReason()))
+						.replace("{server}", mute.getServer())
+						.replace("{date}", formatDate(mute.getDate()))
+						.replace("{unmute_date}", unmuteDate == null ? Utils.NOT_APPLICABLE : formatDate(unmuteDate.longValue()))
+						.replace("{expiration_date}", duration == -1 ? Utils.NOT_APPLICABLE : formatDate(mute.getDate() + duration))
+						.replace("{duration}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(duration, true, false))
+						.replace("{remaining_time}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(mute.getRemainingTime(), false, true))
+						.replace("{active}", getFormat(active == null ? "active.no" : (active ? "active.yes" : "active.no")))
+						.replace("{global}", getFormat(mute.isGlobal() ? "global.yes" : "global.no"))
+						.replace("{silent}", getFormat(mute.isSilent() ? "silent.yes" : "silent.no"))
+						);
+			} return fields;
+		}
+		
+		private static String getFormat(String type) {
+			return mappings.getString("messages.mute.formats." + type);
+		}
+		
+	}
+	
+	private static List<String> getValues(String path) {
+		List<String> values = new ArrayList<>(EMBED_OPTIONS.length);
+		
+		for (String option : EMBED_OPTIONS)
+			values.add(mappings.getString(path + option, null));
+		return values;
+	}
+	
+	private static List<FieldAdapter> getFields(String path) {
+		return FieldAdapter.Parser.getInstance().fromYAML(ConfigurationType.DISCORD_INTEGRATION.get(), path);
+	}
+	
+	private static String formatTime(long totalMilliseconds, boolean everInsteadOfNever, boolean useZeroSecondsInstead) {
+		StringBuilder sb = new StringBuilder();
+		long totalSeconds = (totalMilliseconds + 999) / 1000L;
+		
+		if (totalMilliseconds == -1)
+			return mappings.getString(everInsteadOfNever ? "timestamps.ever" : "timestamps.never");
+		if (totalSeconds < 1 && !useZeroSecondsInstead)
+			return mappings.getString("timestamps.now");
+		int years = (int) (totalSeconds / Utils.SECONDS_IN_A_YEAR);
+		totalSeconds -= years * Utils.SECONDS_IN_A_YEAR;
+		int months = (int) (totalSeconds / Utils.SECONDS_IN_A_MONTH);
+		totalSeconds -= months * Utils.SECONDS_IN_A_MONTH;
+		int days = (int) (totalSeconds / Utils.SECONDS_IN_A_DAY);
+		totalSeconds -= days * Utils.SECONDS_IN_A_DAY;
+		int weeks = 0;
+		
+		if (ConfigurationType.CONFIG.get().getBoolean("settings.use-week-timestamp")) {
+			weeks = (int) (totalSeconds / Utils.SECONDS_IN_A_WEEK);
+			totalSeconds -= weeks * Utils.SECONDS_IN_A_WEEK;
+		} int hours = (int) (totalSeconds / Utils.SECONDS_IN_AN_HOUR);
+		totalSeconds -= hours * Utils.SECONDS_IN_AN_HOUR;
+		int minutes = (int) (totalSeconds / Utils.SECONDS_IN_A_MINUTE);
+		totalSeconds -= minutes * Utils.SECONDS_IN_A_MINUTE;
+		
+		if (years != 0)
+			sb.append(years + (years == 1 ? "{year}, " : "{years}, "));
+		if (months != 0)
+			sb.append(months + (months == 1 ? "{month}, " : "{months}, "));
+		if (weeks != 0)
+			sb.append(weeks + (weeks == 1 ? "{week}, " : "{weeks}, "));
+		if (days != 0)
+			sb.append(days + (days == 1 ? "{day}, " : "{days}, "));
+		if (hours != 0)
+			sb.append(hours + (hours == 1 ? "{hour}, " : "{hours}, "));
+		if (minutes != 0)
+			sb.append(minutes + (minutes == 1 ? "{minute}, " : "{minutes}, "));
+		if (totalSeconds != 0 || (useZeroSecondsInstead && minutes == 0 && hours == 0 && days == 0 && weeks == 0 && months == 0 && years == 0))
+			sb.append(totalSeconds + (totalSeconds == 1 ? "{second}" : "{seconds}"));
+		else sb.delete(sb.length() - 2, sb.length());
+		
+		return sb.toString()
+				.replace("{second}", mappings.getString("timestamps.second"))
+				.replace("{seconds}", mappings.getString("timestamps.seconds"))
+				.replace("{minute}", mappings.getString("timestamps.minute"))
+				.replace("{minutes}", mappings.getString("timestamps.minutes"))
+				.replace("{hour}", mappings.getString("timestamps.hour"))
+				.replace("{hours}", mappings.getString("timestamps.hours"))
+				.replace("{day}", mappings.getString("timestamps.day"))
+				.replace("{days}", mappings.getString("timestamps.days"))
+				.replace("{week}", mappings.getString("timestamps.week"))
+				.replace("{weeks}", mappings.getString("timestamps.weeks"))
+				.replace("{month}", mappings.getString("timestamps.month"))
+				.replace("{months}", mappings.getString("timestamps.months"))
+				.replace("{year}", mappings.getString("timestamps.year"))
+				.replace("{years}", mappings.getString("timestamps.years"));
+	}
+	
+	private static String formatDate(long ms) {
+		return new SimpleDateFormat(mappings.getString("simple-date-format")).format(new Date(ms));
+	}
+	
+	/**
+	 * Annotation used to describe the arguments of a {@link DiscordMessage}'s
+	 * {@link DiscordMessage#getEmbed(Object...)} method.
+	 */
+	@Target(FIELD)
+	public @interface MessageArguments {
+		
+		/**
+		 * Gets the message's arguments' types.
+		 * 
+		 * @return Message's arguments' types
+		 */
+		public Class<?>[] types();
+		
+		/**
+		 * Gets the message's arguments' descriptions.
+		 * 
+		 * @return Message's arguments' descriptions
+		 */
+		public String[] descriptions();
+		
+	}
+	
+}

@@ -1,0 +1,68 @@
+plugins {
+	id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+repositories {
+	maven { url 'https://jitpack.io' }
+	maven { url 'https://repo.viaversion.com' }
+	maven { url 'https://maven.enginehub.org/repo/' }
+	maven { url 'https://repo.essentialsx.net/releases/' }
+	maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+	maven { url 'https://repo.rosewooddev.io/repository/public/' }
+	maven { url 'https://nexus.sirblobman.xyz/public/' }
+}
+
+ext.libsDir = project.projectDir.path + '/libs/'
+
+dependencies {
+	implementation project(':loader')
+	implementation project(':api')
+	
+	implementation files(libsDir + 'UltraCosmetics-3.3.jar')
+	implementation files(libsDir + 'GadgetsMenu-4.9.3.jar')
+	implementation files(libsDir + 'Vulcan-2.7.5.jar')
+	compileOnly files(libsDir + 'Matrix-7.3.10A.jar')
+	implementation files(libsDir + 'MVdWPlaceholderAPI-3.1.1.jar')
+	implementation files(libsDir + 'Negativity-2.6.jar')
+	
+	implementation 'com.github.cliftonlabs:json-simple:4.0.1'
+	implementation 'com.viaversion:viaversion-api:4.0.0'
+	implementation 'com.viaversion:viaversion-bukkit:4.0.0'
+	implementation 'com.viaversion:viaversion-sponge:4.0.0'
+	compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.0'
+	compileOnly 'net.essentialsx:EssentialsX:2.19.0'
+	implementation 'com.github.MilkBowl:VaultAPI:1.7'
+	implementation 'net.luckperms:api:5.4'
+	compileOnly 'me.clip:placeholderapi:2.11.3'
+	compileOnly 'dev.esophose:playerparticles:8.0'
+	implementation 'com.github.sirblobman.combatlogx:api:11.4-SNAPSHOT'
+}
+
+jar {
+	from project(':loader').sourceSets.main.output
+	from project(':api').sourceSets.main.output
+	
+	exclude 'me/remigio07_/chatplugin/common/**'
+	exclude 'me/remigio07_/chatplugin/server/**'
+	exclude 'me/remigio07_/chatplugin/ChatPluginImpl.class'
+	exclude 'me/remigio07_/chatplugin/ChatPluginImpl$1.class'
+	from shadowJar.archiveFile
+}
+
+shadowJar {
+	archiveFileName = 'ChatPlugin.jar'
+	
+	dependencies {
+        include(dependency('me.remigio07_.chatplugin:.*'))
+    }
+	
+	include '**/*.class'
+	
+	relocate 'com.github.cliftonlabs.json_simple', 'me.remigio07_.chatplugin.common.lib.com.github.cliftonlabs.json_simple'
+}
+
+processResources {
+    filesMatching(['plugin.yml', 'mcmod.info', 'bungee.yml']) {
+        expand 'version': rootProject.version
+    }
+}

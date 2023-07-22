@@ -1,0 +1,54 @@
+buildscript {
+	repositories {
+		
+	}
+	
+	dependencies {
+		classpath files('C:/Users/Remigio/Desktop/skidfuscator-gradle-wrapper-master/build/libs/SkidFuscatorGradle-1.0.3.jar')
+	}
+}
+
+plugins {
+	id 'java'
+	id 'eclipse'
+}
+
+group 'me.remigio07_'
+version '1.9.0'
+jar.enabled = false
+
+allprojects {
+	apply plugin: 'java'
+	apply plugin: 'eclipse'
+	
+	java {
+		sourceCompatibility = 1.8
+		targetCompatibility = 1.8
+	}
+	
+	compileJava {
+		options.compilerArgs.add '-Xlint:deprecation'
+		options.compilerArgs.add '-Xlint:unchecked'
+	}
+}
+
+subprojects {
+	repositories {
+		mavenCentral()
+		maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+		maven { url 'https://repo.papermc.io/repository/maven-public/' }
+		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+		maven { url 'https://repo.spongepowered.org/repository/maven-public/' }
+		maven { url 'https://papermc.io/repo/repository/maven-releases/' }
+	}
+	
+	dependencies {
+		implementation 'org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT'
+		implementation 'com.destroystokyo.paper:paper-api:1.14.4-R0.1-SNAPSHOT'
+		implementation 'org.spongepowered:spongeapi:7.4.0'
+		implementation 'org.spongepowered:spongecommon:1.12.2-7.4.7:dev@jar'
+		implementation 'com.mojang:authlib:1.5.25'
+		implementation 'io.github.waterfallmc:waterfall-api:1.19-R0.1-SNAPSHOT'
+		implementation 'com.velocitypowered:velocity-api:3.1.1'
+	}
+}

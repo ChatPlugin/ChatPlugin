@@ -1,0 +1,74 @@
+name: ChatPlugin
+main: me.remigio07_.chatplugin.bootstrap.BukkitBootstrapper
+version: '${version}'
+api-version: 1.13
+author: Remigio07_
+website: https://megaproserver.com/chatplugin
+description: 'A lightweight yet complete plugin which handles just too many features! Check the website for info: https://megaproserver.com/ChatPlugin'
+softdepend: [Essentials, ViaVersion, ProtocolSupport, Vault, PlaceholderAPI, MVdWPlaceholderAPI, CombatLogX, GadgetsMenu, PlayerParticles, Matrix, Vulcan, Negativity, WorldGuard, UltraCosmetics]
+commands:
+  # main
+  chatplugin:
+    description: ChatPlugin's main command.
+    usage: /chatplugin help
+    aliases: [chatpl, chatp, chat, cplugin, cp]
+  # user
+  language:
+    description: Language command.
+    usage: /language
+    aliases: [languages, lang, langs, localization, locale, l18n]
+  ping:
+    description: Ping command.
+    usage: /ping [player]
+    aliases: [pong, latency]
+  rankinfo:
+    description: Rank info command.
+    usage: /rankinfo <player>
+    aliases: [rinfo, rank]
+  playerlist:
+    description: Player list command.
+    usage: /playerlist [rank]
+    aliases: [playerslist, plist, list, onlineplayers, onlinelist, online]
+  # admin
+  staffchat:
+    description: Staff chat command.
+    usage: /staffchat [message]
+    aliases: [staffc, schat, sch, sc]
+  iplookup:
+    description: IP lookup command.
+    usage: /iplookup <player|IP address>
+    aliases: [lookup, geolocalize, geolocate, geol, iplook, ipl]
+  lastseen:
+    description: Last seen comamnd.
+    usage: /lastseen <player>
+    aliases: [seen, last, lastlogout, lastlogin]
+  clearchat:
+    description: Clear chat command.
+    usage: /clearchat
+    aliases: [clrchat, cchat]
+  muteall:
+    description: Muteall command.
+    usage: /muteall
+    aliases: [mutea, mall, disablechat, enablechat, togglechat, tchat]
+  # vanish
+  vanish:
+    description: Vanish command.
+    usage: /vanish [player]
+    aliases: [hide, fade]
+  # misc
+  tps:
+    description: TPS command.
+    usage: /tps
+    aliases: [tickspersecond, ticks, tick, lag]
+  broadcast:
+    description: Broadcast command.
+    usage: /broadcast <message>
+    aliases: [bcast, shout, local, bc]
+  broadcastraw:
+    description: Broadcast raw command.
+    usage: /broadcastraw <message>
+    aliases: [bcastraw, bcastr, shoutraw, localraw, bcraw, bcr]
+  ad:
+    description: Ad command.
+    usage: /ad <send|list> [player] [id]
+    aliases: [ads, sendad]

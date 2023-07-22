@@ -53,8 +53,8 @@ shadowJar {
 	archiveFileName = 'ChatPlugin.jar'
 	
 	dependencies {
-        include(dependency('me.remigio07_.chatplugin:.*'))
-    }
+		include(dependency('me.remigio07_.chatplugin:.*'))
+	}
 	
 	include '**/*.class'
 	
@@ -62,7 +62,7 @@ shadowJar {
 }
 
 processResources {
-    filesMatching(['plugin.yml', 'mcmod.info', 'bungee.yml']) {
-        expand 'version': rootProject.version
-    }
+	filesMatching(['plugin.yml', 'mcmod.info', 'bungee.yml']) {
+		expand 'version': rootProject.version
+	}
 }

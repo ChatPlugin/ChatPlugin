@@ -20,6 +20,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.github.cliftonlabs.json_simple.JsonArray;
+import com.github.cliftonlabs.json_simple.JsonException;
+import com.github.cliftonlabs.json_simple.JsonObject;
+import com.github.cliftonlabs.json_simple.Jsoner;
+
 import me.remigio07_.chatplugin.api.common.ip_lookup.IPLookup;
 import me.remigio07_.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07_.chatplugin.api.common.ip_lookup.IPLookupMethod;
@@ -27,12 +32,8 @@ import me.remigio07_.chatplugin.api.common.ip_lookup.LocalIPLookupManager;
 import me.remigio07_.chatplugin.api.common.player.PlayerManager;
 import me.remigio07_.chatplugin.api.common.util.Utils;
 import me.remigio07_.chatplugin.api.common.util.manager.TaskManager;
-import com.github.cliftonlabs.json_simple.JsonArray;
-import com.github.cliftonlabs.json_simple.JsonException;
-import com.github.cliftonlabs.json_simple.JsonObject;
-import com.github.cliftonlabs.json_simple.Jsoner;
 
-public class IPLookupImpl extends IPLookup { //ID: 513719; key: 5CY0bXritQc1YdQj
+public class IPLookupImpl extends IPLookup {
 	
 	public IPLookupImpl() {
 		// disabled feature constructor
@@ -97,22 +98,22 @@ public class IPLookupImpl extends IPLookup { //ID: 513719; key: 5CY0bXritQc1YdQj
 	}
 	
 	@Override
-		public String formatPlaceholders(String input) {
-			return input == null ? null : input
-					.replace("{ip_address}", ipAddress.getHostAddress())
-					.replace("{isp}", isp)
-					.replace("{continent}", continent)
-					.replace("{country}", country)
-					.replace("{subdivisions}", formatSubdivisions())
-					.replace("{city}", city)
-					.replace("{inside_eu}", String.valueOf(insideEU))
-					.replace("{postal_code}", String.valueOf(postalCode))
-					.replace("{latitude}", String.valueOf(Utils.truncate(latitude, 3)))
-					.replace("{longitude}", String.valueOf(Utils.truncate(longitude, 3)))
-					.replace("{accuracy_radius_km}", String.valueOf(accuracyRadius))
-					.replace("{accuracy_radius_mi}", String.valueOf(Utils.kilometersToMiles(accuracyRadius)))
-					.replace("{accuracy_radius_nm}", String.valueOf(Utils.kilometersToNauticalMiles(accuracyRadius)));
-		}
+	public String formatPlaceholders(String input) {
+		return input == null ? null : input
+				.replace("{ip_address}", ipAddress.getHostAddress())
+				.replace("{isp}", isp)
+				.replace("{continent}", continent)
+				.replace("{country}", country)
+				.replace("{subdivisions}", formatSubdivisions())
+				.replace("{city}", city)
+				.replace("{inside_eu}", String.valueOf(insideEU))
+				.replace("{postal_code}", String.valueOf(postalCode))
+				.replace("{latitude}", String.valueOf(Utils.truncate(latitude, 3)))
+				.replace("{longitude}", String.valueOf(Utils.truncate(longitude, 3)))
+				.replace("{accuracy_radius_km}", String.valueOf(accuracyRadius))
+				.replace("{accuracy_radius_mi}", String.valueOf(Utils.kilometersToMiles(accuracyRadius)))
+				.replace("{accuracy_radius_nm}", String.valueOf(Utils.kilometersToNauticalMiles(accuracyRadius)));
+	}
 	
 	@Override
 	public List<String> formatPlaceholders(List<String> input) {

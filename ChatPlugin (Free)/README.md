@@ -1,2 +1,0 @@
-# ChatPlugin (Free)
-TODO

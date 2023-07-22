@@ -1,9 +1,0 @@
-{
-	"id": "chatplugin",
-	"name": "ChatPlugin",
-	"main": "me.remigio07_.chatplugin.Main$Velocity$MainVelocity",
-	"version": "∞",
-	"authors": ["Remigio07_"],
-	"url": "https://megaproserver.com/chatplugin",
-	"description": "A lightweight yet complete plugin which handles just too many features! Check the website for info: https://megaproserver.com/ChatPlugin"
-}

@@ -20,6 +20,8 @@ jar.enabled = false
 allprojects {
 	apply plugin: 'java'
 	apply plugin: 'eclipse'
+	compileTestJava.options.encoding = 'UTF-8'
+	javadoc.options.encoding = 'UTF-8'
 	
 	java {
 		sourceCompatibility = 1.8
@@ -29,6 +31,7 @@ allprojects {
 	compileJava {
 		options.compilerArgs.add '-Xlint:deprecation'
 		options.compilerArgs.add '-Xlint:unchecked'
+		options.encoding = 'UTF-8'
 	}
 }
 

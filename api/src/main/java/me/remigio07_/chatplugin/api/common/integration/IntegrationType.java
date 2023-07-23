@@ -59,7 +59,7 @@ public class IntegrationType<T extends ChatPluginIntegration> {
 	public static final IntegrationType<VersionIntegration> VIAVERSION = new IntegrationType<>("ViaVersion", "com.viaversion.viaversion.api.Via", Arrays.asList(Environment.values()));
 	public static final IntegrationType<AnticheatIntegration> VULCAN = new IntegrationType<>("Vulcan", "me.frep.vulcan.spigot.VulcanPlugin", Arrays.asList(Environment.BUKKIT));
 	public static final IntegrationType<RegionIntegration> WORLDGUARD = new IntegrationType<>("WorldGuard", "com.sk89q.worldguard.WorldGuard", Arrays.asList(Environment.BUKKIT, Environment.SPONGE));
-	private static final IntegrationType<?>[] VALUES = new IntegrationType[] { COMBATLOGX, ESSENTIALS, GADGETSMENU, GEYSERMC, MATRIX, MVDWPLACEHOLDERAPI, NEGATIVITY, PLACEHOLDERAPI, PLAYERPARTICLES, PROTOCOLSUPPORT, VAULT, VIAVERSION, VULCAN, WORLDGUARD };
+	private static final IntegrationType<?>[] VALUES = new IntegrationType[] { COMBATLOGX, ESSENTIALS, GADGETSMENU, GEYSERMC, LUCKPERMS, MATRIX, MVDWPLACEHOLDERAPI, NEGATIVITY, PLACEHOLDERAPI, PLAYERPARTICLES, PROTOCOLSUPPORT, ULTRACOSMETICS, VAULT, VIAVERSION, VULCAN, WORLDGUARD };
 	private String plugin, clazz;
 	private List<Environment> supportedEnvironments;
 	

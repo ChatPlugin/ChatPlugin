@@ -9,7 +9,6 @@ repositories {
 	maven { url 'https://repo.essentialsx.net/releases/' }
 	maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
 	maven { url 'https://repo.rosewooddev.io/repository/public/' }
-	maven { url 'https://nexus.sirblobman.xyz/public/' }
 }
 
 ext.libsDir = project.projectDir.path + '/libs/'
@@ -24,6 +23,7 @@ dependencies {
 	compileOnly files(libsDir + 'Matrix-7.3.10A.jar')
 	implementation files(libsDir + 'MVdWPlaceholderAPI-3.1.1.jar')
 	implementation files(libsDir + 'Negativity-2.6.jar')
+	implementation files(libsDir + 'CombatLogX-11.4.0.0.1156.jar')
 	
 	implementation 'com.github.cliftonlabs:json-simple:4.0.1'
 	implementation 'com.viaversion:viaversion-api:4.0.0'
@@ -35,7 +35,6 @@ dependencies {
 	implementation 'net.luckperms:api:5.4'
 	compileOnly 'me.clip:placeholderapi:2.11.3'
 	compileOnly 'dev.esophose:playerparticles:8.0'
-	implementation 'com.github.sirblobman.combatlogx:api:11.4-SNAPSHOT'
 }
 
 jar {

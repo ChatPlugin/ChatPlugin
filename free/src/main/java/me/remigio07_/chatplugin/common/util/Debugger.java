@@ -65,8 +65,8 @@ public class Debugger {
 		sb.append("Active threads: " + Thread.activeCount() + "x\n");
 		sb.append("\n");
 		sb.append("Uptime: " + Utils.formatTime(ManagementFactory.getRuntimeMXBean().getUptime()) + "\n");
-		sb.append("Startup time: " + ChatPlugin.getInstance().getStartupTime() + "ms\n");
-		sb.append("Last reload time: " + ChatPlugin.getInstance().getLastReloadTime() + "ms\n");
+		sb.append("Startup time: " + ChatPlugin.getInstance().getStartupTime() + " ms\n");
+		sb.append("Last reload time: " + ChatPlugin.getInstance().getLastReloadTime() + " ms\n");
 		sb.append("\n");
 		
 		if (!Environment.isProxy()) {

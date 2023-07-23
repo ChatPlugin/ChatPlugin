@@ -106,7 +106,7 @@ public class Client {
 				return temp2;
 			}
 		} socket.close();
-		LogManager.log("[SOCKETS] Client \"{0}\" did not receive a response within 5000ms so it was disconnected.", 4, id);
+		LogManager.log("[SOCKETS] Client \"{0}\" did not receive a response within 5000 ms so it was disconnected.", 4, id);
 		return ConnectionOutcome.TIMEOUT;
 	}
 	

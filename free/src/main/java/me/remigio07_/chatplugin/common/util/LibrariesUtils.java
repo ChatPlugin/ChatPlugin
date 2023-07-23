@@ -61,7 +61,7 @@ public class LibrariesUtils {
 	}
 	
 	public static void update(Library library) throws Exception {
-		LogManager.log("Updating " + library.getName() + " library (new plugin version detected)...", 0);
+		LogManager.log("Updating {0} library (new plugin version detected)...", 0, library.getName());
 		delete(library);
 		download(library);
 	}
@@ -84,7 +84,7 @@ public class LibrariesUtils {
 		
 		boolean megabyte = target.length() > Math.pow(1024, 2);
 		
-		LogManager.log(library.getName() + " library (" + MemoryUtils.formatMemory(target.length(), megabyte ? MemoryUtils.MEGABYTE : MemoryUtils.KILOBYTE) + (megabyte ? " MB" : " KB") + ") downloaded successfully in " + (System.currentTimeMillis() - ms) + "ms.", 0);
+		LogManager.log("{0} library ({1}) downloaded successfully in {2} ms.", 0, library.getName(), MemoryUtils.formatMemory(target.length(), megabyte ? MemoryUtils.MEGABYTE : MemoryUtils.KILOBYTE) + (megabyte ? " MB" : " KB"), System.currentTimeMillis() - ms);
 		relocate(library);
 	}
 	
@@ -102,7 +102,7 @@ public class LibrariesUtils {
 		Files.move(jar.toPath(), tmp.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		clazz.getMethod("run").invoke(clazz.getConstructors()[0].newInstance(tmp, jar, rules));
 		tmp.delete();
-		LogManager.log(library.getName() + " relocated successfully in " + (System.currentTimeMillis() - ms) + "ms.", 0);
+		LogManager.log("{0} relocated successfully in {1} ms.", 0, library.getName(), System.currentTimeMillis() - ms);
 	}
 	
 	public static File getTarget(Library library) {

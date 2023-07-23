@@ -280,7 +280,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("misc.only-players", "{pfx} &cOnly players can execute this command.");
 		messages.addDefault("misc.no-permission", "{pfx} &cYou do not have the permission to execute this command.");
 		messages.addDefault("misc.reload.start", "{pfx} &aChatPlugin is reloading...");
-		messages.addDefault("misc.reload.end", "{pfx} &aChatPlugin has been reloaded. Took &f{0}ms &ato complete.");
+		messages.addDefault("misc.reload.end", "{pfx} &aChatPlugin has been reloaded. Took &f{0} ms &ato complete.");
 		messages.addDefault("misc.reload.asyns-tasks", "{pfx} &cSome asyns tasks are still running. Wait a moment before reloading.");
 		messages.addDefault("misc.player-not-found", "{pfx} &f{0} &cis not online. Recheck the typing.");
 		messages.addDefault("misc.cooldown-active", "{pfx} &cA cooldown is currently active, try later.");		
@@ -293,7 +293,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("misc.debug.enabled", "{pfx} &aDebug mode enabled.");
 		messages.addDefault("misc.debug.disabled", "{pfx} &aDebug mode disabled.");
 		messages.addDefault("misc.debug.file.start", "{pfx} &aDebugging data and settings...");
-		messages.addDefault("misc.debug.file.end", "{pfx} &aDebug saved to file &f{0}&a. Took &f{1}ms &ato complete.");
+		messages.addDefault("misc.debug.file.end", "{pfx} &aDebug saved to file &f{0}&a. Took &f{1} ms &ato complete.");
 		messages.addDefault("misc.debug.file.too-fast", "{pfx} &cYou cannot generate more than a debug file per second.");
 		messages.addDefault("misc.debug.manager.info", "{pfx} &aDebugging data of &f{0}&a:");
 		messages.addDefault("misc.debug.manager.disabled", "{pfx} &cThat manager is disabled.");
@@ -319,7 +319,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.help.misc", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07_&a:\n&f&l/tps &8- &eDisplay server's ticks per second.\n&f&l/broadcast &8- &eSend a message to every online player.\n&f&l/broadcastraw &8- &eLike /broadcast, but without the prefix.\n&f&l/globalbroadcast &8- &eLike /broadcast, but cross-server.\n&f&l/ad &8- &eSend a loaded ad to one or more online players.\n&f&l/crashclient &8- &eCrash a player. Yeah, for real.\n&f&l/discordmessage &8- &eSend a message through the bot.");
 		messages.addDefault("commands.info", "{pfx} &aInfo about &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07_&a:\n&eWebsite: &fhttps://megaproserver.com/chatplugin\n&eGitHub: &fhttps://github.com/Remigio07/ChatPlugin\n&eDiscord: &fhttps://discord.gg/CPtysXTfQg");
 		messages.addDefault("commands.version", "{pfx} &aRunning &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07_&a.");
-		messages.addDefault("commands.status", "{pfx} &aCurrent server status:\n&eServer version: &f{server_version} (protocol: {server_version_protocol})\n&eChatPlugin version: &f{plugin_version}\n&eUptime: &f{uptime}\n&eTPS (1m, 5m, 15m): &f{tps_1_min_format}&f, {tps_5_min_format}&f, {tps_15_min_format}\n&eUsed memory: &f{used_memory}/{max_memory} MB\n&eAllocated memory: &f{total_memory} MB\n&eFree memory: &f{free_memory} MB\n&eStorage used: &f{used_storage}/{total_storage} GB\n&eFree storage: &f{free_storage} GB\n&eEnabled worlds: &f{enabled_worlds}x\n&eEnabled players: &f{enabled_players}x\n&eEnabled managers: &f{enabled_managers}x\n&eStartup time: &f{startup_time}ms\n&eLast reload time: &f{last_reload_time}ms");
+		messages.addDefault("commands.status", "{pfx} &aCurrent server status:\n&eServer version: &f{server_version} (protocol: {server_version_protocol})\n&eChatPlugin version: &f{plugin_version}\n&eUptime: &f{uptime}\n&eTPS (1m, 5m, 15m): &f{tps_1_min_format}&f, {tps_5_min_format}&f, {tps_15_min_format}\n&eUsed memory: &f{used_memory}/{max_memory} MB\n&eAllocated memory: &f{total_memory} MB\n&eFree memory: &f{free_memory} MB\n&eStorage used: &f{used_storage}/{total_storage} GB\n&eFree storage: &f{free_storage} GB\n&eEnabled worlds: &f{enabled_worlds}x\n&eEnabled players: &f{enabled_players}x\n&eEnabled managers: &f{enabled_managers}x\n&eStartup time: &f{startup_time} ms\n&eLast reload time: &f{last_reload_time} ms");
 		messages.addDefault("commands.scoreboard.enabled", "{pfx} &aThe scoreboard has been enabled.");
 		messages.addDefault("commands.scoreboard.disabled", "{pfx} &aThe scoreboard has been disabled.");
 		messages.addDefault("commands.bossbar.enabled", "{pfx} &aThe bossbar has been enabled.");
@@ -352,7 +352,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.warnlist.empty", "{pfx} &eThere are no active warnings.");
 		messages.addDefault("commands.mutelist.ids", "{pfx} &eActive mutes' IDs: &f{0}&e.");
 		messages.addDefault("commands.mutelist.empty", "{pfx} &eThere are no active mutes.");
-		messages.addDefault("commands.playerinfo", "{pfx} &aInformation and data about &f{player}&a:\n&ePlayer ID: &f#{player_id}\n&eUUID: &f{uuid}\n&eVersion: &f{version} (protocol: {version_protocol})\n&eIP address: &f{ip_address}\n&eISP: &f{isp}\n&eLocation: &f{subdivisions}\n&eCity: &f{city} (~{accuracy_radius_km} km)\n&ePing: &f{ping_format}ms\n&eRank: &f{rank}\n&eTag: &f{tag_prefix}{tag_name_color}{tag_suffix}\n&eLanguage: &f{language_display_name}\n&eLast login: &f{last_login} ago\n&eTime played: &f{time_played}\n&eTotal bans: &f{player_bans}x\n&eTotal warnings: &f{player_warnings}x\n&eTotal kicks: &f{player_kicks}x\n&eTotal mutes: &f{player_mutes}x\n&eMessages sent: &f{messages_sent}x");
+		messages.addDefault("commands.playerinfo", "{pfx} &aInformation and data about &f{player}&a:\n&ePlayer ID: &f#{player_id}\n&eUUID: &f{uuid}\n&eVersion: &f{version} (protocol: {version_protocol})\n&eIP address: &f{ip_address}\n&eISP: &f{isp}\n&eLocation: &f{subdivisions}\n&eCity: &f{city} (~{accuracy_radius_km} km)\n&ePing: &f{ping_format} ms\n&eRank: &f{rank}\n&eTag: &f{tag_prefix}{tag_name_color}{tag_suffix}\n&eLanguage: &f{language_display_name}\n&eLast login: &f{last_login} ago\n&eTime played: &f{time_played}\n&eTotal bans: &f{player_bans}x\n&eTotal warnings: &f{player_warnings}x\n&eTotal kicks: &f{player_kicks}x\n&eTotal mutes: &f{player_mutes}x\n&eMessages sent: &f{messages_sent}x");
 		messages.addDefault("commands.playerpunishments", "{pfx} &f{0}&e's punishments' IDs:\n&eBans: &f{1}\n&eWarnings: &f{2}\n&eKicks: &f{3}\n&eMutes: &f{4}");
 		messages.addDefault("commands.tps", "{pfx} &eTPS from last &f1m&e, &f5m&e, &f15m&e: &f{0}&e, &f{1}&e, &f{2}&e.");
 		messages.addDefault("commands.ad.send.one", "{pfx} &aAd &f{0} &ahas been successfully sent to &f{1}&a.");
@@ -499,8 +499,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("mute.silent-format.yes", "yes");
 		messages.addDefault("mute.silent-format.no", "no");
 		
-		messages.addDefault("ping.self", "{pfx} &eYou have a ping of {0}ms&e. Quality: {1}&e.");
-		messages.addDefault("ping.other", "{pfx} &f{1} &ehas a ping of {0}ms&e. Quality: {2}&e.");
+		messages.addDefault("ping.self", "{pfx} &eYou have a ping of {0} ms&e. Quality: {1}&e.");
+		messages.addDefault("ping.other", "{pfx} &f{1} &ehas a ping of {0} ms&e. Quality: {2}&e.");
 		messages.addDefault("ping.excellent.color", "&2");
 		messages.addDefault("ping.excellent.text", "&2excellent");
 		messages.addDefault("ping.great.color", "&a");
@@ -572,11 +572,11 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("proxy-messages.no-permission", "{pfx} &cYou don't have the permission to execute this command.");
 		messages.addDefault("proxy-messages.wrong-syntax", "{pfx} &cThe syntax is wrong. Usage: &f{0}&c.");
 		messages.addDefault("proxy-messages.help", "{pfx} &aCommands for &c&lChat&f&lPlugin &fv{0}&a by &9Remigio07_&a:\n&f&l/cpb status &8- &eDisplay current network status.\n&f&l/cpb debug &8- &eToggle the debug/verbose mode.\n&f&l/cpb reload &8- &eReload the ChatPlugin system.\n&f&l/cpb version &8- &eDisplay current plugin version.\n&f&l/cpb info &8- &eShow useful info about this plugin.");
-		messages.addDefault("proxy-messages.status", "{pfx} &aCurrent network status:\n&eProxy version: &f{network_version} (protocol: {network_protocol})\n&eChatPlugin version: &f{plugin_version}\n&eUptime: &f{uptime}\n&eUsed memory: &f{used_memory}/{max_memory} MB\n&eAllocated memory: &f{total_memory} MB\n&eFree memory: &f{free_memory} MB\n&eEnabled players: &f{enabled_players}x\n&eStartup time: &f{startup_time}ms\n&eLast reload time: &f{last_reload_time}ms");
+		messages.addDefault("proxy-messages.status", "{pfx} &aCurrent network status:\n&eProxy version: &f{network_version} (protocol: {network_protocol})\n&eChatPlugin version: &f{plugin_version}\n&eUptime: &f{uptime}\n&eUsed memory: &f{used_memory}/{max_memory} MB\n&eAllocated memory: &f{total_memory} MB\n&eFree memory: &f{free_memory} MB\n&eEnabled players: &f{enabled_players}x\n&eStartup time: &f{startup_time} ms\n&eLast reload time: &f{last_reload_time} ms");
 		messages.addDefault("proxy-messages.debug.enabled", "{pfx} &aDebug mode enabled.");
 		messages.addDefault("proxy-messages.debug.disabled", "{pfx} &aDebug mode disabled.");
 		messages.addDefault("proxy-messages.reload.start", "{pfx} &aChatPlugin is reloading...");
-		messages.addDefault("proxy-messages.reload.end", "{pfx} &aChatPlugin has been reloaded. Took &f{0}ms &ato complete.");
+		messages.addDefault("proxy-messages.reload.end", "{pfx} &aChatPlugin has been reloaded. Took &f{0} ms &ato complete.");
 		messages.addDefault("proxy-messages.version", "{pfx} &aRunning &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07_&a.");
 		messages.addDefault("proxy-messages.info", "{pfx} &aInfo about &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07_&a:\n&eWebsite: &fhttps://megaproserver.com/chatplugin\n&eGitHub: &fhttps://github.com/Remigio07/ChatPlugin\n&eDiscord: &fhttps://discord.gg/CPtysXTfQg");
 		
@@ -665,8 +665,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.hover-info.player.click.action", "SUGGEST_TEXT");
 		chat.addDefault("chat.hover-info.player.click.value", "/msg {player} ");
 		chat.addDefault("chat.hover-info.player.placeholder-types", Arrays.asList("PLAYER"));
-		chat.addDefault("chat.hover-info.player.hovers.english", "&ePlayer: &f{player}\n&ePing: {ping_format}ms\n&d&oClick = send /msg");
-		chat.addDefault("chat.hover-info.player.hovers.italian", "&eGiocatore: &f{player}\n&ePing: {ping_format}ms\n&d&oClick = invia /msg");
+		chat.addDefault("chat.hover-info.player.hovers.english", "&ePlayer: &f{player}\n&ePing: {ping_format} ms\n&d&oClick = send /msg");
+		chat.addDefault("chat.hover-info.player.hovers.italian", "&eGiocatore: &f{player}\n&ePing: {ping_format} ms\n&d&oClick = invia /msg");
 		
 		chat.addDefault("chat.hover-info.url.enabled", true);
 		chat.addDefault("chat.hover-info.url.default-https", true);
@@ -781,8 +781,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		defaultScoreboard.addDefault("lines.3.values.english", Arrays.asList("&aRank: &f{rank}", "&eRank: &f{rank}", "&6Rank: &f{rank}", "&eRank: &f{rank}"));
 		defaultScoreboard.addDefault("lines.3.values.italian", Arrays.asList("&aRank: &f{rank}", "&eRank: &f{rank}", "&6Rank: &f{rank}", "&eRank: &f{rank}"));
 		defaultScoreboard.addDefault("lines.3.sending-timeout-ms", 250);
-		defaultScoreboard.addDefault("lines.4.values.english", Arrays.asList("&aPing: &f{ping_format}ms", "&ePing: &f{ping_format}ms", "&6Ping: &f{ping_format}ms", "&ePing: &f{ping_format}ms"));
-		defaultScoreboard.addDefault("lines.4.values.italian", Arrays.asList("&aPing: &f{ping_format}ms", "&ePing: &f{ping_format}ms", "&6Ping: &f{ping_format}ms", "&ePing: &f{ping_format}ms"));
+		defaultScoreboard.addDefault("lines.4.values.english", Arrays.asList("&aPing: &f{ping_format} ms", "&ePing: &f{ping_format} ms", "&6Ping: &f{ping_format} ms", "&ePing: &f{ping_format} ms"));
+		defaultScoreboard.addDefault("lines.4.values.italian", Arrays.asList("&aPing: &f{ping_format} ms", "&ePing: &f{ping_format} ms", "&6Ping: &f{ping_format} ms", "&ePing: &f{ping_format} ms"));
 		defaultScoreboard.addDefault("lines.4.sending-timeout-ms", 250);
 		defaultScoreboard.addDefault("lines.5.values.english", Arrays.asList("&aOnline: &f{online}/{max_players}", "&eOnline: &f{online}/{max_players}", "&6Online: &f{online}/{max_players}", "&eOnline: &f{online}/{max_players}"));
 		defaultScoreboard.addDefault("lines.5.values.italian", Arrays.asList("&aOnline: &f{online}/{max_players}", "&eOnline: &f{online}/{max_players}", "&6Online: &f{online}/{max_players}", "&eOnline: &f{online}/{max_players}"));
@@ -1097,8 +1097,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.status.";
 		mainGUI.addDefault(path + "display-names.english", "&d&lServer status");
 		mainGUI.addDefault(path + "display-names.italian", "&d&lStato del server");
-		mainGUI.addDefault(path + "lores.english", Arrays.asList("&eOS: &f{server_os_name} {server_os_version}&e, Java: &f{server_java_version}", "&eServer: &f{server_version} (protocol: &f{server_version_protocol})", "&eChatPlugin version: &f{plugin_version}", "&eUptime: &f{uptime}", "&eTPS (1m, 5m, 15m): &f{tps_1_min_format}&f, {tps_5_min_format}&f, {tps_15_min_format}", "&eUsed memory: &f{used_memory}/{max_memory} MB", "&eAllocated: &f{total_memory} MB&e, free: &f{free_memory} MB", "&eCurrent threads count: &f{active_threads}x", "&eUsed storage: &f{used_storage}/{total_storage} GB", "&eFree storage: &f{free_storage} GB", "&eEnabled worlds: &f{enabled_worlds}x&e, &f{enabled_players} &eplayers", "&eEnabled managers: &f{enabled_managers}x", "&eStartup: &f{startup_time}ms&e, last reload: &f{last_reload_time}ms"));
-		mainGUI.addDefault(path + "lores.italian", Arrays.asList("&eOS: &f{server_os_name} {server_os_version}&e, Java: &f{server_java_version}", "&eServer: &f{server_version} (protocollo: &f{server_version_protocol})", "&eVersione ChatPlugin: &f{plugin_version}", "&eUptime: &f{uptime}", "&eTPS (1m, 5m, 15m): &f{tps_1_min_format}&f, {tps_5_min_format}&f, {tps_15_min_format}", "&eUtilizzo memoria: &f{used_memory}/{max_memory} MB", "&eAllocata: &f{total_memory} MB&e, libera: &f{free_memory} MB", "&eConteggio threads attivi: &f{active_threads}x", "&eStorage utilizzato: &f{used_storage}/{total_storage} GB", "&eStorage libero: &f{free_storage} GB", "&eMondi abilitati: &f{enabled_worlds}x&e, &f{enabled_players} &egiocatori", "&eManagers abilitati: &f{enabled_managers}x", "&eStartup: &f{startup_time}ms&e, ultimo reload: &f{last_reload_time}ms"));
+		mainGUI.addDefault(path + "lores.english", Arrays.asList("&eOS: &f{server_os_name} {server_os_version}&e, Java: &f{server_java_version}", "&eServer: &f{server_version} (protocol: &f{server_version_protocol})", "&eChatPlugin version: &f{plugin_version}", "&eUptime: &f{uptime}", "&eTPS (1m, 5m, 15m): &f{tps_1_min_format}&f, {tps_5_min_format}&f, {tps_15_min_format}", "&eUsed memory: &f{used_memory}/{max_memory} MB", "&eAllocated: &f{total_memory} MB&e, free: &f{free_memory} MB", "&eCurrent threads count: &f{active_threads}x", "&eUsed storage: &f{used_storage}/{total_storage} GB", "&eFree storage: &f{free_storage} GB", "&eEnabled worlds: &f{enabled_worlds}x&e, &f{enabled_players} &eplayers", "&eEnabled managers: &f{enabled_managers}x", "&eStartup: &f{startup_time} ms&e, last reload: &f{last_reload_time} ms"));
+		mainGUI.addDefault(path + "lores.italian", Arrays.asList("&eOS: &f{server_os_name} {server_os_version}&e, Java: &f{server_java_version}", "&eServer: &f{server_version} (protocollo: &f{server_version_protocol})", "&eVersione ChatPlugin: &f{plugin_version}", "&eUptime: &f{uptime}", "&eTPS (1m, 5m, 15m): &f{tps_1_min_format}&f, {tps_5_min_format}&f, {tps_15_min_format}", "&eUtilizzo memoria: &f{used_memory}/{max_memory} MB", "&eAllocata: &f{total_memory} MB&e, libera: &f{free_memory} MB", "&eConteggio threads attivi: &f{active_threads}x", "&eStorage utilizzato: &f{used_storage}/{total_storage} GB", "&eStorage libero: &f{free_storage} GB", "&eMondi abilitati: &f{enabled_worlds}x&e, &f{enabled_players} &egiocatori", "&eManagers abilitati: &f{enabled_managers}x", "&eStartup: &f{startup_time} ms&e, ultimo reload: &f{last_reload_time} ms"));
 		mainGUI.addDefault(path + "material", Environment.isSponge() || VersionUtils.getVersion().isAtLeast(Version.V1_13) ? "COMMAND_BLOCK" : "COMMAND");
 		mainGUI.addDefault(path + "keep-open", true);
 		mainGUI.addDefault(path + "glowing", true);
@@ -1504,8 +1504,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.display-names.english", "&c&l{player}");
 		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.display-names.italian", "&c&l{player}");
-		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.lores.english", Arrays.asList("&eServer: &f{server}&e, TPS: &f{tps}", "&eAnticheat: &f{anticheat}", "&eVersion: &f{version} ({version_protocol})", "&ePing: &f{ping_format}ms", "", "&eRecent violations:", "{violations}", "", "&d&oClick to teleport you there!"));
-		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.lores.italian", Arrays.asList("&eServer: &f{server}&e, TPS: &f{tps}", "&eAnticheat: &f{anticheat}", "&eVersione: &f{version} ({version_protocol})", "&ePing: &f{ping_format}ms", "", "&eViolazioni recenti:", "{violations}", "", "&d&oClicca per teletrasportarti!"));
+		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.lores.english", Arrays.asList("&eServer: &f{server}&e, TPS: &f{tps}", "&eAnticheat: &f{anticheat}", "&eVersion: &f{version} ({version_protocol})", "&ePing: &f{ping_format} ms", "", "&eRecent violations:", "{violations}", "", "&d&oClick to teleport you there!"));
+		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.lores.italian", Arrays.asList("&eServer: &f{server}&e, TPS: &f{tps}", "&eAnticheat: &f{anticheat}", "&eVersione: &f{version} ({version_protocol})", "&ePing: &f{ping_format} ms", "", "&eViolazioni recenti:", "{violations}", "", "&d&oClicca per teletrasportarti!"));
 		
 		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
 			violationsGUI.addDefault("settings.filling-function.icon-layouts.player.material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
@@ -1591,8 +1591,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.overview.";
 		playerInfoGUI.addDefault(path + "display-names.english", "&a&l{player}");
 		playerInfoGUI.addDefault(path + "display-names.italian", "&a&l{player}");
-		playerInfoGUI.addDefault(path + "lores.english", Arrays.asList("&eUUID: &f{uuid}", "&ePlayer ID: &f#{player_id}", "&eVersion: &f{version} (protocol: {version_protocol})", "&eLanguage: &f{language_display_name}", "&ePing: &f{ping_format}ms", "&eTime played: &f{time_played}", "&eLast login: &f{last_login} ago", "&eMessages sent: &f{messages_sent}x"));
-		playerInfoGUI.addDefault(path + "lores.italian", Arrays.asList("&eUUID: &f{uuid}", "&eID giocatore: &f#{player_id}", "&eVersione: &f{version} (protocollo: {version_protocol})", "&eLingua: &f{language_display_name}", "&ePing: &f{ping_format}ms", "&eTempo di gioco: &f{time_played}", "&eUltimo login: &f{last_login} fa", "&eMessaggi inviati: &f{messages_sent}x"));
+		playerInfoGUI.addDefault(path + "lores.english", Arrays.asList("&eUUID: &f{uuid}", "&ePlayer ID: &f#{player_id}", "&eVersion: &f{version} (protocol: {version_protocol})", "&eLanguage: &f{language_display_name}", "&ePing: &f{ping_format} ms", "&eTime played: &f{time_played}", "&eLast login: &f{last_login} ago", "&eMessages sent: &f{messages_sent}x"));
+		playerInfoGUI.addDefault(path + "lores.italian", Arrays.asList("&eUUID: &f{uuid}", "&eID giocatore: &f#{player_id}", "&eVersione: &f{version} (protocollo: {version_protocol})", "&eLingua: &f{language_display_name}", "&ePing: &f{ping_format} ms", "&eTempo di gioco: &f{time_played}", "&eUltimo login: &f{last_login} fa", "&eMessaggi inviati: &f{messages_sent}x"));
 		
 		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
 			playerInfoGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
@@ -1807,8 +1807,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.display-names.english", "&c&l{cheat_id}");
 		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.display-names.italian", "&c&l{cheat_id}");
-		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.lores.english", Arrays.asList("&ePing: &f{ping_format}ms&e, TPS: &f{tps}", "&eAnticheat: &f{anticheat}", "&eLast time: &f{last_time} ago", "&eComponent: &f{component}", "&eViolations: &f{amount}x", "&d&oClick to teleport you there!"));
-		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.lores.italian", Arrays.asList("&ePing: &f{ping_format}ms&e, TPS: &f{tps}", "&eAnticheat: &f{anticheat}", "&eUltima volta: &f{last_time} fa", "&eComponente: &f{component}", "&eViolazioni: &f{amount}x", "&d&oClicca per teletrasportarti!"));
+		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.lores.english", Arrays.asList("&ePing: &f{ping_format} ms&e, TPS: &f{tps}", "&eAnticheat: &f{anticheat}", "&eLast time: &f{last_time} ago", "&eComponent: &f{component}", "&eViolations: &f{amount}x", "&d&oClick to teleport you there!"));
+		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.lores.italian", Arrays.asList("&ePing: &f{ping_format} ms&e, TPS: &f{tps}", "&eAnticheat: &f{anticheat}", "&eUltima volta: &f{last_time} fa", "&eComponente: &f{component}", "&eViolazioni: &f{amount}x", "&d&oClicca per teletrasportarti!"));
 		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.material", "AIR");
 		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.commands", Arrays.asList("p: silentteleport player {player}"));
 		
@@ -2110,11 +2110,11 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		discordIntegration.addDefault(path + "reload-start.thumbnail", "https://i.imgur.com/00DHN3z.png");
 		discordIntegration.addDefault(path + "reload-start.color", "55FF55");
 		discordIntegration.addDefault(path + "reload-end.title.text", "Reloaded successfully");
-		discordIntegration.addDefault(path + "reload-end.description", "The bot has been reloaded. Took **{last_reload_time}ms** to complete.");
+		discordIntegration.addDefault(path + "reload-end.description", "The bot has been reloaded. Took **{last_reload_time} ms** to complete.");
 		discordIntegration.addDefault(path + "reload-end.thumbnail", "https://i.imgur.com/LYPzmVV.png");
 		discordIntegration.addDefault(path + "reload-end.color", "55FF55");
 		discordIntegration.addDefault(path + "status.title.text", "Current server status");
-		discordIntegration.addDefault(path + "status.description", "**OS:** {os_name} {os_version}, **Java:** {java_version}\n**Environment:** {environment} {environment_version}\n**ChatPlugin:** {chatplugin_version}, **JDA:** {jda_version}\n**Uptime:** {uptime}\n**Used memory:** {used_memory}/{max_memory} MB\n**Allocated:** {total_memory} MB, **free:** {free_memory} MB\n**Current threads count:** {active_threads}x\n**Used storage:** {used_storage}/{total_storage} GB\n**Free storage:** {free_storage} GB\n**Enabled players:** {enabled_players}x\n**Startup:** {startup_time}ms, **last reload:** {last_reload_time}ms");
+		discordIntegration.addDefault(path + "status.description", "**OS:** {os_name} {os_version}, **Java:** {java_version}\n**Environment:** {environment} {environment_version}\n**ChatPlugin:** {chatplugin_version}, **JDA:** {jda_version}\n**Uptime:** {uptime}\n**Used memory:** {used_memory}/{max_memory} MB\n**Allocated:** {total_memory} MB, **free:** {free_memory} MB\n**Current threads count:** {active_threads}x\n**Used storage:** {used_storage}/{total_storage} GB\n**Free storage:** {free_storage} GB\n**Enabled players:** {enabled_players}x\n**Startup:** {startup_time} ms, **last reload:** {last_reload_time} ms");
 		discordIntegration.addDefault(path + "status.thumbnail", "https://i.imgur.com/ovtYIIz.png");
 		discordIntegration.addDefault(path + "status.color", "55FF55");
 		discordIntegration.addDefault(path + "version.title.text", "Current plugin version");

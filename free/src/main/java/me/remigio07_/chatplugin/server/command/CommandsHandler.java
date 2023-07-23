@@ -79,7 +79,7 @@ public abstract class CommandsHandler {
 	}
 	
 	protected static void printTotalLoaded(long ms) {
-		LogManager.log("Loaded " + total + " commands in " + (System.currentTimeMillis() - ms) + "ms.", 4);
+		LogManager.log("Loaded {0} commands in {1} ms.", 4, total, System.currentTimeMillis() - ms);
 	}
 	
 	public static void executeCommands(ChatPluginServerPlayer player, List<String> commands, long delay) {

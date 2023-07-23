@@ -159,7 +159,7 @@ public class SpongePlayerManager extends ServerPlayerManager {
 			ScoreboardManager.getInstance().getScoreboard("join-event").addPlayer(serverPlayer);
 		players.put(player.getUUID(), serverPlayer);
 		new ServerPlayerLoadEvent(serverPlayer, (int) ms).call();
-		LogManager.log("Player {0} has been loaded in {1}ms.", 4, player.getName(), ms = System.currentTimeMillis() - ms);
+		LogManager.log("Player {0} has been loaded in {1} ms.", 4, player.getName(), ms = System.currentTimeMillis() - ms);
 		return (int) ms;
 	}
 	
@@ -197,7 +197,7 @@ public class SpongePlayerManager extends ServerPlayerManager {
 			StorageConnector.getInstance().setPlayerData(PlayersDataType.TIME_PLAYED, serverPlayer, StorageConnector.getInstance().getPlayerData(PlayersDataType.TIME_PLAYED, serverPlayer) + (System.currentTimeMillis() - serverPlayer.getLoginTime()));
 		} catch (Exception e) {
 			LogManager.log("{0} occurred while setting {1}'s last logout or time played in the storage: {2}", 2, e.getClass().getSimpleName(), serverPlayer.getName(), e.getMessage());
-		} LogManager.log("Player {0} has been unloaded in {1}ms.", 4, serverPlayer.getName(), ms = System.currentTimeMillis() - ms);
+		} LogManager.log("Player {0} has been unloaded in {1} ms.", 4, serverPlayer.getName(), ms = System.currentTimeMillis() - ms);
 		return (int) ms;
 	}
 	

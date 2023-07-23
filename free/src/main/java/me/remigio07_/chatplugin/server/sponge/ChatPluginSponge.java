@@ -87,7 +87,7 @@ public class ChatPluginSponge extends ChatPlugin {
 				long ms2 = System.currentTimeMillis();
 				
 				if ((metrics = new SpongeMetrics(Sponge.getPluginManager().getPlugin("chatplugin").get(), 12758)).load().areMetricsEnabled())
-					LogManager.log("[ASYNC] Metrics loaded in {0}ms.", 4, System.currentTimeMillis() - ms2);
+					LogManager.log("[ASYNC] Metrics loaded in {0} ms.", 4, System.currentTimeMillis() - ms2);
 			}, 0L);
 		} catch (ChatPluginManagerException e) {
 			String message = e.getMessage() + ". Contact support if you are unable to solve the issue.";
@@ -96,7 +96,7 @@ public class ChatPluginSponge extends ChatPlugin {
 				System.err.println(message);
 			else LogManager.log(message, 2);
 			return -1;
-		} LogManager.log("Ready. Plugin loaded successfully in {0}ms.", 0, startupTime = (int) (System.currentTimeMillis() - ms));
+		} LogManager.log("Ready. Plugin loaded successfully in {0} ms.", 0, startupTime = (int) (System.currentTimeMillis() - ms));
 		new ChatPluginLoadEvent(startupTime).call();
 		
 		started = loaded = true;
@@ -113,7 +113,7 @@ public class ChatPluginSponge extends ChatPlugin {
 		try {
 			LogManager.log("Reloading ChatPlugin...", 0);
 			managers.reloadManagers();
-			LogManager.log("Plugin reloaded successfully in {0}ms.", 0, lastReloadTime = (int) (System.currentTimeMillis() - ms));
+			LogManager.log("Plugin reloaded successfully in {0} ms.", 0, lastReloadTime = (int) (System.currentTimeMillis() - ms));
 			new ChatPluginReloadEvent(lastReloadTime).call();
 			return lastReloadTime;
 		} catch (ChatPluginManagerException e) {
@@ -145,7 +145,7 @@ public class ChatPluginSponge extends ChatPlugin {
 			Sponge.getEventManager().unregisterPluginListeners(SpongeBootstrapper.getInstance());
 			// ChatPlugin's stuff which might crash
 			managers.unloadManagers();
-			LogManager.log("Plugin unloaded successfully in {0}ms.", 3, ms = System.currentTimeMillis() - ms); // XXX might not work (called after .unloadManagers())
+			LogManager.log("Plugin unloaded successfully in {0} ms.", 3, ms = System.currentTimeMillis() - ms); // XXX might not work (called after .unloadManagers())
 			return (int) ms;
 		} catch (NoClassDefFoundError e) {
 			System.err.println("You cannot replace the plugin JAR while the server is running. Reloads are supported but not in this case; shutting down...");
@@ -211,7 +211,7 @@ public class ChatPluginSponge extends ChatPlugin {
 								
 								if (startupTime == -1)
 									sender.sendMessage(new TextAdapter("\u00A7cFailed to load. Check the console for the error message.").spongeValue());
-								else sender.sendMessage(new TextAdapter("\u00A7aChatPlugin has been loaded successfully in \u00A7f" + startupTime + "ms\u00A7a. You should anyway restart as soon as possible.").spongeValue());
+								else sender.sendMessage(new TextAdapter("\u00A7aChatPlugin has been loaded successfully in \u00A7f" + startupTime + " ms\u00A7a. You should anyway restart as soon as possible.").spongeValue());
 							} else sender.sendMessage(new TextAdapter("\u00A7cYou do not have the permission to execute this command.").spongeValue());
 						} else sender.sendMessage(new TextAdapter("\u00A7cThe syntax is wrong. Usage: \u00A7f/chatplugin recover\u00A7c.").spongeValue());
 						return CommandResult.success();

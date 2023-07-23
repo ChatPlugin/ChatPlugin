@@ -106,7 +106,7 @@ public abstract class ConfigurationManager implements ChatPluginManager {
 		
 		for (Configuration configuration : configurations.values())
 			configuration.load();
-		LogManager.log("Loaded {0} configuration files in {1}ms.", 3, configurations.size(), System.currentTimeMillis() - ms);
+		LogManager.log("Loaded {0} configuration files in {1} ms.", 3, configurations.size(), System.currentTimeMillis() - ms);
 	}
 	
 	/**
@@ -121,7 +121,7 @@ public abstract class ConfigurationManager implements ChatPluginManager {
 			if (!configuration.getFile().exists())
 				configuration.createFile();
 			configuration.save();
-		} LogManager.log("Saved {0} configuration files in {1}ms.", 3, configurations.size(), System.currentTimeMillis() - ms);
+		} LogManager.log("Saved {0} configuration files in {1} ms.", 3, configurations.size(), System.currentTimeMillis() - ms);
 	}
 	
 	protected void putConfiguration(Configuration configuration) {

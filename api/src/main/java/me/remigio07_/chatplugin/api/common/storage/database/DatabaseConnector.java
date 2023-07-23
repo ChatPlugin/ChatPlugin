@@ -232,7 +232,7 @@ public abstract class DatabaseConnector extends StorageConnector {
 				} catch (SQLException e) {
 					LogManager.log("SQLException occurred while cleaning old players from the database: {0}", 2, e.getMessage());
 				} if (old > 0)
-					LogManager.log("[ASYNC] Cleaned {0} old player{1} from the database in {2}ms.", 4, old, old == 1 ? "" : "s", System.currentTimeMillis() - ms);
+					LogManager.log("[ASYNC] Cleaned {0} old player{1} from the database in {2} ms.", 4, old, old == 1 ? "" : "s", System.currentTimeMillis() - ms);
 			}, 0L);
 	}
 	

@@ -15,6 +15,7 @@
 
 package me.remigio07_.chatplugin.server.join_quit;
 
+import me.remigio07_.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07_.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07_.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07_.chatplugin.api.common.util.manager.ChatPluginManagerException;
@@ -49,11 +50,12 @@ public class SuggestedVersionManagerImpl extends SuggestedVersionManager {
 	
 	@Override
 	public void check(ChatPluginServerPlayer player) {
-		if (enabled && player.getVersion().getProtocol() < version.getProtocol())
-			TaskManager.runAsync(() -> {
-				if (player != null)
-					player.sendMessage(translate(player.getLanguage().getMessage("misc.suggest-version")));
-			}, delay);
+		if (!enabled || player.getVersion().isAtLeast(version) || (IntegrationType.GEYSERMC.isEnabled() && IntegrationType.GEYSERMC.get().isBedrockPlayer(player.toAdapter())))
+			return;
+		TaskManager.runAsync(() -> {
+			if (player != null)
+				player.sendMessage(translate(player.getLanguage().getMessage("misc.suggest-version")));
+		}, delay);
 	}
 	
 	private String translate(String input) {

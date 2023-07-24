@@ -213,7 +213,7 @@ public class Utils {
 			return Sponge.getServer().getMaxPlayers();
 		case BUNGEECORD:
 			try {
-				return (int) Class.forName("net.md-5.bungee.conf.Configuration").getMethod("getPlayerLimit").invoke(invokeBungeeCordMethod("getConfig", new Class<?>[0]));
+				return (int) Class.forName("net.md-5.bungee.conf.Configuration").getMethod("getPlayerLimit").invoke(invokeBungeeCordMethod("getConfig", null));
 			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -224,8 +224,8 @@ public class Utils {
 	
 	public static Object invokeBungeeCordMethod(String name, Class<?>[] types, Object... args) {
 		try {
-			Class<?> clazz = Class.forName("net.md-5.bungee.BungeeCord");
-			return clazz.getMethod(name, types).invoke(clazz.getMethod("getInstance").invoke(null));
+			Class<?> clazz = Class.forName("net.md_5.bungee.BungeeCord");
+			return clazz.getMethod(name, types != null && types.length == 0 ? null : types).invoke(clazz.getMethod("getInstance").invoke(null), args);
 		} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
 		} return null;

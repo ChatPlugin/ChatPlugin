@@ -16,6 +16,7 @@
 package me.remigio07_.chatplugin.api.common.integration;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import me.remigio07_.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07_.chatplugin.api.common.util.manager.ChatPluginManager;
@@ -30,7 +31,7 @@ public abstract class IntegrationManager implements ChatPluginManager {
 	
 	protected static IntegrationManager instance;
 	protected boolean enabled;
-	protected HashMap<IntegrationType<? extends ChatPluginIntegration>, ChatPluginIntegration> integrations = new HashMap<>();
+	protected Map<IntegrationType<? extends ChatPluginIntegration>, ChatPluginIntegration> integrations = new HashMap<>();
 	protected long loadTime;
 	
 	@Override
@@ -58,7 +59,7 @@ public abstract class IntegrationManager implements ChatPluginManager {
 	 * 
 	 * @return Integrations map
 	 */
-	public HashMap<IntegrationType<?>, ChatPluginIntegration> getIntegrations() {
+	public Map<IntegrationType<?>, ChatPluginIntegration> getIntegrations() {
 		return integrations;
 	}
 	

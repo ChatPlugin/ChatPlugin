@@ -334,7 +334,7 @@ public class PlayerAdapter {
 			players = Sponge.getServer().getOnlinePlayers();
 			break;
 		case BUNGEECORD:
-			players = (Collection<?>) Utils.invokeBungeeCordMethod("getPlayers", new Class<?>[0]);
+			players = (Collection<?>) Utils.invokeBungeeCordMethod("getPlayers", null);
 			break;
 		case VELOCITY:
 			players = VelocityBootstrapper.getInstance().getProxy().getAllPlayers();

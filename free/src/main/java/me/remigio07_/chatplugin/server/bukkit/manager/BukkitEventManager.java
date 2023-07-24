@@ -120,7 +120,7 @@ public class BukkitEventManager extends EventManager {
 		processJoinEvent(player, false);
 	}
 	
-	void processJoinEvent(PlayerAdapter playerAdapter, boolean vanished) {
+	public void processJoinEvent(PlayerAdapter playerAdapter, boolean vanished) {
 		ServerPlayerManager.getInstance().loadPlayer(playerAdapter);
 		
 		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(playerAdapter.getUUID());

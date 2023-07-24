@@ -19,11 +19,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import me.remigio07_.chatplugin.api.ChatPlugin;
 import me.remigio07_.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07_.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07_.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07_.chatplugin.api.common.util.manager.ChatPluginManagers;
 import me.remigio07_.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07_.chatplugin.api.common.util.manager.TaskManager;
@@ -334,7 +336,7 @@ public class ChatPluginCommand extends BaseCommand {
 						if (manager.equalsIgnoreCase(args[1])) {
 							if (Debugger.getEnabledManagersNames().contains(manager)) {
 								sender.sendMessage(language.getMessage("misc.debug.manager.info", manager + "Manager"));
-								sender.sendMessage(Debugger.getContent(ChatPluginManagers.getInstance().getManager(manager)).replaceAll(" +", " ").trim());
+								sender.sendMessage(Debugger.getContent(getOriginalClass(ChatPluginManagers.getInstance().getManager(manager))).replaceAll(" +", " ").trim());
 							} else sender.sendMessage(language.getMessage("misc.debug.manager.disabled"));
 							return;
 						}
@@ -342,6 +344,13 @@ public class ChatPluginCommand extends BaseCommand {
 					break;
 				}
 			}
+		}
+		
+		private static Class<? extends ChatPluginManager> getOriginalClass(ChatPluginManager manager) {
+			for (Entry<Class<? extends ChatPluginManager>, ChatPluginManager> entry : ChatPluginManagers.getInstance().getManagers().entrySet())
+				if (entry.getValue().equals(manager))
+					return entry.getKey();
+			return null;
 		}
 		
 	}

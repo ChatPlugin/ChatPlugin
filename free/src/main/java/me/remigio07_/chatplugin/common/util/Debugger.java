@@ -91,7 +91,7 @@ public class Debugger {
 		sb.append(TWO_SPACES + "enabled: " + Utils.getStringFromList(getEnabledManagersNames(), false, true) + "\n");
 		sb.append(TWO_SPACES + "amount: " + ChatPluginManagers.getInstance().getEnabledManagers().size() + "x\n");
 		sb.append(TWO_SPACES + "values:\n");
-		ChatPluginManagers.getInstance().getManagers().keySet().stream().filter(clazz -> ChatPluginManagers.getInstance().getManager(clazz).isEnabled()).forEach(clazz -> sb.append(FOUR_SPACES + clazz.getSimpleName().substring(0, clazz.getSimpleName().indexOf("Manager")) + ":\n" + getContent(ChatPluginManagers.getInstance().getManager(clazz))));
+		ChatPluginManagers.getInstance().getManagers().keySet().stream().filter(clazz -> ChatPluginManagers.getInstance().getManager(clazz).isEnabled()).forEach(clazz -> sb.append(FOUR_SPACES + clazz.getSimpleName().substring(0, clazz.getSimpleName().indexOf("Manager")) + ":\n" + getContent(clazz)));
 		return ChatColor.stripColor(sb.toString());
 	}
 	
@@ -103,8 +103,8 @@ public class Debugger {
 		return names;
 	}
 	
-	public static String getContent(ChatPluginManager manager) {
-		return formatFields(getInstanceFields(manager)) + "\n";
+	public static String getContent(Class<? extends ChatPluginManager> clazz) {
+		return formatFields(getInstanceFields(clazz, ChatPluginManagers.getInstance().getManager(clazz))) + "\n";
 	}
 	
 	public static String writeToFile() {
@@ -142,36 +142,36 @@ public class Debugger {
 		} return sb.toString();
 	}
 	
-	public static LinkedHashMap<String, Object> getInstanceFields(Object object) {
+	public static LinkedHashMap<String, Object> getInstanceFields(Class<? extends ChatPluginManager> clazz, ChatPluginManager manager) {
 		LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
-		Class<?> clazz = null;
+		Class<?> clazz2 = manager.getClass();
 		
-		while ((clazz = clazz == null ? object.getClass().getSuperclass() : clazz.getSuperclass()).getPackage().getName().startsWith("me.remigio07_.chatplugin")) {
-			for (Field field : clazz.getDeclaredFields()) {
-				if (field.getName().startsWith("$"))
-					continue;
+		while (clazz2 != clazz)
+			clazz2 = clazz2.getSuperclass();
+		for (Field field : clazz2.getDeclaredFields()) {
+			if (field.getName().startsWith("$"))
+				continue;
+			try {
+				field.get(null);
+			} catch (NoClassDefFoundError e) {
+				continue;
+			} catch (NullPointerException | IllegalArgumentException | IllegalAccessException e) {
+				boolean accessible = field.isAccessible();
+				
+				if (!accessible)
+					field.setAccessible(true);
+				Object value;
 				try {
-					field.get(null);
-				} catch (NoClassDefFoundError e) {
+					value = field.get(manager);
+				} catch (NoClassDefFoundError e2) {
 					continue;
-				} catch (NullPointerException | IllegalArgumentException | IllegalAccessException e) {
-					boolean accessible = field.isAccessible();
-					
-					if (!accessible)
-						field.setAccessible(true);
-					Object value;
-					try {
-						value = field.get(object);
-					} catch (NoClassDefFoundError e2) {
-						continue;
-					} catch (IllegalArgumentException | IllegalAccessException e2) {
-						value = null;
+				} catch (IllegalArgumentException | IllegalAccessException e2) {
+					value = null;
 //					} fields.put(field.getName() + (value == null ? ":" + field.getGenericType().getTypeName() : ""), field.isAnnotationPresent(SensitiveData.class) ? "<hidden>" : value);
-					} fields.put(field.getName() + ":" + (field.getType().isPrimitive() ? "\u00A7c" + (field.getClass().equals(Integer.class) ? "int" : field.getClass().equals(Character.class) ? "char" : field.getType().getSimpleName().toLowerCase()) : field.getType().isEnum() ? "\u00A75" + field.getType().getSimpleName() : "\u00A79" + field.getType().getSimpleName()), field.isAnnotationPresent(SensitiveData.class) ? "<hidden>" : value);
-					
-					if (!accessible)
-						field.setAccessible(false);
-				}
+				} fields.put(field.getName() + ":" + (field.getType().isPrimitive() ? "\u00A7c" + (field.getClass().equals(Integer.class) ? "int" : field.getClass().equals(Character.class) ? "char" : field.getType().getSimpleName().toLowerCase()) : field.getType().isEnum() ? "\u00A75" + field.getType().getSimpleName() : "\u00A79" + field.getType().getSimpleName()), field.isAnnotationPresent(SensitiveData.class) ? "<hidden>" : value);
+				
+				if (!accessible)
+					field.setAccessible(false);
 			}
 		} return fields;
 	}

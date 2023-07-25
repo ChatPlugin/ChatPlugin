@@ -112,8 +112,8 @@ public enum ScoreboardEvent {
 	/**
 	 * Event triggered when a player changes their language.
 	 */
-	@EventArguments(types = String.class, descriptions = "Old locale's ID")
-	LOCALE_CHANGE("locale_change_event_old_locale"),
+	@EventArguments(types = String.class, descriptions = "Old locale's language")
+	LOCALE_CHANGE("locale_change_event_old_locale_language"),
 	
 	/**
 	 * Event triggered when a player changes their resource pack's status.

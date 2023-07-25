@@ -24,6 +24,7 @@ import org.spongepowered.api.event.EventListener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent.Teleport;
+import org.spongepowered.api.event.entity.living.humanoid.player.PlayerChangeClientSettingsEvent;
 import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.event.message.MessageChannelEvent.Chat;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
@@ -32,9 +33,11 @@ import org.spongepowered.api.event.network.ClientConnectionEvent.Join;
 
 import me.remigio07_.chatplugin.api.common.event.EventManager;
 import me.remigio07_.chatplugin.api.common.integration.IntegrationType;
+import me.remigio07_.chatplugin.api.common.player.PlayerManager;
 import me.remigio07_.chatplugin.api.common.util.VersionUtils;
 import me.remigio07_.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07_.chatplugin.api.common.util.manager.ChatPluginManagerException;
+import me.remigio07_.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07_.chatplugin.api.server.chat.ChatManager;
 import me.remigio07_.chatplugin.api.server.integration.anticheat.AnticheatManager;
 import me.remigio07_.chatplugin.api.server.join_quit.JoinMessageManager;
@@ -42,6 +45,9 @@ import me.remigio07_.chatplugin.api.server.join_quit.JoinTitleManager;
 import me.remigio07_.chatplugin.api.server.join_quit.QuitMessageManager;
 import me.remigio07_.chatplugin.api.server.join_quit.SuggestedVersionManager;
 import me.remigio07_.chatplugin.api.server.join_quit.WelcomeMessageManager;
+import me.remigio07_.chatplugin.api.server.language.Language;
+import me.remigio07_.chatplugin.api.server.language.LanguageDetector;
+import me.remigio07_.chatplugin.api.server.language.LanguageManager;
 import me.remigio07_.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07_.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07_.chatplugin.api.server.scoreboard.Scoreboard;
@@ -51,6 +57,7 @@ import me.remigio07_.chatplugin.api.server.scoreboard.event.ScoreboardEvent;
 import me.remigio07_.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07_.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07_.chatplugin.bootstrap.SpongeBootstrapper;
+import me.remigio07_.chatplugin.server.player.BaseChatPluginServerPlayer;
 
 public class SpongeEventManager extends EventManager {
 	
@@ -67,6 +74,7 @@ public class SpongeEventManager extends EventManager {
 		manager.registerListener(instance, MessageChannelEvent.Chat.class, Order.EARLY, listener);
 		manager.registerListener(instance, ClientConnectionEvent.Join.class, Order.EARLY, listener);
 		manager.registerListener(instance, ClientConnectionEvent.Disconnect.class, Order.EARLY, listener);
+		manager.registerListener(instance, PlayerChangeClientSettingsEvent.class, Order.POST, listener);
 		
 		try { // Sponge v4.2
 			manager.registerListener(instance, (Class<? extends Event>) Class.forName("org.spongepowered.api.event.entity.DisplaceEntityEvent$Teleport"), Order.EARLY, listener);
@@ -92,6 +100,9 @@ public class SpongeEventManager extends EventManager {
 			break;
 		case "DisplaceEntity$Teleport":
 			onDisplaceEntityEvent$Teleport(event);
+			break;
+		case "PlayerChangeClientSettings":
+			onPlayerChangeClientSettings((PlayerChangeClientSettingsEvent) event);
 			break;
 		}
 	}
@@ -172,6 +183,23 @@ public class SpongeEventManager extends EventManager {
 			VanishManager.getInstance().update(player, false);
 			playerManager.unloadPlayer(player.getUUID());
 		} else playerManager.loadPlayer(player.toAdapter());
+	}
+	
+	public void onPlayerChangeClientSettings(PlayerChangeClientSettingsEvent event) {
+		ChatPluginServerPlayer player = (ChatPluginServerPlayer) PlayerManager.getInstance().getPlayer(event.getTargetEntity().getUniqueId());
+		
+		if (player != null && !player.getLocale().getLanguage().equals(event.getLocale().getLanguage())) {
+			LanguageDetector detector = LanguageManager.getInstance().getDetector();
+			
+			if (detector.isEnabled())
+				TaskManager.runAsync(() -> {
+					Language detected = detector.detectUsingClientLocale(player);
+					
+					if (!detected.equals(player.getLanguage()))
+						((BaseChatPluginServerPlayer) player).sendLanguageDetectedMessage(detected);
+				}, detector.getDelay());
+			applyScoreboard(ScoreboardEvent.LOCALE_CHANGE, event.getTargetEntity(), player.getLocale().getDisplayLanguage());
+		}
 	}
 	
 	public void applyScoreboard(ScoreboardEvent event, Player player, Object... args) {

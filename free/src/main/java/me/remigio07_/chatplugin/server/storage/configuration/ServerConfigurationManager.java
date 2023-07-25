@@ -543,7 +543,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("languages.set", "{pfx} &aLanguage set to &f{0}&a.");
 		messages.addDefault("languages.set-already", "{pfx} &cYour language is already set to &f{0}&c.");
 		messages.addDefault("languages.invalid", "{pfx} &cInvalid language. Here are the loaded languages: &f{0}&c.");
-		messages.addDefault("languages.detected.text", "{pfx} &eIt seems that your native language is {0}&e. Click this message to set it as your default language.");
+		messages.addDefault("languages.detected.text", "{pfx} &eIt seems that your language is {0}&e. Click this message to set it as your default language.");
 		messages.addDefault("languages.detected.hover", "&9[Click here to change your language]");
 		
 		messages.addDefault("timestamps.invalid", "{pfx} &cInvalid timestamp. Use this format: &f1d,3h,35m,20s&c.");

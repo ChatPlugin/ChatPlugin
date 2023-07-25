@@ -24,6 +24,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLocaleChangeEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
@@ -36,6 +37,7 @@ import me.remigio07_.chatplugin.api.common.util.VersionUtils;
 import me.remigio07_.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07_.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07_.chatplugin.api.common.util.manager.LogManager;
+import me.remigio07_.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07_.chatplugin.api.server.chat.ChatManager;
 import me.remigio07_.chatplugin.api.server.integration.anticheat.AnticheatManager;
 import me.remigio07_.chatplugin.api.server.join_quit.JoinMessageManager;
@@ -43,6 +45,9 @@ import me.remigio07_.chatplugin.api.server.join_quit.JoinTitleManager;
 import me.remigio07_.chatplugin.api.server.join_quit.QuitMessageManager;
 import me.remigio07_.chatplugin.api.server.join_quit.SuggestedVersionManager;
 import me.remigio07_.chatplugin.api.server.join_quit.WelcomeMessageManager;
+import me.remigio07_.chatplugin.api.server.language.Language;
+import me.remigio07_.chatplugin.api.server.language.LanguageDetector;
+import me.remigio07_.chatplugin.api.server.language.LanguageManager;
 import me.remigio07_.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07_.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07_.chatplugin.api.server.scoreboard.Scoreboard;
@@ -53,6 +58,7 @@ import me.remigio07_.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07_.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07_.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07_.chatplugin.server.command.misc.TPSCommand;
+import me.remigio07_.chatplugin.server.player.BaseChatPluginServerPlayer;
 
 public class BukkitEventManager extends EventManager {
 	
@@ -70,6 +76,7 @@ public class BukkitEventManager extends EventManager {
 		manager.registerEvent(PlayerQuitEvent.class, listener, EventPriority.LOW, listener, instance);
 		manager.registerEvent(PlayerCommandPreprocessEvent.class, listener, EventPriority.NORMAL, listener, instance);
 		manager.registerEvent(PlayerChangedWorldEvent.class, listener, EventPriority.LOW, listener, instance);
+		manager.registerEvent(PlayerLocaleChangeEvent.class, listener, EventPriority.MONITOR, listener, instance);
 		
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
@@ -91,6 +98,9 @@ public class BukkitEventManager extends EventManager {
 			break;
 		case "PlayerChangedWorld":
 			onPlayerChangedWorld((PlayerChangedWorldEvent) event);
+			break;
+		case "PlayerLocaleChange":
+			onPlayerLocaleChange((PlayerLocaleChangeEvent) event);
 			break;
 		}
 	}
@@ -164,6 +174,23 @@ public class BukkitEventManager extends EventManager {
 			VanishManager.getInstance().update(player, false);
 			playerManager.unloadPlayer(player.getUUID());
 		} else playerManager.loadPlayer(player.toAdapter());
+	}
+	
+	public void onPlayerLocaleChange(PlayerLocaleChangeEvent event) {
+		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getPlayer().getUniqueId());
+		
+		if (player != null && !player.getLocale().getLanguage().equals(event.getLocale().substring(0, event.getLocale().indexOf('_')))) {
+			LanguageDetector detector = LanguageManager.getInstance().getDetector();
+			
+			if (detector.isEnabled())
+				TaskManager.runAsync(() -> {
+					Language detected = detector.detectUsingClientLocale(player);
+					
+					if (!detected.equals(player.getLanguage()))
+						((BaseChatPluginServerPlayer) player).sendLanguageDetectedMessage(detected);
+				}, detector.getDelay());
+			applyScoreboard(ScoreboardEvent.LOCALE_CHANGE, event.getPlayer(), player.getLocale().getDisplayLanguage());
+		}
 	}
 	
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {

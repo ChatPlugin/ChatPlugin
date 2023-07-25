@@ -26,30 +26,24 @@ public class F3ServerNamePacket {
 	private byte[] array;
 	
 	public F3ServerNamePacket(String value) {
-		writeString(value);
+		byte[] bytes = (value + "\u00A7r").getBytes(StandardCharsets.UTF_8);
+		int length = bytes.length;
+		
+		do {
+			int part = length & 0x7F;
+			
+			length >>>= 7;
+			
+			if (length != 0)
+				part |= 0x80;
+			buffer.writeByte(part);
+		} while (length != 0);
+		
+		buffer.writeBytes(bytes);
 		
 		array = buffer.array();
 		
 		buffer.release();
-	}
-	
-	private void writeString(String value) {
-		byte[] bytes = value.getBytes(StandardCharsets.UTF_8);
-		
-		writeInt(bytes.length);
-		buffer.writeBytes(bytes);
-	}
-	
-	private void writeInt(int value) {
-		do {
-			int part = value & 0x7F;
-			
-			value >>>= 7;
-			
-			if (value != 0)
-				part |= 0x80;
-			buffer.writeByte(part);
-		} while (value != 0);
 	}
 	
 	public byte[] toArray() {

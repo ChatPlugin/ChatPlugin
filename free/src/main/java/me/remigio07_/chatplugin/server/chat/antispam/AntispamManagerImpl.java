@@ -28,12 +28,12 @@ import me.remigio07_.chatplugin.api.common.util.manager.ChatPluginManagerExcepti
 import me.remigio07_.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07_.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07_.chatplugin.api.server.chat.ChatManager;
-import me.remigio07_.chatplugin.api.server.chat.antispam.AntiSpamManager;
+import me.remigio07_.chatplugin.api.server.chat.antispam.AntispamManager;
 import me.remigio07_.chatplugin.api.server.chat.antispam.DenyChatReason;
 import me.remigio07_.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07_.chatplugin.api.server.util.URLValidator;
 
-public class AntiSpamManagerImpl extends AntiSpamManager {
+public class AntispamManagerImpl extends AntispamManager {
 	
 	@Override
 	public void load() throws ChatPluginManagerException {

@@ -34,9 +34,9 @@ import me.remigio07_.chatplugin.api.server.player.ChatPluginServerPlayer;
  * 
  * @see me.remigio07_.chatplugin.api.server.chat Chat-related managers
  */
-public abstract class AntiSpamManager implements ChatPluginManager {
+public abstract class AntispamManager implements ChatPluginManager {
 	
-	protected static AntiSpamManager instance;
+	protected static AntispamManager instance;
 	protected boolean enabled, urlsPreventionEnabled, ipsPreventionEnabled;
 	protected int maxCapsLength, maxCapsPercent, secondsBetweenMsg, secondsBetweenSameMsg;
 	protected List<String> allowedDomains = new ArrayList<>(), urlsWhitelist = new ArrayList<>(), ipsWhitelist = new ArrayList<>(), wordsBlacklist = new ArrayList<>(), messagesWhitelist = new ArrayList<>();
@@ -201,7 +201,7 @@ public abstract class AntiSpamManager implements ChatPluginManager {
 	 * 
 	 * @return Manager's instance
 	 */
-	public static AntiSpamManager getInstance() {
+	public static AntispamManager getInstance() {
 		return instance;
 	}
 	

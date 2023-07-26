@@ -29,20 +29,20 @@ import me.remigio07_.chatplugin.api.server.util.manager.VanishManager;
 public enum DenyChatReason {
 	
 	/**
-	 * The message {@link AntiSpamManager#exceedsMaxCapsLength(String)} and
-	 * {@link AntiSpamManager#exceedsMaxCapsPercentage(String)} and the sender does not
+	 * The message {@link AntispamManager#exceedsMaxCapsLength(String)} and
+	 * {@link AntispamManager#exceedsMaxCapsPercentage(String)} and the sender does not
 	 * have the permission "chatplugin.antispam.caps" or "chatplugin.antispam.bypass".
 	 * 
-	 * <p><strong>Handler:</strong> {@link AntiSpamManager}
+	 * <p><strong>Handler:</strong> {@link AntispamManager}
 	 * <br><strong>Message path:</strong> "chat.antispam.no-caps"</p>
 	 */
 	CAPS("chat.antispam.no-caps"),
 	
 	/**
-	 * The list {@link AntiSpamManager#getFloodCache()} contains the sender and they do not
+	 * The list {@link AntispamManager#getFloodCache()} contains the sender and they do not
 	 * have the permission "chatplugin.antispam.flood" or "chatplugin.antispam.bypass".
 	 * 
-	 * <p><strong>Handler:</strong> {@link AntiSpamManager}
+	 * <p><strong>Handler:</strong> {@link AntispamManager}
 	 * <br><strong>Message path:</strong> "chat.antispam.no-flood"</p>
 	 */
 	FLOOD("chat.antispam.no-flood"),
@@ -57,10 +57,10 @@ public enum DenyChatReason {
 	FORMAT("chat.no-format"),
 	
 	/**
-	 * When the message {@link AntiSpamManager#containsDisallowedIP(String)}
+	 * When the message {@link AntispamManager#containsDisallowedIP(String)}
 	 * and the sender does not have the permission "chatplugin.antispam.bypass".
 	 * 
-	 * <p><strong>Handler:</strong> {@link AntiSpamManager}
+	 * <p><strong>Handler:</strong> {@link AntispamManager}
 	 * <br><strong>Message path:</strong> "chat.antispam.no-ip"</p>
 	 */
 	IP_ADDRESS("chat.antispam.no-ip"),
@@ -82,28 +82,28 @@ public enum DenyChatReason {
 	MUTEALL("commands.muteall.muted"),
 	
 	/**
-	 * The map {@link AntiSpamManager#getSpamCache()} contains the sender and they do not
+	 * The map {@link AntispamManager#getSpamCache()} contains the sender and they do not
 	 * have the permission "chatplugin.antispam.spam" or "chatplugin.antispam.bypass".
 	 * 
-	 * <p><strong>Handler:</strong> {@link AntiSpamManager}
+	 * <p><strong>Handler:</strong> {@link AntispamManager}
 	 * <br><strong>Message path:</strong> "chat.antispam.no-spam"</p>
 	 */
 	SPAM("chat.antispam.no-spam"),
 	
 	/**
-	 * When the message {@link AntiSpamManager#containsBlacklistedWord(String)}
+	 * When the message {@link AntispamManager#containsBlacklistedWord(String)}
 	 * and the sender does not have the permission "chatplugin.antispam.bypass".
 	 * 
-	 * <p><strong>Handler:</strong> {@link AntiSpamManager}
+	 * <p><strong>Handler:</strong> {@link AntispamManager}
 	 * <br><strong>Message path:</strong> "chat.antispam.no-swear"</p>
 	 */
 	SWEAR("chat.antispam.no-swear"),
 	
 	/**
-	 * When the message {@link AntiSpamManager#containsDisallowedURL(String)}
+	 * When the message {@link AntispamManager#containsDisallowedURL(String)}
 	 * and the sender does not have the permission "chatplugin.antispam.bypass".
 	 * 
-	 * <p><strong>Handler:</strong> {@link AntiSpamManager}
+	 * <p><strong>Handler:</strong> {@link AntispamManager}
 	 * <br><strong>Message path:</strong> "chat.antispam.no-url"</p>
 	 */
 	URL("chat.antispam.no-url"),

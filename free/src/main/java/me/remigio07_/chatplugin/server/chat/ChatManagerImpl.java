@@ -32,7 +32,7 @@ import me.remigio07_.chatplugin.api.server.chat.HoverInfoManager;
 import me.remigio07_.chatplugin.api.server.chat.InstantEmojisManager;
 import me.remigio07_.chatplugin.api.server.chat.PlayerPingManager;
 import me.remigio07_.chatplugin.api.server.chat.StaffChatManager;
-import me.remigio07_.chatplugin.api.server.chat.antispam.AntiSpamManager;
+import me.remigio07_.chatplugin.api.server.chat.antispam.AntispamManager;
 import me.remigio07_.chatplugin.api.server.chat.antispam.DenyChatReason;
 import me.remigio07_.chatplugin.api.server.chat.log.ChatLogManager;
 import me.remigio07_.chatplugin.api.server.event.chat.AllowChatEvent;
@@ -117,8 +117,8 @@ public class ChatManagerImpl extends ChatManager {
 			reason = DenyChatReason.MUTE;
 		
 		// 4. antispam
-		if (reason == null && AntiSpamManager.getInstance().isEnabled())
-			reason = AntiSpamManager.getInstance().getDenyChatReason(player, message);
+		if (reason == null && AntispamManager.getInstance().isEnabled())
+			reason = AntispamManager.getInstance().getDenyChatReason(player, message);
 		
 		// 5. formatted-chat
 		if (reason == null && FormattedChatManager.getInstance().isEnabled() && FormattedChatManager.getInstance().containsFormattedText(message)) {
@@ -141,16 +141,16 @@ public class ChatManagerImpl extends ChatManager {
 			
 			switch (reason) {
 			case CAPS:
-				denyMessage = Utils.numericPlaceholders(denyMessage, AntiSpamManager.getInstance().getMaxCapsPercent(), AntiSpamManager.getInstance().getMaxCapsLength());
+				denyMessage = Utils.numericPlaceholders(denyMessage, AntispamManager.getInstance().getMaxCapsPercent(), AntispamManager.getInstance().getMaxCapsLength());
 				break;
 			case FLOOD:
-				denyMessage = Utils.numericPlaceholders(denyMessage, AntiSpamManager.getInstance().getSecondsBetweenMsg());
+				denyMessage = Utils.numericPlaceholders(denyMessage, AntispamManager.getInstance().getSecondsBetweenMsg());
 				break;
 			case MUTE:
 				denyMessage = MuteManager.getInstance().getActiveMute(player, ProxyManager.getInstance().getServerID()).formatPlaceholders(denyMessage, player.getLanguage());
 				break;
 			case SPAM:
-				denyMessage = Utils.numericPlaceholders(denyMessage, AntiSpamManager.getInstance().getSecondsBetweenSameMsg());
+				denyMessage = Utils.numericPlaceholders(denyMessage, AntispamManager.getInstance().getSecondsBetweenSameMsg());
 				break;
 			default:
 				break;

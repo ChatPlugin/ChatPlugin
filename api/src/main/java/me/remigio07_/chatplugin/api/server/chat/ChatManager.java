@@ -20,7 +20,7 @@ import java.util.List;
 
 import me.remigio07_.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07_.chatplugin.api.common.util.manager.ChatPluginManager;
-import me.remigio07_.chatplugin.api.server.chat.antispam.AntiSpamManager;
+import me.remigio07_.chatplugin.api.server.chat.antispam.AntispamManager;
 import me.remigio07_.chatplugin.api.server.event.chat.ToggleChatMuteEvent;
 import me.remigio07_.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07_.chatplugin.api.server.util.PlaceholderType;
@@ -83,7 +83,7 @@ public abstract class ChatManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the list of recognized <a href="https://en.wikipedia.org/wiki/Top-level_domain">TLD</a>s in the chat.
-	 * The returned list is used by the {@link AntiSpamManager} and the {@link HoverInfoManager}.
+	 * The returned list is used by the {@link AntispamManager} and the {@link HoverInfoManager}.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.recognized-tlds" in {@link ConfigurationType#CHAT}</p>
 	 * 

@@ -237,7 +237,6 @@ public class ChatPluginCommand extends BaseCommand {
 		
 		@Override
 		public void execute(CommandSenderAdapter sender, me.remigio07_.chatplugin.api.server.language.Language language, String[] args) {
-			LogManager.log("ChatPlugin is reloading...", 0);
 			sender.sendMessage(language.getMessage("misc.reload.start"));
 			
 			int ms = ChatPlugin.getInstance().reload();

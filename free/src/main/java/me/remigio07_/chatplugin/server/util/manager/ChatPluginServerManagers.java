@@ -148,13 +148,13 @@ public class ChatPluginServerManagers extends ChatPluginManagers {
 		addManager(TPSManager.class, new TPSManagerImpl());
 		addManager(PingManager.class, new PingManagerImpl());
 		addManager(ChatManager.class, new ChatManagerImpl());
-		addManager(ChatLogManager.class, new DummyChatLogManager());
-		addManager(StaffChatManager.class, new StaffChatManagerImpl());
-		addManager(HoverInfoManager.class, new DummyHoverInfoManager());
-		addManager(AntispamManager.class, new AntispamManagerImpl());
 		addManager(FormattedChatManager.class, new FormattedChatManagerImpl());
-		addManager(InstantEmojisManager.class, new InstantEmojisManagerImpl());
+		addManager(AntispamManager.class, new AntispamManagerImpl());
 		addManager(PlayerPingManager.class, new PlayerPingManagerImpl());
+		addManager(HoverInfoManager.class, new DummyHoverInfoManager());
+		addManager(InstantEmojisManager.class, new InstantEmojisManagerImpl());
+		addManager(StaffChatManager.class, new StaffChatManagerImpl());
+		addManager(ChatLogManager.class, new DummyChatLogManager());
 		addManager(ScoreboardManager.class, new DummyScoreboardManager());
 		addManager(TablistManager.class, new TablistManagerImpl());
 		addManager(CustomSuffixManager.class, new DummyCustomSuffixManager());

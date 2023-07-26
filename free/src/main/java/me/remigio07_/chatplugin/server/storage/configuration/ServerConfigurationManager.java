@@ -643,43 +643,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.recognized-tlds", Arrays.asList("com", "net", "org", "io", "me", "edu", "gov", "int", "info", "pro", "xyz", "gg", "us", "eu", "uk", "de", "fr", "es", "it", "co.uk", "jp", "ru"));
 		chat.addDefault("chat.placeholder-types", Arrays.asList("PLAYER"));
 		
-		chat.addDefault("chat.staff-chat.enabled", true);
-		chat.addDefault("chat.staff-chat.format.player.chat", "&7«&8[&6&lSC&8] &f{tag_prefix}{tag_name_color}{player}{tag_suffix}&7» &f");
-		chat.addDefault("chat.staff-chat.format.player.terminal", "&8{server_display_name} &7<&8[&6&lSC&8] &f{tag_prefix}{tag_name_color}{player}{tag_suffix}&7> &f");
-		chat.addDefault("chat.staff-chat.format.console.chat", "&7«&8[&6&lSC&8] &8[&5&lC&8] &fConsole &4[***]&7» &f");
-		chat.addDefault("chat.staff-chat.format.console.terminal", "&8{server_display_name} &7<&8[&6&lSC&8] &8[&5&lC&8] &fConsole &4[***]&7> &f");
-		chat.addDefault("chat.staff-chat.placeholder-types", Arrays.asList("PLAYER", "SERVER"));
-		
-		chat.addDefault("chat.log.enabled", true);
-		chat.addDefault("chat.log.print-to-log-file", false);
-		chat.addDefault("chat.log.messages-auto-cleaner-period", "120d");
-		
 		chat.addDefault("chat.formatted-chat.enabled", true);
 		chat.addDefault("chat.formatted-chat.send-anyway", true);
-		
-		chat.addDefault("chat.hover-info.enabled", Environment.isBukkit() ? VersionUtils.isSpigot() && VersionUtils.getVersion().isAtLeast(Version.V1_7_2) : VersionUtils.getVersion().isAtLeast(Version.V1_8));
-		
-		chat.addDefault("chat.hover-info.rank.enabled", true);
-		
-		chat.addDefault("chat.hover-info.player.enabled", true);
-		chat.addDefault("chat.hover-info.player.click.action", "SUGGEST_TEXT");
-		chat.addDefault("chat.hover-info.player.click.value", "/msg {player} ");
-		chat.addDefault("chat.hover-info.player.placeholder-types", Arrays.asList("PLAYER"));
-		chat.addDefault("chat.hover-info.player.hovers.english", "&ePlayer: &f{player}\n&ePing: {ping_format} ms\n&d&oClick = send /msg");
-		chat.addDefault("chat.hover-info.player.hovers.italian", "&eGiocatore: &f{player}\n&ePing: {ping_format} ms\n&d&oClick = invia /msg");
-		
-		chat.addDefault("chat.hover-info.url.enabled", true);
-		chat.addDefault("chat.hover-info.url.default-https", true);
-		chat.addDefault("chat.hover-info.url.color", "&b&n");
-		chat.addDefault("chat.hover-info.url.hovers.english", "&9[Click here to open the URL]");
-		chat.addDefault("chat.hover-info.url.hovers.italian", "&9[Clicca qui per aprire l'URL]");
-		
-		chat.addDefault("chat.player-ping.enabled", true);
-		chat.addDefault("chat.player-ping.color", "&b");
-		chat.addDefault("chat.player-ping.sound.enabled", true);
-		chat.addDefault("chat.player-ping.sound.id", Environment.isBukkit() ? "entity.experience_orb.pickup" : VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "ENTITY_EXPERIENCE_ORB_PICKUP" : "ORB_PICKUP");
-		chat.addDefault("chat.player-ping.sound.volume", 1F);
-		chat.addDefault("chat.player-ping.sound.pitch", 1F);
 		
 		chat.addDefault("chat.antispam.enabled", true);
 		chat.addDefault("chat.antispam.prevention.urls.enabled", true);
@@ -693,6 +658,27 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.antispam.seconds-between-same-msg", 10);
 		chat.addDefault("chat.antispam.words-blacklist", Arrays.asList("fuck", "dick", "shit"));
 		chat.addDefault("chat.antispam.messages-whitelist", Arrays.asList("hello", "hey", "ok"));
+		
+		chat.addDefault("chat.player-ping.enabled", true);
+		chat.addDefault("chat.player-ping.color", "&b");
+		chat.addDefault("chat.player-ping.sound.enabled", true);
+		chat.addDefault("chat.player-ping.sound.id", Environment.isBukkit() ? "entity.experience_orb.pickup" : VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "ENTITY_EXPERIENCE_ORB_PICKUP" : "ORB_PICKUP");
+		chat.addDefault("chat.player-ping.sound.volume", 1F);
+		chat.addDefault("chat.player-ping.sound.pitch", 1F);
+		
+		chat.addDefault("chat.hover-info.enabled", Environment.isBukkit() ? VersionUtils.isSpigot() && VersionUtils.getVersion().isAtLeast(Version.V1_7_2) : VersionUtils.getVersion().isAtLeast(Version.V1_8));
+		chat.addDefault("chat.hover-info.rank.enabled", true);
+		chat.addDefault("chat.hover-info.player.enabled", true);
+		chat.addDefault("chat.hover-info.player.click.action", "SUGGEST_TEXT");
+		chat.addDefault("chat.hover-info.player.click.value", "/msg {player} ");
+		chat.addDefault("chat.hover-info.player.placeholder-types", Arrays.asList("PLAYER"));
+		chat.addDefault("chat.hover-info.player.hovers.english", "&ePlayer: &f{player}\n&ePing: {ping_format} ms\n&d&oClick = send /msg");
+		chat.addDefault("chat.hover-info.player.hovers.italian", "&eGiocatore: &f{player}\n&ePing: {ping_format} ms\n&d&oClick = invia /msg");
+		chat.addDefault("chat.hover-info.url.enabled", true);
+		chat.addDefault("chat.hover-info.url.default-https", true);
+		chat.addDefault("chat.hover-info.url.color", "&b&n");
+		chat.addDefault("chat.hover-info.url.hovers.english", "&9[Click here to open the URL]");
+		chat.addDefault("chat.hover-info.url.hovers.italian", "&9[Clicca qui per aprire l'URL]");
 		
 		chat.addDefault("chat.instant-emojis.enabled", true);
 		chat.addDefault("chat.instant-emojis.values.copyright", "\u00A9");
@@ -710,6 +696,17 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.instant-emojis.values.plus-minus", "\u00B1");
 		chat.addDefault("chat.instant-emojis.values.division", "\u00F7");
 		chat.addDefault("chat.instant-emojis.values.caret", "\u005E");
+		
+		chat.addDefault("chat.staff-chat.enabled", true);
+		chat.addDefault("chat.staff-chat.format.player.chat", "&7«&8[&6&lSC&8] &f{tag_prefix}{tag_name_color}{player}{tag_suffix}&7» &f");
+		chat.addDefault("chat.staff-chat.format.player.terminal", "&8{server_display_name} &7<&8[&6&lSC&8] &f{tag_prefix}{tag_name_color}{player}{tag_suffix}&7> &f");
+		chat.addDefault("chat.staff-chat.format.console.chat", "&7«&8[&6&lSC&8] &8[&5&lC&8] &fConsole &4[***]&7» &f");
+		chat.addDefault("chat.staff-chat.format.console.terminal", "&8{server_display_name} &7<&8[&6&lSC&8] &8[&5&lC&8] &fConsole &4[***]&7> &f");
+		chat.addDefault("chat.staff-chat.placeholder-types", Arrays.asList("PLAYER", "SERVER"));
+		
+		chat.addDefault("chat.log.enabled", true);
+		chat.addDefault("chat.log.print-to-log-file", false);
+		chat.addDefault("chat.log.messages-auto-cleaner-period", "120d");
 		
 		chat.save();
 	}

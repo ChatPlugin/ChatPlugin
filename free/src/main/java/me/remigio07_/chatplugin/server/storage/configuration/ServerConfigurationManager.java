@@ -662,7 +662,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.player-ping.enabled", true);
 		chat.addDefault("chat.player-ping.color", "&b");
 		chat.addDefault("chat.player-ping.sound.enabled", true);
-		chat.addDefault("chat.player-ping.sound.id", Environment.isBukkit() ? "entity.experience_orb.pickup" : VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "ENTITY_EXPERIENCE_ORB_PICKUP" : "ORB_PICKUP");
+		chat.addDefault("chat.player-ping.sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "ENTITY_EXPERIENCE_ORB_PICKUP" : "ORB_PICKUP");
 		chat.addDefault("chat.player-ping.sound.volume", 1F);
 		chat.addDefault("chat.player-ping.sound.pitch", 1F);
 		
@@ -1052,10 +1052,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		mainGUI.addDefault("settings.titles.italian", "&c&lChat&f&lPlugin");
 		mainGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &c&lChat&f&lPlugin &aGUI.");
 		mainGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &c&lChat&f&lPlugin &ain corso.");
-		mainGUI.addDefault("settings.open-actions.play-sound.id", Environment.isBukkit() ? "block.chest.open" : VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
+		mainGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
 		mainGUI.addDefault("settings.open-actions.play-sound.volume", 1F);
 		mainGUI.addDefault("settings.open-actions.play-sound.pitch", 1F);
-		mainGUI.addDefault("settings.click-sound.id", Environment.isBukkit() ? "ui.button.click" : VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : "GUI_BUTTON");
+		mainGUI.addDefault("settings.click-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : Environment.isBukkit() ? "CLICK" : "GUI_BUTTON");
 		mainGUI.addDefault("settings.click-sound.volume", 1F);
 		mainGUI.addDefault("settings.click-sound.pitch", 1F);
 		path = "icons.info.";
@@ -1148,10 +1148,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		languagesGUI.addDefault("settings.titles.italian", "&f&lLingue");
 		languagesGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &f&lLanguages &aGUI.");
 		languagesGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &f&lLingue &ain corso.");
-		languagesGUI.addDefault("settings.open-actions.play-sound.id", Environment.isBukkit() ? "block.chest.open" : VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
+		languagesGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
 		languagesGUI.addDefault("settings.open-actions.play-sound.volume", 1F);
 		languagesGUI.addDefault("settings.open-actions.play-sound.pitch", 1F);
-		languagesGUI.addDefault("settings.click-sound.id", Environment.isBukkit() ? "ui.button.click" : VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : "GUI_BUTTON");
+		languagesGUI.addDefault("settings.click-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : Environment.isBukkit() ? "CLICK" : "GUI_BUTTON");
 		languagesGUI.addDefault("settings.click-sound.volume", 1F);
 		languagesGUI.addDefault("settings.click-sound.pitch", 1F);
 		path = "icons.info.";
@@ -1208,10 +1208,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		banlistGUI.addDefault("settings.titles.italian", "&4&lBanlist &8(Pagina {current_page}/{max_page})");
 		banlistGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &4&lBanlist &aGUI.");
 		banlistGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &4&lBanlist &ain corso.");
-		banlistGUI.addDefault("settings.open-actions.play-sound.id", Environment.isBukkit() ? "block.chest.open" : VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
+		banlistGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
 		banlistGUI.addDefault("settings.open-actions.play-sound.volume", 1F);
 		banlistGUI.addDefault("settings.open-actions.play-sound.pitch", 1F);
-		banlistGUI.addDefault("settings.click-sound.id", Environment.isBukkit() ? "ui.button.click" : VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : "GUI_BUTTON");
+		banlistGUI.addDefault("settings.click-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : Environment.isBukkit() ? "CLICK" : "GUI_BUTTON");
 		banlistGUI.addDefault("settings.click-sound.volume", 1F);
 		banlistGUI.addDefault("settings.click-sound.pitch", 1F);
 		
@@ -1303,10 +1303,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		warnlistGUI.addDefault("settings.titles.italian", "&c&lWarnlist &8(Pagina {current_page}/{max_page})");
 		warnlistGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &c&lWarnlist &aGUI.");
 		warnlistGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &c&lWarnlist &ain corso.");
-		warnlistGUI.addDefault("settings.open-actions.play-sound.id", Environment.isBukkit() ? "block.chest.open" : VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
+		warnlistGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
 		warnlistGUI.addDefault("settings.open-actions.play-sound.volume", 1F);
 		warnlistGUI.addDefault("settings.open-actions.play-sound.pitch", 1F);
-		warnlistGUI.addDefault("settings.click-sound.id", Environment.isBukkit() ? "ui.button.click" : VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : "GUI_BUTTON");
+		warnlistGUI.addDefault("settings.click-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : Environment.isBukkit() ? "CLICK" : "GUI_BUTTON");
 		warnlistGUI.addDefault("settings.click-sound.volume", 1F);
 		warnlistGUI.addDefault("settings.click-sound.pitch", 1F);
 		
@@ -1391,10 +1391,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		mutelistGUI.addDefault("settings.titles.italian", "&e&lMutelist &8(Pagina {current_page}/{max_page})");
 		mutelistGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &e&lMutelist &aGUI.");
 		mutelistGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &e&lMutelist &ain corso.");
-		mutelistGUI.addDefault("settings.open-actions.play-sound.id", Environment.isBukkit() ? "block.chest.open" : VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
+		mutelistGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
 		mutelistGUI.addDefault("settings.open-actions.play-sound.volume", 1F);
 		mutelistGUI.addDefault("settings.open-actions.play-sound.pitch", 1F);
-		mutelistGUI.addDefault("settings.click-sound.id", Environment.isBukkit() ? "ui.button.click" : VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : "GUI_BUTTON");
+		mutelistGUI.addDefault("settings.click-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : Environment.isBukkit() ? "CLICK" : "GUI_BUTTON");
 		mutelistGUI.addDefault("settings.click-sound.volume", 1F);
 		mutelistGUI.addDefault("settings.click-sound.pitch", 1F);
 		
@@ -1479,10 +1479,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		violationsGUI.addDefault("settings.titles.italian", "&3&lViolazioni &8(Pagina {current_page}/{max_page})");
 		violationsGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &3&lViolations &aGUI.");
 		violationsGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &3&lViolazioni &ain corso.");
-		violationsGUI.addDefault("settings.open-actions.play-sound.id", Environment.isBukkit() ? "block.chest.open" : VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
+		violationsGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
 		violationsGUI.addDefault("settings.open-actions.play-sound.volume", 1F);
 		violationsGUI.addDefault("settings.open-actions.play-sound.pitch", 1F);
-		violationsGUI.addDefault("settings.click-sound.id", Environment.isBukkit() ? "ui.button.click" : VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : "GUI_BUTTON");
+		violationsGUI.addDefault("settings.click-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : Environment.isBukkit() ? "CLICK" : "GUI_BUTTON");
 		violationsGUI.addDefault("settings.click-sound.volume", 1F);
 		violationsGUI.addDefault("settings.click-sound.pitch", 1F);
 		
@@ -1569,10 +1569,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		playerInfoGUI.addDefault("settings.titles.italian", "&f&lInfo giocatore");
 		playerInfoGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &f&lPlayer info &aGUI.");
 		playerInfoGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &f&lInfo giocatore &ain corso.");
-		playerInfoGUI.addDefault("settings.open-actions.play-sound.id", Environment.isBukkit() ? "block.chest.open" : VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
+		playerInfoGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
 		playerInfoGUI.addDefault("settings.open-actions.play-sound.volume", 1F);
 		playerInfoGUI.addDefault("settings.open-actions.play-sound.pitch", 1F);
-		playerInfoGUI.addDefault("settings.click-sound.id", Environment.isBukkit() ? "ui.button.click" : VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : "GUI_BUTTON");
+		playerInfoGUI.addDefault("settings.click-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : Environment.isBukkit() ? "CLICK" : "GUI_BUTTON");
 		playerInfoGUI.addDefault("settings.click-sound.volume", 1F);
 		playerInfoGUI.addDefault("settings.click-sound.pitch", 1F);
 		
@@ -1659,10 +1659,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		playerPunishmentsGUI.addDefault("settings.titles.italian", "&c&lPunizioni giocatore");
 		playerPunishmentsGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &c&lPlayer punishments &aGUI.");
 		playerPunishmentsGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &c&lPunizioni giocatore &ain corso.");
-		playerPunishmentsGUI.addDefault("settings.open-actions.play-sound.id", Environment.isBukkit() ? "block.chest.open" : VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
+		playerPunishmentsGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
 		playerPunishmentsGUI.addDefault("settings.open-actions.play-sound.volume", 1F);
 		playerPunishmentsGUI.addDefault("settings.open-actions.play-sound.pitch", 1F);
-		playerPunishmentsGUI.addDefault("settings.click-sound.id", Environment.isBukkit() ? "ui.button.click" : VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : "GUI_BUTTON");
+		playerPunishmentsGUI.addDefault("settings.click-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : Environment.isBukkit() ? "CLICK" : "GUI_BUTTON");
 		playerPunishmentsGUI.addDefault("settings.click-sound.volume", 1F);
 		playerPunishmentsGUI.addDefault("settings.click-sound.pitch", 1F);
 		
@@ -1782,10 +1782,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		playerViolationsGUI.addDefault("settings.titles.italian", "&3&lViolazioni giocatore");
 		playerViolationsGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &3&lPlayer violations &aGUI.");
 		playerViolationsGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &3&lViolazioni giocatore &ain corso.");
-		playerViolationsGUI.addDefault("settings.open-actions.play-sound.id", Environment.isBukkit() ? "block.chest.open" : VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
+		playerViolationsGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
 		playerViolationsGUI.addDefault("settings.open-actions.play-sound.volume", 1F);
 		playerViolationsGUI.addDefault("settings.open-actions.play-sound.pitch", 1F);
-		playerViolationsGUI.addDefault("settings.click-sound.id", Environment.isBukkit() ? "ui.button.click" : VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : "GUI_BUTTON");
+		playerViolationsGUI.addDefault("settings.click-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : Environment.isBukkit() ? "CLICK" : "GUI_BUTTON");
 		playerViolationsGUI.addDefault("settings.click-sound.volume", 1F);
 		playerViolationsGUI.addDefault("settings.click-sound.pitch", 1F);
 		

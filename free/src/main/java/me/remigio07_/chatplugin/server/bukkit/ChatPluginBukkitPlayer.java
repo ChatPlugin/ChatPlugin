@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import me.remigio07_.chatplugin.api.common.integration.IntegrationType;
@@ -246,7 +247,11 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public void playSound(SoundAdapter sound) {
-		player.playSound(player.getLocation(), sound.getID(), sound.getVolume(), sound.getPitch());
+		Sound bukkitValue = sound.bukkitValue();
+		
+		if (bukkitValue == null)
+			player.playSound(player.getLocation(), sound.getID(), sound.getVolume(), sound.getPitch());
+		else player.playSound(player.getLocation(), bukkitValue, sound.getVolume(), sound.getPitch());
 	}
 	
 	@Override

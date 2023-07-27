@@ -109,8 +109,8 @@ public abstract class PlayerPingManager implements ChatPluginManager {
 	public abstract List<ChatPluginServerPlayer> getPingedPlayers(ChatPluginServerPlayer player, String message);
 	
 	/**
-	 * Plays {@link #getSound()} to the specified certain player. This
-	 * will have no effect if <code>!</code>{@link #isSoundEnabled()}.
+	 * Plays {@link #getSound()} to the specified player. This will
+	 * have no effect if <code>!</code>{@link #isSoundEnabled()}.
 	 * 
 	 * @param player Player to play the sound to
 	 */

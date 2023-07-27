@@ -15,6 +15,7 @@
 
 package me.remigio07_.chatplugin.api.server.util.adapter.user;
 
+import org.bukkit.Sound;
 import org.spongepowered.api.effect.sound.SoundType;
 import org.spongepowered.api.effect.sound.SoundTypes;
 
@@ -25,10 +26,7 @@ import me.remigio07_.chatplugin.bootstrap.Environment;
 
 /**
  * Environment indipendent (Bukkit and Sponge) sound adapter.
- * Unlike other adapters, this class does not contain a
- * <code>bukkitValue()</code> method, as Bukkit uses
- * plain text IDs to identify sound types.
- * Also, it contains additional information that are normally
+ * It also contains additional information that are normally
  * not included with a sound type: a volume and a pitch.
  */
 public class SoundAdapter {
@@ -37,8 +35,8 @@ public class SoundAdapter {
 	private float volume, pitch;
 	
 	/**
-	 * Constructs a sound adapter that accepts a Bukkit's {@link org.bukkit.Sound}
-	 * or Sponge's {@link org.spongepowered.api.effect.sound.SoundTypes} compatible sound ID as input.
+	 * Constructs a sound adapter that accepts a Bukkit's {@link org.bukkit.Sound} or Sponge's
+	 * {@link org.spongepowered.api.effect.sound.SoundTypes} compatible sound ID as input.
 	 * 
 	 * @param id Sound's ID
 	 * @param volume Sound's volume [0 - 1]
@@ -73,8 +71,25 @@ public class SoundAdapter {
 	}
 	
 	/**
+	 * Gets the sound adapted for Bukkit environments.
+	 * Will return <code>null</code> if {@link #getID()} is not a valid sound.
+	 * 
+	 * @return Bukkit-adapted sound
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBukkit()}
+	 */
+	public Sound bukkitValue() {
+		if (Environment.isBukkit())
+			try {
+				return Sound.valueOf(id);
+			} catch (IllegalArgumentException e) {
+				return null;
+			}
+		else throw new UnsupportedOperationException("Unable to adapt sound to a Bukkit's Sound on a " + Environment.getCurrent().getName() + " environment");
+	}
+	
+	/**
 	 * Gets the sound adapted for Sponge environments.
-	 * Will return <code>null</code> if {@link #getID()} is not a valid sound type.
+	 * Will return <code>null</code> if {@link #getID()} is not a valid sound.
 	 * 
 	 * @param warnIfInvalid Whether to send a warning message if sound is invalid
 	 * @return Sponge-adapted sound

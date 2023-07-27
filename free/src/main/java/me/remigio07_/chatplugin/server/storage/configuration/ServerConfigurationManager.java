@@ -380,7 +380,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("chat.antispam.no-url", "{pfx} &cYour message contains a disallowed URL.");
 		messages.addDefault("chat.antispam.no-ip", "{pfx} &cYour message contains a disallowed IP address.");
 		messages.addDefault("chat.deny-chat-notify", "{pfx} &f{0} &cwas prevented (reason: &f{1}&c) from sending:\n&f{2}");
-		messages.addDefault("chat.no-format", "{pfx} &cYou can't write formatted messages. Buy a &fVIP package &cto bypass this restriction.");
+		messages.addDefault("chat.no-format", "{pfx} &cYou cannot write formatted messages. Buy a &fVIP package &cto bypass this restriction.");
 		messages.addDefault("chat.pinged", "{pfx} &eYou got pinged by &f{0}&e.");
 		
 		messages.addDefault("commands.multi-account-check.searching", "{pfx} &eSearching for multiple accounts...");
@@ -529,13 +529,13 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("vanish.enabled.other", "{pfx} &f{0} &ais now vanished.");
 		messages.addDefault("vanish.disabled.self", "{pfx} &eYou are no longer vanished.");
 		messages.addDefault("vanish.disabled.other", "{pfx} &f{0} &eis no longer vanished.");
-		messages.addDefault("vanish.no-permission", "{pfx} &f{0} &cdoesn't have the permission to vanish.");
-		messages.addDefault("vanish.no-chat", "{pfx} &cYou can't use the public chat while you are vanished.");
+		messages.addDefault("vanish.no-permission", "{pfx} &f{0} &cdoes not have the permission to vanish.");
+		messages.addDefault("vanish.no-chat", "{pfx} &cYou cannot use the public chat while you are vanished.");
 		messages.addDefault("vanish.cosmetics-reset", "{pfx} &eThe following cosmetics were reset: &f{0}&e.");
 		messages.addDefault("vanish.gadgetsmenu-reload", "{pfx} &cGadgetsMenu has been reloaded. Its cosmetics have not been reset.");
 		messages.addDefault("vanish.fakejoin.no-fakequit", "{pfx} &cYou have to use &f/fakequit &cfirst.");
 		messages.addDefault("vanish.fakejoin.performed", "{pfx} &aFake join performed. You are no longer vanished.");
-		messages.addDefault("vanish.fakequit.already-vanished", "{pfx} &cYou can't perform a fake quit while vanished.");
+		messages.addDefault("vanish.fakequit.already-vanished", "{pfx} &cYou cannot perform a fake quit while vanished.");
 		messages.addDefault("vanish.fakequit.already-fakequit", "{pfx} &cVanish cannot be turned off while fake quit. Use &f/fakejoin &cinstead.");
 		messages.addDefault("vanish.fakequit.performed", "{pfx} &aFake quit performed. You are now vanished.");
 		messages.addDefault("vanish.safe-teleport", "{pfx} &aYou have been safely teleported to &f{0}&a.");
@@ -569,7 +569,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("placeholders.nobody", "nobody");
 		messages.addDefault("placeholders.not-present", "not present");
 		
-		messages.addDefault("proxy-messages.no-permission", "{pfx} &cYou don't have the permission to execute this command.");
+		messages.addDefault("proxy-messages.no-permission", "{pfx} &cYou do not have the permission to execute this command.");
 		messages.addDefault("proxy-messages.wrong-syntax", "{pfx} &cThe syntax is wrong. Usage: &f{0}&c.");
 		messages.addDefault("proxy-messages.help", "{pfx} &aCommands for &c&lChat&f&lPlugin &fv{0}&a by &9Remigio07_&a:\n&f&l/cpb status &8- &eDisplay current network status.\n&f&l/cpb debug &8- &eToggle the debug/verbose mode.\n&f&l/cpb reload &8- &eReload the ChatPlugin system.\n&f&l/cpb version &8- &eDisplay current plugin version.\n&f&l/cpb info &8- &eShow useful info about this plugin.");
 		messages.addDefault("proxy-messages.status", "{pfx} &aCurrent network status:\n&eProxy version: &f{network_version} (protocol: {network_protocol})\n&eChatPlugin version: &f{plugin_version}\n&eUptime: &f{uptime}\n&eUsed memory: &f{used_memory}/{max_memory} MB\n&eAllocated memory: &f{total_memory} MB\n&eFree memory: &f{free_memory} MB\n&eEnabled players: &f{enabled_players}x\n&eStartup time: &f{startup_time} ms\n&eLast reload time: &f{last_reload_time} ms");
@@ -2295,7 +2295,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "messages.no-permission.";
 		
 		discordIntegration.addDefault(path + "title.text", "No permission");
-		discordIntegration.addDefault(path + "description", "You don't have the permission to execute this command.");
+		discordIntegration.addDefault(path + "description", "You do not have the permission to execute this command.");
 		discordIntegration.addDefault(path + "thumbnail", "https://i.imgur.com/C2lN5aC.png");
 		discordIntegration.addDefault(path + "color", "FF5555");
 		

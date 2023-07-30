@@ -92,7 +92,7 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Checks if text should be displayed when hovering over an URL in the chat.
+	 * Checks if text should be displayed when hovering over a URL in the chat.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.hover-info.url.enabled" in {@link ConfigurationType#CHAT}</p>
 	 * 
@@ -171,7 +171,7 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the map of the hovers displayed when hovering over an URL in the chat.
+	 * Gets the map of the hovers displayed when hovering over a URL in the chat.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.hover-info.url.hovers" in {@link ConfigurationType#CHAT}</p>
 	 * 

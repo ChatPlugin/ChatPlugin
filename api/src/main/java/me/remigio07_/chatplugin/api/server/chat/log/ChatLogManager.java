@@ -61,7 +61,7 @@ public abstract class ChatLogManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the period of time after which old players will be
+	 * Gets the period of time after which old messages will be
 	 * removed from the storage by the auto cleaner, in milliseconds.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.log.messages-auto-cleaner-period" in {@link ConfigurationType#CHAT}</p>

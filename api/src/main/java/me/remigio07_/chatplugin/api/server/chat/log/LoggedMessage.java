@@ -40,15 +40,6 @@ public abstract class LoggedMessage {
 	protected long date;
 	protected DenyChatReason denyChatReason;
 	
-	protected LoggedMessage(OfflinePlayer player, String rank, String server, String world, String message, long date, DenyChatReason denyReason) {
-		this.player = player;
-		this.rank = rank;
-		this.server = server;
-		this.world = world;
-		this.message = message;
-		this.date = date;
-	}
-	
 	/**
 	 * Gets this message's sender.
 	 * 

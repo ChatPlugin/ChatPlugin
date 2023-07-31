@@ -66,6 +66,11 @@ public class AdCommand extends BaseCommand {
 		}
 		
 		@Override
+		public String getPermission() {
+			return "chatplugin.commands.ad.send";
+		}
+		
+		@Override
 		public boolean isSubCommand() {
 			return true;
 		}
@@ -122,6 +127,11 @@ public class AdCommand extends BaseCommand {
 		@Override
 		public java.util.List<String> getMainArgs() {
 			return Arrays.asList("list", "ls", "l");
+		}
+		
+		@Override
+		public String getPermission() {
+			return "chatplugin.commands.ad.list";
 		}
 		
 		@Override

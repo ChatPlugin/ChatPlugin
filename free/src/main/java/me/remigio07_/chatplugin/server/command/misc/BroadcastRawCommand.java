@@ -34,7 +34,7 @@ public class BroadcastRawCommand extends BaseCommand {
 	
 	@Override
 	public List<String> getMainArgs() {
-		return Arrays.asList("broadcastraw", "bcastr", "shoutraw", "localraw", "bcraw", "bcr");
+		return Arrays.asList("broadcastraw", "bcastraw", "shoutraw", "localraw", "bcr");
 	}
 	
 	@Override

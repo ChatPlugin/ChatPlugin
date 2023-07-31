@@ -36,7 +36,7 @@ public class IPLookupCommand extends BaseCommand {
 	
 	@Override
 	public List<String> getMainArgs() {
-		return Arrays.asList("iplookup", "lookup", "geolocalize", "geolocate", "geol", "iplook", "ipl");
+		return Arrays.asList("iplookup", "lookup", "geolocate", "ipl");
 	}
 	
 	@Override

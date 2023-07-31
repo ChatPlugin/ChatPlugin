@@ -33,7 +33,7 @@ public class ClearChatCommand extends BaseCommand {
 	
 	@Override
 	public List<String> getMainArgs() {
-		return Arrays.asList("clearchat", "clrchat", "cchat");
+		return Arrays.asList("clearchat", "clc");
 	}
 	
 	@Override

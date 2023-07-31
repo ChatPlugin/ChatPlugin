@@ -33,7 +33,7 @@ public class MuteAllCommand extends BaseCommand {
 	
 	@Override
 	public List<String> getMainArgs() {
-		return Arrays.asList("muteall", "mutea", "mall", "disablechat", "enablechat", "togglechat", "tchat");
+		return Arrays.asList("muteall", "togglechat", "ma");
 	}
 	
 	@Override

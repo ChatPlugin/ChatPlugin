@@ -40,7 +40,7 @@ public class LastSeenCommand extends BaseCommand {
 	
 	@Override
 	public List<String> getMainArgs() {
-		return Arrays.asList("lastseen", "seen", "last", "lastlogout", "lastlogin");
+		return Arrays.asList("lastseen", "seen", "lastlogout", "ls");
 	}
 	
 	@Override

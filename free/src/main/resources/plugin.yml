@@ -11,12 +11,8 @@ commands:
   chatplugin:
     description: ChatPlugin's main command.
     usage: /chatplugin help
-    aliases: [chatpl, chatp, chat, cplugin, cp]
+    aliases: [chatpl, cp]
   # user
-  language:
-    description: Language command.
-    usage: /language
-    aliases: [languages, lang, langs, localization, locale, l18n]
   ping:
     description: Ping command.
     usage: /ping [player]
@@ -28,28 +24,28 @@ commands:
   playerlist:
     description: Player list command.
     usage: /playerlist [rank]
-    aliases: [playerslist, plist, list, onlineplayers, onlinelist, online]
+    aliases: [plist, list, online]
   # admin
   staffchat:
     description: Staff chat command.
     usage: /staffchat [message]
-    aliases: [staffc, schat, sch, sc]
+    aliases: [schat, sc]
   iplookup:
     description: IP lookup command.
     usage: /iplookup <player|IP address>
-    aliases: [lookup, geolocalize, geolocate, geol, iplook, ipl]
+    aliases: [lookup, geolocate, ipl]
   lastseen:
     description: Last seen comamnd.
     usage: /lastseen <player>
-    aliases: [seen, last, lastlogout, lastlogin]
+    aliases: [seen, lastlogout, ls]
   clearchat:
     description: Clear chat command.
     usage: /clearchat
-    aliases: [clrchat, cchat]
+    aliases: [clc]
   muteall:
     description: Muteall command.
     usage: /muteall
-    aliases: [mutea, mall, disablechat, enablechat, togglechat, tchat]
+    aliases: [togglechat, ma]
   # vanish
   vanish:
     description: Vanish command.
@@ -67,7 +63,7 @@ commands:
   broadcastraw:
     description: Broadcast raw command.
     usage: /broadcastraw <message>
-    aliases: [bcastraw, bcastr, shoutraw, localraw, bcraw, bcr]
+    aliases: [bcastraw, shoutraw, localraw, bcr]
   ad:
     description: Ad command.
     usage: /ad <send|list> [player] [id]

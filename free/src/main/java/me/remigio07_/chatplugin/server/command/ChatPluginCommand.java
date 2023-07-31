@@ -49,7 +49,7 @@ public class ChatPluginCommand extends BaseCommand {
 	
 	@Override
 	public List<String> getMainArgs() {
-		return Arrays.asList("chatplugin", "chatp", "chat", "cplugin", "cp");
+		return Arrays.asList("chatplugin", "chatpl", "cp");
 	}
 	
 	@Override
@@ -71,7 +71,7 @@ public class ChatPluginCommand extends BaseCommand {
 		
 		@Override
 		public List<String> getMainArgs() {
-			return Arrays.asList("help", "helpme", "what", "?");
+			return Arrays.asList("help", "?");
 		}
 		
 		@Override
@@ -174,7 +174,7 @@ public class ChatPluginCommand extends BaseCommand {
 		
 		@Override
 		public List<String> getMainArgs() {
-			return Arrays.asList("language", "languages", "lang", "langs", "localization", "locale", "l18n");
+			return Arrays.asList("language", "languages", "lang", "langs", "locale");
 		}
 		
 		@Override

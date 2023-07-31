@@ -41,7 +41,7 @@ public class PlayerListCommand extends BaseCommand {
 	
 	@Override
 	public List<String> getMainArgs() {
-		return Arrays.asList("playerlist", "playerslist", "plist", "list", "onlineplayers", "onlinelist", "online");
+		return Arrays.asList("playerlist", "plist", "list", "online");
 	}
 	
 	@Override

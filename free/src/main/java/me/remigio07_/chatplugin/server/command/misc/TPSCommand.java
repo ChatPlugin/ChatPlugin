@@ -32,7 +32,7 @@ public class TPSCommand extends BaseCommand {
 	
 	@Override
 	public List<String> getMainArgs() {
-		return Arrays.asList("tps", "tickspersecond", "ticks", "tick", "lag");
+		return Arrays.asList("tps", "tickspersecond", "ticks", "lag");
 	}
 	
 	@Override

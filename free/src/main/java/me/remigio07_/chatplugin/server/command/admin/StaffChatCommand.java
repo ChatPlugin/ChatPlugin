@@ -33,7 +33,7 @@ public class StaffChatCommand extends BaseCommand {
 	
 	@Override
 	public List<String> getMainArgs() {
-		return Arrays.asList("staffchat", "staffc", "schat", "sch", "sc");
+		return Arrays.asList("staffchat", "schat","sc");
 	}
 	
 	@Override

@@ -29,6 +29,7 @@ import me.remigio07_.chatplugin.server.command.admin.IPLookupCommand;
 import me.remigio07_.chatplugin.server.command.admin.LastSeenCommand;
 import me.remigio07_.chatplugin.server.command.admin.MuteAllCommand;
 import me.remigio07_.chatplugin.server.command.admin.StaffChatCommand;
+import me.remigio07_.chatplugin.server.command.misc.AdCommand;
 import me.remigio07_.chatplugin.server.command.misc.BroadcastCommand;
 import me.remigio07_.chatplugin.server.command.misc.BroadcastRawCommand;
 import me.remigio07_.chatplugin.server.command.misc.TPSCommand;
@@ -70,6 +71,11 @@ public abstract class CommandsHandler {
 		put("tps", new TPSCommand());
 		put("broadcast", new BroadcastCommand());
 		put("broadcastraw", new BroadcastRawCommand());
+		put("ad",
+				new AdCommand.List(),
+				new AdCommand.Send(),
+				new AdCommand()
+				);
 	}
 	
 	private static void put(String name, BaseCommand... commands) {

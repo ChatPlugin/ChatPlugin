@@ -581,7 +581,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("proxy-messages.debug.disabled", "{pfx} &aDebug mode disabled.");
 		messages.addDefault("proxy-messages.reload.start", "{pfx} &aChatPlugin is reloading...");
 		messages.addDefault("proxy-messages.reload.end", "{pfx} &aChatPlugin has been reloaded. Took &f{0} ms &ato complete.");
-		messages.addDefault("proxy-messages.version", "{pfx} &aRunning &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07_&a.");
+		messages.addDefault("proxy-messages.version", "{pfx} &aRunning &c&lChat&f&lPlugin &6Premium &fv{0} &aby &9Remigio07_ &aon &f{1} {2}&a.");
 		messages.addDefault("proxy-messages.info", "{pfx} &aInfo about &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07_&a:\n&eWebsite: &fhttps://megaproserver.com/chatplugin\n&eGitHub: &fhttps://github.com/Remigio07/ChatPlugin\n&eDiscord: &fhttps://discord.gg/CPtysXTfQg");
 		
 		messages.save();

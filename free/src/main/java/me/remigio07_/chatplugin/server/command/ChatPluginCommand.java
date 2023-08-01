@@ -252,7 +252,7 @@ public class ChatPluginCommand extends BaseCommand {
 		
 		public Status() {
 			super("/chatplugin status [-chat]");
-			tabCompletionArgs.put(1, Arrays.asList("-c"));
+			tabCompletionArgs.put(1, Arrays.asList("-chat", "-c"));
 		}
 		
 		@Override
@@ -286,8 +286,8 @@ public class ChatPluginCommand extends BaseCommand {
 	public static class Debug extends BaseCommand {
 		
 		public Debug() {
-			super("/chatplugin debug [manager|-f]");
-			tabCompletionArgs.put(1, Arrays.asList("{managers}", "-f"));
+			super("/chatplugin debug [manager|-file]");
+			tabCompletionArgs.put(1, Arrays.asList("{managers}", "-file", "-f"));
 		}
 		
 		@Override

@@ -65,9 +65,11 @@ public class ChatPluginCommand extends BaseCommand {
 	
 	public static class Help extends BaseCommand {
 		
+		private static boolean premium = ChatPlugin.getInstance().isPremium();
+		
 		public Help() {
 			super("/chatplugin help [category]");
-			tabCompletionArgs.put(1, Arrays.asList("user", "punishments", "guis", "admin", "vanish", "misc"));
+			tabCompletionArgs.put(1, premium ? Arrays.asList("user", "punishments", "guis", "admin", "vanish", "misc") : Arrays.asList("user", "admin", "vanish", "misc"));
 		}
 		
 		@Override
@@ -82,33 +84,38 @@ public class ChatPluginCommand extends BaseCommand {
 		
 		@Override
 		public void execute(CommandSenderAdapter sender, me.remigio07_.chatplugin.api.server.language.Language language, String[] args) {
+			String str = premium ? "premium" : "free";
+			
 			if (args.length == 1 || args[1].equalsIgnoreCase("user"))
-				sender.sendMessage(language.getMessage("commands.help.user", ChatPlugin.VERSION));
-			else if (sender.hasPermission(getPermission() + ".admin"))
+				sender.sendMessage(language.getMessage("commands.help." + str + ".user", ChatPlugin.VERSION));
+			else if (sender.hasPermission(getPermission() + ".admin")) {
 				switch (args[1].toLowerCase()) {
 				case "user":
-					sender.sendMessage(language.getMessage("commands.help.user", ChatPlugin.VERSION));
-					break;
+					sender.sendMessage(language.getMessage("commands.help." + str + ".user", ChatPlugin.VERSION));
+					return;
 				case "admin":
-					sender.sendMessage(language.getMessage("commands.help.admin", ChatPlugin.VERSION));
-					break;
+					sender.sendMessage(language.getMessage("commands.help." + str + ".admin", ChatPlugin.VERSION));
+					return;
 				case "punishments":
-					sender.sendMessage(language.getMessage("commands.help.punishments", ChatPlugin.VERSION));
-					break;
+					if (premium) {
+						sender.sendMessage(language.getMessage("commands.help.premium.punishments", ChatPlugin.VERSION));
+						return;
+					} break;
 				case "guis":
-					sender.sendMessage(language.getMessage("commands.help.guis", ChatPlugin.VERSION));
-					break;
+					if (premium) {
+						sender.sendMessage(language.getMessage("commands.help.premium.guis", ChatPlugin.VERSION));
+						return;
+					} break;
 				case "vanish":
-					sender.sendMessage(language.getMessage("commands.help.vanish", ChatPlugin.VERSION));
-					break;
+					sender.sendMessage(language.getMessage("commands.help." + str + ".vanish", ChatPlugin.VERSION));
+					return;
 				case "misc":
-					sender.sendMessage(language.getMessage("commands.help.misc", ChatPlugin.VERSION));
-					break;
+					sender.sendMessage(language.getMessage("commands.help." + str + ".misc", ChatPlugin.VERSION));
+					return;
 				default:
-					sender.sendMessage(language.getMessage("misc.wrong-syntax", usage));
 					break;
-				}
-			else sender.sendMessage(language.getMessage("misc.no-permission"));
+				} sender.sendMessage(language.getMessage("misc.wrong-syntax", usage));
+			} else sender.sendMessage(language.getMessage("misc.no-permission"));
 		}
 		
 	}

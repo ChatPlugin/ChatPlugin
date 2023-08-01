@@ -72,13 +72,13 @@ public abstract class CommandsHandler {
 		put("vanish", new VanishCommand());
 		// misc
 		put("tps", new TPSCommand());
-		put("broadcast", new BroadcastCommand());
-		put("broadcastraw", new BroadcastRawCommand());
 		put("ad",
 				new AdCommand.List(),
 				new AdCommand.Send(),
 				new AdCommand()
 				);
+		put("broadcast", new BroadcastCommand());
+		put("broadcastraw", new BroadcastRawCommand());
 	}
 	
 	private static void put(String name, BaseCommand... commands) {

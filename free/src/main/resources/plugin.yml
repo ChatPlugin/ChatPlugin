@@ -60,6 +60,10 @@ commands:
     description: TPS command.
     usage: /tps
     aliases: [tickspersecond, ticks, tick, lag]
+  ad:
+    description: Ad command.
+    usage: /ad <send|list> [player] [id]
+    aliases: [ads, sendad]
   broadcast:
     description: Broadcast command.
     usage: /broadcast <message>
@@ -68,7 +72,3 @@ commands:
     description: Broadcast raw command.
     usage: /broadcastraw <message>
     aliases: [bcastraw, shoutraw, localraw, bcr]
-  ad:
-    description: Ad command.
-    usage: /ad <send|list> [player] [id]
-    aliases: [ads, sendad]

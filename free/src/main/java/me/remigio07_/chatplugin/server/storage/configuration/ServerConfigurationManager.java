@@ -366,17 +366,16 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.crashclient", "{pfx} &aYou crashed &f{0}&a. Well done.");
 		messages.addDefault("commands.discordmessage", "{pfx} &aTrying to send the message through the bot...");
 		
+		messages.addDefault("commands.multi-account-check.searching", "{pfx} &eSearching for multiple accounts...");
+		messages.addDefault("commands.multi-account-check.found", "{pfx} &aThe following accounts were found:");
+		messages.addDefault("commands.multi-account-check.not-found", "{pfx} &f{0} &cdoes not own any multiple accounts.");
+		messages.addDefault("commands.multi-account-check.message-format.text", "{banned} &8- &f{player}");
+		messages.addDefault("commands.multi-account-check.message-format.hover", "&ePlayer ID: &f#{player_id}\n&eIP address: &f{ip_address}\n&eLast logout: &f{last_logout} ago\n&eTime played: &f{time_played}");
+		messages.addDefault("commands.multi-account-check.message-format.banned-format.yes", "&4banned &e(IDs: &f{bans_ids}&e)");
+		messages.addDefault("commands.multi-account-check.message-format.banned-format.no", "&2not banned");
+		
 		messages.addDefault("chat.broadcast-format.local", "&8[&c&lBroadcast&8] &r{0}");
 		messages.addDefault("chat.broadcast-format.global", "&8[&c&lBroadcast&8] &r{0}");
-		
-		messages.addDefault("chat.log.searching", "{pfx} &eSearching for logged messages...");
-		messages.addDefault("chat.log.found", "{pfx} &aThe following messages were found:");
-		messages.addDefault("chat.log.not-found", "{pfx} &cNo logged messages were found.");
-		messages.addDefault("chat.log.message-format.text", "&e[{date}] &8- &f{message}");
-		messages.addDefault("chat.log.message-format.hover", "&aPlayer: &f{player}\n&aRank: &f{rank}\n&aServer: &f{server}\n&aWorld: &f{world}\n&aDate: &f{date}\n&aDenied: &f{denied}");
-		messages.addDefault("chat.log.message-format.date-format", "MM-dd hh:mm:ss a");
-		messages.addDefault("chat.log.message-format.denied-format.yes", "&4denied &f({deny_chat_reason})");
-		messages.addDefault("chat.log.message-format.denied-format.no", "&2allowed");
 		
 		messages.addDefault("chat.antispam.no-caps", "{pfx} &cYou cannot use more than &f{0}% &cof caps in messages longer than &f{1} &ccharacters. Buy a &fVIP package &cto bypass this restriction.");
 		messages.addDefault("chat.antispam.no-flood", "{pfx} &cYou cannot chat more than once every &f{0} &cseconds. Buy a &fVIP package &cto bypass this restriction.");
@@ -388,13 +387,14 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("chat.no-format", "{pfx} &cYou cannot write formatted messages. Buy a &fVIP package &cto bypass this restriction.");
 		messages.addDefault("chat.pinged", "{pfx} &eYou got pinged by &f{0}&e.");
 		
-		messages.addDefault("commands.multi-account-check.searching", "{pfx} &eSearching for multiple accounts...");
-		messages.addDefault("commands.multi-account-check.found", "{pfx} &aThe following accounts were found:");
-		messages.addDefault("commands.multi-account-check.not-found", "{pfx} &f{0} &cdoes not own any multiple accounts.");
-		messages.addDefault("commands.multi-account-check.message-format.text", "{banned} &8- &f{player}");
-		messages.addDefault("commands.multi-account-check.message-format.hover", "&ePlayer ID: &f#{player_id}\n&eIP address: &f{ip_address}\n&eLast logout: &f{last_logout} ago\n&eTime played: &f{time_played}");
-		messages.addDefault("commands.multi-account-check.message-format.banned-format.yes", "&4banned &e(IDs: &f{bans_ids}&e)");
-		messages.addDefault("commands.multi-account-check.message-format.banned-format.no", "&2not banned");
+		messages.addDefault("chat.log.searching", "{pfx} &eSearching for logged messages...");
+		messages.addDefault("chat.log.found", "{pfx} &aThe following messages were found:");
+		messages.addDefault("chat.log.not-found", "{pfx} &cNo logged messages were found.");
+		messages.addDefault("chat.log.message-format.text", "&e[{date}] &8- &f{message}");
+		messages.addDefault("chat.log.message-format.hover", "&aPlayer: &f{player}\n&aRank: &f{rank}\n&aServer: &f{server}\n&aWorld: &f{world}\n&aDate: &f{date}\n&aDenied: &f{denied}");
+		messages.addDefault("chat.log.message-format.date-format", "MM-dd hh:mm:ss a");
+		messages.addDefault("chat.log.message-format.denied-format.yes", "&4denied &f({deny_chat_reason})");
+		messages.addDefault("chat.log.message-format.denied-format.no", "&2allowed");
 		
 		messages.addDefault("guis.no-permission", "{pfx} &cYou do not have the permission to use that GUI.");
 		messages.addDefault("guis.player-went-offline", "{pfx} &f{0} &cwent offline so your open GUI (&f{1}&c) has been closed.");
@@ -481,7 +481,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("kick.silent-format.yes", "yes");
 		messages.addDefault("kick.silent-format.no", "no");
 		
-		// ok, idea geniale, ogni lingua ha le sue preset-reasons ma devi tenere conto che se lo staffer ha il pl in ita e usa le motivazioni in ita con un utente inglese e` un po' una cavolata: bisognerebbe fare in modo che le liste in entrambi i files siano lunghe uguali, in questo modo semplicemente vede in che posizione di questo file si trova la motivazione e va a beccare quella uguale nel file dell'altra lingua (quella del player)!
 		messages.addDefault("mute.muted.self", "{pfx} &cYou have been muted (ID: &f#{id}&c) for &f{duration} &cby &f{staff_member}&c: &f{reason}&c.");
 		messages.addDefault("mute.muted.other", "{pfx} &f{player} &chas been muted (ID: &f#{id}&c) for &f{duration} &cby &f{staff_member}&c: &f{reason}&c.");
 		messages.addDefault("mute.updated.self", "{pfx} &cYour active mute (ID: &f#{id}&c) has been updated by &f{staff_member}&c. Duration: &f{duration}&c, reason: &f{reason}&c.");

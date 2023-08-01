@@ -179,11 +179,6 @@ public class ChatPluginCommand extends BaseCommand {
 		}
 		
 		@Override
-		public String getPermission() {
-			return "chatplugin.commands.language.sub";
-		}
-		
-		@Override
 		public boolean isSubCommand() {
 			return true;
 		}

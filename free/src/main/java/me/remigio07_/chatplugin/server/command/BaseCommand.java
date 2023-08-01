@@ -31,6 +31,7 @@ import me.remigio07_.chatplugin.api.server.ad.AdManager;
 import me.remigio07_.chatplugin.api.server.gui.GUI;
 import me.remigio07_.chatplugin.api.server.gui.GUIManager;
 import me.remigio07_.chatplugin.api.server.language.Language;
+import me.remigio07_.chatplugin.api.server.language.LanguageManager;
 import me.remigio07_.chatplugin.api.server.rank.Rank;
 import me.remigio07_.chatplugin.api.server.rank.RankManager;
 import me.remigio07_.chatplugin.api.server.util.Utils;
@@ -101,6 +102,9 @@ public abstract class BaseCommand {
 		} if (args.contains("{managers}")) {
 			args.remove("{managers}");
 			args.addAll(ChatPluginManagers.getInstance().getManagers().keySet().stream().map(clazz -> clazz.getSimpleName().substring(0, clazz.getSimpleName().indexOf("Manager"))).collect(Collectors.toList()));
+		} if (args.contains("{languages}")) {
+			args.remove("{languages}");
+			args.addAll(LanguageManager.getInstance().getLanguages().stream().map(Language::getID).collect(Collectors.toList()));
 		} if (startsWith.isEmpty())
 			return args;
 		for (String str : new ArrayList<>(args))

@@ -181,7 +181,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("languages.detector.enabled", false);
 		config.addDefault("languages.detector.method", "CLIENT_LOCALE");
 		config.addDefault("languages.detector.delay-ms", 5000L);
-		config.addDefault("languages.command.enabled", true);
 		config.addDefault("languages.command.cooldown", "5m");
 		config.addDefault("languages.command.commands", Arrays.asList());
 		config.addDefault("languages.english.display-name", "&fEnglish");

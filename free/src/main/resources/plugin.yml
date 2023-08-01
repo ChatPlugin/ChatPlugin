@@ -13,6 +13,10 @@ commands:
     usage: /chatplugin help
     aliases: [chatpl, cp]
   # user
+  language:
+    description: Language command.
+    usage: /language
+    aliases: [languages, lang, langs, locale]
   ping:
     description: Ping command.
     usage: /ping [player]

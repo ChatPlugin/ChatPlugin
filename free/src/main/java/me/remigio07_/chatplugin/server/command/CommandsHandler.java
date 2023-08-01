@@ -33,6 +33,7 @@ import me.remigio07_.chatplugin.server.command.misc.AdCommand;
 import me.remigio07_.chatplugin.server.command.misc.BroadcastCommand;
 import me.remigio07_.chatplugin.server.command.misc.BroadcastRawCommand;
 import me.remigio07_.chatplugin.server.command.misc.TPSCommand;
+import me.remigio07_.chatplugin.server.command.user.LanguageCommand;
 import me.remigio07_.chatplugin.server.command.user.PingCommand;
 import me.remigio07_.chatplugin.server.command.user.PlayerListCommand;
 import me.remigio07_.chatplugin.server.command.user.RankInfoCommand;
@@ -56,6 +57,8 @@ public abstract class CommandsHandler {
 				new ChatPluginCommand()
 				);
 		// user
+		if (!ChatPlugin.getInstance().isPremium())
+			put("language", new LanguageCommand());
 		put("ping", new PingCommand());
 		put("rankinfo", new RankInfoCommand());
 		put("playerlist", new PlayerListCommand());

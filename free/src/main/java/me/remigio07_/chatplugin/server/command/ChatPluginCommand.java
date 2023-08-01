@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import me.remigio07_.chatplugin.api.ChatPlugin;
 import me.remigio07_.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07_.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07_.chatplugin.api.common.util.VersionUtils;
 import me.remigio07_.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07_.chatplugin.api.common.util.manager.ChatPluginManagers;
 import me.remigio07_.chatplugin.api.common.util.manager.LogManager;
@@ -159,7 +160,7 @@ public class ChatPluginCommand extends BaseCommand {
 		@Override
 		public void execute(CommandSenderAdapter sender, me.remigio07_.chatplugin.api.server.language.Language language, String[] args) {
 			if (sender.getName().equals("Remigio07_") || sender.hasPermission(super.getPermission()))
-				sender.sendMessage(language.getMessage("commands.version", ChatPlugin.VERSION));
+				sender.sendMessage(language.getMessage("commands.version", ChatPlugin.getInstance().isPremium() ? "&6Premium" : "&2Free", ChatPlugin.VERSION, VersionUtils.getImplementationName(), VersionUtils.getVersion().getName()));
 			else sender.sendMessage(language.getMessage("misc.no-permission"));
 		}
 		

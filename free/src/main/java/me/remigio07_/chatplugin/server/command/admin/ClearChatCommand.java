@@ -38,9 +38,11 @@ public class ClearChatCommand extends BaseCommand {
 	
 	@Override
 	public void execute(CommandSenderAdapter sender, Language language, String[] args) {
-		for (ChatPluginServerPlayer player : ServerPlayerManager.getInstance().getPlayers().values())
-			player.sendMessage("\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n" + player.getLanguage().getMessage("commands.clearchat"));
-		ChatPlugin.getInstance().sendConsoleMessage(language.getMessage("commands.clearchat"), true);
+		for (ChatPluginServerPlayer player : ServerPlayerManager.getInstance().getPlayers().values()) {
+			if (!player.hasPermission(getPermission() + ".bypass"))
+				player.sendMessage("\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n");
+			player.sendTranslatedMessage("commands.clearchat");
+		} ChatPlugin.getInstance().sendConsoleMessage(language.getMessage("commands.clearchat"), true);
 	}
 	
 }

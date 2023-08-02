@@ -345,7 +345,7 @@ public class ChatPluginCommand extends BaseCommand {
 					} sendUsage(sender, language);
 					break;
 				}
-			}
+			} else sendUsage(sender, language);
 		}
 		
 		private static Class<? extends ChatPluginManager> getOriginalClass(ChatPluginManager manager) {

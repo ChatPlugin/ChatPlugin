@@ -20,9 +20,9 @@ import java.util.concurrent.CompletableFuture;
 
 import me.remigio07_.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07_.chatplugin.api.common.util.manager.ChatPluginManagerException;
-import me.remigio07_.chatplugin.api.server.join_quit.MultiAccountCheckManager;
+import me.remigio07_.chatplugin.api.server.join_quit.AccountCheckManager;
 
-public class DummyMultiAccountCheckManager extends MultiAccountCheckManager {
+public class DummyAccountCheckManager extends AccountCheckManager {
 	
 	@Override
 	public void load() throws ChatPluginManagerException {

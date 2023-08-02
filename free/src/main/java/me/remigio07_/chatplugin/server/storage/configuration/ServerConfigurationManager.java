@@ -316,7 +316,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.help.free.misc", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07_&a:\n&f&l/tps &8- &eDisplay server's ticks per second.\n&f&l/ad &8- &eSend a loaded ad to one or more online players.\n&f&l/broadcast &8- &eSend a message to every online player.\n&f&l/broadcastraw &8- &eLike /broadcast, but without the prefix.");
 		
 		messages.addDefault("commands.help.premium.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07_&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.\n&f&l/bossbar &8- &eToggle the bossbar's visibility.\n&f&l/scoreboard &8- &eToggle the scoreboard's visibility.");
-		messages.addDefault("commands.help.premium.admin", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07_&a:\n&f&l/staffchat &8- &eVery handy cross-server Staff chat.\n&f&l/iplookup &8- &ePerform a lookup of an IP address.\n&f&l/lastseen &8- &eCheck when a player was last seen.\n&f&l/clearchat &8- &eClear chat to hide last messages.\n&f&l/muteall &8- &eToggle chat for non Staff members.\n&f&l/chatlog &8- &eLook up messages containing certain text.\n&f&l/multiaccountcheck &8- &eCheck a player's alt accounts.");
+		messages.addDefault("commands.help.premium.admin", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07_&a:\n&f&l/staffchat &8- &eVery handy cross-server Staff chat.\n&f&l/iplookup &8- &ePerform a lookup of an IP address.\n&f&l/lastseen &8- &eCheck when a player was last seen.\n&f&l/clearchat &8- &eClear chat to hide last messages.\n&f&l/muteall &8- &eToggle chat for non Staff members.\n&f&l/chatlog &8- &eLook up messages containing certain text.\n&f&l/accountcheck &8- &eCheck a player's alt accounts.");
 		messages.addDefault("commands.help.premium.punishments", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07_&a:\n&f&l/ban &8- &eBan a player (/tempban also available).\n&f&l/unban &8- &eUnban a previously banned player.\n&f&l/warning &8- &eWarn a player for a certain time.\n&f&l/removewarning &8- &eRemove a player's last active warning.\n&f&l/clearwarnings &8- &eClear a player's active warnings.\n&f&l/kick &8- &eDisconnect a player from the server.\n&f&l/fakekick &8- &eKick using a random error as reason.\n&f&l/mute &8- &eMake a player unable to use the chat.\n&f&l/unmute &8- &eUnmute a previously muted player.");
 		messages.addDefault("commands.help.premium.guis", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07_&a:\n&f&l/cp status &8- &eDisplay the server's current status.u\n&f&l/banlist &8- &eDisplay the active bans list.\n&f&l/warnlist &8- &eDisplay the active warnings list.\n&f&l/mutelist &8- &eDisplay the active mutes list.\n&f&l/violations &8- &eDisplay last players' violations.\n&f&l/playerinfo &8- &eShow detailed info about a player.\n&f&l/playerpunishments &8- &eShow a player's punishments list.\n&f&l/playerviolations &8- &eShow a player's last violations.");
 		messages.addDefault("commands.help.premium.vanish", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07_&a:\n&f&l/vanish &8- &eBecome invisible to non Staff members.\n&f&l/fakejoin &8- &eSend fake join message and disable vanish.\n&f&l/fakequit &8- &eSend fake quit message and enable vanish.\n&f&l/silentjoin &8- &eSilently switch to another server.");
@@ -366,13 +366,13 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.crashclient", "{pfx} &aYou crashed &f{0}&a. Well done.");
 		messages.addDefault("commands.discordmessage", "{pfx} &aTrying to send the message through the bot...");
 		
-		messages.addDefault("commands.multi-account-check.searching", "{pfx} &eSearching for multiple accounts...");
-		messages.addDefault("commands.multi-account-check.found", "{pfx} &aThe following accounts were found:");
-		messages.addDefault("commands.multi-account-check.not-found", "{pfx} &f{0} &cdoes not own any multiple accounts.");
-		messages.addDefault("commands.multi-account-check.message-format.text", "{banned} &8- &f{player}");
-		messages.addDefault("commands.multi-account-check.message-format.hover", "&ePlayer ID: &f#{player_id}\n&eIP address: &f{ip_address}\n&eLast logout: &f{last_logout} ago\n&eTime played: &f{time_played}");
-		messages.addDefault("commands.multi-account-check.message-format.banned-format.yes", "&4banned &e(IDs: &f{bans_ids}&e)");
-		messages.addDefault("commands.multi-account-check.message-format.banned-format.no", "&2not banned");
+		messages.addDefault("commands.account-check.searching", "{pfx} &eSearching for multiple accounts...");
+		messages.addDefault("commands.account-check.found", "{pfx} &aThe following accounts were found:");
+		messages.addDefault("commands.account-check.not-found", "{pfx} &f{0} &cdoes not own any multiple accounts.");
+		messages.addDefault("commands.account-check.message-format.text", "{banned} &8- &f{player}");
+		messages.addDefault("commands.account-check.message-format.hover", "&ePlayer ID: &f#{player_id}\n&eIP address: &f{ip_address}\n&eLast logout: &f{last_logout} ago\n&eTime played: &f{time_played}");
+		messages.addDefault("commands.account-check.message-format.banned-format.yes", "&4banned &e(IDs: &f{bans_ids}&e)");
+		messages.addDefault("commands.account-check.message-format.banned-format.no", "&2not banned");
 		
 		messages.addDefault("chat.broadcast-format.local", "&8[&c&lBroadcast&8] &r{0}");
 		messages.addDefault("chat.broadcast-format.global", "&8[&c&lBroadcast&8] &r{0}");
@@ -1026,19 +1026,19 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		joinQuitModules.addDefault("join-quit-modules.suggested-version.version", "{server_version}");
 		joinQuitModules.addDefault("join-quit-modules.suggested-version.delay-ms", 10000L);
 		
-		joinQuitModules.addDefault("join-quit-modules.multi-account-check.enabled", false);
-		joinQuitModules.addDefault("join-quit-modules.multi-account-check.perform-on-first-join", true);
-		joinQuitModules.addDefault("join-quit-modules.multi-account-check.timeout-between-checks-ms", 10);
-		joinQuitModules.addDefault("join-quit-modules.multi-account-check.max-time-played", "12h");
-		joinQuitModules.addDefault("join-quit-modules.multi-account-check.ip-lookup.enabled", false);
-		joinQuitModules.addDefault("join-quit-modules.multi-account-check.ip-lookup.max-accuracy-radius-km", 10);
-		joinQuitModules.addDefault("join-quit-modules.multi-account-check.anti-ban-evading-system.enabled", true);
-		joinQuitModules.addDefault("join-quit-modules.multi-account-check.anti-ban-evading-system.commands.english", Arrays.asList("tempban {player} 30d Ban evading of account {account}. This is an automatic ban. -s"));
-		joinQuitModules.addDefault("join-quit-modules.multi-account-check.anti-ban-evading-system.commands.italian", Arrays.asList("tempban {player} 30d Elusione del ban dell'account {account}. Questo è un ban automatico. -s"));
-		joinQuitModules.addDefault("join-quit-modules.multi-account-check.punish-commands.2.english", Arrays.asList("staffchat &f{player} &cowns multiple (&f{amount}&c) accounts: &f{accounts}&c."));
-		joinQuitModules.addDefault("join-quit-modules.multi-account-check.punish-commands.2.italian", Arrays.asList("staffchat &f{player} &cpossiede accounts multipli (&f{amount}&c): &f{accounts}&c."));
-		joinQuitModules.addDefault("join-quit-modules.multi-account-check.punish-commands.3.english", Arrays.asList("tempban {player} 30d Multiple ({amount}) accounts detected: {accounts}. This is an automatic ban. -s"));
-		joinQuitModules.addDefault("join-quit-modules.multi-account-check.punish-commands.3.italian", Arrays.asList("tempban {player} 30d Accounts multipli ({amount}) rilevati: {accounts}. Questo è un ban automatico. -s"));
+		joinQuitModules.addDefault("join-quit-modules.account-check.enabled", false);
+		joinQuitModules.addDefault("join-quit-modules.account-check.perform-on-first-join", true);
+		joinQuitModules.addDefault("join-quit-modules.account-check.timeout-between-checks-ms", 10);
+		joinQuitModules.addDefault("join-quit-modules.account-check.max-time-played", "12h");
+		joinQuitModules.addDefault("join-quit-modules.account-check.ip-lookup.enabled", false);
+		joinQuitModules.addDefault("join-quit-modules.account-check.ip-lookup.max-accuracy-radius-km", 10);
+		joinQuitModules.addDefault("join-quit-modules.account-check.anti-ban-evading-system.enabled", true);
+		joinQuitModules.addDefault("join-quit-modules.account-check.anti-ban-evading-system.commands.english", Arrays.asList("tempban {player} 30d Ban evading of account {account}. This is an automatic ban. -s"));
+		joinQuitModules.addDefault("join-quit-modules.account-check.anti-ban-evading-system.commands.italian", Arrays.asList("tempban {player} 30d Elusione del ban dell'account {account}. Questo è un ban automatico. -s"));
+		joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.2.english", Arrays.asList("staffchat &f{player} &cowns multiple (&f{amount}&c) accounts: &f{accounts}&c."));
+		joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.2.italian", Arrays.asList("staffchat &f{player} &cpossiede accounts multipli (&f{amount}&c): &f{accounts}&c."));
+		joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.3.english", Arrays.asList("tempban {player} 30d Multiple ({amount}) accounts detected: {accounts}. This is an automatic ban. -s"));
+		joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.3.italian", Arrays.asList("tempban {player} 30d Accounts multipli ({amount}) rilevati: {accounts}. Questo è un ban automatico. -s"));
 		
 		joinQuitModules.save();
 	}

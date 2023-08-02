@@ -45,7 +45,7 @@ import me.remigio07_.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07_.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07_.chatplugin.api.server.bossbar.BossbarManager;
 import me.remigio07_.chatplugin.api.server.event.player.PlayerFirstJoinEvent;
-import me.remigio07_.chatplugin.api.server.join_quit.MultiAccountCheckManager;
+import me.remigio07_.chatplugin.api.server.join_quit.AccountCheckManager;
 import me.remigio07_.chatplugin.api.server.language.Language;
 import me.remigio07_.chatplugin.api.server.language.LanguageDetector;
 import me.remigio07_.chatplugin.api.server.language.LanguageDetectorMethod;
@@ -155,8 +155,8 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 			} catch (SQLException | IOException e) {
 				LogManager.log("{0} occurred while getting {1}'s name or ID from the storage: {2}", 2, e.getClass().getSimpleName(), name, e.getMessage());
 			} if (!playerStored) {
-				if (MultiAccountCheckManager.getInstance().isPerformOnFirstJoin())
-					MultiAccountCheckManager.getInstance().check(this);
+				if (AccountCheckManager.getInstance().isPerformOnFirstJoin())
+					AccountCheckManager.getInstance().check(this);
 				new PlayerFirstJoinEvent(this).call();
 			}
 		}, 0L);

@@ -27,9 +27,9 @@ import me.remigio07_.chatplugin.api.common.storage.configuration.ConfigurationTy
 import me.remigio07_.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07_.chatplugin.api.server.language.Language;
 
-public abstract class MultiAccountCheckManager implements ChatPluginManager {
+public abstract class AccountCheckManager implements ChatPluginManager {
 	
-	protected static MultiAccountCheckManager instance;
+	protected static AccountCheckManager instance;
 	protected boolean enabled, performOnFirstJoin, ipLookupEnabled, antiBanEvadingSystemEnabled;
 	protected long timeoutBetweenChecks, maxTimePlayed;
 	protected int maxAccuracyRadius;
@@ -40,7 +40,7 @@ public abstract class MultiAccountCheckManager implements ChatPluginManager {
 	/**
 	 * Checks if this manager is enabled.
 	 * 
-	 * <p><strong>Found at:</strong> "join-quit-modules.multi-account-check.enabled" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
+	 * <p><strong>Found at:</strong> "join-quit-modules.account-check.enabled" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
 	 */
 	@Override
 	public boolean isEnabled() {
@@ -48,9 +48,9 @@ public abstract class MultiAccountCheckManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Checks if a multi account check should be performed the first time a (new) player joins.
+	 * Checks if an account check should be performed the first time a (new) player joins.
 	 * 
-	 * <p><strong>Found at:</strong> "join-quit-modules.multi-account-check.perform-on-join" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
+	 * <p><strong>Found at:</strong> "join-quit-modules.account-check.perform-on-join" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
 	 * 
 	 * @return Whether a check is performed on the first join
 	 */
@@ -61,7 +61,7 @@ public abstract class MultiAccountCheckManager implements ChatPluginManager {
 	/**
 	 * Checks if IP lookups of every IP address should be performed when checking accounts.
 	 * 
-	 * <p><strong>Found at:</strong> "join-quit-modules.multi-account-check.ip-lookup.enabled" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
+	 * <p><strong>Found at:</strong> "join-quit-modules.account-check.ip-lookup.enabled" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
 	 * 
 	 * @return Whether the IP lookup mode is enabled
 	 */
@@ -72,7 +72,7 @@ public abstract class MultiAccountCheckManager implements ChatPluginManager {
 	/**
 	 * Checks if the anti ban evading system is enabled.
 	 * 
-	 * <p><strong>Found at:</strong> "join-quit-modules.multi-account-check.anti-ban-evading-system.enabled" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
+	 * <p><strong>Found at:</strong> "join-quit-modules.account-check.anti-ban-evading-system.enabled" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
 	 * 
 	 * @return Whether the anti ban evading system is enabled
 	 */
@@ -83,7 +83,7 @@ public abstract class MultiAccountCheckManager implements ChatPluginManager {
 	/**
 	 * Gets the timeout to wait between each check, in milliseconds.
 	 * 
-	 * <p><strong>Found at:</strong> "join-quit-modules.multi-account-check.timeout-between-checks-ms" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
+	 * <p><strong>Found at:</strong> "join-quit-modules.account-check.timeout-between-checks-ms" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
 	 * 
 	 * @return Timeout between checks
 	 */
@@ -95,7 +95,7 @@ public abstract class MultiAccountCheckManager implements ChatPluginManager {
 	 * Gets a player's max {@link PlayersDataType#TIME_PLAYED} allowed,
 	 * in milliseconds, to be considered reliable for a comparison.
 	 * 
-	 * <p><strong>Found at:</strong> "join-quit-modules.multi-account-check.max-time-played" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
+	 * <p><strong>Found at:</strong> "join-quit-modules.account-check.max-time-played" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
 	 * 
 	 * @return Players' max time played
 	 */
@@ -107,7 +107,7 @@ public abstract class MultiAccountCheckManager implements ChatPluginManager {
 	 * Gets an IP lookup's max {@link IPLookup#getAccuracyRadius()}
 	 * allowed, in kilometers, to be considered reliable for a comparison.
 	 * 
-	 * <p><strong>Found at:</strong> "join-quit-modules.multi-account-check.ip-lookup.max-accuracy-radius-km" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
+	 * <p><strong>Found at:</strong> "join-quit-modules.account-check.ip-lookup.max-accuracy-radius-km" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
 	 * 
 	 * @return IP lookups' max accuracy radius
 	 */
@@ -118,7 +118,7 @@ public abstract class MultiAccountCheckManager implements ChatPluginManager {
 	/**
 	 * Gets the commands executed when a ban is detected.
 	 * 
-	 * <p><strong>Found at:</strong> "join-quit-modules.multi-account-check.anti-ban-evading-system.commands" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
+	 * <p><strong>Found at:</strong> "join-quit-modules.account-check.anti-ban-evading-system.commands" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
 	 * 
 	 * @return Anti ban evading system's commands' map
 	 */
@@ -129,7 +129,7 @@ public abstract class MultiAccountCheckManager implements ChatPluginManager {
 	/**
 	 * Gets the punish commands' map.
 	 * 
-	 * <p><strong>Found at:</strong> "join-quit-modules.multi-account-check.punish-commands" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
+	 * <p><strong>Found at:</strong> "join-quit-modules.account-check.punish-commands" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
 	 * 
 	 * @return Punish commands' map
 	 */
@@ -142,7 +142,7 @@ public abstract class MultiAccountCheckManager implements ChatPluginManager {
 	 * 
 	 * @return Manager's instance
 	 */
-	public static MultiAccountCheckManager getInstance() {
+	public static AccountCheckManager getInstance() {
 		return instance;
 	}
 	

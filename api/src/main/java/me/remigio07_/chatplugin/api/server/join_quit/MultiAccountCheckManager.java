@@ -162,7 +162,7 @@ public abstract class MultiAccountCheckManager implements ChatPluginManager {
 	 * Will do nothing if <code>!</code>{@link OfflinePlayer#hasPlayedBefore()}.
 	 * 
 	 * @param player Player to check
-	 * @param maxTimePlayed
+	 * @param maxTimePlayed A player's max time played allowed to be considered reliable for a comparison, in milliseconds
 	 * @param useIPLookup Whether to compare every IP address' lookup (requires extra time)
 	 * @return Player's accounts, including given one
 	 */

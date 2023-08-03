@@ -27,6 +27,7 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 
 import me.remigio07_.chatplugin.api.common.util.VersionUtils;
+import me.remigio07_.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07_.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07_.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07_.chatplugin.bootstrap.Environment;
@@ -463,7 +464,7 @@ public class ChatColor {
 		
 		Color.decode(color = hex.startsWith("#") ? hex : ("#" + hex)); // check format is valid
 		
-		int rgb = Integer.parseInt(color.substring(1));
+		int rgb = Integer.parseInt(color.substring(1), 16);
 		StringBuilder sb = new StringBuilder(SECTION_SIGN + "x");
 		
 		for (char x : color.substring(1).toCharArray())
@@ -493,11 +494,11 @@ public class ChatColor {
 	public static String translate(String string, boolean retainNewLines) {
 		String message = string;
 		
-		if (VersionUtils.getVersion().getProtocol() > 734) {
+		if (VersionUtils.getVersion().isAtLeast(Version.V1_16)) {
 			Matcher matcher = HEX_COLORS.matcher(message);
 			
 			while (matcher.find())
-				matcher = HEX_COLORS.matcher(message = message.substring(0, matcher.start()) + of(matcher.group().substring(1, matcher.group().length() - 1)) + message.substring(matcher.end()));
+				matcher = HEX_COLORS.matcher(message = message.substring(0, matcher.start()) + of(matcher.group().substring(1, matcher.group().length())) + message.substring(matcher.end()));
 		} char[] array = message.toCharArray();
 		
 		for (int i = 0; i < array.length - 1; i++) {

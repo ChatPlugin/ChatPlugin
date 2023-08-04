@@ -329,7 +329,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.scoreboard.disabled", "{pfx} &aThe scoreboard has been disabled.");
 		messages.addDefault("commands.bossbar.enabled", "{pfx} &aThe bossbar has been enabled.");
 		messages.addDefault("commands.bossbar.disabled", "{pfx} &aThe bossbar has been disabled.");
-		messages.addDefault("commands.rankinfo", "{pfx} &aInformation about &f{player}&a's rank:\n&eRank: &f{rank}\n&ePrefix: &f{prefix}\n&eSuffix: &f{suffix}\n&eTag: &f{tag_prefix}{tag_name_color}{player}{tag_suffix}\n&eDescription:\n&f{rank_description}");
+		messages.addDefault("commands.rankinfo", "{pfx} &aInformation about &f{player}&a's rank:\n&eRank: &f{rank_display_name}\n&ePrefix: &f{prefix}\n&eSuffix: &f{suffix}\n&eTag: &f{tag_prefix}{tag_name_color}{player}{tag_suffix}\n&eDescription:\n&f{rank_description}");
 		
 		messages.addDefault("commands.playerlist.all.message", "{pfx} &aThere are currently &f{0}/{1} &aplayers online:");
 		messages.addDefault("commands.playerlist.all.no-players-online", "{pfx} &eThere are currently no players online.");
@@ -357,7 +357,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.warnlist.empty", "{pfx} &eThere are no active warnings.");
 		messages.addDefault("commands.mutelist.ids", "{pfx} &eActive mutes' IDs: &f{0}&e.");
 		messages.addDefault("commands.mutelist.empty", "{pfx} &eThere are no active mutes.");
-		messages.addDefault("commands.playerinfo", "{pfx} &aInformation and data about &f{player}&a:\n&ePlayer ID: &f#{player_id}\n&eUUID: &f{uuid}\n&eVersion: &f{version} (protocol: {version_protocol})\n&eIP address: &f{ip_address}\n&eISP: &f{isp}\n&eLocation: &f{subdivisions}\n&eCity: &f{city} (~{accuracy_radius_km} km)\n&ePing: &f{ping_format} ms\n&eRank: &f{rank}\n&eTag: &f{tag_prefix}{tag_name_color}{tag_suffix}\n&eLanguage: &f{language_display_name}\n&eLast login: &f{last_login} ago\n&eTime played: &f{time_played}\n&eTotal bans: &f{player_bans}x\n&eTotal warnings: &f{player_warnings}x\n&eTotal kicks: &f{player_kicks}x\n&eTotal mutes: &f{player_mutes}x\n&eMessages sent: &f{messages_sent}x");
+		messages.addDefault("commands.playerinfo", "{pfx} &aInformation and data about &f{player}&a:\n&ePlayer ID: &f#{player_id}\n&eUUID: &f{uuid}\n&eVersion: &f{version} (protocol: {version_protocol})\n&eIP address: &f{ip_address}\n&eISP: &f{isp}\n&eLocation: &f{subdivisions}\n&eCity: &f{city} (~{accuracy_radius_km} km)\n&ePing: &f{ping_format} ms\n&eRank: &f{rank_display_name}\n&eTag: &f{tag_prefix}{tag_name_color}{tag_suffix}\n&eLanguage: &f{language_display_name}\n&eLast login: &f{last_login} ago\n&eTime played: &f{time_played}\n&eTotal bans: &f{player_bans}x\n&eTotal warnings: &f{player_warnings}x\n&eTotal kicks: &f{player_kicks}x\n&eTotal mutes: &f{player_mutes}x\n&eMessages sent: &f{messages_sent}x");
 		messages.addDefault("commands.playerpunishments", "{pfx} &f{0}&e's punishments' IDs:\n&eBans: &f{1}\n&eWarnings: &f{2}\n&eKicks: &f{3}\n&eMutes: &f{4}");
 		messages.addDefault("commands.tps", "{pfx} &eTPS from last &f1m&e, &f5m&e, &f15m&e: &f{0}&e, &f{1}&e, &f{2}&e.");
 		messages.addDefault("commands.ad.send.one", "{pfx} &aAd &f{0} &ahas been successfully sent to &f{1}&a.");
@@ -391,7 +391,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("chat.log.found", "{pfx} &aThe following messages were found:");
 		messages.addDefault("chat.log.not-found", "{pfx} &cNo logged messages were found.");
 		messages.addDefault("chat.log.message-format.text", "&e[{date}] &8- &f{message}");
-		messages.addDefault("chat.log.message-format.hover", "&aPlayer: &f{player}\n&aRank: &f{rank}\n&aServer: &f{server}\n&aWorld: &f{world}\n&aDate: &f{date}\n&aDenied: &f{denied}");
+		messages.addDefault("chat.log.message-format.hover", "&aPlayer: &f{player}\n&aRank: &f{rank_display_name}\n&aServer: &f{server}\n&aWorld: &f{world}\n&aDate: &f{date}\n&aDenied: &f{denied}");
 		messages.addDefault("chat.log.message-format.date-format", "MM-dd hh:mm:ss a");
 		messages.addDefault("chat.log.message-format.denied-format.yes", "&4denied &f({deny_chat_reason})");
 		messages.addDefault("chat.log.message-format.denied-format.no", "&2allowed");
@@ -779,8 +779,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		defaultScoreboard.addDefault("lines.2.values.english", Arrays.asList("&aName: &f{player}", "&eName: &f{player}", "&6Name: &f{player}", "&eName: &f{player}"));
 		defaultScoreboard.addDefault("lines.2.values.italian", Arrays.asList("&aNome: &f{player}", "&eNome: &f{player}", "&6Nome: &f{player}", "&eNome: &f{player}"));
 		defaultScoreboard.addDefault("lines.2.sending-timeout-ms", 250);
-		defaultScoreboard.addDefault("lines.3.values.english", Arrays.asList("&aRank: &f{rank}", "&eRank: &f{rank}", "&6Rank: &f{rank}", "&eRank: &f{rank}"));
-		defaultScoreboard.addDefault("lines.3.values.italian", Arrays.asList("&aRank: &f{rank}", "&eRank: &f{rank}", "&6Rank: &f{rank}", "&eRank: &f{rank}"));
+		defaultScoreboard.addDefault("lines.3.values.english", Arrays.asList("&aRank: &f{rank_display_name}", "&eRank: &f{rank_display_name}", "&6Rank: &f{rank_display_name}", "&eRank: &f{rank_display_name}"));
+		defaultScoreboard.addDefault("lines.3.values.italian", Arrays.asList("&aRank: &f{rank_display_name}", "&eRank: &f{rank_display_name}", "&6Rank: &f{rank_display_name}", "&eRank: &f{rank_display_name}"));
 		defaultScoreboard.addDefault("lines.3.sending-timeout-ms", 250);
 		defaultScoreboard.addDefault("lines.4.values.english", Arrays.asList("&aPing: &f{ping_format} ms", "&ePing: &f{ping_format} ms", "&6Ping: &f{ping_format} ms", "&ePing: &f{ping_format} ms"));
 		defaultScoreboard.addDefault("lines.4.values.italian", Arrays.asList("&aPing: &f{ping_format} ms", "&ePing: &f{ping_format} ms", "&6Ping: &f{ping_format} ms", "&ePing: &f{ping_format} ms"));
@@ -1615,8 +1615,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.rank.";
 		playerInfoGUI.addDefault(path + "display-names.english", "&6&lRank");
 		playerInfoGUI.addDefault(path + "display-names.italian", "&6&lRank");
-		playerInfoGUI.addDefault(path + "lores.english", Arrays.asList("&eRank: &f{rank}", "&ePrefix: &f{prefix}", "&eSuffix: &f{suffix}", "&eTag: &f{tag_prefix}{tag_name_color}{player}{tag_suffix}", "&eDescription:", "&f{rank_description}"));
-		playerInfoGUI.addDefault(path + "lores.italian", Arrays.asList("&eRank: &f{rank}", "&ePrefix: &f{prefix}", "&eSuffix: &f{suffix}", "&eTag: &f{tag_prefix}{tag_name_color}{player}{tag_suffix}", "&eDescrizione:", "&f{rank_description}"));
+		playerInfoGUI.addDefault(path + "lores.english", Arrays.asList("&eRank: &f{rank_display_name}", "&ePrefix: &f{prefix}", "&eSuffix: &f{suffix}", "&eTag: &f{tag_prefix}{tag_name_color}{player}{tag_suffix}", "&eDescription:", "&f{rank_description}"));
+		playerInfoGUI.addDefault(path + "lores.italian", Arrays.asList("&eRank: &f{rank_display_name}", "&ePrefix: &f{prefix}", "&eSuffix: &f{suffix}", "&eTag: &f{tag_prefix}{tag_name_color}{player}{tag_suffix}", "&eDescrizione:", "&f{rank_description}"));
 		playerInfoGUI.addDefault(path + "material", "NAME_TAG");
 		playerInfoGUI.addDefault(path + "glowing", true);
 		playerInfoGUI.addDefault(path + "commands", Arrays.asList("p: rankinfo {player}"));

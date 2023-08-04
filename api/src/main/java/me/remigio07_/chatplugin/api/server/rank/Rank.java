@@ -35,9 +35,9 @@ public abstract class Rank {
 	 * be translated with a rank's information. See wiki for more info:
 	 * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Ranks#placeholders">ChatPlugin wiki/Ranks/Placeholders</a>
 	 * 
-	 * <p><strong>Content:</strong> ["rank", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description"]</p>
+	 * <p><strong>Content:</strong> ["rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description"]</p>
 	 */
-	public static final String[] PLACEHOLDERS = new String[] { "rank", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description" };
+	public static final String[] PLACEHOLDERS = new String[] { "rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description" };
 	private String id, displayName, prefix, suffix, chatColor;
 	protected RankTag tag;
 	protected RankPermission permission;
@@ -210,7 +210,8 @@ public abstract class Rank {
 	 */
 	public String formatPlaceholders(String input, Language language) {
 		return ChatColor.translate(input
-				.replace("{rank}", displayName)
+				.replace("{rank_id}", id)
+				.replace("{rank_display_name}", displayName)
 				.replace("{prefix}", prefix)
 				.replace("{suffix}", suffix)
 				.replace("{tag_prefix}", tag.getPrefix())

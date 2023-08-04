@@ -264,7 +264,7 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 					.replace("{z}", String.valueOf(Environment.isBukkit() ? ((org.bukkit.Location) location).getBlockZ() : ((org.spongepowered.api.world.Location<World>) location).getBlockZ()))
 					.replace("{yaw}", String.valueOf(Environment.isBukkit() ? ((org.bukkit.Location) location).getYaw() : ((Vector3d) headRotation).getX()))
 					.replace("{pitch}", String.valueOf(Environment.isBukkit() ? ((org.bukkit.Location) location).getPitch() : ((Vector3d) headRotation).getY()));
-		} if (output.contains("{rank}") || output.contains("prefix}") || output.contains("suffix}") || output.contains("color}") || output.contains("{rank_description}"))
+		} if (output.contains("{rank") || output.contains("prefix}") || output.contains("suffix}") || output.contains("color}") || output.contains("{rank_description}"))
 			output = player.getRank().formatPlaceholders(output, language);
 		if (output.contains("{isp}") || output.contains("{continent}") || output.contains("{country}") || output.contains("{subdivisions}") || output.contains("{city}") || output.contains("{country_code}")
 				|| output.contains("{postal_code}") || output.contains("{latitude}") || output.contains("{longitude}") || output.contains("{accuracy_radius")) {

@@ -158,11 +158,11 @@ public abstract class QuitMessageManager implements ChatPluginManager {
 		/**
 		 * Array containing all available placeholders that can
 		 * be translated with a packet's information. See wiki for more info:
-		 * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Join-quit modules#placeholders">ChatPlugin wiki/Join-quit modules/Placeholders</a>
+		 * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Join%E2%80%90quit#placeholders">ChatPlugin wiki/Join-quit/Quit messages/Placeholders</a>
 		 * 
-		 * <p><strong>Content:</strong> ["player", "uuid", "player_id", "rank", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description"]</p>
+		 * <p><strong>Content:</strong> ["player", "uuid", "player_id", "rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description"]</p>
 		 */
-		public static final String[] PLACEHOLDERS = new String[] { "player", "uuid", "player_id", "rank", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description" };
+		public static final String[] PLACEHOLDERS = new String[] { "player", "uuid", "player_id", "rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description" };
 		protected OfflinePlayer player;
 		protected Rank rank;
 		protected int playerID;

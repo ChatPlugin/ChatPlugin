@@ -58,6 +58,10 @@ public class JoinMessageManagerImpl extends JoinMessageManager {
 				else this.joinMessages.put(rank, joinMessages);
 			} else if (!rankID.equals("settings"))
 				LogManager.log("Rank \"{0}\" specified at \"join-quit-modules.join-messages.{0}\" is not loaded; skipping it.", 2, rankID);
+		} if (!joinMessages.containsKey(RankManager.getInstance().getDefaultRank())) {
+			LogManager.log("Join messages for default rank {0} not found at \"join-quit-modules.join-messages.{0}\"; disabling module.", 2, RankManager.getInstance().getDefaultRank().getID());
+			unload();
+			return;
 		} placeholderTypes = PlaceholderType.getPlaceholders(ConfigurationType.JOIN_QUIT_MODULES.get().getStringList("join-quit-modules.join-messages.settings.placeholder-types"));
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;

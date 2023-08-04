@@ -61,6 +61,10 @@ public class QuitMessageManagerImpl extends QuitMessageManager {
 				else this.quitMessages.put(rank, quitMessages);
 			} else if (!rankID.equals("settings"))
 				LogManager.log("Rank \"{0}\" specified at \"join-quit-modules.quit-messages.{0}\" is not loaded; skipping it.", 2, rankID);
+		} if (!quitMessages.containsKey(RankManager.getInstance().getDefaultRank())) {
+			LogManager.log("Quit messages for default rank {0} not found at \"join-quit-modules.quit-messages.{0}\"; disabling module.", 2, RankManager.getInstance().getDefaultRank().getID());
+			unload();
+			return;
 		} if ((placeholderTypes = PlaceholderType.getPlaceholders(ConfigurationType.JOIN_QUIT_MODULES.get().getStringList("join-quit-modules.quit-messages.settings.placeholder-types"))).contains(PlaceholderType.INTEGRATIONS)) {
 			LogManager.log("The INTEGRATIONS placeholder type specified at \"join-quit-modules.quit-messages.settings.placeholder-types\" in join-quit-modules.yml is not supported; removing it.", 1);
 			placeholderTypes.remove(PlaceholderType.INTEGRATIONS);

@@ -178,7 +178,7 @@ public abstract class Rank {
 	/**
 	 * Gets an alphabetically sortable String containing the rank's position in the following format:
 	 * "03", "41", "17"... Will return "00" if <code>!</code>{@link RankManager#isSortingEnabled()}
-	 * and automatically adjusted based on {@link RankManager#isSortingFromTablistTop()}.
+	 * or be automatically adjusted based on {@link RankManager#isSortingFromTablistTop()}.
 	 * 
 	 * @return Position's sortable String
 	 */

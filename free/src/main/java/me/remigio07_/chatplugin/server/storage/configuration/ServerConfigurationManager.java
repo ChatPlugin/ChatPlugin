@@ -999,8 +999,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		joinQuitModules.addDefault("join-quit-modules.quit-messages.user.italian", Arrays.asList("&8[&c&l-&8] &r{prefix}{tag_name_color}{player}{suffix}"));
 		
 		joinQuitModules.addDefault("join-quit-modules.switch-messages.settings.enabled", false);
-		joinQuitModules.addDefault("join-quit-modules.switch-messages.settings.displayed-servers-names.hub", "&dHub");
-		joinQuitModules.addDefault("join-quit-modules.switch-messages.settings.displayed-servers-names.survival", "&4Survival");
 		joinQuitModules.addDefault("join-quit-modules.switch-messages.settings.placeholder-types", Arrays.asList("PLAYER"));
 		joinQuitModules.addDefault("join-quit-modules.switch-messages.user.english", Arrays.asList("&8[&e&l»&8] &r{prefix}{tag_name_color}{player}{suffix} &e-> &r{server}"));
 		joinQuitModules.addDefault("join-quit-modules.switch-messages.user.italian", Arrays.asList("&8[&e&l»&8] &r{prefix}{tag_name_color}{player}{suffix} &e-> &r{server}"));

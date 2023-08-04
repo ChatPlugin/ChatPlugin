@@ -28,7 +28,6 @@ import me.remigio07_.chatplugin.api.server.language.Language;
 import me.remigio07_.chatplugin.api.server.rank.Rank;
 import me.remigio07_.chatplugin.api.server.rank.RankManager;
 import me.remigio07_.chatplugin.api.server.util.PlaceholderType;
-import me.remigio07_.chatplugin.api.server.util.manager.ProxyManager;
 
 /**
  * Manager that handles switch messages.
@@ -37,7 +36,6 @@ public abstract class SwitchMessageManager implements ChatPluginManager {
 	
 	protected static SwitchMessageManager instance;
 	protected boolean enabled;
-	protected Map<String, String> displayedServersNames = new HashMap<>();
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
 	protected Map<Rank, Map<Language, List<String>>> switchMessages = new HashMap<>();
 	protected long loadTime;
@@ -50,19 +48,6 @@ public abstract class SwitchMessageManager implements ChatPluginManager {
 	@Override
 	public boolean isEnabled() {
 		return enabled;
-	}
-	
-	/**
-	 * Gets the displayed servers names' map.
-	 * You may modify the returned map, but keys have
-	 * to match {@link ProxyManager#SERVER_ID_PATTERN}.
-	 * 
-	 * <p><strong>Found at:</strong> "join-quit-modules.switch-messages.settings.displayed-servers-names" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
-	 * 
-	 * @return Displayed servers names' map
-	 */
-	public Map<String, String> getDisplayedServersNames() {
-		return displayedServersNames;
 	}
 	
 	/**
@@ -103,17 +88,6 @@ public abstract class SwitchMessageManager implements ChatPluginManager {
 		Rank otherRank = switchMessages.get(rank) == null ? RankManager.getInstance().getDefaultRank() : rank;
 		
 		return switchMessages.get(otherRank).get(switchMessages.get(otherRank).get(language) == null ? Language.getMainLanguage() : language);
-	}
-	
-	/**
-	 * Gets the displayed server's name for the specified server.
-	 * 
-	 * @param server Server to check
-	 * @return Displayed server's name
-	 */
-	@NotNull
-	public String getDisplayedServerName(String server) {
-		return displayedServersNames.get(server) == null ? server : displayedServersNames.get(server);
 	}
 	
 	/**

@@ -97,10 +97,12 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 			} if (detector.isEnabled()) {
 				if (detector.getMethod() == LanguageDetectorMethod.CLIENT_LOCALE) {
 					TaskManager.runAsync(() -> {
-						Language detected = detector.detectUsingClientLocale(this);
-						
-						if (!detected.equals(Language.getMainLanguage()))
-							sendLanguageDetectedMessage(detected);
+						if (isLoaded()) {
+							Language detected = detector.detectUsingClientLocale(this);
+							
+							if (!detected.equals(Language.getMainLanguage()))
+								sendLanguageDetectedMessage(detected);
+						}
 					}, detector.getDelay());
 				} else {
 					long ms = System.currentTimeMillis();

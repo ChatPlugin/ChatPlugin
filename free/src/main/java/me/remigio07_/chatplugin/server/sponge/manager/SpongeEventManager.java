@@ -193,10 +193,12 @@ public class SpongeEventManager extends EventManager {
 			
 			if (detector.isEnabled())
 				TaskManager.runAsync(() -> {
-					Language detected = detector.detectUsingClientLocale(player);
-					
-					if (!detected.equals(player.getLanguage()))
-						((BaseChatPluginServerPlayer) player).sendLanguageDetectedMessage(detected);
+					if (player.isLoaded()) {
+						Language detected = detector.detectUsingClientLocale(player);
+						
+						if (!detected.equals(player.getLanguage()))
+							((BaseChatPluginServerPlayer) player).sendLanguageDetectedMessage(detected);
+					}
 				}, detector.getDelay());
 			applyScoreboard(ScoreboardEvent.LOCALE_CHANGE, event.getTargetEntity(), player.getLocale().getDisplayLanguage());
 		}

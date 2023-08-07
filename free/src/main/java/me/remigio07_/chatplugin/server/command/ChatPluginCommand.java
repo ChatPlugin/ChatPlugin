@@ -264,24 +264,17 @@ public class ChatPluginCommand extends BaseCommand {
 		}
 		
 		@Override
-		public String getPermission() {
-			return null;
-		}
-		
-		@Override
 		public boolean isSubCommand() {
 			return true;
 		}
 		
 		@Override
 		public void execute(CommandSenderAdapter sender, me.remigio07_.chatplugin.api.server.language.Language language, String[] args) {
-			if (sender.getName().equals("Remigio07_") || sender.hasPermission("chatplugin.commands.status"))
-				if (sender.isPlayer() && (args.length < 2 || (!args[1].equalsIgnoreCase("-chat") && !args[1].equalsIgnoreCase("-c"))))
-					if (GUIManager.getInstance().isEnabled() && GUIManager.getInstance().getGUI("main") != null)
-						((SinglePageGUI) GUIManager.getInstance().getGUI("main")).open(ServerPlayerManager.getInstance().getPlayer(sender.getUUID()), true);
-					else sender.sendMessage(language.getMessage("misc.disabled-feature"));
-				else sender.sendMessage(PlaceholderManager.getInstance().translateServerPlaceholders(language.getMessage("commands.status"), language));
-			else sender.sendMessage(language.getMessage("misc.no-permission"));
+			if (sender.isPlayer() && (args.length < 2 || (!args[1].equalsIgnoreCase("-chat") && !args[1].equalsIgnoreCase("-c"))))
+				if (GUIManager.getInstance().isEnabled() && GUIManager.getInstance().getGUI("main") != null)
+					((SinglePageGUI) GUIManager.getInstance().getGUI("main")).open(ServerPlayerManager.getInstance().getPlayer(sender.getUUID()), true);
+				else sender.sendMessage(language.getMessage("misc.disabled-feature"));
+			else sender.sendMessage(PlaceholderManager.getInstance().translateServerPlaceholders(language.getMessage("commands.status"), language));
 		}
 		
 	}
@@ -329,7 +322,6 @@ public class ChatPluginCommand extends BaseCommand {
 					sender.sendMessage(language.getMessage("misc.debug.file.start"));
 					TaskManager.runAsync(() -> {
 						String file = Debugger.writeToFile();
-						
 						sender.sendMessage(language.getMessage(file.equals(Utils.NOT_APPLICABLE) ? "misc.debug.file.too-fast" : "misc.debug.file.end", file, System.currentTimeMillis() - ms));
 					}, 0L);
 					break;

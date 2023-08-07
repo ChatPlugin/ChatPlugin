@@ -179,7 +179,7 @@ public class BukkitEventManager extends EventManager {
 	public void onPlayerLocaleChange(PlayerLocaleChangeEvent event) {
 		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getPlayer().getUniqueId());
 		
-		if (player != null && !player.getLocale().getLanguage().equals(event.getLocale().substring(0, event.getLocale().indexOf('_')))) {
+		if (player != null && System.currentTimeMillis() - player.getLoginTime() > 15000L && !player.getLocale().getLanguage().equals(event.getLocale().substring(0, event.getLocale().indexOf('_')))) {
 			LanguageDetector detector = LanguageManager.getInstance().getDetector();
 			
 			if (detector.isEnabled())

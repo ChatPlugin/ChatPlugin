@@ -188,7 +188,7 @@ public class SpongeEventManager extends EventManager {
 	public void onPlayerChangeClientSettings(PlayerChangeClientSettingsEvent event) {
 		ChatPluginServerPlayer player = (ChatPluginServerPlayer) PlayerManager.getInstance().getPlayer(event.getTargetEntity().getUniqueId());
 		
-		if (player != null && !player.getLocale().getLanguage().equals(event.getLocale().getLanguage())) {
+		if (player != null && System.currentTimeMillis() - player.getLoginTime() > 15000L && !player.getLocale().getLanguage().equals(event.getLocale().getLanguage())) {
 			LanguageDetector detector = LanguageManager.getInstance().getDetector();
 			
 			if (detector.isEnabled())

@@ -27,6 +27,9 @@ import me.remigio07_.chatplugin.api.common.storage.configuration.ConfigurationTy
 import me.remigio07_.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07_.chatplugin.api.server.language.Language;
 
+/**
+ * Manager that handles account checks.
+ */
 public abstract class AccountCheckManager implements ChatPluginManager {
 	
 	protected static AccountCheckManager instance;

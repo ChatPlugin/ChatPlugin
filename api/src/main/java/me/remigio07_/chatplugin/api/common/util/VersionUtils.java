@@ -21,6 +21,8 @@ import org.spongepowered.api.Sponge;
 import com.velocitypowered.api.network.ProtocolVersion;
 
 import me.remigio07_.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07_.chatplugin.api.common.util.annotation.NotNull;
+import me.remigio07_.chatplugin.api.common.util.annotation.ServerImplementationOnly;
 import me.remigio07_.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07_.chatplugin.bootstrap.Environment;
 import me.remigio07_.chatplugin.bootstrap.VelocityBootstrapper;
@@ -942,11 +944,13 @@ public class VersionUtils {
 		}
 		
 		/**
-		 * Formats this version by truncating as specified at
-		 * <code>settings.truncate-version-string</code> in config.yml.
+		 * Formats this version based according to the setting
+		 * at <code>settings.truncate-version-string</code>
+		 * in {@link ConfigurationType#CONFIG}.
 		 * 
 		 * @return Formatted version
 		 */
+		@ServerImplementationOnly(why = ServerImplementationOnly.SETTINGS_NOT_PRESENT)
 		public String format() {
 			if (this == UNSUPPORTED)
 				return name();
@@ -967,6 +971,7 @@ public class VersionUtils {
 		 * @param input Version to check
 		 * @return Corresponding version
 		 */
+		@NotNull
 		public static Version getVersion(String input) {
 			Version version = Version.UNSUPPORTED;
 			
@@ -984,6 +989,7 @@ public class VersionUtils {
 		 * @param preNettyRewrite Whether it is a pre-Netty rewrite version
 		 * @return Corresponding version
 		 */
+		@NotNull
 		public static Version getVersion(int protocol, boolean preNettyRewrite) {
 			for (Version version : values())
 				if (preNettyRewrite == version.isPreNettyRewrite() && version.getProtocol() == protocol)

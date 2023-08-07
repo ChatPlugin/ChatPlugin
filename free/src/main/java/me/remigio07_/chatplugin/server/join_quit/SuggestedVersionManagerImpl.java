@@ -19,15 +19,15 @@ import me.remigio07_.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07_.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07_.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07_.chatplugin.api.common.util.manager.ChatPluginManagerException;
+import me.remigio07_.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07_.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07_.chatplugin.api.server.join_quit.SuggestedVersionManager;
 import me.remigio07_.chatplugin.api.server.language.Language;
 import me.remigio07_.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07_.chatplugin.api.server.util.manager.PlaceholderManager;
-import me.remigio07_.chatplugin.common.util.Utils;
 
 public class SuggestedVersionManagerImpl extends SuggestedVersionManager {
-
+	
 	@Override
 	public void load() throws ChatPluginManagerException {
 		instance = this;
@@ -36,7 +36,12 @@ public class SuggestedVersionManagerImpl extends SuggestedVersionManager {
 		if (!ConfigurationType.JOIN_QUIT_MODULES.get().getBoolean("join-quit-modules.suggested-version.enabled"))
 			return;
 		version = Version.getVersion(PlaceholderManager.getInstance().translateServerPlaceholders(ConfigurationType.JOIN_QUIT_MODULES.get().getString("join-quit-modules.suggested-version.version"), Language.getMainLanguage()));
-		delay = Utils.getTime(ConfigurationType.JOIN_QUIT_MODULES.get().getString("join-quit-modules.suggested-version.delay"), false);
+		
+		if (version == Version.UNSUPPORTED) {
+			LogManager.log("Version \"{0}\" specified at \"join-quit-modules.suggested-version.version\" is invalid; disabling module.", 2, ConfigurationType.JOIN_QUIT_MODULES.get().getString("join-quit-modules.suggested-version.version"));
+			unload();
+			return;
+		} delay = ConfigurationType.JOIN_QUIT_MODULES.get().getLong("join-quit-modules.suggested-version.delay-ms");
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}
@@ -53,16 +58,12 @@ public class SuggestedVersionManagerImpl extends SuggestedVersionManager {
 		if (!enabled || player.getVersion().isAtLeast(version) || (IntegrationType.GEYSERMC.isEnabled() && IntegrationType.GEYSERMC.get().isBedrockPlayer(player.toAdapter())))
 			return;
 		TaskManager.runAsync(() -> {
-			if (player != null)
-				player.sendMessage(translate(player.getLanguage().getMessage("misc.suggest-version")));
+			if (player.isLoaded())
+				player.sendMessage(player.getLanguage().getMessage("misc.suggest-version")
+						.replace("{suggested_version}", version.format())
+						.replace("{suggested_version_protocol}", String.valueOf(version.getProtocol()))
+						);
 		}, delay);
-	}
-	
-	private String translate(String input) {
-		return enabled ? input
-				.replace("{suggested_version}", version.format())
-				.replace("{suggested_version_protocol}", String.valueOf(version.getProtocol()))
-				: input;
 	}
 	
 }

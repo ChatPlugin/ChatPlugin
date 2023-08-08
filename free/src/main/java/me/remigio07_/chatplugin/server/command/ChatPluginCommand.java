@@ -199,6 +199,9 @@ public class ChatPluginCommand extends BaseCommand {
 					if (player.getLanguage() != newLanguage) {
 						if (!LanguageManagerImpl.isCommandCooldownActive(player) || player.hasPermission("chatplugin.commands.language.cooldown-bypass")) {
 							LanguageManager.getInstance().setLanguage(player, newLanguage);
+							
+							player = ServerPlayerManager.getInstance().getPlayer(player.getUUID());
+							
 							CommandsHandler.executeCommands(player, formatPlaceholders(player, newLanguage, ConfigurationType.CONFIG.get().getStringList("languages.command.commands")), 0L);
 							player.sendTranslatedMessage("languages.set", newLanguage.getDisplayName());
 							LanguageManagerImpl.startCommandCooldown(player.getUUID());

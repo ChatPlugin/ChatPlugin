@@ -189,7 +189,7 @@ public class H2Connector extends DatabaseConnector {
 			update = "CREATE TABLE IF NOT EXISTS {table_id} ("
 					+ "`player_uuid` VARCHAR(36) NOT NULL, "
 					+ "`player_name` VARCHAR(16) NOT NULL, "
-					+ "`rank` VARCHAR(14) NOT NULL, "
+					+ "`rank_id` VARCHAR(14) NOT NULL, "
 					+ "`server` VARCHAR(36) NOT NULL, "
 					+ "`world` VARCHAR(255) NOT NULL, "
 					+ "`message` VARCHAR(256) NOT NULL, "

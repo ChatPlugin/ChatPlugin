@@ -186,7 +186,7 @@ public class SQLiteConnector extends DatabaseConnector {
 			update = "CREATE TABLE IF NOT EXISTS {table_id} ("
 					+ "`player_uuid` TEXT NOT NULL, "
 					+ "`player_name` TEXT NOT NULL, "
-					+ "`rank` TEXT NOT NULL, "
+					+ "`rank_id` TEXT NOT NULL, "
 					+ "`server` TEXT NOT NULL, "
 					+ "`world` TEXT NOT NULL, "
 					+ "`message` TEXT NOT NULL, "

@@ -56,7 +56,7 @@ public enum DataContainer {
 	/**
 	 * Represents the messages' data.
 	 */
-	MESSAGES("player_uuid", "player_name", "rank", "server", "world", "message", "date", "deny_chat_reason"),
+	MESSAGES("player_uuid", "player_name", "rank_id", "server", "world", "message", "date", "deny_chat_reason"),
 	
 	/**
 	 * Represents the players' IP addresses.

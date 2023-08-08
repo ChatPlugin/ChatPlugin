@@ -389,7 +389,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("chat.log.found", "{pfx} &aThe following messages were found:");
 		messages.addDefault("chat.log.not-found", "{pfx} &cNo logged messages were found.");
 		messages.addDefault("chat.log.message-format.text", "&e[{date}] &8- &f{message}");
-		messages.addDefault("chat.log.message-format.hover", "&aPlayer: &f{player}\n&aRank: &f{rank_display_name}\n&aServer: &f{server}\n&aWorld: &f{world}\n&aDate: &f{date}\n&aDenied: &f{denied}");
+		messages.addDefault("chat.log.message-format.hover", "&aPlayer: &f{player}\n&aRank: &f{rank_id}\n&aServer: &f{server}\n&aWorld: &f{world}\n&aDate: &f{date}\n&aDenied: &f{denied}");
 		messages.addDefault("chat.log.message-format.date-format", "MM/dd hh:mm:ss a");
 		messages.addDefault("chat.log.message-format.denied-format.yes", "&4denied &f({deny_chat_reason})");
 		messages.addDefault("chat.log.message-format.denied-format.no", "&2allowed");

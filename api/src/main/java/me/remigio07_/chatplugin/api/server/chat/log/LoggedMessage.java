@@ -32,11 +32,11 @@ public abstract class LoggedMessage {
 	 * be translated with a logged message's information. See wiki for more info:
 	 * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Chat#placeholders">ChatPlugin wiki/Chat/Log/Placeholders</a>
 	 * 
-	 * <p><strong>Content:</strong> ["player", "player_uuid", "rank", "server", "world", "message", "date", "denied", "deny_chat_reason"]</p>
+	 * <p><strong>Content:</strong> ["player", "player_uuid", "rank_id", "server", "world", "message", "date", "denied", "deny_chat_reason"]</p>
 	 */
-	public static final String[] PLACEHOLDERS = new String[] { "player", "player_uuid", "rank", "server", "world", "message", "date", "denied", "deny_chat_reason" };
+	public static final String[] PLACEHOLDERS = new String[] { "player", "player_uuid", "rank_id", "server", "world", "message", "date", "denied", "deny_chat_reason" };
 	protected OfflinePlayer player;
-	protected String rank, server, world, message;
+	protected String rankID, server, world, message;
 	protected long date;
 	protected DenyChatReason denyChatReason;
 	
@@ -50,12 +50,12 @@ public abstract class LoggedMessage {
 	}
 	
 	/**
-	 * Gets this message's sender's rank.
+	 * Gets this message's sender's rank's ID.
 	 * 
-	 * @return Sender's rank
+	 * @return Sender's rank's ID
 	 */
-	public String getRank() {
-		return rank;
+	public String getRankID() {
+		return rankID;
 	}
 	
 	/**

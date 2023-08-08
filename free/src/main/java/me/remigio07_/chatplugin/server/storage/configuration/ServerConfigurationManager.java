@@ -1021,15 +1021,15 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		joinQuitModules.addDefault("join-quit-modules.account-check.perform-on-first-join", true);
 		joinQuitModules.addDefault("join-quit-modules.account-check.timeout-between-checks-ms", 10);
 		joinQuitModules.addDefault("join-quit-modules.account-check.max-time-played", "12h");
+		joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.2.english", Arrays.asList("staffchat &f{player} &cowns multiple (&f{amount}&c) accounts: &f{accounts}&c."));
+		joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.2.italian", Arrays.asList("staffchat &f{player} &cpossiede accounts multipli (&f{amount}&c): &f{accounts}&c."));
+		joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.3.english", Arrays.asList("tempban {player} 30d Multiple ({amount}) accounts detected: {accounts}. This is an automatic ban. -s"));
+		joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.3.italian", Arrays.asList("tempban {player} 30d Accounts multipli ({amount}) rilevati: {accounts}. Questo è un ban automatico. -s"));
 		joinQuitModules.addDefault("join-quit-modules.account-check.ip-lookup.enabled", false);
 		joinQuitModules.addDefault("join-quit-modules.account-check.ip-lookup.max-accuracy-radius-km", 10);
 		joinQuitModules.addDefault("join-quit-modules.account-check.anti-ban-evading-system.enabled", true);
 		joinQuitModules.addDefault("join-quit-modules.account-check.anti-ban-evading-system.commands.english", Arrays.asList("tempban {player} 30d Ban evading of account {account}. This is an automatic ban. -s"));
 		joinQuitModules.addDefault("join-quit-modules.account-check.anti-ban-evading-system.commands.italian", Arrays.asList("tempban {player} 30d Elusione del ban dell'account {account}. Questo è un ban automatico. -s"));
-		joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.2.english", Arrays.asList("staffchat &f{player} &cowns multiple (&f{amount}&c) accounts: &f{accounts}&c."));
-		joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.2.italian", Arrays.asList("staffchat &f{player} &cpossiede accounts multipli (&f{amount}&c): &f{accounts}&c."));
-		joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.3.english", Arrays.asList("tempban {player} 30d Multiple ({amount}) accounts detected: {accounts}. This is an automatic ban. -s"));
-		joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.3.italian", Arrays.asList("tempban {player} 30d Accounts multipli ({amount}) rilevati: {accounts}. Questo è un ban automatico. -s"));
 		
 		joinQuitModules.save();
 	}

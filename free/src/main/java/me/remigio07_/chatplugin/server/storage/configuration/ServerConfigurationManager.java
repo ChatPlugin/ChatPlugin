@@ -280,7 +280,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("misc.no-permission", "{pfx} &cYou do not have the permission to execute this command.");
 		messages.addDefault("misc.reload.start", "{pfx} &aChatPlugin is reloading...");
 		messages.addDefault("misc.reload.end", "{pfx} &aChatPlugin has been reloaded. Took &f{0} ms &ato complete.");
-		messages.addDefault("misc.reload.asyns-tasks", "{pfx} &cSome asyns tasks are still running. Wait a moment before reloading.");
 		messages.addDefault("misc.player-not-found", "{pfx} &f{0} &cis not online. Recheck the typing.");
 		messages.addDefault("misc.cooldown-active", "{pfx} &cA cooldown is currently active, try later.");		
 		messages.addDefault("misc.wrong-args", "{pfx} &cThe arguments are wrong. Try &f/chatplugin help&c.");
@@ -363,7 +362,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.ad.send.one", "{pfx} &aAd &f{0} &ahas been successfully sent to &f{1}&a.");
 		messages.addDefault("commands.ad.send.all", "{pfx} &aAd &f{0} &ahas been successfully sent to &f{1} &aplayers.");
 		messages.addDefault("commands.ad.list", "{pfx} &eLoaded ads' IDs: &f{0}&e.");
-		messages.addDefault("commands.crashclient", "{pfx} &aYou crashed &f{0}&a. Well done.");
 		messages.addDefault("commands.discordmessage", "{pfx} &aTrying to send the message through the bot...");
 		
 		messages.addDefault("commands.account-check.searching", "{pfx} &eSearching for multiple accounts...");
@@ -392,7 +390,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("chat.log.not-found", "{pfx} &cNo logged messages were found.");
 		messages.addDefault("chat.log.message-format.text", "&e[{date}] &8- &f{message}");
 		messages.addDefault("chat.log.message-format.hover", "&aPlayer: &f{player}\n&aRank: &f{rank_display_name}\n&aServer: &f{server}\n&aWorld: &f{world}\n&aDate: &f{date}\n&aDenied: &f{denied}");
-		messages.addDefault("chat.log.message-format.date-format", "MM-dd hh:mm:ss a");
+		messages.addDefault("chat.log.message-format.date-format", "MM/dd hh:mm:ss a");
 		messages.addDefault("chat.log.message-format.denied-format.yes", "&4denied &f({deny_chat_reason})");
 		messages.addDefault("chat.log.message-format.denied-format.no", "&2allowed");
 		
@@ -404,11 +402,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		messages.addDefault("ban.ban-format.kick", "&8[&a&lLogin&8] &cDisconnected from server &f{server}&c: &fyou got banned.\n\n&eBan ID: &f#{id}\n&eStaff member: &f{staff_member}\n&eReason: &f{reason}\n&eDate: &f{date}\n&eRemaining time: &f{remaining_time}\n&eType: &f{type}\n\n&7You can make an unban request on our website.\n\n&7If the request gets refused, you can buy the unban on our Store.");
 		messages.addDefault("ban.ban-format.chat", "&8[&a&lLogin&8] &cDisconnected from server &f{server}&c: &fyou got banned. &eBan ID: &f#{id}&e, Staff member: &f{staff_member}&e, reason: &f{reason}&e, remaining time: &f{remaining_time}&e, type: &f{type}&e.");
-		messages.addDefault("ban.command-usage.ban", "{pfx} &cThe syntax is wrong. Usage: &f{0}&c. Additional flags:\n&f&l-silent &8- &emake it silent: only the Staff will be notified.\n&f&l-type &8- &ealternate ban scope (default is &f{1}&e).");
-		messages.addDefault("ban.command-usage.tempban", "{pfx} &cThe syntax is wrong. Usage: &f{0}&c. Additional flags:\n&f&l-silent &8- &emake it silent: only the Staff will be notified.\n&f&l-type &8- &ealternate ban scope (default is &f{1}&e).");
-		messages.addDefault("ban.command-usage.banip", "{pfx} &cThe syntax is wrong. Usage: &f{0}&c. Additional flags:\n&f&l-silent &8- &emake it silent: only the Staff will be notified.\n&f&l-type &8- &ealternate ban scope (default is &f{1}&e).");
-		messages.addDefault("ban.command-usage.tempbanip", "{pfx} &cThe syntax is wrong. Usage: &f{0}&c. Additional flags:\n&f&l-silent &8- &emake it silent: only the Staff will be notified.\n&f&l-type &8- &ealternate ban scope (default is &f{1}&e).");
-		messages.addDefault("ban.command-usage.addbanwaveentry", "{pfx} &cThe syntax is wrong. Usage: &f{0}&c. Additional flags:\n&f&l-silent &8- &emake it silent: only the Staff will be notified.\n&f&l-type &8- &ealternate ban scope (default is &f{1}&e).");
+		messages.addDefault("ban.command-usage", "{pfx} &cThe syntax is wrong. Usage: &f{0}&c. Additional flags:\n&f&l-silent &8- &emake it silent: only the Staff will be notified.\n&f&l-type &8- &ealternate ban scope (default is &f{1}&e).");
 		messages.addDefault("ban.banwave.start", "{pfx} &cA new banwave has started. Total bans amount will be printed at the end. Cheaters, you will have &nno&c escape...");
 		messages.addDefault("ban.banwave.end", "{pfx} &aBanwave completed in &f{0}&a. Banned: &f{1}x&a.");
 		messages.addDefault("ban.banwave.added", "{pfx} &cNew banwave entry: &f{player}&c (type: &f{type}&c), for &f{duration}&c: &f{reason}&c.");
@@ -447,7 +441,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		messages.addDefault("warning.warned.self", "{pfx} &cYou have been warned (ID: &f#{id}&c) (&f{amount}/{max_amount}&c) for &f{duration} &cby &f{staff_member}&c: &f{reason}&c.");
 		messages.addDefault("warning.warned.other", "{pfx} &f{player} &chas been warned (ID: &f#{id}&c) (&f{amount}/{max_amount}&c) for &f{duration} &cby &f{staff_member}&c: &f{reason}&c.");
-		messages.addDefault("warning.command-usage.warning", "{pfx} &cThe syntax is wrong. Usage: &f{0}&c. Additional flags:\n&f&l-silent &8- &emake silent: only the Staff will be notified.\n&f&l-type &8- &ealternate warning scope (default is &f{1}&e).");
+		messages.addDefault("warning.command-usage", "{pfx} &cThe syntax is wrong. Usage: &f{0}&c. Additional flags:\n&f&l-silent &8- &emake silent: only the Staff will be notified.\n&f&l-type &8- &ealternate warning scope (default is &f{1}&e).");
 		messages.addDefault("warning.preset-reasons", Arrays.asList("Inappropriate language", "Bug abuse", "Spam of disallowed URL/address", "Disallowed (self) advertising"));
 		messages.addDefault("warning.expired.self", "{pfx} &aYour warning (ID: &f#{id}&a) has just expired.");
 		messages.addDefault("warning.expired.other", "{pfx} &f{player}&e's warning (ID: &f#{id}&e) has just expired.");
@@ -485,8 +479,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("mute.muted.other", "{pfx} &f{player} &chas been muted (ID: &f#{id}&c) for &f{duration} &cby &f{staff_member}&c: &f{reason}&c.");
 		messages.addDefault("mute.updated.self", "{pfx} &cYour active mute (ID: &f#{id}&c) has been updated by &f{staff_member}&c. Duration: &f{duration}&c, reason: &f{reason}&c.");
 		messages.addDefault("mute.updated.other", "{pfx} &f{player}&c's active mute (ID: &f#{id}&c) has been updated by &f{staff_member}&c. Duration: &f{duration}&c, reason: &f{reason}&c.");
-		messages.addDefault("mute.command-usage.mute", "{pfx} &cThe syntax is wrong. Usage: &f{0}&c. Additional flags:\n&f&l-silent &8- &emake it silent: only the Staff will be notified.\n&f&l-type &8- &ealternate mute scope (default is &f{1}&e).");
-		messages.addDefault("mute.command-usage.permmute", "{pfx} &cThe syntax is wrong. Usage: &f{0}&c. Additional flags:\n&f&l-silent &8- &emake it silent: only the Staff will be notified.\n&f&l-type &8- &ealternate mute scope (default is &f{1}&e).");
+		messages.addDefault("mute.command-usage", "{pfx} &cThe syntax is wrong. Usage: &f{0}&c. Additional flags:\n&f&l-silent &8- &emake it silent: only the Staff will be notified.\n&f&l-type &8- &ealternate mute scope (default is &f{1}&e).");
 		messages.addDefault("mute.preset-reasons", Arrays.asList("Caps", "Flood", "Inappropriate language", "Insults", "Blasphemies", "Spam of disallowed URL/address"));
 		messages.addDefault("mute.expired.self", "{pfx} &aYour mute (ID: &f#{id}&a) has just expired.");
 		messages.addDefault("mute.expired.other", "{pfx} &f{player}&e's mute (ID: &f#{id}&e) has just expired.");

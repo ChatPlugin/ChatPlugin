@@ -141,6 +141,7 @@ public class Configuration {
 		DumperOptions options = new DumperOptions();
 		Map<String, Object> map = null;
 		
+		options.setWidth(250);
 		options.setDefaultFlowStyle(FlowStyle.BLOCK);
 		
 		yaml = new Yaml(new Representer() {

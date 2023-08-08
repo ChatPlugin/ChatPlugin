@@ -98,7 +98,6 @@ public class ConfigurationMappings {
 	@NotNull
 	public String getChild(@NotNull String path) {
 		int index = path.indexOf('.');
-		
 		return index == -1 ? path : path.substring(index + 1);
 	}
 	
@@ -148,7 +147,6 @@ public class ConfigurationMappings {
 	@NotNull
 	public List<String> getKeys(String path) {
 		ConfigurationMappings section = getSection(path);
-		
 		return new ArrayList<>(section == null ? Collections.emptyList() : section.getKeys());
 	}
 	
@@ -217,7 +215,6 @@ public class ConfigurationMappings {
 	 */
 	public boolean getBoolean(String path, boolean def) {
 		Object value = get(path, def);
-		
 		return value instanceof Boolean ? (boolean) value : def;
 	}
 	
@@ -242,7 +239,6 @@ public class ConfigurationMappings {
 	 */
 	public byte getByte(String path, byte def) {
 		Object value = get(path, def);
-		
 		return value instanceof Number ? ((Number) value).byteValue() : (byte) 0;
 	}
 	
@@ -292,7 +288,6 @@ public class ConfigurationMappings {
 	 */
 	public short getShort(String path, short def) {
 		Object value = get(path, def);
-		
 		return value instanceof Number ? ((Number) value).shortValue() : (short) 0;
 	}
 	
@@ -317,7 +312,6 @@ public class ConfigurationMappings {
 	 */
 	public int getInt(String path, int def) {
 		Object value = get(path, def);
-		
 		return value instanceof Number ? ((Number) value).intValue() : 0;
 	}
 	
@@ -342,7 +336,6 @@ public class ConfigurationMappings {
 	 */
 	public long getLong(String path, long def) {
 		Object value = get(path, def);
-		
 		return value instanceof Number ? ((Number) value).longValue() : 0L;
 	}
 	
@@ -367,7 +360,6 @@ public class ConfigurationMappings {
 	 */
 	public float getFloat(String path, float def) {
 		Object value = get(path, def);
-		
 		return value instanceof Number ? ((Number) value).floatValue() : 0F;
 	}
 	
@@ -392,7 +384,6 @@ public class ConfigurationMappings {
 	 */
 	public double getDouble(String path, double def) {
 		Object value = get(path, def);
-		
 		return value instanceof Number ? ((Number) value).doubleValue() : 0D;
 	}
 	
@@ -420,7 +411,6 @@ public class ConfigurationMappings {
 	@Nullable(why = "Default value may be null")
 	public String getString(String path, @Nullable(why = "Default value may be null") String def) {
 		Object value = get(path, def);
-		
 		return value instanceof String ? (String) value : def;
 	}
 	

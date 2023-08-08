@@ -78,7 +78,7 @@ public class PlayerListCommand extends BaseCommand {
 						players.add((VanishManager.getInstance().isVanished(player) ? vanishedColor : notVanishedColor) + player.getName());
 				if (players.size() == 0)
 					sender.sendMessage(language.getMessage("commands.playerlist.rank.no-players-online"));
-				else sender.sendMessage(language.getMessage("commands.playerlist.rank.message", players.size(), rank.getID(), String.join(", " + notVanishedColor, players.toArray(new String[0])) + "\u00A7r"));
+				else sender.sendMessage(language.getMessage("commands.playerlist.rank.message", players.size(), rank.getDisplayName(), String.join(", " + notVanishedColor, players.toArray(new String[0])) + "\u00A7r"));
 			} else sender.sendMessage(language.getMessage("misc.invalid-rank", args[0]));
 		}
 	}

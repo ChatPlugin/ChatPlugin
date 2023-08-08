@@ -4,104 +4,126 @@ misc:
     full: E, dd/MM/yyyy HH:mm
     day: E, dd/MM/yyyy
     hour: HH:mm
-  only-players: '{pfx} &cSoltanto i giocatori possono eseguire questo comando.'
-  no-permission: '{pfx} &cNon hai il permesso per eseguire questo comando.'
+  only-players: '{pfx} &cSolo i giocatori possono eseguire questo comando.'
+  no-permission: '{pfx} &cNon hai il permesso di eseguire questo comando.'
   reload:
     start: '{pfx} &aChatPlugin si sta ricaricando...'
-    end: '{pfx} &aChatPlugin è stato ricaricato. Ci sono voluti &f{0}ms&a.'
-    asyns-tasks: '{pfx} &cAlcune tasks asincrone sono ancora in esecuzione. Aspetta un momento prima di ricaricare.'
-  player-not-found: '{pfx} &f{0} &cnon è online. Ricontrolla cosa hai scritto.'
-  cooldown-active: '{pfx} &cUn cooldown è attivo al momento. Riprova più tardi'
+    end: '{pfx} &aChatPlugin è stato ricaricato. Ci sono voluti &f{0} ms&a.'
+  player-not-found: '{pfx} &f{0} &cnon è online. Controlla quello che hai scritto.'
+  cooldown-active: '{pfx} &cÈ attivo un cooldown, riprova più tardi.'
   wrong-args: '{pfx} &cGli argomenti sono errati. Prova &f/chatplugin help&c.'
-  wrong-syntax: '{pfx} &cSintassi errata. Utilizzo: &f{0}&c.'
+  wrong-syntax: '{pfx} &cLa sintassi è errata. Utilizzo: &f{0}&c.'
   invalid-number: '{pfx} &f{0} &cnon è un numero valido.'
-  invalid-rank: '{pfx} &f{0} &cnon è un rank valido.'
-  reason-required: '{pfx} &cDevi specificare una ragione.'
+  invalid-rank: '{pfx} &f{0} &cnon è un rango valido.'
+  reason-required: '{pfx} &cDevi specificare un motivo.'
   player-not-stored: '{pfx} &f{0} &cnon sono contenuti nel database.'
   debug:
     enabled: '{pfx} &aModalità di debug abilitata.'
     disabled: '{pfx} &aModalità di debug disabilitata.'
     file:
-      start: '{pfx} &aDebug di dati e impostazioni in corso...'
-      end: '{pfx} &aDebug salvato nel file &f{0}&a. Ci sono voluti &f{1}ms&a.'
+      start: '{pfx} &aDebug di dati ed impostazioni in corso...'
+      end: '{pfx} &aDebug salvato nel file &f{0}&a. Ci sono voluti &f{1} ms&a.'
       too-fast: '{pfx} &cNon puoi generare più di un file di debug al secondo.'
     manager:
       info: '{pfx} &aDebug dei dati di &f{0}&a:'
       disabled: '{pfx} &cQuel manager è disabilitato.'
-  at-least-one-online: '{pfx} &cAlmeno un giocatore online è richiesto per eseguire questa azione.'
+  at-least-one-online: '{pfx} &cÈ richiesto almeno un giocatore online per eseguire questa azione.'
   disabled-world: '{pfx} &cQuel mondo non è abilitato.'
-  disabled-feature: '{pfx} &cQuella funzionalità non è abilitata.'
-  inexistent-id: '{pfx} &cQuell''ID non esiste.'
+  disabled-feature: '{pfx} &cQuesta funzionalità non è abilitata.'
+  inexistent-id: '{pfx} &cQuell'' ID non esiste.'
   inexistent-player: '{pfx} &f{0} &cnon è il nome di un giocatore premium.'
-  cannot-fetch: '{pfx} &cImpossibile raggiungere &fhttps://api.mojang.com &cper recuperare l''UUID di &f{0}&c.'
-  suggest-version: '{pfx} &eUtilizza Minecraft versione &f{suggested_version} &eo superiore per goderti la migliore esperienza sul server.'
-  safe-teleport: '{pfx} &aSiete stati teletrasportati in sicurezza da &f{0}&a.'
+  cannot-fetch: '{pfx} &cImpossibile raggiungere &fhttps://api.mojang.com &cper ottenere l''UUID di &f{0}&c: &f{1}&c.'
+  suggest-version: '{pfx} &eUsa la versione di Minecraft &f{suggested_version} &eo successiva per godere dell''esperienza migliore sul server.'
   already-connected: '{pfx} &cSiete già connessi a questo server.'
   invalid-player-name: '{pfx} &cNome del giocatore invalido.'
-  invalid-json: '{pfx} &cJSON invalido: &f{0}&c.'
-  invalid-server: '{pfx} &cQuel server è invalido. Il proxy è online con ChatPlugin installato?'
+  invalid-json: '{pfx} &cJSON non valido: &f{0}&c.'
+  invalid-server: '{pfx} &f{0} &cnon è un server valido. Il proxy è online con ChatPlugin installato?'
   invalid-ip-address: '{pfx} &f{0} &cnon è un indirizzo IP valido.'
-  kick-on-reload: '{pfx} &cReload del server in corso.'
+  database-error: '{pfx} &cSi è verificata una SQLException durante l''accesso al database: &f{0}&c.'
 commands:
   help:
-    user: |-
-      {pfx} &aAiuto per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
-      &f&l/language &8- &eCambia la tua lingua attualmente visualizzata.
-      &f&l/ping &8- &eMostra la latenza tua o di un altro giocatore in ms.
-      &f&l/scoreboard &8- &eAttiva/disattiva la visibilità della scoreboard.
-      &f&l/bossbar &8- &eAttiva/disattiva la visibilità della bossbar.
-      &f&l/rankinfo &8- &eVisualizza informazioni sul rank di un giocatore.
-      &f&l/playerlist &8- &eVisualizza la lista dei giocatori online.
-    admin: |-
-      {pfx} &aAiuto per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
-      &f&l/staffchat &8- &eStaff chat cross-server molto utile.
-      &f&l/iplookup &8- &eEsegui il lookup di un indirizzo IP.
-      &f&l/lastseen &8- &eControlla l'ultimo login di un giocatore.
-      &f&l/clearchat &8- &eCancella la chat e nascondi gli ultimi messaggi.
-      &f&l/muteall &8- &eAttiva/disattiva la chat per gli utenti.
-    punishments: |-
-      {pfx} &aAiuto per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
-      &f&l/ban &8- &eBanna un giocatore (disponibile anche /tempban).
-      &f&l/unban &8- &eSbanna un giocatore precedentemente bannato.
-      &f&l/warning &8- &eWarna un giocatore per un certo tempo.
-      &f&l/removewarning &8- &eRimuovi l'ultimo warning di un giocatore.
-      &f&l/clearwarnings &8- &eCancella i warnings attivi di un giocatore.
-      &f&l/kick &8- &eDisconnetti un giocatore dal server.
-      &f&l/fakekick &8- &eKicka utilizzando un errore casuale come motivo.
-      &f&l/mute &8- &eImpedisci ad un giocatore di utilizzare la chat.
-      &f&l/unmute &8- &eSmuta un giocatore precedentemente mutato.
-    guis: |-
-      {pfx} &aAiuto per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
-      &f&l/cp status &8- &eVisualizza lo stato attuale del server.
-      &f&l/language &8- &eCambia la tua lingua visualizzata.
-      &f&l/banlist &8- &eVisualizza la lista dei bans attivi.
-      &f&l/warnlist &8- &eVisualizza la lista dei warnings attivi.
-      &f&l/mutelist &8- &eVisualizza la lista dei mutes attivi.
-      &f&l/violations &8- &eMostra le ultime violazioni dei giocatori.
-      &f&l/playerinfo &8- &eMostra informazioni dettagliate di un giocatore.
-      &f&l/playerpunishments &8- &eMostra le punizioni di un giocatore.
-      &f&l/playerviolations &8- &eMostra le violazioni di un giocatore.
-    vanish: |-
-      {pfx} &aAiuto per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
-      &f&l/vanish &8- &eDiventa invisibile agli altri utenti.
-      &f&l/fakejoin &8- &eFingi di entrare nel server e disabilita la vanish.
-      &f&l/fakequit &8- &eFingi di uscire dal server ed abilita la vanish.
-      &f&l/silentjoin &8- &eEntra in un altro server di nascosto.
-    misc: |-
-      {pfx} &aAiuto per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
-      &f&l/tps &8- &eVisualizza i ticks per secondo del server.
-      &f&l/broadcast &8- &eInvia un messaggio ad ogni giocatore online.
-      &f&l/broadcastraw &8- &eCome /broadcast, ma senza il prefix.
-      &f&l/globalbroadcast &8- &eCome /broadcast, ma cross-server.
-      &f&l/ad &8- &eInvia un annuncio caricato ad uno o più giocatori online.
-      &f&l/crashclient &8- &eFai crashare un giocatore. Sì, per davvero.
-      &f&l/discordnotification &8- &eInvia un messaggio tramite il bot.
+    free:
+      user: |-
+        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+        &f&l/language &8- &eCambia la tua lingua attualmente visualizzata.
+        &f&l/ping &8- &eMostra la latenza tua o di un altro giocatore in ms.
+        &f&l/rankinfo &8- &eVisualizza informazioni sul rango di un giocatore.
+        &f&l/playerlist &8- &eVisualizza la lista dei giocatori online.
+      admin: |-
+        {pfx} &aAiuto per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+        &f&l/staffchat &8- &eStaff chat cross-server molto utile.
+        &f&l/iplookup &8- &eEsegui il lookup di un indirizzo IP.
+        &f&l/lastseen &8- &eControlla l'ultimo login di un giocatore.
+        &f&l/clearchat &8- &eCancella la chat e nascondi gli ultimi messaggi.
+        &f&l/muteall &8- &eAttiva/disattiva la chat per gli utenti.
+      vanish: |-
+        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+        &f&l/vanish &8- &eDiventa invisibile agli altri utenti.
+      misc: |-
+        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+        &f&l/tps &8- &eVisualizza i ticks per secondo del server.
+        &f&l/ad &8- &eInvia un annuncio ad uno o più giocatori online.
+        &f&l/broadcast &8- &eInvia un messaggio ad ogni giocatore online.
+        &f&l/broadcastraw &8- &eCome /broadcast, ma senza il prefisso.
+    premium:
+      user: |-
+        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+        &f&l/language &8- &eCambia la tua lingua attualmente visualizzata.
+        &f&l/ping &8- &eMostra la latenza tua o di un altro giocatore in ms.
+        &f&l/rankinfo &8- &eVisualizza informazioni sul rango di un giocatore.
+        &f&l/playerlist &8- &eVisualizza la lista dei giocatori online.
+        &f&l/bossbar &8- &eAttiva/disattiva la visibilità della bossbar.
+        &f&l/scoreboard &8- &eAttiva/disattiva la visibilità della scoreboard.
+      admin: |-
+        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+        &f&l/staffchat &8- &eStaff chat cross-server molto utile.
+        &f&l/iplookup &8- &eEsegui il lookup di un indirizzo IP.
+        &f&l/lastseen &8- &eControlla l'ultimo login di un giocatore.
+        &f&l/clearchat &8- &eCancella la chat e nascondi gli ultimi messaggi.
+        &f&l/muteall &8- &eAttiva/disattiva la chat per gli utenti.
+        &f&l/chatlog &8- &eCerca messaggi che contengono determinato testo.
+        &f&l/accountcheck &8- &eControlla gli accounts di un giocatore.
+      punishments: |-
+        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+        &f&l/ban &8- &eBanna un giocatore (disponibile anche /tempban).
+        &f&l/unban &8- &eRimuovi il ban ad un giocatore bannato.
+        &f&l/warning &8- &eAvvisa un giocatore per un certo periodo.
+        &f&l/removelastwarning &8- &eRimuovi l'ultimo avviso di un giocatore.
+        &f&l/clearwarnings &8- &eCancella gli avvisi attivi di un giocatore.
+        &f&l/kick &8- &eDisconnetti un giocatore dal server.
+        &f&l/fakekick &8- &eDisconnetti con un errore casuale come motivo.
+        &f&l/mute &8- &eImpedisci ad un giocatore di utilizzare la chat.
+        &f&l/unmute &8- &eRimuovi il mute ad un giocatore mutato.
+      guis: |-
+        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+        &f&l/cp status &8- &eVisualizza lo stato attuale del server.
+        &f&l/banlist &8- &eVisualizza la lista dei bans attivi.
+        &f&l/warnlist &8- &eVisualizza la lista dei warnings attivi.
+        &f&l/mutelist &8- &eVisualizza la lista dei mutes attivi.
+        &f&l/violations &8- &eMostra le ultime violazioni dei giocatori.
+        &f&l/playerinfo &8- &eMostra informazioni dettagliate di un giocatore.
+        &f&l/playerpunishments &8- &eMostra le punizioni di un giocatore.
+        &f&l/playerviolations &8- &eMostra le violazioni di un giocatore.
+      vanish: |-
+        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+        &f&l/vanish &8- &eDiventa invisibile agli altri utenti.
+        &f&l/fakejoin &8- &eFingi di entrare nel server e disabilita la vanish.
+        &f&l/fakequit &8- &eFingi di uscire dal server ed abilita la vanish.
+        &f&l/silentteleport &8- &eTeletrasportati in modo silenzioso.
+      misc: |-
+        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+        &f&l/tps &8- &eVisualizza i ticks per secondo del server.
+        &f&l/ad &8- &eInvia un annuncio ad uno o più giocatori online.
+        &f&l/broadcast &8- &eInvia un messaggio ad ogni giocatore online.
+        &f&l/broadcastraw &8- &eCome /broadcast, ma senza il prefix.
+        &f&l/globalbroadcast &8- &eCome /broadcast, ma cross-server.
+        &f&l/discordmessage &8- &eInvia un messaggio attraverso il bot.
   info: |-
     {pfx} &aInformazioni su &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
     &eSito web: &fhttps://megaproserver.com/chatplugin
     &eGitHub: &fhttps://github.com/Remigio07/ChatPlugin
     &eDiscord: &fhttps://discord.gg/CPtysXTfQg
-  version: '{pfx} &aIn esecuzione &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a.'
+  version: '{pfx} &aIn esecuzione &c&lChat&f&lPlugin {0} &fv{1} &adi &9Remigio07_ &asu &f{2} {3}&a.'
   status: |-
     {pfx} &aStato attuale del server:
     &eVersione del server: &f{server_version} (protocollo: {server_version_protocol})
@@ -115,9 +137,9 @@ commands:
     &eStorage libero: &f{free_storage} GB
     &eMondi abilitati: &f{enabled_worlds}x
     &eGiocatori abilitati: &f{enabled_players}x
-    &eManagers abilitati: &f{enabled_managers}x
-    &eTempo di avvio: &f{startup_time}ms
-    &eTempo dell'ultima ricarica: &f{last_reload_time}ms
+    &eGestori abilitati: &f{enabled_managers}x
+    &eTempo di avvio: &f{startup_time} ms
+    &eTempo dell'ultima ricarica: &f{last_reload_time} ms
   scoreboard:
     enabled: '{pfx} &aLa scoreboard è stata abilitata.'
     disabled: '{pfx} &aLa scoreboard è stata disabilitata.'
@@ -125,11 +147,11 @@ commands:
     enabled: '{pfx} &aLa bossbar è stata abilitata.'
     disabled: '{pfx} &aLa bossbar è stata disabilitata.'
   rankinfo: |-
-    {pfx} &aInformazioni sul rank di &f{player}&a:
-    &eRank: &f{rank}
+    {pfx} &aInformazioni sul rango di &f{player}&a:
+    &eRango: &f{rank}
     &ePrefisso: &f{prefix}
     &eSuffisso: &f{suffix}
-    &eTarghetta: &f{tag_prefix}{tag_color}{player}{tag_suffix}
+    &eTag: &f{tag_prefix}{tag_name_color}{player}{tag_suffix}
     &eDescrizione:
     &f{rank_description}
   playerlist:
@@ -138,8 +160,8 @@ commands:
       no-players-online: '{pfx} &eAttualmente non ci sono giocatori online.'
       rank-format: '{prefix}&e(&f{0}&e): &f[{1}]'
     rank:
-      message: '{pfx} &aAttualmente ci sono &f{0} &agiocatori online che appartengono al rank &f{1}&a: &f[{2}]&a.'
-      no-players-online: '{pfx} &eAttualmente non ci sono giocatori online che appartengono a quel rank.'
+      message: '{pfx} &aAttualmente ci sono &f{0} &agiocatori online che appartengono al rango &f{1} &a: &f[{2}]&a.'
+      no-players-online: '{pfx} &eAttualmente non ci sono giocatori online appartenenti a quel rango.'
     name-format:
       vanished: '&o'
       not-vanished: '&f'
@@ -147,26 +169,26 @@ commands:
     enabled: '{pfx} &aModalità chat Staff abilitata.'
     disabled: '{pfx} &aModalità chat Staff disabilitata.'
   iplookup: |-
-    {pfx} &aLookup di &f{ip_address}&a:
+    {pfx} &fLookup di &a{ip_address}&f:
     &eISP: &f{isp}
     &ePaese: &f{country}, {continent}
     &eSottodivisione/i: &f{subdivisions}
-    &eCittà: &f{city} (postal code: {postal_code})
+    &eCittà: &f{city} (codice postale: {postal_code})
     &eCoordinate: &f{latitude}° {longitude}°
     &eRaggio di accuratezza: &f~{accuracy_radius_km} km
   lastseen:
     online: '{pfx} &f{0} &esono stati online per &f{1}&e.'
-    offline: '{pfx} &f{0} &esono stati visti l''ultima volta &f{1} &efa; indirizzo IP: &f{2}&e.'
-  clearchat: '{pfx} &aLa chat è stata cancellata.'
+    offline: '{pfx} &f{0} &esono stati online per &f{1}&e.'
+  clearchat: '{pfx} &aLa chat è stata ripulita.'
   muteall:
     muted: '{pfx} &eLa chat è stata mutata globalmente da un membro dello Staff.'
     unmuted: '{pfx} &aLa chat è stata smutata globalmente.'
   baninfo: |-
-    {pfx} &aInformazioni e dati riguardo il ban &f#{id}&a:
+    {pfx} &aInformazioni e dati sul ban &f#{id}&a:
     &eNome del giocatore: &f{player}
     &eUUID del giocatore: &f{player_uuid}
     &eIndirizzo IP: &f{ip_address}
-    &eStaffer: &f{staffer}
+    &eMembro dello Staff: &f{staff_member}
     &eChi ha sbannato: &f{who_unbanned}
     &eMotivo: &f{reason}
     &eServer: &f{server}
@@ -179,10 +201,10 @@ commands:
     &eGlobale: &f{global}
     &eSilenzioso: &f{silent}
   warninginfo: |-
-    {pfx} &aInformazioni e dati riguardo il warning &f#{id}&a:
+    {pfx} &aInformazioni e dati sul warning &f#{id}&a:
     &eNome del giocatore: &f{player}
     &eUUID del giocatore: &f{player_uuid}
-    &eStaffer: &f{staffer}
+    &eMembro dello Staff: &f{staff_member}
     &eChi ha unwarnato: &f{who_unwarned}
     &eMotivo: &f{reason}
     &eServer: &f{server}
@@ -194,20 +216,20 @@ commands:
     &eGlobale: &f{global}
     &eSilenzioso: &f{silent}
   kickinfo: |-
-    {pfx} &aInformazioni e dati riguardo il kick &f#{id}&a:
+    {pfx} &aInformazioni e dati sul kick &f#{id}&a:
     &eNome del giocatore: &f{player}
     &eUUID del giocatore: &f{player_uuid}
     &eIndirizzo IP: &f{ip_address}
-    &eStaffer: &f{staffer}
+    &eMembro dello Staff: &f{staff_member}
     &eMotivo: &f{reason}
     &eServer: &f{server}
     &eData: &f{date}
     &eSilenzioso: &f{silent}
   muteinfo: |-
-    {pfx} &aInformazioni e dati riguardo il mute &f#{id}&a:
+    {pfx} &aInformazioni e dati sul mute &f#{id}&a:
     &eNome del giocatore: &f{player}
     &eUUID del giocatore: &f{player_uuid}
-    &eStaffer: &f{staffer}
+    &eMembro dello Staff: &f{staff_member}
     &eChi ha smutato: &f{who_unmuted}
     &eMotivo: &f{reason}
     &eServer: &f{server}
@@ -228,7 +250,7 @@ commands:
     ids: '{pfx} &eIDs dei mutes attivi: &f{0}&e.'
     empty: '{pfx} &eNon ci sono mutes attivi.'
   playerinfo: |-
-    {pfx} &aInformazioni e dati riguardo &f{player}&a:
+    {pfx} &aInformazioni e dati su &f{player}&a:
     &eID giocatore: &f#{player_id}
     &eUUID: &f{uuid}
     &eVersione: &f{version} (protocollo: {version_protocol})
@@ -236,11 +258,11 @@ commands:
     &eISP: &f{isp}
     &ePosizione: &f{subdivisions}
     &eCittà: &f{city} (~{accuracy_radius_km} km)
-    &ePing: &f{ping_format}ms
-    &eRank: &f{rank}
-    &eTarghetta: &f{tag_prefix}{tag_color}{tag_suffix}
-    &eLingua: &f{language}
-    &eUltimo login: &f{last_login} fa
+    &ePing: &f{ping_format} ms
+    &eRango: &f{rank}
+    &eTag: &f{tag_prefix}{tag_name_color}{tag_suffix}
+    &eLingua: &f{language_display_name}
+    &eUltimo accesso: &f{last_login} fa
     &eTempo di gioco: &f{time_played}
     &eBans totali: &f{player_bans}x
     &eWarnings totali: &f{player_warnings}x
@@ -248,7 +270,7 @@ commands:
     &eMutes totali: &f{player_mutes}x
     &eMessaggi inviati: &f{messages_sent}x
   playerpunishments: |-
-    {pfx} &eIDs delle punizioni di &f{0}&e:
+    {pfx} &aIDs delle punizioni di &f{0}&a:
     &eBans: &f{1}
     &eWarnings: &f{2}
     &eKicks: &f{3}
@@ -256,32 +278,28 @@ commands:
   tps: '{pfx} &eTPS degli ultimi &f1m&e, &f5m&e, &f15m&e: &f{0}&e, &f{1}&e, &f{2}&e.'
   ad:
     send:
-      one: '{pfx} &aL''annuncio &f{0} &aè stato inviato con successo a &f{1}&a.'
-      all: '{pfx} &aL''annuncio &f{0} &aè stato inviato con successo a &f{1} &agiocatori.'
+      one: '{pfx} &aL''annuncio &f{0} &ae stato inviato con successo a &f{1}&a.'
+      all: '{pfx} &aL''annuncio &f{0} &ae stato inviato con successo a &f{1} &agiocatori.'
     list: '{pfx} &eIDs degli annunci caricati: &f{0}&e.'
-  crashclient: '{pfx} &aHai fatto crashare &f{0}&a. Ben fatto.'
-  discordnotification: '{pfx} &aCercando di inviare il messaggio tramite il bot...'
+  discordmessage: '{pfx} &aCercando di inviare il messaggio tramite il bot...'
+  account-check:
+    searching: '{pfx} &eRicerca di accounts multipli in corso...'
+    found: '{pfx} &aSono stati trovati i seguenti accounts:'
+    not-found: '{pfx} &f{0} &cnon possiede accounts multipli.'
+    message-format:
+      text: '{banned} &8- &f{player}'
+      hover: |-
+        &eID Giocatore: &f#{player_id}
+        &eIndirizzo IP: &f{ip_address}
+        &eUltimo logout: &f{last_logout} fa
+        &eTempo di gioco: &f{time_played}
+      banned-format:
+        'yes': '&4bannato &e(IDs: &f{bans_ids}&e)'
+        'no': '&2non bannato'
 chat:
   broadcast-format:
     local: '&8[&c&lBroadcast&8] &r{0}'
     global: '&8[&c&lBroadcast&8] &r{0}'
-  log:
-    searching: '{pfx} &eRicerca di messaggi registrati in corso...'
-    found: '{pfx} &aSono stati trovati i seguenti messaggi:'
-    not-found: '{pfx} &cNessun messaggio registrato è stato trovato.'
-    message-format:
-      text: '&e[{date}] &8- &f{message}'
-      hover: |-
-        &aGiocatore: &f{player_name}
-        &aRank: &f{rank}
-        &aServer: &f{server}
-        &aMondo: &f{world}
-        &aData: &f{date}
-        &aConsentito: &f{denied}
-      date-format: dd-MM HH:mm:ss
-      denied-format:
-        'yes': '&4non consentito'
-        'no': '&2consentito'
   antispam:
     no-caps: '{pfx} &cNon puoi usare più del &f{0}% &cdi caps nei messaggi più lunghi di &f{1} &ccaratteri. Acquista un pacchetto &fVIP &cper aggirare questa restrizione.'
     no-flood: '{pfx} &cNon puoi chattare più di una volta ogni &f{0} &csecondi. Acquista un pacchetto &fVIP &cper aggirare questa restrizione.'
@@ -294,8 +312,25 @@ chat:
     &f{2}
   no-format: '{pfx} &cNon puoi scrivere messaggi formattati. Acquista un pacchetto &fVIP &cper aggirare questa restrizione.'
   pinged: '{pfx} &eSiete stati pingati da &f{0}&e.'
+  log:
+    searching: '{pfx} &eRicerca dei messaggi registrati...'
+    found: '{pfx} &aSono stati trovati i seguenti messaggi:'
+    not-found: '{pfx} &cNessun messaggio registrato trovato.'
+    message-format:
+      text: '&e[{date}] &8- &f{message}'
+      hover: |-
+        &aGiocatore: &f{player}
+        &aRango: &f{rank}
+        &aServer: &f{server}
+        &aMondo: &f{world}
+        &aData: &f{date}
+        &aNegato: &f{denied}
+      date-format: dd/MM HH:mm:ss
+      denied-format:
+        'yes': '&4negato &f({deny_chat_reason})'
+        'no': '&2permesso'
 guis:
-  no-permission: '{pfx} &cNon hai il permesso per utilizzare quella GUI.'
+  no-permission: '{pfx} &cNon hai il permesso di utilizzare quella GUI.'
   player-went-offline: '{pfx} &f{0} &csono andati offline quindi la tua GUI aperta (&f{1}&c) è stata chiusa.'
   unloaded: '{pfx} &eLa tua GUI aperta &f{0} &eè stat chiusa dopo &f{1} &edi inattività.'
   still-loading: '{pfx} &cLa GUI &f{0} &csi sta ancora caricando. Riprova tra pochi secondi.'
@@ -306,7 +341,7 @@ ban:
       &8[&a&lLogin&8] &cDisconnessi dal server &f{server}&c: &fsiete stati bannati.
 
       &eID ban: &f#{id}
-      &eStaffer: &f{staffer}
+      &eMembro dello Staff: &f{staff_member}
       &eMotivo: &f{reason}
       &eData: &f{date}
       &eTempo rimanente: &f{remaining_time}
@@ -315,60 +350,55 @@ ban:
       &7Puoi fare una richiesta di unban sul nostro sito.
 
       &7Se la richiesta viene rifiutata, puoi acquistare l'unban sul nostro Store.
-    chat: '&fsiete stati bannati. &eID ban: &f#{id}&e, staffer: &f{staffer}&e, motivo: &f{reason}&e, tempo rimanente: &f{remaining_time}&e, tipo: &f{type}&e.'
-  command-usage:
-    ban: |-
-      {pfx} &cSintassi errata. Utilizzo: &f{0}&c. Flags aggiuntivi:
-      &f&l-silent &8- &erendilo silenzioso: solo lo Staff verrà avvisato.
-      &f&l-type &8- &ealterna lo scopo del ban (di default è &f{1}&e).
-    tempban: |-
-      {pfx} &cSintassi errata. Utilizzo: &f{0}&c. Flags aggiuntivi:
-      &f&l-silent &8- &erendilo silenzioso: solo lo Staff verrà avvisato.
-      &f&l-type &8- &ealterna lo scopo del ban (di default è &f{1}&e).
-    banip: |-
-      {pfx} &cSintassi errata. Utilizzo: &f{0}&c. Flags aggiuntivi:
-      &f&l-silent &8- &erendilo silenzioso: solo lo Staff verrà avvisato.
-      &f&l-type &8- &ealterna lo scopo del ban (di default è &f{1}&e).
-    tempbanip: |-
-      {pfx} &cSintassi errata. Utilizzo: &f{0}&c. Flags aggiuntivi:
-      &f&l-silent &8- &erendilo silenzioso: solo lo Staff verrà avvisato.
-      &f&l-type &8- &ealterna lo scopo del ban (di default è &f{1}&e).
-    addbanwaveentry: |-
-      {pfx} &cSintassi errata. Utilizzo: &f{0}&c. Flags aggiuntivi:
-      &f&l-silent &8- &erendilo silenzioso: solo lo Staff verrà avvisato.
-      &f&l-type &8- &ealterna lo scopo del ban (di default è &f{1}&e).
+    chat: '&8[&a&lLogin&8] &cDisconnessi dal server &f{server}&c: &fsiete stati bannati. &eID ban: &f#{id}&e, membro dello Staff: &f{staff_member}&e, motivo: &f{reason}&e, tempo rimanente: &f{remaining_time}&e, tipo: &f{type}&e.'
+  command-usage: |-
+    {pfx} &cLa sintassi è errata. Utilizzo: &f{0}&c. Opzioni aggiuntive:
+    &f&l-silent &8- &erendilo silenzioso: solo lo Staff verrà avvisato.
+    &f&l-type &8- &ealterna lo scopo del ban (di default è &f{1}&e).
   banwave:
     start: '{pfx} &cUna nuova banwave è iniziata. La quantità totale dei bans verrà comunicata alla fine. Cheaters, &nnon&c avrete scampo...'
     end: '{pfx} &aBanwave completata in &f{0}&a. Bannati: &f{1}x&a.'
-    new-entry: '{pfx} &cNuova entry in banwave: &f{player}&c (tipo: &f{type}&c), per &f{duration}&c: &f{reason}&c.'
-    entry-updated: '{pfx} &cEntry in banwave modificata: &f{player}&c (tipo: &f{type}&c), per &f{duration}&c: &f{reason}&c.'
-    entry-removed: '{pfx} &f{0} &asono stati rimossi dalle entries della prossima banwave.'
-    entry-not-contained: '{pfx} &f{0} &cnon sono contenuti nelle entries della prossima banwave.'
+    added: '{pfx} &cNuova entry in banwave: &f{player}&c (tipo: &f{type}&c), per &f{duration}&c: &f{reason}&c.'
+    added-ip: '{pfx} &cNuova entry in banwave: &f{ip_address}&c (tipo: &f{type}&c), per &f{duration}&c: &f{reason}&c.'
+    updated: '{pfx} &cEntry in banwave modificata: &f{player}&c (tipo: &f{type}&c), per &f{duration}&c: &f{reason}&c.'
+    updated-ip: '{pfx} &cEntry in banwave modificata: &f{ip_address}&c (tipo: &f{type}&c), per &f{duration}&c: &f{reason}&c.'
+    removed: '{pfx} &f{player} &asono stati rimossi dalle entries della prossima banwave.'
+    removed-ip: '{pfx} &f{ip_address} &asono stati rimossi dalle entries della prossima banwave.'
+    invalid-type:
+      account: '{pfx} &cNon puoi rimuovere entries dell''account con questo comando. Usa invece &f/removebanwaveentry <player>&c.'
+      ip: '{pfx} &cNon puoi rimuovere entries dell''IP con questo comando. Usa invece &f/removebanwaveentryip <player|IP address>&c.'
+    not-contained: '{pfx} &f{0} &cnon sono contenuti nelle entries della prossima banwave.'
   preset-reasons:
-  - Griefing non consentito
-  - Cheating
-  - Elusione ban
-  - Abuso di bugs
-  - Multi account
-  - Spam di URL/indirizzo non consentito
+    - Griefing non consentito
+    - Cheating
+    - Esusione ban
+    - Abuso di bugs
+    - Accounts multipli
+    - Spam di URL/indirizzo non consentito
   unspecified-reason: Motivo non specificato.
-  invalid-ip-or-name: '{pfx} &cIndirizzo IP o nome invalido.'
   no-ips-stored: '{pfx} &cNon ci sono indirizzi IP memorizzati per quel giocatore.'
   offline-player: '{pfx} &cNon puoi bannare giocatori offline.'
   invalid-type:
-    account: '{pfx} &cNon puoi rimuovere i bans dell''account con questo comando. Usa invece &f/unban <player>&c.'
-    ip: '{pfx} &cNon puoi rimuovere i bans dell''IP con questo comando. Usa invece &f/unbanip <player>&c.'
+    account: '{pfx} &cNon puoi rimuovere bans dell''account con questo comando. Usa invece &f/unban <player>&c.'
+    ip: '{pfx} &cNon puoi rimuovere bans dell''IP con questo comando. Usa invece &f/unbanip <player|IP address>&c.'
   banned:
-    other: '{pfx} &f{player} &csono stati bannati (ID: &f#{id}&c, tipo: &f{type}&c) per &f{duration} &cda &f{staffer}&c: &f{reason}&c.'
+    other: '{pfx} &f{player} &csono stati bannati (ID: &f#{id}&c, tipo: &f{type}&c) per &f{duration} &cda &f{staff_member}&c: &f{reason}&c.'
+  banned-ip:
+    other: '{pfx} &f{ip_address} &cè stato bannato (ID: &f#{id}&c, tipo: &f{type}&c) per &f{duration} &cda &f{staff_member}&c: &f{reason}&c.'
   updated:
-    other: '{pfx} &cIl ban attivo &c(ID: &f#{id}&c, tipo: &f{type}&c) di &f{player} &cè stato aggiornato da &f{staffer}&c. Durata: &f{duration}&c, motivo: &f{reason}&c.'
+    other: '{pfx} Il ban attivo di &f{player}&c (ID: &f#{id}&c, tipo: &f{type}&c) è stato aggiornato da &f{staff_member}&c. Durata: &f{duration}&c, motivo: &f{reason}&c.'
+  updated-ip:
+    other: '{pfx} Il ban attivo dell''IP &f{ip_address}&c (ID: &f#{id}&c, tipo: &f{type}&c) è stato aggiornato da &f{staff_member}&c. Durata: &f{duration}&c, motivo: &f{reason}&c.'
   expired:
-    other: '{pfx} &eIl ban (ID: &f#{id}&e) di &f{player} &eè appena scaduto.'
+    other: '{pfx} Il ban di &f{player}&e (ID: &f#{id}&e) è appena scaduto.'
+  expired-ip:
+    other: '{pfx} Il ban dell''IP &f{ip_address}&e (ID: &f#{id}&e) è appena scaduto.'
   unbanned:
     other: '{pfx} &f{player} &esono stati sbannati (ID: &f#{id}&e) da &f{who_unbanned}&e.'
+  unbanned-ip:
+    other: '{pfx} &f{ip_address} &eè stato sbannato (ID: &f#{id}&e) da &f{who_unbanned}&e.'
   cannot-ban: '{pfx} &f{0} &cnon possono essere bannati.'
-  not-banned: '{pfx} &cQuel giocatore non è bannato.'
-  unbanip-qty: '{pfx} &aSbannati con successo &f{0} &agiocatori.'
+  not-banned: '{pfx} &f{0} &cnon sono bannati.'
   types-format:
     account: account
     ip-address: indirizzo IP
@@ -383,30 +413,29 @@ ban:
     'no': 'no'
 warning:
   warned:
-    self: '{pfx} &cSiete stati avvisati (ID: &f#{id}&c) (&f{amount}/{max_amount}&c) per &f{duration} &cda &f{staffer}&c: &f{reason}&c.'
-    other: '{pfx} &f{player} &csono stati avvisati (ID: &f#{id}&c) (&f{amount}/{max_amount}&c) per &f{duration} &cda &f{staffer}&c: &f{reason}&c.'
-  command-usage:
-    warning: |-
-      {pfx} &cSintassi errata. Utilizzo: &f{0}&c. Flags aggiuntivi:
-      &f&l-silent &8- &erendilo silenzioso: solo lo Staff verrà avvisato.
-      &f&l-type &8- &ealterna lo scopo del warning (di default è &f{1}&e).
+    self: '{pfx} &cSiete stati avvisati (ID: &f#{id}&c) (&f{amount}/{max_amount}&c) per &f{duration} &cda &f{staff_member}&c: &f{reason}&c.'
+    other: '{pfx} &f{player} &csono stati avvisati (ID: &f#{id}&c) (&f{amount}/{max_amount}&c) per &f{duration} &cda &f{staff_member}&c: &f{reason}&c.'
+  command-usage: |-
+    {pfx} &cLa sintassi è errata. Utilizzo: &f{0}&c. Opzioni aggiuntive:
+    &f&l-silent &8- &erendilo silenzioso: solo lo Staff verrà avvisato.
+    &f&l-type &8- &ealterna lo scopo del warning (di default è &f{1}&e).
   preset-reasons:
   - Linguaggio inappropriato
   - Abuso di bugs
   - Spam di URL/indirizzo non consentito
-  - (Auto) pubblicità non consentita
+  - (Auto) promozione non consentita
   expired:
-    self: '{pfx} &aIl tuo warning (ID: &f#{id}&a) è appena scaduto.'
+    self: '{pfx} &aIl tuo avviso (ID: &f#{id}&a) è appena scaduto.'
     other: '{pfx} &eIl warning (ID: &f#{id}&e) di &f{player} &eè appena scaduto.'
   removed:
-    self: '{pfx} &f{who_unwarned} &aha rimosso il tuo ultimo warning (ID: &f#{id}&a).'
-    other: '{pfx} &f{who_unwarned} &eha rimosso l''ultimo warning (ID: &f#{id}&e) di &f{player}&e.'
+    self: '{pfx} &f{who_unwarned} &aha rimosso il tuo ultimo avviso (ID: &f#{id}&a).'
+    other: '{pfx} &f{who_unwarned} &eha rimosso l''ultimo avviso di &f{player} &e(ID: &f#{id}&e).'
   cleared:
-    self: '{pfx} &f{who_unwarned} &aha cancellato i tuoi warnings.'
-    other: '{pfx} &f{who_unwarned} &eha cancellato i warnings di &f{player}&e.'
+    self: '{pfx} &f{who_unwarned} &aha cancellato i tuoi avvisi.'
+    other: '{pfx} &f{who_unwarned} &eha cancellato gli avvisi di &f{player}&e.'
   unspecified-reason: Motivo non specificato.
-  cannot-warn: '{pfx} &f{0} &cnon possono essere warnati.'
-  not-warned: '{pfx} &cQuel giocatore non è warnato.'
+  cannot-warn: '{pfx} &f{0} &cnon possono essere avvisati.'
+  not-warned: '{pfx} &f{0} &cnon sono avvisati.'
   active-format:
     'yes': '&2attivo'
     'no': '&4disattivo'
@@ -419,73 +448,68 @@ warning:
 kick:
   kick-format:
     kick: |-
-      &8[&a&lLogin&8] &cDisconnessi dal server &f{server}&c: &fsiete stati kickati.
+      &8[&a&lLogin&8] &cDisconnessi dal server &f{server}&c: &fsiete stati espulsi.
 
       &eID kick: &f#{id}
-      &eStaffer: &f{staffer}
+      &eMembro dello Staff: &f{staff_member}
       &eMotivo: &f{reason}
       &eData: &f{date}
-    chat: '&8[&a&lLogin&8] &cDisconnessi dal server &f{server}&c: &fsiete stati kickati. &eID kick: &f#{id}&e, staffer: &f{staffer}&e, motivo: &f{reason}&e.'
+    chat: '&8[&a&lLogin&8] &cDisconnessi dal server &f{server}&c: &fsiete stati espulsi. &eID kick: &f#{id}&e, staffer: &f{staffer}&e, motivo: &f{reason}&e.'
   fakekick-format:
     kick: '{fake_reason}'
     chat: '&8[&a&lLogin&8] &cDisconnessi dal server &f{server}&c: &f{fake_reason}&c.'
   command-usage:
     kick: |-
-      {pfx} &cSintassi errata. Utilizzo: &f{0}&c. Flags aggiuntivi:
+      {pfx} &cLa sintassi è errata. Utilizzo: &f{0}&c. Opzioni aggiuntive:
       &f&l-silent &8- &erendilo silenzioso: solo lo Staff verrà avvisato.
       &f&l-type &8- &ealterna il tipo di kick (di default è &f{1}&e).
     fakekick: |-
-      {pfx} &cSintassi errata. Utilizzo: &f{0}&c. Flags aggiuntivi:
+      {pfx} &cLa sintassi è errata. Utilizzo: &f{0}&c. Opzioni aggiuntive:
       &f&l-chat &8- &econnetti al server lobby con il motivo del kick in chat.
   preset-reasons:
-  - Caps
-  - Flood
-  - Linguaggio inappropriato
-  - Insulti
+    - Caps
+    - Flood
+    - Linguaggio inappropriato
+    - Insulti
   unspecified-reason: Motivo non specificato.
   kicked:
-    other: '{pfx} &f{player} &csono stati kickati (ID: &f#{id}&c) da &f{staffer}&c: &f{reason}&c.'
-  cannot-kick: '{pfx} &f{0} &cnon possono essere kickati.'
-  fakekicked: '{pfx} &f{0} &asono stati kickati per finta con successo; messaggio: &f{1}&a.'
+    other: '{pfx} &f{player} &csono stati espulsi (ID: &f#{id}&c) da &f{staff_member}&c: &f{reason}&c.'
+  cannot-kick: '{pfx} &f{0} &cnon possono essere espulsi.'
+  fakekicked: '{pfx} &f{0} &asono stati espulsi per finta con successo; messaggio: &f{1}&a.'
   types-format:
-    kick: kick
+    kick: espulsione
     chat: chat
   silent-format:
     'yes': 'sì'
     'no': 'no'
 mute:
   muted:
-    self: '{pfx} &cSiete stati mutati (ID: &f#{id}&c) per &f{duration} &cda &f{staffer}&c: &f{reason}&c.'
-    other: '{pfx} &f{player} &csono stati mutati (ID: &f#{id}&c) per &f{duration} &cda &f{staffer}&c: &f{reason}&c.'
+    self: '{pfx} &cSiete stati mutati (ID: &f#{id}&c) per &f{duration} &cda &f{staff_member}&c: &f{reason}&c.'
+    other: '{pfx} &f{player} &csono stati mutati (ID: &f#{id}&c) per &f{duration} &cda &f{staff_member}&c: &f{reason}&c.'
   updated:
-    self: '{pfx} &cIl tuo mute attivo (ID: &f#{id}&c) è stato aggiornato da &f{staffer}&c. Durata: &f{duration}&c, motivo: &f{reason}&c.'
-    other: '{pfx} &cIl mute attivo (ID: &f#{id}&c) di &f{player} &cè stato aggiornato da &f{staffer}&c. Durata: &f{duration}&c, motivo: &f{reason}&c.'
-  command-usage:
-    mute: |-
-      {pfx} &cSintassi errata. Utilizzo: &f{0}&c. Flags aggiuntivi:
-      &f&l-silent &8- &erendilo silenzioso: solo lo Staff verrà avvisato.
-      &f&l-type &8- &ealterna lo scopo del mute (di default è &f{1}&e).
-    permanentmute: |-
-      {pfx} &cSintassi errata. Utilizzo: &f{0}&c. Flags aggiuntivi:
-      &f&l-silent &8- &erendilo silenzioso: solo lo Staff verrà avvisato.
-      &f&l-type &8- &ealterna lo scopo del mute (di default è &f{1}&e).
+    self: '{pfx} &cIl tuo mute attivo (ID: &f#{id}&c) è stato aggiornato da &f{staff_member}&c. Durata: &f{duration}&c, motivo: &f{reason}&c.'
+    other: '{pfx} &cIl mute attivo di &f{player} &c(ID: &f#{id}&c) è stato aggiornato da &f{staff_member}&c. Durata: &f{duration}&c, motivo: &f{reason}&c.'
+  command-usage: |-
+    {pfx} &cLa sintassi è errata. Utilizzo: &f{0}&c. Opzioni aggiuntive:
+    &f&l-silent &8- &erendilo silenzioso: solo lo Staff verrà avvisato.
+    &f&l-type &8- &ealterna lo scopo del mute (di default è &f{1}&e).
   preset-reasons:
   - Caps
   - Flood
   - Linguaggio inappropriato
   - Insulti
-  - Blasfemie
+  - Bestemmie
   - Spam di URL/indirizzo non consentito
   expired:
     self: '{pfx} &aIl tuo mute (ID: &f#{id}&a) è appena scaduto.'
-    other: '{pfx} &eIl mute (ID: &f#{id}&e) di &f{player} &eè appena scaduto.'
+    other: '{pfx} &f{player} &esono stati smutati (ID: &f#{id}&e).'
   unmuted:
-    self: '{pfx} &aSiete stati smutati (ID: &f#{id}&a) da &f{who_unmuted}&a.'
-    other: '{pfx} &f{player} &esono stati smutati (ID: &f#{id}&e) da &f{who_unmuted}&e.'
+    self: '{pfx} &aSiete stati mutati (ID: &f#{id}&a) da &f{who_unmuted}&a.'
+    other: '{pfx} &f{player} &esono stati mutati (ID: &f#{id}&e) da &f{who_unmuted}&e.'
   no-chat: '{pfx} &cSiete mutati (ID: &f#{id}&c) per ancora &f{remaining_time}&c: &f{reason}&c.'
   unspecified-reason: Motivo non specificato.
   cannot-mute: '{pfx} &f{0} &cnon possono essere mutati.'
-  not-muted: '{pfx} &cQuel giocatore non è mutato.'
+  not-muted: '{pfx} &f{0} &cnon sono mutati.'
   active-format:
     'yes': '&2attivo'
     'no': '&4disattivo'
@@ -496,8 +520,8 @@ mute:
     'yes': 'sì'
     'no': 'no'
 ping:
-  self: '{pfx} &eHai un ping di {0}ms&e. Qualità: {1}&e.'
-  other: '{pfx} &f{1} &eha un ping di {0}ms&e. Qualità: {2}&e.'
+  self: '{pfx} &eHai un ping di {0} ms&e. Qualità: {1}&e.'
+  other: '{pfx} &f{1} &eha un ping di {0} ms&e. Qualità: {2}&e.'
   excellent:
     color: '&2'
     text: '&2eccellente'
@@ -547,17 +571,17 @@ vanish:
     already-vanished: '{pfx} &cNon puoi eseguire un fake quit mentre sei in vanish.'
     already-fakequit: '{pfx} &cLa vanish non può essere disattivata mentre sei in fake quit. Usa invece &f/fakejoin&c.'
     performed: '{pfx} &aFake quit eseguito. Sei ora in vanish.'
-  silentjoin:
-    joining: '{pfx} &aEntrando nel server &f{0} &ae provando ad abilitare la vanish...'
-    vanished: '{pfx} &aLa vanish è stata abilitata ed il messaggio di join è stato nascosto.'
-    no-players: '{pfx} &cNon ci sono giocatori online. La vanish non è stata abilitata.'
+  safe-teleport: '{pfx} &aSiete stato teletrasportati in sicurezza a &f{0}&a.'
 languages:
-  language-set: '{pfx} &aLingua impostata su &f{0}&a.'
-  invalid-language: '{pfx} &cLingua invalida. Ecco le lingue caricate: &f{0}&c.'
-  language-set-already: '{pfx} &cLa tua lingua è già impostata su &f{0}&c.'
+  set: '{pfx} &aLingua impostata su &f{0}&a.'
+  set-already: '{pfx} &cLa tua lingua è già impostata su &f{0}&c.'
+  invalid: '{pfx} &cLingua invalida. Ecco le lingue caricate: &f{0}&c.'
+  detected:
+    text: '{pfx} &eSembra che la tua lingua sia {0}&e. Clicca su questo messaggio per impostarla come lingua predefinita.'
+    hover: '&9[Fai clic qui per cambiare la tua lingua]'
 timestamps:
-  invalid: '{pfx} &cTimestamp invalido. Utilizza questo formato: &f1d,3h,35m,20s&c.'
-  rank-limitation: '{pfx} &cLa durata massima consentita per il tuo rank (&f{0}&c) è &f{1}&c.'
+  invalid: '{pfx} &cTimestamp non valido. Usa questo formato: &f1g,3h,35m,20s&c.'
+  rank-limitation: '{pfx} &cLa durata massima consentita per il tuo rango (&f{0}&c) è &f{1}&c.'
   now: ora
   ever: sempre
   never: mai
@@ -575,36 +599,39 @@ timestamps:
   months: ' mesi'
   year: ' anno'
   years: ' anni'
+placeholders:
+  nobody: nessuno
+  not-present: non presente
 proxy-messages:
-  no-permission: '{pfx} &cNon hai il permesso per eseguire questo comando.'
-  wrong-syntax: '{pfx} &cSintassi errata. Utilizzo: &f{0}&c.'
+  no-permission: '{pfx} &cNon hai il permesso di eseguire questo comando.'
+  wrong-syntax: '{pfx} &cLa sintassi è errata. Utilizzo: &f{0}&c.'
   help: |-
-    {pfx} &aComandi per &c&lChat&f&lPlugin &fv{0}&a di &9Remigio07_&a:
-    &f&l/cpb status &8- &eVisualizza lo stato attuale del network.
-    &f&l/cpb debug &8- &eAbilita/disabilita la modalità di debug/verbose.
+    {pfx} &aComandi per il &c&lChat&f&lPlugin &fv{0}&a di &9Remigio07_&a:
+    &f&l/cpb status &8- &eMostra lo stato corrente del proxy.
+    &f&l/cpb debug &8- &eAttiva/disattiva la modalità debug/verbose.
     &f&l/cpb reload &8- &eRicarica il sistema di ChatPlugin.
-    &f&l/cpb version &8- &eVisualizza la versione attuale del plugin.
-    &f&l/cpb info &8- &eMostra info utili di questo plugin.
+    &f&l/cpb version &8- &eMostra la versione corrente del plugin.
+    &f&l/cpb info &8- &eMostra informazioni utili su questo plugin.
   status: |-
-    {pfx} &aStato attuale del network:
+    {pfx} &aStato attuale del proxy:
     &eVersione del proxy: &f{network_version} (protocollo: {network_protocol})
     &eVersione di ChatPlugin: &f{plugin_version}
     &eTempo di attività: &f{uptime}
-    &eMemoria utilizzata: &f{used_memory}/{max_memory} MB
+    &eMemoria usata: &f{used_memory}/{max_memory} MB
     &eMemoria allocata: &f{total_memory} MB
     &eMemoria libera: &f{free_memory} MB
     &eGiocatori abilitati: &f{enabled_players}x
-    &eTempo di avvio: &f{startup_time}ms
-    &eTempo dell'ultima ricarica: &f{last_reload_time}ms
+    &eTempo di avvio: &f{startup_time} ms
+    &eTempo dell'ultima ricarica: &f{last_reload_time} ms
   debug:
     enabled: '{pfx} &aModalità di debug abilitata.'
     disabled: '{pfx} &aModalità di debug disabilitata.'
   reload:
-    start: '{pfx} &aChatPlugin si sta ricaricando...'
-    end: '{pfx} &aChatPlugin è stato ricaricato. Ci sono voluti &f{0}ms&a.'
-  version: '{pfx} &aIn esecuzione &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a.'
+    start: '{pfx} &aChatPlugin sta ricaricando...'
+    end: '{pfx} &aChatPlugin è stato ricaricato. Ci sono voluti &f{0} ms&a.'
+  version: '{pfx} &aIn esecuzione &c&lChat&f&lPlugin &6Premium &fv{0} &adi &9Remigio07_ &ail &f{1} {2}&a.'
   info: |-
-    {pfx} &aInfo su &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+    {pfx} &aInformazioni su &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
     &eSito web: &fhttps://megaproserver.com/chatplugin
     &eGitHub: &fhttps://github.com/Remigio07/ChatPlugin
     &eDiscord: &fhttps://discord.gg/CPtysXTfQg

@@ -21,7 +21,7 @@ import me.remigio07_.chatplugin.api.common.player.PlayerManager;
 import me.remigio07_.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07_.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07_.chatplugin.api.common.util.manager.ChatPluginManagerException;
-import me.remigio07_.chatplugin.api.common.util.packet.PacketSerializer;
+import me.remigio07_.chatplugin.api.common.util.packet.Packets;
 import me.remigio07_.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07_.chatplugin.api.server.chat.ChatManager;
 import me.remigio07_.chatplugin.api.server.chat.StaffChatManager;
@@ -69,38 +69,28 @@ public class StaffChatManagerImpl extends StaffChatManager {
 		if (staffChatEvent.isCancelled())
 			return;
 		if (ProxyManager.getInstance().isEnabled()) {
-			ProxyManager.getInstance().sendPluginMessage(
-					new PacketSerializer("PlayerMessage")
-					.writeUTF("ALL")
-					.writeUTF("ALL ENABLED")
-					.writeUTF("chatplugin.commands.staffchat")
-					.writeBoolean(false)
-					.writeUTF(
-							ChatColor.translate(
-									PlaceholderManager.getInstance().translatePlaceholders(
-											playerChatFormat,
-											player,
-											placeholderTypes
-											) + message
-									)
-							)
-					);
-			ProxyManager.getInstance().sendPluginMessage(
-					new PacketSerializer("PlayerMessage")
-					.writeUTF("ALL")
-					.writeUTF("CONSOLE")
-					.writeUTF("")
-					.writeBoolean(false)
-					.writeUTF(
-							ChatColor.translate(
-									PlaceholderManager.getInstance().translatePlaceholders(
-											playerTerminalFormat,
-											player,
-											placeholderTypes
-											) + message
-									)
-							)
-					);
+			ProxyManager.getInstance().sendPluginMessage(Packets.Messages.plainPlayerMessage(
+					"ALL",
+					"ALL ENABLED",
+					"chatplugin.commands.staffchat",
+					false,
+					ChatColor.translate(PlaceholderManager.getInstance().translatePlaceholders(
+							playerChatFormat,
+							player,
+							placeholderTypes
+							) + message)
+					));
+			ProxyManager.getInstance().sendPluginMessage(Packets.Messages.plainPlayerMessage(
+					"ALL",
+					"CONSOLE",
+					null,
+					false,
+					ChatColor.translate(PlaceholderManager.getInstance().translatePlaceholders(
+							playerTerminalFormat,
+							player,
+							placeholderTypes
+							) + message)
+					));
 		} else {
 			for (ChatPluginPlayer other : PlayerManager.getInstance().getPlayers().values())
 				other.sendMessage(
@@ -136,36 +126,26 @@ public class StaffChatManagerImpl extends StaffChatManager {
 		if (ProxyManager.getInstance().isEnabled()) {
 			if (PlayerAdapter.getOnlinePlayers().size() == 0)
 				throw new IllegalStateException("Unable send PlayerMessage plugin message with no players online");
-			ProxyManager.getInstance().sendPluginMessage(
-					new PacketSerializer("PlayerMessage")
-					.writeUTF("ALL")
-					.writeUTF("ALL ENABLED")
-					.writeUTF("chatplugin.commands.staffchat")
-					.writeBoolean(false)
-					.writeUTF(
-							ChatColor.translate(
-									PlaceholderManager.getInstance().translateServerPlaceholders(
-											consoleChatFormat,
-											Language.getMainLanguage()
-											) + message
-									)
-							)
-					);
-			ProxyManager.getInstance().sendPluginMessage(
-					new PacketSerializer("PlayerMessage")
-					.writeUTF("ALL")
-					.writeUTF("CONSOLE")
-					.writeUTF("")
-					.writeBoolean(false)
-					.writeUTF(
-							ChatColor.translate(
-									PlaceholderManager.getInstance().translateServerPlaceholders(
-											consoleTerminalFormat,
-											Language.getMainLanguage()
-											) + message
-									)
-							)
-					);
+			ProxyManager.getInstance().sendPluginMessage(Packets.Messages.plainPlayerMessage(
+					"ALL",
+					"ALL ENABLED",
+					"chatplugin.commands.staffchat",
+					false,
+					ChatColor.translate(PlaceholderManager.getInstance().translateServerPlaceholders(
+							consoleChatFormat,
+							Language.getMainLanguage()
+							) + message)
+					));
+			ProxyManager.getInstance().sendPluginMessage(Packets.Messages.plainPlayerMessage(
+					"ALL",
+					"CONSOLE",
+					null,
+					false,
+					ChatColor.translate(PlaceholderManager.getInstance().translateServerPlaceholders(
+							consoleTerminalFormat,
+							Language.getMainLanguage()
+							) + message)
+					));
 		} else {
 			for (ChatPluginPlayer player : PlayerManager.getInstance().getPlayers().values())
 				player.sendMessage(

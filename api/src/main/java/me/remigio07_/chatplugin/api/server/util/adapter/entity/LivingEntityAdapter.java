@@ -16,13 +16,18 @@
 package me.remigio07_.chatplugin.api.server.util.adapter.entity;
 
 import org.bukkit.attribute.Attribute;
+import org.spongepowered.api.data.key.Keys;
 
+import me.remigio07_.chatplugin.api.common.util.adapter.text.TextAdapter;
+import me.remigio07_.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07_.chatplugin.bootstrap.Environment;
 
 /**
  * Environment indipendent (Bukkit and Sponge) living entity adapter.
  */
-public class LivingEntityAdapter extends EntityAdapter {
+public class LivingEntityAdapter {
+	
+	private Object livingEntity;
 	
 	/**
 	 * Constructs a living entity adapter that accepts one of the following specified as input:
@@ -34,7 +39,7 @@ public class LivingEntityAdapter extends EntityAdapter {
 	 * @param livingEntity Living entity object
 	 */
 	public LivingEntityAdapter(Object livingEntity) {
-		super(livingEntity);
+		this.livingEntity = livingEntity;
 	}
 	
 	/**
@@ -45,7 +50,7 @@ public class LivingEntityAdapter extends EntityAdapter {
 	 */
 	public org.bukkit.entity.LivingEntity bukkitValue() {
 		if (Environment.isBukkit())
-			return (org.bukkit.entity.LivingEntity) entity;
+			return (org.bukkit.entity.LivingEntity) livingEntity;
 		else throw new UnsupportedOperationException("Unable to adapt living entity to a Bukkit's LivingEntity on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
@@ -57,8 +62,20 @@ public class LivingEntityAdapter extends EntityAdapter {
 	 */
 	public org.spongepowered.api.entity.living.Living spongeValue() {
 		if (Environment.isSponge())
-			return (org.spongepowered.api.entity.living.Living) entity;
+			return (org.spongepowered.api.entity.living.Living) livingEntity;
 		else throw new UnsupportedOperationException("Unable to adapt living entity to a Sponge's Living on a " + Environment.getCurrent().getName() + " environment");
+	}
+	
+	/**
+	 * Gets this living entity's name.
+	 * Will return the entity type's name
+	 * if a display name is not provided.
+	 * 
+	 * @return Living entity's name
+	 */
+	@NotNull
+	public String getName() {
+		return Environment.isBukkit() ? bukkitValue().getName() : new TextAdapter(spongeValue().getOrElse(Keys.DISPLAY_NAME, new TextAdapter(spongeValue().getType().getName()).spongeValue())).toPlain();
 	}
 	
 	/**

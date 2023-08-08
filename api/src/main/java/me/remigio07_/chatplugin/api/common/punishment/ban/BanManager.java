@@ -44,6 +44,7 @@ public abstract class BanManager extends PunishmentManager {
 	protected static BanManager instance;
 	protected List<Ban> bans = new ArrayList<>();
 	protected boolean defaultGlobal;
+	protected long loadTime;
 	
 	/**
 	 * Checks if this manager is enabled.

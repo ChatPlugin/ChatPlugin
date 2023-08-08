@@ -26,7 +26,7 @@ import me.remigio07_.chatplugin.bootstrap.Environment;
  */
 public class EntityAdapter {
 	
-	protected Object entity;
+	private Object entity;
 	
 	/**
 	 * Constructs an entity adapter that accepts one of the following specified as input:

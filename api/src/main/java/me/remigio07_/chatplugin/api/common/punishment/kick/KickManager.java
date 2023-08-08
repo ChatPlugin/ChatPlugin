@@ -38,6 +38,7 @@ public abstract class KickManager extends PunishmentManager {
 	protected static KickManager instance;
 	protected KickType defaultKickMessageType;
 	protected String lobbyServerID;
+	protected long loadTime;
 	
 	/**
 	 * Checks if this manager is enabled.

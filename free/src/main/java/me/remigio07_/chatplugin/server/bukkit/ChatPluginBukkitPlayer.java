@@ -76,7 +76,7 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 		bedrockPlayer = ServerPlayerManager.getInstance().isBedrockPlayer(uuid);
 		rank = RankManager.getInstance().calculateRank(this);
 		craftPlayer = BukkitReflection.getLoadedClass("CraftPlayer").cast(player);
-		playerConnection = BukkitReflection.getField("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", craftPlayer), VersionUtils.getVersion().isAtLeast(Version.V1_17) ? "b" : "playerConnection", "");
+		playerConnection = BukkitReflection.getField("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", craftPlayer), "playerConnection", VersionUtils.getVersion().isAtLeast(Version.V1_20) ? "c" : "b");
 		StorageConnector storage = StorageConnector.getInstance();
 		
 		try {

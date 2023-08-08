@@ -42,6 +42,7 @@ public abstract class MuteManager extends PunishmentManager {
 	protected static MuteManager instance;
 	protected List<Mute> mutes = new ArrayList<>();
 	protected boolean defaultGlobal;
+	protected long loadTime;
 	
 	/**
 	 * Checks if this manager is enabled.

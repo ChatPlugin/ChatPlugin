@@ -48,6 +48,7 @@ public abstract class WarningManager extends PunishmentManager {
 	protected boolean defaultGlobal;
 	protected long duration;
 	protected int maxAmount;
+	protected long loadTime;
 	
 	/**
 	 * Checks if this manager is enabled.

@@ -42,7 +42,6 @@ public abstract class PunishmentManager implements ChatPluginManager {
 	protected static ComponentTranslator componentTranslator;
 	protected boolean enabled;
 	protected int nextID, storageCount, staffStorageCount, anticheatStorageCount;
-	protected long loadTime;
 	
 	@Override
 	public void load() throws ChatPluginManagerException {

@@ -144,7 +144,7 @@ public class Configuration {
 		options.setWidth(250);
 		options.setDefaultFlowStyle(FlowStyle.BLOCK);
 		
-		yaml = new Yaml(new Representer() {
+		yaml = new Yaml(new Representer(options) {
 			
 			{
 				representers.put(ConfigurationMappings.class, new Represent() {
@@ -156,7 +156,7 @@ public class Configuration {
 					
 				});
 			}
-		}, options);
+		});
 		
 		if (!file.exists())
 			map = yaml.loadAs("", LinkedHashMap.class);

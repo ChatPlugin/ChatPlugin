@@ -217,8 +217,8 @@ public class ChatPluginCommand extends BaseCommand {
 			for (String str : input)
 				list.add(str
 						.replace("{id}", language.getID())
-						.replace("{player_name}", player.getName())
-						.replace("{player_uuid}", player.getUUID().toString())
+						.replace("{player}", player.getName())
+						.replace("{uuid}", player.getUUID().toString())
 						);
 			return list;
 		}

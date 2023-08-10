@@ -29,6 +29,7 @@ import me.remigio07_.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07_.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07_.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07_.chatplugin.api.common.util.annotation.SensitiveData;
+import me.remigio07_.chatplugin.api.common.util.annotation.ServerImplementationOnly;
 import me.remigio07_.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07_.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07_.chatplugin.bootstrap.Environment;
@@ -77,6 +78,7 @@ public abstract class IPLookupManager implements ChatPluginManager {
 	 * 
 	 * @return Whether a lookup is loaded on every join
 	 */
+	@ServerImplementationOnly(why = ServerImplementationOnly.SETTINGS_NOT_PRESENT)
 	public boolean isLoadOnJoin() {
 		return loadOnJoin;
 	}

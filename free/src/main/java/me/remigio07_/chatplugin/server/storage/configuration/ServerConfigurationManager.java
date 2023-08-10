@@ -189,7 +189,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		config.addDefault("ip-lookup.enabled", false);
 		config.addDefault("ip-lookup.load-on-join", false);
-		config.addDefault("ip-lookup.method", "LOCAL");
+		config.addDefault("ip-lookup.method", "REMOTE");
 		config.addDefault("ip-lookup.database-folder", "{0}/files");
 		config.addDefault("ip-lookup.cache-time", "10m");
 		config.addDefault("ip-lookup.maxmind-account.user-id", "");

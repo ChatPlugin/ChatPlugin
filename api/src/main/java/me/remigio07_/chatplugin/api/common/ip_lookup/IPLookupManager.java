@@ -218,7 +218,7 @@ public abstract class IPLookupManager implements ChatPluginManager {
 	 * Returned lookup will be also {@link #putInCache(String, IPLookup)}.
 	 * 
 	 * <p>You can specify <code>null</code> as <code>requesterName</code>
-	 * to prevent the proxy to send them the message found at "misc.disabled-feature" if its
+	 * to prevent the proxy from sending them the message found at "misc.disabled-feature" if its
 	 * manager is not enabled, otherwise it will try to do it. Specify "CONSOLE" for the console.</p>
 	 * 
 	 * <p>Note that this method might take some time to be executed: async calls are recommended.</p>

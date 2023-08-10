@@ -156,7 +156,7 @@ public class Configuration {
 					
 				});
 			}
-		});
+		}, options);
 		
 		if (!file.exists())
 			map = yaml.loadAs("", LinkedHashMap.class);

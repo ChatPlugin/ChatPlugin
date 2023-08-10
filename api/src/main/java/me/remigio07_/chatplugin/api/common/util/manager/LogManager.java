@@ -41,18 +41,23 @@ public abstract class LogManager implements ChatPluginManager {
 	protected Boolean debug = null;
 	protected LoggerType loggerType;
 	protected File file;
-	protected SimpleDateFormat dateFormat = new SimpleDateFormat("[MM-dd hh:mm:ss]: ");
+	protected SimpleDateFormat dateFormat = new SimpleDateFormat("[MM-dd HH:mm:ss]: ");
 	protected long loadTime;
 	
 	@Override
 	public void load() throws ChatPluginManagerException {
 		if (!(file = new File(ChatPlugin.getInstance().getDataFolder(), "chatplugin.log")).exists())
 			try {
-				if (file.getParentFile() != null)
+				boolean freshInstallation = !file.getParentFile().exists();
+				
+				if (freshInstallation)
 					file.getParentFile().mkdirs();
 				file.createNewFile();
+				
+				if (freshInstallation)
+					logMessage("Fresh installation? Welcome! Generating default files for you. Follow this guide for proper installation: https://github.com/Remigio07/ChatPlugin/wiki/Installation-({0})", LogLevel.INFO, ChatPlugin.getInstance().isPremium() ? "premium" : "free");
 			} catch (IOException e) {
-				e.printStackTrace();
+				throw new ChatPluginManagerException(this, e);
 			}
 		else if (file.length() > 10 * MemoryUtils.MEGABYTE.getToBytesRatio())
 			logMessage("Log file chatplugin.log's size is over 10 MB (currently " + MemoryUtils.formatMemory(file.length(), MemoryUtils.MEGABYTE) + " MB). This might impact performance. It is recommended to stop the server and rename or delete the file before starting again.", LogLevel.WARNING);

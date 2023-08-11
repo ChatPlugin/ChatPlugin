@@ -18,7 +18,6 @@ package me.remigio07_.chatplugin.api.server.util.adapter.bossbar;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,6 +25,7 @@ import org.bukkit.boss.BarColor;
 import org.spongepowered.api.boss.BossBarColor;
 import org.spongepowered.api.boss.BossBarColors;
 
+import io.netty.util.internal.ThreadLocalRandom;
 import me.remigio07_.chatplugin.api.common.util.VersionUtils;
 import me.remigio07_.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07_.chatplugin.api.common.util.annotation.Nullable;
@@ -121,7 +121,7 @@ public class BossbarColorAdapter {
 	 */
 	public BarColor bukkitValue() {
 		if (Environment.isBukkit())
-			return this == RANDOM ? BarColor.values()[VersionUtils.getVersion().isAtLeast(Version.V1_9) ? new Random().nextInt(BarColor.values().length) : 2] : BarColor.valueOf(name()); // .values()[2] = PINK
+			return this == RANDOM ? BarColor.values()[VersionUtils.getVersion().isAtLeast(Version.V1_9) ? ThreadLocalRandom.current().nextInt(BarColor.values().length) : 2] : BarColor.valueOf(name()); // .values()[2] = PINK
 		else throw new UnsupportedOperationException("Unable to adapt bossbar color to a Bukkit's BarColor on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
@@ -134,7 +134,7 @@ public class BossbarColorAdapter {
 	 */
 	public BossBarColor spongeValue() {
 		if (Environment.isSponge())
-			return (BossBarColor) (this == RANDOM ? new ArrayList<>(spongeColors.values()).get(VersionUtils.getVersion().isAtLeast(Version.V1_9) ? new Random().nextInt(values().length - 1) : 2) : spongeColors.get(name())); // .values().get(2) = PINK
+			return (BossBarColor) (this == RANDOM ? new ArrayList<>(spongeColors.values()).get(VersionUtils.getVersion().isAtLeast(Version.V1_9) ? ThreadLocalRandom.current().nextInt(VALUES.length - 1) : 2) : spongeColors.get(name())); // .values().get(2) = PINK
 		else throw new UnsupportedOperationException("Unable to adapt bossbar color to a Sponge's BossBarColor on a " + Environment.getCurrent().getName() + " environment");
 	}
 	

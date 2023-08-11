@@ -34,10 +34,8 @@ public class TPSManagerImpl extends TPSManager {
 	public void load() {
 		instance = this;
 		long ms = System.currentTimeMillis();
-		updateTimeout = ConfigurationType.CONFIG.get().getInt("tps.update-seconds") * 1000L;
+		updateTimeout = ConfigurationType.CONFIG.get().getLong("tps.update-timeout-ms");
 		Configuration messages = Language.getMainLanguage().getConfiguration();
-		
-		qualities.clear();
 		
 		for (String id : ConfigurationType.CONFIG.get().getKeys("tps.qualities")) {
 			double minTPS = ConfigurationType.CONFIG.get().getDouble("tps.qualities." + id);

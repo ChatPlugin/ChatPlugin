@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
 
+import me.remigio07_.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07_.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07_.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07_.chatplugin.api.server.language.Language;
@@ -50,11 +51,11 @@ public abstract class PingManager extends TimerTask implements ChatPluginManager
 	}
 	
 	/**
-	 * Gets this manager's update timeout, specified at
-	 * <code>ping.update-seconds</ping> in config.yml,
-	 * expressed in milliseconds.
+	 * Gets the timeout between ping updates, in milliseconds.
 	 * 
-	 * @return Manager's update timeout
+	 * <p><strong>Found at:</strong> "ping.update-timeout-ms" in {@link ConfigurationType#CONFIG}</p>
+	 * 
+	 * @return Time between updates
 	 */
 	public long getUpdateTimeout() {
 		return updateTimeout;
@@ -71,12 +72,12 @@ public abstract class PingManager extends TimerTask implements ChatPluginManager
 	}
 	
 	/**
-	 * Returns a player's cached ping. Latencies are cached in a map which
-	 * is updated once every <code>ping.update-seconds</code> in config.yml.
+	 * Returns a player's cached ping. Latencies are cached in
+	 * a map updated once every {@link #getUpdateTimeout()} ms.
 	 * 
 	 * If you need a real time ping (just a little more precise), you can use
-	 * {@link #getRealTimePing(ChatPluginServerPlayer)}, but it's not recommended, as many calls of
-	 * that method could be heavy to handle.
+	 * {@link #getRealTimePing(ChatPluginServerPlayer)}, but it's not recommended,
+	 * as many calls of that method could be heavy to handle.
 	 * 
 	 * @param player Player to get the ping for
 	 * @return Player's cached ping, in milliseconds
@@ -107,8 +108,7 @@ public abstract class PingManager extends TimerTask implements ChatPluginManager
 	}
 	
 	/**
-	 * Online players' ping updater, called once every
-	 * <code>ping.update-seconds</code> in config.yml.
+	 * Automatic online players' ping updater, called once every {@link #getUpdateTimeout()} ms.
 	 */
 	@Override
 	public abstract void run();
@@ -130,7 +130,7 @@ public abstract class PingManager extends TimerTask implements ChatPluginManager
 	 * according to the response time, expressed in milliseconds.
 	 * 
 	 * @param ms Ping to check
-	 * @return Resulting {@link PingQuality}
+	 * @return Resulting ping quality
 	 */
 	public abstract PingQuality getPingQuality(int ms);
 	

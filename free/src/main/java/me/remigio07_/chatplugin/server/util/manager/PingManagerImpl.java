@@ -38,16 +38,15 @@ public class PingManagerImpl extends PingManager {
 	public void load() throws ChatPluginManagerException {
 		instance = this;
 		long ms = System.currentTimeMillis();
-		updateTimeout = ConfigurationType.CONFIG.get().getInt("ping.update-seconds") * 1000L;
+		updateTimeout = ConfigurationType.CONFIG.get().getLong("ping.update-timeout-ms");
 		Configuration messages = ConfigurationType.MESSAGES.get();
 		
 		for (String id : ConfigurationType.CONFIG.get().getKeys("ping.qualities")) {
 			int maxMs = ConfigurationType.CONFIG.get().getInt("ping.qualities." + id);
 			
-			if (messages.contains("ping." + id + ".color") && messages.contains("ping." + id + ".text")) {
+			if (messages.contains("ping." + id + ".color") && messages.contains("ping." + id + ".text"))
 				qualities.add(new PingQuality(id, maxMs));
-				continue;
-			} LogManager.log("Missing translation in messages.yml for ping quality with ID " + id + "; skipping.", 2);
+			else LogManager.log("Missing translation in messages.yml for ping quality with ID " + id + "; skipping.", 2);
 		} PingQuality last = qualities.get(0);
 		
 		for (PingQuality maxMs : qualities)

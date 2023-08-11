@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
 
+import me.remigio07_.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07_.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07_.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07_.chatplugin.api.server.language.Language;
@@ -59,11 +60,11 @@ public abstract class TPSManager extends TimerTask implements ChatPluginManager 
 	}
 	
 	/**
-	 * Gets this manager's update timeout, specified at
-	 * <code>tps.update-seconds</ping> in config.yml,
-	 * expressed in milliseconds.
+	 * Gets the timeout between TPS updates, in milliseconds.
 	 * 
-	 * @return Manager's update timeout
+	 * <p><strong>Found at:</strong> "tps.update-timeout-ms" in {@link ConfigurationType#CONFIG}</p>
+	 * 
+	 * @return Timeout between updates
 	 */
 	public long getUpdateTimeout() {
 		return updateTimeout;
@@ -89,8 +90,7 @@ public abstract class TPSManager extends TimerTask implements ChatPluginManager 
 	}
 	
 	/**
-	 * Server's TPS updater, called once every
-	 * <code>tps.update-seconds</code> in config.yml.
+	 * Automatic server's TPS updater, called once every {@link #getUpdateTimeout()} ms.
 	 */
 	@Override
 	public abstract void run();
@@ -107,7 +107,7 @@ public abstract class TPSManager extends TimerTask implements ChatPluginManager 
 	 * Establishes what {@link TPSQuality} a TPS value belongs to.
 	 * 
 	 * @param tps TPS to check
-	 * @return Resulting {@link TPSQuality}
+	 * @return Resulting TPS quality
 	 */
 	public abstract TPSQuality getTPSQuality(double tps);
 	
@@ -208,40 +208,6 @@ public abstract class TPSManager extends TimerTask implements ChatPluginManager 
 		 * Represents a fifteen minutes time interval (15m).
 		 */
 		FIFTEEN_MINUTES;
-		
-//		private int position;
-//		
-//		private TPSTimeInterval(int position) {
-//			this.position = position;
-//		}
-		
-//		/**
-//		 * Gets this time interval's position. Bounds: 0 to 2.
-//		 * 
-//		 * @return Time interval's position
-//		 */
-//		public int getPosition() {
-//			return position;
-//		}
-//		
-//		/**
-//		 * Get a time interval from its position. Bounds: 0 to 2.
-//		 * 
-//		 * @param position Time interval's position
-//		 * @return Corresponding time interval or <code>null</code> if <code>position &#60; 0 || position &#62; 2</code>
-//		 */
-//		public static TPSTimeInterval fromPosition(int position) {
-//			switch (position) {
-//			case 0:
-//				return ONE_MINUTE;
-//			case 1:
-//				return FIVE_MINUTES;
-//			case 2:
-//				return FIFTEEN_MINUTES;
-//			default:
-//				return null;
-//			}
-//		}
 		
 	}
 	

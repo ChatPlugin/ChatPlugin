@@ -235,7 +235,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("mute.allow-mute-not-stored-players", false);
 		config.addDefault("mute.allow-mute-offline", true);
 		
-		config.addDefault("ping.update-seconds", 10);
+		config.addDefault("ping.update-timeout-ms", 5000);
 		config.addDefault("ping.qualities.excellent", 20);
 		config.addDefault("ping.qualities.great", 50);
 		config.addDefault("ping.qualities.good", 68);
@@ -245,7 +245,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("ping.qualities.bad", 200);
 		config.addDefault("ping.qualities.unplayable", 201);
 		
-		config.addDefault("tps.update-seconds", 5);
+		config.addDefault("tps.update-timeout-ms", 5000);
 		config.addDefault("tps.20-tps-cap.enabled", false);
 		config.addDefault("tps.20-tps-cap.add-wildcard", false);
 		config.addDefault("tps.enable-command", true);

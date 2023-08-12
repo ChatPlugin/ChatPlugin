@@ -1,8 +1,8 @@
 name: ChatPlugin
-main: me.remigio07_.chatplugin.bootstrap.BukkitBootstrapper
+main: me.remigio07.chatplugin.bootstrap.BukkitBootstrapper
 version: '${version}'
 api-version: 1.13
-author: Remigio07_
+author: Remigio07
 website: https://megaproserver.com/chatplugin
 description: 'A lightweight yet complete plugin which handles just too many features! Check the website for info: https://megaproserver.com/ChatPlugin'
 softdepend: [Essentials, ViaVersion, ProtocolSupport, Vault, PlaceholderAPI, MVdWPlaceholderAPI, CombatLogX, GadgetsMenu, PlayerParticles, Matrix, Vulcan, Negativity, WorldGuard, UltraCosmetics]

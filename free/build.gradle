@@ -41,10 +41,10 @@ jar {
 	from project(':loader').sourceSets.main.output
 	from project(':api').sourceSets.main.output
 	
-	exclude 'me/remigio07_/chatplugin/common/**'
-	exclude 'me/remigio07_/chatplugin/server/**'
-	exclude 'me/remigio07_/chatplugin/ChatPluginImpl.class'
-	exclude 'me/remigio07_/chatplugin/ChatPluginImpl$1.class'
+	exclude 'me/remigio07/chatplugin/common/**'
+	exclude 'me/remigio07/chatplugin/server/**'
+	exclude 'me/remigio07/chatplugin/ChatPluginImpl.class'
+	exclude 'me/remigio07/chatplugin/ChatPluginImpl$1.class'
 	from shadowJar.archiveFile
 }
 
@@ -52,12 +52,12 @@ shadowJar {
 	archiveFileName = 'ChatPlugin.jar'
 	
 	dependencies {
-		include(dependency('me.remigio07_.chatplugin:.*'))
+		include(dependency('me.remigio07.chatplugin:.*'))
 	}
 	
 	include '**/*.class'
 	
-	relocate 'com.github.cliftonlabs.json_simple', 'me.remigio07_.chatplugin.common.lib.com.github.cliftonlabs.json_simple'
+	relocate 'com.github.cliftonlabs.json_simple', 'me.remigio07.chatplugin.common.lib.com.github.cliftonlabs.json_simple'
 }
 
 processResources {

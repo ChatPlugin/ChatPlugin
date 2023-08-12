@@ -44,30 +44,30 @@ commands:
   help:
     free:
       user: |-
-        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/language &8- &eCambia la tua lingua attualmente visualizzata.
         &f&l/ping &8- &eMostra la latenza tua o di un altro giocatore in ms.
         &f&l/rankinfo &8- &eVisualizza informazioni sul rango di un giocatore.
         &f&l/playerlist &8- &eVisualizza la lista dei giocatori online.
       admin: |-
-        {pfx} &aAiuto per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+        {pfx} &aAiuto per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/staffchat &8- &eStaff chat cross-server molto utile.
         &f&l/iplookup &8- &eEsegui il lookup di un indirizzo IP.
         &f&l/lastseen &8- &eControlla l'ultimo login di un giocatore.
         &f&l/clearchat &8- &eCancella la chat e nascondi gli ultimi messaggi.
         &f&l/muteall &8- &eAttiva/disattiva la chat per gli utenti.
       vanish: |-
-        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/vanish &8- &eDiventa invisibile agli altri utenti.
       misc: |-
-        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/tps &8- &eVisualizza i ticks per secondo del server.
         &f&l/ad &8- &eInvia un annuncio ad uno o più giocatori online.
         &f&l/broadcast &8- &eInvia un messaggio ad ogni giocatore online.
         &f&l/broadcastraw &8- &eCome /broadcast, ma senza il prefisso.
     premium:
       user: |-
-        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/language &8- &eCambia la tua lingua attualmente visualizzata.
         &f&l/ping &8- &eMostra la latenza tua o di un altro giocatore in ms.
         &f&l/rankinfo &8- &eVisualizza informazioni sul rango di un giocatore.
@@ -75,7 +75,7 @@ commands:
         &f&l/bossbar &8- &eAttiva/disattiva la visibilità della bossbar.
         &f&l/scoreboard &8- &eAttiva/disattiva la visibilità della scoreboard.
       admin: |-
-        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/staffchat &8- &eStaff chat cross-server molto utile.
         &f&l/iplookup &8- &eEsegui il lookup di un indirizzo IP.
         &f&l/lastseen &8- &eControlla l'ultimo login di un giocatore.
@@ -84,7 +84,7 @@ commands:
         &f&l/chatlog &8- &eCerca messaggi che contengono determinato testo.
         &f&l/accountcheck &8- &eControlla gli accounts di un giocatore.
       punishments: |-
-        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/ban &8- &eBanna un giocatore (disponibile anche /tempban).
         &f&l/unban &8- &eRimuovi il ban ad un giocatore bannato.
         &f&l/warning &8- &eAvvisa un giocatore per un certo periodo.
@@ -95,7 +95,7 @@ commands:
         &f&l/mute &8- &eImpedisci ad un giocatore di utilizzare la chat.
         &f&l/unmute &8- &eRimuovi il mute ad un giocatore mutato.
       guis: |-
-        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/cp status &8- &eVisualizza lo stato attuale del server.
         &f&l/banlist &8- &eVisualizza la lista dei bans attivi.
         &f&l/warnlist &8- &eVisualizza la lista dei warnings attivi.
@@ -105,13 +105,13 @@ commands:
         &f&l/playerpunishments &8- &eMostra le punizioni di un giocatore.
         &f&l/playerviolations &8- &eMostra le violazioni di un giocatore.
       vanish: |-
-        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/vanish &8- &eDiventa invisibile agli altri utenti.
         &f&l/fakejoin &8- &eFingi di entrare nel server e disabilita la vanish.
         &f&l/fakequit &8- &eFingi di uscire dal server ed abilita la vanish.
         &f&l/silentteleport &8- &eTeletrasportati in modo silenzioso.
       misc: |-
-        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/tps &8- &eVisualizza i ticks per secondo del server.
         &f&l/ad &8- &eInvia un annuncio ad uno o più giocatori online.
         &f&l/broadcast &8- &eInvia un messaggio ad ogni giocatore online.
@@ -119,11 +119,11 @@ commands:
         &f&l/globalbroadcast &8- &eCome /broadcast, ma cross-server.
         &f&l/discordmessage &8- &eInvia un messaggio attraverso il bot.
   info: |-
-    {pfx} &aInformazioni su &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+    {pfx} &aInformazioni su &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
     &eSito web: &fhttps://megaproserver.com/chatplugin
     &eGitHub: &fhttps://github.com/Remigio07/ChatPlugin
     &eDiscord: &fhttps://discord.gg/CPtysXTfQg
-  version: '{pfx} &aIn esecuzione &c&lChat&f&lPlugin {0} &fv{1} &adi &9Remigio07_ &asu &f{2} {3}&a.'
+  version: '{pfx} &aIn esecuzione &c&lChat&f&lPlugin {0} &fv{1} &adi &9Remigio07 &asu &f{2} {3}&a.'
   status: |-
     {pfx} &aStato attuale del server:
     &eVersione del server: &f{server_version} (protocollo: {server_version_protocol})
@@ -606,7 +606,7 @@ proxy-messages:
   no-permission: '{pfx} &cNon hai il permesso di eseguire questo comando.'
   wrong-syntax: '{pfx} &cLa sintassi è errata. Utilizzo: &f{0}&c.'
   help: |-
-    {pfx} &aComandi per il &c&lChat&f&lPlugin &fv{0}&a di &9Remigio07_&a:
+    {pfx} &aComandi per il &c&lChat&f&lPlugin &fv{0}&a di &9Remigio07&a:
     &f&l/cpb status &8- &eMostra lo stato corrente del proxy.
     &f&l/cpb debug &8- &eAttiva/disattiva la modalità debug/verbose.
     &f&l/cpb reload &8- &eRicarica il sistema di ChatPlugin.
@@ -629,9 +629,9 @@ proxy-messages:
   reload:
     start: '{pfx} &aChatPlugin sta ricaricando...'
     end: '{pfx} &aChatPlugin è stato ricaricato. Ci sono voluti &f{0} ms&a.'
-  version: '{pfx} &aIn esecuzione &c&lChat&f&lPlugin &6Premium &fv{0} &adi &9Remigio07_ &ail &f{1} {2}&a.'
+  version: '{pfx} &aIn esecuzione &c&lChat&f&lPlugin &6Premium &fv{0} &adi &9Remigio07 &ail &f{1} {2}&a.'
   info: |-
-    {pfx} &aInformazioni su &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07_&a:
+    {pfx} &aInformazioni su &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
     &eSito web: &fhttps://megaproserver.com/chatplugin
     &eGitHub: &fhttps://github.com/Remigio07/ChatPlugin
     &eDiscord: &fhttps://discord.gg/CPtysXTfQg

@@ -1,19 +1,9 @@
-buildscript {
-	repositories {
-		
-	}
-	
-	dependencies {
-		classpath files('C:/Users/Remigio/Desktop/skidfuscator-gradle-wrapper-master/build/libs/SkidFuscatorGradle-1.0.3.jar')
-	}
-}
-
 plugins {
 	id 'java'
 	id 'eclipse'
 }
 
-group 'me.remigio07_'
+group 'me.remigio07'
 version '1.9.0'
 jar.enabled = false
 

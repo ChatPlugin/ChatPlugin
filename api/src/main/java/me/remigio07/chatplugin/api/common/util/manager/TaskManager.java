@@ -93,11 +93,13 @@ public abstract class TaskManager implements ChatPluginManager {
 	 * @throws UnsupportedOperationException If {@link Environment#isProxy()}
 	 */
 	public static long runSync(Runnable runnable, long delay) {
+		delay = delay < 0 ? 0 : delay;
+		
 		if (Environment.isProxy())
 			throw new UnsupportedOperationException("Synchronous tasks are not available on a " + Environment.getCurrent().getName() + " environment. Bukkit and Sponge only");
 		long taskID = Environment.isBukkit() ? (long) BukkitScheduler.runSync(runnable, delay) : instance.currentSpongeID++;
 		
-		instance.syncTasks.put(taskID, Environment.isBukkit() ? UUID.randomUUID() : Sponge.getScheduler().createTaskBuilder().execute(runnable).delayTicks((delay < 0 ? 0 : delay) / 50).submit(SpongeBootstrapper.getInstance()).getUniqueId());
+		instance.syncTasks.put(taskID, Environment.isBukkit() ? UUID.randomUUID() : Sponge.getScheduler().createTaskBuilder().execute(runnable).delayTicks(delay / 50).submit(SpongeBootstrapper.getInstance()).getUniqueId());
 		runAsync(() -> instance.syncTasks.remove(taskID), delay);
 		return taskID;
 	}
@@ -139,11 +141,14 @@ public abstract class TaskManager implements ChatPluginManager {
 	 * @throws UnsupportedOperationException If {@link Environment#isProxy()}
 	 */
 	public static long scheduleSync(Runnable runnable, long delay, long period) {
+		delay = delay < 0 ? 0 : delay;
+		period = period < 1 ? 1 : period;
+		
 		if (Environment.isProxy())
 			throw new UnsupportedOperationException("Synchronous tasks are not available on a " + Environment.getCurrent().getName() + " environment. Bukkit and Sponge only");
 		long taskID = Environment.isBukkit() ? (long) BukkitScheduler.scheduleSync(runnable, delay, period) : instance.currentSpongeID++;
 		
-		instance.syncTasks.put(taskID, Environment.isBukkit() ? UUID.randomUUID() : Sponge.getScheduler().createTaskBuilder().execute(runnable).delayTicks((delay < 0 ? 0 : delay) / 50).intervalTicks(period / 50).submit(SpongeBootstrapper.getInstance()).getUniqueId());
+		instance.syncTasks.put(taskID, Environment.isBukkit() ? UUID.randomUUID() : Sponge.getScheduler().createTaskBuilder().execute(runnable).delayTicks(delay / 50).intervalTicks(period / 50).submit(SpongeBootstrapper.getInstance()).getUniqueId());
 		return taskID;
 	}
 	
@@ -166,7 +171,7 @@ public abstract class TaskManager implements ChatPluginManager {
 			}
 			
 		};
-		new Timer().schedule(task, delay < 0 ? 0 : delay, period);
+		new Timer().schedule(task, delay < 0 ? 0 : delay, period < 1 ? 1 : period);
 		instance.asyncTasks.put(taskID, task);
 		return taskID;
 	}
@@ -227,7 +232,7 @@ public abstract class TaskManager implements ChatPluginManager {
 		}
 		
 		public static int scheduleSync(Runnable runnable, long delay, long period) {
-			return Bukkit.getScheduler().runTaskTimer(BukkitBootstrapper.getInstance(), runnable, (delay < 0 ? 0 : delay) / 50, period / 50).getTaskId();
+			return Bukkit.getScheduler().runTaskTimer(BukkitBootstrapper.getInstance(), runnable, (delay < 0 ? 0 : delay) / 50, (period < 1 ? 1 : period) / 50).getTaskId();
 		}
 		
 	}

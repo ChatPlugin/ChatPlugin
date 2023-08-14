@@ -142,7 +142,7 @@ public class TextAdapter {
 	 * Gets the text adapted for Velocity environments.
 	 * 
 	 * @return Velocity-adapted text
-	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isVelocity()()}
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isVelocity()}
 	 */
 	public net.kyori.adventure.text.Component velocityValue() {
 		if (Environment.isVelocity())

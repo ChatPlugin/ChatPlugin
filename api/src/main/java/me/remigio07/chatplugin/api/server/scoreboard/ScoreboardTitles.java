@@ -33,14 +33,14 @@ public abstract class ScoreboardTitles extends TimerTask {
 	/**
 	 * Value representing the max title length.
 	 * 
-	 * <p><strong>Value:</strong> 128 on > 1.12.2, 32 otherwise</p>
+	 * <p><strong>Value:</strong> 128 on &gt; 1.12.2, 32 otherwise</p>
 	 */
 	public static final int MAX_TITLE_LENGTH = VersionUtils.getVersion().getProtocol() > 340 ? 128 : 32;
 	
 	/**
 	 * String containing the "title too long" text indicator.
 	 * 
-	 * <p><strong>Content:</strong> "&#167cTitle exceeds &#167f" + {@link #MAX_TITLE_LENGTH} + " &#167cchars"</p>
+	 * <p><strong>Content:</strong> "&sect;cTitle exceeds &sect;f" + {@link #MAX_TITLE_LENGTH} + " &sect;cchars"</p>
 	 */
 	public static final String TITLE_TOO_LONG = "\u00A7cTitle exceeds \u00A7f" + MAX_TITLE_LENGTH + " \u00A7cchars";
 	protected Scoreboard scoreboard;
@@ -77,7 +77,7 @@ public abstract class ScoreboardTitles extends TimerTask {
 	 * Gets these titles's values for the specified language.
 	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s values if no values are present for the specified language.
-	 * Will return <code>null</code> if {@link #getValues()}<code>.get(language) == null && !avoidNull</code>.
+	 * Will return <code>null</code> if {@link #getValues()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.
 	 * 
 	 * @param language Language used to translate the values
 	 * @param avoidNull Whether to avoid returning <code>null</code>

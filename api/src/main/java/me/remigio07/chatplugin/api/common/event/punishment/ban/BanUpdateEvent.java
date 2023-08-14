@@ -15,6 +15,8 @@
 
 package me.remigio07.chatplugin.api.common.event.punishment.ban;
 
+import java.net.InetAddress;
+
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.punishment.ban.Ban;
 import me.remigio07.chatplugin.api.common.punishment.ban.BanManager;
@@ -24,7 +26,7 @@ import me.remigio07.chatplugin.api.common.punishment.ban.BanManager;
  * 
  * @see BanManager#ban(OfflinePlayer, String, String, String, long, boolean, boolean)
  * @see BanManager#banIP(OfflinePlayer, String, String, String, long, boolean, boolean)
- * @see BanManager#banIP(String, String, String, String, long, boolean, boolean)
+ * @see BanManager#banIP(InetAddress, String, String, String, long, boolean, boolean)
  */
 public class BanUpdateEvent extends BanEvent {
 	

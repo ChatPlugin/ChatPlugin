@@ -27,6 +27,7 @@ import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerExceptio
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.common.util.packet.PacketDeserializer;
 import me.remigio07.chatplugin.api.common.util.packet.PacketSerializer;
+import me.remigio07.chatplugin.api.common.util.packet.Packets;
 
 /**
  * Manager used to send plugin messages to the servers under the proxy.

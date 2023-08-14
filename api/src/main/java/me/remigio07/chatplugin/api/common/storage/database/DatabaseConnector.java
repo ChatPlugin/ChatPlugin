@@ -364,7 +364,7 @@ public abstract class DatabaseConnector extends StorageConnector {
 	 * 
 	 * @param <T> Data's type
 	 * @param query SQL statement
-	 * @param columnIndex Column's index
+	 * @param columnIndex Column's index, starting from 1
 	 * @param type Data's class
 	 * @param params Parameters to pass
 	 * @return Requested data
@@ -393,7 +393,7 @@ public abstract class DatabaseConnector extends StorageConnector {
 	 * 
 	 * @param <T> Data's type
 	 * @param query SQL statement
-	 * @param columnLabel Column's label
+	 * @param columnIndex Column's index
 	 * @param def Default value
 	 * @param params Parameters to pass
 	 * @return Requested data
@@ -448,7 +448,7 @@ public abstract class DatabaseConnector extends StorageConnector {
 	 * 
 	 * @param <T> Data's type
 	 * @param query SQL statement
-	 * @param columnIndex Column's index
+	 * @param columnIndex Column's index, starting from 1
 	 * @param type Data's class
 	 * @param params Parameters to pass
 	 * @return Requested list of data

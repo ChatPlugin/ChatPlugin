@@ -54,7 +54,7 @@ public enum StorageMethod {
 	/**
 	 * Gets this storage method's name.
 	 * 
-	 * <p><strong>Example:</strong> {@link #SQLITE} -> "SQLite"</p>
+	 * <p><strong>Example:</strong> {@link #SQLITE} -&gt; "SQLite"</p>
 	 * 
 	 * @return Storage method's name
 	 */

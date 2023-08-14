@@ -93,8 +93,8 @@ public abstract class KickManager extends PunishmentManager {
 	 * @param lobbyServer Lobby server ({@link #getLobbyServerID()})
 	 * @param type Kick's type ({@link #getDefaultKickMessageType()})
 	 * @param silent Whether this kick is silent
-	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &&
-	 * {@link ProxyManager#isEnabled()} && {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
 	 * @see KickEvent
 	 */
 	public abstract void kick(

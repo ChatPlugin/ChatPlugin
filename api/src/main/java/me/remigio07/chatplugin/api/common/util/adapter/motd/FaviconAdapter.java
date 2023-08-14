@@ -32,7 +32,7 @@ public class FaviconAdapter {
 	 * 		<li>{@link com.velocitypowered.api.util.Favicon} for Velocity environments</li>
 	 * 	</ul>
 	 * 
-	 * @param player Player object
+	 * @param favicon Favicon object
 	 */
 	public FaviconAdapter(Object favicon) {
 		this.favicon = favicon;

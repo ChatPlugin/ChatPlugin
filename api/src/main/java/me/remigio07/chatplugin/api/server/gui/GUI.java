@@ -111,21 +111,19 @@ public abstract class GUI {
 	 * {@link Icon#toItemStackAdapter(GUI, Language)} is called or a {@link GUIClickEvent} occurs.
 	 * Will return <code>null</code> if no placeholders' translator has been set.
 	 * 
-	 * <p>It translates the following values:
+	 * 	<p>It translates the following values:
 	 * 	<ul>
 	 * 		<li>{@link Icon#getDisplayNames()}</li>
 	 * 		<li>{@link Icon#getSkullOwner()}</li>
 	 * 		<li>{@link Icon#getSkullTextureURL()}</li>
 	 * 	</ul>
-	 * </p>
 	 * 
-	 * <p>The function is composed of the following arguments:
+	 * 	<p>The function is composed of the following arguments:
 	 * 	<ol>
 	 * 		<li>{@link Icon} - this icon's instance</li>
 	 * 		<li>{@link String} - the text to format with custom placeholders</li>
 	 * 		<li>{@link Language} - the language used to translate the value</li>
 	 * 	</ol>
-	 * </p>
 	 * 
 	 * If {@link #getStringPlaceholdersTranslator()}<code> != null</code> it will be also used to translate string lists when
 	 * {@link #getStringListPlaceholdersTranslator()}<code> == null</code>, passing every element to the function's method.
@@ -140,25 +138,23 @@ public abstract class GUI {
 	/**
 	 * Sets this GUI's string placeholders' translator function. The required value (a <code>String</code>)
 	 * is set to {@link TriFunction#apply(Object, Object, Object)}'s result every time
-	 * {@link #toItemStackAdapter(GUI, Language)} is called or a {@link GUIClickEvent} occurs.
+	 * {@link Icon#toItemStackAdapter(GUI, Language)} is called or a {@link GUIClickEvent} occurs.
 	 * You can specify <code>null</code> to remove the placeholders' translator.
 	 * You may also want to {@link #refresh()} the GUI after this operation.
 	 * 
-	 * <p>It translates the following values:
+	 * 	<p>It translates the following values:
 	 * 	<ul>
 	 * 		<li>{@link Icon#getDisplayNames()}</li>
 	 * 		<li>{@link Icon#getSkullOwner()}</li>
 	 * 		<li>{@link Icon#getSkullTextureURL()}</li>
 	 * 	</ul>
-	 * </p>
 	 * 
-	 * <p>The function is composed of the following arguments:
+	 * 	<p>The function is composed of the following arguments:
 	 * 	<ol>
 	 * 		<li>{@link Icon} - this icon's instance</li>
 	 * 		<li>{@link String} - the text to format with custom placeholders</li>
 	 * 		<li>{@link Language} - the language used to translate the value</li>
 	 * 	</ol>
-	 * </p>
 	 * 
 	 * If {@link #getStringPlaceholdersTranslator()}<code> != null</code> it will be also used to translate string lists when
 	 * {@link #getStringListPlaceholdersTranslator()}<code> == null</code>, passing every element to the function's method.
@@ -189,20 +185,18 @@ public abstract class GUI {
 	 * {@link Icon#toItemStackAdapter(GUI, Language)} is called or a {@link GUIClickEvent} occurs.
 	 * Will return <code>null</code> if no placeholders' translator has been set.
 	 * 
-	 * <p>It translates the following values:
+	 * 	<p>It translates the following values:
 	 * 	<ul>
 	 * 		<li>{@link Icon#getLores()}</li>
 	 * 		<li>{@link Icon#getCommands()}</li>
 	 * 	</ul>
-	 * </p>
 	 * 
-	 * <p>The function is composed of the following arguments:
+	 * 	<p>The function is composed of the following arguments:
 	 * 	<ol>
 	 * 		<li>{@link Icon} - this icon's instance</li>
 	 * 		<li>{@link List}<code>&lt;{@link String}&gt;</code> - the text to format with custom placeholders</li>
 	 * 		<li>{@link Language} - the language used to translate the value</li>
 	 * 	</ol>
-	 * </p>
 	 * 
 	 * If {@link #getStringPlaceholdersTranslator()}<code> != null</code> it will be also used to translate string lists when
 	 * {@link #getStringListPlaceholdersTranslator()}<code> == null</code>, passing every element to the function's method.
@@ -217,24 +211,22 @@ public abstract class GUI {
 	/**
 	 * Sets this GUI's string list placeholders' translator function. The required value (a <code>List&lt;String&gt;</code>)
 	 * is set to {@link TriFunction#apply(Object, Object, Object)}'s result every time
-	 * {@link #toItemStackAdapter(GUI, Language)} is called or a {@link GUIClickEvent} occurs.
+	 * {@link Icon#toItemStackAdapter(GUI, Language)} is called or a {@link GUIClickEvent} occurs.
 	 * You can specify <code>null</code> to remove the placeholders' translator.
 	 * You may also want to {@link #refresh()} the GUI after this operation.
 	 * 
-	 * <p>It translates the following values:
+	 * 	<p>It translates the following values:
 	 * 	<ul>
 	 * 		<li>{@link Icon#getLores()}</li>
 	 * 		<li>{@link Icon#getCommands()}</li>
 	 * 	</ul>
-	 * </p>
 	 * 
-	 * <p>The function is composed of the following arguments:
+	 * 	<p>The function is composed of the following arguments:
 	 * 	<ol>
 	 * 		<li>{@link Icon} - this icon's instance</li>
 	 * 		<li>{@link List}<code>&lt;{@link String}&gt;</code> - the text to format with custom placeholders</li>
 	 * 		<li>{@link Language} - the language used to translate the value</li>
 	 * 	</ol>
-	 * </p>
 	 * 
 	 * If {@link #getStringPlaceholdersTranslator()}<code> != null</code> it will be also used to translate string lists when
 	 * {@link #getStringListPlaceholdersTranslator()}<code> == null</code>, passing every element to the function's method.

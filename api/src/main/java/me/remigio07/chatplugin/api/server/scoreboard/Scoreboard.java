@@ -119,7 +119,7 @@ public abstract class Scoreboard {
 	
 	/**
 	 * Gets the red number displayed in the right side of the scoreboard.
-	 * Will work when {@link #isDisplayOnlyOneNumber()}<code> == true</code>.
+	 * Will work when {@link #isDisplayOnlyOneNumberEnabled()}.
 	 * 
 	 * <p><strong>Found at:</strong> "settings.display-only-one-number.value" in {@link #getConfiguration()}</p>
 	 * 
@@ -195,7 +195,7 @@ public abstract class Scoreboard {
 		 * @param sendingTimeout Time between sendings
 		 * @return This builder
 		 * @throws IllegalArgumentException If <code>values.get({@link Language#getMainLanguage()}) == null</code>
-		 * @throws IndexOutOfBoundsException If <code>lineIndex < 0 || lineIndex > 14</code>
+		 * @throws IndexOutOfBoundsException If <code>lineIndex &lt; 0 || lineIndex &gt; 14</code>
 		 */
 		public abstract Builder setLine(Map<Language, List<String>> values, int lineIndex, boolean randomOrder, long sendingTimeout);
 		

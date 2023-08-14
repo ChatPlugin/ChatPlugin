@@ -161,7 +161,7 @@ public abstract class LogManager implements ChatPluginManager {
 	
 	/**
 	 * Logs a message and writes it to file. This static method calls the instance method
-	 * {@link #logMessage(String, LogLevel)} using the manager's current instance.
+	 * {@link #logMessage(String, LogLevel, Object...)} using the manager's current instance.
 	 * This method uses the log level's ID instead of the enum value, but they do the same thing.
 	 * 
 	 * @param message Message to send and write to file
@@ -233,7 +233,7 @@ public abstract class LogManager implements ChatPluginManager {
 		/**
 		 * Gets this log level's prefix.
 		 * 
-		 * <p><strong>Example:</strong> {@link #INFO} -> "[INFO] "</p>
+		 * <p><strong>Example:</strong> {@link #INFO} -&gt; "[INFO] "</p>
 		 * 
 		 * @return This log level's prefix
 		 */

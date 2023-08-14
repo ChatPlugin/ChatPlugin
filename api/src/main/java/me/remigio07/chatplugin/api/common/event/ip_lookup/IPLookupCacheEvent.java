@@ -15,13 +15,15 @@
 
 package me.remigio07.chatplugin.api.common.event.ip_lookup;
 
+import java.net.InetAddress;
+
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookup;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 
 /**
  * Represents the event called after an {@link IPLookup} is cached into {@link IPLookupManager#getCache()}.
  * 
- * @see IPLookupManager#putInCache(String, IPLookup)
+ * @see IPLookupManager#putInCache(InetAddress, IPLookup)
  */
 public class IPLookupCacheEvent extends IPLookupEvent {
 	

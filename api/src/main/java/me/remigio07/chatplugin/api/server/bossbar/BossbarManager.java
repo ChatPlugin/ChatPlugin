@@ -60,14 +60,14 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	/**
 	 * Value representing the max title length.
 	 * 
-	 * <p><strong>Value:</strong> 256 on > 1.12.2, 64 otherwise</p>
+	 * <p><strong>Value:</strong> 256 on &gt; 1.12.2, 64 otherwise</p>
 	 */
 	public static final int MAX_TITLE_LENGTH = VersionUtils.getVersion().getProtocol() > 340 ? 256 : 64;
 	
 	/**
 	 * String containing the "title too long" text indicator.
 	 * 
-	 * <p><strong>Content:</strong> "&#167cTitle exceeds &#167f+" + {@link #MAX_TITLE_LENGTH} + " &#167cchars"</p>
+	 * <p><strong>Content:</strong> "&sect;cTitle exceeds &sect;f+" + {@link #MAX_TITLE_LENGTH} + " &sect;cchars"</p>
 	 */
 	public static final String TITLE_TOO_LONG = "\u00A7cTitle exceeds \u00A7f64 \u00A7cchars";
 	protected static BossbarManager instance;

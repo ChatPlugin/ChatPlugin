@@ -196,7 +196,7 @@ public class BossbarAdapter {
 	/**
 	 * Sets this bossbar's style.
 	 * 
-	 * @param color Bossbar's style
+	 * @param style Bossbar's style
 	 */
 	public void setStyle(@NotNull BossbarStyleAdapter style) {
 		if (Environment.isBukkit())

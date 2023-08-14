@@ -35,14 +35,14 @@ public abstract class ScoreboardLines {
 	/**
 	 * Value representing the max line length.
 	 * 
-	 * <p><strong>Value:</strong> 128 on > 1.12.2, 32 otherwise</p>
+	 * <p><strong>Value:</strong> 128 on &gt; 1.12.2, 32 otherwise</p>
 	 */
 	public static final int MAX_LINE_LENGTH = VersionUtils.getVersion().getProtocol() > 340 ? 128 : 32;
 	
 	/**
 	 * String containing the "line too long" text indicator.
 	 * 
-	 * <p><strong>Content:</strong> "&#167cLine exceeds &#167f" + {@link #MAX_LINE_LENGTH} + " &#167cchars"</p>
+	 * <p><strong>Content:</strong> "&sect;cLine exceeds &sect;f" + {@link #MAX_LINE_LENGTH} + " &sect;cchars"</p>
 	 */
 	public static final String LINE_TOO_LONG = "\u00A7cLine exceeds \u00A7f" + MAX_LINE_LENGTH + " \u00A7cchars";
 	protected Scoreboard scoreboard;
@@ -76,7 +76,7 @@ public abstract class ScoreboardLines {
 	 * 
 	 * @param lineIndex Line's index (0 - 14)
 	 * @return Scoreboard's line
-	 * @throws IndexOutOfBoundsException If <code>lineIndex < 0 || lineIndex > 14</code>
+	 * @throws IndexOutOfBoundsException If <code>lineIndex &lt; 0 || lineIndex &gt; 14</code>
 	 */
 	@Nullable(why = "No line may be present for the specified line index")
 	public ScoreboardLine getLine(int lineIndex) {
@@ -125,7 +125,7 @@ public abstract class ScoreboardLines {
 		 * Gets this line's values for the specified language.
 		 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
 		 * {@link Language#getMainLanguage()}'s values if no values are present for the specified language.
-		 * Will return <code>null</code> if {@link #getValues()}<code>.get(language) == null && !avoidNull</code>.
+		 * Will return <code>null</code> if {@link #getValues()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.
 		 * 
 		 * @param language Language used to translate the values
 		 * @param avoidNull Whether to avoid returning <code>null</code>

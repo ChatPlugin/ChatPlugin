@@ -15,6 +15,8 @@
 
 package me.remigio07.chatplugin.api.common.event.punishment.ban;
 
+import java.net.InetAddress;
+
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.punishment.ban.Ban;
 import me.remigio07.chatplugin.api.common.punishment.ban.BanManager;
@@ -23,7 +25,7 @@ import me.remigio07.chatplugin.api.common.punishment.ban.BanManager;
  * Represents the event called after an unban gets processed.
  * 
  * @see BanManager#unban(OfflinePlayer, String, String)
- * @see BanManager#unbanIP(String, String, String)
+ * @see BanManager#unbanIP(InetAddress, String, String)
  * @see BanManager#unban(int, String)
  */
 public class UnbanEvent extends BanEvent {

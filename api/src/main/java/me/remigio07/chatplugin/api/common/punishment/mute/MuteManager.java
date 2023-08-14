@@ -107,10 +107,10 @@ public abstract class MuteManager extends PunishmentManager {
 	 * @param duration Duration, in milliseconds; -1 = permanent
 	 * @param global Whether this mute is global
 	 * @param silent Whether this mute is silent
-	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &&
-	 * {@link ProxyManager#isEnabled()} && {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
 	 * @throws UnsupportedOperationException If <code>{@link OfflinePlayer#isOnline()}
-	 * && !{@link OfflinePlayer#isLoaded()}</code>
+	 * &amp;&amp; !{@link OfflinePlayer#isLoaded()}</code>
 	 * @see MuteEvent
 	 * @see MuteUpdateEvent
 	 */
@@ -131,10 +131,10 @@ public abstract class MuteManager extends PunishmentManager {
 	 * @param player Player to unmute
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
 	 * @param whoUnmuted Who unmuted the player
-	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &&
-	 * {@link ProxyManager#isEnabled()} && {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
 	 * @throws UnsupportedOperationException If <code>{@link OfflinePlayer#isOnline()}
-	 * && !{@link OfflinePlayer#isLoaded()}</code>
+	 * &amp;&amp; !{@link OfflinePlayer#isLoaded()}</code>
 	 * @see UnmuteEvent
 	 */
 	public abstract void unmute(
@@ -148,8 +148,8 @@ public abstract class MuteManager extends PunishmentManager {
 	 * 
 	 * @param id Mute's ID
 	 * @param whoUnmuted Who unmuted the player
-	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &&
-	 * {@link ProxyManager#isEnabled()} && {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
 	 * @see UnmuteEvent
 	 */
 	public abstract void unmute(

@@ -23,7 +23,7 @@ import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 /**
  * Represents a {@link ChatPluginIntegration} that provides a {@link PlayerAdapter}'s version.
  * 
- * <p><strong>Types:</strong> [{@link IntegrationType#PROTOCOLSUPPORT}, {@link IntegrationType#VIAVERSION}]<p>
+ * <p><strong>Types:</strong> [{@link IntegrationType#PROTOCOLSUPPORT}, {@link IntegrationType#VIAVERSION}]</p>
  */
 public interface VersionIntegration extends ChatPluginIntegration {
 	

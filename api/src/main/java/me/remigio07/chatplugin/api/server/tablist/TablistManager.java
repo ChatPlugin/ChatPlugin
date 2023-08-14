@@ -97,8 +97,8 @@ public abstract class TablistManager extends TimerTask implements ChatPluginMana
 	}
 	
 	/**
-	 * Gets the list of placeholder types used
-	 * to translate {@link Tablist#getTexts()}.
+	 * Gets the list of placeholder types used to translate
+	 * {@link Tablist#getHeaders()} and {@link Tablist#getFooters()}.
 	 * 
 	 * <p><strong>Found at:</strong> "tablists.settings.placeholder-types" in {@link ConfigurationType#TABLISTS}</p>
 	 * 

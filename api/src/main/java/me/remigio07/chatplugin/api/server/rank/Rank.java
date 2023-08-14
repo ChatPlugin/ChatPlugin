@@ -151,7 +151,7 @@ public abstract class Rank {
 	 * Gets this rank's description for the specified language.
 	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s description if no description is present for the specified language.
-	 * Will return <code>null</code> if {@link #getDescriptions()}<code>.get(language) == null && !avoidNull</code>.
+	 * Will return <code>null</code> if {@link #getDescriptions()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.
 	 * 
 	 * @param language Language used to translate the description
 	 * @param avoidNull Whether to avoid returning <code>null</code>

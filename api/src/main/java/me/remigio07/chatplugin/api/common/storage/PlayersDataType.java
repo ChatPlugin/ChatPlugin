@@ -21,7 +21,7 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.language.Language;
 
 /**
- * Represents the data types of {@link ChatPluginDataType#PLAYERS}.
+ * Represents the data types of {@link DataContainer#PLAYERS}.
  * 
  * <p>This class is a pseudo-{@link Enum}. It contains the following methods:
  * {@link #name()}, {@link #ordinal()}, {@link #valueOf(String)} and {@link #values()}.</p>

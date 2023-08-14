@@ -22,7 +22,7 @@ import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
- * Represents an {@link AntiCheatIntegration}'s violation handled by the {@link AntiCheatManager}.
+ * Represents an {@link AnticheatIntegration}'s violation handled by the {@link AnticheatManager}.
  */
 public abstract class Violation {
 	

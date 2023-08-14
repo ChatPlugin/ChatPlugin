@@ -1,7 +1,58 @@
-dependencies {
-	implementation project(':loader')
+plugins {
+	id 'maven-publish'
+	id 'signing'
 }
 
-jar {
-	from project(':loader').sourceSets.main.output
+java {
+	withJavadocJar()
+	withSourcesJar()
+}
+
+javadoc {
+	options.windowTitle = 'ChatPlugin ' + rootProject.version + ' API'
+	options.encoding = 'UTF-8'
+	options.charSet = 'UTF-8'
+	options.links 'https://docs.oracle.com/javase/8/docs/api/'
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			groupId = rootProject.group
+			artifactId = 'chatplugin-api'
+			version = rootProject.version
+			from components.java
+			pom {
+				name = 'ChatPlugin'
+				description = 'A complete yet lightweight plugin which handles just too many features!'
+				url = 'https://github.com/Remigio07/ChatPlugin'
+				licenses {
+					license {
+						name = 'GNU Affero General Public License v3.0'
+						url = 'https://www.gnu.org/licenses/agpl-3.0.en.html'
+					}
+				}
+				developers {
+					developer {
+						id = 'remigio07'
+						name = 'Remigio07'
+						email = 'remipiova@gmail.com'
+					}
+				}
+				scm {
+					connection = 'scm:svn:https://github.com/Remigio07/ChatPlugin.git'
+					developerConnection = 'scm:svn:https://github.com/Remigio07/ChatPlugin.git'
+					url = 'https://github.com/Remigio07/ChatPlugin.git'
+				}
+			}
+		}
+		
+	}
+	repositories {
+		mavenCentral()
+	}
+}
+
+signing {
+	sign publishing.publications.mavenJava
 }

@@ -67,7 +67,7 @@ public enum MemoryUtils {
 	/**
 	 * Gets this unit's string representation.
 	 * 
-	 * <p><strong>Example:</strong> {@link #MEGABYTE} -> "MB"</p>
+	 * <p><strong>Example:</strong> {@link #MEGABYTE} -&gt; "MB"</p>
 	 * 
 	 * @return Unit's string representation
 	 */

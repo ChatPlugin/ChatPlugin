@@ -133,8 +133,8 @@ public abstract class PlayerManager implements ChatPluginManager {
 	 * @param ignoreCase Whether to ignore case when checking online players
 	 * @return Loaded {@link ChatPluginPlayer}
 	 * @throws IllegalArgumentException If <code>checkPattern</code> and specified name <code>!{@link Utils#isValidUsername(String)}</code>
-	 * @see ServerPlayerManager#getPlayer(String, boolean)
-	 * @see ProxyPlayerManager#getPlayer(String, boolean)
+	 * @see ServerPlayerManager#getPlayer(String, boolean, boolean)
+	 * @see ProxyPlayerManager#getPlayer(String, boolean, boolean)
 	 */
 	@Nullable(why = "Specified player may not be loaded")
 	@Deprecated

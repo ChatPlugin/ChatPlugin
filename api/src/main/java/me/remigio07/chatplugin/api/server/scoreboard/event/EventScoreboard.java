@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.api.server.scoreboard.event;
 
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
 
 /**
  * Represents a scoreboard triggered by a {@link ScoreboardEvent}.

@@ -29,7 +29,6 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
  * 
  * @see #getOnlineWorld(String)
  * @see #getOnlineServer()
- * @see #getOnlineProxy()
  */
 public abstract class VanishManager implements ChatPluginManager {
 	

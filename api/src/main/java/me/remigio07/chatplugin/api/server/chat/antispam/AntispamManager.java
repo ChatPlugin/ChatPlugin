@@ -207,7 +207,7 @@ public abstract class AntispamManager implements ChatPluginManager {
 	 * Gets the reason why the specified message should be blocked.
 	 * Will return <code>null</code> if <code>player</code> has the permission to send the message.
 	 * 
-	 * <p><strong>Note:</strong> this method returns only reasons handled by the {@link AntiSpamManager}.
+	 * <p><strong>Note:</strong> this method returns only reasons handled by the {@link AntispamManager}.
 	 * Check a {@link DenyChatReason}'s doc to know what manager handles it.</p>
 	 * 
 	 * @param player Player involved

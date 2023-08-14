@@ -127,7 +127,7 @@ public abstract class JoinTitleManager implements ChatPluginManager {
 	 * Gets the title for the specified language.
 	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s title if no title is present for the specified language.
-	 * Will return <code>null</code> if {@link #getTitles()}<code>.get(language) == null && !avoidNull</code>.
+	 * Will return <code>null</code> if {@link #getTitles()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.
 	 * 
 	 * @param language Language used to translate the title
 	 * @param avoidNull Whether to avoid returning <code>null</code>
@@ -155,7 +155,7 @@ public abstract class JoinTitleManager implements ChatPluginManager {
 	 * Gets the subtitle for the specified language.
 	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s subtitle if no subtitle is present for the specified language.
-	 * Will return <code>null</code> if {@link #getSubtitles()}<code>.get(language) == null && !avoidNull</code>.
+	 * Will return <code>null</code> if {@link #getSubtitles()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.
 	 * 
 	 * @param language Language used to translate the subtitle
 	 * @param avoidNull Whether to avoid returning <code>null</code>

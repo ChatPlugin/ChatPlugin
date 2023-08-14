@@ -100,7 +100,7 @@ public class Bossbar {
 	 * Gets this bossbar's title for the specified language.
 	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s title if no title is present for the specified language.
-	 * Will return <code>null</code> if {@link #getTitles()}<code>.get(language) == null && !avoidNull</code>.
+	 * Will return <code>null</code> if {@link #getTitles()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.
 	 * 
 	 * @param language Language used to translate the title
 	 * @param avoidNull Whether to avoid returning <code>null</code>

@@ -428,7 +428,7 @@ public class ConfigurationMappings {
 	
 	/**
 	 * Gets a list value.
-	 * Will return <code>def</code> if a {@link List}<code>&#60;T></code> is not found at the specified path.
+	 * Will return <code>def</code> if a {@link List}<code>&lt;T&gt;</code> is not found at the specified path.
 	 * You can specify <code>null</code> as <code>def</code>.
 	 * 
 	 * @param <T> List's type
@@ -450,7 +450,7 @@ public class ConfigurationMappings {
 	
 	/**
 	 * Gets a Boolean list value.
-	 * Will return a new {@link ArrayList} if a {@link List}<code>&#60;{@link Boolean}></code> is not found at the specified path.
+	 * Will return a new {@link ArrayList} if a {@link List}<code>&lt;{@link Boolean}&gt;</code> is not found at the specified path.
 	 * 
 	 * @param path Path to check
 	 * @return Boolean list value
@@ -462,7 +462,7 @@ public class ConfigurationMappings {
 	
 	/**
 	 * Gets a Byte list value.
-	 * Will return a new {@link ArrayList} if a {@link List}<code>&#60;{@link Byte}></code> is not found at the specified path.
+	 * Will return a new {@link ArrayList} if a {@link List}<code>&lt;{@link Byte}&gt;</code> is not found at the specified path.
 	 * 
 	 * @param path Path to check
 	 * @return Byte list value
@@ -474,7 +474,7 @@ public class ConfigurationMappings {
 	
 	/**
 	 * Gets a Character list value.
-	 * Will return a new {@link ArrayList} if a {@link List}<code>&#60;{@link Character}></code> is not found at the specified path.
+	 * Will return a new {@link ArrayList} if a {@link List}<code>&lt;{@link Character}&gt;</code> is not found at the specified path.
 	 * 
 	 * @param path Path to check
 	 * @return Character list value
@@ -486,7 +486,7 @@ public class ConfigurationMappings {
 	
 	/**
 	 * Gets a Short list value.
-	 * Will return a new {@link ArrayList} if a {@link List}<code>&#60;{@link Short}></code> is not found at the specified path.
+	 * Will return a new {@link ArrayList} if a {@link List}<code>&lt;{@link Short}&gt;</code> is not found at the specified path.
 	 * 
 	 * @param path Path to check
 	 * @return Short list value
@@ -498,7 +498,7 @@ public class ConfigurationMappings {
 	
 	/**
 	 * Gets an Integer list value.
-	 * Will return a new {@link ArrayList} if a {@link List}<code>&#60;{@link Integer}></code> is not found at the specified path.
+	 * Will return a new {@link ArrayList} if a {@link List}<code>&lt;{@link Integer}&gt;</code> is not found at the specified path.
 	 * 
 	 * @param path Path to check
 	 * @return Integer list value
@@ -510,7 +510,7 @@ public class ConfigurationMappings {
 	
 	/**
 	 * Gets a Long list value.
-	 * Will return a new {@link ArrayList} if a {@link List}<code>&#60;{@link Long}></code> is not found at the specified path.
+	 * Will return a new {@link ArrayList} if a {@link List}<code>&lt;{@link Long}&gt;</code> is not found at the specified path.
 	 * 
 	 * @param path Path to check
 	 * @return Long list value
@@ -522,7 +522,7 @@ public class ConfigurationMappings {
 	
 	/**
 	 * Gets a Float list value.
-	 * Will return a new {@link ArrayList} if a {@link List}<code>&#60;{@link Float}></code> is not found at the specified path.
+	 * Will return a new {@link ArrayList} if a {@link List}<code>&lt;{@link Float}&gt;</code> is not found at the specified path.
 	 * 
 	 * @param path Path to check
 	 * @return Float list value
@@ -534,7 +534,7 @@ public class ConfigurationMappings {
 	
 	/**
 	 * Gets a Double list value.
-	 * Will return a new {@link ArrayList} if a {@link List}<code>&#60;{@link Double}></code> is not found at the specified path.
+	 * Will return a new {@link ArrayList} if a {@link List}<code>&lt;{@link Double}&gt;</code> is not found at the specified path.
 	 * 
 	 * @param path Path to check
 	 * @return Double list value
@@ -546,7 +546,7 @@ public class ConfigurationMappings {
 	
 	/**
 	 * Gets a String list value.
-	 * Will return a new {@link ArrayList} if a {@link List}<code>&#60;{@link String}></code> is not found at the specified path.
+	 * Will return a new {@link ArrayList} if a {@link List}<code>&lt;{@link String}&gt;</code> is not found at the specified path.
 	 * 
 	 * @param path Path to check
 	 * @return String list value
@@ -590,7 +590,7 @@ public class ConfigurationMappings {
 	/**
 	 * Calls {@link #translateStringList(String, List, boolean)} passing
 	 * <code>path</code>, <code>new </code>{@link ArrayList} and <code>true</code> as arguments.
-	 * Will return a new {@link ArrayList} if a {@link List}<code>&#60;{@link String}></code> is not found at the specified path.
+	 * Will return a new {@link ArrayList} if a {@link List}<code>&lt;{@link String}&gt;</code> is not found at the specified path.
 	 * 
 	 * @param path Path to check
 	 * @return Translated String list
@@ -603,7 +603,7 @@ public class ConfigurationMappings {
 	/**
 	 * Calls {@link ChatColor#translate(List, boolean)} passing
 	 * {@link #getString(String, String)} and <code>retainNewLines</code> as arguments.
-	 * Will return <code>def</code> if a {@link List}<code>&#60;{@link String}></code> is not found at the specified path.
+	 * Will return <code>def</code> if a {@link List}<code>&lt;{@link String}&gt;</code> is not found at the specified path.
 	 * You can specify <code>null</code> as <code>def</code>.
 	 * 
 	 * @param path Path to check

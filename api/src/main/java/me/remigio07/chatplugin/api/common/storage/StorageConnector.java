@@ -373,7 +373,7 @@ public abstract class StorageConnector {
 	/**
 	 * Unloads this connector.
 	 * 
-	 * @throws ChatPluginManagerException If something goes wrong and {@link StorageMethod#isDatabase()}
+	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
 	 * @throws IOException If something goes wrong and {@link StorageMethod#isFlatFile()}
 	 */
 	public abstract void unload() throws SQLException, IOException;
@@ -550,7 +550,7 @@ public abstract class StorageConnector {
 	 * 
 	 * @param type Data's type
 	 * @param player Player to set data for
-	 * @param data Data to set or <code>null<code>
+	 * @param data Data to set or <code>null</code>
 	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
 	 * @throws IOException If something goes wrong and {@link StorageMethod#isFlatFile()}
 	 * @throws IllegalArgumentException If <code>type == </code>{@link PlayersDataType#ID}
@@ -595,7 +595,7 @@ public abstract class StorageConnector {
 	
 	/**
 	 * Cleans old players who haven't played for at least
-	 * {@link #getPlayersAutoCleanerPeriod()} from the storage.
+	 * {@link StorageManager#getPlayersAutoCleanerPeriod()} from the storage.
 	 */
 	public abstract void cleanOldPlayers();
 	

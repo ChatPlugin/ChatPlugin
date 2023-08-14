@@ -78,7 +78,7 @@ public class Actionbar {
 	 * Gets this actionbar's text for the specified language.
 	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s text if no text is present for the specified language.
-	 * Will return <code>null</code> if {@link #getTexts()}<code>.get(language) == null && !avoidNull</code>.
+	 * Will return <code>null</code> if {@link #getTexts()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.
 	 * 
 	 * @param language Language used to translate the text
 	 * @param avoidNull Whether to avoid returning <code>null</code>

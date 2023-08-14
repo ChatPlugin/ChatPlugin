@@ -27,7 +27,7 @@ public interface DiscordMessage {
 	/**
 	 * Checks if this message is enabled and should be sent.
 	 * Will return true if nothing is specified in {@link ConfigurationType#DISCORD_INTEGRATION}
-	 * at path <code>"{@link #getPath()} + enabled"<code>; example: "messages.ban.info.enabled".
+	 * at path <code>"{@link #getPath()} + enabled"</code>; example: "messages.ban.info.enabled".
 	 * 
 	 * @return Whether this message is enabled
 	 */

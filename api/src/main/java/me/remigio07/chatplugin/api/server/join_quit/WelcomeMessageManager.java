@@ -90,7 +90,7 @@ public abstract class WelcomeMessageManager implements ChatPluginManager {
 	 * Gets the welcome message for the specified language.
 	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s welcome message if no welcome message is present for the specified language.
-	 * Will return <code>null</code> if {@link #getWelcomeMessages()}<code>.get(language) == null && !avoidNull</code>.
+	 * Will return <code>null</code> if {@link #getWelcomeMessages()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.
 	 * 
 	 * @param language Language used to translate the welcome message
 	 * @param avoidNull Whether to avoid returning <code>null</code>

@@ -113,8 +113,8 @@ public abstract class AnticheatManager implements ChatPluginManager {
 	/**
 	 * Removes a violation from {@link #getViolations()}.
 	 * 
-	 * @param anticheat Violation's {@link Violation#getAntiCheat()}
-	 * @param player Violation's {@link Violation#getPlayerUUID()}
+	 * @param anticheat Violation's {@link Violation#getAnticheat()}
+	 * @param player Violation's {@link Violation#getCheater()}
 	 * @param cheatID Violation's {@link Violation#getCheatID()}
 	 */
 	public abstract void removeViolation(IntegrationType<AnticheatIntegration> anticheat, ChatPluginServerPlayer player, String cheatID);

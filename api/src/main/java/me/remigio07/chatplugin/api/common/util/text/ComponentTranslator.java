@@ -16,12 +16,12 @@
 package me.remigio07.chatplugin.api.common.util.text;
 
 import me.remigio07.chatplugin.api.common.util.MemoryUtils;
-import me.remigio07.chatplugin.api.common.util.Utils;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.annotation.ServerImplementationOnly;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.util.DateFormat;
+import me.remigio07.chatplugin.api.server.util.Utils;
 
 /**
  * Util class used to send translatable {@link Component}s between the proxy and the servers.

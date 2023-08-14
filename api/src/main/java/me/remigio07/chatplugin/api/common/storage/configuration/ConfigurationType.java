@@ -207,7 +207,7 @@ public enum ConfigurationType {
 	 * <p><strong>Path:</strong> ChatPlugin/guis/violations.yml</p>
 	 * 
 	 * @see GUIManager
-	 * @see AntiCheatManager
+	 * @see AnticheatManager
 	 */
 	VIOLATIONS_GUI,
 	

@@ -188,8 +188,8 @@ public abstract class BanwaveManager extends TimerTask implements ChatPluginMana
 	 * @param duration Duration, in milliseconds; -1 = permanent
 	 * @param global Whether this ban is global
 	 * @param silent Whether this ban is silent
-	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &&
-	 * {@link ProxyManager#isEnabled()} && {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
 	 * @see BanwaveEntryAddEvent
 	 * @see BanwaveEntryUpdateEvent
 	 */
@@ -214,8 +214,8 @@ public abstract class BanwaveManager extends TimerTask implements ChatPluginMana
 	 * @param global Whether this ban is global
 	 * @param silent Whether this ban is silent
 	 * @throws IllegalArgumentException If <code>!</code>{@link OfflinePlayer#hasPlayedBefore()}
-	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &&
-	 * {@link ProxyManager#isEnabled()} && {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
 	 * @see BanwaveEntryAddEvent
 	 * @see BanwaveEntryUpdateEvent
 	 */
@@ -239,8 +239,8 @@ public abstract class BanwaveManager extends TimerTask implements ChatPluginMana
 	 * @param duration Duration, in milliseconds; -1 = permanent
 	 * @param global Whether this ban is global
 	 * @param silent Whether this ban is silent
-	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &&
-	 * {@link ProxyManager#isEnabled()} && {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
 	 * @see BanwaveEntryAddEvent
 	 * @see BanwaveEntryUpdateEvent
 	 */
@@ -261,8 +261,8 @@ public abstract class BanwaveManager extends TimerTask implements ChatPluginMana
 	 * @param player Player of the entry to remove
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
 	 * @param whoRemoved Who removed the entry
-	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &&
-	 * {@link ProxyManager#isEnabled()} && {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
 	 * @see BanwaveEntryRemoveEvent
 	 */
 	public abstract void removeEntry(
@@ -278,8 +278,8 @@ public abstract class BanwaveManager extends TimerTask implements ChatPluginMana
 	 * @param ipAddress Entry's IP address to remove
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
 	 * @param whoRemoved Who removed the entry
-	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &&
-	 * {@link ProxyManager#isEnabled()} && {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
 	 * @see BanwaveEntryRemoveEvent
 	 */
 	public abstract void removeIPEntry(

@@ -133,7 +133,7 @@ public abstract class DiscordBot {
 	 * 
 	 * @param channelID Channel's ID
 	 * @param embed Embed to send
-	 * @see #sendEmbed(long, DiscordMessage, Object...)
+	 * @see #sendEmbedMessage(long, DiscordMessage, Object...)
 	 * @see EmbedMessageSendEvent
 	 */
 	public abstract void sendEmbedMessage(long channelID, Object embed);
@@ -189,7 +189,7 @@ public abstract class DiscordBot {
 	 * @return Serialized JSON string
 	 * @throws IllegalArgumentException If passed object is not
 	 * a <code>net.dv8tion.jda.api.entities.MessageEmbed</code>
-	 * @see #deserializeEmbed(String)
+	 * @see #deserializeEmbedMessage(String)
 	 */
 	public abstract String serializeEmbedMessage(Object embed);
 	
@@ -202,7 +202,7 @@ public abstract class DiscordBot {
 	 * @param json JSON string to deserialize
 	 * @return Deserialized message
 	 * @throws Exception If the string's format is invalid
-	 * @see #serializeEmbed(Object)
+	 * @see #serializeEmbedMessage(Object)
 	 */
 	public abstract Object deserializeEmbedMessage(String json) throws Exception;
 	

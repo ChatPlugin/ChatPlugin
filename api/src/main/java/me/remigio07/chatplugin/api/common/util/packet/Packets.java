@@ -58,20 +58,19 @@ public class Packets {
 		 * You can specify <code>null</code> as <code>permission</code> if no permission is required to receive the message.
 		 * 
 		 * 	<p>Available targets:
-		 * 		<ul>
-		 * 			<li>"ALL CONNECTED" - every player connected to specified <code>server</code>(s)</li>
-		 * 			<li>"ALL ENABLED" - every loaded player ({@link OfflinePlayer#isLoaded()}) connected</li>
-		 * 			<li>"ALL CONNECTED EXCEPT &lt;player&gt;" - every connected player except the specified one</li>
-		 * 			<li>"ALL CONNECTED EXCEPT &lt;IP address&gt;" - every connected player except the ones with given IP</li>
-		 * 			<li>"ALL ENABLED EXCEPT &lt;player&gt;" - every loaded player except the specified one</li>
-		 * 			<li>"ALL ENABLED EXCEPT &lt;IP address&gt;" - every loaded player except the ones with given IP</li>
-		 * 			<li>"ENABLED &lt;player&gt;" - a player; they will receive the message only if they are loaded</li>
-		 * 			<li>"ENABLED &lt;IP address&gt;" - players with given IP; they will receive the message only if they are loaded</li>
-		 * 			<li>"&lt;player&gt;" - a player; they will receive the message even if they are not loaded</li>
-		 * 			<li>"&lt;IP address&gt;" - players with given IP; they will receive the message even if they are not loaded</li>
-		 * 			<li>"CONSOLE" - console only; specify <code>false</code> as <code>includeConsole</code> to avoid double messages</li>
-		 * 		</ul>
-		 * 	</p>
+		 * 	<ul>
+		 * 		<li>"ALL CONNECTED" - every player connected to specified <code>server</code>(s)</li>
+		 * 		<li>"ALL ENABLED" - every loaded player ({@link OfflinePlayer#isLoaded()}) connected</li>
+		 * 		<li>"ALL CONNECTED EXCEPT &lt;player&gt;" - every connected player except the specified one</li>
+		 * 		<li>"ALL CONNECTED EXCEPT &lt;IP address&gt;" - every connected player except the ones with given IP</li>
+		 * 		<li>"ALL ENABLED EXCEPT &lt;player&gt;" - every loaded player except the specified one</li>
+		 * 		<li>"ALL ENABLED EXCEPT &lt;IP address&gt;" - every loaded player except the ones with given IP</li>
+		 * 		<li>"ENABLED &lt;player&gt;" - a player; they will receive the message only if they are loaded</li>
+		 * 		<li>"ENABLED &lt;IP address&gt;" - players with given IP; they will receive the message only if they are loaded</li>
+		 * 		<li>"&lt;player&gt;" - a player; they will receive the message even if they are not loaded</li>
+		 * 		<li>"&lt;IP address&gt;" - players with given IP; they will receive the message even if they are not loaded</li>
+		 * 		<li>"CONSOLE" - console only; specify <code>false</code> as <code>includeConsole</code> to avoid double messages</li>
+		 * 	</ul>
 		 * 
 		 * @param server Target server
 		 * @param targets Target player(s) or console

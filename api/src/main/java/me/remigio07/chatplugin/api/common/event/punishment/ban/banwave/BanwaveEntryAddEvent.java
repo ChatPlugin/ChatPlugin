@@ -15,7 +15,10 @@
 
 package me.remigio07.chatplugin.api.common.event.punishment.ban.banwave;
 
+import java.net.InetAddress;
+
 import me.remigio07.chatplugin.api.common.event.ChatPluginEvent;
+import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.punishment.ban.banwave.BanwaveEntry;
 import me.remigio07.chatplugin.api.common.punishment.ban.banwave.BanwaveManager;
 
@@ -24,7 +27,7 @@ import me.remigio07.chatplugin.api.common.punishment.ban.banwave.BanwaveManager;
  * 
  * @see BanwaveManager#addEntry(OfflinePlayer, String, String, String, long, boolean, boolean)
  * @see BanwaveManager#addIPEntry(OfflinePlayer, String, String, String, long, boolean, boolean)
- * @see BanwaveManager#addIPEntry(String, String, String, String, long, boolean, boolean)
+ * @see BanwaveManager#addIPEntry(InetAddress, String, String, String, long, boolean, boolean)
  */
 public class BanwaveEntryAddEvent implements ChatPluginEvent {
 	

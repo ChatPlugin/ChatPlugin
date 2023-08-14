@@ -52,7 +52,7 @@ public class InventoryAdapter {
 	 * Constructs an item stack with the given title and rows.
 	 * 
 	 * @param rows Inventory's rows [1 - 6]
-	 * @throws IndexOutOfBoundsException If <code>rows < 1 || rows > 6</code>
+	 * @throws IndexOutOfBoundsException If <code>rows &lt; 1 || rows &gt; 6</code>
 	 */
 	public InventoryAdapter(int rows) {
 		if (rows < 1 || rows > 6)

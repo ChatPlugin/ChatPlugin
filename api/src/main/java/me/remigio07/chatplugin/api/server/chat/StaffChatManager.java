@@ -184,8 +184,8 @@ public abstract class StaffChatManager implements ChatPluginManager {
 	 * Makes the console send a message using the Staff chat.
 	 * 
 	 * @param message Message to send
-	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &&
-	 * {@link ProxyManager#isEnabled()} && {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
 	 * 
 	 * @see StaffChatEvent
 	 */

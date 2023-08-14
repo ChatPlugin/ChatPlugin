@@ -132,7 +132,7 @@ public abstract class Mute extends Punishment {
 	 * Gets this mute's expiration task's ID.
 	 * May be used with {@link TaskManager#cancelAsync(long)}.
 	 * Will return -1 if this mute is permanent, if it has already expired
-	 * or if <code>!{@link Environment#isProxy()} && {@link ProxyManager#isEnabled()}</code>.
+	 * or if <code>!{@link Environment#isProxy()} &amp;&amp; {@link ProxyManager#isEnabled()}</code>.
 	 * 
 	 * @return Mute's expiration task's ID
 	 */

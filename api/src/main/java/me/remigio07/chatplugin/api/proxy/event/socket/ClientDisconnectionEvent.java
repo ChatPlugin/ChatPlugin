@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.api.proxy.event.socket;
 
 import me.remigio07.chatplugin.api.proxy.util.socket.ClientHandler;
+import me.remigio07.chatplugin.api.proxy.util.socket.Server;
 
 /**
  * Represents an event called after a {@link ClientHandler} is disconnected from a {@link Server}.

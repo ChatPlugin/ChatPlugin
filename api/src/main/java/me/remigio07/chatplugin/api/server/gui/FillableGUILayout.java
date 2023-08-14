@@ -56,7 +56,7 @@ public class FillableGUILayout extends GUILayout {
 	 * 
 	 * @param startSlot Filling function's start slot, inclusive [0 - ({@link #getSize()} - 1)]
 	 * @throws IllegalArgumentException If the position is outside of
-	 * valid range or <code>startSlot &#8250 </code>{@link #getEndSlot()}.
+	 * valid range or <code>startSlot &gt; </code>{@link #getEndSlot()}.
 	 */
 	public void setStartSlot(int startSlot) {
 		if (startSlot < 0 || startSlot > getSize() - 1 || (endSlot != -1 && startSlot > endSlot))
@@ -78,7 +78,7 @@ public class FillableGUILayout extends GUILayout {
 	 * 
 	 * @param endSlot Filling function's end slot, inclusive [0 - ({@link #getSize()} - 1)]
 	 * @throws IllegalArgumentException If the position is outside of
-	 * valid range or <code>startSlot &#8250 </code>{@link #getEndSlot()}.
+	 * valid range or <code>startSlot &gt; </code>{@link #getEndSlot()}.
 	 */
 	public void setEndSlot(int endSlot) {
 		if (endSlot < 0 || endSlot > getSize() - 1 || (startSlot != -1 && startSlot > endSlot))
@@ -142,7 +142,7 @@ public class FillableGUILayout extends GUILayout {
 	}
 	
 	/**
-	 * Gets the icon displayed when {@link #getFillers()} is empty.
+	 * Gets the icon displayed when {@link FillableGUI#getFillers()} is empty.
 	 * 
 	 * @return Empty fillers list icon
 	 */
@@ -152,7 +152,7 @@ public class FillableGUILayout extends GUILayout {
 	}
 	
 	/**
-	 * Sets the icon displayed when {@link #getFillers()} is empty.
+	 * Sets the icon displayed when {@link FillableGUI#getFillers()} is empty.
 	 * 
 	 * @param emptyListIcon Empty fillers list icon
 	 */
@@ -173,7 +173,7 @@ public class FillableGUILayout extends GUILayout {
 		 * @param endSlot Filling function's end slot [0 - ({@link GUILayout#getSize()} -1)]
 		 * @return This builder
 		 * @throws IllegalArgumentException If a position is outside of
-		 * valid range or <code>startSlot &#8250 endSlot</code>.
+		 * valid range or <code>startSlot &gt; endSlot</code>.
 		 */
 		public abstract Builder setSlots(int startSlot, int endSlot);
 		

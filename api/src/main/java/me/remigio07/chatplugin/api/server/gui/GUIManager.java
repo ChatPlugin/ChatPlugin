@@ -263,7 +263,7 @@ public abstract class GUIManager implements ChatPluginManager {
 	 * @param layout GUI layout to read
 	 * @param player GUI's player
 	 * @return New GUI
-	 * @throw IllegalArgumentException If {@link GUILayout#getID() layout.getID()}
+	 * @throws IllegalArgumentException If {@link GUILayout#getID() layout.getID()}
 	 * <code>!</code>{@link #isValidPerPlayerGUIID(String)} or {@link GUI#getID()}
 	 * is already in use by another GUI in {@link #getGUIs()}
 	 */

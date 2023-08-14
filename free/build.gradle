@@ -14,7 +14,6 @@ repositories {
 ext.libsDir = project.projectDir.path + '/libs/'
 
 dependencies {
-	implementation project(':loader')
 	implementation project(':api')
 	
 	implementation files(libsDir + 'UltraCosmetics-3.3.jar')
@@ -38,7 +37,6 @@ dependencies {
 }
 
 jar {
-	from project(':loader').sourceSets.main.output
 	from project(':api').sourceSets.main.output
 	
 	exclude 'me/remigio07/chatplugin/common/**'

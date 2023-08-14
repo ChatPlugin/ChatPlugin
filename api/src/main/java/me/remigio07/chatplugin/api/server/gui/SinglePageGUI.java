@@ -81,12 +81,11 @@ public abstract class SinglePageGUI extends GUI {
 	 * every time the GUI is loaded or a {@link GUI#refresh()} is performed.
 	 * Will return <code>null</code> if no title's translator has been set.
 	 * 
-	 * <p>The function is composed of the following arguments:
+	 * 	<p>The function is composed of the following arguments:
 	 * 	<ol>
 	 * 		<li>{@link SinglePageGUI} - this GUI's instance</li>
 	 * 		<li>{@link Language} - the language used to translate the title</li>
 	 * 	</ol>
-	 * </p>
 	 * 
 	 * @return GUI's titles' translator
 	 */
@@ -102,12 +101,11 @@ public abstract class SinglePageGUI extends GUI {
 	 * You can specify <code>null</code> to remove the title's translator.
 	 * You may also want to {@link #refresh()} the GUI after this operation.
 	 * 
-	 * <p>The function is composed of the following arguments:
+	 * 	<p>The function is composed of the following arguments:
 	 * 	<ol>
 	 * 		<li>{@link SinglePageGUI} - this GUI's instance</li>
 	 * 		<li>{@link Language} - the language used to translate the title</li>
 	 * 	</ol>
-	 * </p>
 	 * 
 	 * @param titlesTranslator GUI's titles' translator
 	 * @return This GUI

@@ -1,7 +1,6 @@
 rootProject.name = 'chatplugin'
 
 include (
-	'loader',
 	'api',
 	'free'
 )

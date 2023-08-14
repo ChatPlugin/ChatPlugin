@@ -58,9 +58,9 @@ public abstract class ServerMoTDManager extends MoTDManager {
 			outdatedVersionDescriptions = new HashMap<>(), outdatedVersionHovers = new HashMap<>(), outdatedVersionVersionNames = new HashMap<>();
 	
 	/**
-	 * Checks if one player more than the online players' amount should be
-	 * displayed instead of {@link #getMaxPlayersFixedValue()} as the max
-	 * players' count when <code>!</code>{@link #areVersionNamesEnabled()}.
+	 * Checks if one player more than the online players' amount should
+	 * be displayed instead of {@link #getMaxPlayersFixedValue()} as
+	 * the max players' count when version names are not displayed.
 	 * 
 	 * <p><strong>Found at:</strong> "motd.max-players.one-more-instead-of-fixed-value" in {@link ConfigurationType#MOTD}</p>
 	 * 

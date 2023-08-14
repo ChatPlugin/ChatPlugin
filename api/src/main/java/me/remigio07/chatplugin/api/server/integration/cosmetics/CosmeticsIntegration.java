@@ -19,6 +19,7 @@ import java.util.List;
 
 import me.remigio07.chatplugin.api.common.integration.ChatPluginIntegration;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
+import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**

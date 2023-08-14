@@ -15,14 +15,15 @@
 
 package me.remigio07.chatplugin.api.server.event.player;
 
-import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
+import java.util.UUID;
+
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 
 /**
  * Represents the event called just before a {@link ChatPluginServerPlayer} is unloaded.
  * 
- * @see ServerPlayerManager#unloadPlayer(PlayerAdapter)
+ * @see ServerPlayerManager#unloadPlayer(UUID)
  */
 public class ServerPlayerUnloadEvent implements ChatPluginServerPlayerEvent {
 	

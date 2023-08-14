@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.api.server.scoreboard;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.server.scoreboard.event.ScoreboardEvent;
 
 /**
  * Represents the type of a scoreboard: default, event or custom.

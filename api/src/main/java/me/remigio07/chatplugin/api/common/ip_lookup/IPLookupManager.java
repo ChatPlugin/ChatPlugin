@@ -38,7 +38,7 @@ import me.remigio07.chatplugin.bootstrap.Environment;
  * Manager that handles {@link IPLookup}s. See wiki for more info:
  * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/IP-lookup">ChatPlugin wiki/IP lookup</a>
  * 
- * @see #getIPLookup(String)
+ * @see #getIPLookup(InetAddress)
  */
 public abstract class IPLookupManager implements ChatPluginManager {
 	
@@ -197,8 +197,8 @@ public abstract class IPLookupManager implements ChatPluginManager {
 	 * 
 	 * @param ipAddress IP address to check
 	 * @return Lookup for the IP address
-	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} && {@link ProxyManager#isEnabled()}
-	 * && {@link #getFromCache(String)} == null && {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp; {@link ProxyManager#isEnabled()}
+	 * &amp;&amp; {@link #getFromCache(InetAddress)} == null &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
 	 */
 	public CompletableFuture<IPLookup> getIPLookup(InetAddress ipAddress) {
 		return getIPLookup(ipAddress, null);
@@ -215,7 +215,7 @@ public abstract class IPLookupManager implements ChatPluginManager {
 	
 	/**
 	 * Gets an IP lookup for the specified IPv4 address.
-	 * Returned lookup will be also {@link #putInCache(String, IPLookup)}.
+	 * Returned lookup will be also {@link #putInCache(InetAddress, IPLookup)}.
 	 * 
 	 * <p>You can specify <code>null</code> as <code>requesterName</code>
 	 * to prevent the proxy from sending them the message found at "misc.disabled-feature" if its
@@ -224,9 +224,10 @@ public abstract class IPLookupManager implements ChatPluginManager {
 	 * <p>Note that this method might take some time to be executed: async calls are recommended.</p>
 	 * 
 	 * @param ipAddress IP address to check
+	 * @param requesterName Who requested the IP lookup
 	 * @return Lookup for the IP address
-	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} && {@link ProxyManager#isEnabled()}
-	 * && {@link #getFromCache(String)} == null && {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp; {@link ProxyManager#isEnabled()}
+	 * &amp;&amp; {@link #getFromCache(InetAddress)} == null &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
 	 */
 	public abstract CompletableFuture<IPLookup> getIPLookup(InetAddress ipAddress, @Nullable(why = "Requester may not be specified") String requesterName);
 	

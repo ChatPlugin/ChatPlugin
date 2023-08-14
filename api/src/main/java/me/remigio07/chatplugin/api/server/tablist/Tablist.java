@@ -90,7 +90,7 @@ public class Tablist {
 	 * Gets this tablist's header for the specified language.
 	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s header if no header is present for the specified language.
-	 * Will return <code>null</code> if {@link #getHeaders()}<code>.get(language) == null && !avoidNull</code>.
+	 * Will return <code>null</code> if {@link #getHeaders()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.
 	 * 
 	 * @param language Language used to translate the text
 	 * @param avoidNull Whether to avoid returning <code>null</code>
@@ -116,7 +116,7 @@ public class Tablist {
 	 * Gets this tablist's footer for the specified language.
 	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s footer if no footer is present for the specified language.
-	 * Will return <code>null</code> if {@link #getFooters()}<code>.get(language) == null && !avoidNull</code>.
+	 * Will return <code>null</code> if {@link #getFooters()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.
 	 * 
 	 * @param language Language used to translate the text
 	 * @param avoidNull Whether to avoid returning <code>null</code>

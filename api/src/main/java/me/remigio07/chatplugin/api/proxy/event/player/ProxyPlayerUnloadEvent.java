@@ -15,14 +15,13 @@
 
 package me.remigio07.chatplugin.api.proxy.event.player;
 
-import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.proxy.player.ChatPluginProxyPlayer;
 import me.remigio07.chatplugin.api.proxy.player.ProxyPlayerManager;
 
 /**
  * Represents the event called just before a {@link ChatPluginProxyPlayer} is unloaded.
  * 
- * @see ProxyPlayerManager#unloadPlayer(PlayerAdapter)
+ * @see ProxyPlayerManager#unloadPlayer(java.util.UUID)
  */
 public class ProxyPlayerUnloadEvent implements ChatPluginProxyPlayerEvent {
 	

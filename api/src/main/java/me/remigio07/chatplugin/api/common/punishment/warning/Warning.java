@@ -120,7 +120,7 @@ public abstract class Warning extends Punishment {
 	 * Gets this warning's expiration task's ID.
 	 * May be used with {@link TaskManager#cancelAsync(long)}.
 	 * Will return -1 if this warning has already expired
-	 * or if <code>!{@link Environment#isProxy()} && {@link ProxyManager#isEnabled()}</code>.
+	 * or if <code>!{@link Environment#isProxy()} &amp;&amp; {@link ProxyManager#isEnabled()}</code>.
 	 * 
 	 * @return Warning's expiration task's ID
 	 */

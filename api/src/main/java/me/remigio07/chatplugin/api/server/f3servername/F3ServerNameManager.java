@@ -57,7 +57,7 @@ public abstract class F3ServerNameManager extends TimerTask implements ChatPlugi
 	/**
 	 * Channel used to send F3 server names to loaded players.
 	 * 
-	 * <p><strong>Content:</strong> "minecraft:brand" on > 1.12.2, "MC|Brand" otherwise</p>
+	 * <p><strong>Content:</strong> "minecraft:brand" on &gt; 1.12.2, "MC|Brand" otherwise</p>
 	 */
 	public static final String CHANNEL_ID = VersionUtils.getVersion().getProtocol() > 340 ? "minecraft:brand" : "MC|Brand";
 	protected static F3ServerNameManager instance;

@@ -19,7 +19,7 @@ import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 
 /**
- * Represents a major, minor or patch change in a version (example: 1.8.0 -> 1.9.0).
+ * Represents a major, minor or patch change in a version (example: 1.8.0 -&gt; 1.9.0).
  */
 public enum VersionChange {
 	

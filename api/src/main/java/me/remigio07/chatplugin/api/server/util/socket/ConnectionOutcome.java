@@ -19,7 +19,7 @@ import me.remigio07.chatplugin.api.proxy.util.socket.ClientHandler;
 
 /**
  * Represents the possible outcomes that may
- * occur when {@link Client#connect()} is called.
+ * occur when {@link Client#connect(String)} is called.
  */
 public enum ConnectionOutcome {
 	

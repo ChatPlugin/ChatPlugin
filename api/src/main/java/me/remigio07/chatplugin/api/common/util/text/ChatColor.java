@@ -304,7 +304,7 @@ public class ChatColor {
 	/**
 	 * Gets the string representation of this color.
 	 * Will return {@link #SECTION_SIGN}<code> + </code>{@link #getCode()} if {@link #isDefaultColor()}
-	 * and a hex string (example: "&x&f&f&5&5&f&f", but translated) otherwise.
+	 * and a hex string (example: "&sect;x&sect;f&sect;f&sect;5&sect;5&sect;f&sect;f", but translated) otherwise.
 	 */
 	@Override
 	public String toString() {
@@ -485,7 +485,7 @@ public class ChatColor {
 	
 	/**
 	 * Translates given string applying default
-	 * ("&x") and hex ("#xxxxxx") color codes.
+	 * ("&amp;x") and hex ("#xxxxxx") color codes.
 	 * 
 	 * @param string String to translate
 	 * @param retainNewLines Whether to retain new lines or to replace them with spaces

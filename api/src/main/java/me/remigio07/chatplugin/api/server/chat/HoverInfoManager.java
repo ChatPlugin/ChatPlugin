@@ -211,7 +211,7 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	 * Gets the hover info for the specified rank from {@link #getRanksCache()}.
 	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s hover info if no hover info is present for the specified language.
-	 * Will return <code>null</code> if {@link #getRanksCache()}<code>.get(rank).get(language) == null && !avoidNull</code>
+	 * Will return <code>null</code> if {@link #getRanksCache()}<code>.get(rank).get(language) == null &amp;&amp; !avoidNull</code>
 	 * or a new instance of {@link TextAdapter#EMPTY_TEXT} if <code>!</code>{@link #isRankHoverEnabled()}.
 	 * 
 	 * @param rank Target rank
@@ -226,7 +226,7 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	 * Gets the hover info for the specified player from {@link #getPlayerHovers()}.
 	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s hover info if no hover info is present for the specified language.
-	 * Will return <code>null</code> if {@link #getPlayerHovers()}<code>.get(language) == null && !avoidNull</code>
+	 * Will return <code>null</code> if {@link #getPlayerHovers()}<code>.get(language) == null &amp;&amp; !avoidNull</code>
 	 * or a new instance of {@link TextAdapter#EMPTY_TEXT} if <code>!</code>{@link #isPlayerHoverEnabled()}.
 	 * 
 	 * @param player Target player
@@ -241,7 +241,7 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	 * Gets the hover info for the URLs contained in the specified input from {@link #getURLHovers()}.
 	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s hover info if no hover info is present for the specified language.
-	 * Will return <code>null</code> if {@link #getURLHovers()}<code>.get(language) == null && !avoidNull</code>
+	 * Will return <code>null</code> if {@link #getURLHovers()}<code>.get(language) == null &amp;&amp; !avoidNull</code>
 	 * or a new instance of {@link TextAdapter#EMPTY_TEXT} if <code>!</code>{@link #isURLHoverEnabled()}.
 	 * 
 	 * @param input Input containing URLs

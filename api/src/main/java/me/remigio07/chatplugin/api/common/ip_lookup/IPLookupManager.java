@@ -45,9 +45,9 @@ public abstract class IPLookupManager implements ChatPluginManager {
 	/**
 	 * Array containing all the libraries required for this module to work.
 	 * 
-	 * <p><strong>Content:</strong> [{@link Library#MAXMIND_DB_READER}, {@link Library#MAXMIND_GEOIP2_API}, {@link Library#APACHE_HTTPCLIENT}, {@link Library#JACKSON_CORE}, {@link Library#JACKSON_ANNOTATIONS}, {@link Library#JACKSON_DATABIND}, {@link Library#ACTIVATION_FRAMEWORK}, {@link Library#ICE_TAR}]</p>
+	 * <p><strong>Content:</strong> [{@link Library#MAXMIND_DB_READER}, {@link Library#MAXMIND_GEOIP2}, {@link Library#APACHE_HTTPCLIENT}, {@link Library#JACKSON_CORE}, {@link Library#JACKSON_ANNOTATIONS}, {@link Library#JACKSON_DATABIND}, {@link Library#ACTIVATION_FRAMEWORK}, {@link Library#ICE_TAR}]</p>
 	 */
-	public static final Library[] LIBRARIES = new Library[] { Library.MAXMIND_DB_READER, Library.MAXMIND_GEOIP2_API, Library.APACHE_HTTPCLIENT, Library.JACKSON_CORE, Library.JACKSON_ANNOTATIONS, Library.JACKSON_DATABIND, Library.ACTIVATION_FRAMEWORK, Library.ICE_TAR };
+	public static final Library[] LIBRARIES = new Library[] { Library.MAXMIND_DB_READER, Library.MAXMIND_GEOIP2, Library.APACHE_HTTPCLIENT, Library.JACKSON_CORE, Library.JACKSON_ANNOTATIONS, Library.JACKSON_DATABIND, Library.ACTIVATION_FRAMEWORK, Library.ICE_TAR };
 	protected static IPLookupManager instance;
 	protected static final String URL = "https://geolite.info/geoip/v2.1/city/{0}";
 	protected boolean enabled, loadOnJoin;

@@ -403,8 +403,8 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 				
 				if (IntegrationType.VAULT.isEnabled())
 					balance = ((EconomyIntegration) IntegrationType.VAULT.get()).getBalance(player);
-				else if (IntegrationType.ESSENTIALS.isEnabled())
-					balance = ((EconomyIntegration) IntegrationType.ESSENTIALS.get()).getBalance(player);
+				else if (IntegrationType.ESSENTIALSX.isEnabled())
+					balance = ((EconomyIntegration) IntegrationType.ESSENTIALSX.get()).getBalance(player);
 				output = output.replace("{balance}", Utils.formatBalance(balance, ConfigurationType.CONFIG.get().getInt("settings.balance-placeholder.decimals", 2)));
 			} if (IntegrationType.PLACEHOLDERAPI.isEnabled())
 				output = ((PlaceholderIntegration) IntegrationType.PLACEHOLDERAPI.get()).translatePlaceholders(output, player);

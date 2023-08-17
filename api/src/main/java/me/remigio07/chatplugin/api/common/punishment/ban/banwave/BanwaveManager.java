@@ -133,7 +133,7 @@ public abstract class BanwaveManager extends TimerTask implements ChatPluginMana
 	 * 
 	 * <p><strong>Found at:</strong> "ban.banwave.commands.start" in {@link ConfigurationType#CONFIG}</p>
 	 * 
-	 * @return Start commands
+	 * @return Banwave's start commands
 	 */
 	public List<String> getStartCommands() {
 		return startCommands;
@@ -144,7 +144,7 @@ public abstract class BanwaveManager extends TimerTask implements ChatPluginMana
 	 * 
 	 * <p><strong>Found at:</strong> "ban.banwave.commands.end" in {@link ConfigurationType#CONFIG}</p>
 	 * 
-	 * @return End commands
+	 * @return Banwave's end commands
 	 */
 	public List<String> getEndCommands() {
 		return endCommands;

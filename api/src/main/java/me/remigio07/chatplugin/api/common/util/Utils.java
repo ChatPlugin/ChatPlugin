@@ -15,7 +15,6 @@
 
 package me.remigio07.chatplugin.api.common.util;
 
-import java.awt.Color;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
@@ -36,7 +35,7 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.bootstrap.VelocityBootstrapper;
 
 /**
- * Common utils class. Not all methods here are documented.
+ * Common utils class.
  */
 public class Utils {
 	
@@ -128,6 +127,13 @@ public class Utils {
 	 */
 	public static final int SECONDS_IN_A_MINUTE = 60;
 	
+	/**
+	 * Checks if the specified input is a valid number
+	 * using {@link Double#parseDouble(String)}.
+	 * 
+	 * @param number Number to check
+	 * @return Whether input is a valid number
+	 */
 	public static boolean isNumber(String number) {
 		try {
 			Double.parseDouble(number);
@@ -137,6 +143,13 @@ public class Utils {
 		}
 	}
 	
+	/**
+	 * Checks if the specified input is a valid float
+	 * using {@link Float#parseFloat(String)}.
+	 * 
+	 * @param number Number to check
+	 * @return Whether input is a valid float
+	 */
 	public static boolean isFloat(String number) {
 		try {
 			Float.parseFloat(number);
@@ -146,6 +159,13 @@ public class Utils {
 		}
 	}
 	
+	/**
+	 * Checks if the specified input is a valid integer
+	 * using {@link Integer#parseInt(String)}.
+	 * 
+	 * @param number Number to check
+	 * @return Whether input is a valid integer
+	 */
 	public static boolean isInteger(String number) {
 		try {
 			Integer.parseInt(number);
@@ -155,6 +175,13 @@ public class Utils {
 		}
 	}
 	
+	/**
+	 * Checks if the specified input is a positive
+	 * integer using {@link Integer#parseInt(String)}.
+	 * 
+	 * @param number Number to check
+	 * @return Whether input is a positive integer
+	 */
 	public static boolean isPositiveInteger(String number) {
 		try {
 			int amount = Integer.parseInt(number);
@@ -167,6 +194,13 @@ public class Utils {
 		}
 	}
 	
+	/**
+	 * Checks if the specified input is a positive
+	 * long using {@link Long#parseLong(String)}.
+	 * 
+	 * @param number Number to check
+	 * @return Whether input is a positive long
+	 */
 	public static boolean isPositiveLong(String number) {
 		try {
 			long amount = Long.parseLong(number);
@@ -179,12 +213,30 @@ public class Utils {
 		}
 	}
 	
+	/**
+	 * Truncates the specified double to a certain approximation.
+	 * 
+	 * @param number Number to truncate
+	 * @param decimalPlaces Decimal places to keep
+	 * @return Truncated number
+	 */
 	public static double truncate(double number, int decimalPlaces) {
 		double scale = Math.pow(10, decimalPlaces);
-		
 		return Math.round(number * scale) / scale;
 	}
 	
+	/**
+	 * Formats the specified balance to a certain approximation like the following:
+	 * 	<ul>
+	 * 		<li>1,500 -&gt; 1.5K</li>
+	 * 		<li>1,500,000 -&gt; 1.5M</li>
+	 * 		<li>1,500,000 -&gt; 1.5B</li>
+	 * 	</ul>
+	 * 
+	 * @param balance Balance to format
+	 * @param decimalPlaces Decimal places to keep
+	 * @return Formatted balance
+	 */
 	public static String formatBalance(double balance, int decimalPlaces) {
 		if (balance >= 1000000000)
 			return String.valueOf(truncate(balance / 1000000000, decimalPlaces)) + 'B';
@@ -195,16 +247,34 @@ public class Utils {
 		return String.valueOf(truncate(balance, decimalPlaces));
 	}
 	
-	// 1 mi = 1609.344 m
+	/**
+	 * Converts the specified kilometers to miles.
+	 * 
+	 * <br>1 mi = 1609.344 m
+	 * 
+	 * @param kilometers Kilometers to convert
+	 * @return Corresponding miles
+	 */
 	public static long kilometersToMiles(long kilometers) {
 		return (long) (kilometers / 1.609344);
 	}
 	
-	// 1 km = 0.53995680345572 nm
+	/**
+	 * Converts the specified kilometers to nautical miles.
+	 * <br>1 km = 0.53995680345572 nm
+	 * 
+	 * @param kilometers Kilometers to convert
+	 * @return Corresponding nautical miles
+	 */
 	public static long kilometersToNauticalMiles(long kilometers) {
 		return (long) (kilometers * 0.53995680345572);
 	}
 	
+	/**
+	 * Gets the maximum online players' amount.
+	 * 
+	 * @return Max players' amount
+	 */
 	public static int getMaxPlayers() {
 		switch (Environment.getCurrent()) {
 		case BUKKIT:
@@ -222,6 +292,15 @@ public class Utils {
 		} return -1;
 	}
 	
+	/**
+	 * Invokes a method of the <code>net.md_5.bungee.BungeeCord</code>
+	 * class reflectively as its API does not expose that class.
+	 * 
+	 * @param name Method's name
+	 * @param types Method's types
+	 * @param args Method's optional arguments
+	 * @return Object returned by the method
+	 */
 	public static Object invokeBungeeCordMethod(String name, Class<?>[] types, Object... args) {
 		try {
 			Class<?> clazz = Class.forName("net.md_5.bungee.BungeeCord");
@@ -253,6 +332,13 @@ public class Utils {
 		return IPV4_PATTERN.matcher(ipv4).matches();
 	}
 	
+	/**
+	 * Evaluates an IP address using {@link InetAddress#getByAddress(byte[])} to avoid
+	 * pinging it, making this method faster than {@link InetAddress#getByName(String)}.
+	 * 
+	 * @param ipv4 IPv4's representation
+	 * @return Corresponding IP address
+	 */
 	public static InetAddress getInetAddress(String ipv4) {
 		if (isValidIPv4(ipv4)) {
 			String[] bytes = ipv4.split("\\.");
@@ -264,8 +350,17 @@ public class Utils {
 		} else throw new IllegalArgumentException("Specified IPv4 is invalid as it does not respect the following pattern: \"" + IPV4_PATTERN.pattern() + "\"");
 	}
 	
-	public static <T> List<T> addAndGet(Collection<T> list, Collection<T> args) {
-		List<T> list2 = new ArrayList<>(list);
+	/**
+	 * Creates a copy of the input collection, adds the
+	 * specified collection's elements and then returns it.
+	 * 
+	 * @param <T> Collection's type
+	 * @param input Input collection
+	 * @param args Collection to add
+	 * @return Copy of <code>input</code> + <code>args</code>
+	 */
+	public static <T> List<T> addAndGet(Collection<T> input, Collection<T> args) {
+		List<T> list2 = new ArrayList<>(input);
 		
 		for (T e : args) {
 			if (!list2.contains(e))
@@ -273,8 +368,17 @@ public class Utils {
 		} return list2;
 	}
 	
-	public static <T> List<T> removeAndGet(Collection<T> list, Collection<T> args) {
-		List<T> list2 = new ArrayList<>(list);
+	/**
+	 * Creates a copy of the input collection, removes the
+	 * specified collection's elements and then returns it.
+	 * 
+	 * @param <T> Collection's type
+	 * @param input Input collection
+	 * @param args Collection to remove
+	 * @return Copy of <code>input</code> - <code>args</code>
+	 */
+	public static <T> List<T> removeAndGet(Collection<T> input, Collection<T> args) {
+		List<T> list2 = new ArrayList<>(input);
 		
 		for (T e : args) {
 			if (list2.contains(e))
@@ -282,6 +386,15 @@ public class Utils {
 		} return list2;
 	}
 	
+	/**
+	 * Creates a string representation of the specified list like the following:
+	 * <br>"[random string, 3, that was a number as a string]"
+	 * 
+	 * @param list List to transform
+	 * @param translateColorCodes Whether to translate colors
+	 * @param retainNewLines Whether to retain new lines or to replace them with spaces
+	 * @return String representing the list
+	 */
 	public static String getStringFromList(List<?> list, boolean translateColorCodes, boolean retainNewLines) {
 		if (list.isEmpty())
 			return "[]";
@@ -296,6 +409,13 @@ public class Utils {
 		return sb.toString();
 	}
 	
+	/**
+	 * Creates a list from a string representation obtained
+	 * using {@link #getStringFromList(List, boolean, boolean)}.
+	 * 
+	 * @param string String representing the list
+	 * @return List from the string representation
+	 */
 	public static List<String> getListFromString(String string) {
 		List<String> list = new ArrayList<>();
 		
@@ -308,14 +428,31 @@ public class Utils {
 		return list;
 	}
 	
+	/**
+	 * Calls {@link String#valueOf(Object)} for every element in the specified list.
+	 * 
+	 * @param list List to transform
+	 * @return String list
+	 */
 	public static List<String> integerListToStringList(List<Integer> list) {
-		return list.stream().map(i -> String.valueOf(i)).collect(Collectors.toList());
+		return list.stream().map(String::valueOf).collect(Collectors.toList());
 	}
 	
+	/**
+	 * Calls {@link Number#intValue()} for every element in the specified list.
+	 * 
+	 * @param list List to transform
+	 * @return Integer list
+	 */
 	public static List<Integer> numberListToIntegerList(List<Number> list) {
 		return list.stream().map(Number::intValue).collect(Collectors.toList());
 	}
 	
+	/**
+	 * Reverses the specified char array.
+	 * 
+	 * @param array Array to reverse
+	 */
 	public static void reverse(char[] array) {
 		int i = 0;
 		int j = Math.min(array.length, array.length - 1);
@@ -330,6 +467,15 @@ public class Utils {
 		}
 	}
 	
+	/**
+	 * Gets the index of the specified string in the given array.
+	 * Will return -1 if the string is not present.
+	 * 
+	 * @param array Array to check
+	 * @param string String to check
+	 * @param ignoreCase Whether to ignore case
+	 * @return String's index in the array
+	 */
 	public static int arrayIndexOf(String[] array, String string, boolean ignoreCase) {
 		for (int i = 0; i < array.length; i++)
 			if (ignoreCase ? array[i].equalsIgnoreCase(string) : array[i].equals(string))
@@ -337,10 +483,27 @@ public class Utils {
 		return -1;
 	}
 	
+	/**
+	 * Checks if {@link #arrayIndexOf(String[], String, boolean)}<code> != -1</code>.
+	 * 
+	 * @param array Array to check
+	 * @param string String to check
+	 * @param ignoreCase Whether to ignore case
+	 * @return Whether the array contains the string
+	 */
 	public static boolean arrayContains(String[] array, String string, boolean ignoreCase) {
 		return arrayIndexOf(array, string, ignoreCase) != -1;
 	}
 	
+	/**
+	 * Creates a copy of the specified array,
+	 * removes the given string and then returns it.
+	 * 
+	 * @param array Input array
+	 * @param string String to remove
+	 * @param ignoreCase Whether to ignore case
+	 * @return New array
+	 */
 	public static String[] removeFromArray(String[] array, String string, boolean ignoreCase) {
 		int index = arrayIndexOf(array, string, ignoreCase);
 		
@@ -355,6 +518,12 @@ public class Utils {
 		return newArray;
 	}
 	
+	/**
+	 * Capitalizes every word in the specified string.
+	 * 
+	 * @param input String to capitalize
+	 * @return Capitalized string
+	 */
 	public static String capitalizeEveryWord(String input) {
 		return Stream
 				.of(input.toLowerCase().split("\\s"))
@@ -498,18 +667,31 @@ public class Utils {
 		return string;
 	}
 	
+	/**
+	 * Calls {@link #numericPlaceholders(String, Object...)} for every string in the specified list.
+	 * 
+	 * @param list List containing placeholders
+	 * @param args Optional arguments
+	 * @return List with placeholders translated
+	 */
 	public static List<String> numericPlaceholders(List<String> list, Object... args) {
 		return list.stream().map(string -> numericPlaceholders(string, args)).collect(Collectors.toList());
 	}
 	
-	public static String colorToString(Color color) {
-		return String.format("#%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue());
-	}
-	
+	/**
+	 * Gets the total storage installed on <code>/</code>, in bytes.
+	 * 
+	 * @return Total storage
+	 */
 	public static long getTotalStorage() {
 		return MAIN_FOLDER.getTotalSpace();
 	}
 	
+	/**
+	 * Gets the free storage available on <code>/</code>, in bytes.
+	 * 
+	 * @return Free storage
+	 */
 	public static long getFreeStorage() {
 		return MAIN_FOLDER.getFreeSpace();
 	}

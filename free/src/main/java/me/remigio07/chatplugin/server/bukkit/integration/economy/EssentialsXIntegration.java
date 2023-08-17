@@ -22,10 +22,10 @@ import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.server.integration.economy.EconomyIntegration;
 import me.remigio07.chatplugin.server.bukkit.integration.ChatPluginBukkitIntegration;
 
-public class EssentialsIntegration extends ChatPluginBukkitIntegration<EconomyIntegration> implements EconomyIntegration {
+public class EssentialsXIntegration extends ChatPluginBukkitIntegration<EconomyIntegration> implements EconomyIntegration {
 	
-	public EssentialsIntegration() {
-		super(IntegrationType.ESSENTIALS);
+	public EssentialsXIntegration() {
+		super(IntegrationType.ESSENTIALSX);
 	}
 	
 	@Override

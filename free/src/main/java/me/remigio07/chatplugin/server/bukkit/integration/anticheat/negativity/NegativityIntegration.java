@@ -33,7 +33,7 @@ public class NegativityIntegration extends ChatPluginBukkitIntegration<Anticheat
 	@Override
 	protected void loadAPI() {
 		try {
-			Class.forName("com.elikill58.negativity.api.events.EventManager").getMethod("registerEvent", Class.forName("com.elikill58.negativity.api.events.Listeners")).invoke(null, Class.forName("me.remigio07.chatplugin.server.bukkit.integration.anticheat.negativity.NegativityListener").newInstance());
+			Class.forName("com.elikill58.negativity.api.events.EventManager").getMethod("registerEvent", Class.forName("com.elikill58.negativity.api.events.Listeners")).invoke(null, Class.forName("me.remigio07.chatplugin.server.bukkit.integration.anticheat.negativity.NegativityListener").getDeclaredConstructor().newInstance());
 		} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
 			e.printStackTrace();
 		}

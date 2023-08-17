@@ -15,6 +15,9 @@
 
 package me.remigio07.chatplugin.api.common.telegram;
 
+/**
+ * Represents the Telegram bot handled by the {@link TelegramIntegrationManager}.
+ */
 public class TelegramBot {
 
 }

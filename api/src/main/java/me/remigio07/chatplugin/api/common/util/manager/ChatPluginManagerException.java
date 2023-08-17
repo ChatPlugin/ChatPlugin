@@ -25,7 +25,15 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 public class ChatPluginManagerException extends Exception {
 	
 	private static final long serialVersionUID = 2161238166368480180L;
+	
+	/**
+	 * Exception's manager.
+	 */
 	private ChatPluginManager manager;
+	
+	/**
+	 * Exception's source.
+	 */
 	private String source;
 	
 	/**

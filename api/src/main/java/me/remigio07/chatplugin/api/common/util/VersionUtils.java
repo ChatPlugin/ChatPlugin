@@ -167,6 +167,9 @@ public class VersionUtils {
 	 */
 	public enum Version {
 		
+		/**
+		 * Represents an unsupported version.
+		 */
 		UNSUPPORTED(-1, -1),
 		
 		// pre-Netty rewrite

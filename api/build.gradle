@@ -9,10 +9,14 @@ java {
 }
 
 javadoc {
-	options.windowTitle = 'ChatPlugin ' + rootProject.version + ' API'
+	title = 'ChatPlugin ' + rootProject.version + ' API'
+	options.docTitle = title
+	options.windowTitle = title
+	options.header = title
 	options.encoding = 'UTF-8'
 	options.charSet = 'UTF-8'
-	options.links 'https://docs.oracle.com/javase/8/docs/api/'
+	options.links 'https://docs.oracle.com/javase/8/docs/api'
+	options.addStringOption 'Xdoclint:all', '-public'
 }
 
 publishing {
@@ -43,6 +47,16 @@ publishing {
 					connection = 'scm:svn:https://github.com/Remigio07/ChatPlugin.git'
 					developerConnection = 'scm:svn:https://github.com/Remigio07/ChatPlugin.git'
 					url = 'https://github.com/Remigio07/ChatPlugin.git'
+				}
+			}
+			pom.withXml {
+				def repositoriesNode = asNode().appendNode('repositories')
+				
+				rootProject.repos.each { name, url ->
+					def node = repositoriesNode.appendNode('repository')
+					
+					node.appendNode('id', name)
+					node.appendNode('url', uri(url))
 				}
 			}
 		}

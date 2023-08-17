@@ -30,7 +30,7 @@ import me.remigio07.chatplugin.server.bukkit.integration.combatlog.CombatLogXInt
 import me.remigio07.chatplugin.server.bukkit.integration.cosmetic.PlayerParticlesIntegration;
 import me.remigio07.chatplugin.server.bukkit.integration.cosmetic.UltraCosmeticsIntegration;
 import me.remigio07.chatplugin.server.bukkit.integration.cosmetic.gadgetsmenu.GadgetsMenuIntegration;
-import me.remigio07.chatplugin.server.bukkit.integration.economy.EssentialsIntegration;
+import me.remigio07.chatplugin.server.bukkit.integration.economy.EssentialsXIntegration;
 import me.remigio07.chatplugin.server.bukkit.integration.economy.VaultIntegration;
 import me.remigio07.chatplugin.server.bukkit.integration.multiplatform.GeyserMCIntegration;
 import me.remigio07.chatplugin.server.bukkit.integration.permission.LuckPermsIntegration;
@@ -50,7 +50,7 @@ public class BukkitIntegrationManager extends IntegrationManager {
 		List<String> hooked = new ArrayList<>();
 		
 		putIntegration(new CombatLogXIntegration());
-		putIntegration(new EssentialsIntegration());
+		putIntegration(new EssentialsXIntegration());
 		putIntegration(new GadgetsMenuIntegration());
 		putIntegration(new GeyserMCIntegration());
 		putIntegration(new LuckPermsIntegration());

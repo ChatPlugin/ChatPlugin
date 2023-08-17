@@ -142,6 +142,7 @@ public class Debugger {
 		} return sb.toString();
 	}
 	
+	@SuppressWarnings("all") // ...used to avoid "Unnecessary @SuppressWarnings("deprecation")" for the annotation below when using Java 8 on IDEs like Eclipse
 	public static LinkedHashMap<String, Object> getInstanceFields(Class<? extends ChatPluginManager> clazz, ChatPluginManager manager) {
 		LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
 		Class<?> clazz2 = manager.getClass();
@@ -156,6 +157,7 @@ public class Debugger {
 			} catch (NoClassDefFoundError e) {
 				continue;
 			} catch (NullPointerException | IllegalArgumentException | IllegalAccessException e) {
+				@SuppressWarnings("deprecation")
 				boolean accessible = field.isAccessible();
 				
 				if (!accessible)

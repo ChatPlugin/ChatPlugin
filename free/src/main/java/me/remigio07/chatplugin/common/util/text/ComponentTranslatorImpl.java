@@ -107,9 +107,9 @@ public class ComponentTranslatorImpl extends ComponentTranslator {
 				return MuteManager.getInstance().formatReason((String) defaultValue, language);
 			case KICK_REASON:
 				return KickManager.getInstance().formatReason((String) defaultValue, language);
-			case BAN_TYPE:
+			case BAN_TYPE_MESSAGE:
 				return BanManager.getInstance().formatTypeMessage(BanType.valueOf((String) defaultValue), language);
-			case KICK_TYPE:
+			case KICK_TYPE_MESSAGE:
 				return KickManager.getInstance().formatTypeMessage(KickType.valueOf((String) defaultValue), language);
 			case WARNING_MAX_AMOUNT:
 				return String.valueOf(WarningManager.getInstance().getMaxAmount());

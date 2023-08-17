@@ -17,58 +17,64 @@ package me.remigio07.chatplugin.api.server.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 
-import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.server.language.Language;
-import me.remigio07.chatplugin.api.server.language.LanguageManager;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
- * Server utils class. Methods here are not documented.
+ * Server utils class.
  */
 public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 	
-	public static Map<Language, String> getLanguageStringMap(Configuration configuration, String path) {
-		LanguageManager languageManager = LanguageManager.getInstance();
-		HashMap<Language, String> map = new HashMap<>();
-		
-		for (String key : configuration.getKeys(path))
-			if (languageManager.getLanguage(key) != null)
-				map.put(languageManager.getLanguage(key), configuration.translateString(path + "." + key));
-		return map;
-	}
-	
-	public static Map<Language, List<String>> getLanguageStringListMap(Configuration configuration, String path) {
-		LanguageManager languageManager = LanguageManager.getInstance();
-		HashMap<Language, List<String>> map = new HashMap<>();
-		
-		for (String key : configuration.getKeys(path))
-			if (languageManager.getLanguage(key) != null)
-				map.put(languageManager.getLanguage(key), configuration.translateStringList(path + "." + key));
-		return map;
-	}
-	
+	/**
+	 * Gets a list of the worlds' names.
+	 * 
+	 * @return Worlds' names
+	 */
 	public static List<String> getWorlds() {
 		return (Environment.isBukkit() ? Bukkit.getWorlds().stream().map(org.bukkit.World::getName) : Sponge.getServer().getWorlds().stream().map(org.spongepowered.api.world.World::getName)).collect(Collectors.toList());
 	}
 	
+	/**
+	 * Gets the online players in the specified world.
+	 * 
+	 * @param world World to check
+	 * @return Online players
+	 */
 	public static int getOnlineWorld(String world) {
 		return (int) (Environment.isBukkit() ? Bukkit.getWorld(world).getPlayers().size() : Sponge.getServer().getWorld(world).get().getEntities().stream().filter(entity -> entity instanceof Player).count()); // Sponge v4.2
 	}
 	
+	/**
+	 * Formats the specified date according to one of the formats specified
+	 * at "misc.simple-date-format" in the given language's messages' file.
+	 * 
+	 * @param ms Date to format
+	 * @param language Language used to translate the date
+	 * @param format Format to use
+	 * @return Formatted date
+	 */
 	public static String formatDate(long ms, Language language, DateFormat format) {
 		return new SimpleDateFormat(language.getMessage("misc.simple-date-format." + format.name().toLowerCase())).format(new Date(ms));
 	}
 	
+	/**
+	 * Formats the specified time according to the messages specified
+	 * at "timestamps" in the given language's messages' file.
+	 * 
+	 * @param totalMilliseconds Time to format
+	 * @param language Language used to translate the time
+	 * @param everInsteadOfNever Whether to use "timestamps.ever" instead of "timestamps.never"
+	 * @param useZeroSecondsInstead Whether to use "0s" instead of "timestamps.ever"
+	 * @return Formatted time
+	 */
 	public static String formatTime(long totalMilliseconds, Language language, boolean everInsteadOfNever, boolean useZeroSecondsInstead) {
 		StringBuilder sb = new StringBuilder();
 		long totalSeconds = (totalMilliseconds + 999) / 1000L;

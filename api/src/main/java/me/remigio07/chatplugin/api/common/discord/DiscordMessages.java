@@ -58,13 +58,53 @@ public class DiscordMessages {
 	public static final String[] EMBED_OPTIONS = new String[] { "title.text", "title.url", "description", "image", "thumbnail", "author.text", "author.url", "author.icon-url", "footer.text", "footer.icon-url", "color" };
 	private static ConfigurationMappings mappings = ConfigurationType.DISCORD_INTEGRATION.get().getMappings();
 	
+	/**
+	 * Represents the main messages.
+	 * 
+	 * <p><strong>Found at:</strong> "messages.main" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+	 */
 	public enum Main implements DiscordMessage {
 		
+		/**
+		 * Represents the help message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.main.help" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>}
+		 */
 		HELP,
+		
+		/**
+		 * Represents the info message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.main.help" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		INFO,
+		
+		/**
+		 * Represents the reload start message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.main.reload-start" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		RELOAD_START,
+		
+		/**
+		 * Represents the reload end message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.main.reload-end" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		RELOAD_END,
+		
+		/**
+		 * Represents the status message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.main.status" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		STATUS,
+		
+		/**
+		 * Represents the version message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.main.version" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		VERSION;
 		
 		@Override
@@ -157,8 +197,14 @@ public class DiscordMessages {
 		
 	}
 	
+	/**
+	 * TODO
+	 */
 	public enum OnlinePlayer implements DiscordMessage {
 		
+		/**
+		 * TODO
+		 */
 		PLAYER_INFO;
 		
 		@Override
@@ -173,8 +219,14 @@ public class DiscordMessages {
 		
 	}
 	
+	/**
+	 * TODO
+	 */
 	public enum OfflinePlayer implements DiscordMessage {
 		
+		/**
+		 * TODO
+		 */
 		PLAYER_PUNISHMENTS;
 		
 		@Override
@@ -189,13 +241,53 @@ public class DiscordMessages {
 		
 	}
 	
+	/**
+	 * Represents the misc messages.
+	 * 
+	 * <p><strong>Found at:</strong> "messages" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+	 */
 	public enum Misc implements DiscordMessage {
 		
+		/**
+		 * Represents the inexistent ID message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.inexistent-id" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		INEXISTENT_ID,
+		
+		/**
+		 * Represents the no permission message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.no-permission" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		NO_PERMISSION,
+		
+		/**
+		 * Represents the disabled feature message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.disabled-feature" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		DISABLED_FEATURE,
+		
+		/**
+		 * Represents the invalid IP address message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.invalid-ip-address" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		INVALID_IP_ADDRESS,
+		
+		/**
+		 * Represents the at least one online message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.at-least-one-online" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		AT_LEAST_ONE_ONLINE,
+		
+		/**
+		 * Represents the IP lookup message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.ip-lookup" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		@MessageArguments(types = IPLookup.class, descriptions = "Related IP lookup's object")
 		IP_LOOKUP;
 		
@@ -220,18 +312,64 @@ public class DiscordMessages {
 		
 	}
 	
+	/**
+	 * Represents the ban messages.
+	 * 
+	 * <p><strong>Found at:</strong> "messages.ban" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+	 */
 	public enum Ban implements DiscordMessage {
 		
+		/**
+		 * Represents the ban info message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.ban.info" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		@MessageArguments(types = me.remigio07.chatplugin.api.common.punishment.ban.Ban.class, descriptions = "Related ban's object")
 		INFO,
+		
+		/**
+		 * Represents the ban list message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.ban.list" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		LIST,
+		
+		/**
+		 * Represents the ban empty list message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.ban.empty-list" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		EMPTY_LIST,
+		
+		/**
+		 * Represents the ban banned message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.ban.banned" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		@MessageArguments(types = me.remigio07.chatplugin.api.common.punishment.ban.Ban.class, descriptions = "Related ban's object")
 		BANNED,
+		
+		/**
+		 * Represents the ban updated message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.ban.updated" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		@MessageArguments(types = me.remigio07.chatplugin.api.common.punishment.ban.Ban.class, descriptions = "Related ban's object")
 		UPDATED,
+		
+		/**
+		 * Represents the ban unbanned message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.ban.unbanned" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		@MessageArguments(types = me.remigio07.chatplugin.api.common.punishment.ban.Ban.class, descriptions = "Related ban's object")
 		UNBANNED,
+		
+		/**
+		 * Represents the ban expired message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.ban.expired" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		@MessageArguments(types = me.remigio07.chatplugin.api.common.punishment.ban.Ban.class, descriptions = "Related ban's object")
 		EXPIRED;
 		
@@ -369,18 +507,64 @@ public class DiscordMessages {
 		
 	}
 	
+	/**
+	 * Represents the warning messages.
+	 * 
+	 * <p><strong>Found at:</strong> "messages.warning" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+	 */
 	public enum Warning implements DiscordMessage {
 		
+		/**
+		 * Represents the warning info message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.warning.info" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		@MessageArguments(types = me.remigio07.chatplugin.api.common.punishment.warning.Warning.class, descriptions = "Related warning's object")
 		INFO,
+		
+		/**
+		 * Represents the warning list message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.warning.list" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		LIST,
+		
+		/**
+		 * Represents the warning empty list message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.warning.empty-list" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		EMPTY_LIST,
+		
+		/**
+		 * Represents the warning warned message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.warning.warned" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		@MessageArguments(types = me.remigio07.chatplugin.api.common.punishment.warning.Warning.class, descriptions = "Related warning's object")
 		WARNED,
+		
+		/**
+		 * Represents the warning removed message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.warning.removed" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		@MessageArguments(types = me.remigio07.chatplugin.api.common.punishment.warning.Warning.class, descriptions = "Related warning's object")
 		REMOVED,
+		
+		/**
+		 * Represents the warning cleared message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.warning.cleared" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		@MessageArguments(types = { me.remigio07.chatplugin.api.common.player.OfflinePlayer.class, String.class }, descriptions = { "Player whose warnings got cleared", "Who unwarned the player" })
 		CLEARED,
+		
+		/**
+		 * Represents the warning expired message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.warning.expired" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		@MessageArguments(types = me.remigio07.chatplugin.api.common.punishment.warning.Warning.class, descriptions = "Related warning's object")
 		EXPIRED;
 		
@@ -555,10 +739,26 @@ public class DiscordMessages {
 		
 	}
 	
+	/**
+	 * Represents the kick messages.
+	 * 
+	 * <p><strong>Found at:</strong> "messages.kick" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+	 */
 	public enum Kick implements DiscordMessage {
 		
+		/**
+		 * Represents the kick info message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.kick.info" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		@MessageArguments(types = me.remigio07.chatplugin.api.common.punishment.kick.Kick.class, descriptions = "Related kick's object")
 		INFO,
+		
+		/**
+		 * Represents the kick kicked message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.kick.kicked" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		@MessageArguments(types = me.remigio07.chatplugin.api.common.punishment.kick.Kick.class, descriptions = "Related kick's object")
 		KICKED;
 		
@@ -631,18 +831,64 @@ public class DiscordMessages {
 		
 	}
 	
+	/**
+	 * Represents the mute messages.
+	 * 
+	 * <p><strong>Found at:</strong> "messages.mute" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+	 */
 	public enum Mute implements DiscordMessage {
 		
+		/**
+		 * Represents the mute info message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.mute.info" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		@MessageArguments(types = me.remigio07.chatplugin.api.common.punishment.mute.Mute.class, descriptions = "Related mute's object")
 		INFO,
+		
+		/**
+		 * Represents the mute list message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.mute.list" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		LIST,
+		
+		/**
+		 * Represents the mute empty list message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.mute.empty-list" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		EMPTY_LIST,
+		
+		/**
+		 * Represents the mute muted message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.mute.muted" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		@MessageArguments(types = me.remigio07.chatplugin.api.common.punishment.mute.Mute.class, descriptions = "Related mute's object")
 		MUTED,
+		
+		/**
+		 * Represents the mute updated message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.mute.updated" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		@MessageArguments(types = me.remigio07.chatplugin.api.common.punishment.mute.Mute.class, descriptions = "Related mute's object")
 		UPDATED,
+		
+		/**
+		 * Represents the mute unmuted message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.mute.unmuted" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		@MessageArguments(types = me.remigio07.chatplugin.api.common.punishment.mute.Mute.class, descriptions = "Related mute's object")
 		UNMUTED,
+		
+		/**
+		 * Represents the mute expired message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.mute.expired" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
 		@MessageArguments(types = me.remigio07.chatplugin.api.common.punishment.mute.Mute.class, descriptions = "Related mute's object")
 		EXPIRED;
 		

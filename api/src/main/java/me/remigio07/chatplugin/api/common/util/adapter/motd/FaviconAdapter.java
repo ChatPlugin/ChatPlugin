@@ -27,7 +27,7 @@ public class FaviconAdapter {
 	/**
 	 * Constructs a favicon adapter that accepts one of the following specified as input:
 	 * 	<ul>
-	 * 		<li>{@link org.spongepowered.common.network.status.SpongeFavicon} for Sponge environments</li>
+	 * 		<li>{@link org.spongepowered.api.network.status.Favicon} for Sponge environments</li>
 	 * 		<li>{@link net.md_5.bungee.api.Favicon} for BungeeCord environments</li>
 	 * 		<li>{@link com.velocitypowered.api.util.Favicon} for Velocity environments</li>
 	 * 	</ul>
@@ -44,10 +44,10 @@ public class FaviconAdapter {
 	 * @return Sponge-adapted favicon
 	 * @throws UnsupportedOperationException If !{@link Environment#isSponge()}
 	 */
-	public org.spongepowered.common.network.status.SpongeFavicon spongeValue() {
+	public org.spongepowered.api.network.status.Favicon spongeValue() {
 		if (Environment.isSponge())
-			return (org.spongepowered.common.network.status.SpongeFavicon) favicon;
-		else throw new UnsupportedOperationException("Unable to adapt favicon to a Sponge's SpongeFavicon on a " + Environment.getCurrent().getName() + " environment");
+			return (org.spongepowered.api.network.status.Favicon) favicon;
+		else throw new UnsupportedOperationException("Unable to adapt favicon to a Sponge's Favicon on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**

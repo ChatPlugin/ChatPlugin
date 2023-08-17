@@ -43,23 +43,86 @@ import me.remigio07.chatplugin.bootstrap.Environment;
  */
 public class IntegrationType<T extends ChatPluginIntegration> {
 	
+	/**
+	 * Represents the <a href="https://www.spigotmc.org/resources/combatlogx.31689/">CombatLogX</a> integration.
+	 */
 	public static final IntegrationType<CombatLogIntegration> COMBATLOGX = new IntegrationType<>("CombatLogX", "com.github.sirblobman.combatlogx.CombatPlugin", Arrays.asList(Environment.BUKKIT));
-	public static final IntegrationType<EconomyIntegration> ESSENTIALS = new IntegrationType<>("Essentials", "com.earth2me.essentials.Essentials", Arrays.asList(Environment.BUKKIT));
+	
+	/**
+	 * Represents the <a href="https://essentialsx.net/">EssentialsX</a> integration.
+	 */
+	public static final IntegrationType<EconomyIntegration> ESSENTIALSX = new IntegrationType<>("Essentials", "com.earth2me.essentials.Essentials", Arrays.asList(Environment.BUKKIT));
+	
+	/**
+	 * Represents the <a href="https://www.gadgetsmenu.net/">GadgetsMenu</a> integration.
+	 */
 	public static final IntegrationType<CosmeticsIntegration> GADGETSMENU = new IntegrationType<>("GadgetsMenu", "com.yapzhenyie.GadgetsMenu.GadgetsMenu", Arrays.asList(Environment.BUKKIT));
+	
+	/**
+	 * Represents the <a href="https://geysermc.org/">GeyserMC</a> integration.
+	 */
 	public static final IntegrationType<MultiPlatformIntegration> GEYSERMC = new IntegrationType<>("GeyserMC", "org.geysermc.geyser.GeyserMain", Arrays.asList(Environment.values()));
+	
+	/**
+	 * Represents the <a href="https://luckperms.net/">LuckPerms</a> integration.
+	 */
 	public static final IntegrationType<PermissionIntegration> LUCKPERMS = new IntegrationType<>("LuckPerms", "net.luckperms.api.LuckPerms", Arrays.asList(Environment.values()));
+	
+	/**
+	 * Represents the <a href="https://matrix.rip/">Matrix</a> integration.
+	 */
 	public static final IntegrationType<AnticheatIntegration> MATRIX = new IntegrationType<>("Matrix", "me.rerere.matrix.Matrix", Arrays.asList(Environment.BUKKIT));
+	
+	/**
+	 * Represents the <a href="https://www.spigotmc.org/resources/mvdwplaceholderapi.11182/">MVdWPlaceholderAPI</a> integration.
+	 */
 	public static final IntegrationType<PlaceholderIntegration> MVDWPLACEHOLDERAPI = new IntegrationType<>("MVdWPlaceholderAPI", "be.maximvdw.placeholderapi.PlaceholderAPI", Arrays.asList(Environment.BUKKIT));
+	
+	/**
+	 * Represents the <a href="https://github.com/Elikill58/Negativity">Negativity</a> integration.
+	 */
 	public static final IntegrationType<AnticheatIntegration> NEGATIVITY = new IntegrationType<>("Negativity", "com.elikill58.negativity.universal.Version", Arrays.asList(Environment.BUKKIT, Environment.SPONGE));
+	
+	/**
+	 * Represents the <a href="https://www.spigotmc.org/resources/placeholderapi.6245/">PlaceholderAPI</a> integration.
+	 */
 	public static final IntegrationType<PlaceholderIntegration> PLACEHOLDERAPI = new IntegrationType<>("PlaceholderAPI", "me.clip.placeholderapi.PlaceholderAPI", Arrays.asList(Environment.BUKKIT));
+	
+	/**
+	 * Represents the <a href="https://www.spigotmc.org/resources/playerparticles.40261/">PlayerParticles</a> integration.
+	 */
 	public static final IntegrationType<CosmeticsIntegration> PLAYERPARTICLES = new IntegrationType<>("PlayerParticles", "dev.esophose.playerparticles.PlayerParticles", Arrays.asList(Environment.BUKKIT));
+	
+	/**
+	 * Represents the <a href="https://www.spigotmc.org/resources/protocolsupport.7201/">ProtocolSupport</a> integration.
+	 */
 	public static final IntegrationType<VersionIntegration> PROTOCOLSUPPORT = new IntegrationType<>("ProtocolSupport", "protocolsupport.ProtocolSupport", Arrays.asList(Environment.BUKKIT));
+	
+	/**
+	 * Represents the <a href="https://www.spigotmc.org/resources/1-8-8-1-20-1-ultra-cosmetics-opensource-free.10905/">UltraCosmetics</a> integration.
+	 */
 	public static final IntegrationType<CosmeticsIntegration> ULTRACOSMETICS = new IntegrationType<>("UltraCosmetics", "be.isach.ultracosmetics.UltraCosmetics", Arrays.asList(Environment.BUKKIT));
+	
+	/**
+	 * Represents the <a href="https://www.spigotmc.org/resources/vault.34315/">Vault</a> integration.
+	 */
 	public static final IntegrationType<EconomyIntegration> VAULT = new IntegrationType<>("Vault", "net.milkbowl.vault.Vault", Arrays.asList(Environment.BUKKIT)); // Vault is also a PermissionIntegration, but we consider it as an EconomyIntegration
+	
+	/**
+	 * Represents the <a href="https://github.com/ViaVersion/ViaVersion">ViaVersion</a> integration.
+	 */
 	public static final IntegrationType<VersionIntegration> VIAVERSION = new IntegrationType<>("ViaVersion", "com.viaversion.viaversion.api.Via", Arrays.asList(Environment.values()));
+	
+	/**
+	 * Represents the <a href="https://www.spigotmc.org/resources/vulcan-anti-cheat-advanced-cheat-detection-1-7-1-20-1.83626/">Vulcan</a> integration.
+	 */
 	public static final IntegrationType<AnticheatIntegration> VULCAN = new IntegrationType<>("Vulcan", "me.frep.vulcan.spigot.VulcanPlugin", Arrays.asList(Environment.BUKKIT));
+	
+	/**
+	 * Represents the <a href="https://enginehub.org/worldguard">WorldGuard</a> integration.
+	 */
 	public static final IntegrationType<RegionIntegration> WORLDGUARD = new IntegrationType<>("WorldGuard", "com.sk89q.worldguard.WorldGuard", Arrays.asList(Environment.BUKKIT, Environment.SPONGE));
-	private static final IntegrationType<?>[] VALUES = new IntegrationType[] { COMBATLOGX, ESSENTIALS, GADGETSMENU, GEYSERMC, LUCKPERMS, MATRIX, MVDWPLACEHOLDERAPI, NEGATIVITY, PLACEHOLDERAPI, PLAYERPARTICLES, PROTOCOLSUPPORT, ULTRACOSMETICS, VAULT, VIAVERSION, VULCAN, WORLDGUARD };
+	private static final IntegrationType<?>[] VALUES = new IntegrationType[] { COMBATLOGX, ESSENTIALSX, GADGETSMENU, GEYSERMC, LUCKPERMS, MATRIX, MVDWPLACEHOLDERAPI, NEGATIVITY, PLACEHOLDERAPI, PLAYERPARTICLES, PROTOCOLSUPPORT, ULTRACOSMETICS, VAULT, VIAVERSION, VULCAN, WORLDGUARD };
 	private String plugin, clazz;
 	private List<Environment> supportedEnvironments;
 	

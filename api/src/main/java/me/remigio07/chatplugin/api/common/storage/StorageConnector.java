@@ -653,11 +653,34 @@ public abstract class StorageConnector {
 		 */
 		public static enum WhereOperator {
 			
+			/**
+			 * Checks for equality between two values.
+			 */
 			EQUAL("="),
+			
+			/**
+			 * Checks for inequality between two values.
+			 */
 			NOT_EQUAL("<>"),
+			
+			/**
+			 * Checks if the first value is bigger than the second one.
+			 */
 			GREATER_THAN(">"),
+			
+			/**
+			 * Checks if the first value is smaller than the second one.
+			 */
 			LESS_THAN("<"),
+			
+			/**
+			 * Checks if the first value is bigger than or equal to the second one.
+			 */
 			GREATER_THAN_OR_EQUAL(">="),
+			
+			/**
+			 * Checks if the first value is smaller than or equal to the second one.
+			 */
 			LESS_THAN_OR_EQUAL("<=");
 			
 			private String toString;

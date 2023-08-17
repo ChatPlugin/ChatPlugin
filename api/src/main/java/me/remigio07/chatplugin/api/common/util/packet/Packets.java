@@ -380,6 +380,15 @@ public class Packets {
 					.writeBoolean(vanished);
 		}
 		
+		/**
+		 * Makes the target server send a switch message for the specified player.
+		 * 
+		 * @param server Target server
+		 * @param player Player's UUID
+		 * @param newServerID New server's ID
+		 * @param newServerDisplayName New server's display name
+		 * @return <code>PlayerSwitch</code> packet
+		 */
 		@PacketScope(Scope.PROXY_TO_SERVER)
 		@Deprecated
 		public static PacketSerializer playerSwitch(
@@ -395,6 +404,13 @@ public class Packets {
 					.writeUTF(newServerDisplayName);
 		}
 		
+		/**
+		 * Makes the target server send a quit message for the specified player.
+		 * 
+		 * @param server Target server
+		 * @param player Player's UUID
+		 * @return <code>PlayerQuit</code> packet
+		 */
 		@PacketScope(Scope.PROXY_TO_SERVER)
 		@Deprecated
 		public static PacketSerializer playerQuit(
@@ -477,6 +493,15 @@ public class Packets {
 					.writeUTF(requesterName);
 		}
 		
+		/**
+		 * Responds to a {@link #ipLookupRequest(String, InetAddress, String)}.
+		 * 
+		 * @param server Target server
+		 * @param ipAddress IP lookup's IP address
+		 * @param isp IP lookup' ISP
+		 * @param json IP lookup's JSON representation
+		 * @return <code>IPLookupResponse</code> packet
+		 */
 		@PacketScope(Scope.PROXY_TO_SERVER)
 		@Deprecated
 		public static PacketSerializer ipLookupResponse(
@@ -516,6 +541,22 @@ public class Packets {
 					.writeBoolean(versionPreNettyRewrite);
 		}
 		
+		/**
+		 * Responds to a {@link #motdRequest(String, InetAddress, int, boolean)}.
+		 * 
+		 * @param server Target server
+		 * @param ipAddress MoTD's IP address
+		 * @param description MoTD's description
+		 * @param hover MoTD's hover
+		 * @param versionName MoTD's version name
+		 * @param customIconURL MoTD's custom icon's URL
+		 * @param hoverDisplayed Whether the hover is visible
+		 * @param versionNameDisplayed Whether the version name is visible
+		 * @param customIconDisplayed Whether the custom icon is visible
+		 * @param onlinePlayers MoTD's online players
+		 * @param maxPlayers MoTD's max players
+		 * @return <code>MoTDResponse</code> packet
+		 */
 		@SocketChannelPacket
 		@PacketScope(Scope.SERVER_TO_PROXY)
 		@Deprecated
@@ -633,6 +674,13 @@ public class Packets {
 					.writeUTF(ViolationPacketType.CLEAR.name());
 		}
 		
+		/**
+		 * Makes the target server reload certain managers.
+		 * 
+		 * @param server Target server
+		 * @param time Reload's time, in milliseconds
+		 * @return <code>ProxyPluginLoad</code> packet
+		 */
 		@PacketScope(Scope.PROXY_TO_SERVER)
 		@Deprecated
 		public static PacketSerializer proxyPluginLoad(
@@ -646,9 +694,29 @@ public class Packets {
 		
 	}
 	
+	/**
+	 * Contains packets used to synchronize punishments.
+	 */
 	@Deprecated
 	public static class Punishments {
 		
+		/**
+		 * Carries information about a player's ban.
+		 * 
+		 * @param server Target server
+		 * @param id Ban's ID
+		 * @param playerUUID Banned player's UUID
+		 * @param playerName Banned player's name
+		 * @param ipAddress Banned IP address
+		 * @param staffMember Ban's Staff member
+		 * @param reason Ban's reason
+		 * @param type Ban's type
+		 * @param date Ban's creation or modification date
+		 * @param duration Ban's duration
+		 * @param global Whether this ban is global
+		 * @param silent Whether this ban is silent
+		 * @return <code>PlayerBan</code> packet
+		 */
 		@PacketScope(Scope.SERVER_TO_SERVER)
 		@Deprecated
 		public static PacketSerializer playerBan(
@@ -680,6 +748,18 @@ public class Packets {
 					.writeBoolean(silent);
 		}
 		
+		/**
+		 * Carries information about a player's unban.
+		 * 
+		 * @param server Target server
+		 * @param whoUnbanned Who unbanned the player
+		 * @param unbanDate Unban's date
+		 * @param playerUUID Banned player's UUID
+		 * @param playerName Banned player's name
+		 * @param ipAddress Banned IP address
+		 * @param type Ban's type
+		 * @return <code>PlayerUnban</code> packet
+		 */
 		@PacketScope(Scope.SERVER_TO_SERVER)
 		@Deprecated
 		public static PacketSerializer playerBasedPlayerUnban(
@@ -702,6 +782,15 @@ public class Packets {
 					.writeUTF(type.name());
 		}
 		
+		/**
+		 * Carries information about a player's unban.
+		 * 
+		 * @param server Target server
+		 * @param whoUnbanned Who unbanned the player
+		 * @param unbanDate Unban's date
+		 * @param id Ban's ID
+		 * @return <code>PlayerUnban</code> packet
+		 */
 		@PacketScope(Scope.SERVER_TO_SERVER)
 		@Deprecated
 		public static PacketSerializer idBasedPlayerUnban(
@@ -718,6 +807,22 @@ public class Packets {
 					.writeInt(id);
 		}
 		
+		/**
+		 * Carries information about a banwave's entry.
+		 * 
+		 * @param server Target server
+		 * @param playerUUID Entry's player's UUID
+		 * @param playerName Entry's player's name
+		 * @param ipAddress Entry's IP address
+		 * @param staffMember Entry's staff member
+		 * @param reason Entry's reason
+		 * @param type Entry's type
+		 * @param date Entry's creation or modification date
+		 * @param duration Entry's duration
+		 * @param global Whether this entry is global
+		 * @param silent Whether this entry is silent
+		 * @return <code>AddBanwaveEntry</code> packet
+		 */
 		@PacketScope(Scope.SERVER_TO_SERVER)
 		@Deprecated
 		public static PacketSerializer addBanwaveEntry(
@@ -747,6 +852,18 @@ public class Packets {
 					.writeBoolean(silent);
 		}
 		
+		/**
+		 * Carries information about a banwave's entry's removal.
+		 * 
+		 * @param server Target server
+		 * @param playerUUID Entry's player's UUID
+		 * @param playerName Entry's player's name
+		 * @param ipAddress Entry's IP address
+		 * @param whoRemoved Who removed the entry
+		 * @param type Entry's type
+		 * @param removalDate Entry's removal date
+		 * @return <code>RemoveBanwaveEntry</code> packet
+		 */
 		@PacketScope(Scope.SERVER_TO_SERVER)
 		@Deprecated
 		public static PacketSerializer removeBanwaveEntry(
@@ -768,6 +885,15 @@ public class Packets {
 					.writeLong(removalDate);
 		}
 		
+		/**
+		 * Makes the target server execute the banwave's start commands.
+		 * 
+		 * @param server Target server
+		 * @param estimatedDuration Banwave's estimated duration
+		 * @param forwardProxyCommands Whether proxy's commands should be forwarded
+		 * @param startCommands Banwave's start commands
+		 * @return <code>BanwaveStart</code> packet
+		 */
 		@PacketScope(Scope.PROXY_TO_SERVER)
 		@Deprecated
 		public static PacketSerializer banwaveStart(
@@ -783,7 +909,15 @@ public class Packets {
 					.writeUTFArray(startCommands);
 		}
 		
-		
+		/**
+		 * Makes the target server execute the banwave's end commands.
+		 * 
+		 * @param server Target server
+		 * @param bannedPlayers Banned players' amount
+		 * @param forwardProxyCommands Whether proxy's commands should be forwarded
+		 * @param endCommands Banwave's end commands
+		 * @return <code>BanwaveEnd</code> packet
+		 */
 		@PacketScope(Scope.PROXY_TO_SERVER)
 		@Deprecated
 		public static PacketSerializer banwaveEnd(
@@ -799,6 +933,21 @@ public class Packets {
 					.writeUTFArray(endCommands);
 		}
 		
+		/**
+		 * Carries information about a player's warning.
+		 * 
+		 * @param server Target server
+		 * @param id Warning's ID
+		 * @param playerUUID Warned player's UUID
+		 * @param playerName Warned player's name
+		 * @param staffMember Warning's Staff member
+		 * @param reason Warning's reason
+		 * @param date Warning's date
+		 * @param duration Warning's duration
+		 * @param global Whether this warning is global
+		 * @param silent Whether this warning is silent
+		 * @return <code>PlayerWarning</code> packet
+		 */
 		@PacketScope(Scope.SERVER_TO_SERVER)
 		@Deprecated
 		public static PacketSerializer playerWarning(
@@ -826,6 +975,15 @@ public class Packets {
 					.writeBoolean(silent);
 		}
 		
+		/**
+		 * Carries information about a player's unwarn.
+		 * 
+		 * @param server Target server
+		 * @param id Warning's ID
+		 * @param whoUnwarned Who unwarned the player
+		 * @param unwarnDate Unwarn's date
+		 * @return <code>PlayerUnwarn</code> packet
+		 */
 		@PacketScope(Scope.SERVER_TO_SERVER)
 		@Deprecated
 		public static PacketSerializer playerUnwarn(
@@ -841,6 +999,16 @@ public class Packets {
 					.writeLong(unwarnDate);
 		}
 		
+		/**
+		 * Carries information about a player's last warning's removal.
+		 * 
+		 * @param server Target server
+		 * @param playerUUID Warned player's UUID
+		 * @param playerName Warned player's name
+		 * @param whoUnwarned Who unwarned the player
+		 * @param unwarnDate Unwarn's date
+		 * @return <code>PlayerRemoveLastWarning</code> packet
+		 */
 		@PacketScope(Scope.SERVER_TO_SERVER)
 		@Deprecated
 		public static PacketSerializer playerRemoveLastWarning(
@@ -858,6 +1026,16 @@ public class Packets {
 					.writeLong(unwarnDate);
 		}
 		
+		/**
+		 * Carries information about a player's warnings' clearing.
+		 * 
+		 * @param server Target server
+		 * @param playerUUID Warned player's UUID
+		 * @param playerName Warned player's name
+		 * @param whoUnwarned Who unwarned the player
+		 * @param unwarnDate Unwarn's date
+		 * @return <code>PlayerClearWarnings</code> packet
+		 */
 		@PacketScope(Scope.SERVER_TO_SERVER)
 		@Deprecated
 		public static PacketSerializer playerClearWarnings(
@@ -875,6 +1053,22 @@ public class Packets {
 					.writeLong(unwarnDate);
 		}
 		
+		/**
+		 * Carries information about a player's kick. 
+		 * 
+		 * @param server Target server
+		 * @param id Kick's ID
+		 * @param playerUUID Kicked player's UUID
+		 * @param playerName Kicked player's name
+		 * @param ipAddress Kicked IP address
+		 * @param staffMember Kick's Staff member
+		 * @param reason Kick's reason
+		 * @param lobbyServer Kick's lobby server's ID
+		 * @param type Kick's type
+		 * @param date Kick's date
+		 * @param silent Whether this kick is global
+		 * @return <code>PlayerKick</code> packet
+		 */
 		@PacketScope(Scope.SERVER_TO_SERVER)
 		@Deprecated
 		public static PacketSerializer playerKick(
@@ -904,6 +1098,21 @@ public class Packets {
 					.writeBoolean(silent);
 		}
 		
+		/**
+		 * Carries information about a player's mute.
+		 * 
+		 * @param server Target server
+		 * @param id Mute's ID
+		 * @param playerUUID Muted player's UUID
+		 * @param playerName Muted player's name
+		 * @param staffMember Mute's Staff member
+		 * @param reason Mute's reason
+		 * @param date Mute's creation or modification date
+		 * @param duration Mute's duration
+		 * @param global Whether this mute is global
+		 * @param silent Whether this mute is silent
+		 * @return <code>PlayerMute</code> packet
+		 */
 		@PacketScope(Scope.SERVER_TO_SERVER)
 		@Deprecated
 		public static PacketSerializer playerMute(
@@ -931,6 +1140,16 @@ public class Packets {
 					.writeBoolean(silent);
 		}
 		
+		/**
+		 * Carries information about a player's unmute.
+		 * 
+		 * @param server Target server
+		 * @param whoUnmuted Who unmuted the player
+		 * @param unmuteDate Unmute's date
+		 * @param playerUUID Muted player's UUID
+		 * @param playerName Muted player's name
+		 * @return <code>PlayerUnmute</code> packet
+		 */
 		@PacketScope(Scope.SERVER_TO_SERVER)
 		@Deprecated
 		public static PacketSerializer playerBasedPlayerUnmute(
@@ -949,6 +1168,15 @@ public class Packets {
 					.writeUTF(playerName);
 		}
 		
+		/**
+		 * Carries information about a player's unmute.
+		 * 
+		 * @param server Target server
+		 * @param whoUnmuted Who unmuted the player
+		 * @param unmuteDate Unmute's date
+		 * @param id Mute's ID
+		 * @return <code>PlayerUnmute</code> packet
+		 */
 		@PacketScope(Scope.SERVER_TO_SERVER)
 		@Deprecated
 		public static PacketSerializer idBasedPlayerUnmute(
@@ -967,9 +1195,20 @@ public class Packets {
 		
 	}
 	
+	/**
+	 * Contains various misc packets.
+	 */
 	@Deprecated
 	public static class Misc {
 		
+		/**
+		 * Carries information about a server's online and vanished players' amount.
+		 * 
+		 * @param server Target server
+		 * @param onlinePlayers Online players' amount
+		 * @param vanishedPlayers Vanished players' amount
+		 * @return <code>ServerInformation</code> packet
+		 */
 		@PacketScope(Scope.SERVER_TO_SERVER)
 		@Deprecated
 		public static PacketSerializer serverInformation(
@@ -983,6 +1222,12 @@ public class Packets {
 					.writeInt(vanishedPlayers);
 		}
 		
+		/**
+		 * Makes a client disconnect from the server.
+		 * 
+		 * @param reason Disconnection's reason
+		 * @return <code>ClientDisconnection</code> packet
+		 */
 		@SocketChannelPacket
 		@PacketScope(Scope.PROXY_TO_SERVER)
 		@Deprecated

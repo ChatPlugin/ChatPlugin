@@ -6,10 +6,13 @@ plugins {
 group 'me.remigio07'
 version '1.9.0'
 jar.enabled = false
+ext.repos = [
+		SpigotMC: 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/',
+		SpongePowered: 'https://repo.spongepowered.org/repository/maven-public/',
+		PaperMC: 'https://repo.papermc.io/repository/maven-public/'
+		]
 
 allprojects {
-	apply plugin: 'java'
-	apply plugin: 'eclipse'
 	compileTestJava.options.encoding = 'UTF-8'
 	
 	java {
@@ -25,22 +28,23 @@ allprojects {
 }
 
 subprojects {
+	apply plugin: 'java'
+	apply plugin: 'eclipse'
+	
 	repositories {
-		mavenCentral()
-		maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
-		maven { url 'https://repo.papermc.io/repository/maven-public/' }
-		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-		maven { url 'https://repo.spongepowered.org/repository/maven-public/' }
-		maven { url 'https://papermc.io/repo/repository/maven-releases/' }
+		repos.each { repoName, repoURL ->
+			maven {
+				name repoName
+				url repoURL
+			}
+		}
 	}
 	
 	dependencies {
-		implementation 'org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT'
-		implementation 'com.destroystokyo.paper:paper-api:1.14.4-R0.1-SNAPSHOT'
+		implementation 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
 		implementation 'org.spongepowered:spongeapi:7.4.0'
-		implementation 'org.spongepowered:spongecommon:1.12.2-7.4.7:dev@jar'
-		implementation 'com.mojang:authlib:1.5.25'
-		implementation 'io.github.waterfallmc:waterfall-api:1.19-R0.1-SNAPSHOT'
+		implementation 'io.github.waterfallmc:waterfall-api:1.20-R0.1-SNAPSHOT'
 		implementation 'com.velocitypowered:velocity-api:3.1.1'
+		compileOnly 'com.mojang:authlib:1.5.25'
 	}
 }

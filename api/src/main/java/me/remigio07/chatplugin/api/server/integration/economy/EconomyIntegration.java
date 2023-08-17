@@ -22,7 +22,7 @@ import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 /**
  * Represents a {@link ChatPluginIntegration} able to check an {@link OfflinePlayer}'s balance.
  * 
- * <p><strong>Types:</strong> [{@link IntegrationType#ESSENTIALS}, {@link IntegrationType#VAULT}]</p>
+ * <p><strong>Types:</strong> [{@link IntegrationType#ESSENTIALSX}, {@link IntegrationType#VAULT}]</p>
  */
 public interface EconomyIntegration extends ChatPluginIntegration {
 	

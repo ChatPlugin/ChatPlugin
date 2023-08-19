@@ -2022,7 +2022,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		motd.addDefault("motd.max-players.fixed-value", 500);
 		
 		
-		motd.addDefault("motd.unknown-player.icon-url", ""); // TODO FIXME
+		motd.addDefault("motd.unknown-player.icon-url", "https://i.imgur.com/Md3OFay.png");
 		motd.addDefault("motd.unknown-player.descriptions.english", Arrays.asList("&1Another ChatPlugin server\n&7This is the default description."));
 		motd.addDefault("motd.unknown-player.descriptions.italian", Arrays.asList("&1Un altro server con ChatPlugin\n&7Questa è la descrizione predefinita."));
 		motd.addDefault("motd.unknown-player.hovers.enabled", true);
@@ -2032,7 +2032,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		motd.addDefault("motd.unknown-player.version-names.values.english", Arrays.asList("&7{online_total}&8/&7{online_total_plus_one}"));
 		motd.addDefault("motd.unknown-player.version-names.values.italian", Arrays.asList("&7{online_total}&8/&7{online_total_plus_one}"));
 		
-		motd.addDefault("motd.stored-player.icon-url", ""); // TODO FIXME
+		motd.addDefault("motd.stored-player.icon-url", "https://i.imgur.com/Md3OFay.png");
 		motd.addDefault("motd.stored-player.descriptions.english", Arrays.asList("&1Another ChatPlugin server\n&7Welcome back, &f{player}&7!"));
 		motd.addDefault("motd.stored-player.descriptions.italian", Arrays.asList("&1Un altro server con ChatPlugin\n&7Bentornati, &f{player}&7!"));
 		motd.addDefault("motd.stored-player.hovers.enabled", true);

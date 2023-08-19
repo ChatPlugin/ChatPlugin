@@ -14,9 +14,9 @@ repositories {
 ext.libsDir = project.projectDir.path + '/libs/'
 
 dependencies {
-	implementation project(':api')
+	compileOnly project(':api')
 	
-	implementation 'org.spongepowered:spongecommon:1.12.2-7.4.7:dev@jar'
+	compileOnly 'org.spongepowered:spongecommon:1.12.2-7.4.7:dev@jar'
 	
 	compileOnly files(libsDir + 'UltraCosmetics-3.3.jar')
 	compileOnly files(libsDir + 'GadgetsMenu-4.9.3.jar')

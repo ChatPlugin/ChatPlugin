@@ -6,11 +6,6 @@ plugins {
 group 'me.remigio07'
 version '1.9.0'
 jar.enabled = false
-ext.repos = [
-		SpigotMC: 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/',
-		SpongePowered: 'https://repo.spongepowered.org/repository/maven-public/',
-		PaperMC: 'https://repo.papermc.io/repository/maven-public/'
-		]
 
 allprojects {
 	compileTestJava.options.encoding = 'UTF-8'
@@ -21,8 +16,7 @@ allprojects {
 	}
 	
 	compileJava {
-		options.compilerArgs.add '-Xlint:deprecation'
-		options.compilerArgs.add '-Xlint:unchecked'
+		options.compilerArgs.add '-Xlint:all'
 		options.encoding = 'UTF-8'
 	}
 }
@@ -32,19 +26,16 @@ subprojects {
 	apply plugin: 'eclipse'
 	
 	repositories {
-		repos.each { repoName, repoURL ->
-			maven {
-				name repoName
-				url repoURL
-			}
-		}
+		maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+		maven { url 'https://repo.spongepowered.org/repository/maven-public/' }
+		maven { url 'https://repo.papermc.io/repository/maven-public/' }
 	}
 	
 	dependencies {
-		implementation 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
-		implementation 'org.spongepowered:spongeapi:7.4.0'
-		implementation 'io.github.waterfallmc:waterfall-api:1.20-R0.1-SNAPSHOT'
-		implementation 'com.velocitypowered:velocity-api:3.1.1'
+		compileOnly 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
+		compileOnly 'org.spongepowered:spongeapi:7.4.0'
+		compileOnly 'io.github.waterfallmc:waterfall-api:1.20-R0.1-SNAPSHOT'
+		compileOnly 'com.velocitypowered:velocity-api:3.1.1'
 		compileOnly 'com.mojang:authlib:1.5.25'
 	}
 }

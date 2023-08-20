@@ -101,7 +101,7 @@ public class H2Connector extends DatabaseConnector {
 		switch (container) {
 		case BANS:
 			update = "CREATE TABLE IF NOT EXISTS {table_id} ("
-					+ "`id` INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, "
+					+ "`id` INT PRIMARY KEY AUTO_INCREMENT, "
 					+ "`player_uuid` VARCHAR(36), "
 					+ "`player_name` VARCHAR(16), "
 					+ "`player_ip` VARCHAR(15), "
@@ -110,7 +110,7 @@ public class H2Connector extends DatabaseConnector {
 					+ "`reason` VARCHAR(255), "
 					+ "`server` VARCHAR(36) NOT NULL, "
 					+ "`type` ENUM('ACCOUNT', 'IP') NOT NULL, "
-					+ "`date` BIGINT UNSIGNED NOT NULL, "
+					+ "`date` BIGINT NOT NULL, "
 					+ "`unban_date` BIGINT UNSIGNED, "
 					+ "`duration` BIGINT UNSIGNED, "
 					+ "`global` BOOLEAN DEFAULT FALSE, "
@@ -121,16 +121,16 @@ public class H2Connector extends DatabaseConnector {
 			break;
 		case WARNINGS:
 			update = "CREATE TABLE IF NOT EXISTS {table_id} ("
-					+ "`id` INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, "
+					+ "`id` INT PRIMARY KEY AUTO_INCREMENT, "
 					+ "`player_uuid` VARCHAR(36) NOT NULL, "
 					+ "`player_name` VARCHAR(16) NOT NULL, "
 					+ "`staff_member` VARCHAR(16) NOT NULL, "
 					+ "`who_unwarned` VARCHAR(16), "
 					+ "`reason` VARCHAR(255), "
 					+ "`server` VARCHAR(36) NOT NULL, "
-					+ "`date` BIGINT UNSIGNED NOT NULL, "
+					+ "`date` BIGINT NOT NULL, "
 					+ "`unwarn_date` BIGINT UNSIGNED, "
-					+ "`duration` BIGINT UNSIGNED NOT NULL, "
+					+ "`duration` BIGINT NOT NULL, "
 					+ "`global` BOOLEAN DEFAULT FALSE, "
 					+ "`silent` BOOLEAN DEFAULT FALSE, "
 					+ "`active` BOOLEAN DEFAULT TRUE, "
@@ -139,7 +139,7 @@ public class H2Connector extends DatabaseConnector {
 			break;
 		case KICKS:
 			update = "CREATE TABLE IF NOT EXISTS {table_id} ("
-					+ "`id` INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, "
+					+ "`id` INT PRIMARY KEY AUTO_INCREMENT, "
 					+ "`player_uuid` VARCHAR(36) NOT NULL, "
 					+ "`player_name` VARCHAR(16) NOT NULL, "
 					+ "`player_ip` VARCHAR(15) NOT NULL, "
@@ -147,20 +147,20 @@ public class H2Connector extends DatabaseConnector {
 					+ "`reason` VARCHAR(255), "
 					+ "`server` VARCHAR(36) NOT NULL, "
 					+ "`type` ENUM('KICK', 'CHAT') NOT NULL, "
-					+ "`date` BIGINT UNSIGNED NOT NULL, "
+					+ "`date` BIGINT NOT NULL, "
 					+ "`silent` BOOLEAN DEFAULT FALSE"
 					+ ")";
 			break;
 		case MUTES:
 			update = "CREATE TABLE IF NOT EXISTS {table_id} ("
-					+ "`id` INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, "
+					+ "`id` INT PRIMARY KEY AUTO_INCREMENT, "
 					+ "`player_uuid` VARCHAR(36) NOT NULL, "
 					+ "`player_name` VARCHAR(16) NOT NULL, "
 					+ "`staff_member` VARCHAR(16) NOT NULL, "
 					+ "`who_unmuted` VARCHAR(16), "
 					+ "`reason` VARCHAR(255), "
 					+ "`server` VARCHAR(36) NOT NULL, "
-					+ "`date` BIGINT UNSIGNED NOT NULL, "
+					+ "`date` BIGINT NOT NULL, "
 					+ "`unmute_date` BIGINT UNSIGNED, "
 					+ "`duration` BIGINT UNSIGNED, "
 					+ "`global` BOOLEAN DEFAULT FALSE, "
@@ -171,18 +171,18 @@ public class H2Connector extends DatabaseConnector {
 			break;
 		case PLAYERS:
 			update = "CREATE TABLE IF NOT EXISTS {table_id} ("
-					+ "`id` INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, "
+					+ "`id` INT PRIMARY KEY AUTO_INCREMENT, "
 					+ "`player_uuid` VARCHAR(36) NOT NULL, "
 					+ "`player_name` VARCHAR(16) NOT NULL, "
 					+ "`player_ip` VARCHAR(15), "
 					+ "`language` VARCHAR(32), "
-					+ "`last_logout` BIGINT UNSIGNED DEFAULT 0, "
-					+ "`time_played` BIGINT UNSIGNED DEFAULT 0, "
-					+ "`messages_sent` MEDIUMINT UNSIGNED DEFAULT 0, "
-					+ "`bans` SMALLINT UNSIGNED DEFAULT 0, "
-					+ "`warnings` SMALLINT UNSIGNED DEFAULT 0, "
-					+ "`kicks` SMALLINT UNSIGNED DEFAULT 0, "
-					+ "`mutes` SMALLINT UNSIGNED DEFAULT 0"
+					+ "`last_logout` BIGINT DEFAULT 0, "
+					+ "`time_played` BIGINT DEFAULT 0, "
+					+ "`messages_sent` MEDIUMINT DEFAULT 0, "
+					+ "`bans` SMALLINT DEFAULT 0, "
+					+ "`warnings` SMALLINT DEFAULT 0, "
+					+ "`kicks` SMALLINT DEFAULT 0, "
+					+ "`mutes` SMALLINT DEFAULT 0"
 					+ ")";
 			break;
 		case MESSAGES:
@@ -193,13 +193,13 @@ public class H2Connector extends DatabaseConnector {
 					+ "`server` VARCHAR(36) NOT NULL, "
 					+ "`world` VARCHAR(255) NOT NULL, "
 					+ "`message` VARCHAR(256) NOT NULL, "
-					+ "`date` BIGINT UNSIGNED NOT NULL, "
+					+ "`date` BIGINT NOT NULL, "
 					+ "`deny_chat_reason` ENUM('CAPS', 'FLOOD', 'FORMAT', 'IP_ADDRESS', 'MUTE', 'MUTEALL', 'SPAM', 'SWEAR', 'URL', 'VANISH')"
 					+ ")";
 			break;
 		case IP_ADDRESSES:
 			update = "CREATE TABLE IF NOT EXISTS {table_id} ("
-					+ "`player_id` INT UNSIGNED PRIMARY KEY NOT NULL, "
+					+ "`player_id` INT PRIMARY KEY NOT NULL, "
 					+ "`ip_addresses` VARCHAR(255) NOT NULL"
 					+ ")";
 			break;

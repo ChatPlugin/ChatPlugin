@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
@@ -123,6 +124,7 @@ public abstract class LanguageManager implements ChatPluginManager {
 	 * @param player Player to check
 	 * @return Player's language
 	 */
+	@NotNull
 	public abstract Language getLanguage(OfflinePlayer player);
 	
 	/**
@@ -132,6 +134,6 @@ public abstract class LanguageManager implements ChatPluginManager {
 	 * @param player Player to set the language for
 	 * @param language Language to set
 	 */
-	public abstract void setLanguage(OfflinePlayer player, Language language);
+	public abstract void setLanguage(OfflinePlayer player, @NotNull Language language);
 	
 }

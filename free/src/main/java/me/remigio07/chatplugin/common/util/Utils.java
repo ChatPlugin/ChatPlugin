@@ -60,7 +60,7 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 	public static Object getGeyserConnectorPlayer(UUID player) {
 		try {
 			Class<?> clazz = Class.forName("org.geysermc.connector.GeyserConnector");
-			return clazz.getMethod("getPlayerByUuid", UUID.class).invoke(clazz.getMethod("getInstance").invoke(null, player));
+			return clazz.getMethod("getPlayerByUuid", UUID.class).invoke(clazz.getMethod("getInstance").invoke(null), player);
 		} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
 		} return null;

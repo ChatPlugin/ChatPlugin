@@ -56,7 +56,7 @@ public class VersionUtils {
 			implementationName = "Sponge";
 			break;
 		case BUNGEECORD:
-			version = Version.getVersion((String) Utils.invokeBungeeCordMethod("getGameVersion", null));
+			version = Version.getVersion((int) Utils.invokeBungeeCordMethod("getProtocolVersion", null), false);
 			implementationVersion = (String) Utils.invokeBungeeCordMethod("getVersion", null);
 			implementationName = isFlameCord() ? "FlameCord" : isWaterfall() ? "Waterfall" : "BungeeCord";
 			break;

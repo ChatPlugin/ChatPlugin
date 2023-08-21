@@ -3,7 +3,7 @@ plugins {
 	id 'eclipse'
 }
 
-group 'me.remigio07'
+group 'me.remigio07.chatplugin'
 version '1.9.0'
 jar.enabled = false
 

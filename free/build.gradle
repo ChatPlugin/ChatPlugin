@@ -39,12 +39,14 @@ dependencies {
 }
 
 jar {
-	from project(':api').sourceSets.main.output
+	archiveFileName = 'ChatPlugin-FREE-' + rootProject.version + '.jar'
 	
 	exclude 'me/remigio07/chatplugin/common/**'
 	exclude 'me/remigio07/chatplugin/server/**'
 	exclude 'me/remigio07/chatplugin/ChatPluginImpl.class'
 	exclude 'me/remigio07/chatplugin/ChatPluginImpl$1.class'
+	
+	from project(':api').sourceSets.main.output
 	from shadowJar.archiveFile
 }
 

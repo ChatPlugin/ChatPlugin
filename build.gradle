@@ -7,21 +7,6 @@ group 'me.remigio07.chatplugin'
 version '1.9.0'
 jar.enabled = false
 
-allprojects {
-	compileTestJava.options.encoding = 'UTF-8'
-	
-	java {
-		sourceCompatibility = 1.8
-		targetCompatibility = 1.8
-	}
-	
-	compileJava {
-		options.compilerArgs.add '-Xlint:deprecation'
-		options.compilerArgs.add '-Xlint:unchecked'
-		options.encoding = 'UTF-8'
-	}
-}
-
 subprojects {
 	apply plugin: 'java'
 	apply plugin: 'eclipse'
@@ -39,4 +24,17 @@ subprojects {
 		compileOnly 'com.velocitypowered:velocity-api:3.1.1'
 		compileOnly 'com.mojang:authlib:1.5.25'
 	}
+	
+	java {
+		sourceCompatibility = 1.8
+		targetCompatibility = 1.8
+	}
+	
+	compileJava {
+		options.compilerArgs.add '-Xlint:deprecation'
+		options.compilerArgs.add '-Xlint:unchecked'
+		options.encoding = 'UTF-8'
+	}
+	
+	compileTestJava.options.encoding = 'UTF-8'
 }

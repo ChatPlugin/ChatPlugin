@@ -37,7 +37,7 @@ public class Utils extends me.remigio07.chatplugin.api.server.util.Utils {
 	@SuppressWarnings("deprecation")
 	public static void setTitle(ChatPluginServerPlayer viewer, String title, int rows) {
 		if (Environment.isBukkit()) {
-			int windowID = (int) BukkitReflection.getField("Container", BukkitReflection.getField("EntityHuman", BukkitReflection.invokeMethod("CraftHumanEntity", "getHandle", ((ChatPluginBukkitPlayer) viewer).getCraftPlayer()), VersionUtils.getVersion().isAtLeast(Version.V1_19_4) ? "bP" : "activeContainer", "bV", "bW", "containerMenu", "bU"), "windowId", "j", "containerId");
+			int windowID = (int) BukkitReflection.getField("Container", BukkitReflection.getField("EntityHuman", BukkitReflection.invokeMethod("CraftHumanEntity", "getHandle", ((ChatPluginBukkitPlayer) viewer).getCraftPlayer()), VersionUtils.getVersion().isAtLeast(Version.V1_20) ? "bR" : VersionUtils.getVersion().isAtLeast(Version.V1_19_4) ? "bP" : "activeContainer", "bV", "bW", "containerMenu", "bU"), "windowId", "containerId", "j");
 			Object packet, component = BukkitReflection.invokeMethod("ChatSerializer", "a", null, "{\"text\":\"" + title + "\"}");
 			
 			if (VersionUtils.getVersion().isOlderThan(Version.V1_13))

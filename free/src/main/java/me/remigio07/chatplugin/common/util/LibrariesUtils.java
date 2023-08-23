@@ -26,7 +26,6 @@ import java.util.List;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationManager;
-import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.Library;
 import me.remigio07.chatplugin.api.common.util.MemoryUtils;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
@@ -106,11 +105,7 @@ public class LibrariesUtils {
 	}
 	
 	public static File getTarget(Library library) {
-		return new File(getLibrariesFolder(), library.getFileName());
-	}
-	
-	public static File getLibrariesFolder() {
-		return new File(ConfigurationType.CONFIG.get().getString("settings.libraries-folder").replace("/", File.separator).replace("{0}", ChatPlugin.getInstance().getDataFolder().getPath()));
+		return new File(new File(ChatPlugin.getInstance().getDataFolder(), "libraries"), library.getFileName());
 	}
 	
 }

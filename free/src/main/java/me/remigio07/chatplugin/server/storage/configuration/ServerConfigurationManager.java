@@ -152,7 +152,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("settings.violations-expiration-timeout", "1m");
 		config.addDefault("settings.storage-placeholders-update-timeout", "1m");
 		config.addDefault("settings.enabled-worlds", Arrays.asList(Environment.isBukkit() ? Bukkit.getWorlds().get(0).getName() : Sponge.getServer().getWorlds().iterator().next().getName()));
-		config.addDefault("settings.libraries-folder", "{0}/libraries");
 		config.addDefault("settings.displayed-memory.unit", "MEGABYTE");
 		config.addDefault("settings.displayed-memory.decimals", 0);
 		config.addDefault("settings.balance-placeholder.decimals", 2);

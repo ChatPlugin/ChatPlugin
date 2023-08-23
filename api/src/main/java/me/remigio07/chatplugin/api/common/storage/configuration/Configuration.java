@@ -140,13 +140,13 @@ public class Configuration {
 	public void load() throws IOException {
 		DumperOptions options = new DumperOptions();
 		Map<String, Object> map = null;
+		Representer representer;
 		
 		options.setWidth(250);
 		options.setDefaultFlowStyle(FlowStyle.BLOCK);
 		
-		yaml = new Yaml(new Representer(options) {
-			
-			{
+		try {
+			representer = new Representer(options) {{
 				representers.put(ConfigurationMappings.class, new Represent() {
 					
 					@Override
@@ -155,8 +155,19 @@ public class Configuration {
 					}
 					
 				});
-			}
-		}, options);
+			}};
+		} catch (NoSuchMethodError e) { // compatible with older snakeyaml versions
+			representer = new Representer() {{
+				representers.put(ConfigurationMappings.class, new Represent() {
+					
+					@Override
+					public Node representData(Object data) {
+						return represent(((ConfigurationMappings) data).getMappings());
+					}
+					
+				});
+			}};
+		} yaml = new Yaml(representer, options);
 		
 		if (!file.exists())
 			map = yaml.loadAs("", LinkedHashMap.class);

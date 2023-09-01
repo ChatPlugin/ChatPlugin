@@ -28,6 +28,7 @@ import me.remigio07.chatplugin.api.common.util.Utils;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
+import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 
 /**
  * Manager that handles {@link ChatPluginEvent}s and {@link EventSubscriber}s. See wiki for more info:
@@ -81,7 +82,14 @@ public abstract class EventManager implements ChatPluginManager {
 		List<?> subscribers = getSubscribers(event.getClass());
 		
 		if (subscribers != null && !subscribers.isEmpty())
-			subscribers.forEach(subscriber -> ((EventSubscriber<E>) subscriber).getConsumer().accept(event));
+			subscribers.forEach(subscriber -> {
+				try {
+					((EventSubscriber<E>) subscriber).getConsumer().accept(event);
+				} catch (Throwable e) {
+					LogManager.log("{0} occurred while calling event {1}:", 2, e.getClass().getSimpleName(), event.getClass().getSimpleName());
+					e.printStackTrace();
+				}
+			});
 	}
 	
 	/**

@@ -21,7 +21,7 @@ dependencies {
 	compileOnly files(libsDir + 'UltraCosmetics-3.3.jar')
 	compileOnly files(libsDir + 'GadgetsMenu-4.9.3.jar')
 	compileOnly files(libsDir + 'Vulcan-2.7.5.jar')
-	compileOnly files(libsDir + 'Matrix-7.3.10A.jar')
+	compileOnly files(libsDir + 'Matrix-6.8.19.jar')
 	compileOnly files(libsDir + 'MVdWPlaceholderAPI-3.1.1.jar')
 	compileOnly files(libsDir + 'Negativity-2.6.jar')
 	compileOnly files(libsDir + 'CombatLogX-11.4.0.0.1156.jar')

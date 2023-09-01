@@ -57,6 +57,11 @@ public class BukkitReflection {
 			classes.put("CraftWorld", clazz);
 			putMethod(clazz, "getHandle", "");
 			
+			// CraftChatMessage
+			clazz = getCBClass("util.CraftChatMessage");
+			classes.put("CraftChatMessage", clazz);
+			putMethod(clazz, "fromString", Arrays.asList(String.class));
+			
 			// MinecraftServer
 			clazz = getNMSClass("MinecraftServer");
 			classes.put("MinecraftServer", clazz);
@@ -255,28 +260,25 @@ public class BukkitReflection {
 		} return array;
 	}
 	
-	public static Object getField(String loadedClass, Object instance, String... attempts) {
+	public static Object getFieldValue(String loadedClass, Object instance, String... attempts) {
 		try {
-			return getHiddenField(loadedClass, attempts).get(instance);
+			return getField(loadedClass, attempts).get(instance);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} return null;
 	}
 	
-	public static Field getHiddenField(String loadedClass, String... attempts) {
+	@SuppressWarnings("all") // ...used to avoid "Unnecessary @SuppressWarnings("deprecation")" for the annotation below when using Java 8 on IDEs like Eclipse
+	public static Field getField(String loadedClass, String... attempts) {
 		for (String attempt : attempts) {
 			try {
-				return getLoadedClass(loadedClass).getField(attempt);
-			} catch (NoSuchFieldException e) {
+				Field field = getLoadedClass(loadedClass).getDeclaredField(attempt);
+				@SuppressWarnings("deprecation")
+				boolean accessible = field.isAccessible();
 				
-			}
-		} return null;
-	}
-	
-	public static Field getDeclaredField(String loadedClass, String... attempts) {
-		for (String attempt : attempts) {
-			try {
-				return getLoadedClass(loadedClass).getDeclaredField(attempt);
+				if (!accessible)
+					field.setAccessible(true);
+				return field;
 			} catch (NoSuchFieldException e) {
 				
 			}
@@ -314,8 +316,15 @@ public class BukkitReflection {
 	}
 	
 	public static Locale getLocale(ChatPluginBukkitPlayer player) {
-		String str = VersionUtils.getVersion().getProtocol() >= 341 ? player.toAdapter().bukkitValue().getLocale() : (String) getField("EntityPlayer", invokeMethod("CraftPlayer", "getHandle", player.getCraftPlayer()), "locale", "");
-		return new Locale(str.substring(0, str.indexOf('_')), str.substring(str.indexOf('_') + 1));
+		String str = VersionUtils.getVersion().getProtocol() >= 341 ? player.toAdapter().bukkitValue().getLocale() : (String) getFieldValue("EntityPlayer", invokeMethod("CraftPlayer", "getHandle", player.getCraftPlayer()), "locale");
+		
+		if (str.contains("_")) {
+			Locale locale = new Locale(str.substring(0, str.indexOf('_')), str.substring(str.indexOf('_') + 1));
+			
+			for (Locale other : Locale.getAvailableLocales())
+				if (other.equals(locale));
+					return locale;
+		} return Locale.US;
 	}
 	
 }

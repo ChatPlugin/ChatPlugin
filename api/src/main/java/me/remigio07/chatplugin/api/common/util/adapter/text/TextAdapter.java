@@ -15,11 +15,15 @@
 
 package me.remigio07.chatplugin.api.common.util.adapter.text;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
+import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -58,6 +62,8 @@ public class TextAdapter {
 	public TextAdapter(@NotNull String text) {
 		switch (Environment.getCurrent()) {
 		case BUKKIT:
+			this.text = new BukkitTextComponent(text);
+			break;
 		case BUNGEECORD:
 			TextComponent textComponent = new TextComponent("\u00A7r");
 			
@@ -87,7 +93,8 @@ public class TextAdapter {
 	/**
 	 * Constructs a text adapter that accepts one of the following specified as input:
 	 * 	<ul>
-	 * 		<li>{@link net.md_5.bungee.api.chat.TextComponent} for Bukkit and BungeeCord environments</li>
+	 * 		<li>{@link me.remigio07.chatplugin.api.common.util.adapter.text.TextAdapter.BukkitTextComponent} for Bukkit environments</li>
+	 * 		<li>{@link net.md_5.bungee.api.chat.TextComponent} for BungeeCord environments</li>
 	 * 		<li>{@link org.spongepowered.api.text.Text} for Sponge environments</li>
 	 * 		<li>{@link net.kyori.adventure.text.Component} for Velocity environments</li>
 	 * 	</ul>
@@ -100,16 +107,14 @@ public class TextAdapter {
 	
 	/**
 	 * Gets the text adapted for Bukkit environments.
-	 * This method returns a {@link TextComponent} as {@link #bungeeCordValue()} does
-	 * as they use the same API, but you cannot call it on Bukkit environments.
 	 * 
 	 * @return Bukkit-adapted text
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBukkit()}
 	 */
-	public net.md_5.bungee.api.chat.TextComponent bukkitValue() {
+	public BukkitTextComponent bukkitValue() {
 		if (Environment.isBukkit())
-			return (TextComponent) text;
-		else throw new UnsupportedOperationException("Unable to adapt text to a Bukkit's TextComponent on a " + Environment.getCurrent().getName() + " environment");
+			return (BukkitTextComponent) text;
+		else throw new UnsupportedOperationException("Unable to adapt text to a Bukkit's BukkitTextComponent on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -126,8 +131,6 @@ public class TextAdapter {
 	
 	/**
 	 * Gets the text adapted for BungeeCord environments.
-	 * This method returns a {@link TextComponent} as {@link #bukkitValue()} does
-	 * as they use the same API, but you cannot call it on BungeeCord environments.
 	 * 
 	 * @return BungeeCord-adapted text
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBungeeCord()}
@@ -159,7 +162,7 @@ public class TextAdapter {
 	public String toPlain() {
 		switch (Environment.getCurrent()) {
 		case BUKKIT:
-			return TextComponent.toLegacyText(bukkitValue());
+			return bukkitValue().toPlain();
 		case BUNGEECORD:
 			return TextComponent.toLegacyText(bungeeCordValue());
 		case SPONGE:
@@ -179,10 +182,10 @@ public class TextAdapter {
 		if (this != EMPTY_TEXT && this != NEW_LINE)
 			switch (Environment.getCurrent()) {
 			case BUKKIT:
-				this.text = BungeeText.join(bukkitValue(), text.bukkitValue());
+				bukkitValue().append(text.bukkitValue());
 				break;
 			case BUNGEECORD:
-				this.text = BungeeText.join(bungeeCordValue(), text.bungeeCordValue());
+				this.text = BungeeCordText.join(bungeeCordValue(), text.bungeeCordValue());
 				break;
 			case SPONGE:
 				this.text = new TextAdapter(Text.join(spongeValue(), text.spongeValue())).spongeValue(); // XXX maybe it's not necessary to call a new constructor - check the docs
@@ -204,10 +207,10 @@ public class TextAdapter {
 		if (this != EMPTY_TEXT && this != NEW_LINE)
 			switch (Environment.getCurrent()) {
 			case BUKKIT:
-				this.text = BungeeText.setText(bukkitValue(), text);
+				bukkitValue().setText(text);
 				break;
 			case BUNGEECORD:
-				this.text = BungeeText.setText(bungeeCordValue(), text);
+				this.text = BungeeCordText.setText(bungeeCordValue(), text);
 				break;
 			case SPONGE:
 				this.text = SpongeText.setText(spongeValue(), text);
@@ -230,7 +233,7 @@ public class TextAdapter {
 		if (this != EMPTY_TEXT && this != NEW_LINE)
 			switch (Environment.getCurrent()) {
 			case BUKKIT:
-				bukkitValue().setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(Action.SHOW_TEXT, new BaseComponent[] { new TextAdapter(hover).bukkitValue() }));
+				bukkitValue().onHover(hover);
 				break;
 			case BUNGEECORD:
 				bungeeCordValue().setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(Action.SHOW_TEXT, new BaseComponent[] { new TextAdapter(hover).bungeeCordValue() }));
@@ -257,7 +260,7 @@ public class TextAdapter {
 		if (this != EMPTY_TEXT && this != NEW_LINE)
 			switch (Environment.getCurrent()) {
 			case BUKKIT:
-				bukkitValue().setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(action.bukkitValue(), value));
+				bukkitValue().onClick(action, value);
 				break;
 			case BUNGEECORD:
 				bungeeCordValue().setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(action.bungeeCordValue(), value));
@@ -272,7 +275,111 @@ public class TextAdapter {
 		return this;
 	}
 	
-	private static class BungeeText {
+	/**
+	 * Represents a text component for Bukkit environments.
+	 */
+	public static class BukkitTextComponent {
+		
+		private String text, hover, clickValue;
+		private ClickActionAdapter clickAction;
+		private List<BukkitTextComponent> extras = new ArrayList<>();
+		
+		/**
+		 * Constructs a text component with the specified input string.
+		 * 
+		 * @param text Input string
+		 */
+		public BukkitTextComponent(String text) {
+			this.text = text;
+		}
+		
+		/**
+		 * Converts this component to a plain string without hover and/or click events.
+		 * 
+		 * @return Plain text
+		 */
+		public String toPlain() {
+			StringBuilder sb = new StringBuilder(text);
+			
+			for (BukkitTextComponent extra : extras)
+				sb.append(extra.text);
+			return ChatColor.translate(sb.toString());
+		}
+		
+		/**
+		 * Changes this component's displayed text.
+		 * 
+		 * @param text Text to display
+		 * @return This component
+		 */
+		public BukkitTextComponent setText(String text) {
+			this.text = text;
+			return this;
+		}
+		
+		/**
+		 * Applies a hover event to this component.
+		 * 
+		 * @param hover Text to show
+		 * @return This component
+		 */
+		public BukkitTextComponent onHover(String hover) {
+			this.hover = hover;
+			return this;
+		}
+		
+		/**
+		 * Applies a click event to this component.
+		 * 
+		 * @param action Action to perform
+		 * @param value Event's value
+		 * @return This component
+		 */
+		public BukkitTextComponent onClick(ClickActionAdapter action, String value) {
+			clickAction = action;
+			clickValue = value;
+			return this;
+		}
+		
+		/**
+		 * Append the specified text to this component.
+		 * 
+		 * @param text Text to append
+		 * @return This componnet
+		 */
+		public BukkitTextComponent append(BukkitTextComponent text) {
+			extras.add(text);
+			return this;
+		}
+		
+		/**
+		 * Gets the JSON String that represents this text.
+		 * May be used with Vanilla's <code>/tellraw</code>.
+		 * 
+		 * @return JSON representation
+		 */
+		public String toJSON() {
+			StringBuilder sb = new StringBuilder("[\"\"");
+			
+			extras.add(0, this);
+			
+			for (BukkitTextComponent extra : extras) {
+				sb.append(
+						",{\"text\":\""
+						+ extra.text
+						+ "\""
+						+ (extra.hover == null ? "" : (",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + extra.hover + "\"}}"))
+						+ (extra.clickAction == null ? "" : (",\"clickEvent\":{\"action\":\"" + extra.clickAction.getID() + "\",\"value\":\"" + extra.clickValue + "\"}"))
+						+ "}"
+						);
+			} extras.remove(0);
+			sb.append(']');
+			return ChatColor.translate(sb.toString());
+		}
+		
+	}
+	
+	private static class BungeeCordText {
 		
 		public static TextComponent join(TextComponent text1, TextComponent text2) {
 			text1.addExtra(text2);
@@ -280,8 +387,7 @@ public class TextAdapter {
 		}
 		
 		public static TextComponent setText(TextComponent text, String value) {
-			TextAdapter adapter = new TextAdapter(value);
-			TextComponent newText = Environment.isBukkit() ? adapter.bukkitValue() : adapter.bungeeCordValue();
+			TextComponent newText = new TextAdapter(value).bungeeCordValue();
 			
 			newText.setHoverEvent(text.getHoverEvent());
 			newText.setClickEvent(text.getClickEvent());

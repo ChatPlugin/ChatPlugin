@@ -34,6 +34,7 @@ import me.remigio07.chatplugin.api.common.event.EventManager;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
@@ -76,7 +77,9 @@ public class BukkitEventManager extends EventManager {
 		manager.registerEvent(PlayerQuitEvent.class, listener, EventPriority.LOW, listener, instance);
 		manager.registerEvent(PlayerCommandPreprocessEvent.class, listener, EventPriority.NORMAL, listener, instance);
 		manager.registerEvent(PlayerChangedWorldEvent.class, listener, EventPriority.LOW, listener, instance);
-		manager.registerEvent(PlayerLocaleChangeEvent.class, listener, EventPriority.MONITOR, listener, instance);
+		
+		if (VersionUtils.getVersion().isAtLeast(Version.V1_12))
+			manager.registerEvent(PlayerLocaleChangeEvent.class, listener, EventPriority.MONITOR, listener, instance);
 		
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
@@ -177,9 +180,11 @@ public class BukkitEventManager extends EventManager {
 	}
 	
 	public void onPlayerLocaleChange(PlayerLocaleChangeEvent event) {
-		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getPlayer().getUniqueId());
-		
-		if (player != null && System.currentTimeMillis() - player.getLoginTime() > 15000L && !player.getLocale().getLanguage().equals(event.getLocale().substring(0, event.getLocale().indexOf('_')))) {
+		onPlayerLocaleChange(ServerPlayerManager.getInstance().getPlayer(event.getPlayer().getUniqueId()), event.getLocale());
+	}
+	
+	public void onPlayerLocaleChange(ChatPluginServerPlayer player, String locale) {
+		if (player != null && System.currentTimeMillis() - player.getLoginTime() > 10000L && !player.getLocale().getLanguage().equals(locale.substring(0, locale.indexOf('_')))) {
 			LanguageDetector detector = LanguageManager.getInstance().getDetector();
 			
 			if (detector.isEnabled())
@@ -191,7 +196,7 @@ public class BukkitEventManager extends EventManager {
 							((BaseChatPluginServerPlayer) player).sendLanguageDetectedMessage(detected);
 					}
 				}, detector.getDelay());
-			applyScoreboard(ScoreboardEvent.LOCALE_CHANGE, event.getPlayer(), player.getLocale().getDisplayLanguage());
+			applyScoreboard(ScoreboardEvent.LOCALE_CHANGE, player.toAdapter().bukkitValue(), player.getLocale().getDisplayLanguage());
 		}
 	}
 	

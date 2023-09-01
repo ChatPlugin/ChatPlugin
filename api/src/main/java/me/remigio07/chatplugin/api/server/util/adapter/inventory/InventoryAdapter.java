@@ -58,7 +58,7 @@ public class InventoryAdapter {
 		if (rows < 1 || rows > 6)
 			throw new IndexOutOfBoundsException("Specified inventory's rows (" + rows + ") are invalid as they are not inside of range 1-6");
 		size = rows * 9;
-		inventory = Environment.isBukkit() ? Bukkit.createInventory(null, size, UUID.randomUUID().toString()): SpongeInventory.get(rows, UUID.randomUUID().toString());
+		inventory = Environment.isBukkit() ? Bukkit.createInventory(null, size, UUID.randomUUID().toString().replace("-", "")): SpongeInventory.get(rows, UUID.randomUUID().toString().replace("-", ""));
 		items = new ItemStackAdapter[size];
 	}
 	

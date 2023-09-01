@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.server.bukkit.manager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -27,6 +28,7 @@ import org.bukkit.scoreboard.Team;
 
 import com.viaversion.viaversion.api.Via;
 
+import me.remigio07.chatplugin.api.common.event.EventManager;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
@@ -63,6 +65,8 @@ import me.remigio07.chatplugin.server.join_quit.QuitMessageManagerImpl.QuitPacke
 
 public class BukkitPlayerManager extends ServerPlayerManager {
 	
+	private long localeChangeTaskID;
+	
 	@Override
 	public void load() throws ChatPluginManagerException {
 		instance = this;
@@ -75,8 +79,31 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 				if (Bukkit.getWorld(world) == null)
 					LogManager.log("World {0} specified at \"settings.enabled-worlds\" in config.yml does not exist (yet); skipping it.", 2, world);
 				else enabledWorlds.add(world);
+		} if (VersionUtils.getVersion().isOlderThan(Version.V1_12)) {
+			localeChangeTaskID = TaskManager.scheduleAsync(() -> {
+				for (ChatPluginServerPlayer serverPlayer : new ArrayList<>(players.values())) {
+					ChatPluginBukkitPlayer player = (ChatPluginBukkitPlayer) serverPlayer;
+					
+					if (System.currentTimeMillis() - player.getLoginTime() > 10000L) {
+						Locale lastLocale = player.getLastLocale();
+						
+						if (lastLocale != null) {
+							if (!player.getLocale().equals(lastLocale)) {
+								player.setLastLocale(player.getLocale());
+								((BukkitEventManager) EventManager.getInstance()).onPlayerLocaleChange(player, lastLocale.getLanguage() + "_" + lastLocale.getCountry());
+							}
+						} else player.setLastLocale(player.getLocale());
+					}
+				}
+			}, 0L, 2000L);
 		} enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
+	}
+	
+	@Override
+	public void unload() throws ChatPluginManagerException {
+		super.unload();
+		TaskManager.cancelAsync(localeChangeTaskID);
 	}
 	
 	@Override
@@ -101,7 +128,8 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 		if (players.containsKey(player.getUUID()))
 			return 0;
 		long ms = System.currentTimeMillis();
-		ChatPluginBukkitPlayer serverPlayer = new ChatPluginBukkitPlayer(player.bukkitValue());
+		Player bukkitValue = player.bukkitValue();
+		ChatPluginBukkitPlayer serverPlayer = new ChatPluginBukkitPlayer(bukkitValue);
 		// teams start
 		org.bukkit.scoreboard.Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 		Objective objective = scoreboard.registerNewObjective("scoreboard", "dummy");
@@ -114,8 +142,8 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 				customSuffix.setRenderType(CustomSuffixManager.getInstance().getRenderType().bukkitValue());
 			customSuffix.setDisplaySlot(DisplaySlot.PLAYER_LIST);
 		} for (int i = 0; i < 15; i++)
-			scoreboard.registerNewTeam("line_" + i).addEntry(Scoreboard.SCORES[i]);
-		player.bukkitValue().setScoreboard(scoreboard);
+			scoreboard.registerNewTeam("line_" + i).addPlayer(Bukkit.getOfflinePlayer(Scoreboard.SCORES[i]));
+		bukkitValue.setScoreboard(scoreboard);
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 		serverPlayer.setObjective(new ObjectiveAdapter(objective));
 		
@@ -133,11 +161,11 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 			else team.setPrefix(ChatColor.translate(team.getPrefix() + tag.getNameColor()));
 			team.setSuffix(ChatColor.translate(tag.getSuffix()));
 		} for (ChatPluginServerPlayer other : getPlayers().values()) {
-			scoreboard.getTeam(other.getRank().getTeamName()).addEntry(other.getName());
-			other.getObjective().bukkitValue().getScoreboard().getTeam(serverPlayer.getRank().getTeamName()).addEntry(player.getName());
+			scoreboard.getTeam(other.getRank().getTeamName()).addPlayer(other.toAdapter().bukkitValue());
+			other.getObjective().bukkitValue().getScoreboard().getTeam(serverPlayer.getRank().getTeamName()).addPlayer(bukkitValue);
 		} if (!getPlayers().containsKey(player.getUUID())) {
-			scoreboard.getTeam(serverPlayer.getRank().getTeamName()).addEntry(player.getName());
-			serverPlayer.getObjective().bukkitValue().getScoreboard().getTeam(serverPlayer.getRank().getTeamName()).addEntry(player.getName());
+			scoreboard.getTeam(serverPlayer.getRank().getTeamName()).addPlayer(bukkitValue);
+			serverPlayer.getObjective().bukkitValue().getScoreboard().getTeam(serverPlayer.getRank().getTeamName()).addPlayer(bukkitValue);
 		} // teams end
 		
 		if (QuitMessageManager.getInstance().isEnabled())

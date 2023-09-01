@@ -98,7 +98,7 @@ public class ReflectionBossbar extends PlayerBossbar {
 		Object world = BukkitReflection.invokeMethod("CraftWorld", "getHandle", BukkitReflection.getLoadedClass("CraftWorld").cast(player.toAdapter().bukkitValue().getWorld()));
 		
 		try {
-			wither = VersionUtils.getVersion().isAtLeast(Version.V1_14) ? constructors[0].newInstance(BukkitReflection.getDeclaredField("EntityTypes", "WITHER", "aZ").get(null), world) : constructors[0].newInstance(world);
+			wither = VersionUtils.getVersion().isAtLeast(Version.V1_14) ? constructors[0].newInstance(BukkitReflection.getFieldValue("EntityTypes", null, "WITHER", "aZ"), world) : constructors[0].newInstance(world);
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
 			e.printStackTrace();
 		} id = (int) BukkitReflection.invokeMethod("Entity", "getId", wither);

@@ -41,7 +41,7 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 		name = "hover info",
 		availableOnBukkit = true,
 		availableOnSponge = true,
-		spigotRequired = true,
+		spigotRequired = false,
 		minimumBukkitVersion = Version.V1_7_2,
 		minimumSpongeVersion = Version.V1_8
 		)

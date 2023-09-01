@@ -30,7 +30,7 @@ misc:
   at-least-one-online: '{pfx} &cÈ richiesto almeno un giocatore online per eseguire questa azione.'
   disabled-world: '{pfx} &cQuel mondo non è abilitato.'
   disabled-feature: '{pfx} &cQuesta funzionalità non è abilitata.'
-  inexistent-id: '{pfx} &cQuell'' ID non esiste.'
+  inexistent-id: '{pfx} &cQuell''ID non esiste.'
   inexistent-player: '{pfx} &f{0} &cnon è il nome di un giocatore premium.'
   cannot-fetch: '{pfx} &cImpossibile raggiungere &fhttps://api.mojang.com &cper ottenere l''UUID di &f{0}&c: &f{1}&c.'
   suggest-version: '{pfx} &eUsa la versione di Minecraft &f{suggested_version} &eo successiva per godere dell''esperienza migliore sul server.'
@@ -169,7 +169,7 @@ commands:
     enabled: '{pfx} &aModalità chat Staff abilitata.'
     disabled: '{pfx} &aModalità chat Staff disabilitata.'
   iplookup: |-
-    {pfx} &fLookup di &a{ip_address}&f:
+    {pfx} &aLookup di &f{ip_address}&a:
     &eISP: &f{isp}
     &ePaese: &f{country}, {continent}
     &eSottodivisione/i: &f{subdivisions}
@@ -278,8 +278,8 @@ commands:
   tps: '{pfx} &eTPS degli ultimi &f1m&e, &f5m&e, &f15m&e: &f{0}&e, &f{1}&e, &f{2}&e.'
   ad:
     send:
-      one: '{pfx} &aL''annuncio &f{0} &ae stato inviato con successo a &f{1}&a.'
-      all: '{pfx} &aL''annuncio &f{0} &ae stato inviato con successo a &f{1} &agiocatori.'
+      one: '{pfx} &aL''annuncio &f{0} &aè stato inviato con successo a &f{1}&a.'
+      all: '{pfx} &aL''annuncio &f{0} &aè stato inviato con successo a &f{1} &agiocatori.'
     list: '{pfx} &eIDs degli annunci caricati: &f{0}&e.'
   discordmessage: '{pfx} &aCercando di inviare il messaggio tramite il bot...'
   account-check:
@@ -571,7 +571,7 @@ vanish:
     already-vanished: '{pfx} &cNon puoi eseguire un fake quit mentre sei in vanish.'
     already-fakequit: '{pfx} &cLa vanish non può essere disattivata mentre sei in fake quit. Usa invece &f/fakejoin&c.'
     performed: '{pfx} &aFake quit eseguito. Sei ora in vanish.'
-  safe-teleport: '{pfx} &aSiete stato teletrasportati in sicurezza a &f{0}&a.'
+  safe-teleport: '{pfx} &aSiete stati teletrasportati in sicurezza a &f{0}&a.'
 languages:
   set: '{pfx} &aLingua impostata su &f{0}&a.'
   set-already: '{pfx} &cLa tua lingua è già impostata su &f{0}&c.'

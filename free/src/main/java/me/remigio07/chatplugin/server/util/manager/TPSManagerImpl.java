@@ -19,6 +19,7 @@ import org.spongepowered.api.Sponge;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
@@ -69,9 +70,10 @@ public class TPSManagerImpl extends TPSManager {
 	@Override
 	public void run() {
 		if (enabled)
-			if (Environment.isBukkit())
-				recentTPS = ((double[]) BukkitReflection.getField("MinecraftServer", BukkitReflection.invokeMethod("MinecraftServer", "getServer", null), "recentTps", "")).clone();
-			else {
+			if (Environment.isBukkit()) {
+				if (VersionUtils.isSpigot())
+					recentTPS = ((double[]) BukkitReflection.getFieldValue("MinecraftServer", BukkitReflection.invokeMethod("MinecraftServer", "getServer", null), "recentTps")).clone();
+			} else {
 				double tps = Sponge.getServer().getTicksPerSecond();
 				recentTPS = new double[] { tps, tps, tps };
 				

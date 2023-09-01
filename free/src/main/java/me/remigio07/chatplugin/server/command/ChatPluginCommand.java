@@ -206,7 +206,7 @@ public class ChatPluginCommand extends BaseCommand {
 							player.sendTranslatedMessage("languages.set", newLanguage.getDisplayName());
 							LanguageManagerImpl.startCommandCooldown(player.getUUID());
 						} else player.sendTranslatedMessage("misc.cooldown-active");
-					} else player.sendTranslatedMessage("languages.set-already", player.getLanguage().getID());
+					} else player.sendTranslatedMessage("languages.set-already", player.getLanguage().getDisplayName());
 				} else player.sendTranslatedMessage("languages.invalid", Utils.getStringFromList(LanguageManager.getInstance().getLanguages().stream().map(me.remigio07.chatplugin.api.server.language.Language::getID).collect(Collectors.toList()), false, true));
 			} else sendUsage(player);
 		}

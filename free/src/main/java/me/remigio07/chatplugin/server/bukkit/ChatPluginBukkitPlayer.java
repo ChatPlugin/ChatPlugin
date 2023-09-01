@@ -65,8 +65,9 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
-	private Player player;
+	protected Player player;
 	private Object craftPlayer;
+	private Locale lastLocale;
 	
 	public ChatPluginBukkitPlayer(Player player) {
 		super(new PlayerAdapter(player));
@@ -76,7 +77,7 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 		bedrockPlayer = ServerPlayerManager.getInstance().isBedrockPlayer(uuid);
 		rank = RankManager.getInstance().calculateRank(this);
 		craftPlayer = BukkitReflection.getLoadedClass("CraftPlayer").cast(player);
-		playerConnection = BukkitReflection.getField("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", craftPlayer), "playerConnection", VersionUtils.getVersion().isAtLeast(Version.V1_20) ? "c" : "b");
+		playerConnection = BukkitReflection.getFieldValue("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", craftPlayer), "playerConnection", VersionUtils.getVersion().isAtLeast(Version.V1_20) ? "c" : "b");
 		StorageConnector storage = StorageConnector.getInstance();
 		
 		try {
@@ -195,9 +196,8 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public void sendMessage(TextAdapter text) {
-		if (VersionUtils.isSpigot() && VersionUtils.getVersion().isAtLeast(Version.V1_7_2))
-			player.spigot().sendMessage(text.bukkitValue());
-		else sendMessage(text.toPlain());
+		System.out.println(text.bukkitValue().toJSON());
+		me.remigio07.chatplugin.server.util.Utils.sendBukkitMessage(this, text.bukkitValue().toJSON());
 	}
 	
 	@Override
@@ -207,7 +207,7 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public void sendTitle(String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-		if (VersionUtils.getVersion().getProtocol() > 47) {
+		if (VersionUtils.getVersion().isAtLeast(Version.V1_11_1)) {
 			player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
 			return;
 		} Class<?>[] params = new Class<?>[] { BukkitReflection.getLoadedClass("EnumTitleAction"), BukkitReflection.getLoadedClass("IChatBaseComponent") };
@@ -219,8 +219,8 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public void sendActionbar(String actionbar) {
-		if (VersionUtils.getVersion().getProtocol() > 47 && VersionUtils.isSpigot())
-			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(actionbar));
+		if (VersionUtils.getVersion().isAtLeast(Version.V1_9))
+			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(actionbar)); // TODO FIXME XXX
 		else if (VersionUtils.getVersion().isAtLeast(Version.V1_19))
 			sendPacket(BukkitReflection.getInstance("ClientboundSystemChatPacket", actionbar, 2));
 		else try {
@@ -273,6 +273,14 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
 	public Object getCraftPlayer() {
 		return craftPlayer;
+	}
+	
+	public Locale getLastLocale() {
+		return lastLocale;
+	}
+	
+	public void setLastLocale(Locale lastLocale) {
+		this.lastLocale = lastLocale;
 	}
 	
 }

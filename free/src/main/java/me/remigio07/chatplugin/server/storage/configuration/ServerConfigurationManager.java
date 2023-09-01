@@ -1079,7 +1079,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
 			mainGUI.addDefault(path + "material", "BANNER");
-			mainGUI.addDefault(path + "sub-id", 14);
+			mainGUI.addDefault(path + "damage", 14);
 		} else mainGUI.addDefault(path + "material", "ORANGE_BANNER");
 		mainGUI.addDefault(path + "glowing", true);
 		mainGUI.addDefault(path + "commands", Arrays.asList("p: warnlist"));
@@ -1229,7 +1229,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
 			banlistGUI.addDefault("settings.filling-function.icon-layouts.ban.material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
-			banlistGUI.addDefault("settings.filling-function.icon-layouts.ban.sub-id", 3);
+			banlistGUI.addDefault("settings.filling-function.icon-layouts.ban.damage", 3);
 		} else banlistGUI.addDefault("settings.filling-function.icon-layouts.ban.material", "PLAYER_HEAD");
 		banlistGUI.addDefault("settings.filling-function.icon-layouts.ban.skull-owner", "{player}");
 		banlistGUI.addDefault("settings.filling-function.icon-layouts.ban.commands", Arrays.asList("p: baninfo {id}"));
@@ -1324,7 +1324,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
 			warnlistGUI.addDefault("settings.filling-function.icon-layouts.warning.material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
-			warnlistGUI.addDefault("settings.filling-function.icon-layouts.warning.sub-id", 3);
+			warnlistGUI.addDefault("settings.filling-function.icon-layouts.warning.damage", 3);
 		} else warnlistGUI.addDefault("settings.filling-function.icon-layouts.warning.material", "PLAYER_HEAD");
 		warnlistGUI.addDefault("settings.filling-function.icon-layouts.warning.skull-owner", "{player}");
 		warnlistGUI.addDefault("settings.filling-function.icon-layouts.warning.commands", Arrays.asList("p: warninginfo {id}"));
@@ -1412,7 +1412,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
 			mutelistGUI.addDefault("settings.filling-function.icon-layouts.mute.material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
-			mutelistGUI.addDefault("settings.filling-function.icon-layouts.mute.sub-id", 3);
+			mutelistGUI.addDefault("settings.filling-function.icon-layouts.mute.damage", 3);
 		} else mutelistGUI.addDefault("settings.filling-function.icon-layouts.mute.material", "PLAYER_HEAD");
 		mutelistGUI.addDefault("settings.filling-function.icon-layouts.mute.skull-owner", "{player}");
 		mutelistGUI.addDefault("settings.filling-function.icon-layouts.mute.commands", Arrays.asList("p: muteinfo {id}"));
@@ -1500,7 +1500,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
 			violationsGUI.addDefault("settings.filling-function.icon-layouts.player.material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
-			violationsGUI.addDefault("settings.filling-function.icon-layouts.player.sub-id", 3);
+			violationsGUI.addDefault("settings.filling-function.icon-layouts.player.damage", 3);
 		} else violationsGUI.addDefault("settings.filling-function.icon-layouts.player.material", "PLAYER_HEAD");
 		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.skull-owner", "{player}");
 		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.commands", Arrays.asList("p: silentteleport player {player}"));
@@ -1587,7 +1587,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
 			playerInfoGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
-			playerInfoGUI.addDefault(path + "sub-id", 3);
+			playerInfoGUI.addDefault(path + "damage", 3);
 		} else playerInfoGUI.addDefault(path + "material", "PLAYER_HEAD");
 		playerInfoGUI.addDefault(path + "skull-owner", "{player}");
 		playerInfoGUI.addDefault(path + "keep-open", true);
@@ -1681,7 +1681,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		if (!isAtLeastV1_13) {
 			playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.ban.material", Environment.isBukkit() ? "STAINED_CLAY" : "STAINED_HARDENED_CLAY");
-			playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.ban.sub-id", 14);
+			playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.ban.damage", 14);
 		} else playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.ban.material", "RED_TERRACOTTA");
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.ban.commands", Arrays.asList("p: baninfo {id}"));
 		
@@ -1704,7 +1704,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		if (!isAtLeastV1_13) {
 			playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.kick.material", Environment.isBukkit() ? "STAINED_CLAY" : "STAINED_HARDENED_CLAY");
-			playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.kick.sub-id", 1);
+			playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.kick.damage", 1);
 		} else playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.kick.material", "ORANGE_TERRACOTTA");
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.kick.commands", Arrays.asList("p: kickinfo {id}"));
 		
@@ -1716,7 +1716,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		if (!isAtLeastV1_13) {
 			playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.mute.material", Environment.isBukkit() ? "STAINED_CLAY" : "STAINED_HARDENED_CLAY");
-			playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.mute.sub-id", 4);
+			playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.mute.damage", 4);
 		} else playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.mute.material", "YELLOW_TERRACOTTA");
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.mute.commands", Arrays.asList("p: muteinfo {id}"));
 		
@@ -1859,10 +1859,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "violations-icons.matrix.";
 		violationsIcons.addDefault(path + "killaura.name", "Combat hacks");
 		violationsIcons.addDefault(path + "killaura.id", "IRON_SWORD");
-		violationsIcons.addDefault(path + "hitbox.name", "Reach hacks");
-		violationsIcons.addDefault(path + "hitbox.id", "FISHING_ROD");
 		violationsIcons.addDefault(path + "click.name", "Click hacks");
 		violationsIcons.addDefault(path + "click.id", Environment.isSponge() || isAtLeastV1_13 ? "COMPARATOR" : "REDSTONE_COMPARATOR");
+		violationsIcons.addDefault(path + "hitbox.name", "Reach hacks");
+		violationsIcons.addDefault(path + "hitbox.id", "FISHING_ROD");
 		violationsIcons.addDefault(path + "move.name", "Movement hacks");
 		violationsIcons.addDefault(path + "move.id", Environment.isSponge() || isAtLeastV1_13 ? "GOLDEN_BOOTS" : "GOLD_BOOTS");
 		violationsIcons.addDefault(path + "badpackets.name", "Bad packets hacks");
@@ -1873,8 +1873,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		violationsIcons.addDefault(path + "block.id", "DIAMOND_PICKAXE");
 		violationsIcons.addDefault(path + "scaffold.name", "Scaffold hacks");
 		violationsIcons.addDefault(path + "scaffold.id", "LADDER");
-		violationsIcons.addDefault(path + "jesus.name", "Water hacks");
-		violationsIcons.addDefault(path + "jesus.id", "WATER_BUCKET");
 		violationsIcons.addDefault(path + "velocity.name", "Velocity hacks");
 		violationsIcons.addDefault(path + "velocity.id", Environment.isBukkit() ? isAtLeastV1_13 ? "FIREWORK_ROCKET" : "FIREWORK" : "FIREWORKS");
 		violationsIcons.addDefault(path + "chat.name", "Spamming");
@@ -1887,7 +1885,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		if (!isAtLeastV1_13) {
 			violationsIcons.addDefault(path + "autobot.id", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
-			violationsIcons.addDefault(path + "autobot.sub-id", 3);
+			violationsIcons.addDefault(path + "autobot.damage", 3);
 		} else violationsIcons.addDefault(path + "autobot.id", "PLAYER_HEAD");
 		violationsIcons.addDefault(path + "autobot.skull-owner", "zGhostTeo");
 		violationsIcons.addDefault(path + "elytra.name", "Elytra hacks");
@@ -1919,7 +1917,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		if (!isAtLeastV1_13) {
 			violationsIcons.addDefault(path + "antilevitation.id", Environment.isBukkit() ? "INK_SACK" : "DYE");
-			violationsIcons.addDefault(path + "antilevitation.sub-id", 15);
+			violationsIcons.addDefault(path + "antilevitation.damage", 15);
 		} else violationsIcons.addDefault(path + "antilevitation.id", "BONE_MEAL");
 		violationsIcons.addDefault(path + "nosaddle.name", "No saddle");
 		violationsIcons.addDefault(path + "nosaddle.id", "SADDLE");
@@ -1957,7 +1955,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			violationsIcons.addDefault(path + "ghosthand.id", "BED");
 			
 			if (VersionUtils.getVersion().isAtLeast(Version.V1_12))
-				violationsIcons.addDefault(path + "ghosthand.sub-id", 14);
+				violationsIcons.addDefault(path + "ghosthand.damage", 14);
 		} else violationsIcons.addDefault(path + "ghosthand.id", "RED_BED");
 		violationsIcons.addDefault(path + "crash.name", "Crash");
 		violationsIcons.addDefault(path + "crash.id", Environment.isSponge() || isAtLeastV1_13 ? "COMMAND_BLOCK" : "COMMAND");
@@ -1965,7 +1963,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		if (!isAtLeastV1_13) {
 			violationsIcons.addDefault(path + "baritone.id", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
-			violationsIcons.addDefault(path + "baritone.sub-id", 3);
+			violationsIcons.addDefault(path + "baritone.damage", 3);
 		} else violationsIcons.addDefault(path + "baritone.id", "PLAYER_HEAD");
 		violationsIcons.addDefault(path + "baritone.skull-owner", "zGhostTeo");
 		violationsIcons.addDefault(path + "badpackets.name", "Bad packets");
@@ -1984,7 +1982,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		if (!isAtLeastV1_13) {
 			violationsIcons.addDefault(path + "improbable.id", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
-			violationsIcons.addDefault(path + "improbable.sub-id", 3);
+			violationsIcons.addDefault(path + "improbable.damage", 3);
 		} else violationsIcons.addDefault(path + "improbable.id", "PLAYER_HEAD");
 		violationsIcons.addDefault(path + "improbable.skull-owner", "mhf_question");
 		violationsIcons.addDefault(path + "invalid.name", "Invalid");

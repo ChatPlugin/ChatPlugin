@@ -16,7 +16,6 @@
 package me.remigio07.chatplugin.server.tablist;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,11 +40,9 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.server.bukkit.BukkitReflection;
-import net.md_5.bungee.api.chat.TextComponent;
 
 public class TablistManagerImpl extends TablistManager {
 	
-	private boolean headerFooterOrAB;
 	private Constructor<?> constructor;
 	
 	@Override
@@ -85,17 +82,9 @@ public class TablistManagerImpl extends TablistManager {
 					}
 				} else LogManager.log("A tablist with ID \"{0}\" already exists in tablists.yml; skipping it.", 1, id);
 			} else LogManager.log("Tablist ID specified at \"tablists.{0}\" in tablists.yml is invalid as it does not respect the following pattern: \"{1}\"; skipping it.", 2, id, TABLIST_ID_PATTERN.pattern());
-		} if (Environment.isBukkit() && VersionUtils.getVersion().isOlderThan(Version.V1_9)) {
+		} if (Environment.isBukkit() && VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			Constructor<?>[] constructors = BukkitReflection.getLoadedClass("PacketPlayOutPlayerListHeaderFooter").getConstructors();
-			
-			try {
-				constructor = constructors[constructors[0].getParameterCount() == 0 ? 0 : 1];
-				
-				BukkitReflection.getLoadedClass("PacketPlayOutPlayerListHeaderFooter").getField("header");
-				headerFooterOrAB = true;
-			} catch (NoSuchFieldException e) {
-				
-			}
+			constructor = constructors[constructors[0].getParameterCount() == 0 ? 0 : 1];
 		} timerTaskID = TaskManager.scheduleAsync(this, 0L, sendingTimeout);
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
@@ -109,7 +98,7 @@ public class TablistManagerImpl extends TablistManager {
 		tablists.clear();
 		placeholderTypes.clear();
 		
-		randomOrder = headerFooterOrAB = false;
+		randomOrder = false;
 		sendingTimeout = 0;
 		timerTaskID = timerIndex = -1;
 		constructor = null;
@@ -161,7 +150,7 @@ public class TablistManagerImpl extends TablistManager {
 		} Language language = player.getLanguage();
 		
 		if (Environment.isBukkit())
-			if (VersionUtils.getVersion().isAtLeast(Version.V1_9))
+			if (VersionUtils.getVersion().isAtLeast(Version.V1_13))
 				player.toAdapter().bukkitValue().setPlayerListHeaderFooter(
 						tablist.getHeader(language, true) == null ? null : PlaceholderManager.getInstance().translatePlaceholders(tablist.getHeader(language, true), player, placeholderTypes),
 						tablist.getFooter(language, true) == null ? null : PlaceholderManager.getInstance().translatePlaceholders(tablist.getFooter(language, true), player, placeholderTypes)
@@ -183,38 +172,13 @@ public class TablistManagerImpl extends TablistManager {
 		
 		try {
 			packet = constructor.newInstance();
-			Field a = BukkitReflection.getHiddenField("PacketPlayOutPlayerListHeaderFooter", "header", "a");
-			Field b = BukkitReflection.getHiddenField("PacketPlayOutPlayerListHeaderFooter", "footer", "b");
-			
-			a.setAccessible(true);
-			b.setAccessible(true);
 			
 			if (header == null)
 				header = "";
 			if (footer == null)
 				footer = "";
-			if (headerFooterOrAB) {
-				String[] arrayA = header.split("\n");
-				String[] arrayB = footer.split("\n");
-				TextComponent[] baseA = new TextComponent[arrayA.length];
-				TextComponent[] baseB = new TextComponent[arrayB.length];
-				
-				for (int i = 0; i < arrayA.length; i++) {
-					baseA[i] = new TextAdapter(arrayA[i]).bukkitValue();
-					
-					if (i + 1 < arrayA.length)
-						baseA[i].addExtra("\n");
-				} for (int i = 0; i < arrayB.length; i++) {
-					baseB[i] = new TextAdapter(arrayB[i]).bukkitValue();
-					
-					if (i + 1 < arrayB.length)
-						baseB[i].addExtra("\n");
-				} a.set(packet, baseA);
-				b.set(packet, baseB);
-			} else {
-				a.set(packet, BukkitReflection.invokeMethod("ChatSerializer", "a", null, "\"" + header + "\""));
-				b.set(packet, BukkitReflection.invokeMethod("ChatSerializer", "a", null, "\"" + footer + "\""));
-			}
+			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "header", "a").set(packet, BukkitReflection.invokeMethod("ChatSerializer", "a", null, "\"" + header + "\""));
+			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "footer", "b").set(packet, BukkitReflection.invokeMethod("ChatSerializer", "a", null, "\"" + footer + "\""));
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
 			e.printStackTrace();
 		} return packet;

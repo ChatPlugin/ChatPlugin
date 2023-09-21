@@ -25,8 +25,6 @@ import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationTyp
  */
 public abstract class DatabaseManager extends StorageManager {
 	
-	protected String engineVersion; // not used - here to be read by the debugger
-	
 	@Override
 	public DatabaseConnector getConnector() {
 		return (DatabaseConnector) connector;

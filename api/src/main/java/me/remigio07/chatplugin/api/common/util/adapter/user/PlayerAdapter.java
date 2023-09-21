@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.api.common.util.adapter.user;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -32,19 +33,30 @@ import org.spongepowered.api.Sponge;
 
 import me.remigio07.chatplugin.api.common.player.ChatPluginPlayer;
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
-import me.remigio07.chatplugin.api.common.util.Utils;
-import me.remigio07.chatplugin.api.common.util.adapter.text.TextAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
+import me.remigio07.chatplugin.api.proxy.util.Utils;
 import me.remigio07.chatplugin.bootstrap.Environment;
+import me.remigio07.chatplugin.bootstrap.JARLibraryLoader;
 import me.remigio07.chatplugin.bootstrap.VelocityBootstrapper;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 
 /**
  * Environment indipendent (Bukkit, Sponge, BungeeCord and Velocity) player adapter.
  */
 public class PlayerAdapter {
 	
+	private static Method deserializeLegacy;
 	private Object player;
+	
+	static {
+		try {
+			deserializeLegacy = Class.forName("me.remigio07.chatplugin.common.util.Utils", false, JARLibraryLoader.getInstance()).getMethod("deserializeLegacy", String.class);
+		} catch (ClassNotFoundException | NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	 * Constructs a player adapter that accepts one of the following specified as input:
@@ -223,14 +235,17 @@ public class PlayerAdapter {
 			bukkitValue().sendMessage(message);
 			break;
 		case SPONGE:
-			spongeValue().sendMessage(new TextAdapter(message).spongeValue());
+			spongeValue().sendMessage(me.remigio07.chatplugin.api.server.util.Utils.serializeSpongeText(message));
 			break;
 		case BUNGEECORD:
 			BungeeCordMessages.sendMessage(this, message);
 			break;
 		case VELOCITY:
-			velocityValue().sendMessage(new TextAdapter(message).velocityValue());
-			break;
+			try {
+				velocityValue().sendMessage((ComponentLike) deserializeLegacy.invoke(null, message));
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
+			} break;
 		}
 	}
 	
@@ -245,14 +260,17 @@ public class PlayerAdapter {
 			bukkitValue().kickPlayer(reason);
 			break;
 		case SPONGE:
-			spongeValue().kick(new TextAdapter(reason).spongeValue());
+			spongeValue().kick(me.remigio07.chatplugin.api.server.util.Utils.serializeSpongeText(reason));
 			break;
 		case BUNGEECORD:
 			BungeeCordMessages.disconnect(this, reason);
 			break;
 		case VELOCITY:
-			velocityValue().disconnect(new TextAdapter(reason).velocityValue());
-			break;
+			try {
+				velocityValue().disconnect((Component) deserializeLegacy.invoke(null, reason));
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
+			} break;
 		}
 	}
 	
@@ -275,7 +293,7 @@ public class PlayerAdapter {
 			player = Sponge.getServer().getPlayer(uuid).orElse(null);
 			break;
 		case BUNGEECORD:
-			player = Utils.invokeBungeeCordMethod("getPlayer", new Class<?>[] { UUID.class }, uuid);
+			player = me.remigio07.chatplugin.api.proxy.util.Utils.invokeBungeeCordMethod("getPlayer", new Class<?>[] { UUID.class }, uuid);
 			break;
 		case VELOCITY:
 			player = VelocityBootstrapper.getInstance().getProxy().getPlayer(uuid).orElse(null);
@@ -345,11 +363,11 @@ public class PlayerAdapter {
 	private static class BungeeCordMessages {
 		
 		public static void sendMessage(PlayerAdapter player, String message) {
-			player.bungeeCordValue().sendMessage(new TextAdapter(message).bungeeCordValue());
+			player.bungeeCordValue().sendMessage(Utils.serializeBungeeCordText(message));
 		}
 		
 		public static void disconnect(PlayerAdapter player, String reason) {
-			player.bungeeCordValue().disconnect(new TextAdapter(reason).bungeeCordValue());
+			player.bungeeCordValue().disconnect(Utils.serializeBungeeCordText(reason));
 		}
 		
 	}

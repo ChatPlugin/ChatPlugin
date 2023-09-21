@@ -26,10 +26,15 @@ import java.util.UUID;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.Library;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
+import me.remigio07.chatplugin.api.common.util.text.ChatColor;
+import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.common.util.text.ComponentTranslatorImpl;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 	
@@ -44,12 +49,38 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 			"Did you know the premium version includes custom GUIs? Buy premium to unlock new features and get rid of ads.",
 			"The paid version supports multi-instance synchronization. Buy premium to unlock new features and get rid of ads."
 	};
+	public static final Library[] ADVENTURE_LIBS = new Library[] {
+			Library.ADVENTURE_API,
+			Library.ADVENTURE_KEY,
+			Library.ADVENTURE_NBT,
+			Library.ADVENTURE_PLATFORM_API,
+			Library.ADVENTURE_PLATFORM_FACET,
+			Library.ADVENTURE_TEXT_SERIALIZER_GSON,
+			Library.ADVENTURE_TEXT_SERIALIZER_GSON_LEGACY_IMPL,
+			Library.ADVENTURE_TEXT_SERIALIZER_JSON,
+			Library.ADVENTURE_TEXT_SERIALIZER_JSON_LEGACY_IMPL,	
+			Library.ADVENTURE_TEXT_SERIALIZER_LEGACY,
+			Library.EXAMINATION_API,
+			Library.EXAMINATION_STRING,
+			Library.GSON,
+			Library.JETBRAINS_ANNOTATIONS
+	};
 	
 	@SuppressWarnings("deprecation")
 	public static void initUtils() throws ChatPluginManagerException {
 		try {
 			for (Library library : LibrariesUtils.RELOCATION_LIBS)
 				LibrariesUtils.load(library);
+			for (Library library : ADVENTURE_LIBS)
+				LibrariesUtils.load(library);
+			if (Environment.isBukkit()) {
+				LibrariesUtils.load(Library.ADVENTURE_PLATFORM_BUKKIT);
+				LibrariesUtils.load(Library.ADVENTURE_PLATFORM_BUNGEECORD);
+				LibrariesUtils.load(Library.ADVENTURE_PLATFORM_VIAVERSION);
+			} else if (Environment.isSponge())
+				LibrariesUtils.load(Library.ADVENTURE_PLATFORM_SPONGEAPI);
+			else if (Environment.isBungeeCord())
+				LibrariesUtils.load(Library.ADVENTURE_PLATFORM_BUNGEECORD);
 			LibrariesUtils.load(Library.JSON_SIMPLE);
 		} catch (Exception e) {
 			throw new ChatPluginManagerException("libraries utils", e);
@@ -69,6 +100,7 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 	public static InputStream download(URL url) throws IOException {
 		HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 		
+		connection.setRequestProperty("User-Agent", "Mozilla/5.0 +https://github.com/ChatPlugin/ChatPlugin ChatPlugin/" + ChatPlugin.VERSION);
 		connection.setConnectTimeout(10000);
 		return connection.getInputStream();
 	}
@@ -126,6 +158,10 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 			System.out.println("empty string");
 			return;
 		} System.out.println("[" + sb.toString() + "]");
+	}
+	
+	public static TextComponent deserializeLegacy(String text) {
+		return LegacyComponentSerializer.legacySection().deserialize(ChatColor.translate(text));
 	}
 	
 }

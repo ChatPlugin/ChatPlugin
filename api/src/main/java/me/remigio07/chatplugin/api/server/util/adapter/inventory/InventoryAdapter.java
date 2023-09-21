@@ -29,11 +29,11 @@ import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 
-import me.remigio07.chatplugin.api.common.util.adapter.text.TextAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
+import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.adapter.block.MaterialAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.item.ItemStackAdapter;
 import me.remigio07.chatplugin.bootstrap.Environment;
@@ -168,7 +168,7 @@ public class InventoryAdapter {
 		public static org.spongepowered.api.item.inventory.Inventory get(int rows, String title) {
 			return org.spongepowered.api.item.inventory.Inventory.builder()
 //					.property(new Identifiable(UUID.randomUUID()))
-					.property(InventoryTitle.of(new TextAdapter(title).spongeValue())).property(InventoryDimension.of(9, rows)).build(SpongeBootstrapper.getInstance());
+					.property(InventoryTitle.of(Utils.serializeSpongeText(title))).property(InventoryDimension.of(9, rows)).build(SpongeBootstrapper.getInstance());
 		}
 		
 	}

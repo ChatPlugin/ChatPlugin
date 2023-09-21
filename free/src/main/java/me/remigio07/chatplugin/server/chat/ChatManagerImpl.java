@@ -22,7 +22,6 @@ import me.remigio07.chatplugin.api.common.punishment.mute.MuteManager;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
-import me.remigio07.chatplugin.api.common.util.adapter.text.TextAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
@@ -48,6 +47,7 @@ import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.common.util.Utils;
+import net.kyori.adventure.text.TextComponent;
 
 public class ChatManagerImpl extends ChatManager {
 	
@@ -174,7 +174,7 @@ public class ChatManagerImpl extends ChatManager {
 			ChatLogManager.getInstance().logMessage(player, message, null);
 		if (HoverInfoManager.getInstance().isEnabled()) {
 			for (Language language : LanguageManager.getInstance().getLanguages()) {
-				TextAdapter text = HoverInfoManager.getInstance().getMessageHoverInfo(message, player, language);
+				TextComponent text = ((BaseHoverInfoManager) HoverInfoManager.getInstance()).getMessageHoverInfo(message, player, language);
 				
 				language.getOnlinePlayers().forEach(other -> other.sendMessage(text));
 			}

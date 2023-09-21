@@ -22,6 +22,7 @@ import java.util.UUID;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.util.adapter.inventory.item.ItemStackAdapter;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.server.bukkit.BukkitReflection;
 import me.remigio07.chatplugin.server.bukkit.ChatPluginBukkitPlayer;
@@ -94,6 +95,10 @@ public class Utils extends me.remigio07.chatplugin.api.server.util.Utils {
 		if (version.isAtLeast(Version.V1_16))
 			args.add(UUID.randomUUID());
 		player.sendPacket(BukkitReflection.getInstance("PacketPlayOutChat", classes, args.toArray(new Object[0])));
+	}
+	
+	public static String getBukkitNBT(ItemStackAdapter itemStack) {
+		return BukkitReflection.invokeMethod("ItemStack", "getTag", BukkitReflection.invokeMethod("CraftItemStack", "asNMSCopy", itemStack)).toString();
 	}
 	
 }

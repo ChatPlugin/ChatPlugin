@@ -15,17 +15,7 @@
 
 package me.remigio07.chatplugin.api.common.util.adapter.text;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.spongepowered.api.text.action.TextActions;
-
-import me.remigio07.chatplugin.api.common.util.VersionUtils;
-import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
-import me.remigio07.chatplugin.bootstrap.Environment;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.md_5.bungee.api.chat.ClickEvent.Action;
 
 /**
  * Represents an action performed on a click event.
@@ -47,104 +37,21 @@ public class ClickActionAdapter {
 	public static final ClickActionAdapter OPEN_URL = new ClickActionAdapter("OPEN_URL", "open_url");
 	
 	/**
+	 * Makes the player send a message.
+	 */
+	public static final ClickActionAdapter SEND_MESSAGE = new ClickActionAdapter("SEND_MESSAGE", "run_command");
+	
+	/**
 	 * Suggests text in the player's chat.
 	 */
 	public static final ClickActionAdapter SUGGEST_TEXT = new ClickActionAdapter("SUGGEST_TEXT", "suggest_command");
 	
-	/**
-	 * Makes the player send a message.
-	 */
-	public static final ClickActionAdapter SEND_MESSAGE = new ClickActionAdapter("SEND_MESSAGE", "run_command");
-	private static final ClickActionAdapter[] VALUES = new ClickActionAdapter[] { COPY_TEXT, OPEN_URL, SUGGEST_TEXT, SEND_MESSAGE };
+	private static final ClickActionAdapter[] VALUES = new ClickActionAdapter[] { COPY_TEXT, OPEN_URL, SEND_MESSAGE, SUGGEST_TEXT };
 	private String name, id;
 	
 	private ClickActionAdapter(String name, String id) {
 		this.name = name;
 		this.id = id;
-	}
-	
-	/**
-	 * Gets the click action adapted for Bukkit environments.
-	 * This method returns an {@link Action} as {@link #bungeeCordValue()} does
-	 * as they use the same API, but you cannot call it on Bukkit environments.
-	 * 
-	 * @return Bukkit-adapted click action
-	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBukkit()}
-	 */
-	public net.md_5.bungee.api.chat.ClickEvent.Action bukkitValue() {
-		if (Environment.isBukkit())
-			return Action.valueOf(id.toUpperCase());
-		else throw new UnsupportedOperationException("Unable to adapt click action to a Bukkit's Action on a " + Environment.getCurrent().getName() + " environment");
-	}
-	
-	/**
-	 * Gets the click action adapted for Sponge environments.
-	 * 
-	 * @param value Click event's value
-	 * @return Sponge-adapted click action
-	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isSponge()}
-	 */
-	public Object spongeValue(String value) {
-		if (Environment.isSponge())
-			switch (name) {
-			case "COPY_TEXT":
-				return null;
-			case "OPEN_URL":
-				try {
-					return TextActions.openUrl(new URL(value));
-				} catch (MalformedURLException e) {
-					return null;
-				}
-			case "SUGGEST_TEXT":
-				return TextActions.suggestCommand(value);
-			case "SEND_MESSAGE":
-				return TextActions.runCommand(value);
-			default:
-				return null;
-			}
-		else throw new UnsupportedOperationException("Unable to adapt click action to a Sponge's ClickAction<R> on a " + Environment.getCurrent().getName() + " environment");
-	}
-	
-	/**
-	 * Gets the click action adapted for BungeeCord environments.
-	 * This method returns an {@link Action} as {@link #bukkitValue()} does
-	 * as they use the same API, but you cannot call it on BungeeCord environments.
-	 * 
-	 * @return BungeeCord-adapted click action
-	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBungeeCord()}
-	 */
-	public Action bungeeCordValue() {
-		if (Environment.isBungeeCord())
-			return Action.valueOf(id.toUpperCase());
-		else throw new UnsupportedOperationException("Unable to adapt click action to a BungeeCord's Action on a " + Environment.getCurrent().getName() + " environment");
-	}
-	
-	/**
-	 * Gets the click action adapted for Velocity environments.
-	 * 
-	 * @param value Click event's value
-	 * @return Velocity-adapted click action
-	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isVelocity()}
-	 */
-	public ClickEvent velocityValue(String value) {
-		if (Environment.isVelocity())
-			switch (name) {
-			case "COPY_TEXT":
-				return VersionUtils.getVersion().isAtLeast(Version.V1_15_2) ? ClickEvent.copyToClipboard(value) : null;
-			case "OPEN_URL":
-				try {
-					return ClickEvent.openUrl(new URL(value));
-				} catch (MalformedURLException e) {
-					return null;
-				}
-			case "SUGGEST_TEXT":
-				return ClickEvent.suggestCommand(value);
-			case "SEND_MESSAGE":
-				return ClickEvent.runCommand(value);
-			default:
-				return null;
-			}
-		else throw new UnsupportedOperationException("Unable to adapt click action to a Velocity's ClickEvent on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -195,10 +102,10 @@ public class ClickActionAdapter {
 			return COPY_TEXT;
 		case "OPEN_URL":
 			return OPEN_URL;
-		case "SUGGEST_TEXT":
-			return SUGGEST_TEXT;
 		case "SEND_MESSAGE":
 			return SEND_MESSAGE;
+		case "SUGGEST_TEXT":
+			return SUGGEST_TEXT;
 		default:
 			return null;
 		}

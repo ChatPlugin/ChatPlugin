@@ -15,39 +15,28 @@
 
 package me.remigio07.chatplugin.server.chat;
 
-import me.remigio07.chatplugin.api.common.util.adapter.text.TextAdapter;
-import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.server.chat.HoverInfoManager;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
-import me.remigio07.chatplugin.api.server.rank.Rank;
+import net.kyori.adventure.text.TextComponent;
 
-public class DummyHoverInfoManager extends HoverInfoManager {
+public abstract class BaseHoverInfoManager extends HoverInfoManager {
 	
 	@Override
 	public void load() throws ChatPluginManagerException {
 		instance = this;
 	}
 	
-	@Override
-	public @Nullable(why = "No hover info may be present for the specified language") TextAdapter getRankHoverInfo(Rank rank, Language language, boolean avoidNull) {
-		return null;
-	}
+	public abstract TextComponent getMessageHoverInfo(String message, ChatPluginServerPlayer player, Language language);
 	
-	@Override
-	public @Nullable(why = "No hover info may be present for the specified language") TextAdapter getPlayerHoverInfo(ChatPluginServerPlayer player, Language language, boolean avoidNull) {
-		return null;
-	}
-	
-	@Override
-	public @Nullable(why = "No hover info may be present for the specified language") TextAdapter getURLsHoverInfo(String input, Language language, boolean avoidNull) {
-		return null;
-	}
-	
-	@Override
-	public TextAdapter getMessageHoverInfo(String message, ChatPluginServerPlayer player, Language language) {
-		return null;
+	public static class DummyHoverInfoManager extends BaseHoverInfoManager {
+		
+		@Override
+		public TextComponent getMessageHoverInfo(String message, ChatPluginServerPlayer player, Language language) {
+			return null;
+		}
+		
 	}
 	
 }

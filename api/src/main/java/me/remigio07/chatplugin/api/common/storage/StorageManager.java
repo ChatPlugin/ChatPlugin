@@ -42,6 +42,7 @@ public abstract class StorageManager implements ChatPluginManager {
 	protected StorageMethod method;
 	protected File folder;
 	protected long playersAutoCleanerPeriod = -1, loadTime;
+	protected String engineVersion; // not used - here to be read by the debugger
 	
 	@Override
 	public boolean isEnabled() {

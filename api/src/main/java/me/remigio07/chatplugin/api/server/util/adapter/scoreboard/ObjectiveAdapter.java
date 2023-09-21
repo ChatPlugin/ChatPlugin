@@ -15,8 +15,8 @@
 
 package me.remigio07.chatplugin.api.server.util.adapter.scoreboard;
 
-import me.remigio07.chatplugin.api.common.util.adapter.text.TextAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
+import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
@@ -70,7 +70,7 @@ public class ObjectiveAdapter {
 	 */
 	@NotNull
 	public String getDisplayName() {
-		return Environment.isBukkit() ? bukkitValue().getDisplayName() : new TextAdapter(spongeValue().getDisplayName()).toPlain();
+		return Environment.isBukkit() ? bukkitValue().getDisplayName() : Utils.deserializeSpongeText(spongeValue().getDisplayName());
 	}
 	
 	/**
@@ -82,7 +82,7 @@ public class ObjectiveAdapter {
 	public ObjectiveAdapter setDisplayName(@NotNull String displayName) {
 		if (Environment.isBukkit())
 			bukkitValue().setDisplayName(displayName);
-		else spongeValue().setDisplayName(new TextAdapter(displayName).spongeValue());
+		else spongeValue().setDisplayName(Utils.serializeSpongeText(displayName));
 		return this;
 	}
 	

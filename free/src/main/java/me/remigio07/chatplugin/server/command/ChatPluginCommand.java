@@ -202,7 +202,7 @@ public class ChatPluginCommand extends BaseCommand {
 							
 							player = ServerPlayerManager.getInstance().getPlayer(player.getUUID());
 							
-							CommandsHandler.executeCommands(player, formatPlaceholders(player, newLanguage, ConfigurationType.CONFIG.get().getStringList("languages.command.commands")), 0L);
+							CommandsHandler.executeCommands(player, formatPlaceholders(player, newLanguage, ConfigurationType.CONFIG.get().getStringList("languages.command.commands")));
 							player.sendTranslatedMessage("languages.set", newLanguage.getDisplayName());
 							LanguageManagerImpl.startCommandCooldown(player.getUUID());
 						} else player.sendTranslatedMessage("misc.cooldown-active");

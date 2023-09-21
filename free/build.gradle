@@ -26,6 +26,8 @@ dependencies {
 	compileOnly files(libsDir + 'Negativity-2.6.jar')
 	compileOnly files(libsDir + 'CombatLogX-11.4.0.0.1156.jar')
 	
+	compileOnly 'net.kyori:adventure-platform-bukkit:4.3.0'
+	compileOnly 'net.kyori:adventure-platform-spongeapi:4.3.0'
 	compileOnly 'com.github.cliftonlabs:json-simple:4.0.1'
 	compileOnly 'com.viaversion:viaversion-api:4.0.0'
 	compileOnly 'com.viaversion:viaversion-bukkit:4.0.0'
@@ -38,8 +40,13 @@ dependencies {
 	compileOnly 'dev.esophose:playerparticles:8.0'
 }
 
-jar {
+task assembleFinalJar(type: Jar) {
+	dependsOn shadowJar
+	dependsOn processResources
+	
 	archiveFileName = 'ChatPlugin-FREE-' + rootProject.version + '.jar'
+	
+	from sourceSets.main.output
 	
 	exclude 'me/remigio07/chatplugin/common/**'
 	exclude 'me/remigio07/chatplugin/server/**'
@@ -48,6 +55,13 @@ jar {
 	
 	from project(':api').sourceSets.main.output
 	from shadowJar.archiveFile
+}
+
+jar {
+	archiveFileName = 'ChatPlugin-ORIGINAL.jar'
+	from sourceSets.main.output
+	
+	finalizedBy assembleFinalJar
 }
 
 shadowJar {
@@ -60,6 +74,7 @@ shadowJar {
 	include '**/*.class'
 	
 	relocate 'com.github.cliftonlabs.json_simple', 'me.remigio07.chatplugin.common.lib.com.github.cliftonlabs.json_simple'
+	relocate 'net.kyori.adventure', 'me.remigio07.chatplugin.common.lib.net.kyori.adventure'
 }
 
 processResources {

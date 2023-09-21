@@ -60,6 +60,7 @@ import me.remigio07.chatplugin.api.server.tablist.custom_suffix.CustomSuffixMana
 import me.remigio07.chatplugin.api.server.tablist.custom_suffix.RenderType;
 import me.remigio07.chatplugin.api.server.util.adapter.scoreboard.ObjectiveAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
+import me.remigio07.chatplugin.server.bukkit.BukkitReflection;
 import me.remigio07.chatplugin.server.bukkit.ChatPluginBukkitPlayer;
 import me.remigio07.chatplugin.server.join_quit.QuitMessageManagerImpl.QuitPacketImpl;
 
@@ -142,7 +143,9 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 				customSuffix.setRenderType(CustomSuffixManager.getInstance().getRenderType().bukkitValue());
 			customSuffix.setDisplaySlot(DisplaySlot.PLAYER_LIST);
 		} for (int i = 0; i < 15; i++)
-			scoreboard.registerNewTeam("line_" + i).addPlayer(Bukkit.getOfflinePlayer(Scoreboard.SCORES[i]));
+			if (atLeastV1_9)
+				scoreboard.registerNewTeam("line_" + i).addEntry(Scoreboard.SCORES[i]);
+			else BukkitReflection.invokeMethod("Scoreboard", "addPlayerToTeam", BukkitReflection.invokeMethod("CraftScoreboard", "getHandle", scoreboard), Scoreboard.SCORES[i], scoreboard.registerNewTeam("line_" + i).getName());
 		bukkitValue.setScoreboard(scoreboard);
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 		serverPlayer.setObjective(new ObjectiveAdapter(objective));

@@ -22,11 +22,11 @@ import org.bukkit.command.CommandSender;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 
-import me.remigio07.chatplugin.api.common.util.adapter.text.TextAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
+import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
@@ -135,7 +135,7 @@ public class CommandSenderAdapter {
 	public void sendMessage(@NotNull String message) {
 		if (Environment.isBukkit())
 			bukkitValue().sendMessage(message);
-		else spongeValue().sendMessage(new TextAdapter(message).spongeValue());
+		else spongeValue().sendMessage(Utils.serializeSpongeText(message));
 	}
 	
 	/**

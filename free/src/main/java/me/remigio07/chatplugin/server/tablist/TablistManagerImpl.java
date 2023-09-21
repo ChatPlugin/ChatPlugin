@@ -24,7 +24,6 @@ import io.netty.util.internal.ThreadLocalRandom;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
-import me.remigio07.chatplugin.api.common.util.adapter.text.TextAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
@@ -37,6 +36,7 @@ import me.remigio07.chatplugin.api.server.tablist.Tablist;
 import me.remigio07.chatplugin.api.server.tablist.TablistManager;
 import me.remigio07.chatplugin.api.server.tablist.custom_suffix.CustomSuffixManager;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
+import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.server.bukkit.BukkitReflection;
@@ -106,7 +106,7 @@ public class TablistManagerImpl extends TablistManager {
 	
 	@Override
 	public void run() {
-		if (!enabled) // if (!enabled || (constructor == null && !Main.isSponge() && VersionUtils.getVersion().getProtocol() < 48))
+		if (!enabled) // if (!enabled || (constructor == null && !Main.isSponge() && VersionUtils.getVersion().getProtocol() < 48)) TODO
 			return;
 		if (!enabled)
 			return;
@@ -160,8 +160,8 @@ public class TablistManagerImpl extends TablistManager {
 					tablist.getFooter(language, true) == null ? null : PlaceholderManager.getInstance().translatePlaceholders(tablist.getFooter(language, true), player, placeholderTypes)
 					));
 		else player.toAdapter().spongeValue().getTabList().setHeaderAndFooter(
-				tablist.getHeader(language, true) == null ? null : new TextAdapter(PlaceholderManager.getInstance().translatePlaceholders(tablist.getHeader(language, true), player, placeholderTypes)).spongeValue(),
-				tablist.getFooter(language, true) == null ? null : new TextAdapter(PlaceholderManager.getInstance().translatePlaceholders(tablist.getFooter(language, true), player, placeholderTypes)).spongeValue()
+				tablist.getHeader(language, true) == null ? null : Utils.serializeSpongeText(PlaceholderManager.getInstance().translatePlaceholders(tablist.getHeader(language, true), player, placeholderTypes)),
+				tablist.getFooter(language, true) == null ? null : Utils.serializeSpongeText(PlaceholderManager.getInstance().translatePlaceholders(tablist.getFooter(language, true), player, placeholderTypes))
 				);
 	}
 	
@@ -177,8 +177,8 @@ public class TablistManagerImpl extends TablistManager {
 				header = "";
 			if (footer == null)
 				footer = "";
-			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "header", "a").set(packet, BukkitReflection.invokeMethod("ChatSerializer", "a", null, "\"" + header + "\""));
-			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "footer", "b").set(packet, BukkitReflection.invokeMethod("ChatSerializer", "a", null, "\"" + footer + "\""));
+			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "a").set(packet, BukkitReflection.invokeMethod("ChatSerializer", "a", null, "\"" + header + "\""));
+			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "b").set(packet, BukkitReflection.invokeMethod("ChatSerializer", "a", null, "\"" + footer + "\""));
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
 			e.printStackTrace();
 		} return packet;

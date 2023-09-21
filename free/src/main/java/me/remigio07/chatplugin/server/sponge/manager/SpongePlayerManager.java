@@ -36,7 +36,6 @@ import me.remigio07.chatplugin.api.common.storage.StorageConnector;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
-import me.remigio07.chatplugin.api.common.util.adapter.text.TextAdapter;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
@@ -59,6 +58,7 @@ import me.remigio07.chatplugin.api.server.tablist.Tablist;
 import me.remigio07.chatplugin.api.server.tablist.TablistManager;
 import me.remigio07.chatplugin.api.server.tablist.custom_suffix.CustomSuffixManager;
 import me.remigio07.chatplugin.api.server.tablist.custom_suffix.RenderType;
+import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.adapter.scoreboard.ObjectiveAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.server.join_quit.QuitMessageManagerImpl.QuitPacketImpl;
@@ -123,7 +123,7 @@ public class SpongePlayerManager extends ServerPlayerManager {
 			Team team = Team.builder().name("line_" + i).build();
 			
 			scoreboard.registerTeam(team);
-			team.addMember(new TextAdapter(Scoreboard.SCORES[i]).spongeValue());
+			team.addMember(Utils.serializeSpongeText(Scoreboard.SCORES[i]));
 		} player.spongeValue().setScoreboard(scoreboard);
 		scoreboard.updateDisplaySlot(objective, DisplaySlots.SIDEBAR);
 		serverPlayer.setObjective(new ObjectiveAdapter(objective));
@@ -137,14 +137,14 @@ public class SpongePlayerManager extends ServerPlayerManager {
 				continue;
 			RankTag tag = rank.getTag();
 			
-			team.setPrefix(new TextAdapter(ChatColor.translate(tag.getPrefix().split(" ")[0] + tag.getNameColor() + (tag.getPrefix().contains(" ") ? " " : ""))).spongeValue());
-			team.setSuffix(new TextAdapter(ChatColor.translate(tag.getSuffix())).spongeValue());
+			team.setPrefix(Utils.serializeSpongeText(ChatColor.translate(tag.getPrefix().split(" ")[0] + tag.getNameColor() + (tag.getPrefix().contains(" ") ? " " : ""))));
+			team.setSuffix(Utils.serializeSpongeText(ChatColor.translate(tag.getSuffix())));
 		} for (ChatPluginServerPlayer other : getPlayers().values()) {
-			scoreboard.getTeam(other.getRank().getTeamName()).get().addMember(new TextAdapter(other.getName()).spongeValue());
-			Iterables.getFirst(other.getObjective().spongeValue().getScoreboards(), null).getTeam(serverPlayer.getRank().getTeamName()).get().addMember(new TextAdapter(player.getName()).spongeValue());
+			scoreboard.getTeam(other.getRank().getTeamName()).get().addMember(Utils.serializeSpongeText(other.getName()));
+			Iterables.getFirst(other.getObjective().spongeValue().getScoreboards(), null).getTeam(serverPlayer.getRank().getTeamName()).get().addMember(Utils.serializeSpongeText(player.getName()));
 		} if (!getPlayers().containsKey(player.getUUID())) {
-			scoreboard.getTeam(serverPlayer.getRank().getTeamName()).get().addMember(new TextAdapter(player.getName()).spongeValue());
-			Iterables.getFirst(serverPlayer.getObjective().spongeValue().getScoreboards(), null).getTeam(serverPlayer.getRank().getTeamName()).get().addMember(new TextAdapter(player.getName()).spongeValue());
+			scoreboard.getTeam(serverPlayer.getRank().getTeamName()).get().addMember(Utils.serializeSpongeText(player.getName()));
+			Iterables.getFirst(serverPlayer.getObjective().spongeValue().getScoreboards(), null).getTeam(serverPlayer.getRank().getTeamName()).get().addMember(Utils.serializeSpongeText(player.getName()));
 		} // teams end
 		
 		if (QuitMessageManager.getInstance().isEnabled())

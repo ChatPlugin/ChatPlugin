@@ -79,7 +79,7 @@ public class PingManagerImpl extends PingManager {
 	@Deprecated
 	@Override
 	public int getRealTimePing(ChatPluginServerPlayer player) {
-		return Environment.isBukkit() ? (int) BukkitReflection.getFieldValue("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", ((ChatPluginBukkitPlayer) player).getCraftPlayer()), "ping", VersionUtils.getVersion().isAtLeast(Version.V1_20) ? "f" : "e") : player.toAdapter().spongeValue().getConnection().getLatency();
+		return player.isOnline() ? Environment.isBukkit() ? (int) BukkitReflection.getFieldValue("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", ((ChatPluginBukkitPlayer) player).getCraftPlayer()), "ping", VersionUtils.getVersion().isAtLeast(Version.V1_20) ? "f" : "e") : player.toAdapter().spongeValue().getConnection().getLatency() : 0;
 	}
 	
 	@Override

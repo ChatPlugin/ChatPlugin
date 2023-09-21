@@ -15,8 +15,8 @@
 
 package me.remigio07.chatplugin.api.server.util.adapter.scoreboard;
 
-import me.remigio07.chatplugin.api.common.util.adapter.text.TextAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
+import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
@@ -101,7 +101,7 @@ public class TeamAdapter {
 	public void setPrefix(@NotNull String prefix) {
 		if (Environment.isBukkit())
 			bukkitValue().setPrefix(prefix);
-		else spongeValue().setPrefix(new TextAdapter(prefix).spongeValue());
+		else spongeValue().setPrefix(Utils.serializeSpongeText(prefix));
 	}
 	
 	/**
@@ -112,7 +112,7 @@ public class TeamAdapter {
 	public void setSuffix(@NotNull String suffix) {
 		if (Environment.isBukkit())
 			bukkitValue().setSuffix(suffix);
-		else spongeValue().setSuffix(new TextAdapter(suffix).spongeValue());
+		else spongeValue().setSuffix(Utils.serializeSpongeText(suffix));
 	}
 	
 }

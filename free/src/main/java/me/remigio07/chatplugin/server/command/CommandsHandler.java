@@ -21,7 +21,6 @@ import java.util.Map;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
-import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.command.admin.ClearChatCommand;
@@ -91,17 +90,15 @@ public abstract class CommandsHandler {
 		LogManager.log("Loaded {0} commands in {1} ms.", 4, total, System.currentTimeMillis() - ms);
 	}
 	
-	public static void executeCommands(ChatPluginServerPlayer player, List<String> commands, long delay) {
+	public static void executeCommands(ChatPluginServerPlayer player, List<String> commands) {
 		for (String command : commands) {
 			if (command.isEmpty() || command.equals(Utils.STRING_NOT_FOUND))
 				continue;
-			TaskManager.runSync(() -> {
-				if (player != null && command.startsWith("p:"))
-					if (player.isOnline())
-						player.executeCommand(command.substring(2).trim());
-					else return;
-				else ChatPlugin.getInstance().runConsoleCommand(command.replace("{0}", player == null ? "" : player.getName()));
-			}, delay);
+			if (player != null && command.startsWith("p:"))
+				if (player.isOnline())
+					player.executeCommand(command.substring(2).trim());
+				else return;
+			else ChatPlugin.getInstance().runConsoleCommand(command.replace("{0}", player == null ? "" : player.getName()));
 		}
 	}
 	

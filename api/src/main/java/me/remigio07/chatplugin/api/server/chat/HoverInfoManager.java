@@ -24,12 +24,8 @@ import java.util.Map;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.adapter.text.ClickActionAdapter;
-import me.remigio07.chatplugin.api.common.util.adapter.text.TextAdapter;
-import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.server.language.Language;
-import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
-import me.remigio07.chatplugin.api.server.rank.Rank;
 import me.remigio07.chatplugin.api.server.util.GameFeature;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 
@@ -53,7 +49,6 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	protected String playerClickValue, urlColor;
 	protected List<PlaceholderType> playerPlaceholderTypes = Collections.emptyList();
 	protected Map<Language, String> playerHovers = new HashMap<>(), urlHovers = new HashMap<>();
-	protected Map<Rank, Map<Language, TextAdapter>> ranksCache = new HashMap<>();
 	protected List<String> chatFormat = new ArrayList<>();
 	protected long loadTime;
 	
@@ -180,16 +175,6 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the ranks' hover info cache.
-	 * Do not modify the returned map.
-	 * 
-	 * @return Ranks' cache
-	 */
-	public Map<Rank, Map<Language, TextAdapter>> getRanksCache() {
-		return ranksCache;
-	}
-	
-	/**
 	 * Gets {@link ChatManager#getFormat()} split around placeholders contained in the format.
 	 * 
 	 * @return Chat's format, split up
@@ -206,60 +191,5 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	public static HoverInfoManager getInstance() {
 		return instance;
 	}
-	
-	/**
-	 * Gets the hover info for the specified rank from {@link #getRanksCache()}.
-	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
-	 * {@link Language#getMainLanguage()}'s hover info if no hover info is present for the specified language.
-	 * Will return <code>null</code> if {@link #getRanksCache()}<code>.get(rank).get(language) == null &amp;&amp; !avoidNull</code>
-	 * or a new instance of {@link TextAdapter#EMPTY_TEXT} if <code>!</code>{@link #isRankHoverEnabled()}.
-	 * 
-	 * @param rank Target rank
-	 * @param language Language used to translate the hover info
-	 * @param avoidNull Whether to avoid returning <code>null</code>
-	 * @return Rank's hover info
-	 */
-	@Nullable(why = "No hover info may be present for the specified language")
-	public abstract TextAdapter getRankHoverInfo(Rank rank, Language language, boolean avoidNull);
-	
-	/**
-	 * Gets the hover info for the specified player from {@link #getPlayerHovers()}.
-	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
-	 * {@link Language#getMainLanguage()}'s hover info if no hover info is present for the specified language.
-	 * Will return <code>null</code> if {@link #getPlayerHovers()}<code>.get(language) == null &amp;&amp; !avoidNull</code>
-	 * or a new instance of {@link TextAdapter#EMPTY_TEXT} if <code>!</code>{@link #isPlayerHoverEnabled()}.
-	 * 
-	 * @param player Target player
-	 * @param language Language used to translate the hover info
-	 * @param avoidNull Whether to avoid returning <code>null</code>
-	 * @return Player's hover info
-	 */
-	@Nullable(why = "No hover info may be present for the specified language")
-	public abstract TextAdapter getPlayerHoverInfo(ChatPluginServerPlayer player, Language language, boolean avoidNull);
-	
-	/**
-	 * Gets the hover info for the URLs contained in the specified input from {@link #getURLHovers()}.
-	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
-	 * {@link Language#getMainLanguage()}'s hover info if no hover info is present for the specified language.
-	 * Will return <code>null</code> if {@link #getURLHovers()}<code>.get(language) == null &amp;&amp; !avoidNull</code>
-	 * or a new instance of {@link TextAdapter#EMPTY_TEXT} if <code>!</code>{@link #isURLHoverEnabled()}.
-	 * 
-	 * @param input Input containing URLs
-	 * @param language Language used to translate the hover info
-	 * @param avoidNull Whether to avoid returning <code>null</code>
-	 * @return URLs' hover info
-	 */
-	@Nullable(why = "No hover info may be present for the specified language")
-	public abstract TextAdapter getURLsHoverInfo(String input, Language language, boolean avoidNull);
-	
-	/**
-	 * Gets the hover info for the specified message.
-	 * 
-	 * @param message Message involved
-	 * @param player Target player
-	 * @param language Language used to translate the hover info
-	 * @return Message's hover info
-	 */
-	public abstract TextAdapter getMessageHoverInfo(String message, ChatPluginServerPlayer player, Language language);
 	
 }

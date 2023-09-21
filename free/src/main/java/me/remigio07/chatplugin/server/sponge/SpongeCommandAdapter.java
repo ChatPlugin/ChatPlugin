@@ -31,11 +31,11 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
-import me.remigio07.chatplugin.api.common.util.adapter.text.TextAdapter;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
+import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.adapter.user.CommandSenderAdapter;
 import me.remigio07.chatplugin.server.command.BaseCommand;
 import me.remigio07.chatplugin.server.command.CommandsHandler;
@@ -63,14 +63,14 @@ public class SpongeCommandAdapter implements CommandCallable {
 				
 				if (command instanceof PlayerCommand) {
 					if (!(sender instanceof Player)) {
-						sender.sendMessage(new TextAdapter(language.getMessage("misc.only-players")).spongeValue());
+						sender.sendMessage(Utils.serializeSpongeText(language.getMessage("misc.only-players")));
 						return CommandResult.success();
 					} if (senderAdapter.toServerPlayer() == null) {
-						sender.sendMessage(new TextAdapter(language.getMessage("misc.disabled-world")).spongeValue());
+						sender.sendMessage(Utils.serializeSpongeText(language.getMessage("misc.disabled-world")));
 						return CommandResult.success();
 					}
 				} if (command.getPermission() != null && !sender.hasPermission(command.getPermission())) {
-					sender.sendMessage(new TextAdapter(language.getMessage("misc.no-permission")).spongeValue());
+					sender.sendMessage(Utils.serializeSpongeText(language.getMessage("misc.no-permission")));
 					return CommandResult.success();
 				} LogManager.log(sender.getName() + " issued command: /" + text, 3);
 				command.execute(senderAdapter, language, args);
@@ -106,7 +106,7 @@ public class SpongeCommandAdapter implements CommandCallable {
 	
 	@Override
 	public Text getUsage(CommandSource sender) {
-		return new TextAdapter(command.getUsage()).spongeValue();
+		return Utils.serializeSpongeText(command.getUsage());
 	}
 	
 	@Override

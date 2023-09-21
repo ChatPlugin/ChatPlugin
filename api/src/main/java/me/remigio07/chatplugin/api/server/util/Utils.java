@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.serializer.TextSerializers;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.server.language.Language;
@@ -130,6 +132,28 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 				.replace("{months}", language.getMessage("timestamps.months"))
 				.replace("{year}", language.getMessage("timestamps.year"))
 				.replace("{years}", language.getMessage("timestamps.years"));
+	}
+	
+	/**
+	 * Serializes the specified input to a Sponge-compatible text.
+	 * 
+	 * @param input Input text
+	 * @return Sponge-compatible text
+	 */
+	@SuppressWarnings("deprecation")
+	public static Text serializeSpongeText(String input) {
+		return TextSerializers.LEGACY_FORMATTING_CODE.deserialize(input);
+	}
+	
+	/**
+	 * Deserializes the specified input to a plain text.
+	 * 
+	 * @param input Sponge-compatible text
+	 * @return Plain text
+	 */
+	@SuppressWarnings("deprecation")
+	public static String deserializeSpongeText(Text input) {
+		return TextSerializers.LEGACY_FORMATTING_CODE.serialize(input);
 	}
 	
 }

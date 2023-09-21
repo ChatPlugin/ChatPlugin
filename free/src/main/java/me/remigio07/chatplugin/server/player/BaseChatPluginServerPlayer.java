@@ -15,8 +15,6 @@
 
 package me.remigio07.chatplugin.server.player;
 
-import me.remigio07.chatplugin.api.common.util.adapter.text.ClickActionAdapter;
-import me.remigio07.chatplugin.api.common.util.adapter.text.TextAdapter;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.server.bossbar.PlayerBossbar;
 import me.remigio07.chatplugin.api.server.language.Language;
@@ -25,9 +23,14 @@ import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
 import me.remigio07.chatplugin.api.server.util.adapter.scoreboard.ObjectiveAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
+import me.remigio07.chatplugin.common.util.Utils;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 
 public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer {
 	
+	protected Audience audience;
 	protected boolean playerStored = false;
 	
 	@SuppressWarnings("deprecation")
@@ -95,9 +98,9 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 	}
 	
 	public void sendLanguageDetectedMessage(Language language) {
-		sendMessage(new TextAdapter(language.getMessage("languages.detected.text", language.getDisplayName()))
-				.onHover(language.getMessage("languages.detected.hover", language.getDisplayName()))
-				.onClick(ClickActionAdapter.SEND_MESSAGE, "/chatplugin language " + language.getID())
+		sendMessage(Utils.deserializeLegacy(language.getMessage("languages.detected.text", language.getDisplayName()))
+				.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(language.getMessage("languages.detected.hover", language.getDisplayName()))))
+				.clickEvent(ClickEvent.runCommand("/chatplugin language " + language.getID()))
 				);
 	}
 	

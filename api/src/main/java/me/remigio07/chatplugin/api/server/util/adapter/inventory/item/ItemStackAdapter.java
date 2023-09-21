@@ -53,10 +53,10 @@ import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
-import me.remigio07.chatplugin.api.common.util.adapter.text.TextAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
+import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.adapter.block.MaterialAdapter;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
@@ -409,7 +409,7 @@ public class ItemStackAdapter implements Cloneable {
 		if (Environment.isSponge()) {
 			if (displayName == null)
 				spongeValue().remove(Keys.DISPLAY_NAME);
-			else spongeValue().offer(Keys.DISPLAY_NAME, new TextAdapter(displayName).spongeValue());
+			else spongeValue().offer(Keys.DISPLAY_NAME, Utils.serializeSpongeText(displayName));
 		} else if (itemMeta) {
 			ItemMeta meta = bukkitValue().getItemMeta();
 			
@@ -746,11 +746,11 @@ public class ItemStackAdapter implements Cloneable {
 		}
 		
 		public static List<Text> toTextList(List<String> list) {
-			return list.stream().map(string -> new TextAdapter(string.replace("\n", " ").replace("\r\n", " ").replace("\r", " ")).spongeValue()).collect(Collectors.toList());
+			return list.stream().map(string -> Utils.serializeSpongeText(string.replace("\n", " ").replace("\r\n", " ").replace("\r", " "))).collect(Collectors.toList());
 		}
 		
 		public static List<String> toStringList(List<Text> list) {
-			return list.stream().map(text -> new TextAdapter(text).toPlain()).collect(Collectors.toList());
+			return list.stream().map(text -> Utils.deserializeSpongeText(text)).collect(Collectors.toList());
 		}
 		
 	}

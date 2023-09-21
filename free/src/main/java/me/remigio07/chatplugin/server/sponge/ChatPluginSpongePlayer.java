@@ -38,7 +38,6 @@ import me.remigio07.chatplugin.api.common.storage.StorageConnector;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector.WhereCondition;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector.WhereCondition.WhereOperator;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
-import me.remigio07.chatplugin.api.common.util.adapter.text.TextAdapter;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
@@ -51,17 +50,20 @@ import me.remigio07.chatplugin.api.server.language.LanguageDetectorMethod;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.rank.RankManager;
+import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.InventoryAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
-import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.bossbar.NativeBossbar;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
+import net.kyori.adventure.platform.spongeapi.SpongeAudiences;
+import net.kyori.adventure.text.ComponentLike;
 
 public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	
-	private Player player;
+	private static SpongeAudiences audiences = SpongeAudiences.create(Sponge.getPluginManager().getPlugin("chatplugin").get(), Sponge.getGame());
 	private static Cause inventoryCause;
+	private Player player;
 	
 	static {
 		try { // Sponge v4.2
@@ -74,6 +76,7 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	public ChatPluginSpongePlayer(Player player) {
 		super(new PlayerAdapter(player));
 		this.player = player;
+		audience = audiences.player(player);
 		version = ServerPlayerManager.getInstance().getPlayerVersion(uuid);
 		version = version == null ? VersionUtils.getVersion() : version;
 		bedrockPlayer = ServerPlayerManager.getInstance().isBedrockPlayer(uuid);
@@ -166,7 +169,7 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public void sendMessage(String message) {
-		sendMessage(new TextAdapter(message));
+		player.sendMessage(Utils.serializeSpongeText(message));
 	}
 	
 	@Override
@@ -178,12 +181,12 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public void disconnect(String reason) {
-		TaskManager.runSync(() -> player.kick(new TextAdapter(reason).spongeValue()), 0L);
+		TaskManager.runSync(() -> player.kick(Utils.serializeSpongeText(reason)), 0L);
 	}
 	
 	@Override
-	public void sendMessage(TextAdapter text) {
-		player.sendMessage(text.spongeValue());
+	public void sendMessage(Object adventureComponent) {
+		audiences.player(player).sendMessage((ComponentLike) adventureComponent);
 	}
 	
 	@Override
@@ -196,23 +199,21 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 		// sent separately because of a bug
 		player.sendTitle(Title.builder()
 				.reset()
-				.subtitle(subtitle == null ? null : new TextAdapter(subtitle).spongeValue())
+				.subtitle(subtitle == null ? null : Utils.serializeSpongeText(subtitle))
 				.fadeIn(fadeIn)
 				.stay(stay)
 				.fadeOut(fadeOut)
 				.build()
 				);
 		player.sendTitle(Title.builder()
-				.title(title == null ? null : new TextAdapter(title).spongeValue())
+				.title(title == null ? null : Utils.serializeSpongeText(title))
 				.build()
 				);
 	}
 	
 	@Override
 	public void sendActionbar(String actionbar) {
-		if (VersionUtils.getVersion().getProtocol() > 210)
-			player.sendTitle(Title.builder().actionBar(new TextAdapter(actionbar).spongeValue()).build());
-		else LogManager.log("The plugin has tried to send an actionbar to {0}, but this feature only works on 1.11+ servers.", 2, name);
+		audience.sendActionBar(me.remigio07.chatplugin.common.util.Utils.deserializeLegacy(actionbar));
 	}
 	
 	@Deprecated
@@ -261,6 +262,10 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	@Override
 	public Locale getLocale() {
 		return player.getLocale();
+	}
+	
+	public static void closeAudiences() {
+		audiences.close();
 	}
 	
 }

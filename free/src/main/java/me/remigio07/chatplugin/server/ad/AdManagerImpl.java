@@ -21,13 +21,13 @@ import java.util.List;
 
 import io.netty.util.internal.ThreadLocalRandom;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
-import me.remigio07.chatplugin.api.common.util.Utils;
 import me.remigio07.chatplugin.api.common.util.adapter.text.ClickActionAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.ad.Ad;
 import me.remigio07.chatplugin.api.server.ad.AdManager;
+import me.remigio07.chatplugin.api.server.event.ad.AdSendEvent;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
@@ -35,8 +35,13 @@ import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.rank.Rank;
 import me.remigio07.chatplugin.api.server.rank.RankManager;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
+import me.remigio07.chatplugin.common.util.Utils;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.ClickEvent.Action;
+import net.kyori.adventure.text.event.HoverEvent;
 
-public abstract class BaseAdManager extends AdManager {
+public class AdManagerImpl extends AdManager {
 	
 	@Override
 	public void load() throws ChatPluginManagerException {
@@ -134,6 +139,26 @@ public abstract class BaseAdManager extends AdManager {
 		
 		for (ChatPluginServerPlayer player : ServerPlayerManager.getInstance().getPlayers().values())
 			sendAd(ad, player);
+	}
+	
+	@Override
+	public void sendAd(Ad ad, ChatPluginServerPlayer player) {
+		if (!enabled)
+			return;
+		AdSendEvent event = new AdSendEvent(ad, player);
+		Language language = player.getLanguage();
+		
+		event.call();
+		
+		if (event.isCancelled())
+			return;
+		TextComponent text = Utils.deserializeLegacy(checkPrefixes(ad.getText(language, true)));
+		
+		if (ad.getHover(language) != null)
+			text = text.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(ad.getHover(language))));
+		if (ad.getClickAction() != null && ad.getClickValue(language) != null)
+			text = text.clickEvent(ClickEvent.clickEvent(Action.NAMES.value(ad.getClickAction().getID()), ad.getClickValue(language)));
+		player.sendMessage(text);
 	}
 	
 	protected String checkPrefixes(String text) {

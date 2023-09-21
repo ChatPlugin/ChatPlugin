@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -60,20 +59,20 @@ public class JARLibraryLoader extends URLClassLoader {
 				for (URL jar : jars) {
 					instance.addURL(jar);
 					
-					for (String clazz : getClasses(new JarFile(new File(jar.toURI())), environment.getExcludedClasspaths())) {
-						try {
-							loadClass(clazz);
-						} catch (NoClassDefFoundError e) {
-							// optional dependencies
-						}
-					}
+//					for (String clazz : getClasses(new JarFile(new File(jar.toURI())), environment.getExcludedClasspaths())) {
+//						try {
+//							loadClass(clazz);
+//						} catch (NoClassDefFoundError e) {
+//							// optional dependencies
+//						}
+//					}
 				}
 			} Class<?> mainClass = Class.forName("me.remigio07.chatplugin.ChatPlugin" + (jars.size() == 2 ? "Premium" : "") + "Impl", true, instance);
 			
 			if (environment == Environment.VELOCITY)
 				mainClass.getMethod("load", Object.class, Object.class, Object.class).invoke(null, args);
 			else mainClass.getMethod("load", Object.class, Object.class).invoke(null, args);
-		} catch (IOException | ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | URISyntaxException e) {
+		} catch (IOException | ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException  e) {
 			e.printStackTrace();
 		}
 	}
@@ -101,12 +100,12 @@ public class JARLibraryLoader extends URLClassLoader {
 	public void load(File target) throws IOException {
 		addURL(target.toURI().toURL());
 		
-		try {
-			for (String clazz : getClasses(new JarFile(target), null))
-				loadClass(clazz);
-		} catch (ClassNotFoundException | NoClassDefFoundError e) {
-			// optional dependencies
-		}
+//		try {
+//			for (String clazz : getClasses(new JarFile(target), null))
+//				loadClass(clazz);
+//		} catch (ClassNotFoundException | NoClassDefFoundError e) {
+//			// optional dependencies
+//		}
 	}
 	
 	private URL extract(boolean premium) throws IOException {
@@ -123,7 +122,7 @@ public class JARLibraryLoader extends URLClassLoader {
 		}
 	}
 	
-	private static List<String> getClasses(JarFile jar, List<String> excludedClasspaths) {
+	public static List<String> getClasses(JarFile jar, List<String> excludedClasspaths) {
 		List<String> classes = new ArrayList<>();
 		Enumeration<JarEntry> entries = jar.entries();
 		String entry;

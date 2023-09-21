@@ -145,6 +145,7 @@ public class ChatPluginBukkit extends ChatPlugin {
 				bukkitCommand.setTabCompleter(null);
 			} HandlerList.unregisterAll(plugin);
 			// ChatPlugin's stuff which might crash
+			ChatPluginBukkitPlayer.closeAudiences();
 			managers.unloadManagers();
 			LogManager.log("Plugin unloaded successfully in {0} ms.", 3, ms = System.currentTimeMillis() - ms); // XXX might not work (called after .unloadManagers())
 			return (int) ms;

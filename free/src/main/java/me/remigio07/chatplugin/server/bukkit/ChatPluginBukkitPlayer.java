@@ -17,8 +17,8 @@ package me.remigio07.chatplugin.server.bukkit;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -39,7 +39,6 @@ import me.remigio07.chatplugin.api.common.storage.StorageConnector.WhereConditio
 import me.remigio07.chatplugin.api.common.storage.StorageConnector.WhereCondition.WhereOperator;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
-import me.remigio07.chatplugin.api.common.util.adapter.text.TextAdapter;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
@@ -56,22 +55,27 @@ import me.remigio07.chatplugin.api.server.rank.RankManager;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.InventoryAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
+import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.bossbar.NativeBossbar;
 import me.remigio07.chatplugin.server.bossbar.ReflectionBossbar;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.title.Title;
+import net.kyori.adventure.title.Title.Times;
 
 public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
-	protected Player player;
+	private static BukkitAudiences audiences = BukkitAudiences.create(BukkitBootstrapper.getInstance());
+	private Player player;
 	private Object craftPlayer;
 	private Locale lastLocale;
 	
 	public ChatPluginBukkitPlayer(Player player) {
 		super(new PlayerAdapter(player));
 		this.player = player;
+		audience = audiences.player(player);
 		version = ServerPlayerManager.getInstance().getPlayerVersion(uuid);
 		version = version == null ? IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(toAdapter()) : VersionUtils.getVersion() : version;
 		bedrockPlayer = ServerPlayerManager.getInstance().isBedrockPlayer(uuid);
@@ -195,9 +199,8 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	}
 	
 	@Override
-	public void sendMessage(TextAdapter text) {
-		System.out.println(text.bukkitValue().toJSON());
-		me.remigio07.chatplugin.server.util.Utils.sendBukkitMessage(this, text.bukkitValue().toJSON());
+	public void sendMessage(Object adventureComponent) {
+		audiences.player(player).sendMessage((ComponentLike) adventureComponent);
 	}
 	
 	@Override
@@ -207,27 +210,16 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public void sendTitle(String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-		if (VersionUtils.getVersion().isAtLeast(Version.V1_11_1)) {
-			player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
-			return;
-		} Class<?>[] params = new Class<?>[] { BukkitReflection.getLoadedClass("EnumTitleAction"), BukkitReflection.getLoadedClass("IChatBaseComponent") };
-		
-		sendPacket(BukkitReflection.getInstance("PacketPlayOutTitle", fadeIn, stay, fadeOut));
-		sendPacket(BukkitReflection.getInstance("PacketPlayOutTitle", params, BukkitReflection.getEnum("EnumTitleAction", "TITLE", ""), BukkitReflection.invokeMethod("ChatSerializer", "a", null, "\"" + title + "\"")));
-		sendPacket(BukkitReflection.getInstance("PacketPlayOutTitle", params, BukkitReflection.getEnum("EnumTitleAction", "SUBTITLE", ""), BukkitReflection.invokeMethod("ChatSerializer", "a", null, "\"" + subtitle + "\"")));
+		audience.showTitle(
+				Title.title(Utils.deserializeLegacy(title),
+				Utils.deserializeLegacy(subtitle),
+				Times.times(Duration.ofMillis(fadeIn / 50), Duration.ofMillis(stay / 50), Duration.ofMillis(fadeOut / 50)))
+				);
 	}
 	
 	@Override
 	public void sendActionbar(String actionbar) {
-		if (VersionUtils.getVersion().isAtLeast(Version.V1_9))
-			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(actionbar)); // TODO FIXME XXX
-		else if (VersionUtils.getVersion().isAtLeast(Version.V1_19))
-			sendPacket(BukkitReflection.getInstance("ClientboundSystemChatPacket", actionbar, 2));
-		else try {
-			sendPacket(BukkitReflection.getLoadedClass("PacketPlayOutChat").getConstructor(new Class[] { BukkitReflection.getLoadedClass("IChatBaseComponent"), Byte.TYPE }).newInstance(BukkitReflection.getInstance("ChatComponentText", actionbar), (byte) 2));
-		} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-			LogManager.log("The plugin has tried to send an actionbar to {0}, but this feature only works on 1.8+ servers.", 2, name);
-		}
+		audience.sendActionBar(Utils.deserializeLegacy(actionbar));
 	}
 	
 	@Deprecated
@@ -268,7 +260,15 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public Locale getLocale() {
-		return BukkitReflection.getLocale(this);
+		String str = VersionUtils.getVersion().getProtocol() >= 341 ? player.getLocale() : (String) BukkitReflection.getFieldValue("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", craftPlayer), "locale");
+		
+		if (str.contains("_")) {
+			Locale locale = new Locale(str.substring(0, str.indexOf('_')), str.substring(str.indexOf('_') + 1));
+			
+			for (Locale other : Locale.getAvailableLocales())
+				if (other.equals(locale));
+					return locale;
+		} return Locale.US;
 	}
 	
 	public Object getCraftPlayer() {
@@ -281,6 +281,10 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
 	public void setLastLocale(Locale lastLocale) {
 		this.lastLocale = lastLocale;
+	}
+	
+	public static void closeAudiences() {
+		audiences.close();
 	}
 	
 }

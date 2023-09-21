@@ -24,6 +24,7 @@ import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationTyp
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.ServerImplementationOnly;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
+import me.remigio07.chatplugin.api.proxy.util.Utils;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.bootstrap.VelocityBootstrapper;
 

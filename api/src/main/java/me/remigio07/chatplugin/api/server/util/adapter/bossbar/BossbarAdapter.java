@@ -25,10 +25,10 @@ import org.spongepowered.api.boss.BossBarOverlays;
 import org.spongepowered.api.boss.ServerBossBar;
 import org.spongepowered.api.text.Text;
 
-import me.remigio07.chatplugin.api.common.util.adapter.text.TextAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
@@ -117,7 +117,7 @@ public class BossbarAdapter {
 	public void setTitle(@NotNull String title) {
 		if (Environment.isBukkit())
 			bukkitValue().setTitle(title);
-		else spongeValue().setName(new TextAdapter(title).spongeValue());
+		else spongeValue().setName(Utils.serializeSpongeText(title));
 	}
 	
 	/**

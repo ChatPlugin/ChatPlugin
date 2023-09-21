@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import com.google.common.primitives.Primitives;
@@ -141,6 +140,16 @@ public class BukkitReflection {
 					// EnumTitleAction
 					clazz = getNMSClass("PacketPlayOutTitle$EnumTitleAction");
 					classes.put("EnumTitleAction", clazz);
+				
+				// ScoreboardTeam
+				clazz = getNMSClass("Scoreboard");
+				classes.put("Scoreboard", clazz);
+				putMethod(clazz, "addPlayerToTeam", Arrays.asList(String.class, String.class));
+				
+				// CraftScoreboard
+				clazz = getCBClass("scoreboard.CraftScoreboard");
+				classes.put("CraftScoreboard", clazz);
+				putMethod(clazz, "getHandle", "");
 			} else return;
 			
 			// PacketPlayOutPlayerListHeaderFooter
@@ -313,18 +322,6 @@ public class BukkitReflection {
 	
 	public static Class<?> getNMNClass(String path) throws ClassNotFoundException {
 		return Class.forName("net.minecraft.network." + path);
-	}
-	
-	public static Locale getLocale(ChatPluginBukkitPlayer player) {
-		String str = VersionUtils.getVersion().getProtocol() >= 341 ? player.toAdapter().bukkitValue().getLocale() : (String) getFieldValue("EntityPlayer", invokeMethod("CraftPlayer", "getHandle", player.getCraftPlayer()), "locale");
-		
-		if (str.contains("_")) {
-			Locale locale = new Locale(str.substring(0, str.indexOf('_')), str.substring(str.indexOf('_') + 1));
-			
-			for (Locale other : Locale.getAvailableLocales())
-				if (other.equals(locale));
-					return locale;
-		} return Locale.US;
 	}
 	
 }

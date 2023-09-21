@@ -43,13 +43,12 @@ import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationMan
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
-import me.remigio07.chatplugin.api.common.util.adapter.text.TextAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
+import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.bootstrap.SpongeBootstrapper;
-import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.common.util.manager.SLF4JLogManager;
 import me.remigio07.chatplugin.server.command.BaseCommand;
 import me.remigio07.chatplugin.server.storage.configuration.ServerConfigurationManager;
@@ -76,13 +75,13 @@ public class ChatPluginSponge extends ChatPlugin {
 			SpongeReflection.initReflection();
 			(managers = new ChatPluginServerManagers()).addManager(LogManager.class, new SLF4JLogManager());
 			managers.addManager(ConfigurationManager.class, new ServerConfigurationManager());
-			Utils.initUtils();
+			me.remigio07.chatplugin.common.util.Utils.initUtils();
 			
 			if (VersionUtils.getVersion().isOlderThan(Version.V1_9))
-				LogManager.log("This server is running an old Minecraft version. Note that this software is {0} old. Even though it is still supported, fixing any bugs is not a priority. It's recommended to upgrade to a newer version.", 1, Utils.formatTime(System.currentTimeMillis() - VersionUtils.getVersion().getReleaseDate()));
+				LogManager.log("This server is running an old Minecraft version. Note that this software is {0} old. Even though it is still supported, fixing any bugs is not a priority. It's recommended to upgrade to a newer version.", 1, me.remigio07.chatplugin.common.util.Utils.formatTime(System.currentTimeMillis() - VersionUtils.getVersion().getReleaseDate()));
 			managers.loadManagers();
 			SpongeCommandsHandler.registerCommands();
-			TaskManager.scheduleAsync(() -> LogManager.log(Utils.FREE_VERSION_ADS[ThreadLocalRandom.current().nextInt(Utils.FREE_VERSION_ADS.length)], 0), 3600000L, 3600000L);
+			TaskManager.scheduleAsync(() -> LogManager.log(me.remigio07.chatplugin.common.util.Utils.FREE_VERSION_ADS[ThreadLocalRandom.current().nextInt(me.remigio07.chatplugin.common.util.Utils.FREE_VERSION_ADS.length)], 0), 3600000L, 3600000L);
 			TaskManager.runAsync(() -> {
 				long ms2 = System.currentTimeMillis();
 				
@@ -144,6 +143,7 @@ public class ChatPluginSponge extends ChatPlugin {
 			manager.getOwnedBy(SpongeBootstrapper.getInstance()).forEach(mapping -> manager.removeMapping(mapping));
 			Sponge.getEventManager().unregisterPluginListeners(SpongeBootstrapper.getInstance());
 			// ChatPlugin's stuff which might crash
+			ChatPluginSpongePlayer.closeAudiences();
 			managers.unloadManagers();
 			LogManager.log("Plugin unloaded successfully in {0} ms.", 3, ms = System.currentTimeMillis() - ms); // XXX might not work (called after .unloadManagers())
 			return (int) ms;
@@ -161,7 +161,7 @@ public class ChatPluginSponge extends ChatPlugin {
 			
 			@Override
 			public CommandResult process(CommandSource sender, String text) throws CommandException {
-				sender.sendMessage(new TextAdapter("\u00A7cChatPlugin is disabled because an error occurred.").spongeValue());
+				sender.sendMessage(Utils.serializeSpongeText("\u00A7cChatPlugin is disabled because an error occurred."));
 				return CommandResult.success();
 			}
 			
@@ -172,7 +172,7 @@ public class ChatPluginSponge extends ChatPlugin {
 			
 			@Override
 			public Text getUsage(CommandSource sender) {
-				return new TextAdapter("/chatplugin recover").spongeValue();
+				return Utils.serializeSpongeText("/chatplugin recover");
 			}
 			
 			@Override
@@ -205,15 +205,15 @@ public class ChatPluginSponge extends ChatPlugin {
 						
 						if (args.length == 1 && args[0].equalsIgnoreCase("recover")) {
 							if (sender.hasPermission("chatplugin.commands.recover")) {
-								sender.sendMessage(new TextAdapter("\u00A7eTrying to recover ChatPlugin... Don't get your hopes up.").spongeValue());
+								sender.sendMessage(Utils.serializeSpongeText("\u00A7eTrying to recover ChatPlugin... Don't get your hopes up."));
 								
 								int startupTime = load((Logger) logger, dataFolder.toPath());
 								
 								if (startupTime == -1)
-									sender.sendMessage(new TextAdapter("\u00A7cFailed to load. Check the console for the error message.").spongeValue());
-								else sender.sendMessage(new TextAdapter("\u00A7aChatPlugin has been loaded successfully in \u00A7f" + startupTime + " ms\u00A7a. You should anyway restart as soon as possible.").spongeValue());
-							} else sender.sendMessage(new TextAdapter("\u00A7cYou do not have the permission to execute this command.").spongeValue());
-						} else sender.sendMessage(new TextAdapter("\u00A7cThe syntax is wrong. Usage: \u00A7f/chatplugin recover\u00A7c.").spongeValue());
+									sender.sendMessage(Utils.serializeSpongeText("\u00A7cFailed to load. Check the console for the error message."));
+								else sender.sendMessage(Utils.serializeSpongeText("\u00A7aChatPlugin has been loaded successfully in \u00A7f" + startupTime + " ms\u00A7a. You should anyway restart as soon as possible."));
+							} else sender.sendMessage(Utils.serializeSpongeText("\u00A7cYou do not have the permission to execute this command."));
+						} else sender.sendMessage(Utils.serializeSpongeText("\u00A7cThe syntax is wrong. Usage: \u00A7f/chatplugin recover\u00A7c."));
 						return CommandResult.success();
 					}
 					
@@ -228,7 +228,7 @@ public class ChatPluginSponge extends ChatPlugin {
 					
 					@Override
 					public Text getUsage(CommandSource source) {
-						return new TextAdapter("/chatplugin recover").spongeValue();
+						return Utils.serializeSpongeText("/chatplugin recover");
 					}
 					
 					@Override
@@ -264,7 +264,7 @@ public class ChatPluginSponge extends ChatPlugin {
 	
 	@Override
 	public void sendConsoleMessage(String message, boolean log) {
-		Sponge.getServer().getConsole().sendMessage(new TextAdapter(message).spongeValue());
+		Sponge.getServer().getConsole().sendMessage(Utils.serializeSpongeText(message));
 		
 		if (log && LogManager.getInstance() != null)
 			LogManager.getInstance().writeToFile(message);
@@ -274,10 +274,10 @@ public class ChatPluginSponge extends ChatPlugin {
 	public void printStartMessage() {
 		CommandSource console = Sponge.getServer().getConsole();
 		
-		console.sendMessage(new TextAdapter( "   \u00A7c__  \u00A7f__   ").spongeValue());
-		console.sendMessage(new TextAdapter( "  \u00A7c/   \u00A7f|__)  \u00A7aRunning \u00A7cChat\u00A7fPlugin \u00A72Free \u00A7aversion \u00A7f" + VERSION + " \u00A7aon Sponge").spongeValue());
-		console.sendMessage(new TextAdapter("  \u00A7c\\__ \u00A7f|     \u00A78Detected server version: " + VersionUtils.getVersion().getName() + " (protocol: " + VersionUtils.getVersion().getProtocol() + ")").spongeValue());
-		console.sendMessage(TextAdapter.EMPTY_TEXT.spongeValue());
+		console.sendMessage(Utils.serializeSpongeText( "   \u00A7c__  \u00A7f__   "));
+		console.sendMessage(Utils.serializeSpongeText( "  \u00A7c/   \u00A7f|__)  \u00A7aRunning \u00A7cChat\u00A7fPlugin \u00A72Free \u00A7aversion \u00A7f" + VERSION + " \u00A7aon Sponge"));
+		console.sendMessage(Utils.serializeSpongeText("  \u00A7c\\__ \u00A7f|     \u00A78Detected server version: " + VersionUtils.getVersion().getName() + " (protocol: " + VersionUtils.getVersion().getProtocol() + ")"));
+		console.sendMessage(Utils.serializeSpongeText(""));
 	}
 	
 	@Override

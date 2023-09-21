@@ -15,14 +15,16 @@
 
 package me.remigio07.chatplugin.api.server.util.adapter.entity;
 
+import java.util.UUID;
+
 import org.spongepowered.api.data.key.Keys;
 
-import me.remigio07.chatplugin.api.common.util.adapter.text.TextAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
+import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
- * Environment indipendent (Bukkit and Sponge) entity adapter.
+ * Environment indipendent (Bukkit, Sponge, BungeeCord and Velocity) entity adapter.
  */
 public class EntityAdapter {
 	
@@ -74,7 +76,17 @@ public class EntityAdapter {
 	 */
 	@NotNull
 	public String getName() {
-		return Environment.isBukkit() ? bukkitValue().getName() : new TextAdapter(spongeValue().getOrElse(Keys.DISPLAY_NAME, new TextAdapter(spongeValue().getType().getName()).spongeValue())).toPlain();
+		return Environment.isBukkit() ? bukkitValue().getName() : Utils.deserializeSpongeText(spongeValue().getOrElse(Keys.DISPLAY_NAME, Utils.serializeSpongeText(spongeValue().getType().getName())));
+	}
+	
+	/**
+	 * Gets this entity's UUID.
+	 * 
+	 * @return Entity's UUID
+	 */
+	@NotNull
+	public UUID getUUID() {
+		return Environment.isBukkit() ? bukkitValue().getUniqueId() : spongeValue().getUniqueId();
 	}
 	
 }

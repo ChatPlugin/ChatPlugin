@@ -21,7 +21,6 @@ import java.util.Map;
 import me.remigio07.chatplugin.api.common.util.adapter.text.ClickActionAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
-import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.rank.Rank;
@@ -182,25 +181,6 @@ public class Ad {
 	 */
 	public List<Rank> getDisabledRanks() {
 		return disabledRanks;
-	}
-	
-	/**
-	 * Gets the JSON String that represents this ad.
-	 * May be used with Vanilla's <code>/tellraw</code>.
-	 * 
-	 * @param language Language used to translate the JSON
-	 * @return JSON representation
-	 */
-	public String toJSON(Language language) {
-		return ChatColor.translate(
-				"[\"\",{\"text\":\""
-				+ (AdManager.getInstance().hasPrefix() ? AdManager.getInstance().getPrefix() : "")
-				+ getText(language, true)
-				+ "\""
-				+ (getHover(language) == null ? "" : (",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + getHover(language) + "\"}}"))
-				+ (clickAction == null || getClickValue(language) == null ? "" : (",\"clickEvent\":{\"action\":\"" + clickAction.getID() + "\",\"value\":\"" + getClickValue(language) + "\"}"))
-				+ "}]"
-				);
 	}
 	
 }

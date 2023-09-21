@@ -21,7 +21,6 @@ import java.util.UUID;
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
-import me.remigio07.chatplugin.api.common.util.adapter.text.TextAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.proxy.player.ChatPluginProxyPlayer;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
@@ -76,11 +75,19 @@ public interface ChatPluginPlayer {
 	public boolean isBedrockPlayer();
 	
 	/**
-	 * Sends a text adapter to this player.
+	 * Sends a plain message to this player.
 	 * 
 	 * @param message Message to send
 	 */
-	public void sendMessage(@NotNull TextAdapter message);
+	public void sendMessage(String message);
+	
+	/**
+	 * Sends a text component to this player.
+	 * 
+	 * @param adventureComponent Message to send
+	 * @throws ClassCastException If specified object is not an Adventure component
+	 */
+	public void sendMessage(@NotNull Object adventureComponent);
 	
 	/**
 	 * Connects this player to the specified server.
@@ -97,14 +104,5 @@ public interface ChatPluginPlayer {
 	 * @param reason Reason to kick the player for
 	 */
 	public void disconnect(String reason);
-	
-	/**
-	 * Sends a plain message to this player.
-	 * 
-	 * @param message Message to send
-	 */
-	public default void sendMessage(String message) {
-		sendMessage(new TextAdapter(message));
-	}
 	
 }

@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.server.util.adapter.bossbar;
@@ -33,7 +33,7 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
  * Environment indipendent (Bukkit and Sponge) bossbar style adapter. See wiki for more info:
- * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Bossbars#styles">ChatPlugin wiki/Bossbars#Styles</a>
+ * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Bossbars#styles">ChatPlugin wiki/Bossbars#Styles</a>
  * 
  * <p>This class is a pseudo-{@link Enum}. It contains the following methods:
  * {@link #name()}, {@link #ordinal()}, {@link #valueOf(String)} and {@link #values()}.</p>

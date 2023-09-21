@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.server.tablist.custom_suffix;
@@ -23,7 +23,7 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
  * Represents the tablist's custom suffixes' render type. See wiki for more info:
- * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Tablist#custom-suffix">ChatPlugin wiki/Tablist#Custom suffix</a>
+ * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Tablist#custom-suffix">ChatPlugin wiki/Tablist#Custom suffix</a>
  * 
  * <p>This class is a pseudo-{@link Enum}. It contains the following methods:
  * {@link #name()}, {@link #ordinal()}, {@link #valueOf(String)} and {@link #values()}.</p>

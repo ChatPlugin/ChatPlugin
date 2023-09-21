@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.server.util.manager;
@@ -26,7 +26,7 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 
 /**
  * Manager that handles ChatPlugin's integrated (and its integrations') placeholders. See wiki for more info:
- * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Placeholders">ChatPlugin wiki/Placeholders</a>
+ * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Placeholders">ChatPlugin wiki/Placeholders</a>
  * 
  * @see PlaceholderType
  */

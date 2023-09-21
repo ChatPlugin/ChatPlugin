@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.common.punishment.ban.banwave;
@@ -28,14 +28,14 @@ import me.remigio07.chatplugin.api.server.language.Language;
 
 /**
  * Represents a banwave entry handled by the {@link BanwaveManager}. See wiki for more info:
- * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Ban-system#banwaves">ChatPlugin wiki/Ban system/Banwaves</a>
+ * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Ban-system#banwaves">ChatPlugin wiki/Ban system/Banwaves</a>
  */
 public abstract class BanwaveEntry {
 	
 	/**
 	 * Array containing all available placeholders that can
 	 * be translated with a banwave entry's information. See wiki for more info:
-	 * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Ban-system#placeholders">ChatPlugin wiki/Ban system/Placeholders</a>
+	 * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Ban-system#placeholders">ChatPlugin wiki/Ban system/Placeholders</a>
 	 * 
 	 * <p><strong>Content:</strong> ["player", "player_uuid", "ip_address", "staff_member", "who_removed", "reason", "server", "type", "date", "removal_date", "duration", "active", "global", "silent"]</p>
 	 */

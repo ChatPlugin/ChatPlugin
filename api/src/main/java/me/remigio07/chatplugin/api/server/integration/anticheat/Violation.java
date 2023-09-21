@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.server.integration.anticheat;
@@ -29,7 +29,7 @@ public abstract class Violation {
 	/**
 	 * Array containing all available placeholders that can
 	 * be translated with a violation's information. See wiki for more info:
-	 * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Plugin-integrations#violations-placeholders">ChatPlugin wiki/Plugin integrations/Anticheats/Violations' placeholders</a>
+	 * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Plugin-integrations#violations-placeholders">ChatPlugin wiki/Plugin integrations/Anticheats/Violations' placeholders</a>
 	 * 
 	 * <p><strong>Content:</strong> ["cheater", "cheater_uuid", "server", "anticheat", "cheat_id", "component", "amount", "ping", "ping_format", "version", "version_protocol", "tps", "last_time"]</p>
 	 */

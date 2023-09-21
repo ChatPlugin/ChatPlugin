@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.common.event;
@@ -32,7 +32,7 @@ import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 
 /**
  * Manager that handles {@link ChatPluginEvent}s and {@link EventSubscriber}s. See wiki for more info:
- * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Developer-API#events">ChatPlugin wiki/Developer API/Events</a>
+ * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Developer-API#events">ChatPlugin wiki/Developer API/Events</a>
  */
 public abstract class EventManager implements ChatPluginManager {
 	

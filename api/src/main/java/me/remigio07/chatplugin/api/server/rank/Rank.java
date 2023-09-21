@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.server.rank;
@@ -26,14 +26,14 @@ import me.remigio07.chatplugin.api.server.language.Language;
 
 /**
  * Represents a rank handled by the {@link RankManager}. See wiki for more info:
- * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Ranks">ChatPlugin wiki/Ranks</a>
+ * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Ranks">ChatPlugin wiki/Ranks</a>
  */
 public abstract class Rank {
 	
 	/**
 	 * Array containing all available placeholders that can
 	 * be translated with a rank's information. See wiki for more info:
-	 * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Ranks#placeholders">ChatPlugin wiki/Ranks/Placeholders</a>
+	 * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Ranks#placeholders">ChatPlugin wiki/Ranks/Placeholders</a>
 	 * 
 	 * <p><strong>Content:</strong> ["rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description"]</p>
 	 */

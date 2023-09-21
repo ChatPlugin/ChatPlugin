@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.common.punishment.warning;
@@ -31,7 +31,7 @@ public abstract class Warning extends Punishment {
 	/**
 	 * Array containing all available placeholders that can
 	 * be translated with a warning's information. See wiki for more info:
-	 * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Warning-system#placeholders">ChatPlugin wiki/Warning system/Placeholders</a>
+	 * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Warning-system#placeholders">ChatPlugin wiki/Warning system/Placeholders</a>
 	 * 
 	 * <p><strong>Content:</strong> ["id", "player", "player_uuid", "staff_member", "who_unwarned", "reason", "server", "date", "unwarn_date", "expiration_date", "duration", "remaining_time", "amount", "max_amount", "active", "global", "silent"]</p>
 	 */

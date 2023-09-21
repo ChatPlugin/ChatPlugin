@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.server.storage.configuration;
@@ -320,7 +320,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.help.premium.vanish", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/vanish &8- &eBecome invisible to non Staff members.\n&f&l/fakejoin &8- &eSend fake join message and disable vanish.\n&f&l/fakequit &8- &eSend fake quit message and enable vanish.\n&f&l/silentteleport &8- &eSilently teleport somewhere else.");
 		messages.addDefault("commands.help.premium.misc", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/tps &8- &eDisplay the server's current ticks per second.\n&f&l/ad &8- &eSend a loaded ad to one or more online players.\n&f&l/broadcast &8- &eSend a message to every online player.\n&f&l/broadcastraw &8- &eLike /broadcast, but without the prefix.\n&f&l/globalbroadcast &8- &eLike /broadcast, but cross-server.\n&f&l/discordmessage &8- &eSend a message through the bot.");
 		
-		messages.addDefault("commands.info", "{pfx} &aInfo about &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&eWebsite: &fhttps://megaproserver.com/chatplugin\n&eGitHub: &fhttps://github.com/Remigio07/ChatPlugin\n&eDiscord: &fhttps://discord.gg/CPtysXTfQg");
+		messages.addDefault("commands.info", "{pfx} &aInfo about &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&eWebsite: &fhttps://megaproserver.com/chatplugin\n&eGitHub: &fhttps://github.com/ChatPlugin/ChatPlugin\n&eDiscord: &fhttps://discord.gg/CPtysXTfQg");
 		messages.addDefault("commands.version", "{pfx} &aRunning &c&lChat&f&lPlugin {0} &fv{1} &aby &9Remigio07 &aon &f{2} {3}&a.");
 		messages.addDefault("commands.status", "{pfx} &aCurrent server status:\n&eServer version: &f{server_version} (protocol: {server_version_protocol})\n&eChatPlugin version: &f{plugin_version}\n&eUptime: &f{uptime}\n&eTPS (1m, 5m, 15m): &f{tps_1_min_format}&f, {tps_5_min_format}&f, {tps_15_min_format}\n&eUsed memory: &f{used_memory}/{max_memory} MB\n&eAllocated memory: &f{total_memory} MB\n&eFree memory: &f{free_memory} MB\n&eStorage used: &f{used_storage}/{total_storage} GB\n&eFree storage: &f{free_storage} GB\n&eEnabled worlds: &f{enabled_worlds}x\n&eEnabled players: &f{enabled_players}x\n&eEnabled managers: &f{enabled_managers}x\n&eStartup time: &f{startup_time} ms\n&eLast reload time: &f{last_reload_time} ms");
 		messages.addDefault("commands.scoreboard.enabled", "{pfx} &aThe scoreboard has been enabled.");
@@ -574,7 +574,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("proxy-messages.reload.start", "{pfx} &aChatPlugin is reloading...");
 		messages.addDefault("proxy-messages.reload.end", "{pfx} &aChatPlugin has been reloaded. Took &f{0} ms &ato complete.");
 		messages.addDefault("proxy-messages.version", "{pfx} &aRunning &c&lChat&f&lPlugin &6Premium &fv{0} &aby &9Remigio07 &aon &f{1} {2}&a.");
-		messages.addDefault("proxy-messages.info", "{pfx} &aInfo about &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&eWebsite: &fhttps://megaproserver.com/chatplugin\n&eGitHub: &fhttps://github.com/Remigio07/ChatPlugin\n&eDiscord: &fhttps://discord.gg/CPtysXTfQg");
+		messages.addDefault("proxy-messages.info", "{pfx} &aInfo about &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&eWebsite: &fhttps://megaproserver.com/chatplugin\n&eGitHub: &fhttps://github.com/ChatPlugin/ChatPlugin\n&eDiscord: &fhttps://discord.gg/CPtysXTfQg");
 		
 		messages.save();
 	}
@@ -2085,12 +2085,12 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "messages.main.";
 		
 		discordIntegration.addDefault(path + "help.title.text", "Help for ChatPlugin");
-		discordIntegration.addDefault(path + "help.title.url", "https://github.com/Remigio07/ChatPlugin/wiki/Discord-integration#commands-list");
+		discordIntegration.addDefault(path + "help.title.url", "https://github.com/ChatPlugin/ChatPlugin/wiki/Discord-integration#commands-list");
 		discordIntegration.addDefault(path + "help.description", "Click the title to visit the ChatPlugin wiki with the commands list.");
 		discordIntegration.addDefault(path + "help.thumbnail", "https://i.imgur.com/9NhY4ps.png");
 		discordIntegration.addDefault(path + "help.color", "55FF55");
 		discordIntegration.addDefault(path + "info.title.text", "Info and contacts for ChatPlugin");
-		discordIntegration.addDefault(path + "info.title.url", "https://github.com/Remigio07/ChatPlugin");
+		discordIntegration.addDefault(path + "info.title.url", "https://github.com/ChatPlugin/ChatPlugin");
 		discordIntegration.addDefault(path + "info.description", "TODO finish me with all support links and contacts");
 		discordIntegration.addDefault(path + "info.thumbnail", "https://i.imgur.com/3XBxeNx.png");
 		discordIntegration.addDefault(path + "info.color", "55FF55");

@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.server.language;
@@ -28,7 +28,7 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
  * Manager that handles {@link Language}s. See wiki for more info:
- * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Languages">ChatPlugin wiki/Languages</a>
+ * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Languages">ChatPlugin wiki/Languages</a>
  * 
  * @see LanguageDetector
  */

@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.server.util;
@@ -29,7 +29,7 @@ import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 /**
  * Annotation used to indicate that a Minecraft feature handled by a {@link ChatPluginManager} is not available under certain circumstances.
  * Should be applied to managers' class declarations and checked through {@link ChatPluginManager#checkAvailability(boolean)}. See wiki for more info:
- * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Features-availability">ChatPlugin wiki/Features availability</a>
+ * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Features-availability">ChatPlugin wiki/Features availability</a>
  * 
  * <p><strong>Note:</strong> the check is processed on the plugin's server implementations only (Bukkit and Sponge).</p>
  */

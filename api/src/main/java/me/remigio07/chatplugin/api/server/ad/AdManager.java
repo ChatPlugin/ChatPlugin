@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.server.ad;
@@ -32,7 +32,7 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 
 /**
  * Manager that handles {@link Ad}s.
- * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Ads">ChatPlugin wiki/Ads</a>
+ * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Ads">ChatPlugin wiki/Ads</a>
  */
 public abstract class AdManager extends TimerTask implements ChatPluginManager {
 	

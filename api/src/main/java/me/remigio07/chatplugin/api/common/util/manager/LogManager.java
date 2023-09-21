@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.common.util.manager;
@@ -55,7 +55,7 @@ public abstract class LogManager implements ChatPluginManager {
 				file.createNewFile();
 				
 				if (freshInstallation)
-					logMessage("Fresh installation? Welcome! Generating default files for you. Follow this guide for proper installation: https://github.com/Remigio07/ChatPlugin/wiki/Installation-({0})", LogLevel.INFO, ChatPlugin.getInstance().isPremium() ? "premium" : "free");
+					logMessage("Fresh installation? Welcome! Generating default files for you. Follow this guide for proper installation: https://github.com/ChatPlugin/ChatPlugin/wiki/Installation-({0})", LogLevel.INFO, ChatPlugin.getInstance().isPremium() ? "premium" : "free");
 			} catch (IOException e) {
 				throw new ChatPluginManagerException(this, e);
 			}

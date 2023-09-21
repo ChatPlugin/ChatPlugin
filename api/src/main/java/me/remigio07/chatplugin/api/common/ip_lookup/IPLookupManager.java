@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.common.ip_lookup;
@@ -36,7 +36,7 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
  * Manager that handles {@link IPLookup}s. See wiki for more info:
- * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/IP-lookup">ChatPlugin wiki/IP lookup</a>
+ * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/IP-lookup">ChatPlugin wiki/IP lookup</a>
  * 
  * @see #getIPLookup(InetAddress)
  */

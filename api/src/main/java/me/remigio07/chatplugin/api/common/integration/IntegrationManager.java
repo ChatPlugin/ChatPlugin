@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.common.integration;
@@ -25,7 +25,7 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
  * Manager that handles {@link ChatPluginIntegration}s. See wiki for more info:
- * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Plugin-integrations">ChatPlugin wiki/Plugin integrations</a>
+ * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Plugin-integrations">ChatPlugin wiki/Plugin integrations</a>
  */
 public abstract class IntegrationManager implements ChatPluginManager {
 	

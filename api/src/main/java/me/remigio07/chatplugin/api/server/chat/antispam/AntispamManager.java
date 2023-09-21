@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.server.chat.antispam;
@@ -30,7 +30,7 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
  * Manager that handles the antispam. See wiki for more info:
- * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Chat#antispam">ChatPlugin wiki/Chat/Antispam</a>
+ * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Chat#antispam">ChatPlugin wiki/Chat/Antispam</a>
  */
 public abstract class AntispamManager implements ChatPluginManager {
 	

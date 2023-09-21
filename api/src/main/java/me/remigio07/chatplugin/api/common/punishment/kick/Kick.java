@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.common.punishment.kick;
@@ -31,7 +31,7 @@ public abstract class Kick extends Punishment {
 	/**
 	 * Array containing all available placeholders that can
 	 * be translated with a kick's information. See wiki for more info:
-	 * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Kick-system#placeholders">ChatPlugin wiki/Kick system/Placeholders</a>
+	 * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Kick-system#placeholders">ChatPlugin wiki/Kick system/Placeholders</a>
 	 * 
 	 * <p><strong>Content:</strong> ["id", "player", "player_uuid", "ip_address", "staff_member", "reason", "server", "type", "date", "silent"]</p>
 	 */

@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.common.ip_lookup;
@@ -24,14 +24,14 @@ import me.remigio07.chatplugin.api.common.util.Utils;
 
 /**
  * Represents an IP lookup handled by the {@link IPLookupManager}. See wiki for more info:
- * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/IP-lookup">ChatPlugin wiki/IP lookup</a>
+ * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/IP-lookup">ChatPlugin wiki/IP lookup</a>
  */
 public abstract class IPLookup {
 	
 	/**
 	 * Array containing all available placeholders that can
 	 * be translated with an IP lookup's information. See wiki for more info:
-	 * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/IP-lookup#placeholders">ChatPlugin wiki/IP lookup/Placeholders</a>
+	 * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/IP-lookup#placeholders">ChatPlugin wiki/IP lookup/Placeholders</a>
 	 * 
 	 * <p><strong>Content:</strong> ["ip_address", "isp", "continent", "country", "subdivisions", "city", "postal_code", "latitude", "longitude", "accuracy_radius_km", "accuracy_radius_mi", "accuracy_radius_nm"]</p>
 	 */

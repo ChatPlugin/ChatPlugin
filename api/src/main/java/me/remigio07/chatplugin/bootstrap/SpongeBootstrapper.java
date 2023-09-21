@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.bootstrap;
@@ -35,7 +35,7 @@ import com.google.inject.Inject;
 		name = "ChatPlugin",
 		version = "${version}",
 		url = "https://megaproserver.com/chatplugin",
-		description = "A lightweight yet complete plugin which handles just too many features! Check the wiki for info: https://github.com/Remigio07/ChatPlugin",
+		description = "A lightweight yet complete plugin which handles just too many features! Check the wiki for info: https://github.com/ChatPlugin/ChatPlugin",
 		authors = "Remigio07",
 		dependencies = {
 				@Dependency(

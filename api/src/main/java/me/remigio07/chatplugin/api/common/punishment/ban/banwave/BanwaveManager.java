@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.common.punishment.ban.banwave;
@@ -38,7 +38,7 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
  * Manager that handles {@link BanwaveEntry}(i)es. See wiki for more info:
- * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Ban-system#banwaves">ChatPlugin wiki/Ban system/Banwaves</a>
+ * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Ban-system#banwaves">ChatPlugin wiki/Ban system/Banwaves</a>
  */
 public abstract class BanwaveManager extends TimerTask implements ChatPluginManager {
 	

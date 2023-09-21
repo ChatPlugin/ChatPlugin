@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.server.chat.log;
@@ -29,7 +29,7 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
  * Manager that handles {@link LoggedMessage}s. See wiki for more info:
- * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Chat#log">ChatPlugin wiki/Chat/Log</a>
+ * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Chat#log">ChatPlugin wiki/Chat/Log</a>
  */
 public abstract class ChatLogManager implements ChatPluginManager {
 	

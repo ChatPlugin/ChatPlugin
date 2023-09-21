@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.server.integration.anticheat;
@@ -30,7 +30,7 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
  * Manager that handles an {@link AnticheatIntegration}'s {@link Violation}s. See wiki for more info:
- * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Plugin-integrations#violations-placeholders">ChatPlugin wiki/Plugin integrations/Anticheats/Violations' placeholders</a>
+ * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Plugin-integrations#violations-placeholders">ChatPlugin wiki/Plugin integrations/Anticheats/Violations' placeholders</a>
  */
 public abstract class AnticheatManager implements ChatPluginManager {
 	
@@ -129,7 +129,7 @@ public abstract class AnticheatManager implements ChatPluginManager {
 	/**
 	 * Checks if the specified punishment's reason is contained in {@link #getReasonsStartWith()}.
 	 * Case will be lowered and colors will be stripped using {@link ChatColor#stripColor(String)}. See wiki for more info:
-	 * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Plugin-integrations#anticheats">ChatPlugin wiki/Plugin integrations/Anticheats</a>
+	 * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Plugin-integrations#anticheats">ChatPlugin wiki/Plugin integrations/Anticheats</a>
 	 * 
 	 * @param reason Punishment's reason
 	 * @return Whether the reason is an anticheat's reason

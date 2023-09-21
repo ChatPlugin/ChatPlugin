@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.server.player;
@@ -235,7 +235,7 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	 * @param player Player to load
 	 * @return Time elapsed, in milliseconds
 	 * @throws IllegalStateException If {@link ProxyManager#isEnabled()} and this server has not received a
-	 * <code><a href="https://github.com/remigio07/chatplugin/wiki/Plugin-messages#PlayerJoin">PlayerJoin</a></code>
+	 * <code><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Plugin-messages#PlayerJoin">PlayerJoin</a></code>
 	 * plugin message from the proxy containing information about the specified player's version
 	 * @see ServerPlayerLoadEvent
 	 * @see Packets.JoinQuit#playerJoin(String, UUID, int, boolean, boolean, boolean)

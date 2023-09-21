@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.server.tablist.custom_suffix;
@@ -29,7 +29,7 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 
 /**
  * Manager that handles custom suffixes in the {@link Tablist}. See wiki for more info:
- * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Tablists#custom-suffix">ChatPlugin wiki/Tablists#Custom suffix</a>
+ * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Tablists#custom-suffix">ChatPlugin wiki/Tablists#Custom suffix</a>
  * 
  * @see RenderType
  */

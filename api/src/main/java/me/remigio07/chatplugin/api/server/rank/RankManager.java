@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.server.rank;
@@ -26,7 +26,7 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
  * Manager that handles {@link Rank}s. See wiki for more info:
- * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Ranks">ChatPlugin wiki/Ranks</a>
+ * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Ranks">ChatPlugin wiki/Ranks</a>
  */
 public abstract class RankManager implements ChatPluginManager {
 	

@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.server.chat;
@@ -20,7 +20,7 @@ import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 
 /**
  * Manager that handles formatted and colored messages in the chat. See wiki for more info:
- * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/Chat#formatting-codes">ChatPlugin wiki/Chat/Formatting codes</a>
+ * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Chat#formatting-codes">ChatPlugin wiki/Chat/Formatting codes</a>
  */
 public abstract class FormattedChatManager implements ChatPluginManager {
 	

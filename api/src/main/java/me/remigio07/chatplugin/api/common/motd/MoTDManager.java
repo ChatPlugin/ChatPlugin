@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/Remigio07/ChatPlugin>
+ * 	<https://github.com/ChatPlugin/ChatPlugin>
  */
 
 package me.remigio07.chatplugin.api.common.motd;
@@ -22,7 +22,7 @@ import me.remigio07.chatplugin.api.server.motd.ServerMoTDManager;
 
 /**
  * Manager that handles {@link MoTD}s. See wiki for more info:
- * <br><a href="https://github.com/Remigio07/ChatPlugin/wiki/MoTD">ChatPlugin wiki/MoTD</a>
+ * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/MoTD">ChatPlugin wiki/MoTD</a>
  * 
  * @see ServerMoTDManager
  * @see ProxyMoTDManager

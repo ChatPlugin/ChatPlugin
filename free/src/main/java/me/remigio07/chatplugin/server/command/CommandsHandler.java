@@ -27,15 +27,19 @@ import me.remigio07.chatplugin.server.command.admin.ClearChatCommand;
 import me.remigio07.chatplugin.server.command.admin.IPLookupCommand;
 import me.remigio07.chatplugin.server.command.admin.LastSeenCommand;
 import me.remigio07.chatplugin.server.command.admin.MuteAllCommand;
+import me.remigio07.chatplugin.server.command.admin.SocialspyCommand;
 import me.remigio07.chatplugin.server.command.admin.StaffChatCommand;
 import me.remigio07.chatplugin.server.command.misc.AdCommand;
 import me.remigio07.chatplugin.server.command.misc.BroadcastCommand;
 import me.remigio07.chatplugin.server.command.misc.BroadcastRawCommand;
 import me.remigio07.chatplugin.server.command.misc.TPSCommand;
+import me.remigio07.chatplugin.server.command.user.IgnoreCommand;
 import me.remigio07.chatplugin.server.command.user.LanguageCommand;
 import me.remigio07.chatplugin.server.command.user.PingCommand;
 import me.remigio07.chatplugin.server.command.user.PlayerListCommand;
 import me.remigio07.chatplugin.server.command.user.RankInfoCommand;
+import me.remigio07.chatplugin.server.command.user.ReplyCommand;
+import me.remigio07.chatplugin.server.command.user.WhisperCommand;
 import me.remigio07.chatplugin.server.command.vanish.VanishCommand;
 
 public abstract class CommandsHandler {
@@ -58,11 +62,21 @@ public abstract class CommandsHandler {
 		// user
 		if (!ChatPlugin.getInstance().isPremium())
 			put("language", new LanguageCommand());
+		put("whisper", new WhisperCommand());
+		put("reply", new ReplyCommand());
+		put("ignore",
+				new IgnoreCommand.Add(),
+				new IgnoreCommand.Clear(),
+				new IgnoreCommand.List(),
+				new IgnoreCommand.Remove(),
+				new IgnoreCommand()
+				);
 		put("ping", new PingCommand());
 		put("rankinfo", new RankInfoCommand());
 		put("playerlist", new PlayerListCommand());
 		// admin
 		put("staffchat", new StaffChatCommand());
+		put("socialspy", new SocialspyCommand());
 		put("iplookup", new IPLookupCommand());
 		put("lastseen", new LastSeenCommand());
 		put("clearchat", new ClearChatCommand());

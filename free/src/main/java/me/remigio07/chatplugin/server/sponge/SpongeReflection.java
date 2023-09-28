@@ -50,26 +50,28 @@ public class SpongeReflection {
 			classes.put("NetHandlerPlayServer", clazz);
 			putMethod(clazz, "func_147359_a", Arrays.asList(classes.get("Packet")));
 			
-			// SPacketOpenWindow
-			clazz = getClass("network.play.server.SPacketOpenWindow");
-			classes.put("SPacketOpenWindow", clazz);
-			
-			// Container
-			clazz = getClass("inventory.Container");
-			classes.put("Container", clazz);
-			
-			clazz = getClass("entity.player.EntityPlayerMP");
-			classes.put("EntityPlayerMP", clazz);
-			putMethod(clazz, "func_71120_a", Arrays.asList(classes.get("Container")));
-			
-			// ITextComponent
-			clazz = getClass("util.text.ITextComponent");
-			classes.put("ITextComponent", clazz);
-			
-			// ITextComponent$Serializer
-			clazz = getClass("util.text.ITextComponent$Serializer");
-			classes.put("ITextComponent$Serializer", clazz);
-			putMethod(clazz, "func_150699_a", Arrays.asList(String.class));
+			if (VersionUtils.getVersion().isAtLeast(Version.V1_12)) {
+				// SPacketOpenWindow
+				clazz = getClass("network.play.server.SPacketOpenWindow");
+				classes.put("SPacketOpenWindow", clazz);
+				
+				// Container
+				clazz = getClass("inventory.Container");
+				classes.put("Container", clazz);
+				
+				clazz = getClass("entity.player.EntityPlayerMP");
+				classes.put("EntityPlayerMP", clazz);
+				putMethod(clazz, "func_71120_a", Arrays.asList(classes.get("Container")));
+				
+				// ITextComponent
+				clazz = getClass("util.text.ITextComponent");
+				classes.put("ITextComponent", clazz);
+				
+				// ITextComponent$Serializer
+				clazz = getClass("util.text.ITextComponent$Serializer");
+				classes.put("ITextComponent$Serializer", clazz);
+				putMethod(clazz, "func_150699_a", Arrays.asList(String.class));
+			}
 			
 			// ServerStatusResponse$Version
 			clazz = getClass(VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "network.ServerStatusResponse$Version" : "network.ServerStatusResponse$MinecraftProtocolVersionIdentifier");

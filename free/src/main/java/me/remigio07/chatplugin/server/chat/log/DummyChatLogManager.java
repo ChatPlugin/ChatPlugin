@@ -23,7 +23,8 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.server.chat.antispam.DenyChatReason;
 import me.remigio07.chatplugin.api.server.chat.log.ChatLogManager;
-import me.remigio07.chatplugin.api.server.chat.log.LoggedMessage;
+import me.remigio07.chatplugin.api.server.chat.log.LoggedChatMessage;
+import me.remigio07.chatplugin.api.server.chat.log.LoggedPrivateMessage;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 public class DummyChatLogManager extends ChatLogManager {
@@ -34,12 +35,31 @@ public class DummyChatLogManager extends ChatLogManager {
 	}
 	
 	@Override
-	public @NotNull List<LoggedMessage> getLoggedMessages(OfflinePlayer player, long timeAgo, String query) {
+	public @NotNull List<LoggedChatMessage> getLoggedChatMessages(OfflinePlayer sender, long timeAgo, String query) {
 		return null;
 	}
 	
 	@Override
-	public void logMessage(ChatPluginServerPlayer player, String message, @Nullable(why = "Message may not have been blocked") DenyChatReason denyChatReason) {
+	public @NotNull List<LoggedPrivateMessage> getLoggedPrivateMessages(OfflinePlayer sender, long timeAgo, String query) {
+		return null;
+	}
+	
+	@Override
+	public void logChatMessage(
+			ChatPluginServerPlayer sender,
+			String message,
+			@Nullable(why = "Message may not have been blocked") DenyChatReason<?> denyChatReason
+			) {
+		
+	}
+	
+	@Override
+	public void logPrivateMessage(
+			@Nullable(why = "Null to represent the console") ChatPluginServerPlayer sender,
+			@Nullable(why = "Null to represent the console") ChatPluginServerPlayer recipient,
+			String privateMessage,
+			@Nullable(why = "Private message may not have been blocked") DenyChatReason<?> denyChatReason
+			) {
 		
 	}
 	

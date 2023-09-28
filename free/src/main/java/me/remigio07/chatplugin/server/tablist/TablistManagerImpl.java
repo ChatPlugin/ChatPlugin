@@ -177,8 +177,8 @@ public class TablistManagerImpl extends TablistManager {
 				header = "";
 			if (footer == null)
 				footer = "";
-			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "a").set(packet, BukkitReflection.invokeMethod("ChatSerializer", "a", null, "\"" + header + "\""));
-			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "b").set(packet, BukkitReflection.invokeMethod("ChatSerializer", "a", null, "\"" + footer + "\""));
+			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "a").set(packet, BukkitReflection.invokeMethod("ChatSerializer", "a", null, "{\"text\":\"" + header + "\"}"));
+			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "b").set(packet, BukkitReflection.invokeMethod("ChatSerializer", "a", null, "{\"text\":\"" + footer + "\"}"));
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
 			e.printStackTrace();
 		} return packet;

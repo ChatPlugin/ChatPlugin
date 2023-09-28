@@ -17,13 +17,14 @@ package me.remigio07.chatplugin.common.storage.database;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.DriverManager;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.StorageManager;
@@ -33,6 +34,7 @@ import me.remigio07.chatplugin.api.common.storage.database.DatabaseManager;
 import me.remigio07.chatplugin.api.common.util.Library;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
+import me.remigio07.chatplugin.bootstrap.IsolatedClassLoader;
 import me.remigio07.chatplugin.common.util.LibrariesUtils;
 
 public class SQLiteConnector extends DatabaseConnector {
@@ -43,30 +45,21 @@ public class SQLiteConnector extends DatabaseConnector {
 		
 		try {
 			LibrariesUtils.load(Library.SQLITE_DRIVER);
-			Class.forName("org.sqlite.JDBC");
 			
 			String dbName = ConfigurationType.CONFIG.get().getString("storage.database.file-name") + ".db";
+			String file = StorageManager.getInstance().getFolder().getAbsolutePath() + File.separator + dbName;
 			boolean serverMode = ConfigurationType.CONFIG.get().getBoolean("storage.database.use-server-mode");
 			
 			if (serverMode)
 				LogManager.log("H2 is selected as storage method with the server mode (\"storage.database.use-server-mode\" in config.yml) enabled. This may require extra time to start the database if no connections are open.", 0);
-			connection = DriverManager.getConnection(
-					"jdbc:sqlite:"
-					+ StorageManager.getInstance().getFolder().getAbsolutePath() + File.separator + dbName
-					+ (ConfigurationType.CONFIG.get().getBoolean("storage.database.use-server-mode") ? "?cache=shared" : ""),
-					"sa",
-					""
+			connection = (Connection) IsolatedClassLoader.getInstance().loadClass("org.sqlite.jdbc4.JDBC4Connection").getConstructor(String.class, String.class, Properties.class).newInstance(
+					"jdbc:sqlite:" + file + (serverMode ? "?cache=shared" : ""),
+					file,
+					new Properties()
 					);
 			
 			executeUpdate("ATTACH DATABASE '" + dbName + "' AS 'chatplugin'");
-		} catch (ClassNotFoundException e) {
-			LogManager.log("Unable to find the SQLite JDBC class. ChatPlugin will disable.", 2);
-			throw new ChatPluginManagerException(DatabaseManager.getInstance(), e);
-		} catch (SQLException e) {
-			LogManager.log("Unable to access the SQLite database.", 2);
-			throw new ChatPluginManagerException(DatabaseManager.getInstance(), e);
 		} catch (Exception e) {
-			LogManager.log("Unable to load the SQLite driver's JAR file.", 2);
 			throw new ChatPluginManagerException(DatabaseManager.getInstance(), e);
 		}
 	}
@@ -131,7 +124,7 @@ public class SQLiteConnector extends DatabaseConnector {
 					+ "`global` NUMERIC DEFAULT FALSE, "
 					+ "`silent` NUMERIC DEFAULT FALSE, "
 					+ "`active` NUMERIC DEFAULT TRUE, "
-					+ "`unwarned` NUMERIC DEFAULT FALSE, "
+					+ "`unwarned` NUMERIC DEFAULT FALSE "
 					+ ")";
 			break;
 		case KICKS:
@@ -179,17 +172,32 @@ public class SQLiteConnector extends DatabaseConnector {
 					+ "`bans` INTEGER DEFAULT 0, "
 					+ "`warnings` INTEGER DEFAULT 0, "
 					+ "`kicks` INTEGER DEFAULT 0, "
-					+ "`mutes` INTEGER DEFAULT 0"
+					+ "`mutes` INTEGER DEFAULT 0, "
+					+ "`ignored_players` TEXT"
 					+ ")";
 			break;
-		case MESSAGES:
+		case CHAT_MESSAGES:
 			update = "CREATE TABLE IF NOT EXISTS {table_id} ("
-					+ "`player_uuid` TEXT NOT NULL, "
-					+ "`player_name` TEXT NOT NULL, "
+					+ "`sender_uuid` TEXT NOT NULL, "
+					+ "`sender_name` TEXT NOT NULL, "
 					+ "`rank_id` TEXT NOT NULL, "
 					+ "`server` TEXT NOT NULL, "
 					+ "`world` TEXT NOT NULL, "
-					+ "`message` TEXT NOT NULL, "
+					+ "`content` TEXT NOT NULL, "
+					+ "`date` INTEGER NOT NULL, "
+					+ "`deny_chat_reason` NUMERIC"
+					+ ")";
+			break;
+		case PRIVATE_MESSAGES:
+			update = "CREATE TABLE IF NOT EXISTS {table_id} ("
+					+ "`sender_uuid` TEXT NOT NULL, "
+					+ "`sender_name` TEXT NOT NULL, "
+					+ "`recipient_uuid` TEXT NOT NULL, "
+					+ "`recipient_name` TEXT NOT NULL, "
+					+ "`rank_id` TEXT NOT NULL, "
+					+ "`server` TEXT NOT NULL, "
+					+ "`world` TEXT NOT NULL, "
+					+ "`content` TEXT NOT NULL, "
 					+ "`date` INTEGER NOT NULL, "
 					+ "`deny_chat_reason` NUMERIC"
 					+ ")";

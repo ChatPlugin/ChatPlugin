@@ -31,7 +31,7 @@ public abstract class ChatPlugin {
 	/**
 	 * String containing the plugin's current version.
 	 * 
-	 * <p><strong>Content:</strong> 🤷</p>
+	 * <p><strong>Content:</strong> ?</p>
 	 */
 	public static final String VERSION;
 	protected static ChatPlugin instance;

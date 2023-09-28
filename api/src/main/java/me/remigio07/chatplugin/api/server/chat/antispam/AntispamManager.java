@@ -23,16 +23,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import me.remigio07.chatplugin.api.common.chat.DenyChatReasonHandler;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
-import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
  * Manager that handles the antispam. See wiki for more info:
  * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Chat#antispam">ChatPlugin wiki/Chat/Antispam</a>
  */
-public abstract class AntispamManager implements ChatPluginManager {
+public abstract class AntispamManager implements DenyChatReasonHandler {
 	
 	protected static AntispamManager instance;
 	protected boolean enabled, urlsPreventionEnabled, ipsPreventionEnabled;
@@ -212,10 +212,11 @@ public abstract class AntispamManager implements ChatPluginManager {
 	 * 
 	 * @param player Player involved
 	 * @param message Message to check
+	 * @param bypassChecks Checks not to be performed
 	 * @return The reason why the message should be blocked
 	 */
 	@Nullable(why = "Player may have the permission to send the message")
-	public abstract DenyChatReason getDenyChatReason(ChatPluginServerPlayer player, String message);
+	public abstract DenyChatReason<AntispamManager> getDenyChatReason(ChatPluginServerPlayer player, String message, List<DenyChatReason<AntispamManager>> bypassChecks);
 	
 	/**
 	 * Checks if the specified message contains a disallowed URL.

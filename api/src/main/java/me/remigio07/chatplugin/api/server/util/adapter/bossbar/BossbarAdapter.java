@@ -25,6 +25,8 @@ import org.spongepowered.api.boss.BossBarOverlays;
 import org.spongepowered.api.boss.ServerBossBar;
 import org.spongepowered.api.text.Text;
 
+import me.remigio07.chatplugin.api.common.util.VersionUtils;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
@@ -232,19 +234,18 @@ public class BossbarAdapter {
 	public void remove() {
 		if (Environment.isBukkit()) {
 			bukkitValue().getPlayers().forEach(player -> bukkitValue().removePlayer(player));
-			BukkitBossbar.remove(id);
+			
+			if (VersionUtils.getVersion().isAtLeast(Version.V1_13))
+				BukkitBossbar.remove(id);
 		} else spongeValue().getPlayers().forEach(player -> spongeValue().removePlayer(player));
 	}
 	
 	private static class BukkitBossbar {
 		
 		public static BossBar get(String id) {
-			return Bukkit.createBossBar(
-					new NamespacedKey(BukkitBootstrapper.getInstance(), id),
-					"",
-					BarColor.PINK,
-					BarStyle.SOLID
-					);
+			return VersionUtils.getVersion().isAtLeast(Version.V1_13)
+					? Bukkit.createBossBar(new NamespacedKey(BukkitBootstrapper.getInstance(), id), "", BarColor.PINK, BarStyle.SOLID)
+					: Bukkit.createBossBar("", BarColor.PINK, BarStyle.SOLID);
 		}
 		
 		public static void remove(String id) {

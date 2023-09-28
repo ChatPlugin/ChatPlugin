@@ -15,8 +15,13 @@
 
 package me.remigio07.chatplugin.server.player;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.server.bossbar.PlayerBossbar;
+import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
+import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
@@ -39,6 +44,9 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 		
 		if (ProxyManager.getInstance().isEnabled() && ServerPlayerManager.getInstance().getPlayerVersion(player.getUUID()) == null)
 			throw new IllegalStateException("Server has not received a PlayerJoin plugin message from the proxy");
+		if (PrivateMessagesManager.getInstance().isEnabled() && PrivateMessagesManager.getInstance().isSocialspyOnJoinEnabled() && player.hasPermission("chatplugin.commands.socialspy"))
+			socialspyEnabled = true;
+		ignoredPlayers = PlayerIgnoreManager.getInstance().isEnabled() ? new ArrayList<>(PlayerIgnoreManager.getInstance().getIgnoredPlayers(this)) : Collections.emptyList();
 	}
 	
 	public void setScoreboard(Scoreboard scoreboard) {
@@ -91,6 +99,10 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 	
 	public void setMessagesSent(int messagesSent) {
 		this.messagesSent = messagesSent;
+	}
+	
+	public void setLastCorrespondent(ChatPluginServerPlayer lastCorrespondent) {
+		this.lastCorrespondent = lastCorrespondent;
 	}
 	
 	public boolean isPlayerStored() {

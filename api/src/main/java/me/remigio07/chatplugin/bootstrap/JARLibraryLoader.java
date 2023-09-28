@@ -24,12 +24,8 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,6 +35,10 @@ import java.util.stream.Stream;
 public class JARLibraryLoader extends URLClassLoader {
 	
 	private static JARLibraryLoader instance = new JARLibraryLoader();
+	
+	static {
+		registerAsParallelCapable();
+	}
 	
 	private JARLibraryLoader() {
 		super(new URL[0], JARLibraryLoader.class.getClassLoader());
@@ -55,19 +55,10 @@ public class JARLibraryLoader extends URLClassLoader {
 			Environment environment = Environment.getCurrent();
 			List<URL> jars = Stream.of(extract(false), extract(true)).filter(Objects::nonNull).collect(Collectors.toList());
 			
-			if (instance.getURLs().length == 0) {
-				for (URL jar : jars) {
+			if (instance.getURLs().length == 0)
+				for (URL jar : jars)
 					instance.addURL(jar);
-					
-//					for (String clazz : getClasses(new JarFile(new File(jar.toURI())), environment.getExcludedClasspaths())) {
-//						try {
-//							loadClass(clazz);
-//						} catch (NoClassDefFoundError e) {
-//							// optional dependencies
-//						}
-//					}
-				}
-			} Class<?> mainClass = Class.forName("me.remigio07.chatplugin.ChatPlugin" + (jars.size() == 2 ? "Premium" : "") + "Impl", true, instance);
+			Class<?> mainClass = Class.forName("me.remigio07.chatplugin.ChatPlugin" + (jars.size() == 2 ? "Premium" : "") + "Impl", true, instance);
 			
 			if (environment == Environment.VELOCITY)
 				mainClass.getMethod("load", Object.class, Object.class, Object.class).invoke(null, args);
@@ -99,13 +90,6 @@ public class JARLibraryLoader extends URLClassLoader {
 	 */
 	public void load(File target) throws IOException {
 		addURL(target.toURI().toURL());
-		
-//		try {
-//			for (String clazz : getClasses(new JarFile(target), null))
-//				loadClass(clazz);
-//		} catch (ClassNotFoundException | NoClassDefFoundError e) {
-//			// optional dependencies
-//		}
 	}
 	
 	private URL extract(boolean premium) throws IOException {
@@ -120,24 +104,6 @@ public class JARLibraryLoader extends URLClassLoader {
 			Files.copy(input, path, StandardCopyOption.REPLACE_EXISTING);
 			return path.toUri().toURL();
 		}
-	}
-	
-	public static List<String> getClasses(JarFile jar, List<String> excludedClasspaths) {
-		List<String> classes = new ArrayList<>();
-		Enumeration<JarEntry> entries = jar.entries();
-		String entry;
-		
-		while (entries.hasMoreElements() && (entry = entries.nextElement().getName()) != null)
-			if (entry.endsWith(".class") && !entry.startsWith("META-INF") && !entry.equals("module-info.class") && (excludedClasspaths == null || isIncluded(entry, excludedClasspaths)))
-				classes.add(entry.substring(0, entry.lastIndexOf('.')).replace('/', '.'));
-		return classes;
-	}
-	
-	private static boolean isIncluded(String entryName, List<String> excludedClasspaths) {
-		for (String excludedClasspath : excludedClasspaths)
-			if (entryName.replace('/', '.').startsWith(excludedClasspath))
-				return false;
-		return true;
 	}
 	
 	/**

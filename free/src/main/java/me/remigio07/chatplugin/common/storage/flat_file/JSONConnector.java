@@ -220,11 +220,6 @@ public class JSONConnector extends FlatFileConnector {
 	}
 	
 	@Override
-	public @NotNull List<LoggedMessage> getMessages(OfflinePlayer player, long timeAgo, String query) throws SQLException {
-		return null;
-	}
-	
-	@Override
 	public void cleanOldPlayers() {
 		
 	}

@@ -15,14 +15,14 @@
 
 package me.remigio07.chatplugin.api.server.chat;
 
+import me.remigio07.chatplugin.api.common.chat.DenyChatReasonHandler;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
-import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 
 /**
  * Manager that handles formatted and colored messages in the chat. See wiki for more info:
  * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Chat#formatting-codes">ChatPlugin wiki/Chat/Formatting codes</a>
  */
-public abstract class FormattedChatManager implements ChatPluginManager {
+public abstract class FormattedChatManager implements DenyChatReasonHandler {
 	
 	protected static FormattedChatManager instance;
 	protected boolean enabled, sendAnyway;

@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.server.chat.log;
 
 import java.util.List;
 
+import me.remigio07.chatplugin.api.common.chat.DenyChatReasonHandler;
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
@@ -80,25 +81,62 @@ public abstract class ChatLogManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets a logged messages' list for the specified player and text.
+	 * Gets a logged chat messages' list for the specified sender and text.
 	 * 
-	 * @param player Target player
-	 * @param timeAgo Messages' maximum age
+	 * @param sender Chat messages' sender
+	 * @param timeAgo Chat messages' maximum age
 	 * @param query Text to search
-	 * @return Player's logged messages
+	 * @return Sender's logged chat messages
 	 */
 	@NotNull
-	public abstract List<LoggedMessage> getLoggedMessages(OfflinePlayer player, long timeAgo, String query);
+	public abstract List<LoggedChatMessage> getLoggedChatMessages(OfflinePlayer sender, long timeAgo, String query);
 	
 	/**
-	 * Logs a player's message and inserts it into {@link DataContainer#MESSAGES}.
-	 * Specify <code>null</code> as <code>denyChatReason</code>
-	 * if the message has not been blocked by the antispam.
+	 * Gets a logged private messages' list for the specified sender and text.
 	 * 
-	 * @param player Target player
-	 * @param message Message to log
-	 * @param denyChatReason Message's deny chat reason
+	 * @param sender Private messages' sender
+	 * @param timeAgo Private messages' maximum age
+	 * @param query Text to search
+	 * @return Sender's logged private messages
 	 */
-	public abstract void logMessage(ChatPluginServerPlayer player, String message, @Nullable(why = "Message may not have been blocked") DenyChatReason denyChatReason);
+	@NotNull
+	public abstract List<LoggedPrivateMessage> getLoggedPrivateMessages(OfflinePlayer sender, long timeAgo, String query);
+	
+	/**
+	 * Logs a player's chat message and inserts it into {@link DataContainer#CHAT_MESSAGES}.
+	 * 
+	 * <p>Specify <code>null</code> as <code>denyChatReason</code> if the chat
+	 * message has not been blocked by a {@link DenyChatReasonHandler}.</p>
+	 * 
+	 * @param sender Chat message's sender
+	 * @param chatMessage Chat message to log
+	 * @param denyChatReason Chat message's deny chat reason
+	 * @throws IllegalArgumentException If chat message's length exceeds 256 characters
+	 */
+	public abstract void logChatMessage(
+			ChatPluginServerPlayer sender,
+			String chatMessage,
+			@Nullable(why = "Chat message may not have been blocked") DenyChatReason<?> denyChatReason
+			);
+	
+	/**
+	 * Logs a player's private message and inserts it into {@link DataContainer#PRIVATE_MESSAGES}.
+	 * 
+	 * <p>Specify <code>null</code> as the recipient to indicate the console.
+	 * Specify <code>null</code> as <code>denyChatReason</code> if the private
+	 * message has not been blocked by a {@link DenyChatReasonHandler}.</p>
+	 * 
+	 * @param sender Private message's sender
+	 * @param recipient Private message's recipient
+	 * @param privateMessage Private message to log
+	 * @param denyChatReason Private message's deny chat reason
+	 * @throws IllegalArgumentException If private message's length exceeds 256 characters
+	 */
+	public abstract void logPrivateMessage(
+			@NotNull ChatPluginServerPlayer sender,
+			@Nullable(why = "Null to represent the console") ChatPluginServerPlayer recipient,
+			String privateMessage,
+			@Nullable(why = "Private message may not have been blocked") DenyChatReason<?> denyChatReason
+			);
 	
 }

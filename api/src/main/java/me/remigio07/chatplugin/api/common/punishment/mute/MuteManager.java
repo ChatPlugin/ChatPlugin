@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.remigio07.chatplugin.api.common.chat.DenyChatReasonHandler;
 import me.remigio07.chatplugin.api.common.event.punishment.mute.MuteEvent;
 import me.remigio07.chatplugin.api.common.event.punishment.mute.MuteUpdateEvent;
 import me.remigio07.chatplugin.api.common.event.punishment.mute.UnmuteEvent;
@@ -37,7 +38,7 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 /**
  * Manager that handles {@link Mute}s and interacts with the database.
  */
-public abstract class MuteManager extends PunishmentManager {
+public abstract class MuteManager extends PunishmentManager implements DenyChatReasonHandler  {
 	
 	protected static MuteManager instance;
 	protected List<Mute> mutes = new ArrayList<>();

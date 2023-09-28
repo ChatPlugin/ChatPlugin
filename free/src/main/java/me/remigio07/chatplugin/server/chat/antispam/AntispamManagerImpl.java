@@ -87,25 +87,25 @@ public class AntispamManagerImpl extends AntispamManager {
 	}
 	
 	@Override
-	public DenyChatReason getDenyChatReason(ChatPluginServerPlayer player, String message) {
+	public DenyChatReason<AntispamManager> getDenyChatReason(ChatPluginServerPlayer player, String message, List<DenyChatReason<AntispamManager>> bypassChecks) {
 		if (!enabled || player.hasPermission("chatplugin.antispam.bypass"))
 			return null;
-		if (urlsPreventionEnabled && containsDisallowedURL(message))
+		if (urlsPreventionEnabled && !bypassChecks.contains(DenyChatReason.URL) && containsDisallowedURL(message))
 			return DenyChatReason.URL;
-		if (ipsPreventionEnabled && containsDisallowedIP(message))
+		if (ipsPreventionEnabled && !bypassChecks.contains(DenyChatReason.IP_ADDRESS) && containsDisallowedIP(message))
 			return DenyChatReason.IP_ADDRESS;
-		if (containsBlacklistedWord(message) && !player.hasPermission("chatplugin.antispam.swear"))
+		if (!bypassChecks.contains(DenyChatReason.SWEAR) && !player.hasPermission("chatplugin.antispam.swear") && containsBlacklistedWord(message))
 			return DenyChatReason.SWEAR;
-		if (exceedsMaxCapsLength(message) && exceedsMaxCapsPercentage(message) && !player.hasPermission("chatplugin.antispam.caps"))
+		if (!bypassChecks.contains(DenyChatReason.CAPS) && !player.hasPermission("chatplugin.antispam.caps") && exceedsMaxCapsLength(message) && exceedsMaxCapsPercentage(message))
 			return DenyChatReason.CAPS;
 		UUID uuid = player.getUUID();
 		
-		if (!player.hasPermission("chatplugin.antispam.flood")) {
+		if (!bypassChecks.contains(DenyChatReason.FLOOD) && !player.hasPermission("chatplugin.antispam.flood")) {
 			if (floodCache.contains(uuid))
 				return DenyChatReason.FLOOD;
 			floodCache.add(uuid);
 			TaskManager.runAsync(() -> floodCache.remove(uuid), secondsBetweenMsg * 1000L);
-		} if (!isMessageWhitelisted(message) && !player.hasPermission("chatplugin.antispam.spam")) {
+		} if (!bypassChecks.contains(DenyChatReason.SPAM) && !player.hasPermission("chatplugin.antispam.spam") && !isMessageWhitelisted(message)) {
 			if (spamCache.containsKey(uuid) && spamCache.get(uuid).contains(message))
 				return DenyChatReason.SPAM;
 			if (!spamCache.containsKey(uuid))

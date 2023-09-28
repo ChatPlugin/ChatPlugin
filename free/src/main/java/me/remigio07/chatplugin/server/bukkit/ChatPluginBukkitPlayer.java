@@ -30,6 +30,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
+import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
@@ -67,7 +68,7 @@ import net.kyori.adventure.title.Title.Times;
 
 public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
-	private static BukkitAudiences audiences = BukkitAudiences.create(BukkitBootstrapper.getInstance());
+	private static BukkitAudiences audiences = ChatPlugin.getInstance().isLoaded() ? BukkitAudiences.create(BukkitBootstrapper.getInstance()) : null;
 	private Player player;
 	private Object craftPlayer;
 	private Locale lastLocale;
@@ -200,7 +201,7 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public void sendMessage(Object adventureComponent) {
-		audiences.player(player).sendMessage((ComponentLike) adventureComponent);
+		audience.sendMessage((ComponentLike) adventureComponent);
 	}
 	
 	@Override
@@ -284,7 +285,8 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	}
 	
 	public static void closeAudiences() {
-		audiences.close();
+		if (audiences != null)
+			audiences.close();
 	}
 	
 }

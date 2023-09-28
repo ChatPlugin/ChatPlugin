@@ -308,15 +308,15 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("misc.invalid-ip-address", "{pfx} &f{0} &cis not a valid IP address.");
 		messages.addDefault("misc.database-error", "{pfx} &cSQLException occurred while trying to access the database: &f{0}&c.");
 		
-		messages.addDefault("commands.help.free.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.");
-		messages.addDefault("commands.help.free.admin", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/staffchat &8- &eVery handy cross-server Staff chat.\n&f&l/iplookup &8- &ePerform a lookup of an IP address.\n&f&l/lastseen &8- &eCheck when a player was last seen.\n&f&l/clearchat &8- &eClear chat to hide last messages.\n&f&l/muteall &8- &eToggle chat for non Staff members.");
+		messages.addDefault("commands.help.free.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/whisper &8- &eSend a private message to another player.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.");
+		messages.addDefault("commands.help.free.admin", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/staffchat &8- &eVery handy cross-server Staff chat.\n&f&l/socialspy &8- &eSpy other players' private messages.\n&f&l/iplookup &8- &ePerform a lookup of an IP address.\n&f&l/lastseen &8- &eCheck when a player was last seen.\n&f&l/clearchat &8- &eClear chat to hide last messages.\n&f&l/muteall &8- &eToggle chat for non Staff members.");
 		messages.addDefault("commands.help.free.vanish", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/vanish &8- &eBecome invisible to non Staff members.");
 		messages.addDefault("commands.help.free.misc", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/tps &8- &eDisplay the server's current ticks per second.\n&f&l/ad &8- &eSend a loaded ad to one or more online players.\n&f&l/broadcast &8- &eSend a message to every online player.\n&f&l/broadcastraw &8- &eLike /broadcast, but without the prefix.");
 		
-		messages.addDefault("commands.help.premium.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.\n&f&l/bossbar &8- &eToggle the bossbar's visibility.\n&f&l/scoreboard &8- &eToggle the scoreboard's visibility.");
-		messages.addDefault("commands.help.premium.admin", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/staffchat &8- &eVery handy cross-server Staff chat.\n&f&l/iplookup &8- &ePerform a lookup of an IP address.\n&f&l/lastseen &8- &eCheck when a player was last seen.\n&f&l/clearchat &8- &eClear chat to hide last messages.\n&f&l/muteall &8- &eToggle chat for non Staff members.\n&f&l/chatlog &8- &eLook up messages containing certain text.\n&f&l/accountcheck &8- &eCheck a player's alt accounts.");
+		messages.addDefault("commands.help.premium.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/whisper &8- &eSend a private message to another player.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.\n&f&l/bossbar &8- &eToggle the bossbar's visibility.\n&f&l/scoreboard &8- &eToggle the scoreboard's visibility.");
+		messages.addDefault("commands.help.premium.admin", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/staffchat &8- &eVery handy cross-server Staff chat.\n&f&l/socialspy &8- &eSpy other players' private messages.\n&f&l/iplookup &8- &ePerform a lookup of an IP address.\n&f&l/lastseen &8- &eCheck when a player was last seen.\n&f&l/clearchat &8- &eClear chat to hide last messages.\n&f&l/muteall &8- &eToggle chat for non Staff members.\n&f&l/chatlog &8- &eLook up messages containing certain text.\n&f&l/accountcheck &8- &eCheck a player's alt accounts.");
 		messages.addDefault("commands.help.premium.punishments", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/ban &8- &eBan a player (/tempban also available).\n&f&l/unban &8- &eUnban a previously banned player.\n&f&l/warning &8- &eWarn a player for a certain time.\n&f&l/removelastwarning &8- &eRemove a player's last warning.\n&f&l/clearwarnings &8- &eClear a player's active warnings.\n&f&l/kick &8- &eDisconnect a player from the server.\n&f&l/fakekick &8- &eKick using a random error as reason.\n&f&l/mute &8- &eMake a player unable to use the chat.\n&f&l/unmute &8- &eUnmute a previously muted player.");
-		messages.addDefault("commands.help.premium.guis", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/cp status &8- &eDisplay the server's current status.u\n&f&l/banlist &8- &eDisplay the active bans list.\n&f&l/warnlist &8- &eDisplay the active warnings list.\n&f&l/mutelist &8- &eDisplay the active mutes list.\n&f&l/violations &8- &eDisplay last players' violations.\n&f&l/playerinfo &8- &eShow detailed info about a player.\n&f&l/playerpunishments &8- &eShow a player's punishments list.\n&f&l/playerviolations &8- &eShow a player's last violations.");
+		messages.addDefault("commands.help.premium.guis", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/cp status &8- &eDisplay the server's current status\n&f&l/banlist &8- &eDisplay the active bans list.\n&f&l/warnlist &8- &eDisplay the active warnings list.\n&f&l/mutelist &8- &eDisplay the active mutes list.\n&f&l/violations &8- &eDisplay last players' violations.\n&f&l/playerinfo &8- &eShow detailed info about a player.\n&f&l/playerpunishments &8- &eShow a player's punishments list.\n&f&l/playerviolations &8- &eShow a player's last violations.");
 		messages.addDefault("commands.help.premium.vanish", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/vanish &8- &eBecome invisible to non Staff members.\n&f&l/fakejoin &8- &eSend fake join message and disable vanish.\n&f&l/fakequit &8- &eSend fake quit message and enable vanish.\n&f&l/silentteleport &8- &eSilently teleport somewhere else.");
 		messages.addDefault("commands.help.premium.misc", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/tps &8- &eDisplay the server's current ticks per second.\n&f&l/ad &8- &eSend a loaded ad to one or more online players.\n&f&l/broadcast &8- &eSend a message to every online player.\n&f&l/broadcastraw &8- &eLike /broadcast, but without the prefix.\n&f&l/globalbroadcast &8- &eLike /broadcast, but cross-server.\n&f&l/discordmessage &8- &eSend a message through the bot.");
 		
@@ -334,7 +334,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.playerlist.all.rank-format", "{prefix}&e(&f{0}&e): &f[{1}]");
 		messages.addDefault("commands.playerlist.rank.message", "{pfx} &aThere are currently &f{0} &aplayers online who belong to the &f{1} &arank: &f[{2}]&a.");
 		messages.addDefault("commands.playerlist.rank.no-players-online", "{pfx} &eThere are currently no players online who belong to that rank.");
-		messages.addDefault("commands.playerlist.name-format.vanished", "&o");
+		messages.addDefault("commands.playerlist.name-format.vanished", "&f&o");
 		messages.addDefault("commands.playerlist.name-format.not-vanished", "&f");
 		
 		messages.addDefault("commands.staff-chat.enabled", "{pfx} &aStaff chat mode enabled.");
@@ -371,6 +371,27 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.account-check.message-format.banned-format.yes", "&4banned &e(IDs: &f{bans_ids}&e)");
 		messages.addDefault("commands.account-check.message-format.banned-format.no", "&2not banned");
 		
+		messages.addDefault("commands.ignore.added.success.self", "{pfx} &aYou are now ignoring &f{0} &a(&f{1}/25&a).");
+		messages.addDefault("commands.ignore.added.success.other", "{pfx} &f{0} &eis now ignoring you.");
+		messages.addDefault("commands.ignore.added.already-ignoring", "{pfx} &cYou are already ignoring &f{0}&c.");
+		messages.addDefault("commands.ignore.removed.success.self", "{pfx} &aYou are no longer ignoring &f{0} &a(&f{1}/25&a).");
+		messages.addDefault("commands.ignore.removed.success.other", "{pfx} &f{0} &eis no longer ignoring you.");
+		messages.addDefault("commands.ignore.removed.not-ignoring", "{pfx} &cYou are not ignoring &f{0}&c.");
+		messages.addDefault("commands.ignore.cannot-ignore.self", "{pfx} &cYou cannot ignore yourself.");
+		messages.addDefault("commands.ignore.cannot-ignore.other", "{pfx} &f{0} &ccannot be ignored.");
+		messages.addDefault("commands.ignore.list.self", "{pfx} &eYou are ignoring the following players (&f{0}/25&e): &f{1}&e.");
+		messages.addDefault("commands.ignore.list.other", "{pfx} &f{0} &eis ignoring the following players (&f{1}/25&e): &f{2}&e.");
+		messages.addDefault("commands.ignore.no-ignored.self", "{pfx} &eYou are not ignoring anyone.");
+		messages.addDefault("commands.ignore.no-ignored.other", "{pfx} &f{0} &eis not ignoring anyone.");
+		messages.addDefault("commands.ignore.cleared", "{pfx} &aYou are no longer ignoring anyone.");
+		messages.addDefault("commands.ignore.max-reached", "{pfx} &cYou have reached the maximum of &f25 &cignored players.");
+		
+		messages.addDefault("commands.whisper.ignored", "{pfx} &f{0} &ccannot read your messages because they are ignoring you.");
+		messages.addDefault("commands.whisper.self", "{pfx} &cYou cannot send a private message to yourself.");
+		messages.addDefault("commands.reply.not-found", "{pfx} &cUnable to find someone to reply to.");
+		messages.addDefault("commands.socialspy.enabled", "{pfx} &aSocialspy mode enabled.");
+		messages.addDefault("commands.socialspy.disabled", "{pfx} &aSocialspy mode disabled.");
+		
 		messages.addDefault("chat.broadcast-format.local", "&8[&c&lBroadcast&8] &r{0}");
 		messages.addDefault("chat.broadcast-format.global", "&8[&c&lBroadcast&8] &r{0}");
 		
@@ -387,8 +408,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("chat.log.searching", "{pfx} &eSearching for logged messages...");
 		messages.addDefault("chat.log.found", "{pfx} &aThe following messages were found:");
 		messages.addDefault("chat.log.not-found", "{pfx} &cNo logged messages were found.");
-		messages.addDefault("chat.log.message-format.text", "&e[{date}] &8- &f{message}");
-		messages.addDefault("chat.log.message-format.hover", "&aPlayer: &f{player}\n&aRank: &f{rank_id}\n&aServer: &f{server}\n&aWorld: &f{world}\n&aDate: &f{date}\n&aDenied: &f{denied}");
+		messages.addDefault("chat.log.message-format.chat.text", "&e[{date}] &8- &f{content}");
+		messages.addDefault("chat.log.message-format.chat.hover", "&aType: &echat message\n&aSender: &f{sender}\n&aRank: &f{rank_id}\n&aServer: &f{server}\n&aWorld: &f{world}\n&aDate: &f{date}\n&aDenied: &f{denied}");
+		messages.addDefault("chat.log.message-format.private.text", "&e[{date}] &8- &f&o{content}");
+		messages.addDefault("chat.log.message-format.private.hover", "&aType: &bprivate message\n&aSender: &f{sender}\n&aRecipient: &f{recipient}\n&aRank: &f{rank_id}\n&aServer: &f{server}\n&aWorld: &f{world}\n&aDate: &f{date}\n&aDenied: &f{denied}");
 		messages.addDefault("chat.log.message-format.date-format", "MM/dd hh:mm:ss a");
 		messages.addDefault("chat.log.message-format.denied-format.yes", "&4denied &f({deny_chat_reason})");
 		messages.addDefault("chat.log.message-format.denied-format.no", "&2allowed");
@@ -703,6 +726,22 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.log.enabled", true);
 		chat.addDefault("chat.log.print-to-log-file", false);
 		chat.addDefault("chat.log.messages-auto-cleaner-period", "120d");
+		
+		chat.addDefault("chat.private-messages.enabled", true);
+		chat.addDefault("chat.private-messages.format.sent.chat", "&7«&8[&b\u270E&8] &fYou &e-> &f{recipient}&7» &f");
+		chat.addDefault("chat.private-messages.format.sent.terminal", "&7<&8[&b&lPM&8] &fYou &e-> &f{recipient}&7> &f");
+		chat.addDefault("chat.private-messages.format.received.chat", "&7«&8[&b\u270E&8] &f{sender} &e-> &fYou&7» &f");
+		chat.addDefault("chat.private-messages.format.received.terminal", "&7<&8[&b&lPM&8] &f{sender} &e-> &fYou&7> &f");
+		chat.addDefault("chat.private-messages.format.socialspy.chat", "&7«&8[&4&lSS&8] &f{sender} &e-> &f{recipient}&7» &f");
+		chat.addDefault("chat.private-messages.format.socialspy.terminal", "&7<&8[&4&lSS&8] &f{sender} &e-> &f{recipient}&7> &f");
+		chat.addDefault("chat.private-messages.sound.enabled", true);
+		chat.addDefault("chat.private-messages.sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "ENTITY_EXPERIENCE_ORB_PICKUP" : "ORB_PICKUP");
+		chat.addDefault("chat.private-messages.sound.volume", 1F);
+		chat.addDefault("chat.private-messages.sound.pitch", 1F);
+		chat.addDefault("chat.private-messages.bypass-antispam-checks", Arrays.asList("CAPS", "FLOOD", "SPAM", "SWEAR"));
+		chat.addDefault("chat.private-messages.socialspy-on-join-enabled", true);
+		
+		chat.addDefault("chat.player-ignore.enabled", true);
 		
 		chat.save();
 	}

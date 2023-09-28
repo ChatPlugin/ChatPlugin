@@ -116,7 +116,7 @@ public class VersionUtils {
 		try {
 			Class.forName("org.bukkit.entity.Player$Spigot");
 			return true;
-		} catch (ClassNotFoundException | NoClassDefFoundError e) {
+		} catch (ClassNotFoundException e) {
 			return false;
 		}
 	}
@@ -128,9 +128,9 @@ public class VersionUtils {
 	 */
 	public static boolean isPaper() {
 		try {
-			Class.forName("com.destroystokyo.paper.VersionHistoryManager$VersionData");
+			Class.forName((version.isAtLeast(Version.V1_9) ? "com.destroystokyo.paper" : "org.github.paperspigot") + ".ServerSchedulerReportingWrapper");
 			return true;
-		} catch (ClassNotFoundException | NoClassDefFoundError e) {
+		} catch (ClassNotFoundException e) {
 			return false;
 		}
 	}
@@ -870,7 +870,15 @@ public class VersionUtils {
 		 * <p><strong>Protocol version number:</strong> 763
 		 * <br><strong>Release date:</strong> June 12, 2023</p>
 		 */
-		V1_20_1(763, 1686520800000L, "1.20.0/1");
+		V1_20_1(763, 1686520800000L, "1.20.0/1"),
+		
+		/**
+		 * Version 1.20.2.
+		 * 
+		 * <p><strong>Protocol version number:</strong> 764
+		 * <br><strong>Release date:</strong> September 21, 2023</p>
+		 */
+		V1_20_2(764, 1695247200000L);
 		
 		private int protocol;
 		private long releaseDate;

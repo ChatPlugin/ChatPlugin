@@ -91,7 +91,12 @@ public class PlayersDataType<T> {
 	 * Player's mutes' amount.
 	 */
 	public static final PlayersDataType<Short> MUTES = new PlayersDataType<>("MUTES", short.class);
-	private static final PlayersDataType<?>[] VALUES = new PlayersDataType[] { ID, PLAYER_UUID, PLAYER_NAME, PLAYER_IP, LANGUAGE, LAST_LOGOUT, TIME_PLAYED, MESSAGES_SENT, BANS, WARNINGS, KICKS, MUTES };
+	
+	/**
+	 * Player's ignored players' IDs.
+	 */
+	public static final PlayersDataType<String> IGNORED_PLAYERS = new PlayersDataType<String>("IGNORED_PLAYERS", String.class);
+	private static final PlayersDataType<?>[] VALUES = new PlayersDataType[] { ID, PLAYER_UUID, PLAYER_NAME, PLAYER_IP, LANGUAGE, LAST_LOGOUT, TIME_PLAYED, MESSAGES_SENT, BANS, WARNINGS, KICKS, MUTES, IGNORED_PLAYERS };
 	private String name;
 	private Class<T> type;
 	

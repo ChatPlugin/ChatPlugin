@@ -51,12 +51,17 @@ public enum DataContainer {
 	/**
 	 * Represents the players' data.
 	 */
-	PLAYERS("id", "player_uuid", "player_name", "player_ip", "language", "last_logout", "time_played", "messages_sent", "bans", "warnings", "kicks", "mutes"),
+	PLAYERS("id", "player_uuid", "player_name", "player_ip", "language", "last_logout", "time_played", "messages_sent", "bans", "warnings", "kicks", "mutes", "ignored_players"),
 	
 	/**
-	 * Represents the messages' data.
+	 * Represents the chat messages' data.
 	 */
-	MESSAGES("player_uuid", "player_name", "rank_id", "server", "world", "message", "date", "deny_chat_reason"),
+	CHAT_MESSAGES("player_uuid", "player_name", "rank_id", "server", "world", "message", "date", "deny_chat_reason"),
+	
+	/**
+	 * Represents the private messages' data.
+	 */
+	PRIVATE_MESSAGES("player_uuid", "player_name", "recipient", "rank_id", "server", "world", "message", "date", "deny_chat_reason"),
 	
 	/**
 	 * Represents the players' IP addresses.
@@ -89,13 +94,14 @@ public enum DataContainer {
 	
 	/**
 	 * Gets this data type's ID column's label.
-	 * Will return {@link Utils#NOT_APPLICABLE} if called on {@link #MESSAGES},
-	 * "player_id" if called on {@link #IP_ADDRESSES} and "id" otherwise.
+	 * Will return {@link Utils#NOT_APPLICABLE} if called on {@link #CHAT_MESSAGES}
+	 * or {@link #PRIVATE_MESSAGES}, "player_id" if called on {@link #IP_ADDRESSES}
+	 * and "id" otherwise.
 	 * 
 	 * @return ID column's label
 	 */
 	public String getIDColumn() {
-		return this == MESSAGES ? Utils.NOT_APPLICABLE : this == IP_ADDRESSES ? "player_id" : "id";
+		return this == CHAT_MESSAGES || this == PRIVATE_MESSAGES ? Utils.NOT_APPLICABLE : this == IP_ADDRESSES ? "player_id" : "id";
 	}
 	
 	/**
@@ -122,13 +128,14 @@ public enum DataContainer {
 	}
 	
 	/**
-	 * Gets a data container by its database table's ID.
+	 * Gets a data container by its database table's ID with the prefix.
 	 * Will return <code>null</code> if the specified ID is invalid.
 	 * 
 	 * <p><strong>Example:</strong> (with default settings) <code>"chatplugin_mutes"</code> -&gt; {@link #MUTES}</p>
 	 * 
 	 * @param databaseTableID Database table's ID
 	 * @return Corresponding data container
+	 * @see DatabaseManager#getTablePrefix()
 	 */
 	@Nullable(why = "Specified ID may be invalid")
 	public static DataContainer getDataContainer(String databaseTableID) {

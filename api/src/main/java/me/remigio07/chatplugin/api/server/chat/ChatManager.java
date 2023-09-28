@@ -18,9 +18,12 @@ package me.remigio07.chatplugin.api.server.chat;
 import java.util.Collections;
 import java.util.List;
 
+import me.remigio07.chatplugin.api.common.chat.DenyChatReasonHandler;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
-import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.server.chat.antispam.AntispamManager;
+import me.remigio07.chatplugin.api.server.event.chat.AllowChatEvent;
+import me.remigio07.chatplugin.api.server.event.chat.DenyChatEvent;
+import me.remigio07.chatplugin.api.server.event.chat.PreChatEvent;
 import me.remigio07.chatplugin.api.server.event.chat.ToggleChatMuteEvent;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
@@ -29,7 +32,7 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
  * Manager that handles the chat. See wiki for more info:
  * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Chat">ChatPlugin wiki/Chat</a>
  */
-public abstract class ChatManager implements ChatPluginManager {
+public abstract class ChatManager implements DenyChatReasonHandler {
 	
 	protected static ChatManager instance;
 	protected boolean enabled, chatMuted;
@@ -81,7 +84,8 @@ public abstract class ChatManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the list of recognized <a href="https://en.wikipedia.org/wiki/Top-level_domain">TLD</a>s in the chat.
-	 * The returned list is used by the {@link AntispamManager} and the {@link HoverInfoManager}.
+	 * 
+	 * <p>The returned list is used by the {@link AntispamManager} and the {@link HoverInfoManager}.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "chat.recognized-tlds" in {@link ConfigurationType#CHAT}</p>
 	 * 
@@ -123,8 +127,14 @@ public abstract class ChatManager implements ChatPluginManager {
 	/**
 	 * Handles and processes a chat event.
 	 * 
+	 * <p>This method will consider that some
+	 * players may be ignored by other players.</p>
+	 * 
 	 * @param player Player involved
 	 * @param message Message involved
+	 * @see PreChatEvent
+	 * @see AllowChatEvent
+	 * @see DenyChatEvent
 	 */
 	public abstract void handleChatEvent(ChatPluginServerPlayer player, String message);
 	

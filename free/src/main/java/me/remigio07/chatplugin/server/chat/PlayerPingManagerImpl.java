@@ -23,13 +23,14 @@ import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationTyp
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.chat.ChatManager;
+import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
 import me.remigio07.chatplugin.api.server.chat.PlayerPingManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 
 public class PlayerPingManagerImpl extends PlayerPingManager {
-
+	
 	@Override
 	public void load() throws ChatPluginManagerException {
 		instance = this;
@@ -61,8 +62,10 @@ public class PlayerPingManagerImpl extends PlayerPingManager {
 			for (ChatPluginServerPlayer pinged : getPingedPlayers(player, message)) {
 				message = message.replace(pinged.getName(), ChatColor.translate(color) + "@" + pinged.getName() + "\u00A7r");
 				
-				pinged.sendTranslatedMessage("chat.pinged", player.getName());
-				playPingSound(pinged);
+				if (!PlayerIgnoreManager.getInstance().isEnabled() || !pinged.getIgnoredPlayers().contains(player)) {
+					pinged.sendTranslatedMessage("chat.pinged", player.getName());
+					playPingSound(pinged);
+				}
 			}
 		} return message;
 	}

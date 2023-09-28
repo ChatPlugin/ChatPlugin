@@ -43,7 +43,7 @@ public class ChatPluginManagerException extends Exception {
 	 * @param exception Exception caught by the manager
 	 */
 	public ChatPluginManagerException(ChatPluginManager manager, Exception exception) {
-		super(exception.getClass().getSimpleName() + " occurred while (un)loading " + manager.getClass().getSimpleName() + ": " + exception.getMessage());
+		super(exception.getClass().getSimpleName() + " occurred while (un)loading " + Utils.getOriginalClass(manager).getSimpleName() + ": " + exception.getMessage());
 		this.manager = manager;
 	}
 	
@@ -55,7 +55,7 @@ public class ChatPluginManagerException extends Exception {
 	 * @param args Optional arguments ({@link Utils#numericPlaceholders(String, Object...)}
 	 */
 	public ChatPluginManagerException(ChatPluginManager manager, String message, Object... args) {
-		super("Error occurred while (un)loading " + manager.getClass().getSimpleName() + ": " + Utils.numericPlaceholders(message, args));
+		super("Error occurred while (un)loading " + Utils.getOriginalClass(manager).getSimpleName() + ": " + Utils.numericPlaceholders(message, args));
 		this.manager = manager;
 	}
 	

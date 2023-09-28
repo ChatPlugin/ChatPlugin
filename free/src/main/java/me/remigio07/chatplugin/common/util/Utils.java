@@ -49,6 +49,11 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 			"Did you know the premium version includes custom GUIs? Buy premium to unlock new features and get rid of ads.",
 			"The paid version supports multi-instance synchronization. Buy premium to unlock new features and get rid of ads."
 	};
+	public static final Library[] RELOCATION_LIBS = new Library[] {
+			Library.ASM,
+			Library.ASM_COMMONS,
+			Library.JAR_RELOCATOR
+			};
 	public static final Library[] ADVENTURE_LIBS = new Library[] {
 			Library.ADVENTURE_API,
 			Library.ADVENTURE_KEY,
@@ -58,7 +63,7 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 			Library.ADVENTURE_TEXT_SERIALIZER_GSON,
 			Library.ADVENTURE_TEXT_SERIALIZER_GSON_LEGACY_IMPL,
 			Library.ADVENTURE_TEXT_SERIALIZER_JSON,
-			Library.ADVENTURE_TEXT_SERIALIZER_JSON_LEGACY_IMPL,	
+			Library.ADVENTURE_TEXT_SERIALIZER_JSON_LEGACY_IMPL,
 			Library.ADVENTURE_TEXT_SERIALIZER_LEGACY,
 			Library.EXAMINATION_API,
 			Library.EXAMINATION_STRING,
@@ -66,10 +71,11 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 			Library.JETBRAINS_ANNOTATIONS
 	};
 	
+	
 	@SuppressWarnings("deprecation")
 	public static void initUtils() throws ChatPluginManagerException {
 		try {
-			for (Library library : LibrariesUtils.RELOCATION_LIBS)
+			for (Library library : RELOCATION_LIBS)
 				LibrariesUtils.load(library);
 			for (Library library : ADVENTURE_LIBS)
 				LibrariesUtils.load(library);
@@ -83,6 +89,7 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 				LibrariesUtils.load(Library.ADVENTURE_PLATFORM_BUNGEECORD);
 			LibrariesUtils.load(Library.JSON_SIMPLE);
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new ChatPluginManagerException("libraries utils", e);
 		} UUIDFetcherImpl.setInstance(new UUIDFetcherImpl());
 		ComponentTranslatorImpl.setInstance(new ComponentTranslatorImpl());

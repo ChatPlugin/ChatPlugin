@@ -15,6 +15,7 @@
 
 package me.remigio07.chatplugin.server.chat;
 
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
@@ -104,7 +105,7 @@ public class ChatManagerImpl extends ChatManager {
 		if (StaffChatManager.getInstance().isEnabled() && player.hasPermission("chatplugin.commands.staffchat") && StaffChatManager.getInstance().isUsingStaffChat(player.getUUID())) {
 			StaffChatManager.getInstance().sendPlayerMessage(player, message);
 			return;
-		} DenyChatReason reason = null;
+		} DenyChatReason<?> reason = null;
 		
 		// 2. vanish
 		if (VanishManager.getInstance().isVanished(player))
@@ -118,7 +119,7 @@ public class ChatManagerImpl extends ChatManager {
 		
 		// 4. antispam
 		if (reason == null && AntispamManager.getInstance().isEnabled())
-			reason = AntispamManager.getInstance().getDenyChatReason(player, message);
+			reason = AntispamManager.getInstance().getDenyChatReason(player, message, Collections.emptyList());
 		
 		// 5. formatted-chat
 		if (reason == null && FormattedChatManager.getInstance().isEnabled() && FormattedChatManager.getInstance().containsFormattedText(message)) {
@@ -137,19 +138,19 @@ public class ChatManagerImpl extends ChatManager {
 		if (reason != null) {
 			String denyMessage = reason.getMessage(player.getLanguage());
 			
-			new DenyChatEvent(player, denyMessage, reason).call();
+			new DenyChatEvent(player, message, reason).call();
 			
-			switch (reason) {
-			case CAPS:
+			switch (reason.name()) {
+			case "CAPS":
 				denyMessage = Utils.numericPlaceholders(denyMessage, AntispamManager.getInstance().getMaxCapsPercent(), AntispamManager.getInstance().getMaxCapsLength());
 				break;
-			case FLOOD:
+			case "FLOOD":
 				denyMessage = Utils.numericPlaceholders(denyMessage, AntispamManager.getInstance().getSecondsBetweenMsg());
 				break;
-			case MUTE:
+			case "MUTE":
 				denyMessage = MuteManager.getInstance().getActiveMute(player, ProxyManager.getInstance().getServerID()).formatPlaceholders(denyMessage, player.getLanguage());
 				break;
-			case SPAM:
+			case "SPAM":
 				denyMessage = Utils.numericPlaceholders(denyMessage, AntispamManager.getInstance().getSecondsBetweenSameMsg());
 				break;
 			default:
@@ -162,7 +163,7 @@ public class ChatManagerImpl extends ChatManager {
 			} player.sendMessage(denyMessage);
 			
 			if (ChatLogManager.getInstance().isEnabled())
-				ChatLogManager.getInstance().logMessage(player, message, reason);
+				ChatLogManager.getInstance().logChatMessage(player, message, reason);
 			return;
 		} AllowChatEvent allowChatEvent = new AllowChatEvent(player, message);
 		
@@ -171,24 +172,27 @@ public class ChatManagerImpl extends ChatManager {
 		if (allowChatEvent.isCancelled())
 			return;
 		if (ChatLogManager.getInstance().isEnabled())
-			ChatLogManager.getInstance().logMessage(player, message, null);
+			ChatLogManager.getInstance().logChatMessage(player, message, null);
 		if (HoverInfoManager.getInstance().isEnabled()) {
 			for (Language language : LanguageManager.getInstance().getLanguages()) {
 				TextComponent text = ((BaseHoverInfoManager) HoverInfoManager.getInstance()).getMessageHoverInfo(message, player, language);
 				
-				language.getOnlinePlayers().forEach(other -> other.sendMessage(text));
+				for (ChatPluginServerPlayer other : language.getOnlinePlayers())
+					if (!other.getIgnoredPlayers().contains(player))
+						other.sendMessage(text);
 			}
 		} else for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
-			other.sendMessage(PlaceholderManager.getInstance().translatePlaceholders(format, player, other.getLanguage(), placeholderTypes) + message);
+			if (!other.getIgnoredPlayers().contains(player))
+				other.sendMessage(PlaceholderManager.getInstance().translatePlaceholders(format, player, other.getLanguage(), placeholderTypes) + message);
 		} try {
 			StorageConnector.getInstance().incrementPlayerStat(PlayersDataType.MESSAGES_SENT, player);
 		} catch (Exception e) {
 			LogManager.log("{0} occurred while incrementing messages sent stat for {1}: {2}", 2, e.getClass().getSimpleName(), player.getName(), e.getMessage());
-		} logMessage(ChatColor.translate(PlaceholderManager.getInstance().translatePlaceholders(consoleFormat, player, placeholderTypes) + message));
+		} logMessage(ChatColor.translate(PlaceholderManager.getInstance().translatePlaceholders(consoleFormat, player, placeholderTypes)) + message);
 	}
 	
 	private static void logMessage(String message) {
-		if (ChatLogManager.getInstance().isEnabled() && ChatLogManager.getInstance().isPrintToLogFile())
+		if (!ChatLogManager.getInstance().isEnabled() || ChatLogManager.getInstance().isPrintToLogFile())
 			LogManager.getInstance().writeToFile(ChatColor.stripColor(message));
 		ChatPlugin.getInstance().sendConsoleMessage(message, false);
 	}

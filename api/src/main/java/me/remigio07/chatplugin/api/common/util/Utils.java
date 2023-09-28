@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -30,6 +31,8 @@ import java.util.stream.Stream;
 import org.bukkit.Bukkit;
 import org.spongepowered.api.Sponge;
 
+import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
+import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagers;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.bootstrap.VelocityBootstrapper;
@@ -330,6 +333,19 @@ public class Utils {
 				return null; // never called
 			}
 		} else throw new IllegalArgumentException("Specified IPv4 is invalid as it does not respect the following pattern: \"" + IPV4_PATTERN.pattern() + "\"");
+	}
+	
+	/**
+	 * Gets the original (abstract, API) class of the specified manager's instance.
+	 * 
+	 * @param manager Manager's instance
+	 * @return Manager's original class
+	 */
+	public static Class<? extends ChatPluginManager> getOriginalClass(ChatPluginManager manager) {
+		for (Entry<Class<? extends ChatPluginManager>, ChatPluginManager> entry : ChatPluginManagers.getInstance().getManagers().entrySet())
+			if (entry.getValue().equals(manager))
+				return entry.getKey();
+		return null;
 	}
 	
 	/**

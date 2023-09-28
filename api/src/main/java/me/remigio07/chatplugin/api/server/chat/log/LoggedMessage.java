@@ -17,123 +17,121 @@ package me.remigio07.chatplugin.api.server.chat.log;
 
 import java.util.List;
 
+import me.remigio07.chatplugin.api.common.chat.DenyChatReasonHandler;
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.chat.antispam.DenyChatReason;
 import me.remigio07.chatplugin.api.server.language.Language;
 
 /**
- * Represents a logged message handled by the {@link ChatLogManager}.
+ * Represents a logged message.
+ * 
+ * @see LoggedChatMessage
+ * @see LoggedPrivateMessage
  */
-public abstract class LoggedMessage {
+public interface LoggedMessage extends Comparable<LoggedMessage> {
 	
 	/**
-	 * Array containing all available placeholders that can
-	 * be translated with a logged message's information. See wiki for more info:
-	 * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Chat#placeholders">ChatPlugin wiki/Chat/Log/Placeholders</a>
-	 * 
-	 * <p><strong>Content:</strong> ["player", "player_uuid", "rank_id", "server", "world", "message", "date", "denied", "deny_chat_reason"]</p>
+	 * Compares two logged messages based on their {@link #getDate()}.
 	 */
-	public static final String[] PLACEHOLDERS = new String[] { "player", "player_uuid", "rank_id", "server", "world", "message", "date", "denied", "deny_chat_reason" };
-	protected OfflinePlayer player;
-	protected String rankID, server, world, message;
-	protected long date;
-	protected DenyChatReason denyChatReason;
+	@Override
+	public default int compareTo(LoggedMessage o) {
+		return getDate() < o.getDate() ? -1 : getDate() == o.getDate() ? 0 : 1;
+	}
 	
 	/**
 	 * Gets this message's sender.
 	 * 
 	 * @return Message's sender
 	 */
-	public OfflinePlayer getPlayer() {
-		return player;
-	}
+	public OfflinePlayer getSender();
 	
 	/**
 	 * Gets this message's sender's rank's ID.
 	 * 
 	 * @return Sender's rank's ID
 	 */
-	public String getRankID() {
-		return rankID;
-	}
+	public String getRankID();
 	
 	/**
 	 * Gets this message's origin server.
 	 * 
 	 * @return Message's origin server
 	 */
-	public String getServer() {
-		return server;
-	}
+	public String getServer();
 	
 	/**
 	 * Gets this message's origin world.
 	 * 
 	 * @return Message's origin world
 	 */
-	public String getWorld() {
-		return world;
-	}
+	public String getWorld();
 	
 	/**
 	 * Gets the message's content.
 	 * 
 	 * @return Message's content
 	 */
-	public String getMessage() {
-		return message;
-	}
+	public String getContent();
 	
 	/**
 	 * Gets this message's sending date, in milliseconds.
 	 * 
 	 * @return Message's sending date
 	 */
-	public long getDate() {
-		return date;
-	}
+	public long getDate();
 	
 	/**
-	 * Gets the reason why the message has been blocked by the antispam.
-	 * Will return <code>null</code> if it has not been blocked.
+	 * Gets the reason why the message has been
+	 * blocked by a {@link DenyChatReasonHandler}.
+	 * 
+	 * <p>Will return <code>null</code> if it has not been blocked.</p>
 	 * 
 	 * @return Message's deny chat reason
 	 * @see #isDenied()
 	 */
 	@Nullable(why = "Message may not have been blocked")
-	public DenyChatReason getDenyChatReason() {
-		return denyChatReason;
-	}
+	public DenyChatReason<?> getDenyChatReason();
 	
 	/**
-	 * Checks if the message has been blocked by the antispam.
+	 * Checks if the message has been blocked
+	 * by a {@link DenyChatReasonHandler}.
 	 * 
 	 * @return Whether the message has been denied
 	 * @see #getDenyChatReason()
 	 */
-	public boolean isDenied() {
-		return denyChatReason != null;
+	public default boolean isDenied() {
+		return getDenyChatReason() != null;
 	}
 	
 	/**
 	 * Translates an input string with this message's specific placeholders.
-	 * Check {@link #PLACEHOLDERS} to know the available placeholders.
+	 * 
+	 * <p>Every logged message has different placeholders available. Check the following fields:
+	 * 	<ul>
+	 * 		<li>{@link LoggedChatMessage#PLACEHOLDERS} - chat messages' placeholders</li>
+	 * 		<li>{@link LoggedPrivateMessage#PLACEHOLDERS} - private messages' placeholders</li>
+	 * 	</ul>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param language Language used to translate the placeholders
 	 * @return Translated placeholders
 	 */
-	public abstract String formatPlaceholders(String input, Language language);
+	public String formatPlaceholders(String input, Language language);
 	
 	/**
 	 * Translates an input string list with this message's specific placeholders.
-	 * Check {@link #PLACEHOLDERS} to know the available placeholders.
+	 * 
+	 * <p>Every logged message has different placeholders available. Check the following fields:
+	 * 	<ul>
+	 * 		<li>{@link LoggedChatMessage#PLACEHOLDERS} - chat messages' placeholders</li>
+	 * 		<li>{@link LoggedPrivateMessage#PLACEHOLDERS} - private messages' placeholders</li>
+	 * 	</ul>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param language Language used to translate the placeholders
 	 * @return Translated placeholders
 	 */
-	public abstract List<String> formatPlaceholders(List<String> input, Language language);
+	public List<String> formatPlaceholders(List<String> input, Language language);
 	
 }

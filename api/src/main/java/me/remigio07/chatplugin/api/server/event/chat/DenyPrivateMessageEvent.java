@@ -15,33 +15,42 @@
 
 package me.remigio07.chatplugin.api.server.event.chat;
 
-import me.remigio07.chatplugin.api.server.chat.ChatManager;
+import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
+import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
 import me.remigio07.chatplugin.api.server.chat.antispam.DenyChatReason;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
- * Represents an event called before a player's message is blocked.
+ * Represents an event called before a player's private message is blocked.
  * 
- * @see ChatManager#handleChatEvent(ChatPluginServerPlayer, String)
+ * @see PrivateMessagesManager#sendMessage(ChatPluginServerPlayer, ChatPluginServerPlayer, String)
  */
-public class DenyChatEvent extends ChatEvent {
+public class DenyPrivateMessageEvent extends PrivateMessageEvent {
 	
 	private DenyChatReason<?> reason;
 	
 	/**
-	 * Constructs a new deny chat event.
+	 * Constructs a new deny private message event.
+	 * Specify <code>null</code> as either the sender
+	 * or the recipient to indicate the console.
 	 * 
 	 * @param player Player involved
-	 * @param message Message involved
+	 * @param recipient Recipient involved
+	 * @param privateMessage Private message involved
 	 * @param reason Deny chat reason
 	 */
-	public DenyChatEvent(ChatPluginServerPlayer player, String message, DenyChatReason<?> reason) {
-		super(player, message);
+	public DenyPrivateMessageEvent(
+			@Nullable(why = "Null to represent the console") ChatPluginServerPlayer player,
+			@Nullable(why = "Null to represent the console") ChatPluginServerPlayer recipient,
+			String privateMessage,
+			DenyChatReason<?> reason
+			) {
+		super(player, recipient, privateMessage);
 		this.reason = reason;
 	}
 	
 	/**
-	 * Gets the reason why the message has been denied.
+	 * Gets the reason why the private message has been denied.
 	 * 
 	 * @return Deny chat reason
 	 */

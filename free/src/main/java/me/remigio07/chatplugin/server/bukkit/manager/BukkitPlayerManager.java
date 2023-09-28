@@ -42,6 +42,7 @@ import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.bossbar.BossbarManager;
+import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
 import me.remigio07.chatplugin.api.server.event.player.ServerPlayerLoadEvent;
 import me.remigio07.chatplugin.api.server.event.player.ServerPlayerUnloadEvent;
 import me.remigio07.chatplugin.api.server.gui.GUIManager;
@@ -63,6 +64,7 @@ import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.server.bukkit.BukkitReflection;
 import me.remigio07.chatplugin.server.bukkit.ChatPluginBukkitPlayer;
 import me.remigio07.chatplugin.server.join_quit.QuitMessageManagerImpl.QuitPacketImpl;
+import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 
 public class BukkitPlayerManager extends ServerPlayerManager {
 	
@@ -139,7 +141,7 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 		if (CustomSuffixManager.getInstance().isEnabled()) {
 			Objective customSuffix = scoreboard.registerNewObjective("tablist_suffix", CustomSuffixManager.getInstance().getRenderType() == RenderType.HEARTS ? "health" : "dummy");
 			
-			if (atLeastV1_9)
+			if (VersionUtils.getVersion().isAtLeast(Version.V1_13))
 				customSuffix.setRenderType(CustomSuffixManager.getInstance().getRenderType().bukkitValue());
 			customSuffix.setDisplaySlot(DisplaySlot.PLAYER_LIST);
 		} for (int i = 0; i < 15; i++)
@@ -159,7 +161,7 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 			
 			team.setPrefix(ChatColor.translate(tag.getPrefix()));
 			
-			if (atLeastV1_9)
+			if (VersionUtils.getVersion().isAtLeast(Version.V1_12))
 				team.setColor(ChatColor.getByChar(tag.getNameColor().charAt(1)).bukkitValue());
 			else team.setPrefix(ChatColor.translate(team.getPrefix() + tag.getNameColor()));
 			team.setSuffix(ChatColor.translate(tag.getSuffix()));
@@ -211,6 +213,10 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 			VanishManager.getInstance().show(serverPlayer);
 		if (BossbarManager.getInstance().getLoadingBossbarsTasks().containsKey(serverPlayer))
 			TaskManager.getInstance().getAsyncTasks().get(BossbarManager.getInstance().getLoadingBossbarsTasks().remove(serverPlayer)).run();
+		if (PrivateMessagesManager.getInstance().isEnabled())
+			for (ChatPluginServerPlayer other : players.values())
+				if (other.getLastCorrespondent().equals(serverPlayer))
+					((BaseChatPluginServerPlayer) other).setLastCorrespondent(null);
 		TablistManager.getInstance().sendTablist(Tablist.NULL_TABLIST, serverPlayer);
 		
 		if (scoreboard.getObjective("scoreboard") != null)

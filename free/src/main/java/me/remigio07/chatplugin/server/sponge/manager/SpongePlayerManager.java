@@ -42,6 +42,7 @@ import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.bossbar.BossbarManager;
+import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
 import me.remigio07.chatplugin.api.server.event.player.ServerPlayerLoadEvent;
 import me.remigio07.chatplugin.api.server.event.player.ServerPlayerUnloadEvent;
 import me.remigio07.chatplugin.api.server.gui.GUIManager;
@@ -62,6 +63,7 @@ import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.adapter.scoreboard.ObjectiveAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.server.join_quit.QuitMessageManagerImpl.QuitPacketImpl;
+import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import me.remigio07.chatplugin.server.sponge.ChatPluginSpongePlayer;
 
 public class SpongePlayerManager extends ServerPlayerManager {
@@ -187,6 +189,10 @@ public class SpongePlayerManager extends ServerPlayerManager {
 			VanishManager.getInstance().show(serverPlayer);
 		if (BossbarManager.getInstance().getLoadingBossbarsTasks().containsKey(serverPlayer))
 			TaskManager.getInstance().getAsyncTasks().get(BossbarManager.getInstance().getLoadingBossbarsTasks().remove(serverPlayer)).run();
+		if (PrivateMessagesManager.getInstance().isEnabled())
+			for (ChatPluginServerPlayer other : players.values())
+				if (other.getLastCorrespondent().equals(serverPlayer))
+					((BaseChatPluginServerPlayer) other).setLastCorrespondent(null);
 		TablistManager.getInstance().sendTablist(Tablist.NULL_TABLIST, serverPlayer);
 		scoreboard.getScores().forEach(score -> scoreboard.removeScores(score.getName()));
 		new ArrayList<>(GUIManager.getInstance().getGUIs()).stream().filter(PerPlayerGUI.class::isInstance).map(PerPlayerGUI.class::cast).forEach(PerPlayerGUI::unload);

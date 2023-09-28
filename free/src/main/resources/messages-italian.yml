@@ -46,12 +46,14 @@ commands:
       user: |-
         {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/language &8- &eCambia la tua lingua attualmente visualizzata.
+        &f&l/whisper &8- &eInvia un messaggio privato ad un altro giocatore.
         &f&l/ping &8- &eMostra la latenza tua o di un altro giocatore in ms.
         &f&l/rankinfo &8- &eVisualizza informazioni sul rango di un giocatore.
         &f&l/playerlist &8- &eVisualizza la lista dei giocatori online.
       admin: |-
         {pfx} &aAiuto per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/staffchat &8- &eStaff chat cross-server molto utile.
+        &f&l/socialspy &8- &eSpia i messaggi privati degli altri giocatori.
         &f&l/iplookup &8- &eEsegui il lookup di un indirizzo IP.
         &f&l/lastseen &8- &eControlla l'ultimo login di un giocatore.
         &f&l/clearchat &8- &eCancella la chat e nascondi gli ultimi messaggi.
@@ -69,6 +71,7 @@ commands:
       user: |-
         {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/language &8- &eCambia la tua lingua attualmente visualizzata.
+        &f&l/whisper &8- &eInvia un messaggio privato ad un altro giocatore.
         &f&l/ping &8- &eMostra la latenza tua o di un altro giocatore in ms.
         &f&l/rankinfo &8- &eVisualizza informazioni sul rango di un giocatore.
         &f&l/playerlist &8- &eVisualizza la lista dei giocatori online.
@@ -77,11 +80,12 @@ commands:
       admin: |-
         {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/staffchat &8- &eStaff chat cross-server molto utile.
+        &f&l/socialspy &8- &eSpia i messaggi privati degli altri giocatori.
         &f&l/iplookup &8- &eEsegui il lookup di un indirizzo IP.
         &f&l/lastseen &8- &eControlla l'ultimo login di un giocatore.
         &f&l/clearchat &8- &eCancella la chat e nascondi gli ultimi messaggi.
         &f&l/muteall &8- &eAttiva/disattiva la chat per gli utenti.
-        &f&l/chatlog &8- &eCerca messaggi che contengono determinato testo.
+        &f&l/chatlog &8- &eCerca messaggi che contengono certo testo.
         &f&l/accountcheck &8- &eControlla gli accounts di un giocatore.
       punishments: |-
         {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
@@ -164,7 +168,7 @@ commands:
       no-players-online: '{pfx} &eAttualmente non ci sono giocatori online appartenenti a quel rango.'
     name-format:
       vanished: '&o'
-      not-vanished: '&f'
+      not-vanished: '&f&o'
   staff-chat:
     enabled: '{pfx} &aModalità chat Staff abilitata.'
     disabled: '{pfx} &aModalità chat Staff disabilitata.'
@@ -296,6 +300,36 @@ commands:
       banned-format:
         'yes': '&4bannato &e(IDs: &f{bans_ids}&e)'
         'no': '&2non bannato'
+  ignore:
+    added:
+      success:
+        self: '{pfx} &aStai ora ignorando &f{0} &a(&f{1}/25&a).'
+        other: '{pfx} &f{0} &eti sta ora ignorando'
+      already-ignoring: '{pfx} &cStai già ignorando &f{0}&c.'
+    removed:
+      success:
+        self: '{pfx} &aNon stai più ignorando &f{0} &a(&f{1}/25&a).'
+        other: '{pfx} &f{0} &enon ti sta più ignorando.'
+      not-ignoring: '{pfx} &cNon stai ignorando &f{0}&c.'
+    cannot-ignore:
+      self: '{pfx} &cNon potete ignorare voi stessi.'
+      other: '{pfx} &f{0} &cnon possono essere ignorati.'
+    list:
+      self: '{pfx} &eStai ignorando i seguenti giocatori (&f{0}/25&e): &f{1}&e.'
+      other: '{pfx} &f{0} &esta ignorando i seguenti giocatori (&f{1}/25&e): &f{2}&e.'
+    no-ignored:
+      self: '{pfx} &eNon stai ignorando nessuno.'
+      other: '{pfx} &f{0} &enon sta ignorando nessuno.'
+    cleared: '{pfx} &aNon stai più ignorando nessuno.'
+    max-reached: '{pfx} &cHai raggiunto il massimo di &f25 &cgiocatori ignorati.'
+  whisper:
+    ignored: '{pfx} &f{0} &cnon può leggere i tuoi messaggi perché ti sta ignorando.'
+    self: '{pfx} &cNon potete inviare un messaggio privato a voi stessi.'
+  reply:
+    not-found: '{pfx} &cImpossibile trovare qualcuno a cui rispondere.'
+  socialspy:
+    enabled: '{pfx} &aModalità socialspy abilitata'
+    disabled: '{pfx} &aModalità socialspy disabilitata.'
 chat:
   broadcast-format:
     local: '&8[&c&lBroadcast&8] &r{0}'
@@ -317,14 +351,27 @@ chat:
     found: '{pfx} &aSono stati trovati i seguenti messaggi:'
     not-found: '{pfx} &cNessun messaggio registrato trovato.'
     message-format:
-      text: '&e[{date}] &8- &f{message}'
-      hover: |-
-        &aGiocatore: &f{player}
-        &aRango: &f{rank}
-        &aServer: &f{server}
-        &aMondo: &f{world}
-        &aData: &f{date}
-        &aNegato: &f{denied}
+      chat:
+        text: '&e[{date}] &8- &f{content}'
+        hover: |-
+          &aTipo: &emessaggio della chat
+          &aMittente: &f{sender}
+          &aRango: &f{rank_id}
+          &aServer: &f{server}
+          &aWorld: &f{world}
+          &aDate: &f{date}
+          &aNegato: &f{denied}
+      private:
+        text: '&e[{date}] &8- &f&o{content}'
+        hover: |-
+          &aTipo: &bmessaggio privato
+          &aMittente: &f{sender}
+          &aDestinatario: &f{recipient}
+          &aRango: &f{rank_id}
+          &aServer: &f{server}
+          &aMondo: &f{world}
+          &aData: &f{date}
+          &aNegato: &f{denied}
       date-format: dd/MM HH:mm:ss
       denied-format:
         'yes': '&4negato &f({deny_chat_reason})'

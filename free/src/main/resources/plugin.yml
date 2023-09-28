@@ -17,6 +17,18 @@ commands:
     description: Language command.
     usage: /language
     aliases: [languages, lang, langs, locale]
+  whisper:
+    description: Whisper command.
+    usage: /whisper <player> <message>
+    aliases: [message, msg, tell, w, dm]
+  reply:
+    description: Reply command.
+    usage: /reply <message>
+    aliases: [r]
+  ignore:
+    description: Ignore command.
+    usage: /ignore <add|remove|clear|list> [player]
+    aliases: [avoid]
   ping:
     description: Ping command.
     usage: /ping [player]
@@ -34,6 +46,10 @@ commands:
     description: Staff chat command.
     usage: /staffchat [message]
     aliases: [schat, sc]
+  socialspy:
+    description: Socialspy command.
+    usage: /socialspy
+    aliases: [chatspy, ss]
   iplookup:
     description: IP lookup command.
     usage: /iplookup <player|IP address>

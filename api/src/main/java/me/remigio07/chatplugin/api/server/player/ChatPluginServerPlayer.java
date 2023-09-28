@@ -15,6 +15,7 @@
 
 package me.remigio07.chatplugin.api.server.player;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
@@ -33,6 +34,7 @@ import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.packet.type.MessagePacketType;
 import me.remigio07.chatplugin.api.server.bossbar.BossbarManager;
 import me.remigio07.chatplugin.api.server.bossbar.PlayerBossbar;
+import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.rank.Rank;
 import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
@@ -48,7 +50,7 @@ import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 public abstract class ChatPluginServerPlayer extends OfflinePlayer implements ChatPluginPlayer {
 	
 	protected Version version;
-	protected boolean bedrockPlayer;
+	protected boolean bedrockPlayer, socialspyEnabled;
 	protected Rank rank;
 	protected Language language;
 	protected Scoreboard scoreboard;
@@ -59,6 +61,8 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	protected int ping, id, messagesSent;
 	protected short bans, anticheatBans, warnings, anticheatWarnings, kicks, anticheatKicks, mutes, anticheatMutes;
 	protected long loginTime = System.currentTimeMillis();
+	protected ChatPluginServerPlayer lastCorrespondent;
+	protected List<OfflinePlayer> ignoredPlayers;
 	
 	/**
 	 * Constructs a new server player with the given {@link PlayerAdapter} object.
@@ -79,6 +83,24 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	@Override
 	public boolean isBedrockPlayer() {
 		return bedrockPlayer;
+	}
+	
+	/**
+	 * Checks if this player has socialspy enabled.
+	 * 
+	 * @return Whether socialspy is enabled
+	 */
+	public boolean hasSocialspyEnabled() {
+		return socialspyEnabled;
+	}
+	
+	/**
+	 * Sets whether this player should have socialspy enabled.
+	 * 
+	 * @param socialspyEnabled Whether socialspy is enabled
+	 */
+	public void setSocialspyEnabled(boolean socialspyEnabled) {
+		this.socialspyEnabled = socialspyEnabled;
 	}
 	
 	/**
@@ -269,6 +291,31 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	 */
 	public long getLoginTime() {
 		return loginTime;
+	}
+	
+	/**
+	 * Gets the last player that has sent a private message to this player.
+	 * 
+	 * <p>Will return <code>null</code> if no private messages were sent to
+	 * this player since they have joined or if the correspondent was unloaded.</p>
+	 * 
+	 * <p>Keep in mind that the returned player may be vanished and that <code>null</code>
+	 * does not represent the console: it is not possible to reply to it directly.</p>
+	 * 
+	 * @return Player's last correspondent
+	 */
+	@Nullable(why = "There may not be a correspondent loaded")
+	public ChatPluginServerPlayer getLastCorrespondent() {
+		return lastCorrespondent;
+	}
+	
+	/**
+	 * Cached version of {@link PlayerIgnoreManager#getIgnoredPlayers(OfflinePlayer)}.
+	 * 
+	 * @return Ignored players' list
+	 */
+	public List<OfflinePlayer> getIgnoredPlayers() {
+		return ignoredPlayers;
 	}
 	
 	/**

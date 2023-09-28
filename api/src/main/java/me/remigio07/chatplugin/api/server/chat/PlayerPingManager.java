@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.server.chat;
 
 import java.util.List;
 
+import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
@@ -89,11 +90,16 @@ public abstract class PlayerPingManager implements ChatPluginManager {
 	/**
 	 * Pings every loaded player contained in <code>message</code> and
 	 * returns the message with their names colored using {@link #getColor()}.
-	 * Will do nothing if the player does not have the permission "chatplugin.player-ping".
+	 * 
+	 * <p>Will do nothing if the player does not have the permission "chatplugin.player-ping".</p>
+	 * 
+	 * <p>This method will consider that some
+	 * players may be ignored by other players.</p>
 	 * 
 	 * @param player Player involved
 	 * @param message Message involved
 	 * @return Message adjusted with color
+	 * @see PlayerIgnoreManager#getIgnoredPlayers(OfflinePlayer)
 	 */
 	public abstract String performPing(ChatPluginServerPlayer player, String message);
 	
@@ -107,8 +113,9 @@ public abstract class PlayerPingManager implements ChatPluginManager {
 	public abstract List<ChatPluginServerPlayer> getPingedPlayers(ChatPluginServerPlayer player, String message);
 	
 	/**
-	 * Plays {@link #getSound()} to the specified player. This will
-	 * have no effect if <code>!</code>{@link #isSoundEnabled()}.
+	 * Plays {@link #getSound()} to the specified player.
+	 * 
+	 * <p>This will have no effect if <code>!</code>{@link #isSoundEnabled()}.</p>
 	 * 
 	 * @param player Player to play the sound to
 	 */

@@ -39,7 +39,9 @@ import me.remigio07.chatplugin.api.server.chat.ChatManager;
 import me.remigio07.chatplugin.api.server.chat.FormattedChatManager;
 import me.remigio07.chatplugin.api.server.chat.HoverInfoManager;
 import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager;
+import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
 import me.remigio07.chatplugin.api.server.chat.PlayerPingManager;
+import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
 import me.remigio07.chatplugin.api.server.chat.StaffChatManager;
 import me.remigio07.chatplugin.api.server.chat.antispam.AntispamManager;
 import me.remigio07.chatplugin.api.server.chat.log.ChatLogManager;
@@ -87,7 +89,9 @@ import me.remigio07.chatplugin.server.chat.BaseHoverInfoManager.DummyHoverInfoMa
 import me.remigio07.chatplugin.server.chat.ChatManagerImpl;
 import me.remigio07.chatplugin.server.chat.FormattedChatManagerImpl;
 import me.remigio07.chatplugin.server.chat.InstantEmojisManagerImpl;
+import me.remigio07.chatplugin.server.chat.PlayerIgnoreManagerImpl;
 import me.remigio07.chatplugin.server.chat.PlayerPingManagerImpl;
+import me.remigio07.chatplugin.server.chat.PrivateMessagesManagerImpl;
 import me.remigio07.chatplugin.server.chat.StaffChatManagerImpl;
 import me.remigio07.chatplugin.server.chat.antispam.AntispamManagerImpl;
 import me.remigio07.chatplugin.server.chat.log.DummyChatLogManager;
@@ -154,6 +158,8 @@ public class ChatPluginServerManagers extends ChatPluginManagers {
 		addManager(InstantEmojisManager.class, new InstantEmojisManagerImpl());
 		addManager(StaffChatManager.class, new StaffChatManagerImpl());
 		addManager(ChatLogManager.class, new DummyChatLogManager());
+		addManager(PlayerIgnoreManager.class, new PlayerIgnoreManagerImpl());
+		addManager(PrivateMessagesManager.class, new PrivateMessagesManagerImpl());
 		addManager(ScoreboardManager.class, new DummyScoreboardManager());
 		addManager(TablistManager.class, new TablistManagerImpl());
 		addManager(CustomSuffixManager.class, new DummyCustomSuffixManager());

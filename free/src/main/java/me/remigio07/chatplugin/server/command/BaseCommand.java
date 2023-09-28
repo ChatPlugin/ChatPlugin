@@ -80,7 +80,7 @@ public abstract class BaseCommand {
 		
 		if (args.contains("{players}")) {
 			args.remove("{players}");
-			args.addAll(PlayerManager.getInstance().getPlayersNames().stream().filter(name -> sender.hasPermission("chatplugin.commands.vanish") || !VanishManager.getInstance().getVanishedNames().contains(name)).collect(Collectors.toList()));
+			args.addAll(PlayerManager.getInstance().getPlayersNames().stream().filter(name -> !VanishManager.getInstance().getVanishedNames().contains(name)).collect(Collectors.toList()));
 		} if (args.contains("{ips}")) {
 			args.remove("{ips}");
 			args.addAll(PlayerManager.getInstance().getPlayersIPs().stream().map(InetAddress::getHostAddress).collect(Collectors.toList()));

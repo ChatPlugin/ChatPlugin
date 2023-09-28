@@ -17,14 +17,14 @@ package me.remigio07.chatplugin.common.storage.database;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.sql.DriverManager;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
@@ -33,6 +33,7 @@ import me.remigio07.chatplugin.api.common.storage.database.DatabaseManager;
 import me.remigio07.chatplugin.api.common.util.Library;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
+import me.remigio07.chatplugin.bootstrap.IsolatedClassLoader;
 import me.remigio07.chatplugin.common.util.LibrariesUtils;
 
 public class H2Connector extends DatabaseConnector {
@@ -43,33 +44,24 @@ public class H2Connector extends DatabaseConnector {
 		
 		try {
 			LibrariesUtils.load(Library.H2_DRIVER);
-			Class.forName(Library.PREFIX + "org.h2.Driver").getDeclaredMethod("load").invoke(null);
 			
 			boolean serverMode = ConfigurationType.CONFIG.get().getBoolean("storage.database.use-server-mode");
 			
 			if (serverMode)
 				LogManager.log("H2 is selected as storage method with the server mode (\"storage.database.use-server-mode\" in config.yml) enabled. This may require extra time to start the database if no connections are open.", 0);
-			connection = DriverManager.getConnection(
+			connection = (Connection) IsolatedClassLoader.getInstance().loadClass("org.h2.jdbc.JdbcConnection").getConstructor(String.class, Properties.class, String.class, Object.class, boolean.class).newInstance(
 					"jdbc:h2:file:"
 					+ DatabaseManager.getInstance().getFolder().getAbsolutePath()
 					+ File.separator + ConfigurationType.CONFIG.get().getString("storage.database.file-name")
 					+ ";LOCK_MODE=2;AUTO_RECONNECT=TRUE;MODE=MySQL" + (serverMode ? ";AUTO_SERVER=TRUE" : ""),
-					"sa",
-					""
+					new Properties(),
+					null,
+					null,
+					false
 					);
 			
 			executeUpdate("SET IGNORECASE TRUE");
-		} catch (ClassNotFoundException e) {
-			LogManager.log("Unable to find the H2 JDBC class. ChatPlugin will disable.", 2);
-			throw new ChatPluginManagerException(DatabaseManager.getInstance(), e);
-		} catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
-			LogManager.log("Unable to load the H2 database using the current driver.", 2);
-			throw new ChatPluginManagerException(DatabaseManager.getInstance(), e);
-		} catch (SQLException e) {
-			LogManager.log("Unable to access the H2 database.", 2);
-			throw new ChatPluginManagerException(DatabaseManager.getInstance(), e);
 		} catch (Exception e) {
-			LogManager.log("Unable to load the H2 driver's JAR file.", 2);
 			throw new ChatPluginManagerException(DatabaseManager.getInstance(), e);
 		}
 	}
@@ -182,19 +174,34 @@ public class H2Connector extends DatabaseConnector {
 					+ "`bans` SMALLINT DEFAULT 0, "
 					+ "`warnings` SMALLINT DEFAULT 0, "
 					+ "`kicks` SMALLINT DEFAULT 0, "
-					+ "`mutes` SMALLINT DEFAULT 0"
+					+ "`mutes` SMALLINT DEFAULT 0, "
+					+ "`ignored_players` VARCHAR(255)"
 					+ ")";
 			break;
-		case MESSAGES:
+		case CHAT_MESSAGES:
 			update = "CREATE TABLE IF NOT EXISTS {table_id} ("
-					+ "`player_uuid` VARCHAR(36) NOT NULL, "
-					+ "`player_name` VARCHAR(16) NOT NULL, "
+					+ "`sender_uuid` VARCHAR(36) NOT NULL, "
+					+ "`sender_name` VARCHAR(16) NOT NULL, "
 					+ "`rank_id` VARCHAR(14) NOT NULL, "
 					+ "`server` VARCHAR(36) NOT NULL, "
-					+ "`world` VARCHAR(255) NOT NULL, "
-					+ "`message` VARCHAR(256) NOT NULL, "
+					+ "`world` VARCHAR(248) NOT NULL, "
+					+ "`content` VARCHAR(256) NOT NULL, "
 					+ "`date` BIGINT NOT NULL, "
 					+ "`deny_chat_reason` ENUM('CAPS', 'FLOOD', 'FORMAT', 'IP_ADDRESS', 'MUTE', 'MUTEALL', 'SPAM', 'SWEAR', 'URL', 'VANISH')"
+					+ ")";
+			break;
+		case PRIVATE_MESSAGES:
+			update = "CREATE TABLE IF NOT EXISTS {table_id} ("
+					+ "`sender_uuid` VARCHAR(36) NOT NULL, "
+					+ "`sender_name` VARCHAR(16) NOT NULL, "
+					+ "`recipient_uuid` VARCHAR(36) NOT NULL, "
+					+ "`recipient_name` VARCHAR(16) NOT NULL, "
+					+ "`rank_id` VARCHAR(14) NOT NULL, "
+					+ "`server` VARCHAR(36) NOT NULL, "
+					+ "`world` VARCHAR(248) NOT NULL, "
+					+ "`content` VARCHAR(256) NOT NULL, "
+					+ "`date` BIGINT NOT NULL, "
+					+ "`deny_chat_reason` ENUM('CAPS', 'FLOOD', 'IP_ADDRESS', 'SPAM', 'SWEAR', 'URL')"
 					+ ")";
 			break;
 		case IP_ADDRESSES:
@@ -208,7 +215,7 @@ public class H2Connector extends DatabaseConnector {
 	
 	@Override
 	public String getEngineVersion() throws SQLException {
-		return get("SELECT value FROM information_schema.settings WHERE name = ?", "value", String.class, "info.VERSION");
+		return get("SELECT setting_value FROM information_schema.settings WHERE setting_name = ?", "setting_value", String.class, "info.VERSION");
 	}
 	
 }

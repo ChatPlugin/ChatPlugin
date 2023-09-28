@@ -80,6 +80,12 @@ public class BukkitReflection {
 				classes.put("PacketPlayOutChat", clazz);
 			}
 			
+			if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
+				// PacketPlayOutPlayerListHeaderFooter
+				clazz = atLeast1_17 ? getNMNClass("protocol.game.PacketPlayOutPlayerListHeaderFooter") : getNMSClass("PacketPlayOutPlayerListHeaderFooter");
+				classes.put("PacketPlayOutPlayerListHeaderFooter", clazz);
+			}
+			
 			// IChatBaseComponent
 			clazz = atLeast1_17 ? getNMNClass("chat.IChatBaseComponent") : getNMSClass("IChatBaseComponent");
 			classes.put("IChatBaseComponent", clazz);
@@ -151,10 +157,6 @@ public class BukkitReflection {
 				classes.put("CraftScoreboard", clazz);
 				putMethod(clazz, "getHandle", "");
 			} else return;
-			
-			// PacketPlayOutPlayerListHeaderFooter
-			clazz = atLeast1_17 ? getNMNClass("protocol.game.PacketPlayOutPlayerListHeaderFooter") : getNMSClass("PacketPlayOutPlayerListHeaderFooter");
-			classes.put("PacketPlayOutPlayerListHeaderFooter", clazz);
 			
 			// PacketPlayOutSpawnEntityLiving
 			clazz = atLeast1_17 ? getNMNClass("protocol.game.PacketPlayOutSpawnEntityLiving") : getNMSClass("PacketPlayOutSpawnEntityLiving");

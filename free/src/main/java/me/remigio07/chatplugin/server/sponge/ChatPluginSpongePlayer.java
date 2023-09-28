@@ -31,6 +31,7 @@ import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.text.title.Title;
 
+import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
@@ -61,7 +62,7 @@ import net.kyori.adventure.text.ComponentLike;
 
 public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	
-	private static SpongeAudiences audiences = SpongeAudiences.create(Sponge.getPluginManager().getPlugin("chatplugin").get(), Sponge.getGame());
+	private static SpongeAudiences audiences = ChatPlugin.getInstance().isLoaded() ? SpongeAudiences.create(Sponge.getPluginManager().getPlugin("chatplugin").get(), Sponge.getGame()) : null;
 	private static Cause inventoryCause;
 	private Player player;
 	
@@ -186,7 +187,7 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public void sendMessage(Object adventureComponent) {
-		audiences.player(player).sendMessage((ComponentLike) adventureComponent);
+		audience.sendMessage((ComponentLike) adventureComponent);
 	}
 	
 	@Override
@@ -265,7 +266,8 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	}
 	
 	public static void closeAudiences() {
-		audiences.close();
+		if (audiences != null)
+			audiences.close();
 	}
 	
 }

@@ -20,8 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import me.remigio07.chatplugin.api.common.chat.DenyChatReasonHandler;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
-import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
@@ -30,7 +30,7 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
  * @see #getOnlineWorld(String)
  * @see #getOnlineServer()
  */
-public abstract class VanishManager implements ChatPluginManager {
+public abstract class VanishManager implements DenyChatReasonHandler {
 	
 	protected static VanishManager instance;
 	protected boolean enabled, invisibility;

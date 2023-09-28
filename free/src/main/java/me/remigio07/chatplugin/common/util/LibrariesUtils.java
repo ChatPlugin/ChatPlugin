@@ -21,23 +21,24 @@ import java.nio.channels.Channels;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationManager;
 import me.remigio07.chatplugin.api.common.util.Library;
+import me.remigio07.chatplugin.api.common.util.Library.Relocation;
 import me.remigio07.chatplugin.api.common.util.MemoryUtils;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
+import me.remigio07.chatplugin.bootstrap.IsolatedClassLoader;
 import me.remigio07.chatplugin.bootstrap.JARLibraryLoader;
 
 public class LibrariesUtils {
 	
-	public static final List<Library> RELOCATION_LIBS = Arrays.asList(Library.ASM, Library.ASM_COMMONS, Library.JAR_RELOCATOR);
+	private static IsolatedClassLoader isolatedClassLoader = IsolatedClassLoader.getInstance();
 	
 	public static boolean isLoaded(Library library) {
 		try {
-			Class.forName(library.getClazz(), false, JARLibraryLoader.getInstance());
+			Class.forName(library.getClazz(), false, library.getRelocation() == null && library != Library.SLF4J_API ? isolatedClassLoader : JARLibraryLoader.getInstance());
 			return true;
 		} catch (ClassNotFoundException e) {
 			return false;
@@ -55,7 +56,9 @@ public class LibrariesUtils {
 				file.getParentFile().mkdirs();
 				file.createNewFile();
 				download(library);
-			} JARLibraryLoader.getInstance().load(getTarget(library));
+			} if (library.getRelocation() == null && library != Library.SLF4J_API)
+				isolatedClassLoader.load(getTarget(library));
+			else JARLibraryLoader.getInstance().load(getTarget(library));
 		}
 	}
 	
@@ -94,10 +97,10 @@ public class LibrariesUtils {
 		File jar = getTarget(library);
 		File tmp = new File(jar.getPath() + ".tmp");
 		List<Object> rules = new ArrayList<>();
-		Class<?> clazz = Class.forName("me.remigio07.jarrelocator.JarRelocator");
+		Class<?> clazz = isolatedClassLoader.loadClass("me.remigio07.jarrelocator.JarRelocator");
 		
 		for (String oldPackage : library.getRelocation().getOldPackages())
-			rules.add(Class.forName("me.remigio07.jarrelocator.Relocation").getConstructor(String.class, String.class).newInstance(oldPackage, Library.PREFIX + oldPackage));
+			rules.add(isolatedClassLoader.loadClass("me.remigio07.jarrelocator.Relocation").getConstructor(String.class, String.class).newInstance(oldPackage, Relocation.PREFIX + oldPackage));
 		Files.move(jar.toPath(), tmp.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		clazz.getMethod("run").invoke(clazz.getConstructors()[0].newInstance(tmp, jar, rules));
 		tmp.delete();

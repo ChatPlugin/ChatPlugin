@@ -34,7 +34,9 @@ import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.server.chat.log.ChatLogManager;
+import me.remigio07.chatplugin.api.server.chat.log.LoggedChatMessage;
 import me.remigio07.chatplugin.api.server.chat.log.LoggedMessage;
+import me.remigio07.chatplugin.api.server.chat.log.LoggedPrivateMessage;
 
 /**
  * Represents the storage connector used by the plugin.
@@ -100,7 +102,8 @@ public abstract class StorageConnector {
 	
 	/**
 	 * Gets a player from the storage.
-	 * Will return <code>null</code> if the player is not stored.
+	 * 
+	 * <p>Will return <code>null</code> if the player is not stored.</p>
 	 * 
 	 * @param playerID Player's ID
 	 * @return Stored player
@@ -148,8 +151,10 @@ public abstract class StorageConnector {
 	}
 	
 	/**
-	 * Inserts a new ban in the storage. If you wish to just update
-	 * an existing ban with new values use {@link #updateBan(Ban, Ban)} instead.
+	 * Inserts a new ban in the storage.
+	 * 
+	 * <p>If you wish to just update an existing ban with new
+	 * values use {@link #updateBan(Ban, Ban)} instead.</p>
 	 * 
 	 * @param ban Ban object
 	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
@@ -161,8 +166,10 @@ public abstract class StorageConnector {
 	}
 	
 	/**
-	 * Updates an existing ban in the storage. The old ban's ID is the only thing
-	 * that remains unchanged: other values are replaced with the new ban's ones.
+	 * Updates an existing ban in the storage.
+	 * 
+	 * <p>The old ban's ID is the only thing that remains unchanged:
+	 * other values are replaced with the new ban's ones.</p>
 	 * 
 	 * @param oldBan Old ban to update data for
 	 * @param newBan New ban with new values
@@ -188,7 +195,8 @@ public abstract class StorageConnector {
 	
 	/**
 	 * Gets a {@link Ban} object from the storage.
-	 * Will return <code>null</code> if the ban does not exist.
+	 * 
+	 * <p>Will return <code>null</code> if the ban does not exist.</p>
 	 * 
 	 * @param id Ban's ID
 	 * @return Ban object
@@ -226,7 +234,8 @@ public abstract class StorageConnector {
 	
 	/**
 	 * Gets a {@link Warning} object from the storage.
-	 * Will return <code>null</code> if the warning does not exist.
+	 * 
+	 * <p>Will return <code>null</code> if the warning does not exist.</p>
 	 * 
 	 * @param id Warning's ID
 	 * @return Warning object
@@ -252,7 +261,8 @@ public abstract class StorageConnector {
 	
 	/**
 	 * Gets a {@link Kick} object from the storage.
-	 * Will return <code>null</code> if the kick does not exist.
+	 * 
+	 * <p>Will return <code>null</code> if the kick does not exist.</p>
 	 * 
 	 * @param id Kick's ID
 	 * @return Kick object
@@ -265,8 +275,10 @@ public abstract class StorageConnector {
 	}
 	
 	/**
-	 * Inserts a new mute in the storage. If you wish to just update
-	 * an existing mute with new values use {@link #updateMute(Mute, Mute)} instead.
+	 * Inserts a new mute in the storage.
+	 * 
+	 * <p>If you wish to just update an existing mute with new
+	 * values use {@link #updateMute(Mute, Mute)} instead.</p>
 	 * 
 	 * @param mute Mute object
 	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
@@ -278,8 +290,10 @@ public abstract class StorageConnector {
 	}
 	
 	/**
-	 * Updates an existing mute in the storage. The old mute's ID is the only thing
-	 * that remains unchanged: other values are replaced with the new mute's ones.
+	 * Updates an existing mute in the storage.
+	 * 
+	 * <p>The old mute's ID is the only thing that remains unchanged:
+	 * other values are replaced with the new mute's ones.</p>
 	 * 
 	 * @param oldMute Old mute to update data for
 	 * @param newMute New mute with new values
@@ -305,7 +319,8 @@ public abstract class StorageConnector {
 	
 	/**
 	 * Gets a {@link Mute} object from the storage.
-	 * Will return <code>null</code> if the mute does not exist.
+	 * 
+	 * <p>Will return <code>null</code> if the mute does not exist.</p>
 	 * 
 	 * @param id Mute's ID
 	 * @return Mute object
@@ -330,9 +345,9 @@ public abstract class StorageConnector {
 	}
 	
 	/**
-	 * Gets a list of logged messages from the storage.
+	 * Gets a list of logged chat messages from the storage.
 	 * 
-	 * @param player Target player
+	 * @param sender Messages' sender
 	 * @param timeAgo Maximum time elapsed
 	 * @param query Text to search
 	 * @return List of logged messages
@@ -340,13 +355,30 @@ public abstract class StorageConnector {
 	 * @throws UnsupportedOperationException If <code>!</code>{@link ChatPlugin#isPremium()}
 	 */
 	@NotNull
-	public List<LoggedMessage> getMessages(OfflinePlayer player, long timeAgo, String query) throws SQLException {
+	public List<LoggedChatMessage> getChatMessages(@NotNull OfflinePlayer sender, long timeAgo, String query) throws SQLException {
 		throw new UnsupportedOperationException("Unable to get messages from the storage on the free version");
 	}
 	
 	/**
-	 * Cleans messages older than {@link ChatLogManager#getMessagesAutoCleanerPeriod()} from the storage.
-	 * Will do nothing if called on a proxy environment.
+	 * Gets a list of logged private messages from the storage.
+	 * 
+	 * @param sender Messages' sender
+	 * @param timeAgo Maximum time elapsed
+	 * @param query Text to search
+	 * @return List of logged private messages
+	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
+	 * @throws UnsupportedOperationException If <code>!</code>{@link ChatPlugin#isPremium()}
+	 */
+	@NotNull
+	public List<LoggedPrivateMessage> getPrivateMessages(@NotNull OfflinePlayer sender, long timeAgo, String query) throws SQLException {
+		throw new UnsupportedOperationException("Unable to get private messages from the storage on the free version");
+	}
+	
+	/**
+	 * Cleans messages older than {@link ChatLogManager#getMessagesAutoCleanerPeriod()}
+	 * from {@link DataContainer#CHAT_MESSAGES} and {@link DataContainer#PRIVATE_MESSAGES}.
+	 * 
+	 * <p>Will do nothing if called on a proxy environment.</p>
 	 * 
 	 * @throws UnsupportedOperationException If <code>!</code>{@link ChatPlugin#isPremium()}
 	 */
@@ -450,7 +482,8 @@ public abstract class StorageConnector {
 	 * @param id Data's ID
 	 * @return Requested list of data
 	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
-	 * @throws IllegalArgumentException If <code>container == </code>{@link DataContainer#MESSAGES}
+	 * @throws IllegalArgumentException If <code>container == </code>{@link DataContainer#CHAT_MESSAGES}
+	 * <code>|| container == </code>{@link DataContainer#PRIVATE_MESSAGES}
 	 */
 	@NotNull
 	public abstract List<Object> getRowValues(DataContainer container, int id) throws SQLException;
@@ -483,7 +516,8 @@ public abstract class StorageConnector {
 	 * @param data Data to set or <code>null</code>
 	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
 	 * @throws IOException If something goes wrong and {@link StorageMethod#isFlatFile()}
-	 * @throws IllegalArgumentException If <code>container == </code>{@link DataContainer#MESSAGES}
+	 * @throws IllegalArgumentException If <code>container == </code>{@link DataContainer#CHAT_MESSAGES}
+	 * <code>|| container == </code>{@link DataContainer#PRIVATE_MESSAGES}
 	 */
 	public abstract void setData(DataContainer container, String position, int id, @Nullable(why = "Data will become SQL NULL if null") Object data) throws SQLException, IOException;
 	
@@ -493,7 +527,8 @@ public abstract class StorageConnector {
 	 * @param container Container to check
 	 * @return All entries' IDs
 	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
-	 * @throws IllegalArgumentException If <code>container == </code>{@link DataContainer#MESSAGES}
+	 * @throws IllegalArgumentException If <code>container == </code>{@link DataContainer#CHAT_MESSAGES}
+	 * <code>|| container == </code>{@link DataContainer#PRIVATE_MESSAGES}
 	 */
 	@NotNull
 	public abstract List<Integer> getIDs(DataContainer container) throws SQLException;
@@ -504,7 +539,8 @@ public abstract class StorageConnector {
 	 * @param container Container to check
 	 * @return Next entry's ID
 	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
-	 * @throws IllegalArgumentException If <code>container == </code>{@link DataContainer#MESSAGES}
+	 * @throws IllegalArgumentException If <code>container == </code>{@link DataContainer#CHAT_MESSAGES}
+	 * <code>|| container == </code>{@link DataContainer#PRIVATE_MESSAGES}
 	 */
 	public abstract int getNextID(DataContainer container) throws SQLException;
 	
@@ -515,7 +551,8 @@ public abstract class StorageConnector {
 	 * @param id Entry's ID
 	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
 	 * @throws IOException If something goes wrong and {@link StorageMethod#isFlatFile()}
-	 * @throws IllegalArgumentException If <code>container == </code>{@link DataContainer#MESSAGES}
+	 * @throws IllegalArgumentException If <code>container == </code>{@link DataContainer#CHAT_MESSAGES}
+	 * <code>|| container == </code>{@link DataContainer#PRIVATE_MESSAGES}
 	 */
 	public abstract void removeEntry(DataContainer container, int id) throws SQLException, IOException;
 	

@@ -114,12 +114,12 @@ public enum Library {
 	/**
 	 * Represents the <a href="https://asm.ow2.io/">ASM</a> library.
 	 */
-	ASM("ASM", "org.objectweb.asm.ClassReader", null, "https://repo1.maven.org/maven2/org/ow2/asm/asm/7.2/asm-7.2.jar", "asm.jar"),
+	ASM("ASM", "org.objectweb.asm.ModuleVisitor", null, "https://repo1.maven.org/maven2/org/ow2/asm/asm/7.2/asm-7.2.jar", "asm.jar"),
 	
 	/**
 	 * Represents the <a href="https://asm.ow2.io/">ASM Commons</a> library.
 	 */
-	ASM_COMMONS("ASM Commons", "org.objectweb.asm.commons.Method", null, "https://repo1.maven.org/maven2/org/ow2/asm/asm-commons/7.2/asm-commons-7.2.jar", "asm-commons.jar"),
+	ASM_COMMONS("ASM Commons", "org.objectweb.asm.commons.ClassRemapper", null, "https://repo1.maven.org/maven2/org/ow2/asm/asm-commons/7.2/asm-commons-7.2.jar", "asm-commons.jar"),
 	
 	/**
 	 * Represents the <a href="https://checkerframework.org/">Checker Qual</a> library.
@@ -164,7 +164,7 @@ public enum Library {
 	/**
 	 * Represents the <a href="https://github.com/google/gson">Gson</a> library.
 	 */
-	GSON("Gson", "com.google.gson.Gson", null, "https://repo1.maven.org/maven2/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar", "gson.jar"),
+	GSON("Gson", "com.google.gson.Gson", new Relocation("com.google.gson"), "https://repo1.maven.org/maven2/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar", "gson.jar"),
 	
 	/**
 	 * Represents the <a href="https://guava.dev/">Guava</a> library.
@@ -174,7 +174,7 @@ public enum Library {
 	/**
 	 * Represents the <a href="https://h2database.com/html/main.html">H2 Driver</a> library.
 	 */
-	H2_DRIVER("H2 Driver", "org.h2.Driver", new Relocation("org.h2"), "https://repo1.maven.org/maven2/com/h2database/h2/1.4.200/h2-1.4.200.jar", "h2-driver.jar"),
+	H2_DRIVER("H2 Driver", "org.h2.Driver", null, "https://repo1.maven.org/maven2/com/h2database/h2/2.2.224/h2-2.2.224.jar", "h2-driver.jar"),
 	
 	/**
 	 * Represents the <a href="http://www.trustice.com/java/tar/">Ice TAR</a> library.
@@ -274,7 +274,7 @@ public enum Library {
 	/**
 	 * Represents the <a href="https://github.com/xerial/sqlite-jdbc">SQLite Driver</a> library.
 	 */
-	SQLITE_DRIVER("SQLite Driver", "org.sqlite.JDBC", null, "https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.36.0.3/sqlite-jdbc-3.36.0.3.jar", "sqlite-driver.jar"),
+	SQLITE_DRIVER("SQLite Driver", "org.sqlite.JDBC", null, "https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.43.0.0/sqlite-jdbc-3.43.0.0.jar", "sqlite-driver.jar"),
 	
 	/**
 	 * Represents the <a href="https://github.com/rubenlagus/TelegramBots">Telegram Bots</a> library.
@@ -286,12 +286,6 @@ public enum Library {
 	 */
 	TELEGRAM_BOTS_META("Telegram Bots Meta", "org.telegram.telegrambots.meta.ApiConstants", new Relocation("org.telegram.telegrambots.meta"), "https://repo1.maven.org/maven2/org/telegram/telegrambots-meta/5.6.0/telegrambots-meta-5.6.0.jar", "telegram-bots-meta.jar");
 	
-	/**
-	 * Prefix used for relocation.
-	 * 
-	 * <p><strong>Value:</strong> "me.remigio07.chatplugin.common.lib."</p>
-	 */
-	public static final String PREFIX = "me.remigio07.chatplugin.common.lib.";
 	private String name, clazz, url, fileName;
 	private Relocation relocation;
 	
@@ -309,20 +303,10 @@ public enum Library {
 	
 	private Library(String name, String clazz, Relocation relocation, String url, String fileName) {
 		this.name = name;
+		this.clazz = (relocation == null ? "" : Relocation.PREFIX) + clazz;
 		this.relocation = relocation;
 		this.url = url;
 		this.fileName = fileName;
-		
-		switch (name()) {
-		case "ASM":
-		case "ASM_COMMONS":
-		case "JAR_RELOCATOR":
-			this.clazz = clazz;
-			break;
-		default:
-			this.clazz = PREFIX + clazz;
-			break;
-		}
 	}
 	
 	/**
@@ -381,6 +365,12 @@ public enum Library {
 	 */
 	public static class Relocation {
 		
+		/**
+		 * Prefix used for relocation.
+		 * 
+		 * <p><strong>Value:</strong> "me.remigio07.chatplugin.common.lib."</p>
+		 */
+		public static final String PREFIX = "me.remigio07.chatplugin.common.lib.";
 		private static final Relocation KYORI_RELOCATION = new Relocation("net.kyori.adventure", "net.kyori.examination");
 		private List<String> oldPackages;
 		
@@ -394,25 +384,19 @@ public enum Library {
 		}
 		
 		/**
-		 * Adds libraries to this relocation.
-		 * 
-		 * @param libraries Libraries to add
-		 * @return This relocation
-		 */
-		public Relocation add(Library... libraries) {
-			for (Library library : libraries)
-				if (library.getRelocation() != null && !oldPackages.containsAll(library.getRelocation().getOldPackages()))
-					oldPackages.addAll(library.getRelocation().getOldPackages());
-			return this;
-		}
-		
-		/**
 		 * Gets the list of old packages.
 		 * 
 		 * @return Old packages list
 		 */
 		public List<String> getOldPackages() {
 			return oldPackages;
+		}
+		
+		private Relocation add(Library... libraries) {
+			for (Library library : libraries)
+				if (library.getRelocation() != null && !oldPackages.containsAll(library.getRelocation().getOldPackages()))
+					oldPackages.addAll(library.getRelocation().getOldPackages());
+			return this;
 		}
 		
 	}

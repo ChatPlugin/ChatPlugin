@@ -18,7 +18,6 @@ package me.remigio07.chatplugin.server.command.admin;
 import java.util.Arrays;
 import java.util.List;
 
-import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.server.chat.StaffChatManager;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
@@ -57,9 +56,11 @@ public class StaffChatCommand extends BaseCommand {
 			if (ServerPlayerManager.getInstance().getPlayer(sender.getUUID()) != null)
 				StaffChatManager.getInstance().sendPlayerMessage(ServerPlayerManager.getInstance().getPlayer(sender.getUUID()), String.join(" ", args));
 			else sender.sendMessage(language.getMessage("misc.disabled-world"));
-		} else if (PlayerAdapter.getOnlinePlayers().size() > 0)
+		} try {
 			StaffChatManager.getInstance().sendConsoleMessage(String.join(" ", args));
-		else sender.sendMessage(language.getMessage("misc.at-least-one-online"));
+		} catch (IllegalStateException e) {
+			sender.sendMessage(language.getMessage("misc.at-least-one-online"));
+		}
 	}
 	
 }

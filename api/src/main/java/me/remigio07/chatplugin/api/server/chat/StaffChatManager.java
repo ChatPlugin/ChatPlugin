@@ -175,7 +175,6 @@ public abstract class StaffChatManager implements ChatPluginManager {
 	 * 
 	 * @param player Message's sender
 	 * @param message Message to send
-	 * 
 	 * @see StaffChatEvent
 	 */
 	public abstract void sendPlayerMessage(ChatPluginServerPlayer player, String message);
@@ -186,7 +185,6 @@ public abstract class StaffChatManager implements ChatPluginManager {
 	 * @param message Message to send
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
 	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
-	 * 
 	 * @see StaffChatEvent
 	 */
 	public abstract void sendConsoleMessage(String message);

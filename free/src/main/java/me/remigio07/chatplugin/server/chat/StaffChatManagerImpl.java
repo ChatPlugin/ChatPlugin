@@ -117,6 +117,8 @@ public class StaffChatManagerImpl extends StaffChatManager {
 	
 	@Override
 	public void sendConsoleMessage(String message) {
+		if (ProxyManager.getInstance().isEnabled() && PlayerAdapter.getOnlinePlayers().size() == 0)
+			throw new IllegalStateException("Unable send PlayerMessage plugin message with no players online");
 		StaffChatEvent staffChatEvent = new StaffChatEvent(null, message);
 		
 		staffChatEvent.call();
@@ -124,8 +126,6 @@ public class StaffChatManagerImpl extends StaffChatManager {
 		if (staffChatEvent.isCancelled())
 			return;
 		if (ProxyManager.getInstance().isEnabled()) {
-			if (PlayerAdapter.getOnlinePlayers().size() == 0)
-				throw new IllegalStateException("Unable send PlayerMessage plugin message with no players online");
 			ProxyManager.getInstance().sendPluginMessage(Packets.Messages.plainPlayerMessage(
 					"ALL",
 					"ALL ENABLED",

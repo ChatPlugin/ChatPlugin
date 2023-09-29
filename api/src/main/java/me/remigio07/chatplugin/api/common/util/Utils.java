@@ -57,7 +57,7 @@ public class Utils {
 	public static final String NOT_APPLICABLE = "N/A";
 	
 	/**
-	 * UUID representing the <a href=https://wikipedia.org/wiki/Universally_unique_identifier#Nil_UUID>nil UUID</a>.
+	 * UUID representing the <a href=https://wikipedia.org/wiki/Universally_unique_identifier#Special_UUIDs>nil UUID</a>.
 	 * 
 	 * <p><strong>UUID:</strong> "00000000-0000-0000-0000-000000000000"</p>
 	 */

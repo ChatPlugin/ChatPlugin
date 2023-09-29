@@ -34,17 +34,6 @@ public interface LoggedPrivateMessage extends LoggedMessage {
 	public static final String[] PLACEHOLDERS = new String[] { "sender", "sender_uuid", "recipient", "recipient_uuid", "rank_id", "server", "world", "content", "date", "denied", "deny_chat_reason" };
 	
 	/**
-	 * Gets this private message's sender.
-	 * 
-	 * <p>Will return <code>null</code> to indicate the console.</p>
-	 * 
-	 * @return Private message's sender
-	 */
-	@Nullable(why = "Null to represent the console")
-	@Override
-	public OfflinePlayer getSender();
-	
-	/**
 	 * Gets this private message's recipient.
 	 * 
 	 * <p>Will return <code>null</code> to indicate the console.</p>

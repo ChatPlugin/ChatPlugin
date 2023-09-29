@@ -64,7 +64,7 @@ public class LastSeenCommand extends BaseCommand {
 					} catch (IOException e) {
 						sender.sendMessage(language.getMessage("misc.cannot-fetch", args[0], e.getMessage()));
 					} catch (SQLException e) {
-						sender.sendMessage(language.getMessage("misc.database-error", e.getMessage()));
+						sender.sendMessage(language.getMessage("misc.database-error", e.getClass().getSimpleName(), e.getMessage()));
 					}
 				}, 0L);
 			} else if (player.isLoaded()) {

@@ -306,7 +306,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("misc.invalid-json", "{pfx} &cInvalid JSON: &f{0}&c.");
 		messages.addDefault("misc.invalid-server", "{pfx} &f{0} &cis not a valid server. Is the proxy online with ChatPlugin installed?");
 		messages.addDefault("misc.invalid-ip-address", "{pfx} &f{0} &cis not a valid IP address.");
-		messages.addDefault("misc.database-error", "{pfx} &cSQLException occurred while trying to access the database: &f{0}&c.");
+		messages.addDefault("misc.database-error", "{pfx} &f{0} &coccurred while trying to access the database: &f{1}&c.");
 		
 		messages.addDefault("commands.help.free.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/whisper &8- &eSend a private message to another player.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.");
 		messages.addDefault("commands.help.free.admin", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/staffchat &8- &eVery handy cross-server Staff chat.\n&f&l/socialspy &8- &eSpy other players' private messages.\n&f&l/iplookup &8- &ePerform a lookup of an IP address.\n&f&l/lastseen &8- &eCheck when a player was last seen.\n&f&l/clearchat &8- &eClear chat to hide last messages.\n&f&l/muteall &8- &eToggle chat for non Staff members.");
@@ -685,6 +685,22 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.player-ping.sound.volume", 1F);
 		chat.addDefault("chat.player-ping.sound.pitch", 1F);
 		
+		chat.addDefault("chat.private-messages.enabled", true);
+		chat.addDefault("chat.private-messages.format.sent.chat", "&7«&8[&b\u270E&8] &fYou &e-> &f{recipient}&7» &f");
+		chat.addDefault("chat.private-messages.format.sent.terminal", "&7<&8[&b&lPM&8] &fYou &e-> &f{recipient}&7> &f");
+		chat.addDefault("chat.private-messages.format.received.chat", "&7«&8[&b\u270E&8] &f{sender} &e-> &fYou&7» &f");
+		chat.addDefault("chat.private-messages.format.received.terminal", "&7<&8[&b&lPM&8] &f{sender} &e-> &fYou&7> &f");
+		chat.addDefault("chat.private-messages.format.socialspy.chat", "&7«&8[&4&lSS&8] &f{sender} &e-> &f{recipient}&7» &f");
+		chat.addDefault("chat.private-messages.format.socialspy.terminal", "&7<&8[&4&lSS&8] &f{sender} &e-> &f{recipient}&7> &f");
+		chat.addDefault("chat.private-messages.sound.enabled", true);
+		chat.addDefault("chat.private-messages.sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "ENTITY_EXPERIENCE_ORB_PICKUP" : "ORB_PICKUP");
+		chat.addDefault("chat.private-messages.sound.volume", 1F);
+		chat.addDefault("chat.private-messages.sound.pitch", 1F);
+		chat.addDefault("chat.private-messages.bypass-antispam-checks", Arrays.asList("CAPS", "FLOOD", "SPAM", "SWEAR"));
+		chat.addDefault("chat.private-messages.socialspy-on-join-enabled", true);
+		
+		chat.addDefault("chat.player-ignore.enabled", true);
+		
 		chat.addDefault("chat.hover-info.enabled", Environment.isBukkit() ? VersionUtils.isSpigot() && VersionUtils.getVersion().isAtLeast(Version.V1_7_2) : VersionUtils.getVersion().isAtLeast(Version.V1_8));
 		chat.addDefault("chat.hover-info.rank.enabled", true);
 		chat.addDefault("chat.hover-info.player.enabled", true);
@@ -726,22 +742,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.log.enabled", true);
 		chat.addDefault("chat.log.print-to-log-file", false);
 		chat.addDefault("chat.log.messages-auto-cleaner-period", "120d");
-		
-		chat.addDefault("chat.private-messages.enabled", true);
-		chat.addDefault("chat.private-messages.format.sent.chat", "&7«&8[&b\u270E&8] &fYou &e-> &f{recipient}&7» &f");
-		chat.addDefault("chat.private-messages.format.sent.terminal", "&7<&8[&b&lPM&8] &fYou &e-> &f{recipient}&7> &f");
-		chat.addDefault("chat.private-messages.format.received.chat", "&7«&8[&b\u270E&8] &f{sender} &e-> &fYou&7» &f");
-		chat.addDefault("chat.private-messages.format.received.terminal", "&7<&8[&b&lPM&8] &f{sender} &e-> &fYou&7> &f");
-		chat.addDefault("chat.private-messages.format.socialspy.chat", "&7«&8[&4&lSS&8] &f{sender} &e-> &f{recipient}&7» &f");
-		chat.addDefault("chat.private-messages.format.socialspy.terminal", "&7<&8[&4&lSS&8] &f{sender} &e-> &f{recipient}&7> &f");
-		chat.addDefault("chat.private-messages.sound.enabled", true);
-		chat.addDefault("chat.private-messages.sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "ENTITY_EXPERIENCE_ORB_PICKUP" : "ORB_PICKUP");
-		chat.addDefault("chat.private-messages.sound.volume", 1F);
-		chat.addDefault("chat.private-messages.sound.pitch", 1F);
-		chat.addDefault("chat.private-messages.bypass-antispam-checks", Arrays.asList("CAPS", "FLOOD", "SPAM", "SWEAR"));
-		chat.addDefault("chat.private-messages.socialspy-on-join-enabled", true);
-		
-		chat.addDefault("chat.player-ignore.enabled", true);
 		
 		chat.save();
 	}

@@ -953,15 +953,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		ads.addDefault("ads.discord.click.values.english", "https://discord.gg/psEw7gW");
 		ads.addDefault("ads.discord.click.values.italian", "https://discord.gg/psEw7gW");
 		
-		ads.addDefault("ads.telegram.texts.english", "&e&lJoin our Telegram group:\n&b&nask something, we'll respond instantly!\n\n&7&oClick this message to receive the invitation.");
-		ads.addDefault("ads.telegram.texts.italian", "&e&lEntra nel nostro Telegram:\n&b&nchiedi qualcosa, risponderemo subito!\n\n&7&oClicca questo messaggio per ricevere l'invito.");
-		ads.addDefault("ads.telegram.hovers.english", "&9[Click here to open the link]");
-		ads.addDefault("ads.telegram.hovers.italian", "&9[Clicca qui per aprire il link]");
-		ads.addDefault("ads.telegram.click.action", "OPEN_URL");
-		ads.addDefault("ads.telegram.click.values.english", "https://t.me/megaproserver");
-		ads.addDefault("ads.telegram.click.values.italian", "https://t.me/megaproserver");
-		ads.addDefault("ads.telegram.disabled-ranks", Arrays.asList("staff"));
-		
 		ads.addDefault("ads.store.texts.english", "&e&lVisit our Store:\n&b&nbuy perks and cosmetics and support the server!\n\n&7&oClick this message to get the link.");
 		ads.addDefault("ads.store.texts.italian", "&e&lVisita il nostro Store:\n&b&ncompra benefici e cosmetici e supporta il server!\n\n&7&oClicca questo messaggio per ricevere il link.");
 		ads.addDefault("ads.store.hovers.english", "&9[Click here to open the link]");

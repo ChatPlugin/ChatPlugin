@@ -215,7 +215,7 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 			TaskManager.getInstance().getAsyncTasks().get(BossbarManager.getInstance().getLoadingBossbarsTasks().remove(serverPlayer)).run();
 		if (PrivateMessagesManager.getInstance().isEnabled())
 			for (ChatPluginServerPlayer other : players.values())
-				if (other.getLastCorrespondent().equals(serverPlayer))
+				if (serverPlayer.equals(other.getLastCorrespondent()))
 					((BaseChatPluginServerPlayer) other).setLastCorrespondent(null);
 		TablistManager.getInstance().sendTablist(Tablist.NULL_TABLIST, serverPlayer);
 		

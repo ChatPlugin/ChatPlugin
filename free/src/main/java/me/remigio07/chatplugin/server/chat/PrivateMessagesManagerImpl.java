@@ -164,7 +164,7 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 					.replace("{recipient}", recipient.getName())
 					) + message);
 			
-			if (sender != null && sender.hasPermission("chatplugin.commands.socialspy") && recipient.hasPermission("chatplugin.commands.socialspy")) {
+			if (sender != null && !sender.hasPermission("chatplugin.commands.socialspy") && !recipient.hasPermission("chatplugin.commands.socialspy")) {
 				for (ChatPluginServerPlayer staffMember : ServerPlayerManager.getInstance().getPlayers().values())
 					if (staffMember.hasSocialspyEnabled())
 						staffMember.sendMessage(ChatColor.translate(socialspyChatFormat

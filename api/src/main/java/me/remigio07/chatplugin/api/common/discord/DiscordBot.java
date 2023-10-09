@@ -28,7 +28,7 @@ import me.remigio07.chatplugin.api.common.event.discord.StatusUpdateEvent;
 /**
  * Represents the Discord bot handled by the {@link DiscordIntegrationManager}.
  */
-public abstract class DiscordBot {
+public interface DiscordBot {
 	
 	/**
 	 * Gets a new embed message. This method returns an {@link Object}
@@ -47,7 +47,7 @@ public abstract class DiscordBot {
 	 * @throws IndexOutOfBoundsException If the first list does not contain at least 11 elements
 	 * @see FieldAdapter
 	 */
-	public Object newEmbedMessage(List<String> values, List<FieldAdapter> fields) {
+	public default Object newEmbedMessage(List<String> values, List<FieldAdapter> fields) {
 		return newEmbedMessage(
 				values.get(0),
 				values.get(1),
@@ -70,7 +70,7 @@ public abstract class DiscordBot {
 	 * @param message Message to send
 	 * @param args Message's specific arguments
 	 */
-	public void sendPunishment(DiscordMessage message, Object... args) {
+	public default void sendPunishment(DiscordMessage message, Object... args) {
 		sendEmbedMessage(DiscordIntegrationManager.getInstance().getPunishmentsChannelID(), message, args);
 	}
 	
@@ -80,7 +80,7 @@ public abstract class DiscordBot {
 	 * @param message Message to send
 	 * @param args Message's specific arguments
 	 */
-	public void sendStaffNotification(DiscordMessage message, Object... args) {
+	public default void sendStaffNotification(DiscordMessage message, Object... args) {
 		sendEmbedMessage(DiscordIntegrationManager.getInstance().getStaffNotificationsChannelID(), message, args);
 	}
 	
@@ -100,12 +100,12 @@ public abstract class DiscordBot {
 	 * @throws LoginException If the provided token is invalid
 	 * @throws InterruptedException If the bot is killed while waiting
 	 */
-	public abstract void load() throws LoginException, InterruptedException;
+	public void load() throws LoginException, InterruptedException;
 	
 	/**
 	 * Unloads the Discord bot.
 	 */
-	public abstract void unload();
+	public void unload();
 	
 	/**
 	 * Sends a plain message to the specified channel.
@@ -114,7 +114,7 @@ public abstract class DiscordBot {
 	 * @param message Message to send
 	 * @see PlainMessageSendEvent
 	 */
-	public abstract void sendPlainMessage(long channelID, String message);
+	public void sendPlainMessage(long channelID, String message);
 	
 	/**
 	 * Sends an embed message to the specified channel.
@@ -124,7 +124,7 @@ public abstract class DiscordBot {
 	 * @param args Embed's specific arguments
 	 * @see #sendEmbedMessage(long, Object)
 	 */
-	public abstract void sendEmbedMessage(long channelID, DiscordMessage embed, Object... args);
+	public void sendEmbedMessage(long channelID, DiscordMessage embed, Object... args);
 	
 	/**
 	 * Sends an embed message to the specified channel. The parameter is an {@link Object}
@@ -136,7 +136,7 @@ public abstract class DiscordBot {
 	 * @see #sendEmbedMessage(long, DiscordMessage, Object...)
 	 * @see EmbedMessageSendEvent
 	 */
-	public abstract void sendEmbedMessage(long channelID, Object embed);
+	public void sendEmbedMessage(long channelID, Object embed);
 	
 	/**
 	 * Gets the bot's JDA instance. This method returns an {@link Object}
@@ -145,15 +145,15 @@ public abstract class DiscordBot {
 	 * 
 	 * @return JDA instance
 	 */
-	public abstract Object getJDA();
+	public Object getJDA();
 	
 	/**
-	 * Gets the amount of currently online
-	 * players on the Discord server.
+	 * Gets the amount of users currently
+	 * online on the Discord server.
 	 * 
-	 * @return Online players's amount
+	 * @return Online users' amount
 	 */
-	public abstract int getOnlinePlayers();
+	public int getOnlineUsers();
 	
 	/**
 	 * Gets a new embed message. This method returns an {@link Object}
@@ -177,7 +177,7 @@ public abstract class DiscordBot {
 	 * @return New embed message
 	 * @see FieldAdapter
 	 */
-	public abstract Object newEmbedMessage(String title, String titleURL, String description, List<FieldAdapter> fields, String imageURL, String thumbnailIconURL, String author, String authorURL, String authorIconURL, String footer, String footerIconURL, Color color);
+	public Object newEmbedMessage(String title, String titleURL, String description, List<FieldAdapter> fields, String imageURL, String thumbnailIconURL, String author, String authorURL, String authorIconURL, String footer, String footerIconURL, Color color);
 	
 	/**
 	 * Serializes the specified <code>net.dv8tion.jda.api.entities.MessageEmbed</code>
@@ -191,7 +191,7 @@ public abstract class DiscordBot {
 	 * a <code>net.dv8tion.jda.api.entities.MessageEmbed</code>
 	 * @see #deserializeEmbedMessage(String)
 	 */
-	public abstract String serializeEmbedMessage(Object embed);
+	public String serializeEmbedMessage(Object embed);
 	
 	/**
 	 * Deserializes the specified JSON string to a <code>net.dv8tion.jda.api.entities.MessageEmbed</code>.
@@ -204,15 +204,15 @@ public abstract class DiscordBot {
 	 * @throws Exception If the string's format is invalid
 	 * @see #serializeEmbedMessage(Object)
 	 */
-	public abstract Object deserializeEmbedMessage(String json) throws Exception;
+	public Object deserializeEmbedMessage(String json) throws Exception;
 	
 	/**
-	 * Updates the bot's current activity.
+	 * Updates the bot's current status.
 	 * 
 	 * @param activityType The activity type
 	 * @param value Text to display
 	 * @see StatusUpdateEvent
 	 */
-	public abstract void setStatus(ActivityTypeAdapter activityType, String value);
+	public void setStatus(ActivityTypeAdapter activityType, String value);
 	
 }

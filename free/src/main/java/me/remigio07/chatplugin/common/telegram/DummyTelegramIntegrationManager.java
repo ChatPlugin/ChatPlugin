@@ -26,13 +26,13 @@ public class DummyTelegramIntegrationManager extends TelegramIntegrationManager 
 	}
 	
 	@Override
-	public int reload(String whoReloaded) {
-		return 0;
+	public String getJavaTelegramBotAPIVersion() {
+		return null;
 	}
 	
 	@Override
-	public String getTelegramBotsVersion() {
-		return null;
+	public void run() {
+		
 	}
 	
 }

@@ -15,51 +15,145 @@
 
 package me.remigio07.chatplugin.api.common.telegram;
 
+import java.util.TimerTask;
+
+import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.Library;
-import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
+import me.remigio07.chatplugin.api.common.util.annotation.SensitiveData;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
+import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 
 /**
  * Manager that handles the plugin's {@link TelegramBot}. See wiki for more info:
  * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Telegram-integration">ChatPlugin wiki/Telegram integration</a>
  */
-public abstract class TelegramIntegrationManager implements ChatPluginManager {
+public abstract class TelegramIntegrationManager extends TimerTask implements ChatPluginManager {
 	
 	/**
 	 * Array containing all the libraries required for this module to work.
 	 * 
 	 * <p><strong>Content:</strong> [
-	 * {@link Library#GUAVA}, {@link Library#ERROR_PRONE_ANNOTATIONS}, {@link Library#J2OBJC_ANNOTATIONS}, {@link Library#CHECKER_QUAL},
-	 * {@link Library#JAVAX_ANNOTATION}, {@link Library#SLF4J_API}, {@link Library#JACKSON_ANNOTATIONS}, {@link Library#JACKSON_CORE},
-	 * {@link Library#JACKSON_DATABIND}, {@link Library#TELEGRAM_BOTS}, {@link Library#TELEGRAM_BOTS_META}]</p>
+	 * {@link Library#JAVA_TELEGRAM_BOT_API}, {@link Library#OKIO}, {@link Library#OKHTTP}, {@link Library#KOTLIN_STDLIB}, {@link Library#LOGGING_INTERCEPTOR},
+	 * {@link Library#GSON}]</p>
 	 */
-	public static final Library[] LIBRARIES = new Library[] { Library.GUAVA, Library.ERROR_PRONE_ANNOTATIONS, Library.J2OBJC_ANNOTATIONS, Library.CHECKER_QUAL, Library.JAVAX_ANNOTATION, Library.SLF4J_API, Library.JACKSON_ANNOTATIONS, Library.JACKSON_CORE, Library.JACKSON_DATABIND, Library.TELEGRAM_BOTS, Library.TELEGRAM_BOTS_META };
+	public static final Library[] LIBRARIES = new Library[] {
+			Library.JAVA_TELEGRAM_BOT_API, Library.OKIO, Library.OKHTTP, Library.KOTLIN_STDLIB, Library.LOGGING_INTERCEPTOR,
+			Library.GSON
+			};
 	protected static TelegramIntegrationManager instance;
 	protected boolean enabled;
-	
+	protected long chatID, statusUpdateTimeout, statusUpdateTaskID = -1;
+	protected String username, statusValue;
+	@SensitiveData(warning = "Discord integration's bot's private token")
+	protected String token;
+	protected TelegramBot bot;
 	protected long loadTime;
 	
+	/**
+	 * Checks if this manager is enabled.
+	 * 
+	 * <p><strong>Found at:</strong> "settings.enabled" in {@link ConfigurationType#TELEGRAM_INTEGRATION}</p>
+	 */
 	@Override
 	public boolean isEnabled() {
 		return enabled;
 	}
 	
 	/**
-	 * Reloads the bot.
-	 * You can specify <code>null</code> as <code>whoReloaded</code> to not make
-	 * appear in the logs the following message: <code>"User " + whoReloaded
-	 * + " has reloaded the Telegram integration through the bot."</code>
+	 * Gets the bot's chat's ID.
 	 * 
-	 * @param whoReloaded Who reloaded the bot
-	 * @return Time elapsed, in milliseconds
+	 * <p><strong>Found at:</strong> "settings.chat-id" in {@link ConfigurationType#TELEGRAM_INTEGRATION}</p>
+	 * 
+	 * @return Bot's chat's ID
 	 */
-	public abstract int reload(@Nullable(why = "User will not show up in logs if null") String whoReloaded);
+	public long getChatID() {
+		return chatID;
+	}
 	
 	/**
-	 * Gets the Telegram Bots' version.
+	 * Gets the bot's username.
 	 * 
-	 * @return Telegram Bots' version
+	 * <p><strong>Found at:</strong> "settings.username" in {@link ConfigurationType#TELEGRAM_INTEGRATION}</p>
+	 * 
+	 * @return Bot's username
 	 */
-	public abstract String getTelegramBotsVersion();
+	public String getUsername() {
+		return username;
+	}
+	
+	/**
+	 * Gets the bot's token.
+	 * 
+	 * <p><strong>Found at:</strong> "settings.token" in {@link ConfigurationType#TELEGRAM_INTEGRATION}</p>
+	 * 
+	 * @return Bot's token
+	 */
+	@SensitiveData(warning = "Telegram integration's bot's private token")
+	public String getToken() {
+		return token;
+	}
+	
+	/**
+	 * Gets the bot's status' value.
+	 * 
+	 * <p><strong>Found at:</strong> "settings.status.value" in {@link ConfigurationType#TELEGRAM_INTEGRATION}</p>
+	 * 
+	 * @return Bot's status' value
+	 */
+	public String getStatusValue() {
+		return statusValue;
+	}
+	
+	/**
+	 * Gets the timeout between status updates, in milliseconds.
+	 * 
+	 * <p><strong>Found at:</strong> "settings.status.update-timeout-ms" in {@link ConfigurationType#TELEGRAM_INTEGRATION}</p>
+	 * 
+	 * @return Time between status updates
+	 */
+	public long getStatusUpdateTimeout() {
+		return statusUpdateTimeout;
+	}
+	
+	/**
+	 * Gets the {@link #run()}'s timer's task's ID.
+	 * You can interact with it using {@link TaskManager}'s methods.
+	 * 
+	 * @return Updating task's ID
+	 */
+	public long getStatusUpdateTaskID() {
+		return statusUpdateTaskID;
+	}
+	
+	/**
+	 * Gets the bot's instance.
+	 * 
+	 * @return Bot's instance
+	 */
+	public TelegramBot getBot() {
+		return bot;
+	}
+	
+	/**
+	 * Gets this manager's instance.
+	 * 
+	 * @return Manager's instance
+	 */
+	public static TelegramIntegrationManager getInstance() {
+		return instance;
+	}
+	
+	/**
+	 * Automatic status updater, called once every {@link #getStatusUpdateTimeout()} ms.
+	 */
+	@Override
+	public abstract void run();
+	
+	/**
+	 * Gets the <a href="https://github.com/pengrad/java-telegram-bot-api">Java Telegram Bot API</a>'s version.
+	 * 
+	 * @return Java Telegram Bot API's version
+	 */
+	public abstract String getJavaTelegramBotAPIVersion();
 	
 }

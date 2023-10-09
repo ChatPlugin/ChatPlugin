@@ -35,15 +35,17 @@ public abstract class DiscordIntegrationManager extends TimerTask implements Cha
 	 * 
 	 * <p><strong>Content:</strong> [
 	 * {@link Library#JETBRAINS_ANNOTATIONS}, {@link Library#KOTLIN_STDLIB}, {@link Library#OKIO}, {@link Library#OKHTTP}, {@link Library#JDA},
-	 * {@link Library#CHECKER_QUAL}, {@link Library#COMMONS_COLLECTIONS}, {@link Library#COMMONS_MATH}, {@link Library#ERROR_PRONE_ANNOTATIONS}, {@link Library#FAILURE_ACCESS},
+	 * {@link Library#CHECKER_QUAL}, {@link Library#APACHE_COMMONS_COLLECTIONS}, {@link Library#APACHE_COMMONS_MATH}, {@link Library#ERROR_PRONE_ANNOTATIONS}, {@link Library#FAILURE_ACCESS},
 	 * {@link Library#GNU_TROVE}, {@link Library#GUAVA}, {@link Library#J2OBJC_ANNOTATIONS}, {@link Library#JACKSON_ANNOTATIONS}, {@link Library#JACKSON_CORE},
-	 * {@link Library#JACKSON_DATABIND}, {@link Library#JAVA_NATIVE_ACCESS}, {@link Library#JAVAX_ANNOTATION}, {@link Library#NV_WEBSOCKET_CLIENT}, {@link Library#SLF4J_API}]</p>
+	 * {@link Library#JACKSON_DATABIND}, {@link Library#JAVA_NATIVE_ACCESS}, {@link Library#JAVAX_ANNOTATION}, {@link Library#NV_WEBSOCKET_CLIENT}, {@link Library#SLF4J_API},
+	 * {@link Library#SLF4J_SIMPLE_PROVIDER}]</p>
 	 */
 	public static final Library[] LIBRARIES = new Library[] {
 			Library.JETBRAINS_ANNOTATIONS, Library.KOTLIN_STDLIB, Library.OKIO, Library.OKHTTP, Library.JDA,
-			Library.CHECKER_QUAL, Library.COMMONS_COLLECTIONS, Library.COMMONS_MATH, Library.ERROR_PRONE_ANNOTATIONS, Library.FAILURE_ACCESS,
+			Library.CHECKER_QUAL, Library.APACHE_COMMONS_COLLECTIONS, Library.APACHE_COMMONS_MATH, Library.ERROR_PRONE_ANNOTATIONS, Library.FAILURE_ACCESS,
 			Library.GNU_TROVE, Library.GUAVA, Library.J2OBJC_ANNOTATIONS, Library.JACKSON_ANNOTATIONS, Library.JACKSON_CORE,
-			Library.JACKSON_DATABIND, Library.JAVA_NATIVE_ACCESS, Library.JAVAX_ANNOTATION, Library.NV_WEBSOCKET_CLIENT, Library.SLF4J_API
+			Library.JACKSON_DATABIND, Library.JAVA_NATIVE_ACCESS, Library.JAVAX_ANNOTATION, Library.NV_WEBSOCKET_CLIENT, Library.SLF4J_API,
+			Library.SLF4J_SIMPLE_PROVIDER
 			};
 	protected static DiscordIntegrationManager instance;
 	protected boolean enabled;
@@ -212,7 +214,7 @@ public abstract class DiscordIntegrationManager extends TimerTask implements Cha
 	public abstract int reload(@Nullable(why = "User will not show up in logs if null") String whoReloaded, long channelID);
 	
 	/**
-	 * Gets the JDA's version.
+	 * Gets the <a href="https://github.com/discord-jda/JDA">JDA</a>'s version.
 	 * 
 	 * @return JDA's version
 	 */

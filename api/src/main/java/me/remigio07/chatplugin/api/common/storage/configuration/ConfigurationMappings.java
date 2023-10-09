@@ -78,6 +78,9 @@ public class ConfigurationMappings {
 	@Nullable(why = "Default value may be null")
 	public <T> T get(String path, @Nullable(why = "Default value may be null") T def) {
 		ConfigurationMappings section = getSectionFor(path);
+		
+		if (section == null)
+			return def;
 		Object value;
 		
 		if (section == this)
@@ -125,7 +128,9 @@ public class ConfigurationMappings {
 		if (section == null) {
 			section = new ConfigurationMappings();
 			mappings.put(root, section);
-		} return (ConfigurationMappings) section;
+		} if (section instanceof ConfigurationMappings)
+			return (ConfigurationMappings) section;
+		return null;
 	}
 	
 	/**
@@ -185,11 +190,13 @@ public class ConfigurationMappings {
 			value = new ConfigurationMappings((Map<String, Object>) value);
 		ConfigurationMappings section = getSectionFor(path);
 		
-		if (section == this) {
-			if (value == null)
-				mappings.remove(path);
-			else mappings.put(path, value);
-		} else section.set(getChild(path), value);
+		if (section != null) {
+			if (section == this) {
+				if (value == null)
+					mappings.remove(path);
+				else mappings.put(path, value);
+			} else section.set(getChild(path), value);
+		}
 	}
 	
 	// Getters

@@ -707,8 +707,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.hover-info.player.click.action", "SUGGEST_TEXT");
 		chat.addDefault("chat.hover-info.player.click.value", "/msg {player} ");
 		chat.addDefault("chat.hover-info.player.placeholder-types", Arrays.asList("PLAYER"));
-		chat.addDefault("chat.hover-info.player.hovers.english", "&ePlayer: &f{player}\n&ePing: {ping_format} ms\n&d&oClick = send /msg");
-		chat.addDefault("chat.hover-info.player.hovers.italian", "&eGiocatore: &f{player}\n&ePing: {ping_format} ms\n&d&oClick = invia /msg");
+		chat.addDefault("chat.hover-info.player.hovers.english", "&ePlayer: &f{player}\n&eTime: &f{date_hour}\n&ePing: {ping_format} ms\n&d&oClick = send /msg");
+		chat.addDefault("chat.hover-info.player.hovers.italian", "&eGiocatore: &f{player}\n&eOrario: &f{date_hour}\n&ePing: {ping_format} ms\n&d&oClick = invia /msg");
 		chat.addDefault("chat.hover-info.url.enabled", true);
 		chat.addDefault("chat.hover-info.url.default-https", true);
 		chat.addDefault("chat.hover-info.url.color", "&b&n");
@@ -2103,11 +2103,11 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			return;
 		
 		discordIntegration.addDefault("settings.enabled", false);
-		discordIntegration.addDefault("settings.guild-id", 0);
-		discordIntegration.addDefault("settings.application-id", 0);
+		discordIntegration.addDefault("settings.guild-id", 0L);
+		discordIntegration.addDefault("settings.application-id", 0L);
 		discordIntegration.addDefault("settings.token", "");
-		discordIntegration.addDefault("settings.channels-ids.punishments", 0);
-		discordIntegration.addDefault("settings.channels-ids.staff-notifications", 0);
+		discordIntegration.addDefault("settings.channels-ids.punishments", 0L);
+		discordIntegration.addDefault("settings.channels-ids.staff-notifications", 0L);
 		discordIntegration.addDefault("settings.status.value", "with {online_minecraft} other players.");
 		discordIntegration.addDefault("settings.status.activity-type", "DEFAULT");
 		discordIntegration.addDefault("settings.status.update-timeout-ms", 10000L);
@@ -2115,13 +2115,11 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "messages.main.";
 		
 		discordIntegration.addDefault(path + "help.title.text", "Help for ChatPlugin");
-		discordIntegration.addDefault(path + "help.title.url", "https://github.com/ChatPlugin/ChatPlugin/wiki/Discord-integration#commands-list");
-		discordIntegration.addDefault(path + "help.description", "Click the title to visit the ChatPlugin wiki with the commands list.");
+		discordIntegration.addDefault(path + "help.description", "Click [here](https://github.com/ChatPlugin/ChatPlugin/wiki/Discord-integration#commands) to visit the wiki with the commands list.");
 		discordIntegration.addDefault(path + "help.thumbnail", "https://i.imgur.com/9NhY4ps.png");
 		discordIntegration.addDefault(path + "help.color", "55FF55");
 		discordIntegration.addDefault(path + "info.title.text", "Info and contacts for ChatPlugin");
-		discordIntegration.addDefault(path + "info.title.url", "https://github.com/ChatPlugin/ChatPlugin");
-		discordIntegration.addDefault(path + "info.description", "TODO finish me with all support links and contacts");
+		discordIntegration.addDefault(path + "info.description", "**Website:** https://remigio07.me/chatplugin\n**GitHub:** https://github.com/ChatPlugin/ChatPlugin\n**Discord:** https://discord.gg/CPtysXTfQg");
 		discordIntegration.addDefault(path + "info.thumbnail", "https://i.imgur.com/3XBxeNx.png");
 		discordIntegration.addDefault(path + "info.color", "55FF55");
 		discordIntegration.addDefault(path + "reload-start.title.text", "Reload started");
@@ -2143,42 +2141,35 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		path = "messages.ban.";
 		
-		discordIntegration.addDefault(path + "info.title.text", "Ban #**{id}**: {player}");
-		discordIntegration.addDefault(path + "info.title.url", "https://megaproserver.com/punishments/bans/{id}");
+		discordIntegration.addDefault(path + "info.title.text", "Ban **#{id}**: {player}");
 		discordIntegration.addDefault(path + "info.description", "**Staff member:** {staff_member}\n**Who unbanned:** {who_unbanned}\n**Reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Duration:** {duration}\n**Remaining time:** {remaining_time}\n**Unban date:** {unban_date}\n**Type:** {type}\n**Active:** {active}\n**Scope:** {global}");
 		discordIntegration.addDefault(path + "info.thumbnail", "https://www.mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "info.color", "AA0000");
 		discordIntegration.addDefault(path + "list.title.text", "Banlist");
-		discordIntegration.addDefault(path + "list.title.url", "https://megaproserver.com/punishments/bans");
 		discordIntegration.addDefault(path + "list.description", "**Active bans' IDs:** {bans}.");
 		discordIntegration.addDefault(path + "list.thumbnail", "https://i.imgur.com/2OSaajT.png");
 		discordIntegration.addDefault(path + "list.color", "AA0000");
 		discordIntegration.addDefault(path + "empty-list.title.text", "Empty list");
-		discordIntegration.addDefault(path + "empty-list.title.url", "https://megaproserver.com/punishments/bans");
 		discordIntegration.addDefault(path + "empty-list.description", "There are no active bans.");
 		discordIntegration.addDefault(path + "empty-list.thumbnail", "https://i.imgur.com/soyOo5r.png");
 		discordIntegration.addDefault(path + "empty-list.color", "55FF55");
 		discordIntegration.addDefault(path + "banned.enabled", true);
-		discordIntegration.addDefault(path + "banned.title.text", "Ban #**{id}**: {player}");
-		discordIntegration.addDefault(path + "banned.title.url", "https://megaproserver.com/punishments/bans/{id}");
-		discordIntegration.addDefault(path + "banned.description", "**Staff member:** {staff_member}\n**Reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Duration:** {duration}\n**Remaining time:** {remaining_time}\n**Type:** {type}\n**Scope:** {global}");
+		discordIntegration.addDefault(path + "banned.title.text", "Ban **#{id}**: {player}");
+		discordIntegration.addDefault(path + "banned.description", "**Staff member:** {staff_member}\n**Reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Duration:** {duration}\n**Type:** {type}\n**Scope:** {global}");
 		discordIntegration.addDefault(path + "banned.thumbnail", "https://www.mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "banned.color", "AA0000");
 		discordIntegration.addDefault(path + "updated.enabled", true);
-		discordIntegration.addDefault(path + "updated.title.text", "Ban #**{id}** updated: {player}");
-		discordIntegration.addDefault(path + "updated.title.url", "https://megaproserver.com/punishments/bans/{id}");
-		discordIntegration.addDefault(path + "updated.description", "**Staff member:** {staff_member}\n**Reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Duration:** {duration}\n**Remaining time:** {remaining_time}\n**Type:** {type}\n**Scope:** {global}");
+		discordIntegration.addDefault(path + "updated.title.text", "Ban **#{id}** updated: {player}");
+		discordIntegration.addDefault(path + "updated.description", "**Staff member:** {staff_member}\n**Reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Duration:** {duration}\n**Type:** {type}\n**Scope:** {global}");
 		discordIntegration.addDefault(path + "updated.thumbnail", "https://www.mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "updated.color", "AA0000");
 		discordIntegration.addDefault(path + "unbanned.enabled", true);
-		discordIntegration.addDefault(path + "unbanned.title.text", "Unban #**{id}**: {player}");
-		discordIntegration.addDefault(path + "unbanned.title.url", "https://megaproserver.com/punishments/bans/{id}");
-		discordIntegration.addDefault(path + "unbanned.description", "**Staffer:** {who_unbanned}\n**Date:** {date}");
+		discordIntegration.addDefault(path + "unbanned.title.text", "Unban **#{id}**: {player}");
+		discordIntegration.addDefault(path + "unbanned.description", "**Staff member:** {who_unbanned}\n**Date:** {date}");
 		discordIntegration.addDefault(path + "unbanned.thumbnail", "https://www.mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "unbanned.color", "55FF55");
 		discordIntegration.addDefault(path + "expired.enabled", true);
-		discordIntegration.addDefault(path + "expired.title.text", "Ban #**{id}** expired: {player}");
-		discordIntegration.addDefault(path + "expired.title.url", "https://megaproserver.com/punishments/bans/{id}");
+		discordIntegration.addDefault(path + "expired.title.text", "Ban **#{id}** expired: {player}");
 		discordIntegration.addDefault(path + "expired.description", "**Date:** {date}");
 		discordIntegration.addDefault(path + "expired.thumbnail", "https://www.mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "expired.color", "55FF55");
@@ -2194,41 +2185,35 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		path = "messages.warning.";
 		
-		discordIntegration.addDefault(path + "info.title.text", "Warning #**{id}**: {player}");
-		discordIntegration.addDefault(path + "info.title.url", "https://megaproserver.com/punishments/warnings/{id}");
+		discordIntegration.addDefault(path + "info.title.text", "Warning **#{id}**: {player}");
 		discordIntegration.addDefault(path + "info.description", "**Staff member:** {staff_member}\n**Who unwarned:** {who_unwarned}\n**Last reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Duration:** {duration}\n**Remaining time:** {remaining_time}\n**Unwarn date:** {unwarn_date}\n**Warnings:** {amount}/{max_warnings}\n**Active:** {active}\n**Scope:** {global}");
 		discordIntegration.addDefault(path + "info.thumbnail", "https://www.mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "info.color", "FF5555");
 		discordIntegration.addDefault(path + "list.title.text", "Warnlist");
-		discordIntegration.addDefault(path + "list.title.url", "https://megaproserver.com/punishments/warnings");
 		discordIntegration.addDefault(path + "list.description", "**Active warnings' IDs:** {warnings}.");
 		discordIntegration.addDefault(path + "list.thumbnail", "https://i.imgur.com/X71kYjM.png");
 		discordIntegration.addDefault(path + "list.color", "FF5555");
 		discordIntegration.addDefault(path + "empty-list.title.text", "Empty list");
-		discordIntegration.addDefault(path + "empty-list.title.url", "https://megaproserver.com/punishments/warnings");
 		discordIntegration.addDefault(path + "empty-list.description", "There are no active warnings.");
 		discordIntegration.addDefault(path + "empty-list.thumbnail", "https://i.imgur.com/soyOo5r.png");
 		discordIntegration.addDefault(path + "empty-list.color", "55FF55");
 		discordIntegration.addDefault(path + "warned.enabled", true);
-		discordIntegration.addDefault(path + "warned.title.text", "Warning #**{id}**: {player}");
-		discordIntegration.addDefault(path + "warned.title.url", "https://megaproserver.com/punishments/warnings/{id}");
-		discordIntegration.addDefault(path + "warned.description", "**Staff member:** {staff_member}\n**Last reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Duration:** {duration}\n**Remaining time:** {remaining_time}\n**Warnings:** {amount}/{max_warnings}\n**Scope:** {global}");
+		discordIntegration.addDefault(path + "warned.title.text", "Warning **#{id}**: {player}");
+		discordIntegration.addDefault(path + "warned.description", "**Staff member:** {staff_member}\n**Last reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Duration:** {duration}\n**Warnings:** {amount}/{max_warnings}\n**Scope:** {global}");
 		discordIntegration.addDefault(path + "warned.thumbnail", "https://www.mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "warned.color", "FF5555");
 		discordIntegration.addDefault(path + "removed.enabled", true);
-		discordIntegration.addDefault(path + "removed.title.text", "Warning #**{id}**: {player}");
-		discordIntegration.addDefault(path + "removed.title.url", "https://megaproserver.com/punishments/warnings/{id}");
+		discordIntegration.addDefault(path + "removed.title.text", "Warning **#{id}**: {player}");
 		discordIntegration.addDefault(path + "removed.description", "**Staff member:** {staff_member}\n**Date:** {date}");
 		discordIntegration.addDefault(path + "removed.thumbnail", "https://www.mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "removed.color", "AA0000");
 		discordIntegration.addDefault(path + "cleared.enabled", true);
-		discordIntegration.addDefault(path + "cleared.title.text", "{player}'s warnings cleared");
+		discordIntegration.addDefault(path + "cleared.title.text", "Cleared **{player}**'s warnings");
 		discordIntegration.addDefault(path + "cleared.description", "**Staff member:** {staff_member}\n**Date:** {date}");
 		discordIntegration.addDefault(path + "cleared.thumbnail", "https://www.mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "cleared.color", "AA0000");
 		discordIntegration.addDefault(path + "expired.enabled", true);
-		discordIntegration.addDefault(path + "expired.title.text", "Warning #**{id}** expired: {player}");
-		discordIntegration.addDefault(path + "expired.title.url", "https://megaproserver.com/punishments/warnings/{id}");
+		discordIntegration.addDefault(path + "expired.title.text", "Warning **#{id}** expired: {player}");
 		discordIntegration.addDefault(path + "expired.description", "**Date:** {date}");
 		discordIntegration.addDefault(path + "expired.thumbnail", "https://www.mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "expired.color", "AA0000");
@@ -2242,14 +2227,12 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		path = "messages.kick.";
 		
-		discordIntegration.addDefault(path + "info.title.text", "Kick #**{id}**: {player}");
-		discordIntegration.addDefault(path + "info.title.url", "https://megaproserver.com/punishments/kicks/{id}");
+		discordIntegration.addDefault(path + "info.title.text", "Kick **#{id}**: {player}");
 		discordIntegration.addDefault(path + "info.description", "**Staff member:** {staff_member}\n**Reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Type:** {type}");
 		discordIntegration.addDefault(path + "info.thumbnail", "https://www.mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "info.color", "FFAA00");
 		discordIntegration.addDefault(path + "kicked.enabled", true);
-		discordIntegration.addDefault(path + "kicked.title.text", "Kick #**{id}**: {player}");
-		discordIntegration.addDefault(path + "kicked.title.url", "https://megaproserver.com/punishments/kicks/{id}");
+		discordIntegration.addDefault(path + "kicked.title.text", "Kick **#{id}**: {player}");
 		discordIntegration.addDefault(path + "kicked.description", "**Staff member:** {staff_member}\n**Reason:** {reason}\n**Server:** {server}\n**Date:** {date}");
 		discordIntegration.addDefault(path + "kicked.thumbnail", "https://www.mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "kicked.color", "FFAA00");
@@ -2259,42 +2242,35 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		path = "messages.mute.";
 		
-		discordIntegration.addDefault(path + "info.title.text", "Mute #**{id}**: {player}");
-		discordIntegration.addDefault(path + "info.title.url", "https://megaproserver.com/punishments/mutes/{id}");
+		discordIntegration.addDefault(path + "info.title.text", "Mute **#{id}**: {player}");
 		discordIntegration.addDefault(path + "info.description", "**Staff member:** {staff_member}\n**Who unmuted:** {who_unmuted}\n**Reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Duration:** {duration}\n**Remaining time:** {remaining_time}\n**Unmute date:** {unmute_date}\n**Active:** {active}\n**Scope:** {global}");
 		discordIntegration.addDefault(path + "info.thumbnail", "https://www.mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "info.color", "FFFF55");
 		discordIntegration.addDefault(path + "list.title.text", "Mutelist");
-		discordIntegration.addDefault(path + "list.title.url", "https://megaproserver.com/punishments/mutes");
 		discordIntegration.addDefault(path + "list.description", "**Active mutes' IDs:** {mutes}.");
 		discordIntegration.addDefault(path + "list.thumbnail", "https://i.imgur.com/LdD9xUo.png");
 		discordIntegration.addDefault(path + "list.color", "FFFF55");
 		discordIntegration.addDefault(path + "empty-list.title.text", "Empty list");
-		discordIntegration.addDefault(path + "empty-list.title.url", "https://megaproserver.com/punishments/mutes");
 		discordIntegration.addDefault(path + "empty-list.description", "There are no active mutes.");
 		discordIntegration.addDefault(path + "empty-list.thumbnail", "https://i.imgur.com/soyOo5r.png");
 		discordIntegration.addDefault(path + "empty-list.color", "55FF55");
 		discordIntegration.addDefault(path + "muted.enabled", true);
-		discordIntegration.addDefault(path + "muted.title.text", "Mute #**{id}**: {player}");
-		discordIntegration.addDefault(path + "muted.title.url", "https://megaproserver.com/punishments/mutes/{id}");
-		discordIntegration.addDefault(path + "muted.description", "**Staff member:** {staff_member}\n**Reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Duration:** {duration}\n**Remaining time:** {remaining_time}\n**Scope:** {global}");
+		discordIntegration.addDefault(path + "muted.title.text", "Mute **#{id}**: {player}");
+		discordIntegration.addDefault(path + "muted.description", "**Staff member:** {staff_member}\n**Reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Duration:** {duration}\n**Scope:** {global}");
 		discordIntegration.addDefault(path + "muted.thumbnail", "https://www.mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "muted.color", "FFFF55");
 		discordIntegration.addDefault(path + "updated.enabled", true);
-		discordIntegration.addDefault(path + "updated.title.text", "Mute #**{id}** updated: {player}");
-		discordIntegration.addDefault(path + "updated.title.url", "https://megaproserver.com/punishments/mutes/{id}");
-		discordIntegration.addDefault(path + "updated.description", "**Staff member:** {staff_member}\n**Reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Duration:** {duration}\n**Remaining time:** {remaining_time}\n**Scope:** {global}");
+		discordIntegration.addDefault(path + "updated.title.text", "Mute **#{id}** updated: {player}");
+		discordIntegration.addDefault(path + "updated.description", "**Staff member:** {staff_member}\n**Reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Duration:** {duration}\n**Scope:** {global}");
 		discordIntegration.addDefault(path + "updated.thumbnail", "https://www.mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "updated.color", "FFFF55");
 		discordIntegration.addDefault(path + "unmuted.enabled", true);
-		discordIntegration.addDefault(path + "unmuted.title.text", "Unmute #**{id}**: {player}");
-		discordIntegration.addDefault(path + "unmuted.title.url", "https://megaproserver.com/punishments/mutes/{id}");
+		discordIntegration.addDefault(path + "unmuted.title.text", "Unmute **#{id}**: {player}");
 		discordIntegration.addDefault(path + "unmuted.description", "**Staff member:** {staff_member}\n**Date:** {date}");
 		discordIntegration.addDefault(path + "unmuted.thumbnail", "https://www.mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "unmuted.color", "55FF55");
 		discordIntegration.addDefault(path + "expired.enabled", true);
-		discordIntegration.addDefault(path + "expired.title.text", "Mute #**{id}** expired: {player}");
-		discordIntegration.addDefault(path + "expired.title.url", "https://megaproserver.com/punishments/mutes/{id}");
+		discordIntegration.addDefault(path + "expired.title.text", "Mute **#{id}** expired: {player}");
 		discordIntegration.addDefault(path + "expired.description", "**Date:** {date}");
 		discordIntegration.addDefault(path + "expired.thumbnail", "https://www.mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "expired.color", "55FF55");
@@ -2306,13 +2282,12 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		discordIntegration.addDefault(path + "formats.silent.yes", "yes");
 		discordIntegration.addDefault(path + "formats.silent.no", "no");
 		
-		path = "messages.ip-lookup.";
+		path = "messages.inexistent-id.";
 		
-		discordIntegration.addDefault(path + "title.text", "IP lookup of {ip_address}");
-		discordIntegration.addDefault(path + "title.url", "https://www.maxmind.com/en/geoip2-precision-demo");
-		discordIntegration.addDefault(path + "description", "**ISP:** {isp}\n**Country:** {country}, {continent}\n**Subdivision(s):** {subdivisions}\n**City:** {city} (postal code: {postal_code})\n**Coords:** {latitude}° {longitude}°\n**Accuracy radius:** ~{accuracy_radius_km} km");
-		discordIntegration.addDefault(path + "thumbnail", "https://i.imgur.com/VIVD1jT.png");
-		discordIntegration.addDefault(path + "color", "5555FF");
+		discordIntegration.addDefault(path + "title.text", "Inexistent ID");
+		discordIntegration.addDefault(path + "description", "The specified ID does not exist. Try with a different one.");
+		discordIntegration.addDefault(path + "thumbnail", "https://i.imgur.com/C2lN5aC.png");
+		discordIntegration.addDefault(path + "color", "FF5555");
 		
 		path = "messages.no-permission.";
 		
@@ -2321,10 +2296,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		discordIntegration.addDefault(path + "thumbnail", "https://i.imgur.com/C2lN5aC.png");
 		discordIntegration.addDefault(path + "color", "FF5555");
 		
-		path = "messages.inexistent-id.";
+		path = "messages.guild-only-action.";
 		
-		discordIntegration.addDefault(path + "title.text", "Inexistent ID");
-		discordIntegration.addDefault(path + "description", "The specified ID does not exist. Try with a different one.");
+		discordIntegration.addDefault(path + "title.text", "Guild only action");
+		discordIntegration.addDefault(path + "description", "This action can only be performed inside of the configured guild.");
 		discordIntegration.addDefault(path + "thumbnail", "https://i.imgur.com/C2lN5aC.png");
 		discordIntegration.addDefault(path + "color", "FF5555");
 		
@@ -2341,6 +2316,21 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		discordIntegration.addDefault(path + "description", "The specified IP address is invalid. Try with a different one.");
 		discordIntegration.addDefault(path + "thumbnail", "https://i.imgur.com/C2lN5aC.png");
 		discordIntegration.addDefault(path + "color", "FF5555");
+		
+		path = "messages.at-least-one-online.";
+		
+		discordIntegration.addDefault(path + "title.text", "No players online");
+		discordIntegration.addDefault(path + "description", "At least one player online is required to perform this action.");
+		discordIntegration.addDefault(path + "thumbnail", "https://i.imgur.com/C2lN5aC.png");
+		discordIntegration.addDefault(path + "color", "FF5555");		
+		
+		path = "messages.ip-lookup.";
+		
+		discordIntegration.addDefault(path + "title.text", "IP lookup of {ip_address}");
+		discordIntegration.addDefault(path + "title.url", "https://www.maxmind.com/en/geoip2-precision-demo");
+		discordIntegration.addDefault(path + "description", "**ISP:** {isp}\n**Country:** {country}, {continent}\n**Subdivision(s):** {subdivisions}\n**City:** {city} (postal code: {postal_code})\n**Coords:** {latitude}° {longitude}°\n**Accuracy radius:** ~{accuracy_radius_km} km");
+		discordIntegration.addDefault(path + "thumbnail", "https://i.imgur.com/VIVD1jT.png");
+		discordIntegration.addDefault(path + "color", "5555FF");
 		
 		discordIntegration.addDefault("simple-date-format", "E, MM/dd/yyyy hh:mm a");
 		discordIntegration.addDefault("timestamps.now", "now");
@@ -2359,27 +2349,163 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		discordIntegration.addDefault("timestamps.year", " year");
 		discordIntegration.addDefault("timestamps.years", " years");
 		
+		discordIntegration.addDefault("placeholders.nobody", "nobody");
+		discordIntegration.addDefault("placeholders.not-present", "not present");
+		
 		discordIntegration.addDefault("commands.chatplugin.description", "ChatPlugin's main command.");
-		discordIntegration.addDefault("commands.chatplugin.args-descriptions.sub-command", "Sub-command for the main command.");
+		discordIntegration.addDefault("commands.chatplugin.args-descriptions.sub-command", "Sub-command for the main command");
 		discordIntegration.addDefault("commands.baninfo.description", "Show information about a ban.");
-		discordIntegration.addDefault("commands.baninfo.args-descriptions.id", "The ban's ID.");
-		discordIntegration.addDefault("commands.warninfo.description", "Show information about a warning.");
-		discordIntegration.addDefault("commands.warninfo.args-descriptions.id", "The warning's ID.");
+		discordIntegration.addDefault("commands.baninfo.args-descriptions.id", "The ban's ID");
+		discordIntegration.addDefault("commands.warninginfo.description", "Show information about a warning.");
+		discordIntegration.addDefault("commands.warninginfo.args-descriptions.id", "The warning's ID");
 		discordIntegration.addDefault("commands.kickinfo.description", "Show information about a kick.");
-		discordIntegration.addDefault("commands.kickinfo.args-descriptions.id", "The kick's ID.");
+		discordIntegration.addDefault("commands.kickinfo.args-descriptions.id", "The kick's ID");
 		discordIntegration.addDefault("commands.muteinfo.description", "Show information about a mute.");
-		discordIntegration.addDefault("commands.muteinfo.args-descriptions.id", "The mute's ID.");
+		discordIntegration.addDefault("commands.muteinfo.args-descriptions.id", "The mute's ID");
 		discordIntegration.addDefault("commands.banlist.description", "Show the active bans list.");
 		discordIntegration.addDefault("commands.warnlist.description", "Show the active warnings list.");
 		discordIntegration.addDefault("commands.mutelist.description", "Show the active mutes list.");
 		discordIntegration.addDefault("commands.iplookup.description", "Perform an IP address lookup.");
-		discordIntegration.addDefault("commands.iplookup.args-descriptions.ip-address", "The IP address to check.");
+		discordIntegration.addDefault("commands.iplookup.args-descriptions.ip-address", "The IP address to check");
 		
 		discordIntegration.save();
 	}
 	
 	public void addTelegramIntegrationDefaults(boolean forceAdd) throws IOException {
+		Configuration telegramIntegration = configurations.get(ConfigurationType.TELEGRAM_INTEGRATION);
 		
+		if (!telegramIntegration.getFile().exists())
+			telegramIntegration.createFile();
+		else if (!forceAdd)
+			return;
+		
+		telegramIntegration.addDefault("settings.enabled", false);
+		telegramIntegration.addDefault("settings.chat-id", 0L);
+		telegramIntegration.addDefault("settings.username", "");
+		telegramIntegration.addDefault("settings.token", "");
+		telegramIntegration.addDefault("settings.status.value", "Playing with {online_minecraft} other players.");
+		telegramIntegration.addDefault("settings.status.update-timeout-ms", 30000L);
+		
+		telegramIntegration.addDefault("messages.main.help", "\u2754 Help for ChatPlugin\n\nClick <a href=\"https://github.com/ChatPlugin/ChatPlugin/wiki/Telegram-integration#commands\">here</a> to visit the wiki with the commands list.");
+		telegramIntegration.addDefault("messages.main.info", "\u2139\uFE0F Info and contacts for ChatPlugin\n\n<strong>Website:</strong> https://remigio07.me/chatplugin\n<strong>GitHub:</strong> https://github.com/ChatPlugin/ChatPlugin\n<strong>Discord:</strong> https://discord.gg/CPtysXTfQg");
+		telegramIntegration.addDefault("messages.main.status", "\u2139\uFE0F Current server status\n\n<strong>OS:</strong> {os_name} {os_version}, <strong>Java:</strong> {java_version}\n<strong>Environment:</strong> {environment} {environment_version}\n<strong>ChatPlugin:</strong> {chatplugin_version}, <strong>Java Telegram Bot API version:</strong> {java_telegram_bot_api_version}\n<strong>Uptime:</strong> {uptime}\n<strong>Used memory:</strong> {used_memory}/{max_memory} MB\n<strong>Allocated:</strong> {total_memory} MB, <strong>free:</strong> {free_memory} MB\n<strong>Current threads count:</strong> {active_threads}x\n<strong>Used storage:</strong> {used_storage}/{total_storage} GB\n<strong>Free storage:</strong> {free_storage} GB\n<strong>Enabled players:</strong> {enabled_players}x\n<strong>Startup:</strong> {startup_time} ms, <strong>last reload:</strong> {last_reload_time} ms");
+		telegramIntegration.addDefault("messages.main.version", "\u2699\uFE0F Current plugin version\n\n<strong>ChatPlugin version:</strong> {chatplugin_version}\n<strong>Java Telegram Bot API version:</strong> {java_telegram_bot_api_version}");
+		
+		path = "messages.ban.";
+		
+		telegramIntegration.addDefault(path + "info", "\u26D4 Ban <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Who unbanned:</strong> {who_unbanned}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Remaining time:</strong> {remaining_time}\n<strong>Unban date:</strong> {unban_date}\n<strong>Type:</strong> {type}\n<strong>Active:</strong> {active}\n<strong>Scope:</strong> {global}");
+		telegramIntegration.addDefault(path + "list", "\u26D4 Banlist\n\n<strong>Active bans' IDs:</strong> {bans}.");
+		telegramIntegration.addDefault(path + "empty-list", "\u2705 Empty list\n\nThere are no active bans.");
+		telegramIntegration.addDefault(path + "banned.enabled", true);
+		telegramIntegration.addDefault(path + "banned.value", "\u26D4 Ban <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Type:</strong> {type}\n<strong>Scope:</strong> {global}");
+		telegramIntegration.addDefault(path + "updated.enabled", true);
+		telegramIntegration.addDefault(path + "updated.value", "\u26D4 Ban <strong>#{id}</strong> updated: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Type:</strong> {type}\n<strong>Scope:</strong> {global}");
+		telegramIntegration.addDefault(path + "unbanned.enabled", true);
+		telegramIntegration.addDefault(path + "unbanned.value", "\u26D4 Unban <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {who_unbanned}\n<strong>Date:</strong> {date}");
+		telegramIntegration.addDefault(path + "expired.enabled", true);
+		telegramIntegration.addDefault(path + "expired.value", "\u26D4 Ban <strong>#{id}</strong> expired: {player}\n\n<strong>Date:</strong> {date}");
+		telegramIntegration.addDefault(path + "unspecified-reason", "Reason not specified.");
+		telegramIntegration.addDefault(path + "formats.types.account", "username/UUID");
+		telegramIntegration.addDefault(path + "formats.types.ip", "IP address");
+		telegramIntegration.addDefault(path + "formats.active.yes", "active");
+		telegramIntegration.addDefault(path + "formats.active.no", "disactive");
+		telegramIntegration.addDefault(path + "formats.global.yes", "global");
+		telegramIntegration.addDefault(path + "formats.global.no", "local");
+		telegramIntegration.addDefault(path + "formats.silent.yes", "yes");
+		telegramIntegration.addDefault(path + "formats.silent.no", "no");
+		
+		path = "messages.warning.";
+		
+		telegramIntegration.addDefault(path + "info", "\u26A0\uFE0F Warning <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Who unwarned:</strong> {who_unwarned}\n<strong>Last reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Remaining time:</strong> {remaining_time}\n<strong>Unwarn date:</strong> {unwarn_date}\n<strong>Warnings:</strong> {warnings_amount}/{max_warnings}\n<strong>Active:</strong> {active}\n<strong>Scope:</strong> {global}");
+		telegramIntegration.addDefault(path + "list", "\u26A0\uFE0F Warnlist\n\n<strong>Active warnings' IDs:</strong> {warnings}.");
+		telegramIntegration.addDefault(path + "empty-list", "\u2705 Empty list\n\nThere are no active warnings.");
+		telegramIntegration.addDefault(path + "warned.enabled", true);
+		telegramIntegration.addDefault(path + "warned.value", "\u26A0\uFE0F Warning <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Last reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Warnings:</strong> {warnings_amount}/{max_warnings}\n<strong>Scope:</strong> {global}");
+		telegramIntegration.addDefault(path + "removed.enabled", true);
+		telegramIntegration.addDefault(path + "removed.value", "\u26A0\uFE0F Warning <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Date:</strong> {date}");
+		telegramIntegration.addDefault(path + "cleared.enabled", true);
+		telegramIntegration.addDefault(path + "cleared.value", "\u26A0\uFE0F Cleared <strong>{player}</strong>'s warnings\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Date:</strong> {date}");
+		telegramIntegration.addDefault(path + "expired.enabled", true);
+		telegramIntegration.addDefault(path + "expired.value", "\u26A0\uFE0F Warning <strong>#{id}</strong> expired: {player}\n\n<strong>Date:</strong> {date}");
+		telegramIntegration.addDefault(path + "unspecified-reason", "Reason not specified.");
+		telegramIntegration.addDefault(path + "formats.active.yes", "active");
+		telegramIntegration.addDefault(path + "formats.active.no", "disactive");
+		telegramIntegration.addDefault(path + "formats.global.yes", "global");
+		telegramIntegration.addDefault(path + "formats.global.no", "local");
+		telegramIntegration.addDefault(path + "formats.silent.yes", "yes");
+		telegramIntegration.addDefault(path + "formats.silent.no", "no");
+		
+		path = "messages.kick.";
+		
+		telegramIntegration.addDefault(path + "info", "\u27A1\uFE0F Kick <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Type:</strong> {type}");
+		telegramIntegration.addDefault(path + "kicked.enabled", true);
+		telegramIntegration.addDefault(path + "kicked.value", "\u27A1\uFE0F Kick <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}");
+		telegramIntegration.addDefault(path + "unspecified-reason", "Reason not specified.");
+		telegramIntegration.addDefault(path + "formats.silent.yes", "yes");
+		telegramIntegration.addDefault(path + "formats.silent.no", "no");
+		
+		path = "messages.mute.";
+		
+		telegramIntegration.addDefault(path + "info", "\u2709 Mute <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Who unmuted:</strong> {who_unmuted}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Remaining time:</strong> {remaining_time}\n<strong>Unmute date:</strong> {unmute_date}\n<strong>Active:</strong> {active}\n<strong>Scope:</strong> {global}");
+		telegramIntegration.addDefault(path + "list", "\u2709 Mutelist\n\n<strong>Active mutes' IDs:</strong> {mutes}.");
+		telegramIntegration.addDefault(path + "empty-list", "\u2705 Empty list\n\nThere are no active mutes.");
+		telegramIntegration.addDefault(path + "muted.enabled", true);
+		telegramIntegration.addDefault(path + "muted.value", "\u2709 Mute <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Scope:</strong> {global}");
+		telegramIntegration.addDefault(path + "updated.enabled", true);
+		telegramIntegration.addDefault(path + "updated.value", "\u2709 Mute <strong>#{id}</strong> updated: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Scope:</strong> {global}");
+		telegramIntegration.addDefault(path + "unmuted.enabled", true);
+		telegramIntegration.addDefault(path + "unmuted.value", "\u2709 Unmute <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Date:</strong> {date}");
+		telegramIntegration.addDefault(path + "expired.enabled", true);
+		telegramIntegration.addDefault(path + "expired.value", "\u2709 Mute <strong>#{id}</strong> expired: {player}\n\n<strong>Date:</strong> {date}");
+		telegramIntegration.addDefault(path + "unspecified-reason", "Reason not specified.");
+		telegramIntegration.addDefault(path + "formats.active.yes", "active");
+		telegramIntegration.addDefault(path + "formats.active.no", "disactive");
+		telegramIntegration.addDefault(path + "formats.global.yes", "global");
+		telegramIntegration.addDefault(path + "formats.global.no", "local");
+		telegramIntegration.addDefault(path + "formats.silent.yes", "yes");
+		telegramIntegration.addDefault(path + "formats.silent.no", "no");
+		
+		telegramIntegration.addDefault("messages.inexistent-id", "\u274C Inexistent ID\n\nThe specified ID does not exist. Try with a different one.");
+		telegramIntegration.addDefault("messages.no-permission", "\u274C No permission\n\nYou do not have the permission to execute this command.");
+		telegramIntegration.addDefault("messages.invalid-number", "\u274C Invalid number\n\nThe specified number is invalid. Try with a different one.");
+		telegramIntegration.addDefault("messages.group-only-action", "\u274C Group only action\n\nThis action can only be performed inside of the configured group.");
+		telegramIntegration.addDefault("messages.wrong-syntax", "\u274C Wrong syntax\n\nThe syntax is wrong. Usage: <strong>{usage}</strong>.");
+		telegramIntegration.addDefault("messages.disabled-feature", "\u274C Disabled feature\n\nThat feature is disabled. Set it up in the server's config files.");
+		telegramIntegration.addDefault("messages.invalid-ip-address", "\u274C Invalid IP address\n\nThe specified IP address is invalid. Try with a different one.");
+		telegramIntegration.addDefault("messages.at-least-one-online", "\u274C No players online\n\nAt least one player online is required to perform this action.");
+		telegramIntegration.addDefault("messages.ip-lookup", "\u2316 IP lookup of <strong>{ip_address}</strong>\n\n<strong>ISP:</strong> {isp}\n<strong>Country:</strong> {country}, {continent}\n<strong>Subdivision(s):</strong> {subdivisions}\n<strong>City:</strong> {city} (postal code: {postal_code})\n<strong>Coords:</strong> {latitude}° {longitude}°\n<strong>Accuracy radius:</strong> ~{accuracy_radius_km} km");
+		
+		telegramIntegration.addDefault("simple-date-format", "E, MM/dd/yyyy hh:mm a");
+		telegramIntegration.addDefault("timestamps.now", "now");
+		telegramIntegration.addDefault("timestamps.ever", "ever");
+		telegramIntegration.addDefault("timestamps.never", "never");
+		telegramIntegration.addDefault("timestamps.second", " second");
+		telegramIntegration.addDefault("timestamps.seconds", " seconds");
+		telegramIntegration.addDefault("timestamps.minute", " minute");
+		telegramIntegration.addDefault("timestamps.minutes", " minutes");
+		telegramIntegration.addDefault("timestamps.hour", " hour");
+		telegramIntegration.addDefault("timestamps.hours", " hours");
+		telegramIntegration.addDefault("timestamps.day", " day");
+		telegramIntegration.addDefault("timestamps.days", " days");
+		telegramIntegration.addDefault("timestamps.month", " month");
+		telegramIntegration.addDefault("timestamps.months", " months");
+		telegramIntegration.addDefault("timestamps.year", " year");
+		telegramIntegration.addDefault("timestamps.years", " years");
+		
+		telegramIntegration.addDefault("placeholders.nobody", "nobody");
+		telegramIntegration.addDefault("placeholders.not-present", "not present");
+		
+		telegramIntegration.addDefault("commands-descriptions.chatplugin", "ChatPlugin's main command.");
+		telegramIntegration.addDefault("commands-descriptions.baninfo", "Show information about a ban.");
+		telegramIntegration.addDefault("commands-descriptions.warninginfo", "Show information about a warning.");
+		telegramIntegration.addDefault("commands-descriptions.kickinfo", "Show information about a kick.");
+		telegramIntegration.addDefault("commands-descriptions.muteinfo", "Show information about a mute.");
+		telegramIntegration.addDefault("commands-descriptions.banlist", "Show the active bans list.");
+		telegramIntegration.addDefault("commands-descriptions.warnlist", "Show the active warnings list.");
+		telegramIntegration.addDefault("commands-descriptions.mutelist", "Show the active mutes list.");
+		telegramIntegration.addDefault("commands-descriptions.iplookup", "Perform an IP address lookup.");
+		
+		telegramIntegration.save();
 	}
 	
 }

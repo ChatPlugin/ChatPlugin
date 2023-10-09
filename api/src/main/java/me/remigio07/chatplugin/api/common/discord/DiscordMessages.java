@@ -34,7 +34,6 @@ import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector.WhereCondition;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector.WhereCondition.WhereOperator;
-import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationMappings;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.MemoryUtils;
 import me.remigio07.chatplugin.api.common.util.Utils;
@@ -56,7 +55,6 @@ public class DiscordMessages {
 	 * <p><strong>Content:</strong> ["title.text", "title.url", "description", "image", "thumbnail", "author.text", "author.url", "author.icon-url", "footer.text", "footer.icon-url", "color"]</p>
 	 */
 	public static final String[] EMBED_OPTIONS = new String[] { "title.text", "title.url", "description", "image", "thumbnail", "author.text", "author.url", "author.icon-url", "footer.text", "footer.icon-url", "color" };
-	private static ConfigurationMappings mappings = ConfigurationType.DISCORD_INTEGRATION.get().getMappings();
 	
 	/**
 	 * Represents the main messages.
@@ -121,7 +119,7 @@ public class DiscordMessages {
 			List<String> values = new ArrayList<>(EMBED_OPTIONS.length);
 			
 			for (String option : EMBED_OPTIONS)
-				values.add(translateVersion(mappings.getString(getPath() + option, null)));
+				values.add(translateVersion(getString(getPath() + option, null)));
 			return values;
 		}
 		
@@ -129,7 +127,7 @@ public class DiscordMessages {
 			List<String> values = new ArrayList<>(EMBED_OPTIONS.length);
 			
 			for (String option : EMBED_OPTIONS)
-				values.add(translateStatus(mappings.getString(getPath() + option, null)));
+				values.add(translateStatus(getString(getPath() + option, null)));
 			return values;
 		}
 		
@@ -154,29 +152,28 @@ public class DiscordMessages {
 		private String translateVersion(String input) {
 			return input == null ? null : input
 					.replace("{chatplugin_version}", ChatPlugin.VERSION)
-					.replace("{jda_version}", DiscordIntegrationManager.getInstance().getJDAVersion())
-					.replace("{last_reload_time}", String.valueOf(DiscordIntegrationManager.getInstance().getLastReloadTime()));
+					.replace("{jda_version}", DiscordIntegrationManager.getInstance().getJDAVersion());
 		}
 		
 		/**
 		 * Translates an input String with the server's status' placeholders.
 		 * Unlike other methods of this class, this one is public just because
-		 * it needs to be visible to the {@link DiscordIntegrationManager#run()}.
+		 * it needs to be visible to {@link DiscordIntegrationManager#run()}.
 		 * 
 		 * @param input Input containing placeholders
 		 * @return Translated placeholders
 		 */
 		public String translateStatus(String input) {
 			Runtime runtime = Runtime.getRuntime();
-			
 			return input == null ? null : translateVersion(input
 					.replace("{online_minecraft}", String.valueOf(PlayerAdapter.getOnlinePlayers().size()))
-					.replace("{online_discord}", String.valueOf(DiscordBot.getInstance().getOnlinePlayers()))
+					.replace("{online_discord}", String.valueOf(DiscordBot.getInstance().getOnlineUsers()))
 					.replace("{enabled_players}", String.valueOf(PlayerManager.getInstance().getTotalPlayers()))
 					.replace("{enabled_managers}", String.valueOf(ChatPluginManagers.getInstance().getEnabledManagers().size()))
 					.replace("{max_players}", String.valueOf(Utils.getMaxPlayers()))
 					.replace("{date}", formatDate(System.currentTimeMillis()))
 					.replace("{startup_time}", String.valueOf(ChatPlugin.getInstance().getStartupTime()))
+					.replace("{last_reload_time}", String.valueOf(ChatPlugin.getInstance().getLastReloadTime()))
 					.replace("{java_version}", System.getProperty("java.version"))
 					.replace("{environment}", VersionUtils.getImplementationName())
 					.replace("{environment_version}", VersionUtils.getImplementationVersion())
@@ -198,45 +195,45 @@ public class DiscordMessages {
 	}
 	
 	/**
-	 * TODO
+	 * Not available yet.
 	 */
 	public enum OnlinePlayer implements DiscordMessage {
 		
 		/**
-		 * TODO
+		 * Not available yet.
 		 */
 		PLAYER_INFO;
 		
 		@Override
 		public String getPath() {
-			throw new UnsupportedOperationException("Not available");
+			throw new UnsupportedOperationException("Not available yet");
 		}
 		
 		@Override
 		public Object getEmbed(Object... args) {
-			throw new UnsupportedOperationException("Not available");
+			throw new UnsupportedOperationException("Not available yet");
 		}
 		
 	}
 	
 	/**
-	 * TODO
+	 * Not available yet.
 	 */
 	public enum OfflinePlayer implements DiscordMessage {
 		
 		/**
-		 * TODO
+		 * Not available yet.
 		 */
 		PLAYER_PUNISHMENTS;
 		
 		@Override
 		public String getPath() {
-			throw new UnsupportedOperationException("Not available");
+			throw new UnsupportedOperationException("Not available yet");
 		}
 		
 		@Override
 		public Object getEmbed(Object... args) {
-			throw new UnsupportedOperationException("Not available");
+			throw new UnsupportedOperationException("Not available yet");
 		}
 		
 	}
@@ -261,6 +258,13 @@ public class DiscordMessages {
 		 * <p><strong>Found at:</strong> "messages.no-permission" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
 		 */
 		NO_PERMISSION,
+		
+		/**
+		 * Represents the guild only action message.
+		 * 
+		 * <p><strong>Found at:</strong> "messages.guild-only-action" in {@link ConfigurationType#DISCORD_INTEGRATION}</p>
+		 */
+		GUILD_ONLY_ACTION,
 		
 		/**
 		 * Represents the disabled feature message.
@@ -432,17 +436,17 @@ public class DiscordMessages {
 						.replace("{id}", String.valueOf(id))
 						.replace("{player}", ban.getPlayer().getName())
 						.replace("{player_uuid}", ban.getPlayer().getUUID().toString())
-						.replace("{ip_address}", ban.getIPAddress() == null ? Utils.NOT_APPLICABLE : ban.getIPAddress().getHostAddress())
+						.replace("{ip_address}", ban.getIPAddress() == null ? getString("placeholders.not-present") : ban.getIPAddress().getHostAddress())
 						.replace("{staff_member}", ban.getStaffMember())
-						.replace("{who_unbanned}", whoUnbanned == null ? Utils.NOT_APPLICABLE : whoUnbanned)
-						.replace("{reason}", ban.getReason() == null ? mappings.getString("messages.ban.unspecified-reason") : ChatColor.stripColor(ban.getReason()))
+						.replace("{who_unbanned}", whoUnbanned == null ? getString("placeholders.nobody") : whoUnbanned)
+						.replace("{reason}", ban.getReason() == null ? getString("messages.ban.unspecified-reason") : ChatColor.stripColor(ban.getReason()))
 						.replace("{server}", ban.getServer())
 						.replace("{type}", getFormat("types." + ban.getType().name().toLowerCase()))
 						.replace("{date}", formatDate(ban.getDate()))
-						.replace("{unban_date}", unbanDate == null ? Utils.NOT_APPLICABLE : formatDate(unbanDate.longValue()))
-						.replace("{expiration_date}", duration == -1 ? Utils.NOT_APPLICABLE : formatDate(ban.getDate() + duration))
-						.replace("{duration}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(duration, true, false))
-						.replace("{remaining_time}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(ban.getRemainingTime(), false, true))
+						.replace("{unban_date}", unbanDate == null ? getString("timestamps.never") : formatDate(unbanDate.longValue()))
+						.replace("{expiration_date}", duration == -1 ? getString("timestamps.never") : formatDate(ban.getDate() + duration))
+						.replace("{duration}", formatTime(duration, true, true))
+						.replace("{remaining_time}", formatTime(ban.getRemainingTime(), true, true))
 						.replace("{active}", getFormat(active == null ? "active.no" : (active ? "active.yes" : "active.no")))
 						.replace("{global}", getFormat(ban.isGlobal() ? "global.yes" : "global.no"))
 						.replace("{silent}", getFormat(ban.isSilent() ? "silent.yes" : "silent.no"))
@@ -464,17 +468,17 @@ public class DiscordMessages {
 						.replace("{id}", String.valueOf(id))
 						.replace("{player}", player.getName())
 						.replace("{player_uuid}", player.getUUID().toString())
-						.replace("{ip_address}", ban.getIPAddress() == null ? Utils.NOT_APPLICABLE : ban.getIPAddress().getHostAddress())
+						.replace("{ip_address}", ban.getIPAddress() == null ? getString("placeholders.not-present") : ban.getIPAddress().getHostAddress())
 						.replace("{staff_member}", ban.getStaffMember())
-						.replace("{who_unbanned}", whoUnbanned == null ? Utils.NOT_APPLICABLE : whoUnbanned)
-						.replace("{reason}", ban.getReason() == null ? mappings.getString("messages.ban.unspecified-reason") : ChatColor.stripColor(ban.getReason()))
+						.replace("{who_unbanned}", whoUnbanned == null ? getString("placeholders.nobody") : whoUnbanned)
+						.replace("{reason}", ban.getReason() == null ? getString("messages.ban.unspecified-reason") : ChatColor.stripColor(ban.getReason()))
 						.replace("{server}", ban.getServer())
 						.replace("{type}", getFormat("types." + ban.getType().name().toLowerCase()))
 						.replace("{date}", formatDate(ban.getDate()))
-						.replace("{unban_date}", unbanDate == null ? Utils.NOT_APPLICABLE : formatDate(unbanDate.longValue()))
-						.replace("{expiration_date}", duration == -1 ? Utils.NOT_APPLICABLE : formatDate(ban.getDate() + duration))
-						.replace("{duration}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(duration, true, false))
-						.replace("{remaining_time}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(ban.getRemainingTime(), false, true))
+						.replace("{unban_date}", unbanDate == null ? getString("timestamps.never") : formatDate(unbanDate.longValue()))
+						.replace("{expiration_date}", duration == -1 ? getString("timestamps.never") : formatDate(ban.getDate() + duration))
+						.replace("{duration}", formatTime(duration, true, true))
+						.replace("{remaining_time}", formatTime(ban.getRemainingTime(), true, true))
 						.replace("{active}", getFormat(active == null ? "active.no" : (active ? "active.yes" : "active.no")))
 						.replace("{global}", getFormat(ban.isGlobal() ? "global.yes" : "global.no"))
 						.replace("{silent}", getFormat(ban.isSilent() ? "silent.yes" : "silent.no"))
@@ -483,17 +487,17 @@ public class DiscordMessages {
 						.replace("{id}", String.valueOf(id))
 						.replace("{player}", player.getName())
 						.replace("{player_uuid}", player.getUUID().toString())
-						.replace("{ip_address}", ban.getIPAddress() == null ? Utils.NOT_APPLICABLE : ban.getIPAddress().getHostAddress())
+						.replace("{ip_address}", ban.getIPAddress() == null ? getString("placeholders.not-present") : ban.getIPAddress().getHostAddress())
 						.replace("{staff_member}", ban.getStaffMember())
-						.replace("{who_unbanned}", whoUnbanned == null ? Utils.NOT_APPLICABLE : whoUnbanned)
-						.replace("{reason}", ban.getReason() == null ? mappings.getString("messages.ban.unspecified-reason") : ChatColor.stripColor(ban.getReason()))
+						.replace("{who_unbanned}", whoUnbanned == null ? getString("placeholders.nobody") : whoUnbanned)
+						.replace("{reason}", ban.getReason() == null ? getString("messages.ban.unspecified-reason") : ChatColor.stripColor(ban.getReason()))
 						.replace("{server}", ban.getServer())
 						.replace("{type}", getFormat("types." + ban.getType().name().toLowerCase()))
 						.replace("{date}", formatDate(ban.getDate()))
-						.replace("{unban_date}", unbanDate == null ? Utils.NOT_APPLICABLE : formatDate(unbanDate.longValue()))
-						.replace("{expiration_date}", duration == -1 ? Utils.NOT_APPLICABLE : formatDate(ban.getDate() + duration))
-						.replace("{duration}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(duration, true, false))
-						.replace("{remaining_time}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(ban.getRemainingTime(), false, true))
+						.replace("{unban_date}", unbanDate == null ? getString("timestamps.never") : formatDate(unbanDate.longValue()))
+						.replace("{expiration_date}", duration == -1 ? getString("timestamps.never") : formatDate(ban.getDate() + duration))
+						.replace("{duration}", formatTime(duration, true, true))
+						.replace("{remaining_time}", formatTime(ban.getRemainingTime(), true, true))
 						.replace("{active}", getFormat(active == null ? "active.no" : (active ? "active.yes" : "active.no")))
 						.replace("{global}", getFormat(ban.isGlobal() ? "global.yes" : "global.no"))
 						.replace("{silent}", getFormat(ban.isSilent() ? "silent.yes" : "silent.no"))
@@ -502,7 +506,7 @@ public class DiscordMessages {
 		}
 		
 		private static String getFormat(String type) {
-			return mappings.getString("messages.ban.formats." + type);
+			return getString("messages.ban.formats." + type);
 		}
 		
 	}
@@ -581,7 +585,7 @@ public class DiscordMessages {
 			case EMPTY_LIST:
 				return DiscordBot.getInstance().newEmbedMessage(getValues(getPath()), getFields(getPath()));
 			case CLEARED:
-				return DiscordBot.getInstance().newEmbedMessage(getClearWarningsValues((String) args[0], (me.remigio07.chatplugin.api.common.player.OfflinePlayer) args[1]), getClearWarningsFields((String) args[0], (me.remigio07.chatplugin.api.common.player.OfflinePlayer) args[1]));
+				return DiscordBot.getInstance().newEmbedMessage(getClearWarningsValues((me.remigio07.chatplugin.api.common.player.OfflinePlayer) args[0], (String) args[1]), getClearWarningsFields((me.remigio07.chatplugin.api.common.player.OfflinePlayer) args[0], (String) args[1]));
 			default:
 				return DiscordBot.getInstance().newEmbedMessage(formatValues((me.remigio07.chatplugin.api.common.punishment.warning.Warning) args[0]), formatFields((me.remigio07.chatplugin.api.common.punishment.warning.Warning) args[0]));
 			}
@@ -637,14 +641,14 @@ public class DiscordMessages {
 						.replace("{player}", player.getName())
 						.replace("{player_uuid}", player.getUUID().toString())
 						.replace("{staff_member}", warning.getStaffMember())
-						.replace("{who_unwarned}", whoUnwarned == null ? Utils.NOT_APPLICABLE : whoUnwarned)
-						.replace("{reason}", warning.getReason() == null ? mappings.getString("messages.warning.unspecified-reason") : ChatColor.stripColor(warning.getReason()))
+						.replace("{who_unwarned}", whoUnwarned == null ? getString("placeholders.nobody") : whoUnwarned)
+						.replace("{reason}", warning.getReason() == null ? getString("messages.warning.unspecified-reason") : ChatColor.stripColor(warning.getReason()))
 						.replace("{server}", warning.getServer())
 						.replace("{date}", formatDate(warning.getDate()))
-						.replace("{unwarn_date}", unwarnDate == null ? Utils.NOT_APPLICABLE : formatDate(unwarnDate.longValue()))
+						.replace("{unwarn_date}", unwarnDate == null ? getString("timestamps.never") : formatDate(unwarnDate.longValue()))
 						.replace("{expiration_date}", formatDate(warning.getDate() + warning.getDuration()))
-						.replace("{duration}", formatTime(warning.getDuration(), true, false))
-						.replace("{remaining_time}", formatTime(warning.getRemainingTime(), false, true))
+						.replace("{duration}", formatTime(warning.getDuration(), true, true))
+						.replace("{remaining_time}", formatTime(warning.getRemainingTime(), true, true))
 						.replace("{amount}", String.valueOf(WarningManager.getInstance().getActiveWarnings(player, warning.getServer()).stream().filter(other -> other.getDate() <= warning.getDate()).count()))
 						.replace("{max_amount}", String.valueOf(ConfigurationType.CONFIG.get().getInt("warning.max-warnings-placeholder." + warning.getServer())))
 						.replace("{active}", getFormat(active == null ? "active.no" : (active ? "active.yes" : "active.no")))
@@ -668,14 +672,14 @@ public class DiscordMessages {
 						.replace("{player}", player.getName())
 						.replace("{player_uuid}", player.getUUID().toString())
 						.replace("{staff_member}", warning.getStaffMember())
-						.replace("{who_unwarned}", whoUnwarned == null ? Utils.NOT_APPLICABLE : whoUnwarned)
-						.replace("{reason}", warning.getReason() == null ? mappings.getString("messages.warning.unspecified-reason") : ChatColor.stripColor(warning.getReason()))
+						.replace("{who_unwarned}", whoUnwarned == null ? getString("placeholders.nobody") : whoUnwarned)
+						.replace("{reason}", warning.getReason() == null ? getString("messages.warning.unspecified-reason") : ChatColor.stripColor(warning.getReason()))
 						.replace("{server}", warning.getServer())
 						.replace("{date}", formatDate(warning.getDate()))
-						.replace("{unwarn_date}", unwarnDate == null ? Utils.NOT_APPLICABLE : formatDate(unwarnDate.longValue()))
+						.replace("{unwarn_date}", unwarnDate == null ? getString("timestamps.never") : formatDate(unwarnDate.longValue()))
 						.replace("{expiration_date}", formatDate(warning.getDate() + warning.getDuration()))
-						.replace("{duration}", formatTime(warning.getDuration(), true, false))
-						.replace("{remaining_time}", formatTime(warning.getRemainingTime(), false, true))
+						.replace("{duration}", formatTime(warning.getDuration(), true, true))
+						.replace("{remaining_time}", formatTime(warning.getRemainingTime(), true, true))
 						.replace("{amount}", String.valueOf(WarningManager.getInstance().getActiveWarnings(player, warning.getServer()).stream().filter(other -> other.getDate() <= warning.getDate()).count()))
 						.replace("{max_amount}", String.valueOf(ConfigurationType.CONFIG.get().getInt("warning.max-warnings-placeholder." + warning.getServer())))
 						.replace("{active}", getFormat(active == null ? "active.no" : (active ? "active.yes" : "active.no")))
@@ -687,14 +691,14 @@ public class DiscordMessages {
 						.replace("{player}", player.getName())
 						.replace("{player_uuid}", player.getUUID().toString())
 						.replace("{staff_member}", warning.getStaffMember())
-						.replace("{who_unwarned}", whoUnwarned == null ? Utils.NOT_APPLICABLE : whoUnwarned)
-						.replace("{reason}", warning.getReason() == null ? mappings.getString("messages.warning.unspecified-reason") : ChatColor.stripColor(warning.getReason()))
+						.replace("{who_unwarned}", whoUnwarned == null ? getString("placeholders.nobody") : whoUnwarned)
+						.replace("{reason}", warning.getReason() == null ? getString("messages.warning.unspecified-reason") : ChatColor.stripColor(warning.getReason()))
 						.replace("{server}", warning.getServer())
 						.replace("{date}", formatDate(warning.getDate()))
-						.replace("{unwarn_date}", unwarnDate == null ? Utils.NOT_APPLICABLE : formatDate(unwarnDate.longValue()))
+						.replace("{unwarn_date}", unwarnDate == null ? getString("timestamps.never") : formatDate(unwarnDate.longValue()))
 						.replace("{expiration_date}", formatDate(warning.getDate() + warning.getDuration()))
-						.replace("{duration}", formatTime(warning.getDuration(), true, false))
-						.replace("{remaining_time}", formatTime(warning.getRemainingTime(), false, true))
+						.replace("{duration}", formatTime(warning.getDuration(), true, true))
+						.replace("{remaining_time}", formatTime(warning.getRemainingTime(), true, true))
 						.replace("{amount}", String.valueOf(WarningManager.getInstance().getActiveWarnings(player, warning.getServer()).stream().filter(other -> other.getDate() <= warning.getDate()).count()))
 						.replace("{max_amount}", String.valueOf(ConfigurationType.CONFIG.get().getInt("warning.max-warnings-placeholder." + warning.getServer())))
 						.replace("{active}", getFormat(active == null ? "active.no" : (active ? "active.yes" : "active.no")))
@@ -704,37 +708,38 @@ public class DiscordMessages {
 			} return fields;
 		}
 		
-		private List<String> getClearWarningsValues(String staff_member, me.remigio07.chatplugin.api.common.player.OfflinePlayer user) {
+		private List<String> getClearWarningsValues(me.remigio07.chatplugin.api.common.player.OfflinePlayer user, String whoUnwarned) {
 			List<String> list = new ArrayList<>(EMBED_OPTIONS.length);
 			
 			for (String option : EMBED_OPTIONS) {
-				String value = mappings.getString(getPath() + option, null);
+				String value = getString(getPath() + option, null);
 				list.add(value == null ? null : value
 						.replace("{player}", user.getName())
 						.replace("{player_uuid}", user.getUUID().toString())
+						.replace("{who_unwarned}", whoUnwarned == null ? getString("placeholders.nobody") : whoUnwarned)
 						);
 			} return list;
 		}
 		
-		private List<FieldAdapter> getClearWarningsFields(String whoUnwarned, me.remigio07.chatplugin.api.common.player.OfflinePlayer user) {
+		private List<FieldAdapter> getClearWarningsFields(me.remigio07.chatplugin.api.common.player.OfflinePlayer user, String whoUnwarned) {
 			List<FieldAdapter> fields = getFields(getPath());
 			
 			for (FieldAdapter field : fields) {
 				field.setTitle(field.getTitle() == null ? null : field.getTitle()
 						.replace("{player}", user.getName())
 						.replace("{player_uuid}", user.getUUID().toString())
-						.replace("{who_unwarned}", whoUnwarned == null ? Utils.NOT_APPLICABLE : whoUnwarned)
+						.replace("{who_unwarned}", whoUnwarned == null ? getString("placeholders.nobody") : whoUnwarned)
 						);
 				field.setText(field.getText() == null ? null : field.getText()
 						.replace("{player}", user.getName())
 						.replace("{player_uuid}", user.getUUID().toString())
-						.replace("{who_unwarned}", whoUnwarned == null ? Utils.NOT_APPLICABLE : whoUnwarned)
+						.replace("{who_unwarned}", whoUnwarned == null ? getString("placeholders.nobody") : whoUnwarned)
 						);
 			} return fields;
 		}
 		
 		private static String getFormat(String type) {
-			return mappings.getString("messages.warning.formats." + type);
+			return getString("messages.warning.formats." + type);
 		}
 		
 	}
@@ -782,9 +787,9 @@ public class DiscordMessages {
 						.replace("{id}", String.valueOf(kick.getID()))
 						.replace("{player}", player.getName())
 						.replace("{player_uuid}", player.getUUID().toString())
-						.replace("{ip_address}", kick.getIPAddress() == null ? Utils.NOT_APPLICABLE : kick.getIPAddress().getHostAddress())
+						.replace("{ip_address}", kick.getIPAddress() == null ? getString("placeholders.not-present") : kick.getIPAddress().getHostAddress())
 						.replace("{staff_member}", kick.getStaffMember())
-						.replace("{reason}", kick.getReason() == null ? mappings.getString("messages.kick.unspecified-reason") : ChatColor.stripColor(kick.getReason()))
+						.replace("{reason}", kick.getReason() == null ? getString("messages.kick.unspecified-reason") : ChatColor.stripColor(kick.getReason()))
 						.replace("{server}", kick.getServer())
 						.replace("{type}", getFormat("types." + kick.getType().name().toLowerCase()))
 						.replace("{date}", formatDate(kick.getDate()))
@@ -802,9 +807,9 @@ public class DiscordMessages {
 						.replace("{id}", String.valueOf(kick.getID()))
 						.replace("{player}", player.getName())
 						.replace("{player_uuid}", player.getUUID().toString())
-						.replace("{ip_address}", kick.getIPAddress() == null ? Utils.NOT_APPLICABLE : kick.getIPAddress().getHostAddress())
+						.replace("{ip_address}", kick.getIPAddress() == null ? getString("placeholders.not-present") : kick.getIPAddress().getHostAddress())
 						.replace("{staff_member}", kick.getStaffMember())
-						.replace("{reason}", kick.getReason() == null ? mappings.getString("messages.kick.unspecified-reason") : ChatColor.stripColor(kick.getReason()))
+						.replace("{reason}", kick.getReason() == null ? getString("messages.kick.unspecified-reason") : ChatColor.stripColor(kick.getReason()))
 						.replace("{server}", kick.getServer())
 						.replace("{type}", getFormat("types." + kick.getType().name().toLowerCase()))
 						.replace("{date}", formatDate(kick.getDate()))
@@ -814,9 +819,9 @@ public class DiscordMessages {
 						.replace("{id}", String.valueOf(kick.getID()))
 						.replace("{player}", player.getName())
 						.replace("{player_uuid}", player.getUUID().toString())
-						.replace("{ip_address}", kick.getIPAddress() == null ? Utils.NOT_APPLICABLE : kick.getIPAddress().getHostAddress())
+						.replace("{ip_address}", kick.getIPAddress() == null ? getString("placeholders.not-present") : kick.getIPAddress().getHostAddress())
 						.replace("{staff_member}", kick.getStaffMember())
-						.replace("{reason}", kick.getReason() == null ? mappings.getString("messages.kick.unspecified-reason") : ChatColor.stripColor(kick.getReason()))
+						.replace("{reason}", kick.getReason() == null ? getString("messages.kick.unspecified-reason") : ChatColor.stripColor(kick.getReason()))
 						.replace("{server}", kick.getServer())
 						.replace("{type}", getFormat("types." + kick.getType().name().toLowerCase()))
 						.replace("{date}", formatDate(kick.getDate()))
@@ -826,7 +831,7 @@ public class DiscordMessages {
 		}
 		
 		private static String getFormat(String type) {
-			return mappings.getString("messages.kick.formats." + type);
+			return getString("messages.kick.formats." + type);
 		}
 		
 	}
@@ -953,14 +958,14 @@ public class DiscordMessages {
 						.replace("{player}", player.getName())
 						.replace("{player_uuid}", player.getUUID().toString())
 						.replace("{staff_member}", mute.getStaffMember())
-						.replace("{who_unmuted}", whoUnmuted == null ? Utils.NOT_APPLICABLE : whoUnmuted)
-						.replace("{reason}", mute.getReason() == null ? mappings.getString("messages.mute.unspecified-reason") : ChatColor.stripColor(mute.getReason()))
+						.replace("{who_unmuted}", whoUnmuted == null ? getString("placeholders.nobody") : whoUnmuted)
+						.replace("{reason}", mute.getReason() == null ? getString("messages.mute.unspecified-reason") : ChatColor.stripColor(mute.getReason()))
 						.replace("{server}", mute.getServer())
 						.replace("{date}", formatDate(mute.getDate()))
-						.replace("{unmute_date}", unmuteDate == null ? Utils.NOT_APPLICABLE : formatDate(unmuteDate.longValue()))
-						.replace("{expiration_date}", duration == -1 ? Utils.NOT_APPLICABLE : formatDate(mute.getDate() + duration))
-						.replace("{duration}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(duration, true, false))
-						.replace("{remaining_time}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(mute.getRemainingTime(), false, true))
+						.replace("{unmute_date}", unmuteDate == null ? getString("timestamps.never") : formatDate(unmuteDate.longValue()))
+						.replace("{expiration_date}", duration == -1 ? getString("timestamps.never") : formatDate(mute.getDate() + duration))
+						.replace("{duration}", formatTime(duration, true, true))
+						.replace("{remaining_time}", formatTime(mute.getRemainingTime(), true, true))
 						.replace("{active}", getFormat(active == null ? "active.no" : (active ? "active.yes" : "active.no")))
 						.replace("{global}", getFormat(mute.isGlobal() ? "global.yes" : "global.no"))
 						.replace("{silent}", getFormat(mute.isSilent() ? "silent.yes" : "silent.no"))
@@ -983,14 +988,14 @@ public class DiscordMessages {
 						.replace("{player}", player.getName())
 						.replace("{player_uuid}", player.getUUID().toString())
 						.replace("{staff_member}", mute.getStaffMember())
-						.replace("{who_unmuted}", whoUnmuted == null ? Utils.NOT_APPLICABLE : whoUnmuted)
-						.replace("{reason}", mute.getReason() == null ? mappings.getString("messages.mute.unspecified-reason") : ChatColor.stripColor(mute.getReason()))
+						.replace("{who_unmuted}", whoUnmuted == null ? getString("placeholders.nobody") : whoUnmuted)
+						.replace("{reason}", mute.getReason() == null ? getString("messages.mute.unspecified-reason") : ChatColor.stripColor(mute.getReason()))
 						.replace("{server}", mute.getServer())
 						.replace("{date}", formatDate(mute.getDate()))
-						.replace("{unmute_date}", unmuteDate == null ? Utils.NOT_APPLICABLE : formatDate(unmuteDate.longValue()))
-						.replace("{expiration_date}", duration == -1 ? Utils.NOT_APPLICABLE : formatDate(mute.getDate() + duration))
-						.replace("{duration}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(duration, true, false))
-						.replace("{remaining_time}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(mute.getRemainingTime(), false, true))
+						.replace("{unmute_date}", unmuteDate == null ? getString("timestamps.never") : formatDate(unmuteDate.longValue()))
+						.replace("{expiration_date}", duration == -1 ? getString("timestamps.never") : formatDate(mute.getDate() + duration))
+						.replace("{duration}", formatTime(duration, true, true))
+						.replace("{remaining_time}", formatTime(mute.getRemainingTime(), true, true))
 						.replace("{active}", getFormat(active == null ? "active.no" : (active ? "active.yes" : "active.no")))
 						.replace("{global}", getFormat(mute.isGlobal() ? "global.yes" : "global.no"))
 						.replace("{silent}", getFormat(mute.isSilent() ? "silent.yes" : "silent.no"))
@@ -1000,14 +1005,14 @@ public class DiscordMessages {
 						.replace("{player}", player.getName())
 						.replace("{player_uuid}", player.getUUID().toString())
 						.replace("{staff_member}", mute.getStaffMember())
-						.replace("{who_unmuted}", whoUnmuted == null ? Utils.NOT_APPLICABLE : whoUnmuted)
-						.replace("{reason}", mute.getReason() == null ? mappings.getString("messages.mute.unspecified-reason") : ChatColor.stripColor(mute.getReason()))
+						.replace("{who_unmuted}", whoUnmuted == null ? getString("placeholders.nobody") : whoUnmuted)
+						.replace("{reason}", mute.getReason() == null ? getString("messages.mute.unspecified-reason") : ChatColor.stripColor(mute.getReason()))
 						.replace("{server}", mute.getServer())
 						.replace("{date}", formatDate(mute.getDate()))
-						.replace("{unmute_date}", unmuteDate == null ? Utils.NOT_APPLICABLE : formatDate(unmuteDate.longValue()))
-						.replace("{expiration_date}", duration == -1 ? Utils.NOT_APPLICABLE : formatDate(mute.getDate() + duration))
-						.replace("{duration}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(duration, true, false))
-						.replace("{remaining_time}", duration == -1 ? Utils.NOT_APPLICABLE : formatTime(mute.getRemainingTime(), false, true))
+						.replace("{unmute_date}", unmuteDate == null ? getString("timestamps.never") : formatDate(unmuteDate.longValue()))
+						.replace("{expiration_date}", duration == -1 ? getString("timestamps.never") : formatDate(mute.getDate() + duration))
+						.replace("{duration}", formatTime(duration, true, true))
+						.replace("{remaining_time}", formatTime(mute.getRemainingTime(), true, true))
 						.replace("{active}", getFormat(active == null ? "active.no" : (active ? "active.yes" : "active.no")))
 						.replace("{global}", getFormat(mute.isGlobal() ? "global.yes" : "global.no"))
 						.replace("{silent}", getFormat(mute.isSilent() ? "silent.yes" : "silent.no"))
@@ -1016,16 +1021,24 @@ public class DiscordMessages {
 		}
 		
 		private static String getFormat(String type) {
-			return mappings.getString("messages.mute.formats." + type);
+			return getString("messages.mute.formats." + type);
 		}
 		
+	}
+	
+	private static String getString(String path) {
+		return getString(path, "");
+	}
+	
+	private static String getString(String path, String def) {
+		return ConfigurationType.DISCORD_INTEGRATION.get().getString(path, def);
 	}
 	
 	private static List<String> getValues(String path) {
 		List<String> values = new ArrayList<>(EMBED_OPTIONS.length);
 		
 		for (String option : EMBED_OPTIONS)
-			values.add(mappings.getString(path + option, null));
+			values.add(getString(path + option, null));
 		return values;
 	}
 	
@@ -1038,9 +1051,9 @@ public class DiscordMessages {
 		long totalSeconds = (totalMilliseconds + 999) / 1000L;
 		
 		if (totalMilliseconds == -1)
-			return mappings.getString(everInsteadOfNever ? "timestamps.ever" : "timestamps.never");
+			return getString(everInsteadOfNever ? "timestamps.ever" : "timestamps.never");
 		if (totalSeconds < 1 && !useZeroSecondsInstead)
-			return mappings.getString("timestamps.now");
+			return getString("timestamps.now");
 		int years = (int) (totalSeconds / Utils.SECONDS_IN_A_YEAR);
 		totalSeconds -= years * Utils.SECONDS_IN_A_YEAR;
 		int months = (int) (totalSeconds / Utils.SECONDS_IN_A_MONTH);
@@ -1074,24 +1087,24 @@ public class DiscordMessages {
 		else sb.delete(sb.length() - 2, sb.length());
 		
 		return sb.toString()
-				.replace("{second}", mappings.getString("timestamps.second"))
-				.replace("{seconds}", mappings.getString("timestamps.seconds"))
-				.replace("{minute}", mappings.getString("timestamps.minute"))
-				.replace("{minutes}", mappings.getString("timestamps.minutes"))
-				.replace("{hour}", mappings.getString("timestamps.hour"))
-				.replace("{hours}", mappings.getString("timestamps.hours"))
-				.replace("{day}", mappings.getString("timestamps.day"))
-				.replace("{days}", mappings.getString("timestamps.days"))
-				.replace("{week}", mappings.getString("timestamps.week"))
-				.replace("{weeks}", mappings.getString("timestamps.weeks"))
-				.replace("{month}", mappings.getString("timestamps.month"))
-				.replace("{months}", mappings.getString("timestamps.months"))
-				.replace("{year}", mappings.getString("timestamps.year"))
-				.replace("{years}", mappings.getString("timestamps.years"));
+				.replace("{second}", getString("timestamps.second"))
+				.replace("{seconds}", getString("timestamps.seconds"))
+				.replace("{minute}", getString("timestamps.minute"))
+				.replace("{minutes}", getString("timestamps.minutes"))
+				.replace("{hour}", getString("timestamps.hour"))
+				.replace("{hours}", getString("timestamps.hours"))
+				.replace("{day}", getString("timestamps.day"))
+				.replace("{days}", getString("timestamps.days"))
+				.replace("{week}", getString("timestamps.week"))
+				.replace("{weeks}", getString("timestamps.weeks"))
+				.replace("{month}", getString("timestamps.month"))
+				.replace("{months}", getString("timestamps.months"))
+				.replace("{year}", getString("timestamps.year"))
+				.replace("{years}", getString("timestamps.years"));
 	}
 	
 	private static String formatDate(long ms) {
-		return new SimpleDateFormat(mappings.getString("simple-date-format")).format(new Date(ms));
+		return new SimpleDateFormat(getString("simple-date-format")).format(new Date(ms));
 	}
 	
 	/**

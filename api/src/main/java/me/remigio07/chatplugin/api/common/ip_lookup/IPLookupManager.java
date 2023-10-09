@@ -24,7 +24,6 @@ import java.util.concurrent.CompletableFuture;
 import me.remigio07.chatplugin.api.common.event.ip_lookup.IPLookupCacheEvent;
 import me.remigio07.chatplugin.api.common.event.ip_lookup.IPLookupCleanCacheEvent;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
-import me.remigio07.chatplugin.api.common.util.Library;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -42,12 +41,6 @@ import me.remigio07.chatplugin.bootstrap.Environment;
  */
 public abstract class IPLookupManager implements ChatPluginManager {
 	
-	/**
-	 * Array containing all the libraries required for this module to work.
-	 * 
-	 * <p><strong>Content:</strong> [{@link Library#MAXMIND_DB_READER}, {@link Library#MAXMIND_GEOIP2}, {@link Library#APACHE_HTTPCLIENT}, {@link Library#JACKSON_CORE}, {@link Library#JACKSON_ANNOTATIONS}, {@link Library#JACKSON_DATABIND}, {@link Library#ACTIVATION_FRAMEWORK}, {@link Library#ICE_TAR}]</p>
-	 */
-	public static final Library[] LIBRARIES = new Library[] { Library.MAXMIND_DB_READER, Library.MAXMIND_GEOIP2, Library.APACHE_HTTPCLIENT, Library.JACKSON_CORE, Library.JACKSON_ANNOTATIONS, Library.JACKSON_DATABIND, Library.ACTIVATION_FRAMEWORK, Library.ICE_TAR };
 	protected static IPLookupManager instance;
 	protected static final String URL = "https://geolite.info/geoip/v2.1/city/{0}";
 	protected boolean enabled, loadOnJoin;

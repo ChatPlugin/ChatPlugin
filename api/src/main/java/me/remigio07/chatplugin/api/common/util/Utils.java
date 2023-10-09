@@ -323,6 +323,7 @@ public class Utils {
 	 * 
 	 * @param ipv4 IPv4's representation
 	 * @return Corresponding IP address
+	 * @throws IllegalArgumentException If specified IPv4 <code>!</code>{@link #isValidIPv4(String)}
 	 */
 	public static InetAddress getInetAddress(String ipv4) {
 		if (isValidIPv4(ipv4)) {

@@ -52,6 +52,7 @@ public class Debugger {
 	private static final int SPACES = 32;
 	
 	public static String getFileContent() {
+		ChatPluginManagers managers = ChatPluginManagers.getInstance();
 		StringBuilder sb = new StringBuilder(HEADER);
 		Runtime runtime = Runtime.getRuntime();
 		
@@ -89,9 +90,9 @@ public class Debugger {
 		sb.append("\n");
 		sb.append("Managers:\n");
 		sb.append(TWO_SPACES + "enabled: " + Utils.getStringFromList(getEnabledManagersNames(), false, true) + "\n");
-		sb.append(TWO_SPACES + "amount: " + ChatPluginManagers.getInstance().getEnabledManagers().size() + "x\n");
+		sb.append(TWO_SPACES + "amount: " + managers.getEnabledManagers().size() + "/" + managers.getManagers().size() + "\n");
 		sb.append(TWO_SPACES + "values:\n");
-		ChatPluginManagers.getInstance().getManagers().keySet().stream().filter(clazz -> ChatPluginManagers.getInstance().getManager(clazz).isEnabled()).forEach(clazz -> sb.append(FOUR_SPACES + clazz.getSimpleName().substring(0, clazz.getSimpleName().indexOf("Manager")) + ":\n" + getContent(clazz)));
+		managers.getManagers().keySet().stream().filter(clazz -> managers.getManager(clazz).isEnabled()).forEach(clazz -> sb.append(FOUR_SPACES + clazz.getSimpleName().substring(0, clazz.getSimpleName().indexOf("Manager")) + ":\n" + getContent(clazz)));
 		return ChatColor.stripColor(sb.toString());
 	}
 	

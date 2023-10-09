@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.remigio07.chatplugin.api.common.discord.DiscordIntegrationManager;
-import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
+import me.remigio07.chatplugin.api.common.ip_lookup.LocalIPLookupManager;
 import me.remigio07.chatplugin.api.common.telegram.TelegramIntegrationManager;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 
@@ -57,11 +57,6 @@ public enum Library {
 	ADVENTURE_PLATFORM_API("Adventure Platform", "net.kyori.adventure.platform.AudienceProvider", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-api/4.3.0/adventure-platform-api-4.3.0.jar", "adventure-platform-api.jar"),
 	
 	/**
-	 * Represents the <a href="https://docs.advntr.dev">Adventure Platform Facet</a> library.
-	 */
-	ADVENTURE_PLATFORM_FACET("Adventure Platform Facet", "net.kyori.adventure.platform.facet.Facet", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-facet/4.3.0/adventure-platform-facet-4.3.0.jar", "adventure-platform-facet.jar"),
-	
-	/**
 	 * Represents the <a href="https://docs.advntr.dev">Adventure Platform Bukkit</a> library.
 	 */
 	ADVENTURE_PLATFORM_BUKKIT("Adventure Platform Bukkit", "net.kyori.adventure.platform.bukkit.BukkitAudiences", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-bukkit/4.3.0/adventure-platform-bukkit-4.3.0.jar", "adventure-platform-bukkit.jar"),
@@ -70,6 +65,11 @@ public enum Library {
 	 * Represents the <a href="https://docs.advntr.dev">Adventure Platform BungeeCord</a> library.
 	 */
 	ADVENTURE_PLATFORM_BUNGEECORD("Adventure Platform Bukkit", "net.kyori.adventure.platform.bungeecord.BungeeAudiences", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-bungeecord/4.3.0/adventure-platform-bungeecord-4.3.0.jar", "adventure-platform-bungeecord.jar"),
+	
+	/**
+	 * Represents the <a href="https://docs.advntr.dev">Adventure Platform Facet</a> library.
+	 */
+	ADVENTURE_PLATFORM_FACET("Adventure Platform Facet", "net.kyori.adventure.platform.facet.Facet", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-facet/4.3.0/adventure-platform-facet-4.3.0.jar", "adventure-platform-facet.jar"),
 	
 	/**
 	 * Represents the <a href="https://docs.advntr.dev">Adventure Platform SpongeAPI</a> library.
@@ -107,9 +107,34 @@ public enum Library {
 	ADVENTURE_TEXT_SERIALIZER_LEGACY("Adventure Text Serializer Legacy", "net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-text-serializer-legacy/4.14.0/adventure-text-serializer-legacy-4.14.0.jar", "adventure-text-serializer-legacy.jar"),
 	
 	/**
+	 * Represents the <a href="https://commons.apache.org/proper/commons-codec/">Apache Commons Codec</a> library.
+	 */
+	APACHE_COMMONS_CODEC("Apache Commons Codec", "org.apache.commons.codec.Charsets", new Relocation("org.apache.commons.codec"), "https://repo1.maven.org/maven2/commons-codec/commons-codec/1.11/commons-codec-1.11.jar", "apache-commons-codec.jar"),
+	
+	/**
+	 * Represents the <a href="https://commons.apache.org/proper/commons-collections/">Apache Commons Collections</a> library.
+	 */
+	APACHE_COMMONS_COLLECTIONS("Apache Commons Collections", "org.apache.commons.collections4.Trie", new Relocation("org.apache.commons.collections4"), "https://repo1.maven.org/maven2/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar", "apache-commons-collections.jar"),
+	
+	/**
+	 * Represents the <a href="https://commons.apache.org/proper/commons-logging/">Apache Commons Logging</a> library.
+	 */
+	APACHE_COMMONS_LOGGING("Apache Commons Logging", "org.apache.commons.logging.Log", new Relocation("org.apache.commons.logging"), "https://repo1.maven.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2.jar", "apache-commons-logging.jar"),
+	
+	/**
+	 * Represents the <a href="https://commons.apache.org/proper/commons-math/">Apache Commons Math</a> library.
+	 */
+	APACHE_COMMONS_MATH("Apache Commons Math", "org.apache.commons.math3.Field", new Relocation("assets.org.apache.commons.math3", "org.apache.commons.math3"), "https://repo1.maven.org/maven2/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar", "apache-commons-math.jar"),
+	
+	/**
 	 * Represents the <a href="https://hc.apache.org/httpcomponents-client/">Apache HttpClient</a> library.
 	 */
 	APACHE_HTTPCLIENT("Apache HttpClient", "org.apache.http.auth.Credentials", new Relocation("mozilla", "org.apache.http"), "https://repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.5.13/httpclient-4.5.13.jar", "apache-httpclient.jar"),
+	
+	/**
+	 * Represents the <a href="https://hc.apache.org/httpcomponents-core">Apache HttpCore</a> library.
+	 */
+	APACHE_HTTPCORE("Apache HttpCore", "org.apache.http.HttpHost", new Relocation("org.apache.http"), "https://repo1.maven.org/maven2/org/apache/httpcomponents/httpcore/4.4.13/httpcore-4.4.13.jar", "apache-httpcore.jar"),
 	
 	/**
 	 * Represents the <a href="https://asm.ow2.io/">ASM</a> library.
@@ -125,16 +150,6 @@ public enum Library {
 	 * Represents the <a href="https://checkerframework.org/">Checker Qual</a> library.
 	 */
 	CHECKER_QUAL("Checker Qual", "org.checkerframework.dataflow.qual.Deterministic", new Relocation("org.checkerframework"), "https://repo1.maven.org/maven2/org/checkerframework/checker-qual/3.21.0/checker-qual-3.21.0.jar", "checker-qual.jar"),
-	
-	/**
-	 * Represents the <a href="https://commons.apache.org/proper/commons-collections/">Commons Collections</a> library.
-	 */
-	COMMONS_COLLECTIONS("Commons Collections", "org.apache.commons.collections4.Trie", new Relocation("org.apache.commons.collections4"), "https://repo1.maven.org/maven2/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar", "commons-collections.jar"),
-	
-	/**
-	 * Represents the <a href="https://commons.apache.org/proper/commons-math/">Commons Math</a> library.
-	 */
-	COMMONS_MATH("Commons Math", "org.apache.commons.math3.Field", new Relocation("assets.org.apache.commons.math3", "org.apache.commons.math3"), "https://repo1.maven.org/maven2/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar", "commons-math.jar"),
 	
 	/**
 	 * Represents the <a href="https://errorprone.info/index">Error Prone Annotations</a> library.
@@ -155,6 +170,11 @@ public enum Library {
 	 * Represents the <a href="https://mvnrepository.com/artifact/com.google.guava/failureaccess">Failure Access</a> library.
 	 */
 	FAILURE_ACCESS("Failure Access", "com.google.common.util.concurrent.internal.InternalFutureFailureAccess", new Relocation("com.google.common.util.concurrent.internal"), "https://repo1.maven.org/maven2/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar", "failure-access.jar"),
+	
+	/**
+	 * Represents the <a href="https://findbugs.sourceforge.net/">FindBugs JSR305</a> library.
+	 */
+	FINDBUGS_JSR305("FindBugs JSR305", "javax.annotation", new Relocation("javax.annotation"), "https://repo1.maven.org/maven2/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar", "findbugs-jsr305.jar"),
 	
 	/**
 	 * Represents the <a href="https://trove4j.sourceforge.net/html/overview.html">GNU Trove</a> library.
@@ -212,6 +232,16 @@ public enum Library {
 	JAVA_NATIVE_ACCESS("Java Native Access", "com.sun.jna.Version", new Relocation("com.sun.jna"), "https://repo1.maven.org/maven2/net/java/dev/jna/jna/5.10.0/jna-5.10.0.jar", "java-native-access.jar"),
 	
 	/**
+	 * Represents the <a href="https://github.com/pengrad/java-telegram-bot-api/">Java Telegram Bot API</a> library.
+	 */
+	JAVA_TELEGRAM_BOT_API("Java Telegram Bot API", "com.pengrad.telegrambot.TelegramBot", new Relocation("com.pengrad.telegrambot"), "https://repo1.maven.org/maven2/com/github/pengrad/java-telegram-bot-api/6.9.1/java-telegram-bot-api-6.9.1.jar", "java-telegram-bot-api.jar"),
+	
+	/**
+	 * Represents the <a href="https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api">Javax Annotation</a> library.
+	 */
+	JAVAX_ANNOTATION("Javax Annotation", "javax.annotation.Nullable", new Relocation("javax.annotation"), "https://repo1.maven.org/maven2/javax/annotation/javax.annotation-api/1.3.2/javax.annotation-api-1.3.2.jar", "javax-annotation.jar"),
+	
+	/**
 	 * Represents the <a href="https://github.com/discord-jda/JDA">JDA</a> library.
 	 */
 	JDA("JDA", "net.dv8tion.jda.api.JDA", new Relocation("com.iwebpp.crypto", "net.dv8tion.jda"), "https://jitpack.io/com/github/DV8FromTheWorld/JDA/4.4.0/JDA-4.4.0.jar", "jda.jar"),
@@ -227,14 +257,14 @@ public enum Library {
 	JSON_SIMPLE("JSON.simple", "com.github.cliftonlabs.json_simple.Jsonable", new Relocation("com.github.cliftonlabs.json_simple"), "https://repo1.maven.org/maven2/com/github/cliftonlabs/json-simple/4.0.0/json-simple-4.0.0.jar", "json-simple.jar"),
 	
 	/**
-	 * Represents the <a href="https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api">Javax Annotation</a> library.
-	 */
-	JAVAX_ANNOTATION("Javax Annotation", "javax.annotation.Nullable", new Relocation("javax.annotation"), "https://repo1.maven.org/maven2/javax/annotation/javax.annotation-api/1.3.2/javax.annotation-api-1.3.2.jar", "javax-annotation.jar"),
-	
-	/**
 	 * Represents the <a href="https://kotlinlang.org/api/latest/jvm/stdlib/">Kotlin Stdlib</a> library.
 	 */
-	KOTLIN_STDLIB("Kotlin Stdlib", "kotlin.Deprecated", new Relocation("kotlin"), "https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/1.6.10/kotlin-stdlib-1.6.10.jar", "kotlin-stdlib.jar"),
+	KOTLIN_STDLIB("Kotlin Stdlib", "kotlin.Deprecated", new Relocation(), "https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/1.6.10/kotlin-stdlib-1.6.10.jar", "kotlin-stdlib.jar"),
+	
+	/**
+	 * Represents the <a href="https://square.github.io/okhttp">Logging Interceptor</a> library.
+	 */
+	LOGGING_INTERCEPTOR("Logging Interceptor", "okhttp.logging.HttpLoggingInterceptor", new Relocation("okhttp.logging"), "https://repo1.maven.org/maven2/com/squareup/okhttp3/logging-interceptor/4.10.0/logging-interceptor-4.10.0.jar", "logging-interceptor.jar"),
 	
 	/**
 	 * Represents the <a href="https://github.com/maxmind/MaxMind-DB-Reader-java">MaxMind DB Reader</a> library.
@@ -259,7 +289,7 @@ public enum Library {
 	/**
 	 * Represents the <a href="https://square.github.io/okhttp/">OkHttp</a> library.
 	 */
-	OKHTTP("OkHttp", "okhttp3.Call", new Relocation("okhttp3"), "https://repo1.maven.org/maven2/com/squareup/okhttp3/okhttp/4.9.3/okhttp-4.9.3.jar", "ok-http.jar"),
+	OKHTTP("OkHttp", "okhttp3.Call", new Relocation("okhttp3"), "https://repo1.maven.org/maven2/com/squareup/okhttp3/okhttp/4.10.0/okhttp-4.10.0.jar", "ok-http.jar"),
 	
 	/**
 	 * Represents the <a href="https://square.github.io/okio/">Okio</a> library.
@@ -269,36 +299,35 @@ public enum Library {
 	/**
 	 * Represents the <a href="https://www.slf4j.org/">SLF4J API</a> library.
 	 */
-	SLF4J_API("SLF4J API", "org.slf4j.IMarkerFactory", null, "https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.32/slf4j-api-1.7.32.jar", "slf4j-api.jar"),
+	SLF4J_API("SLF4J API", "org.slf4j.IMarkerFactory", new Relocation("org.slf4j"), "https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.32/slf4j-api-1.7.32.jar", "slf4j-api.jar"),
+	
+	/**
+	 * Represents the <a href="https://www.slf4j.org/">SLF4J Simple Provider</a> library.
+	 */
+	SLF4J_SIMPLE_PROVIDER("SLF4J Simple Provider", "org.slf4j.impl.SimpleLogger", new Relocation("org.slf4j.impl"), "https://repo1.maven.org/maven2/org/slf4j/slf4j-simple/1.7.32/slf4j-simple-1.7.32.jar", "slf4j-simple-provider.jar"),
 	
 	/**
 	 * Represents the <a href="https://github.com/xerial/sqlite-jdbc">SQLite Driver</a> library.
 	 */
-	SQLITE_DRIVER("SQLite Driver", "org.sqlite.JDBC", null, "https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.43.0.0/sqlite-jdbc-3.43.0.0.jar", "sqlite-driver.jar"),
-	
-	/**
-	 * Represents the <a href="https://github.com/rubenlagus/TelegramBots">Telegram Bots</a> library.
-	 */
-	TELEGRAM_BOTS("Telegram Bots", "org.telegram.telegrambots.Constants", new Relocation("org.telegram.telegrambots"), "https://repo1.maven.org/maven2/org/telegram/telegrambots/5.6.0/telegrambots-5.6.0.jar", "telegram-bots.jar"),
-	
-	/**
-	 * Represents the <a href="https://github.com/rubenlagus/TelegramBots">Telegram Bots Meta</a> library.
-	 */
-	TELEGRAM_BOTS_META("Telegram Bots Meta", "org.telegram.telegrambots.meta.ApiConstants", new Relocation("org.telegram.telegrambots.meta"), "https://repo1.maven.org/maven2/org/telegram/telegrambots-meta/5.6.0/telegrambots-meta-5.6.0.jar", "telegram-bots-meta.jar");
+	SQLITE_DRIVER("SQLite Driver", "org.sqlite.JDBC", null, "https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.43.0.0/sqlite-jdbc-3.43.0.0.jar", "sqlite-driver.jar");
 	
 	private String name, clazz, url, fileName;
 	private Relocation relocation;
 	
 	static {
-		Relocation.KYORI_RELOCATION.add(Library.GSON, Library.JETBRAINS_ANNOTATIONS);
+		Relocation.KYORI_RELOCATION.add(GSON, JETBRAINS_ANNOTATIONS);
 		JACKSON_DATABIND.getRelocation().add(JACKSON_CORE, JACKSON_ANNOTATIONS);
+		APACHE_HTTPCLIENT.getRelocation().add(APACHE_COMMONS_CODEC, APACHE_COMMONS_LOGGING, APACHE_HTTPCORE);
+		GUAVA.getRelocation().add(FINDBUGS_JSR305, ERROR_PRONE_ANNOTATIONS, FAILURE_ACCESS, J2OBJC_ANNOTATIONS, CHECKER_QUAL);
 		JDA.getRelocation().add(DiscordIntegrationManager.LIBRARIES);
 		KOTLIN_STDLIB.getRelocation().add(JETBRAINS_ANNOTATIONS);
-		MAXMIND_GEOIP2.getRelocation().add(IPLookupManager.LIBRARIES);
-		OKHTTP.getRelocation().add(OKIO, KOTLIN_STDLIB);
+		MAXMIND_GEOIP2.getRelocation().add(LocalIPLookupManager.LIBRARIES);
+		SLF4J_SIMPLE_PROVIDER.getRelocation().add(SLF4J_API);
+		OKHTTP.getRelocation().add(JETBRAINS_ANNOTATIONS);
 		OKIO.getRelocation().add(KOTLIN_STDLIB);
-		TELEGRAM_BOTS.getRelocation().add(TelegramIntegrationManager.LIBRARIES);
-		TELEGRAM_BOTS_META.getRelocation().add(TelegramIntegrationManager.LIBRARIES);
+		OKHTTP.getRelocation().add(OKIO);
+		LOGGING_INTERCEPTOR.getRelocation().add(OKHTTP);
+		JAVA_TELEGRAM_BOT_API.getRelocation().add(TelegramIntegrationManager.LIBRARIES);
 	}
 	
 	private Library(String name, String clazz, Relocation relocation, String url, String fileName) {

@@ -182,7 +182,7 @@ commands:
     &eRaggio di accuratezza: &f~{accuracy_radius_km} km
   lastseen:
     online: '{pfx} &f{0} &esono stati online per &f{1}&e.'
-    offline: '{pfx} &f{0} &esono stati online per &f{1}&e.'
+    offline: '{pfx} &f{0} &esono stati visti l''ultima volta &f{1} &efa; indirizzo IP: &f{2}&e.'
   clearchat: '{pfx} &aLa chat è stata ripulita.'
   muteall:
     muted: '{pfx} &eLa chat è stata mutata globalmente da un membro dello Staff.'
@@ -676,7 +676,7 @@ proxy-messages:
   reload:
     start: '{pfx} &aChatPlugin sta ricaricando...'
     end: '{pfx} &aChatPlugin è stato ricaricato. Ci sono voluti &f{0} ms&a.'
-  version: '{pfx} &aIn esecuzione &c&lChat&f&lPlugin &6Premium &fv{0} &adi &9Remigio07 &ail &f{1} {2}&a.'
+  version: '{pfx} &aIn esecuzione &c&lChat&f&lPlugin &6Premium &fv{0} &adi &9Remigio07 &asu &f{1} {2}&a.'
   info: |-
     {pfx} &aInformazioni su &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
     &eSito web: &fhttps://megaproserver.com/chatplugin

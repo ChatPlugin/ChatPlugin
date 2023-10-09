@@ -38,7 +38,7 @@ public class LibrariesUtils {
 	
 	public static boolean isLoaded(Library library) {
 		try {
-			Class.forName(library.getClazz(), false, library.getRelocation() == null && library != Library.SLF4J_API ? isolatedClassLoader : JARLibraryLoader.getInstance());
+			Class.forName(library.getClazz(), false, library.getRelocation() == null ? isolatedClassLoader : JARLibraryLoader.getInstance());
 			return true;
 		} catch (ClassNotFoundException e) {
 			return false;
@@ -56,7 +56,7 @@ public class LibrariesUtils {
 				file.getParentFile().mkdirs();
 				file.createNewFile();
 				download(library);
-			} if (library.getRelocation() == null && library != Library.SLF4J_API)
+			} if (library.getRelocation() == null)
 				isolatedClassLoader.load(getTarget(library));
 			else JARLibraryLoader.getInstance().load(getTarget(library));
 		}

@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+import me.remigio07.chatplugin.api.common.util.Library;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 
 /**
@@ -27,6 +28,19 @@ import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
  */
 public abstract class LocalIPLookupManager implements ChatPluginManager {
 	
+	/**
+	 * Array containing all the libraries required for this module to work.
+	 * 
+	 * <p><strong>Content:</strong> [
+	 * {@link Library#MAXMIND_DB_READER}, {@link Library#MAXMIND_GEOIP2}, {@link Library#APACHE_HTTPCLIENT}, {@link Library#APACHE_COMMONS_CODEC}, {@link Library#APACHE_COMMONS_LOGGING},
+	 * {@link Library#APACHE_HTTPCORE}, {@link Library#JACKSON_CORE}, {@link Library#JACKSON_ANNOTATIONS}, {@link Library#JACKSON_DATABIND}, {@link Library#ACTIVATION_FRAMEWORK},
+	 * {@link Library#ICE_TAR}]</p>
+	 */
+	public static final Library[] LIBRARIES = new Library[] {
+			Library.MAXMIND_DB_READER, Library.MAXMIND_GEOIP2, Library.APACHE_HTTPCLIENT, Library.APACHE_COMMONS_CODEC, Library.APACHE_COMMONS_LOGGING,
+			Library.APACHE_HTTPCORE, Library.JACKSON_CORE, Library.JACKSON_ANNOTATIONS, Library.JACKSON_DATABIND, Library.ACTIVATION_FRAMEWORK,
+			Library.ICE_TAR
+			};
 	protected static LocalIPLookupManager instance;
 	protected boolean enabled;
 	protected File cityDatabase, asnDatabase, lockFile;

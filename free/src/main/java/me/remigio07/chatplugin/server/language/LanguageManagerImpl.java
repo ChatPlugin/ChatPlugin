@@ -32,6 +32,7 @@ import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationTyp
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
+import me.remigio07.chatplugin.api.server.event.language.LanguageChangeEvent;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
@@ -115,15 +116,19 @@ public class LanguageManagerImpl extends LanguageManager {
 	
 	@Override
 	public void setLanguage(OfflinePlayer player, Language language) {
+		if (getLanguage(player) == language)
+			throw new IllegalArgumentException("The specified language (" + language.getID() + ") corresponds to the old one");
 		try {
 			StorageConnector.getInstance().setPlayerData(PlayersDataType.LANGUAGE, player, language.getID());
+			
+			if (player.isLoaded()) {
+				ServerPlayerManager.getInstance().unloadPlayer(player.getUUID());
+				ServerPlayerManager.getInstance().loadPlayer(player.toAdapter());
+			} new LanguageChangeEvent(player, language).call();
+			LogManager.log("{0}'s language has been set to {1}.", 4, player.getName(), language.getID());
 		} catch (Exception e) {
 			LogManager.log("{0} occurred while setting {1}'s language to {2}: {3}", 2, e.getClass().getSimpleName(), player.getName(), language.getDisplayName(), e.getMessage());
-			return;
-		} if (player.isLoaded()) {
-			ServerPlayerManager.getInstance().unloadPlayer(player.getUUID());
-			ServerPlayerManager.getInstance().loadPlayer(player.toAdapter());
-		} LogManager.log("{0}'s language has been set to {1}.", 3, player.getName(), language.getID());
+		}
 	}
 	
 	public static boolean isCommandCooldownActive(ChatPluginServerPlayer player) {

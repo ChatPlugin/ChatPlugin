@@ -24,12 +24,11 @@ public class BungeeCordBootstrapper extends Plugin {
 	
 	private static BungeeCordBootstrapper instance;
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable() {
 		instance = this;
+		Environment.currentEnvironment = Environment.BUNGEECORD;
 		
-		Environment.setCurrent(Environment.BUNGEECORD);
 		JARLibraryLoader.getInstance().initialize(getLogger(), getDataFolder());
 	}
 	

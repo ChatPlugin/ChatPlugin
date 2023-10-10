@@ -63,12 +63,11 @@ public class SpongeBootstrapper {
 	 * 
 	 * @param event Startup event
 	 */
-	@SuppressWarnings("deprecation")
 	@Listener
 	public void onGameStartedServer(GameStartedServerEvent event) {
 		instance = this;
+		Environment.currentEnvironment = Environment.SPONGE;
 		
-		Environment.setCurrent(Environment.SPONGE);
 		JARLibraryLoader.getInstance().initialize(logger, dataFolder);
 	}
 	

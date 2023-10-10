@@ -54,7 +54,7 @@ public enum Environment {
 	 */
 	VELOCITY("Velocity", new String[] { "com.velocitypowered.api.proxy.ProxyServer", "org.slf4j.Logger", "java.nio.file.Path" });
 	
-	private static Environment currentEnvironment;
+	static Environment currentEnvironment;
 	private String name;
 	private String[] enableMethodArgsTypes;
 	
@@ -116,7 +116,7 @@ public enum Environment {
 	 * @param environment Current environment
 	 */
 	@Deprecated
-	public static void setCurrent(Environment environment) {
+	public static void setDCurrent(Environment environment) {
 		currentEnvironment = environment;
 	}
 	

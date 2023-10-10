@@ -24,18 +24,17 @@ public class BukkitBootstrapper extends JavaPlugin {
 	
 	private static BukkitBootstrapper instance;
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable() {
 		instance = this;
+		Environment.currentEnvironment = Environment.BUKKIT;
 		java.util.logging.Logger logger;
 		
 		try {
 			logger = getLogger();
 		} catch (NoSuchMethodError e) { // older Bukkit versions
 			logger = java.util.logging.Logger.getLogger("ChatPlugin");
-		} Environment.setCurrent(Environment.BUKKIT);
-		JARLibraryLoader.getInstance().initialize(logger, getDataFolder());
+		} JARLibraryLoader.getInstance().initialize(logger, getDataFolder());
 	}
 	
 	@Override

@@ -83,9 +83,9 @@ public class VelocityBootstrapper {
 	 * @param event Startup event
 	 */
 	@Subscribe
-	@SuppressWarnings("deprecation")
 	public void onProxyInitialize(ProxyInitializeEvent event) {
-		Environment.setCurrent(Environment.VELOCITY);
+		Environment.currentEnvironment = Environment.VELOCITY;
+		
 		JARLibraryLoader.getInstance().initialize(proxy, logger, dataFolder);
 		proxy.getEventManager().register(this, new VelocityEventsAdapter());
 	}

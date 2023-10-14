@@ -24,7 +24,7 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
  */
 public class ChatPluginManagerException extends Exception {
 	
-	private static final long serialVersionUID = 2161238166368480180L;
+	private static final long serialVersionUID = 1L;
 	
 	/**
 	 * Exception's manager.
@@ -43,7 +43,7 @@ public class ChatPluginManagerException extends Exception {
 	 * @param exception Exception caught by the manager
 	 */
 	public ChatPluginManagerException(ChatPluginManager manager, Exception exception) {
-		super(exception.getClass().getSimpleName() + " occurred while (un)loading " + Utils.getOriginalClass(manager).getSimpleName() + ": " + exception.getMessage());
+		super(exception.getCause().getClass().getSimpleName() + " occurred while (un)loading " + Utils.getOriginalClass(manager).getSimpleName() + ": " + exception.getMessage());
 		this.manager = manager;
 	}
 	
@@ -68,7 +68,7 @@ public class ChatPluginManagerException extends Exception {
 	 */
 	@Deprecated
 	public ChatPluginManagerException(String source, Exception exception) {
-		super(exception.getClass().getSimpleName() + " occurred while (un)loading <" + source + ">: " + exception.getMessage());
+		super(exception.getCause().getClass().getSimpleName() + " occurred while (un)loading <" + source + ">: " + exception.getMessage());
 		this.source = source;
 	}
 	
@@ -106,7 +106,7 @@ public class ChatPluginManagerException extends Exception {
 	 * @return Exception's source
 	 */
 	public String getSource() {
-		return source == null ? manager.getClass().getSimpleName() : source;
+		return source == null ? Utils.getOriginalClass(manager).getSimpleName() : source;
 	}
 	
 }

@@ -71,7 +71,6 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 			Library.JETBRAINS_ANNOTATIONS
 	};
 	
-	
 	@SuppressWarnings("deprecation")
 	public static void initUtils() throws ChatPluginManagerException {
 		try {
@@ -88,9 +87,8 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 			else if (Environment.isBungeeCord())
 				LibrariesUtils.load(Library.ADVENTURE_PLATFORM_BUNGEECORD);
 			LibrariesUtils.load(Library.JSON_SIMPLE);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ChatPluginManagerException("libraries utils", e);
+		} catch (LibraryException e) {
+			throw new ChatPluginManagerException("libraries utils", e.getMessage());
 		} UUIDFetcherImpl.setInstance(new UUIDFetcherImpl());
 		ComponentTranslatorImpl.setInstance(new ComponentTranslatorImpl());
 	}

@@ -20,8 +20,11 @@ import java.io.FileOutputStream;
 import java.nio.channels.Channels;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.bind.DatatypeConverter;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationManager;
@@ -45,34 +48,46 @@ public class LibrariesUtils {
 		}
 	}
 	
-	public static void load(Library library) throws Exception {
+	public static void load(Library library) throws LibraryException {
 		if (!isLoaded(library)) {
-			File file = getTarget(library);
-			
-			if (file.exists()) {
-				if (ConfigurationManager.getInstance().getLastVersionChange().isMinor())
-					update(library);
-			} else {
-				file.getParentFile().mkdirs();
-				file.createNewFile();
-				download(library);
-			} if (library.getRelocation() == null)
-				isolatedClassLoader.load(getTarget(library));
-			else JARLibraryLoader.getInstance().load(getTarget(library));
+			try {
+				File file = getTarget(library);
+				
+				if (file.exists()) {
+					if (ConfigurationManager.getInstance().getLastVersionChange().isMinor())
+						downloadFreshCopy("Updating {0} library (new plugin version detected)...", 0, library);
+					else if (!DatatypeConverter.printHexBinary(MessageDigest.getInstance("MD5").digest(Files.readAllBytes(getTarget(library).toPath()))).equals(library.getMD5Hash()))
+						downloadFreshCopy("The {0} library's file is corrupted; downloading a fresh copy...", 1, library);
+				} else {
+					file.getParentFile().mkdirs();
+					file.createNewFile();
+					download(library);
+				} if (library.getRelocation() == null)
+					isolatedClassLoader.load(getTarget(library));
+				else JARLibraryLoader.getInstance().load(getTarget(library));
+			} catch (Throwable e) {
+				throw new LibraryException(e, library);
+			}
 		}
 	}
 	
-	public static void update(Library library) throws Exception {
-		LogManager.log("Updating {0} library (new plugin version detected)...", 0, library.getName());
+	private static void downloadFreshCopy(String message, int logLevel, Library library) throws Throwable {
+		LogManager.log(message, logLevel, library.getName());
 		delete(library);
 		download(library);
 	}
 	
 	public static void delete(Library library) {
-		getTarget(library).delete();
+		File jar = getTarget(library);
+		
+		jar.delete();
+		
+		if (library.getRelocation() != null)
+			new File(jar.getPath() + ".tmp").delete();
+		
 	}
 	
-	public static void download(Library library) throws Exception {
+	public static void download(Library library) throws Throwable {
 		long ms = System.currentTimeMillis();
 		File target = getTarget(library);
 		
@@ -90,7 +105,7 @@ public class LibrariesUtils {
 		relocate(library);
 	}
 	
-	public static void relocate(Library library) throws Exception {
+	public static void relocate(Library library) throws Throwable {
 		if (library.getRelocation() == null)
 			return;
 		long ms = System.currentTimeMillis();
@@ -98,6 +113,8 @@ public class LibrariesUtils {
 		File tmp = new File(jar.getPath() + ".tmp");
 		List<Object> rules = new ArrayList<>();
 		Class<?> clazz = isolatedClassLoader.loadClass("me.remigio07.jarrelocator.JarRelocator");
+		
+		tmp.delete();
 		
 		for (String oldPackage : library.getRelocation().getOldPackages())
 			rules.add(isolatedClassLoader.loadClass("me.remigio07.jarrelocator.Relocation").getConstructor(String.class, String.class).newInstance(oldPackage, Relocation.PREFIX + oldPackage));

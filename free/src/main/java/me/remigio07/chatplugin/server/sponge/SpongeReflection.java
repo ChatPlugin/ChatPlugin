@@ -147,7 +147,7 @@ public class SpongeReflection {
 		} return array;
 	}
 	
-	public static Object getField(String loadedClass, Object instance, String... attempts) {
+	public static Object getFieldValue(String loadedClass, Object instance, String... attempts) {
 		try {
 			return getField(loadedClass, attempts).get(instance);
 		} catch (IllegalAccessException e) {
@@ -155,20 +155,17 @@ public class SpongeReflection {
 		} return null;
 	}
 	
+	@SuppressWarnings("all") // ...used to avoid "Unnecessary @SuppressWarnings("deprecation")" for the annotation below when using Java 8 on IDEs like Eclipse
 	public static Field getField(String loadedClass, String... attempts) {
 		for (String attempt : attempts) {
 			try {
-				return getLoadedClass(loadedClass).getField(attempt);
-			} catch (NoSuchFieldException e) {
+				Field field = getLoadedClass(loadedClass).getDeclaredField(attempt);
+				@SuppressWarnings("deprecation")
+				boolean accessible = field.isAccessible();
 				
-			}
-		} return null;
-	}
-	
-	public static Field getDeclaredField(String loadedClass, String... attempts) {
-		for (String attempt : attempts) {
-			try {
-				return getLoadedClass(loadedClass).getDeclaredField(attempt);
+				if (!accessible)
+					field.setAccessible(true);
+				return field;
 			} catch (NoSuchFieldException e) {
 				
 			}

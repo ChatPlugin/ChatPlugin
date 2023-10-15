@@ -40,7 +40,6 @@ public class BukkitReflection {
 	@SuppressWarnings("deprecation")
 	public static void initReflection() throws ChatPluginManagerException {
 		boolean atLeast1_17 = VersionUtils.getVersion().isAtLeast(Version.V1_17);
-//		boolean atLeast1_18 = VersionUtils.getVersion().isAtLeast(Version.V1_18);
 		Class<?> clazz;
 		cbPath = "org.bukkit.craftbukkit." + VersionUtils.getNMSVersion() + ".";
 		nmsPath = "net.minecraft.server." + (atLeast1_17 ? "" : VersionUtils.getNMSVersion() + ".");

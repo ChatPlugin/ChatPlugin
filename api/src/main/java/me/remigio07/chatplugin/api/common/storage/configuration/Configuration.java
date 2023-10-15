@@ -180,8 +180,11 @@ public class Configuration {
 	 * Saves {@link #getMappings()} into {@link #getFile()}.
 	 * 
 	 * @throws IOException If something goes wrong
+	 * @throws IllegalStateException If {@link #load()} has not been called yet
 	 */
 	public void save() throws IOException {
+		if (yaml == null)
+			throw new IllegalStateException("Configuration#load() must be called at least once before saving");
 		try (Writer writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
 			yaml.dump(mappings.getMappings(), writer);
 		}

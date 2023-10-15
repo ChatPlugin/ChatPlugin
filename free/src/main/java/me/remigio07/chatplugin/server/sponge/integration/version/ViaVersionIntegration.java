@@ -42,7 +42,7 @@ public class ViaVersionIntegration extends ChatPluginSpongeIntegration<VersionIn
 	@SuppressWarnings("unchecked")
 	@Override
 	public Version getVersion(PlayerAdapter player) {
-		Version version = ServerPlayerManager.getInstance().getPlayerVersion(player.getUUID());
+		Version version = ServerPlayerManager.getPlayerVersion(player.getUUID());
 		return version == null ? Version.getVersion(ProtocolVersion.getProtocol(((ViaAPI<Player>) api).getPlayerVersion(player.spongeValue())).getName()) : version;
 	}
 	

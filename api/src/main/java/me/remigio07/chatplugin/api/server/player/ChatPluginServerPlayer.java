@@ -60,7 +60,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	protected Object playerConnection;
 	protected int ping, id, messagesSent;
 	protected short bans, anticheatBans, warnings, anticheatWarnings, kicks, anticheatKicks, mutes, anticheatMutes;
-	protected long loginTime = System.currentTimeMillis();
+	protected long loginTime;
 	protected ChatPluginServerPlayer lastCorrespondent;
 	protected List<OfflinePlayer> ignoredPlayers;
 	

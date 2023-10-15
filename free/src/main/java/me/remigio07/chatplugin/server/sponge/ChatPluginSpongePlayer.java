@@ -31,7 +31,6 @@ import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.text.title.Title;
 
-import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
@@ -49,8 +48,6 @@ import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.language.LanguageDetector;
 import me.remigio07.chatplugin.api.server.language.LanguageDetectorMethod;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
-import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
-import me.remigio07.chatplugin.api.server.rank.RankManager;
 import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.InventoryAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
@@ -62,7 +59,7 @@ import net.kyori.adventure.text.ComponentLike;
 
 public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	
-	private static SpongeAudiences audiences = ChatPlugin.getInstance().isLoaded() ? SpongeAudiences.create(Sponge.getPluginManager().getPlugin("chatplugin").get(), Sponge.getGame()) : null;
+	private static SpongeAudiences audiences = SpongeAudiences.create(Sponge.getPluginManager().getPlugin("chatplugin").get(), Sponge.getGame());
 	private static Cause inventoryCause;
 	private Player player;
 	
@@ -78,10 +75,7 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 		super(new PlayerAdapter(player));
 		this.player = player;
 		audience = audiences.player(player);
-		version = ServerPlayerManager.getInstance().getPlayerVersion(uuid);
 		version = version == null ? VersionUtils.getVersion() : version;
-		bedrockPlayer = ServerPlayerManager.getInstance().isBedrockPlayer(uuid);
-		rank = RankManager.getInstance().calculateRank(this);
 		playerConnection = player.getConnection();
 		StorageConnector storage = StorageConnector.getInstance();
 		

@@ -126,10 +126,11 @@ public class BukkitEventManager extends EventManager {
 			return;
 		PlayerAdapter player = new PlayerAdapter(event.getPlayer());
 		
-		ServerPlayerManager.getInstance().getPlayersVersions().put(player.getUUID(), IntegrationType.VIAVERSION.isEnabled() ? IntegrationType.VIAVERSION.get().getVersion(player) : IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(player) : VersionUtils.getVersion());
+		ServerPlayerManager.getPlayersLoginTimes().put(player.getUUID(), System.currentTimeMillis());
+		ServerPlayerManager.getPlayersVersions().put(player.getUUID(), IntegrationType.VIAVERSION.isEnabled() ? IntegrationType.VIAVERSION.get().getVersion(player) : IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(player) : VersionUtils.getVersion());
 		
 		if (IntegrationType.GEYSERMC.isEnabled() && IntegrationType.GEYSERMC.get().isBedrockPlayer(player))
-			ServerPlayerManager.getInstance().getBedrockPlayers().add(player.getUUID());
+			ServerPlayerManager.getBedrockPlayers().add(player.getUUID());
 		processJoinEvent(player, false);
 	}
 	
@@ -162,8 +163,9 @@ public class BukkitEventManager extends EventManager {
 				QuitMessageManager.getInstance().getQuitPackets().remove(player.getUUID());
 			} AnticheatManager.getInstance().clearViolations(player);
 			ServerPlayerManager.getInstance().unloadPlayer(player.getUUID());
-		} ServerPlayerManager.getInstance().getPlayersVersions().remove(event.getPlayer().getUniqueId());
-		ServerPlayerManager.getInstance().getBedrockPlayers().remove(event.getPlayer().getUniqueId());
+		} ServerPlayerManager.getPlayersVersions().remove(event.getPlayer().getUniqueId());
+		ServerPlayerManager.getPlayersLoginTimes().remove(event.getPlayer().getUniqueId());
+		ServerPlayerManager.getBedrockPlayers().remove(event.getPlayer().getUniqueId());
 	}
 	
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {

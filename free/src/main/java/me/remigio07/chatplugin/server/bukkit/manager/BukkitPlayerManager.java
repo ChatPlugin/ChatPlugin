@@ -15,6 +15,8 @@
 
 package me.remigio07.chatplugin.server.bukkit.manager;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -28,11 +30,13 @@ import org.bukkit.scoreboard.Team;
 
 import com.viaversion.viaversion.api.Via;
 
+import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.event.EventManager;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
+import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
@@ -112,17 +116,47 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 	@Override
 	public void loadOnlinePlayers() {
 		List<PlayerAdapter> players = PlayerAdapter.getOnlinePlayers();
+		File file = new File(ChatPlugin.getInstance().getDataFolder(), "online-players-data.yml");
 		
 		if (players.size() != 0) {
 			if (IntegrationType.VIAVERSION.isEnabled() && IntegrationType.VIAVERSION.get().getVersion(players.get(0)) == Version.UNSUPPORTED) {
 				String reason = ChatColor.translate(Via.getConfig().getReloadDisconnectMsg());
 				
-				LogManager.log("Reload detected. This operation is not fully supported by ViaVersion and all players must be kicked to be able to use the API.", 1);
-				players.forEach(player -> player.disconnect(reason)); 
-			} else for (Player player : Bukkit.getOnlinePlayers())
-				if (getPlayer(player.getUniqueId()) == null && isWorldEnabled(player.getWorld().getName()))
-					loadPlayer(new PlayerAdapter(player));
-		}
+				LogManager.log("Reload detected. This operation is not fully supported by ViaVersion and all players must be kicked in order to use its API.", 1);
+				players.forEach(player -> player.disconnect(reason));
+			} else {
+				if (ServerPlayerManager.getPlayersVersions().isEmpty()) {
+					String message = null;
+					
+					if (file.exists())
+						try {
+							Configuration onlinePlayersData = new Configuration(file);
+							
+							onlinePlayersData.load();
+							
+							for (String player : onlinePlayersData.getKeys()) {
+								UUID uuid = UUID.fromString(player);
+								
+								ServerPlayerManager.getPlayersVersions().put(uuid, Version.getVersion(onlinePlayersData.getString(player + ".version")));
+								ServerPlayerManager.getPlayersLoginTimes().put(uuid, onlinePlayersData.getLong(player + ".login-time"));
+								
+								if (onlinePlayersData.getBoolean(player + ".bedrock"))
+									ServerPlayerManager.getBedrockPlayers().add(uuid);
+							}
+						} catch (IOException e) {
+							message = e.getMessage();
+						}
+					else message = file.getPath() + " file does not exist";
+					
+					if (message != null) {
+						LogManager.log("Error occurred while reading online players' data after a server reload: {0}; kicking all players...", 2, message);
+						Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(null));
+					}
+				} for (Player player : Bukkit.getOnlinePlayers())
+					if (getPlayer(player.getUniqueId()) == null && isWorldEnabled(player.getWorld().getName()))
+						loadPlayer(new PlayerAdapter(player));
+			}
+		} file.delete();
 	}
 	
 	@SuppressWarnings("deprecation")

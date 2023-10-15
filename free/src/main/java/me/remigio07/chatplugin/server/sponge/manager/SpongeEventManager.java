@@ -125,10 +125,11 @@ public class SpongeEventManager extends EventManager {
 			return;
 		PlayerAdapter player = new PlayerAdapter(event.getTargetEntity());
 		
-		ServerPlayerManager.getInstance().getPlayersVersions().put(player.getUUID(), IntegrationType.VIAVERSION.isEnabled() ? IntegrationType.VIAVERSION.get().getVersion(player) : IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(player) : VersionUtils.getVersion());
+		ServerPlayerManager.getPlayersLoginTimes().put(player.getUUID(), System.currentTimeMillis());
+		ServerPlayerManager.getPlayersVersions().put(player.getUUID(), IntegrationType.VIAVERSION.isEnabled() ? IntegrationType.VIAVERSION.get().getVersion(player) : IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(player) : VersionUtils.getVersion());
 		
 		if (IntegrationType.GEYSERMC.isEnabled() && IntegrationType.GEYSERMC.get().isBedrockPlayer(player))
-			ServerPlayerManager.getInstance().getBedrockPlayers().add(player.getUUID());
+			ServerPlayerManager.getBedrockPlayers().add(player.getUUID());
 		processJoinEvent(player, false);
 	}
 	
@@ -161,8 +162,9 @@ public class SpongeEventManager extends EventManager {
 				QuitMessageManager.getInstance().getQuitPackets().remove(player.getUUID());
 			} AnticheatManager.getInstance().clearViolations(player);
 			ServerPlayerManager.getInstance().unloadPlayer(player.getUUID());
-		} ServerPlayerManager.getInstance().getPlayersVersions().remove(event.getTargetEntity().getUniqueId());
-		ServerPlayerManager.getInstance().getBedrockPlayers().remove(event.getTargetEntity().getUniqueId());
+		} ServerPlayerManager.getPlayersVersions().remove(event.getTargetEntity().getUniqueId());
+		ServerPlayerManager.getPlayersLoginTimes().remove(event.getTargetEntity().getUniqueId());
+		ServerPlayerManager.getBedrockPlayers().remove(event.getTargetEntity().getUniqueId());
 	}
 	
 	// Sponge v4.2

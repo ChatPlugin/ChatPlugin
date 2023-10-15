@@ -30,7 +30,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
@@ -51,8 +50,6 @@ import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.language.LanguageDetector;
 import me.remigio07.chatplugin.api.server.language.LanguageDetectorMethod;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
-import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
-import me.remigio07.chatplugin.api.server.rank.RankManager;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.InventoryAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
@@ -68,7 +65,7 @@ import net.kyori.adventure.title.Title.Times;
 
 public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
-	private static BukkitAudiences audiences = ChatPlugin.getInstance().isLoaded() ? BukkitAudiences.create(BukkitBootstrapper.getInstance()) : null;
+	private static BukkitAudiences audiences = BukkitAudiences.create(BukkitBootstrapper.getInstance());
 	private Player player;
 	private Object craftPlayer;
 	private Locale lastLocale;
@@ -77,10 +74,7 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 		super(new PlayerAdapter(player));
 		this.player = player;
 		audience = audiences.player(player);
-		version = ServerPlayerManager.getInstance().getPlayerVersion(uuid);
 		version = version == null ? IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(toAdapter()) : VersionUtils.getVersion() : version;
-		bedrockPlayer = ServerPlayerManager.getInstance().isBedrockPlayer(uuid);
-		rank = RankManager.getInstance().calculateRank(this);
 		craftPlayer = BukkitReflection.getLoadedClass("CraftPlayer").cast(player);
 		playerConnection = BukkitReflection.getFieldValue("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", craftPlayer), "playerConnection", VersionUtils.getVersion().isAtLeast(Version.V1_20) ? "c" : "b");
 		StorageConnector storage = StorageConnector.getInstance();

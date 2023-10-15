@@ -43,10 +43,11 @@ import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
  */
 public abstract class ServerPlayerManager extends PlayerManager {
 	
+	private static Map<UUID, Version> playersVersions = new HashMap<>();
+	private static Map<UUID, Long> playersLoginTimes = new HashMap<>();
+	private static List<UUID> bedrockPlayers = new ArrayList<>();
 	protected boolean everyWorldEnabled;
 	protected Map<UUID, ChatPluginServerPlayer> players = new HashMap<>();
-	protected Map<UUID, Version> playersVersions = new HashMap<>();
-	protected List<UUID> bedrockPlayers = new ArrayList<>();
 	protected List<String> enabledWorlds = new ArrayList<>();
 	protected int storageCount;
 	
@@ -129,47 +130,6 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	}
 	
 	/**
-	 * Gets the online players' versions.
-	 * 
-	 * @return Online players' versions
-	 */
-	public Map<UUID, Version> getPlayersVersions() {
-		return playersVersions;
-	}
-	
-	/**
-	 * Gets an online player's version.
-	 * Will return <code>null</code> if they are not online.
-	 * 
-	 * @param player Player's UUID
-	 * @return Player's version
-	 */
-	@Nullable(why = "Player may not be online")
-	public Version getPlayerVersion(UUID player) {
-		return playersVersions.get(player);
-	}
-	
-	/**
-	 * Gets the online Bedrock players' UUIDs.
-	 * 
-	 * @return Online Bedrock players' UUIDs
-	 */
-	public List<UUID> getBedrockPlayers() {
-		return bedrockPlayers;
-	}
-	
-	/**
-	 * Checks if the specified player is connected
-	 * through {@link IntegrationType#GEYSERMC}.
-	 * 
-	 * @param player Player's UUID
-	 * @return Whether the player is using the BE
-	 */
-	public boolean isBedrockPlayer(UUID player) {
-		return bedrockPlayers.contains(player);
-	}
-	
-	/**
 	 * Checks if every world is enabled by default.
 	 * 
 	 * @return Whether every world is enabled
@@ -217,6 +177,69 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	 */
 	public void setStorageCount(int storageCount) {
 		this.storageCount = storageCount;
+	}
+	
+	/**
+	 * Gets the online players' versions.
+	 * 
+	 * @return Online players' versions
+	 */
+	public static Map<UUID, Version> getPlayersVersions() {
+		return playersVersions;
+	}
+	
+	/**
+	 * Gets an online player's version.
+	 * Will return <code>null</code> if they are not online.
+	 * 
+	 * @param player Player's UUID
+	 * @return Player's version
+	 */
+	@Nullable(why = "Player may not be online")
+	public static Version getPlayerVersion(UUID player) {
+		return playersVersions.get(player);
+	}
+	
+	/**
+	 * Gets the online players' login times.
+	 * 
+	 * @return Online players' login times
+	 */
+	public static Map<UUID, Long> getPlayersLoginTimes() {
+		return playersLoginTimes;
+	}
+	
+	/**
+	 * Gets an online player's login time.
+	 * 
+	 * <p>Will return <code>null</code> if they are not online.</p>
+	 * 
+	 * @param player Player's UUID
+	 * @return Player's login time
+	 */
+	@Nullable(why = "Player may not be online")
+	public static Long getPlayerLoginTime(UUID player) {
+		return playersLoginTimes.get(player);
+	}
+	
+	/**
+	 * Gets the online Bedrock players' UUIDs.
+	 * 
+	 * @return Online Bedrock players' UUIDs
+	 */
+	public static List<UUID> getBedrockPlayers() {
+		return bedrockPlayers;
+	}
+	
+	/**
+	 * Checks if the specified player is connected
+	 * through {@link IntegrationType#GEYSERMC}.
+	 * 
+	 * @param player Player's UUID
+	 * @return Whether the player is using the BE
+	 */
+	public static boolean isBedrockPlayer(UUID player) {
+		return bedrockPlayers.contains(player);
 	}
 	
 	/**

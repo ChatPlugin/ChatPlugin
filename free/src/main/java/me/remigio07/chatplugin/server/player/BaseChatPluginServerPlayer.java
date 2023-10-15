@@ -25,6 +25,7 @@ import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
+import me.remigio07.chatplugin.api.server.rank.RankManager;
 import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
 import me.remigio07.chatplugin.api.server.util.adapter.scoreboard.ObjectiveAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
@@ -42,10 +43,13 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 	public BaseChatPluginServerPlayer(PlayerAdapter player) {
 		super(player);
 		
-		if (ProxyManager.getInstance().isEnabled() && ServerPlayerManager.getInstance().getPlayerVersion(player.getUUID()) == null)
+		if (ProxyManager.getInstance().isEnabled() && (version = ServerPlayerManager.getPlayerVersion(player.getUUID())) == null)
 			throw new IllegalStateException("Server has not received a PlayerJoin plugin message from the proxy");
 		if (PrivateMessagesManager.getInstance().isEnabled() && PrivateMessagesManager.getInstance().isSocialspyOnJoinEnabled() && player.hasPermission("chatplugin.commands.socialspy"))
 			socialspyEnabled = true;
+		bedrockPlayer = ServerPlayerManager.isBedrockPlayer(uuid);
+		rank = RankManager.getInstance().calculateRank(this);
+		loginTime = ServerPlayerManager.getPlayerLoginTime(uuid);
 		ignoredPlayers = PlayerIgnoreManager.getInstance().isEnabled() ? new ArrayList<>(PlayerIgnoreManager.getInstance().getIgnoredPlayers(this)) : Collections.emptyList();
 	}
 	

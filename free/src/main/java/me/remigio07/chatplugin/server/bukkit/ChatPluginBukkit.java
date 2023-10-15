@@ -16,9 +16,11 @@
 package me.remigio07.chatplugin.server.bukkit;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
 
@@ -35,7 +37,9 @@ import me.remigio07.chatplugin.api.common.event.plugin.ChatPluginCrashEvent;
 import me.remigio07.chatplugin.api.common.event.plugin.ChatPluginLoadEvent;
 import me.remigio07.chatplugin.api.common.event.plugin.ChatPluginReloadEvent;
 import me.remigio07.chatplugin.api.common.event.plugin.ChatPluginUnloadEvent;
+import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
+import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationManager;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
@@ -43,6 +47,7 @@ import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
+import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07.chatplugin.common.util.Utils;
@@ -133,9 +138,31 @@ public class ChatPluginBukkit extends ChatPlugin {
 		try {
 			long ms = System.currentTimeMillis();
 			BukkitBootstrapper plugin = BukkitBootstrapper.getInstance();
+			boolean reload = !(boolean) BukkitReflection.getFieldValue("MinecraftServer", BukkitReflection.invokeMethod("MinecraftServer", "getServer", null), "hasStopped");
 			loaded = false;
 			
-			LogManager.log("Unloading ChatPlugin...", 0);
+			if (reload && !IntegrationType.VIAVERSION.isEnabled())
+				try {
+					File file = new File(getDataFolder(), "online-players-data.yml");
+					
+					if (file.exists())
+						file.delete();
+					Configuration onlinePlayersData = new Configuration(file);
+					
+					file.deleteOnExit();
+					onlinePlayersData.load();
+					
+					for (UUID player : ServerPlayerManager.getPlayersVersions().keySet()) {
+						String path = player.toString() + ".";
+						
+						onlinePlayersData.set(path + "version", ServerPlayerManager.getPlayerVersion(player).getName());
+						onlinePlayersData.set(path + "login-time", ServerPlayerManager.getPlayerLoginTime(player).longValue());
+						onlinePlayersData.set(path + "bedrock", ServerPlayerManager.isBedrockPlayer(player));
+					} onlinePlayersData.save();
+				} catch (IOException e) {
+					LogManager.log("IOException occurred while saving online players' data during server reload: {0}; players will be kicked.", 2, e.getMessage());
+				}
+			LogManager.log("Unloading ChatPlugin{0}...", 0, reload ? " (server reload)" : "");
 			new ChatPluginUnloadEvent().call();
 			// Bukkit's crash-proof stuff
 			for (String command : BukkitCommandsHandler.getCommands().keySet()) {

@@ -16,7 +16,6 @@
 package me.remigio07.chatplugin.server.sponge.manager;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import org.spongepowered.api.Sponge;
@@ -27,9 +26,7 @@ import org.spongepowered.api.scoreboard.displayslot.DisplaySlots;
 import org.spongepowered.api.scoreboard.objective.Objective;
 
 import com.google.common.collect.Iterables;
-import com.viaversion.viaversion.api.Via;
 
-import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
@@ -40,7 +37,6 @@ import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
-import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.bossbar.BossbarManager;
 import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
 import me.remigio07.chatplugin.api.server.event.player.ServerPlayerLoadEvent;
@@ -86,18 +82,9 @@ public class SpongePlayerManager extends ServerPlayerManager {
 	
 	@Override
 	public void loadOnlinePlayers() {
-		List<PlayerAdapter> players = PlayerAdapter.getOnlinePlayers();
-		
-		if (players.size() != 0) {
-			if (IntegrationType.VIAVERSION.isEnabled() && IntegrationType.VIAVERSION.get().getVersion(players.get(0)) == Version.UNSUPPORTED) {
-				String reason = ChatColor.translate(Via.getConfig().getReloadDisconnectMsg());
-				
-				LogManager.log("Reload detected. This operation is not fully supported by ViaVersion and all players must be kicked to be able to use the API.", 1);
-				players.forEach(player -> player.disconnect(reason)); 
-			} else for (Player player : Sponge.getServer().getOnlinePlayers())
-				if (getPlayer(player.getUniqueId()) == null && isWorldEnabled(player.getWorld().getName()))
-					loadPlayer(new PlayerAdapter(player));
-		}
+		for (Player player : Sponge.getServer().getOnlinePlayers())
+			if (getPlayer(player.getUniqueId()) == null && isWorldEnabled(player.getWorld().getName()))
+				loadPlayer(new PlayerAdapter(player));
 	}
 	
 	@Override

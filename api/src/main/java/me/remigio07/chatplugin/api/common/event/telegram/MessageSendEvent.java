@@ -23,6 +23,7 @@ import me.remigio07.chatplugin.api.common.telegram.TelegramBot;
  * Represents the event called just before a message is sent through the {@link TelegramBot}.
  * 
  * @see TelegramBot#sendMessage(long, String)
+ * @see TelegramBot#sendMessage(String)
  */
 public class MessageSendEvent implements ChatPluginEvent, CancellableEvent {
 	

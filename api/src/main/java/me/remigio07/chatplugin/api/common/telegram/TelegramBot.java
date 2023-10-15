@@ -55,6 +55,17 @@ public interface TelegramBot {
 	public void sendMessage(long chatID, String message);
 	
 	/**
+	 * Calls {@link #sendMessage(long, String)} specifying
+	 * {@link TelegramIntegrationManager#getChatID()} as the first argument.
+	 * 
+	 * @param message Message to send
+	 * @see MessageSendEvent
+	 */
+	public default void sendMessage(String message) {
+		sendMessage(TelegramIntegrationManager.getInstance().getChatID(), message);
+	}
+	
+	/**
 	 * Gets the amount of users in the Telegram group.
 	 * 
 	 * @return Users' amount

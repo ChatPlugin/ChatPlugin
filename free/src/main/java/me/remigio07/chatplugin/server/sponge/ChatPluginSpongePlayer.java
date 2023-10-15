@@ -170,7 +170,7 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public void sendMessage(String message) {
-		player.sendMessage(Utils.serializeSpongeText(message));
+		player.sendMessage(Utils.serializeSpongeText(message, true));
 	}
 	
 	@Override
@@ -182,7 +182,7 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public void disconnect(String reason) {
-		TaskManager.runSync(() -> player.kick(Utils.serializeSpongeText(reason)), 0L);
+		TaskManager.runSync(() -> player.kick(Utils.serializeSpongeText(reason, true)), 0L);
 	}
 	
 	@Override
@@ -200,21 +200,21 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 		// sent separately because of a bug
 		player.sendTitle(Title.builder()
 				.reset()
-				.subtitle(subtitle == null ? null : Utils.serializeSpongeText(subtitle))
+				.subtitle(subtitle == null ? null : Utils.serializeSpongeText(subtitle, false))
 				.fadeIn(fadeIn)
 				.stay(stay)
 				.fadeOut(fadeOut)
 				.build()
 				);
 		player.sendTitle(Title.builder()
-				.title(title == null ? null : Utils.serializeSpongeText(title))
+				.title(title == null ? null : Utils.serializeSpongeText(title, false))
 				.build()
 				);
 	}
 	
 	@Override
 	public void sendActionbar(String actionbar) {
-		audience.sendActionBar(me.remigio07.chatplugin.common.util.Utils.deserializeLegacy(actionbar));
+		audience.sendActionBar(me.remigio07.chatplugin.common.util.Utils.deserializeLegacy(actionbar, true));
 	}
 	
 	@Deprecated

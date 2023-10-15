@@ -160,8 +160,8 @@ public class TablistManagerImpl extends TablistManager {
 					tablist.getFooter(language, true) == null ? null : PlaceholderManager.getInstance().translatePlaceholders(tablist.getFooter(language, true), player, placeholderTypes)
 					));
 		else player.toAdapter().spongeValue().getTabList().setHeaderAndFooter(
-				tablist.getHeader(language, true) == null ? null : Utils.serializeSpongeText(PlaceholderManager.getInstance().translatePlaceholders(tablist.getHeader(language, true), player, placeholderTypes)),
-				tablist.getFooter(language, true) == null ? null : Utils.serializeSpongeText(PlaceholderManager.getInstance().translatePlaceholders(tablist.getFooter(language, true), player, placeholderTypes))
+				tablist.getHeader(language, true) == null ? null : Utils.serializeSpongeText(PlaceholderManager.getInstance().translatePlaceholders(tablist.getHeader(language, true), player, placeholderTypes), false),
+				tablist.getFooter(language, true) == null ? null : Utils.serializeSpongeText(PlaceholderManager.getInstance().translatePlaceholders(tablist.getFooter(language, true), player, placeholderTypes), false)
 				);
 	}
 	

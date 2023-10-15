@@ -71,6 +71,10 @@ public class AntispamManagerImpl extends AntispamManager {
 		loadTime = System.currentTimeMillis() - ms;
 	}
 	
+	private static List<String> lowerCase(List<String> list) {
+		return list.stream().map(String::toLowerCase).collect(Collectors.toList());
+	}
+	
 	@Override
 	public void unload() throws ChatPluginManagerException {
 		enabled = urlsPreventionEnabled = ipsPreventionEnabled = false;
@@ -179,10 +183,6 @@ public class AntispamManagerImpl extends AntispamManager {
 	@Override
 	public int getCapsPercentage(String message) {
 		return getCapsLength(message) * 100 / message.length();
-	}
-	
-	private static List<String> lowerCase(List<String> list) {
-		return list.stream().map(String::toLowerCase).collect(Collectors.toList());
 	}
 	
 }

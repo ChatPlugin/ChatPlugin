@@ -63,14 +63,14 @@ public class SpongeCommandAdapter implements CommandCallable {
 				
 				if (command instanceof PlayerCommand) {
 					if (!(sender instanceof Player)) {
-						sender.sendMessage(Utils.serializeSpongeText(language.getMessage("misc.only-players")));
+						sender.sendMessage(Utils.serializeSpongeText(language.getMessage("misc.only-players"), false));
 						return CommandResult.success();
 					} if (senderAdapter.toServerPlayer() == null) {
-						sender.sendMessage(Utils.serializeSpongeText(language.getMessage("misc.disabled-world")));
+						sender.sendMessage(Utils.serializeSpongeText(language.getMessage("misc.disabled-world"), false));
 						return CommandResult.success();
 					}
 				} if (command.getPermission() != null && !sender.hasPermission(command.getPermission())) {
-					sender.sendMessage(Utils.serializeSpongeText(language.getMessage("misc.no-permission")));
+					sender.sendMessage(Utils.serializeSpongeText(language.getMessage("misc.no-permission"), false));
 					return CommandResult.success();
 				} LogManager.log(sender.getName() + " issued command: /" + text, 3);
 				command.execute(senderAdapter, language, args);
@@ -106,7 +106,7 @@ public class SpongeCommandAdapter implements CommandCallable {
 	
 	@Override
 	public Text getUsage(CommandSource sender) {
-		return Utils.serializeSpongeText(command.getUsage());
+		return Utils.serializeSpongeText(command.getUsage(), false);
 	}
 	
 	@Override

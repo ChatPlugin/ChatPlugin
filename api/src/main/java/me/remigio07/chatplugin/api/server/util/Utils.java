@@ -27,6 +27,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
@@ -138,11 +139,12 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 	 * Serializes the specified input to a Sponge-compatible text.
 	 * 
 	 * @param input Input text
+	 * @param translate Whether to {@link ChatColor#translate(String)} the text
 	 * @return Sponge-compatible text
 	 */
 	@SuppressWarnings("deprecation")
-	public static Text serializeSpongeText(String input) {
-		return TextSerializers.LEGACY_FORMATTING_CODE.deserialize(input);
+	public static Text serializeSpongeText(String input, boolean translate) {
+		return TextSerializers.LEGACY_FORMATTING_CODE.deserialize(translate ? ChatColor.translate(input) : input);
 	}
 	
 	/**

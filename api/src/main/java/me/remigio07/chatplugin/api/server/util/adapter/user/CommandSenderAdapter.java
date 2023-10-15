@@ -135,7 +135,7 @@ public class CommandSenderAdapter {
 	public void sendMessage(@NotNull String message) {
 		if (Environment.isBukkit())
 			bukkitValue().sendMessage(message);
-		else spongeValue().sendMessage(Utils.serializeSpongeText(message));
+		else spongeValue().sendMessage(Utils.serializeSpongeText(message, true));
 	}
 	
 	/**

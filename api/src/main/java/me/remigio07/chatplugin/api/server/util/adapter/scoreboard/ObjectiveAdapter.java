@@ -82,7 +82,7 @@ public class ObjectiveAdapter {
 	public ObjectiveAdapter setDisplayName(@NotNull String displayName) {
 		if (Environment.isBukkit())
 			bukkitValue().setDisplayName(displayName);
-		else spongeValue().setDisplayName(Utils.serializeSpongeText(displayName));
+		else spongeValue().setDisplayName(Utils.serializeSpongeText(displayName, false));
 		return this;
 	}
 	

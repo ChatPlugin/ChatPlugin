@@ -24,8 +24,6 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.DatatypeConverter;
-
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationManager;
 import me.remigio07.chatplugin.api.common.util.Library;
@@ -38,6 +36,7 @@ import me.remigio07.chatplugin.bootstrap.JARLibraryLoader;
 public class LibrariesUtils {
 	
 	private static IsolatedClassLoader isolatedClassLoader = IsolatedClassLoader.getInstance();
+	private static final char[] HEX_CODES = "0123456789ABCDEF".toCharArray();
 	
 	public static boolean isLoaded(Library library) {
 		try {
@@ -56,7 +55,7 @@ public class LibrariesUtils {
 				if (file.exists()) {
 					if (ConfigurationManager.getInstance().getLastVersionChange().isMinor())
 						downloadFreshCopy("Updating {0} library (new plugin version detected)...", 0, library);
-					else if (!DatatypeConverter.printHexBinary(MessageDigest.getInstance("MD5").digest(Files.readAllBytes(getTarget(library).toPath()))).equals(library.getMD5Hash()))
+					else if (!bytesToHexString(MessageDigest.getInstance("MD5").digest(Files.readAllBytes(getTarget(library).toPath()))).equals(library.getMD5Hash()))
 						downloadFreshCopy("The {0} library's file is corrupted; downloading a fresh copy...", 1, library);
 				} else {
 					file.getParentFile().mkdirs();
@@ -75,6 +74,15 @@ public class LibrariesUtils {
 		LogManager.log(message, logLevel, library.getName());
 		delete(library);
 		download(library);
+	}
+	
+	private static String bytesToHexString(byte[] bytes) {
+		StringBuilder sb = new StringBuilder(bytes.length * 2);
+		
+		for (byte b : bytes) {
+			sb.append(HEX_CODES[(b >> 4) & 0xF]);
+			sb.append(HEX_CODES[(b & 0xF)]);
+		} return sb.toString();
 	}
 	
 	public static void delete(Library library) {

@@ -15,6 +15,8 @@
 
 package me.remigio07.chatplugin.server.chat;
 
+import java.util.List;
+
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.server.chat.HoverInfoManager;
 import me.remigio07.chatplugin.api.server.language.Language;
@@ -28,12 +30,12 @@ public abstract class BaseHoverInfoManager extends HoverInfoManager {
 		instance = this;
 	}
 	
-	public abstract TextComponent getMessageHoverInfo(String message, ChatPluginServerPlayer player, Language language);
+	public abstract TextComponent getMessageHoverInfo(String message, List<String> urls, ChatPluginServerPlayer player, Language language);
 	
 	public static class DummyHoverInfoManager extends BaseHoverInfoManager {
 		
 		@Override
-		public TextComponent getMessageHoverInfo(String message, ChatPluginServerPlayer player, Language language) {
+		public TextComponent getMessageHoverInfo(String message, List<String> urls, ChatPluginServerPlayer player, Language language) {
 			return null;
 		}
 		

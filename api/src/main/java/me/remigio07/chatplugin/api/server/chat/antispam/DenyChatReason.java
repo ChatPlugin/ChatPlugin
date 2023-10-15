@@ -15,6 +15,8 @@
 
 package me.remigio07.chatplugin.api.server.chat.antispam;
 
+import java.util.List;
+
 import me.remigio07.chatplugin.api.common.chat.DenyChatReasonHandler;
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.punishment.mute.MuteManager;
@@ -55,7 +57,7 @@ public class DenyChatReason<H extends DenyChatReasonHandler> {
 	public static final DenyChatReason<AntispamManager> FLOOD = new DenyChatReason<>("FLOOD", "chat.antispam.no-flood", AntispamManager.class);
 	
 	/**
-	 * When the message {@link FormattedChatManager#containsFormattedText(String)}
+	 * When the message {@link FormattedChatManager#containsFormattedText(String, List, boolean)}
 	 * and the sender does not have the permission "chatplugin.formatted-chat".
 	 * 
 	 * <p><strong>Handler:</strong> {@link FormattedChatManager}

@@ -57,8 +57,9 @@ public class URLValidator {
 	
 	/**
 	 * Strips the protocol from the specified URL.
-	 * Will return <code>url</code> if the specified URL is invalid
-	 * or if it does not start with a protocol ("http://", "https://").
+	 * 
+	 * <p>Will return <code>url</code> if the specified URL is invalid or if
+	 * it does not start with a valid protocol ("http://", "https://").</p>
 	 * 
 	 * @param url URL to strip
 	 * @return URL without its protocol
@@ -76,10 +77,10 @@ public class URLValidator {
 	 * Will return <code>null</code> if the URL is invalid or if <code>!</code>{@link ChatManager#isEnabled()} or if
 	 * {@link ChatManager#getRecognizedTLDs()} does not contain the URL's <a href="https://en.wikipedia.org/wiki/Top-level_domain">TLD</a>.
 	 * 
-	 * @param url Target url
+	 * @param url Target URL
 	 * @return Specified URL's domain name
 	 */
-	@Nullable(why = "Null if the URL is invalid or if !ChatManager#isEnabled or if ChatManager#getRecognizedTLDs does not contain the URL's TLD")
+	@Nullable(why = "Null if the URL is invalid or if !ChatManager#isEnabled() or if ChatManager#getRecognizedTLDs() does not contain the URL's TLD")
 	public static String getDomainName(String url) {
 		if (!ChatManager.getInstance().isEnabled())
 			return null;

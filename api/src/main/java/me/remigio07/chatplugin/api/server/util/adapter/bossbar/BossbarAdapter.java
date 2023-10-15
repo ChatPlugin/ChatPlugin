@@ -119,7 +119,7 @@ public class BossbarAdapter {
 	public void setTitle(@NotNull String title) {
 		if (Environment.isBukkit())
 			bukkitValue().setTitle(title);
-		else spongeValue().setName(Utils.serializeSpongeText(title));
+		else spongeValue().setName(Utils.serializeSpongeText(title, false));
 	}
 	
 	/**

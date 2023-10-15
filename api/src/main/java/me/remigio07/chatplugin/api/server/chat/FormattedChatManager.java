@@ -15,8 +15,11 @@
 
 package me.remigio07.chatplugin.api.server.chat;
 
+import java.util.List;
+
 import me.remigio07.chatplugin.api.common.chat.DenyChatReasonHandler;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.server.util.URLValidator;
 
 /**
  * Manager that handles formatted and colored messages in the chat. See wiki for more info:
@@ -63,9 +66,33 @@ public abstract class FormattedChatManager implements DenyChatReasonHandler {
 	/**
 	 * Checks if the specified String contains colored or formatted text.
 	 * 
+	 * <p>Specify <code>true</code> as <code>considerURLs</code> to consider the possibility that
+	 * the specified input may also contain URLs which may contain '&amp;' characters (example:
+	 * "<a href="https://duckduckgo.com/?q=jynxzi&va=n">https://duckduckgo.com/?q=jynxzi&amp;va=n</a>").
+	 * In that case, they will not be counted as format characters.</p>
+	 * 
 	 * @param input Input String
+	 * @param urls URLs contained in the input
+	 * @param considerURLs Whether to consider URLs in the input
 	 * @return Whether the input contains formatted text
+	 * @see URLValidator#getURLs(String)
 	 */
-	public abstract boolean containsFormattedText(String input);
+	public abstract boolean containsFormattedText(String input, List<String> urls, boolean considerURLs);
+	
+	/**
+	 * Translates the specified String containing colored or formatted text.
+	 * 
+	 * <p>Specify <code>true</code> as <code>considerURLs</code> to consider the possibility that
+	 * the specified input may also contain URLs which may contain '&amp;' characters (example:
+	 * "<a href="https://duckduckgo.com/?q=jynxzi&va=n">https://duckduckgo.com/?q=jynxzi&amp;va=n</a>").
+	 * In that case, they will not be counted as format characters.</p>
+	 * 
+	 * @param input Input String
+	 * @param urls URLs contained in the input
+	 * @param considerURLs Whether to consider URLs in the input
+	 * @return Translated String containing formatted text
+	 * @see URLValidator#getURLs(String)
+	 */
+	public abstract String translate(String input, List<String> urls, boolean considerURLs);
 	
 }

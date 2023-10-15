@@ -110,8 +110,8 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 	}
 	
 	public void sendLanguageDetectedMessage(Language language) {
-		sendMessage(Utils.deserializeLegacy(language.getMessage("languages.detected.text", language.getDisplayName()))
-				.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(language.getMessage("languages.detected.hover", language.getDisplayName()))))
+		sendMessage(Utils.deserializeLegacy(language.getMessage("languages.detected.text", language.getDisplayName()), false)
+				.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(language.getMessage("languages.detected.hover", language.getDisplayName()), false)))
 				.clickEvent(ClickEvent.runCommand("/chatplugin language " + language.getID()))
 				);
 	}

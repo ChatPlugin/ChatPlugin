@@ -212,15 +212,15 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	@Override
 	public void sendTitle(String title, String subtitle, int fadeIn, int stay, int fadeOut) {
 		audience.showTitle(
-				Title.title(Utils.deserializeLegacy(title),
-				Utils.deserializeLegacy(subtitle),
+				Title.title(Utils.deserializeLegacy(title, true),
+				Utils.deserializeLegacy(subtitle, true),
 				Times.times(Duration.ofMillis(fadeIn / 50), Duration.ofMillis(stay / 50), Duration.ofMillis(fadeOut / 50)))
 				);
 	}
 	
 	@Override
 	public void sendActionbar(String actionbar) {
-		audience.sendActionBar(Utils.deserializeLegacy(actionbar));
+		audience.sendActionBar(Utils.deserializeLegacy(actionbar, true));
 	}
 	
 	@Deprecated

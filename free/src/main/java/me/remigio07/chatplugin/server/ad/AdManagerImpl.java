@@ -152,10 +152,10 @@ public class AdManagerImpl extends AdManager {
 		
 		if (event.isCancelled())
 			return;
-		TextComponent text = Utils.deserializeLegacy(checkPrefixes(ad.getText(language, true)));
+		TextComponent text = Utils.deserializeLegacy(checkPrefixes(ad.getText(language, true)), true);
 		
 		if (ad.getHover(language) != null)
-			text = text.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(ad.getHover(language))));
+			text = text.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(ad.getHover(language), true)));
 		if (ad.getClickAction() != null && ad.getClickValue(language) != null)
 			text = text.clickEvent(ClickEvent.clickEvent(Action.NAMES.value(ad.getClickAction().getID()), ad.getClickValue(language)));
 		player.sendMessage(text);

@@ -35,6 +35,7 @@ import me.remigio07.chatplugin.api.common.player.ChatPluginPlayer;
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
+import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.proxy.util.Utils;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.bootstrap.JARLibraryLoader;
@@ -52,7 +53,7 @@ public class PlayerAdapter {
 	
 	static {
 		try {
-			deserializeLegacy = Class.forName("me.remigio07.chatplugin.common.util.Utils", false, JARLibraryLoader.getInstance()).getMethod("deserializeLegacy", String.class);
+			deserializeLegacy = Class.forName("me.remigio07.chatplugin.common.util.Utils", false, JARLibraryLoader.getInstance()).getMethod("deserializeLegacy", String.class, boolean.class);
 		} catch (ClassNotFoundException | NoSuchMethodException e) {
 			e.printStackTrace();
 		}
@@ -232,17 +233,17 @@ public class PlayerAdapter {
 	public void sendMessage(String message) {
 		switch (Environment.getCurrent()) {
 		case BUKKIT:
-			bukkitValue().sendMessage(message);
+			bukkitValue().sendMessage(ChatColor.translate(message));
 			break;
 		case SPONGE:
-			spongeValue().sendMessage(me.remigio07.chatplugin.api.server.util.Utils.serializeSpongeText(message));
+			spongeValue().sendMessage(me.remigio07.chatplugin.api.server.util.Utils.serializeSpongeText(message, true));
 			break;
 		case BUNGEECORD:
 			BungeeCordMessages.sendMessage(this, message);
 			break;
 		case VELOCITY:
 			try {
-				velocityValue().sendMessage((ComponentLike) deserializeLegacy.invoke(null, message));
+				velocityValue().sendMessage((ComponentLike) deserializeLegacy.invoke(null, message, true));
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				e.printStackTrace();
 			} break;
@@ -257,17 +258,17 @@ public class PlayerAdapter {
 	public void disconnect(String reason) {
 		switch (Environment.getCurrent()) {
 		case BUKKIT:
-			bukkitValue().kickPlayer(reason);
+			bukkitValue().kickPlayer(ChatColor.translate(reason));
 			break;
 		case SPONGE:
-			spongeValue().kick(me.remigio07.chatplugin.api.server.util.Utils.serializeSpongeText(reason));
+			spongeValue().kick(me.remigio07.chatplugin.api.server.util.Utils.serializeSpongeText(reason, true));
 			break;
 		case BUNGEECORD:
 			BungeeCordMessages.disconnect(this, reason);
 			break;
 		case VELOCITY:
 			try {
-				velocityValue().disconnect((Component) deserializeLegacy.invoke(null, reason));
+				velocityValue().disconnect((Component) deserializeLegacy.invoke(null, reason, true));
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				e.printStackTrace();
 			} break;

@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.server.chat;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
@@ -44,6 +45,7 @@ import me.remigio07.chatplugin.api.server.language.LanguageManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
+import me.remigio07.chatplugin.api.server.util.URLValidator;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
@@ -90,6 +92,7 @@ public class ChatManagerImpl extends ChatManager {
 	
 	@Override
 	public void handleChatEvent(ChatPluginServerPlayer player, String message) {
+		message = message.trim().replaceAll(" +", " ");
 		PreChatEvent preChatEvent = new PreChatEvent(player, message);
 		
 		preChatEvent.call();
@@ -106,6 +109,7 @@ public class ChatManagerImpl extends ChatManager {
 			StaffChatManager.getInstance().sendPlayerMessage(player, message);
 			return;
 		} DenyChatReason<?> reason = null;
+		List<String> urls = URLValidator.getURLs(message);
 		
 		// 2. vanish
 		if (VanishManager.getInstance().isVanished(player))
@@ -122,12 +126,12 @@ public class ChatManagerImpl extends ChatManager {
 			reason = AntispamManager.getInstance().getDenyChatReason(player, message, Collections.emptyList());
 		
 		// 5. formatted-chat
-		if (reason == null && FormattedChatManager.getInstance().isEnabled() && FormattedChatManager.getInstance().containsFormattedText(message)) {
-			if (!player.hasPermission("chatplugin.formatted-chat")) {
+		if (reason == null && FormattedChatManager.getInstance().isEnabled() && FormattedChatManager.getInstance().containsFormattedText(message, urls, true)) {
+			if (!player.hasPermission("chatplugin.formatted-chat"))
 				if (!FormattedChatManager.getInstance().isSendAnyway())
 					reason = DenyChatReason.FORMAT;
 				else player.sendTranslatedMessage("chat.no-format");
-			} else message = ChatColor.translate(message);
+			else message = FormattedChatManager.getInstance().translate(message, urls, true);
 		}
 		
 		// 6. player-ping
@@ -175,7 +179,7 @@ public class ChatManagerImpl extends ChatManager {
 			ChatLogManager.getInstance().logChatMessage(player, message, null);
 		if (HoverInfoManager.getInstance().isEnabled()) {
 			for (Language language : LanguageManager.getInstance().getLanguages()) {
-				TextComponent text = ((BaseHoverInfoManager) HoverInfoManager.getInstance()).getMessageHoverInfo(message, player, language);
+				TextComponent text = ((BaseHoverInfoManager) HoverInfoManager.getInstance()).getMessageHoverInfo(message, urls, player, language);
 				
 				for (ChatPluginServerPlayer other : language.getOnlinePlayers())
 					if (!other.getIgnoredPlayers().contains(player))

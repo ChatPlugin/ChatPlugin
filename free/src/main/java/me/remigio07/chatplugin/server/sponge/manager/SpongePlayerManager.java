@@ -125,7 +125,7 @@ public class SpongePlayerManager extends ServerPlayerManager {
 			Team team = Team.builder().name("line_" + i).build();
 			
 			scoreboard.registerTeam(team);
-			team.addMember(Utils.serializeSpongeText(Scoreboard.SCORES[i]));
+			team.addMember(Utils.serializeSpongeText(Scoreboard.SCORES[i], false));
 		} player.spongeValue().setScoreboard(scoreboard);
 		scoreboard.updateDisplaySlot(objective, DisplaySlots.SIDEBAR);
 		serverPlayer.setObjective(new ObjectiveAdapter(objective));
@@ -139,14 +139,14 @@ public class SpongePlayerManager extends ServerPlayerManager {
 				continue;
 			RankTag tag = rank.getTag();
 			
-			team.setPrefix(Utils.serializeSpongeText(ChatColor.translate(tag.getPrefix().split(" ")[0] + tag.getNameColor() + (tag.getPrefix().contains(" ") ? " " : ""))));
-			team.setSuffix(Utils.serializeSpongeText(ChatColor.translate(tag.getSuffix())));
+			team.setPrefix(Utils.serializeSpongeText(tag.getPrefix().split(" ")[0] + tag.getNameColor() + (tag.getPrefix().contains(" ") ? " " : ""), true));
+			team.setSuffix(Utils.serializeSpongeText(tag.getSuffix(), true));
 		} for (ChatPluginServerPlayer other : getPlayers().values()) {
-			scoreboard.getTeam(other.getRank().getTeamName()).get().addMember(Utils.serializeSpongeText(other.getName()));
-			Iterables.getFirst(other.getObjective().spongeValue().getScoreboards(), null).getTeam(serverPlayer.getRank().getTeamName()).get().addMember(Utils.serializeSpongeText(player.getName()));
+			scoreboard.getTeam(other.getRank().getTeamName()).get().addMember(Utils.serializeSpongeText(other.getName(), false));
+			Iterables.getFirst(other.getObjective().spongeValue().getScoreboards(), null).getTeam(serverPlayer.getRank().getTeamName()).get().addMember(Utils.serializeSpongeText(player.getName(), false));
 		} if (!getPlayers().containsKey(player.getUUID())) {
-			scoreboard.getTeam(serverPlayer.getRank().getTeamName()).get().addMember(Utils.serializeSpongeText(player.getName()));
-			Iterables.getFirst(serverPlayer.getObjective().spongeValue().getScoreboards(), null).getTeam(serverPlayer.getRank().getTeamName()).get().addMember(Utils.serializeSpongeText(player.getName()));
+			scoreboard.getTeam(serverPlayer.getRank().getTeamName()).get().addMember(Utils.serializeSpongeText(player.getName(), false));
+			Iterables.getFirst(serverPlayer.getObjective().spongeValue().getScoreboards(), null).getTeam(serverPlayer.getRank().getTeamName()).get().addMember(Utils.serializeSpongeText(player.getName(), false));
 		} // teams end
 		
 		if (QuitMessageManager.getInstance().isEnabled())

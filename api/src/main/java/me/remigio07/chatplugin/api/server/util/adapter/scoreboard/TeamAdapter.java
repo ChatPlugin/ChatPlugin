@@ -101,7 +101,7 @@ public class TeamAdapter {
 	public void setPrefix(@NotNull String prefix) {
 		if (Environment.isBukkit())
 			bukkitValue().setPrefix(prefix);
-		else spongeValue().setPrefix(Utils.serializeSpongeText(prefix));
+		else spongeValue().setPrefix(Utils.serializeSpongeText(prefix, false));
 	}
 	
 	/**
@@ -112,7 +112,7 @@ public class TeamAdapter {
 	public void setSuffix(@NotNull String suffix) {
 		if (Environment.isBukkit())
 			bukkitValue().setSuffix(suffix);
-		else spongeValue().setSuffix(Utils.serializeSpongeText(suffix));
+		else spongeValue().setSuffix(Utils.serializeSpongeText(suffix, false));
 	}
 	
 }

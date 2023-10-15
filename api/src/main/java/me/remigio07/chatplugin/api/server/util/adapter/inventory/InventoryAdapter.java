@@ -168,7 +168,7 @@ public class InventoryAdapter {
 		public static org.spongepowered.api.item.inventory.Inventory get(int rows, String title) {
 			return org.spongepowered.api.item.inventory.Inventory.builder()
 //					.property(new Identifiable(UUID.randomUUID()))
-					.property(InventoryTitle.of(Utils.serializeSpongeText(title))).property(InventoryDimension.of(9, rows)).build(SpongeBootstrapper.getInstance());
+					.property(InventoryTitle.of(Utils.serializeSpongeText(title, false))).property(InventoryDimension.of(9, rows)).build(SpongeBootstrapper.getInstance());
 		}
 		
 	}

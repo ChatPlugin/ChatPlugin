@@ -409,7 +409,7 @@ public class ItemStackAdapter implements Cloneable {
 		if (Environment.isSponge()) {
 			if (displayName == null)
 				spongeValue().remove(Keys.DISPLAY_NAME);
-			else spongeValue().offer(Keys.DISPLAY_NAME, Utils.serializeSpongeText(displayName));
+			else spongeValue().offer(Keys.DISPLAY_NAME, Utils.serializeSpongeText(displayName, false));
 		} else if (itemMeta) {
 			ItemMeta meta = bukkitValue().getItemMeta();
 			
@@ -746,7 +746,7 @@ public class ItemStackAdapter implements Cloneable {
 		}
 		
 		public static List<Text> toTextList(List<String> list) {
-			return list.stream().map(string -> Utils.serializeSpongeText(string.replace("\n", " ").replace("\r\n", " ").replace("\r", " "))).collect(Collectors.toList());
+			return list.stream().map(string -> Utils.serializeSpongeText(string.replace("\n", " ").replace("\r\n", " ").replace("\r", " "), false)).collect(Collectors.toList());
 		}
 		
 		public static List<String> toStringList(List<Text> list) {

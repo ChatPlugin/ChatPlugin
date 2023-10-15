@@ -165,8 +165,8 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 		} System.out.println("[" + sb.toString() + "]");
 	}
 	
-	public static TextComponent deserializeLegacy(String text) {
-		return LegacyComponentSerializer.legacySection().deserialize(ChatColor.translate(text));
+	public static TextComponent deserializeLegacy(String text, boolean translate) {
+		return LegacyComponentSerializer.legacySection().deserialize(translate ? ChatColor.translate(text) : text);
 	}
 	
 }

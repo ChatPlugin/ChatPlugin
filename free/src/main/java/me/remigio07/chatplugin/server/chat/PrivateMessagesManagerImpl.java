@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.server.chat;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -38,6 +39,7 @@ import me.remigio07.chatplugin.api.server.event.chat.PrePrivateMessageEvent;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
+import me.remigio07.chatplugin.api.server.util.URLValidator;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
@@ -86,6 +88,7 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 			return;
 		if ((sender == null && recipient == null) || (sender != null && sender.equals(recipient)))
 			throw new IllegalArgumentException("The sender and the recipient correspond");
+		message = message.trim().replaceAll(" +", " ");
 		PrePrivateMessageEvent prePrivateMessageEvent = new PrePrivateMessageEvent(sender, recipient, message);
 		
 		prePrivateMessageEvent.call();
@@ -103,12 +106,16 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 			reason = AntispamManager.getInstance().getDenyChatReason(sender, message, bypassAntispamChecks);
 		
 		// 2. formatted-chat
-		if (reason == null && FormattedChatManager.getInstance().isEnabled() && FormattedChatManager.getInstance().containsFormattedText(message)) {
-			if (sender != null && !sender.hasPermission("chatplugin.formatted-chat")) {
-				if (!FormattedChatManager.getInstance().isSendAnyway())
-					reason = DenyChatReason.FORMAT;
-				else sender.sendTranslatedMessage("chat.no-format");
-			} else message = ChatColor.translate(message);
+		if (reason == null && FormattedChatManager.getInstance().isEnabled()) {
+			List<String> urls = URLValidator.getURLs(message);
+			
+			if (FormattedChatManager.getInstance().containsFormattedText(message, urls, true)) {
+				if (sender != null && !sender.hasPermission("chatplugin.formatted-chat"))
+					if (!FormattedChatManager.getInstance().isSendAnyway())
+						reason = DenyChatReason.FORMAT;
+					else sender.sendTranslatedMessage("chat.no-format");
+				else message = FormattedChatManager.getInstance().translate(message, urls, true);
+			}
 		}
 		
 		// denied

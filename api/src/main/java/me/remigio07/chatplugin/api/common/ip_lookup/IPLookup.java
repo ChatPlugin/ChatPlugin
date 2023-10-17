@@ -180,8 +180,10 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Gets this lookup's position's subdivisions. A subdivision is a more detailed
-	 * geographical division of a territory. For example, Italian regions and provinces.
+	 * Gets this lookup's position's subdivisions.
+	 * 
+	 * <p>A subdivision is a more detailed geographical division of
+	 * a territory. For example, Italian regions and provinces.</p>
 	 * 
 	 * @return Lookup's subdivisions
 	 */
@@ -190,8 +192,10 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Sets this lookup's position's subdivisions. A subdivision is a more detailed
-	 * geographical division of a territory. For example, Italian regions and provinces.
+	 * Sets this lookup's position's subdivisions.
+	 * 
+	 * <p>A subdivision is a more detailed geographical division of
+	 * a territory. For example, Italian regions and provinces.</p>
 	 * 
 	 * @param subdivisions Lookup's subdivisions
 	 */
@@ -213,7 +217,8 @@ public abstract class IPLookup {
 	
 	/**
 	 * Checks if this lookup's position is inside the European Union.
-	 * This does not always work (returns <code>false</code>). MaxMind's issues, sorry.
+	 * 
+	 * <p>This does not always work (returns <code>false</code>). MaxMind's issues, sorry.</p>
 	 * 
 	 * @return Whether the IP is inside EU
 	 */
@@ -250,7 +255,8 @@ public abstract class IPLookup {
 	
 	/**
 	 * Gets this lookup's position's postal code.
-	 * Note that not all countries use postal codes.
+	 * 
+	 * <p>Note that not all countries use postal codes.</p>
 	 * 
 	 * @return Lookup's postal code
 	 */
@@ -305,10 +311,10 @@ public abstract class IPLookup {
 	
 	/**
 	 * Gets this lookup's position's accuracy radius, in kilometers.
-	 * You can use {@link Utils#kilometersToMiles(long)} and
-	 * {@link Utils#kilometersToNauticalMiles(long)} to convert values.
 	 * 
 	 * @return Lookup's accuracy radius
+	 * @see Utils#kilometersToMiles(long)
+	 * @see Utils#kilometersToNauticalMiles(long)
 	 */
 	public long getAccuracyRadius() {
 		return accuracyRadius;
@@ -333,7 +339,8 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Sets the JSON string that represents this IP lookup and updates it with new values.
+	 * Sets the JSON string that represents this
+	 * IP lookup and updates it with new values.
 	 * 
 	 * @param json JSON formatted string
 	 * @return Resulting IP lookup
@@ -343,7 +350,8 @@ public abstract class IPLookup {
 	
 	/**
 	 * Translates an input string with this IP lookup's specific placeholders.
-	 * Check {@link #PLACEHOLDERS} to know the available placeholders.
+	 * 
+	 * <p>Check {@link #PLACEHOLDERS} to know the available placeholders.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @return Translated placeholders
@@ -352,7 +360,8 @@ public abstract class IPLookup {
 	
 	/**
 	 * Translates an input string list with this IP lookup's specific placeholders.
-	 * Check {@link #PLACEHOLDERS} to know the available placeholders.
+	 * 
+	 * <p>Check {@link #PLACEHOLDERS} to know the available placeholders.</p>
 	 * 
 	 * @param input Input string list
 	 * @return Formatted string list

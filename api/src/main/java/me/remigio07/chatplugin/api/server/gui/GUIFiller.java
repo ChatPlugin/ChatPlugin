@@ -22,8 +22,9 @@ import me.remigio07.chatplugin.api.server.language.Language;
 
 /**
  * Represents a {@link FillableGUI}'s slots filler.
- * Implement the methods of this class to fully
- * customize {@link IconType#GENERATED} icons.
+ * 
+ * <p>Implement the methods of this class to fully
+ * customize {@link IconType#GENERATED} icons.</p>
  * 
  * @param <T> Filler's type
  */
@@ -54,7 +55,8 @@ public interface GUIFiller<T> {
 	
 	/**
 	 * Translates an input string list containing placeholders for the specified language.
-	 * It calls {@link #formatPlaceholders(String, Language)} for every element in the list by default.
+	 * 
+	 * <p>It calls {@link #formatPlaceholders(String, Language)} for every element in the list by default.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param language Language used to translate the placeholders
@@ -66,8 +68,9 @@ public interface GUIFiller<T> {
 	
 	/**
 	 * Gets this filler's icon's layout.
-	 * Returns {@link #getGUI()}'s {@link FillableGUI#getLayout()}'s
-	 * {@link FillableGUILayout#getIconsLayouts()}'s first element by default.
+	 * 
+	 * <p>Returns {@link #getGUI()}'s {@link FillableGUI#getLayout()}'s
+	 * {@link FillableGUILayout#getIconsLayouts()}'s first element by default.</p>
 	 * 
 	 * @return Filler's icon's layout
 	 */
@@ -77,9 +80,11 @@ public interface GUIFiller<T> {
 	
 	/**
 	 * Gets this filler's icon.
-	 * Returns <code>icon</code> by default.
-	 * If you implement this method, make sure to
-	 * return an icon with the same ID.
+	 * 
+	 * <p>Returns <code>icon</code> by default.</p>
+	 * 
+	 * <p>If you implement this method, make sure
+	 * to return an icon with the same ID.</p>
 	 * 
 	 * @param icon Original icon
 	 * @return Filler's icon

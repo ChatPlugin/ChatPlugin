@@ -26,8 +26,9 @@ public interface DiscordMessage {
 	
 	/**
 	 * Checks if this message is enabled and should be sent.
-	 * Will return true if nothing is specified in {@link ConfigurationType#DISCORD_INTEGRATION}
-	 * at path <code>"{@link #getPath()} + enabled"</code>; example: "messages.ban.info.enabled".
+	 * 
+	 * <p>Will return <code>true</code> if nothing is specified in {@link ConfigurationType#DISCORD_INTEGRATION}
+	 * at path <code>"{@link #getPath()} + enabled"</code>; example: "messages.ban.info.enabled".</p>
 	 * 
 	 * @return Whether this message is enabled
 	 */
@@ -37,7 +38,8 @@ public interface DiscordMessage {
 	
 	/**
 	 * Gets this message's path in {@link ConfigurationType#DISCORD_INTEGRATION}.
-	 * Includes a dot at the end; example: "messages.ban.info.".
+	 * 
+	 * <p>It includes a dot at the end; example: "messages.ban.info.".</p>
 	 * 
 	 * @return Message's path
 	 * @throws UnsupportedOperationException If this message has no path
@@ -45,8 +47,10 @@ public interface DiscordMessage {
 	public String getPath();
 	
 	/**
-	 * Gets this message's <code>net.dv8tion.jda.api.entities.MessageEmbed</code> value. This method
-	 * returns an {@link Object} because libraries' classes cannot be accessed directly from the API.
+	 * Gets this message's <code>net.dv8tion.jda.api.entities.MessageEmbed</code> value.
+	 * 
+	 * <p>This method returns an {@link Object} because libraries'
+	 * classes cannot be accessed directly from the API.</p>
 	 * 
 	 * @param args Message's specific arguments
 	 * @return Resulting embed message

@@ -22,7 +22,9 @@ import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 
 /**
- * Represents a field. This is an adapter of <code>net.dv8tion.jda.api.entities.MessageEmbed.Field</code>.
+ * Represents a field.
+ * 
+ * <p>This is an adapter of <code>net.dv8tion.jda.api.entities.MessageEmbed.Field</code>.</p>
  * 
  * @see FieldAdapter.Parser
  */
@@ -45,8 +47,9 @@ public class FieldAdapter {
 	}
 	
 	/**
-	 * Gets this field's title. Will appear
-	 * in bold above {@link #getText()}.
+	 * Gets this field's title.
+	 * 
+	 * <p>Will appear in bold above {@link #getText()}.</p>
 	 * 
 	 * @return Field's title
 	 */
@@ -56,8 +59,9 @@ public class FieldAdapter {
 	}
 	
 	/**
-	 * Sets this field's title. Will appear
-	 * in bold above {@link #getText()}.
+	 * Sets this field's title.
+	 * 
+	 * <p>Will appear in bold above {@link #getText()}.</p>
 	 * 
 	 * @param title Field's title
 	 */
@@ -85,8 +89,9 @@ public class FieldAdapter {
 	}
 	
 	/**
-	 * Checks if this field is inline. You
-	 * can set up to 3 fields per line.
+	 * Checks if this field is inline.
+	 * 
+	 * <p>You can set up to 3 fields per line.</p>
 	 * 
 	 * @return Whether this field is inline
 	 */
@@ -95,8 +100,9 @@ public class FieldAdapter {
 	}
 	
 	/**
-	 * Sets whether this field is inline. You
-	 * can set up to 3 fields per line.
+	 * Sets whether this field is inline.
+	 * 
+	 * <p>You can set up to 3 fields per line.</p>
 	 * 
 	 * @param inline Whether this field is inline
 	 */
@@ -106,7 +112,9 @@ public class FieldAdapter {
 	
 	/**
 	 * Parser used to read {@link FieldAdapter}s from YAML configurations and JSON strings.
-	 * It can also be used to obtain instances of <code>net.dv8tion.jda.api.entities.MessageEmbed.Field</code>.
+	 * 
+	 * <p>It can also be used to obtain instances of
+	 * <code>net.dv8tion.jda.api.entities.MessageEmbed.Field</code>.</p>
 	 */
 	public abstract static class Parser {
 		
@@ -134,25 +142,26 @@ public class FieldAdapter {
 		
 		/**
 		 * Parses the list of fields contained in the specified YAML configuration at a certain path.
-		 * Example of valid configuration section:
+		 * 
+		 * <p>Example of valid configuration section:
 		 * 
 		 * <pre>
-		 * messages:
-		 *   main:
-		 *     info:
-		 *       title:
-		 *         text: 'Embed''s title''s text'
-		 *         url: 'https://example.com'
-		 *       description: 'Short description under the title'
-		 *       fields:
-		 *         '0': # field's ID
-		 *           title: 'Random title'
-		 *           text: 'Field''s content'
-		 *           inline: true
-		 *         '1':
-		 *           title: 'Second field'
-		 *           text: 'Both fields are aligned'
-		 *           inline: true
+		 *messages:
+		 *  main:
+		 *    info:
+		 *      title:
+		 *        text: 'Embed''s title''s text'
+		 *        url: 'https://example.com'
+		 *      description: 'Short description under the title'
+		 *      fields:
+		 *        '0': # field's ID
+		 *          title: 'Random title'
+		 *          text: 'Field''s content'
+		 *          inline: true
+		 *        '1':
+		 *          title: 'Second field'
+		 *          text: 'Both fields are aligned'
+		 *          inline: true
 		 * </pre>
 		 * 
 		 * In this case, <code>path</code> is "messages.main.info".
@@ -165,28 +174,29 @@ public class FieldAdapter {
 		
 		/**
 		 * Parses the list of fields contained in the specified JSON string.
-		 * Example of valid string:
+		 * 
+		 * <p>Example of valid string:
 		 * 
 		 * <pre>
-		 * {
-		 *   "title": {
-		 *     "text": "Embed's title's text",
-		 *     "url": "https://example.com"
-		 *   },
-		 *   "description": "Short description under the title",
-		 *   "fields": {
-		 *     "0": {
-		 *       "title": "Random title",
-		 *       "text": "Field's content",
-		 *       "inline": true
-		 *     },
-		 *     "1": {
-		 *       "title": "Second field",
-		 *       "text": "Both fields are aligned",
-		 *       "inline": true
-		 *     }
-		 *   }
-		 * }
+		 *{
+		 *  "title": {
+		 *    "text": "Embed's title's text",
+		 *    "url": "https://example.com"
+		 *  },
+		 *  "description": "Short description under the title",
+		 *  "fields": {
+		 *    "0": {
+		 *      "title": "Random title",
+		 *      "text": "Field's content",
+		 *      "inline": true
+		 *    },
+		 *    "1": {
+		 *      "title": "Second field",
+		 *      "text": "Both fields are aligned",
+		 *      "inline": true
+		 *    }
+		 *  }
+		 *}
 		 * </pre>
 		 * 
 		 * @param json String to parse
@@ -197,8 +207,9 @@ public class FieldAdapter {
 		
 		/**
 		 * Gets the equivalent JDA's <code>net.dv8tion.jda.api.entities.MessageEmbed.Field</code>.
-		 * This method returns an {@link Object} because libraries' classes cannot be
-		 * accessed directly from the API; just ignore that and consider it a field.
+		 * 
+		 * <p>This method returns an {@link Object} because libraries' classes cannot be
+		 * accessed directly from the API; just ignore that and consider it a field.</p>
 		 * 
 		 * @param field Field to convert
 		 * @return Equivalent JDA's field

@@ -81,7 +81,8 @@ public class VersionUtils {
 	
 	/**
 	 * Gets the current environment's NMS version.
-	 * Only applies to Bukkit environments.
+	 * 
+	 * <p>It only applies to Bukkit environments.</p>
 	 * 
 	 * @return Environment's NMS version
 	 */
@@ -978,7 +979,8 @@ public class VersionUtils {
 		
 		/**
 		 * Gets a version from the specified input.
-		 * Will return {@link #UNSUPPORTED} if an invalid version is given.
+		 * 
+		 * <p>Will return {@link #UNSUPPORTED} if an invalid version is given.</p>
 		 * 
 		 * @param input Version to check
 		 * @return Corresponding version
@@ -995,7 +997,8 @@ public class VersionUtils {
 		
 		/**
 		 * Gets a version from its protocol number.
-		 * Will return {@link #UNSUPPORTED} if an invalid version is given.
+		 * 
+		 * <p>Will return {@link #UNSUPPORTED} if an invalid version is given.</p>
 		 * 
 		 * @param protocol Version's protocol number
 		 * @param preNettyRewrite Whether it is a pre-Netty rewrite version

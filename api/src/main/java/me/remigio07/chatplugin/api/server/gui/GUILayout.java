@@ -101,9 +101,10 @@ public class GUILayout {
 	
 	/**
 	 * Gets the configuration associated with this GUI layout.
-	 * Will return <code>null</code> if this GUI was created using
-	 * {@link GUIManager#createSinglePageGUILayoutBuilder(String, int, OpenActions, SoundAdapter, Map)}
-	 * or {@link GUIManager#createFillableGUILayoutBuilder(String, int, OpenActions, SoundAdapter, Map)}.
+	 * 
+	 * <p>Will return <code>null</code> if this GUI was created using
+	 * {@link GUIManager#createSinglePageGUILayoutBuilder(String, int, OpenActions, SoundAdapter, Map)} or
+	 * {@link GUIManager#createFillableGUILayoutBuilder(String, int, OpenActions, SoundAdapter, Map)}.</p>
 	 * 
 	 * @return Associated configuration
 	 */
@@ -141,9 +142,10 @@ public class GUILayout {
 	
 	/**
 	 * Gets this GUI layout's title for the specified language.
-	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
+	 * 
+	 * <p>Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s title if no title is present for the specified language.
-	 * Will return <code>null</code> if {@link #getTitles()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.
+	 * Will return <code>null</code> if {@link #getTitles()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.</p>
 	 * 
 	 * @param language Language used to translate the title
 	 * @param avoidNull Whether to avoid returning <code>null</code>
@@ -156,10 +158,12 @@ public class GUILayout {
 	
 	/**
 	 * Gets this GUI layout's icons.
-	 * When created, this list contains {@link #getSize()}
+	 * 
+	 * <p>When created, this list contains {@link #getSize()}
 	 * <code>null</code> elements, then the {@link Icon}
-	 * instances are set at their {@link Icon#getPosition()}s.
-	 * You may modify the returned list.
+	 * instances are set at their {@link Icon#getPosition()}s.</p>
+	 * 
+	 * <p>You may modify the returned list.</p>
 	 * 
 	 * @return GUI's icons
 	 */

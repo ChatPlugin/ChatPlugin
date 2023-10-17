@@ -106,7 +106,8 @@ public class CommandSenderAdapter {
 	
 	/**
 	 * Gets this command sender's UUID.
-	 * Will return <code>null</code> if {@link #isConsole()}.
+	 * 
+	 * <p>Will return <code>null</code> if {@link #isConsole()}.</p>
 	 * 
 	 * @return Command sender's UUID
 	 */
@@ -116,8 +117,7 @@ public class CommandSenderAdapter {
 	}
 	
 	/**
-	 * Checks if this command sender
-	 * has the specified permission.
+	 * Checks if this command sender has the specified permission.
 	 * 
 	 * @param permission Permission to check
 	 * @return Whether this command sender has the permission
@@ -127,8 +127,7 @@ public class CommandSenderAdapter {
 	}
 	
 	/**
-	 * Sends a plain message
-	 * to this command sender.
+	 * Sends a plain message to this command sender.
 	 * 
 	 * @param message Message to send
 	 */
@@ -140,7 +139,8 @@ public class CommandSenderAdapter {
 	
 	/**
 	 * Gets this player's corresponding {@link ChatPluginServerPlayer} object.
-	 * Will return <code>null</code> if the player is not loaded.
+	 * 
+	 * <p>Will return <code>null</code> if the player is not loaded.</p>
 	 * 
 	 * @return Corresponding {@link ChatPluginServerPlayer}
 	 */

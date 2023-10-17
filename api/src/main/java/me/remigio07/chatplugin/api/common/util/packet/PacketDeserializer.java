@@ -20,6 +20,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.UUID;
 
+import me.remigio07.chatplugin.api.common.util.Utils;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 
@@ -168,7 +169,8 @@ public class PacketDeserializer {
 	
 	/**
 	 * Reads the next UTF string value.
-	 * May return a <code>null</code> string.
+	 * 
+	 * <p>May return a <code>null</code> string.</p>
 	 * 
 	 * @return UTF string read
 	 */
@@ -185,7 +187,8 @@ public class PacketDeserializer {
 	
 	/**
 	 * Reads the next UTF string array value.
-	 * The array may contain <code>null</code> elements.
+	 * 
+	 * <p>The array may contain <code>null</code> elements.</p>
 	 * 
 	 * @return UTF string array read
 	 */
@@ -200,8 +203,8 @@ public class PacketDeserializer {
 	
 	/**
 	 * Reads the next UUID value.
-	 * Calls {@link UUID#fromString(String)} with {@link #readUTF()}.
-	 * May return a <code>null</code> UUID.
+	 * 
+	 * <p>May return a <code>null</code> UUID (which is not {@link Utils#NIL_UUID}).</p>
 	 * 
 	 * @return UUID read
 	 */

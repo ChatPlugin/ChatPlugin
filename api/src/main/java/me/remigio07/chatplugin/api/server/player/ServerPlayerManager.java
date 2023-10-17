@@ -73,7 +73,8 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	
 	/**
 	 * Gets the loaded {@link ChatPluginServerPlayer}s' map.
-	 * Do not modify the returned map.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned map.</p>
 	 * 
 	 * @return Loaded players' map
 	 */
@@ -95,7 +96,8 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	
 	/**
 	 * Gets a player from {@link #getPlayers()} by their UUID.
-	 * Will return <code>null</code> if the player is not loaded.
+	 * 
+	 * <p>Will return <code>null</code> if the player is not loaded.</p>
 	 * 
 	 * @param uuid Player to get
 	 * @return Loaded {@link ChatPluginServerPlayer}
@@ -108,7 +110,8 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	
 	/**
 	 * Gets a player from {@link #getPlayers()} by their name.
-	 * Will return <code>null</code> if the player is not loaded.
+	 * 
+	 * <p>Will return <code>null</code> if the player is not loaded.</p>
 	 * 
 	 * @deprecated Names should not be used to identify players. Use {@link #getPlayer(UUID)} instead.
 	 * @param name Player to get
@@ -139,8 +142,10 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	}
 	
 	/**
-	 * Gets the list of the enabled worlds. Every feature of
-	 * this plugin only applies to players in enabled worlds.
+	 * Gets the list of the enabled worlds.
+	 * 
+	 * <p>Every feature of this plugin only
+	 * applies to players in enabled worlds.</p>
 	 * 
 	 * @return List of enabled worlds
 	 */
@@ -150,7 +155,8 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	
 	/**
 	 * Checks if a world is contained in the enabled worlds list.
-	 * Will return true if {@link #isEveryWorldEnabled()}.
+	 * 
+	 * <p>Will return <code>true</code> if {@link #isEveryWorldEnabled()}.</p>
 	 * 
 	 * @param world Name of the world to check
 	 * @return Whether the world is enabled
@@ -161,7 +167,8 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	
 	/**
 	 * Gets the total amount of players stored in the storage.
-	 * This value is only used to translate <code>{total_players}</code>.
+	 * 
+	 * <p>This value is only used to translate <code>{total_players}</code>.</p>
 	 * 
 	 * @return Amount of players
 	 */
@@ -171,7 +178,8 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	
 	/**
 	 * Sets the amount of players stored in the storage.
-	 * This value is only used to translate <code>{total_players}</code>.
+	 * 
+	 * <p>This value is only used to translate <code>{total_players}</code>.</p>
 	 * 
 	 * @param storageCount Amount of players
 	 */
@@ -190,7 +198,8 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	
 	/**
 	 * Gets an online player's version.
-	 * Will return <code>null</code> if they are not online.
+	 * 
+	 * <p>Will return <code>null</code> if they are not online.</p>
 	 * 
 	 * @param player Player's UUID
 	 * @return Player's version
@@ -253,7 +262,8 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	
 	/**
 	 * Adds a player to {@link #getPlayers()}.
-	 * Will do nothing and return 0 if they are already loaded.
+	 * 
+	 * <p>Will do nothing and return 0 if they are already loaded.</p>
 	 * 
 	 * @param player Player to load
 	 * @return Time elapsed, in milliseconds
@@ -267,7 +277,8 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	
 	/**
 	 * Removes a player from {@link #getPlayers()}.
-	 * Will do nothing and return 0 if they are not loaded.
+	 * 
+	 * <p>Will do nothing and return 0 if they are not loaded.</p>
 	 * 
 	 * @param player Player to unload
 	 * @return Time elapsed, in milliseconds

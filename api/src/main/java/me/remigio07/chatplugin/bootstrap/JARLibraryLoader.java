@@ -29,6 +29,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import me.remigio07.chatplugin.api.ChatPlugin;
+
 /**
  * Class used to load ChatPlugin's libraries from JAR files.
  */
@@ -46,7 +48,9 @@ public class JARLibraryLoader extends URLClassLoader {
 	
 	/**
 	 * Initializes ChatPlugin.
-	 * Uses {@link Environment#getCurrent()}'s {@link Environment#getEnableMethodArgsTypes()}.
+	 * 
+	 * <p>Uses {@link Environment#getCurrent()}'s
+	 * {@link Environment#getEnableMethodArgsTypes()}.</p>
 	 * 
 	 * @param args Enable method's args
 	 */
@@ -69,7 +73,7 @@ public class JARLibraryLoader extends URLClassLoader {
 	}
 	
 	/**
-	 * Calls <code>ChatPlugin#unload()</code>.
+	 * Calls {@link ChatPlugin#unload()}.}
 	 */
 	public void disable() {
 		try {

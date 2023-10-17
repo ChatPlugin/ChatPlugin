@@ -123,7 +123,8 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	
 	/**
 	 * Gets this player's active scoreboard.
-	 * Will return <code>null</code> if this player does not have an active scoreboard.
+	 * 
+	 * <p>Will return <code>null</code> if this player does not have an active scoreboard.</p>
 	 * 
 	 * @return Player's scoreboard
 	 */
@@ -134,7 +135,8 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	
 	/**
 	 * Gets this player's active bossbar.
-	 * Will return <code>null</code> if <code>!</code>{@link BossbarManager#isEnabled()}.
+	 * 
+	 * <p>Will return <code>null</code> if <code>!</code>{@link BossbarManager#isEnabled()}.</p>
 	 * 
 	 * @return Player's bossbar
 	 */
@@ -144,10 +146,14 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	}
 	
 	/**
-	 * Gets an IP lookup for this player's IP address. Will return {@link IPLookupManager#getDisabledFeatureConstructor()}
+	 * Gets an IP lookup for this player's IP address.
+	 * 
+	 * <p>Will return {@link IPLookupManager#getDisabledFeatureConstructor()}
 	 * if <code>!</code>{@link IPLookupManager#isEnabled()} or <code>!generateIfNull</code>
-	 * and there are no cached IP lookups for this player or an error occurrs.
-	 * Might take some time: async calls of this method are recommended.
+	 * and there are no cached IP lookups for this player or an error occurrs.</p>
+	 * 
+	 * <p>Note that this method might take some time
+	 * to be executed: async calls are recommended.</p>
 	 * 
 	 * @param generateIfNull Whether to generate the lookup if it is not cached
 	 * @return Lookup for this player

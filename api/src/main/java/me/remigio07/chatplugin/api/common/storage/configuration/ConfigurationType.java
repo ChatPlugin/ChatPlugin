@@ -37,6 +37,7 @@ import me.remigio07.chatplugin.api.server.bossbar.BossbarManager;
 import me.remigio07.chatplugin.api.server.chat.ChatManager;
 import me.remigio07.chatplugin.api.server.f3servername.F3ServerNameManager;
 import me.remigio07.chatplugin.api.server.gui.GUIManager;
+import me.remigio07.chatplugin.api.server.integration.anticheat.AnticheatIntegration;
 import me.remigio07.chatplugin.api.server.integration.anticheat.AnticheatManager;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
 import me.remigio07.chatplugin.api.server.rank.RankManager;
@@ -46,8 +47,10 @@ import me.remigio07.chatplugin.api.server.tablist.TablistManager;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
- * Represents a configuration's type. It comprehends the internal and
- * {@link #CUSTOM} configurations, which are handled by the plugin's addons.
+ * Represents a configuration's type.
+ * 
+ * <p>It comprehends the internal and {@link #CUSTOM}
+ * configurations, which are handled by the plugin's addons.</p>
  * 
  * @see ConfigurationManager
  */
@@ -55,7 +58,8 @@ public enum ConfigurationType {
 	
 	/**
 	 * Main configuration file.
-	 * Common to both proxy and server implementations.
+	 * 
+	 * <p>Common to both proxy and server implementations.</p>
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/config.yml</p>
 	 */
@@ -242,8 +246,10 @@ public enum ConfigurationType {
 	PLAYER_VIOLATIONS_GUI,
 	
 	/**
-	 * Violations icons' configuration file. This is a special configuration that contains
-	 * icons displayed by the anticheat integration in the {@link #PLAYER_VIOLATIONS_GUI}.
+	 * Violations icons' configuration file.
+	 * 
+	 * <p>This is a special configuration that contains icons displayed by
+	 * {@link AnticheatIntegration}s in the {@link #PLAYER_VIOLATIONS_GUI}.</p>
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/guis/violations-icons.yml</p>
 	 * 
@@ -254,7 +260,8 @@ public enum ConfigurationType {
 	
 	/**
 	 * MoTD's configuration file.
-	 * Common to both proxy and server implementations.
+	 * 
+	 * <p>Common to both proxy and server implementations.</p>
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/motd.yml</p>
 	 * 
@@ -264,7 +271,8 @@ public enum ConfigurationType {
 	
 	/**
 	 * Discord integration's configuration file.
-	 * Common to both proxy and server implementations.
+	 * 
+	 * <p>Common to both proxy and server implementations.</p>
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/discord-integration.yml</p>
 	 * 
@@ -274,7 +282,8 @@ public enum ConfigurationType {
 	
 	/**
 	 * Telegram integration's configuration file.
-	 * Common to both proxy and server implementations.
+	 * 
+	 * <p>Common to both proxy and server implementations.</p>
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/telegram-integration.yml</p>
 	 * 
@@ -284,15 +293,19 @@ public enum ConfigurationType {
 	
 	/**
 	 * Represents a custom configuration which may be handled by another plugin.
-	 * Common to both proxy and server implementations.
-	 * To interact with custom configurations, refer to {@link ConfigurationManager}.
+	 * 
+	 * <p>Common to both proxy and server implementations.</p>
+	 * 
+	 * <p>To interact with custom configurations, refer to {@link ConfigurationManager}.</p>
 	 */
 	CUSTOM;
 	
 	/**
-	 * Gets this configuration's folder's path. Will return <code>null</code>
-	 * for files in the plugin's folder (not inside any sub-folder)
-	 * or if <code>this == </code>{@link #CUSTOM}.
+	 * Gets this configuration's folder's path.
+	 * 
+	 * <p>Will return <code>null</code> for files in
+	 * the plugin's folder (not inside any sub-folder)
+	 * or if <code>this == </code>{@link #CUSTOM}.</p>
 	 * 
 	 * @return Configuration's folder's path
 	 */
@@ -329,7 +342,8 @@ public enum ConfigurationType {
 	
 	/**
 	 * Gets this configuration from the loaded {@link ConfigurationManager#getConfigurations()}.
-	 * Will return <code>null</code> if <code>this == </code>{@link #CUSTOM} or if it is not loaded.
+	 * 
+	 * <p>Will return <code>null</code> if <code>this == </code>{@link #CUSTOM} or if it is not loaded.</p>
 	 * 
 	 * @return Corresponding {@link Configuration}
 	 */
@@ -340,8 +354,9 @@ public enum ConfigurationType {
 	
 	/**
 	 * Checks if this configuration is available on the proxy implementation of the plugin.
-	 * The only ones supported on proxies are {@link #CONFIG}, {@link #DISCORD_INTEGRATION},
-	 * {@link #TELEGRAM_INTEGRATION} and {@link #CUSTOM} for custom configurations.
+	 * 
+	 * <p>The only ones supported on proxies are {@link #CONFIG}, {@link #DISCORD_INTEGRATION},
+	 * {@link #TELEGRAM_INTEGRATION} and {@link #CUSTOM} for custom configurations.</p>
 	 * 
 	 * @return Whether this configuration is available on proxy implementations
 	 */

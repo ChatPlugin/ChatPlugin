@@ -42,8 +42,9 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	}
 	
 	/**
-	 * Gets the update task's ID. You can interact
-	 * with it through {@link TaskManager}'s methods.
+	 * Gets the update task's ID.
+	 * 
+	 * <p>You can interact with it through {@link TaskManager}'s methods.</p>
 	 * 
 	 * @return Update task's ID
 	 */
@@ -53,8 +54,9 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	
 	/**
 	 * Translates an input string with placeholders, formatted for the
-	 * specified player and translated in the player's language. You have to
-	 * indicate what placeholder types you need for the string to be translated.
+	 * specified player and translated in the player's language.
+	 * 
+	 * <p>You have to indicate what placeholder types you need for the string to be translated.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated
@@ -68,8 +70,9 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	
 	/**
 	 * Translates an input string list with placeholders, formatted for the
-	 * specified player and translated in the player's language. You have to
-	 * indicate what placeholder types you need for the string to be translated.
+	 * specified player and translated in the player's language.
+	 * 
+	 * <p>You have to indicate what placeholder types you need for the string to be translated.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated
@@ -83,8 +86,9 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	
 	/**
 	 * Translates an input string list with placeholders, formatted for the
-	 * specified player and translated in the specified language. You have to
-	 * indicate what placeholder types you need for the string to be translated.
+	 * specified player and translated in the specified language.
+	 * 
+	 * <p>You have to indicate what placeholder types you need for the string to be translated.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated
@@ -208,8 +212,9 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	
 	/**
 	 * Translates an input string with placeholders, formatted for the
-	 * specified player and translated in the specified language. You have to
-	 * indicate what placeholder types you need for the string to be translated.
+	 * specified player and translated in the specified language.
+	 * 
+	 * <p>You have to indicate what placeholder types you need for the string to be translated.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated

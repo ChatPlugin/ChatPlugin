@@ -124,7 +124,8 @@ public class PlayerAdapter {
 	
 	/**
 	 * Gets the player adapted as a {@link ChatPluginPlayer} loaded by the {@link PlayerManager}.
-	 * Will return <code>null</code> if !{@link #isLoaded()}.
+	 * 
+	 * <p>Will return <code>null</code> if !{@link #isLoaded()}.</p>
 	 * 
 	 * @return Loaded player
 	 */
@@ -277,7 +278,8 @@ public class PlayerAdapter {
 	
 	/**
 	 * Gets an online player by specifying their UUID.
-	 * Will return <code>null</code> if they are not online.
+	 * 
+	 * <p>Will return <code>null</code> if they are not online.</p>
 	 * 
 	 * @param uuid Player's UUID
 	 * @return Player if online or <code>null</code> otherwise
@@ -304,7 +306,8 @@ public class PlayerAdapter {
 	
 	/**
 	 * Gets an online player by specifying their name.
-	 * Will return <code>null</code> if they are not online.
+	 * 
+	 * <p>Will return <code>null</code> if they are not online.</p>
 	 * 
 	 * @param name Player's name
 	 * @param checkPattern Whether to check the name against {@link Utils#USERNAME_PATTERN}
@@ -335,7 +338,8 @@ public class PlayerAdapter {
 	
 	/**
 	 * Gets the online players' list.
-	 * Do not modify the returned list.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned list.</p>
 	 * 
 	 * @return Online players' list
 	 */

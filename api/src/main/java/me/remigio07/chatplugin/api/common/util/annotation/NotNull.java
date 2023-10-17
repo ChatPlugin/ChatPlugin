@@ -25,9 +25,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Annotation used to indicate that the annotated element must not
- * be <code>null</code> after construction has completed. When this annotation
- * is applied to a method, it applies to its return value.
+ * Annotation used to indicate that the annotated element must not be
+ * <code>null</code> after construction has completed. When this
+ * annotation is applied to a method, it applies to its return value.
  */
 @Target({ FIELD, METHOD, TYPE_PARAMETER, TYPE_USE })
 @Retention(SOURCE)

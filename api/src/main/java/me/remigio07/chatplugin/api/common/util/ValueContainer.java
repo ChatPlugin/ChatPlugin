@@ -49,8 +49,9 @@ public class ValueContainer<T extends Number> {
 	
 	/**
 	 * Gets this container's placeholder.
-	 * Will return <code>null</code> if a fixed
-	 * value was specified at construction.
+	 * 
+	 * <p>Will return <code>null</code> if a fixed
+	 * value was specified at construction.</p>
 	 * 
 	 * @return Container's placeholder
 	 */
@@ -61,8 +62,9 @@ public class ValueContainer<T extends Number> {
 	
 	/**
 	 * Gets this container's fixed value.
-	 * Will return <code>null</code> if a
-	 * placeholder was specified at construction.
+	 * 
+	 * <p>Will return <code>null</code> if a
+	 * placeholder was specified at construction.</p>
 	 * 
 	 * @return Container's fixed value
 	 */

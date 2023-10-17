@@ -60,7 +60,8 @@ public abstract class ScoreboardLines {
 	
 	/**
 	 * Gets {@link #getScoreboard()}'s lines.
-	 * You may modify the returned list.
+	 * 
+	 * <p>You may modify the returned list.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "lines" in {@link Scoreboard#getConfiguration()}</p>
 	 * 
@@ -72,7 +73,8 @@ public abstract class ScoreboardLines {
 	
 	/**
 	 * Gets {@link #getScoreboard()}'s line for the specified line index.
-	 * Will return <code>null</code> if {@link #getLines()}<code>.get(lineIndex) == null</code>.
+	 * 
+	 * <p>Will return <code>null</code> if {@link #getLines()}<code>.get(lineIndex) == null</code>.</p>
 	 * 
 	 * @param lineIndex Line's index (0 - 14)
 	 * @return Scoreboard's line
@@ -109,9 +111,10 @@ public abstract class ScoreboardLines {
 		
 		/**
 		 * Gets this line's values.
-		 * You may modify the returned map, but it cannot point to a
+		 * 
+		 * <p>You may modify the returned map, but it cannot point to a
 		 * <code>null</code> value for {@link Language#getMainLanguage()}
-		 * and empty Lists are not allowed.
+		 * and empty Lists are not allowed.</p>
 		 * 
 		 * <p><strong>Found at:</strong> "lines." + {@link #getLineIndex()} + ".values" in {@link Scoreboard#getConfiguration()}</p>
 		 * 
@@ -123,9 +126,10 @@ public abstract class ScoreboardLines {
 		
 		/**
 		 * Gets this line's values for the specified language.
-		 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
+		 * 
+		 * <p>Specify <code>true</code> as <code>avoidNull</code> to fall back to
 		 * {@link Language#getMainLanguage()}'s values if no values are present for the specified language.
-		 * Will return <code>null</code> if {@link #getValues()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.
+		 * Will return <code>null</code> if {@link #getValues()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.</p>
 		 * 
 		 * @param language Language used to translate the values
 		 * @param avoidNull Whether to avoid returning <code>null</code>

@@ -64,8 +64,9 @@ public abstract class JoinMessageManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the map of loaded join messages.
-	 * You may modify the returned map, but it cannot point to a
-	 * <code>null</code> value for {@link RankManager#getDefaultRank()}.
+	 * 
+	 * <p>You may modify the returned map, but it cannot point to a
+	 * <code>null</code> value for {@link RankManager#getDefaultRank()}.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "join-quit-modules.join-messages.values" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
 	 * 
@@ -77,8 +78,9 @@ public abstract class JoinMessageManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the list of loaded join messages for the specified rank and language.
-	 * Will fall back to {@link RankManager#getDefaultRank()}'s join messages
-	 * if no join messages are present for the specified rank.
+	 * 
+	 * <p>Will fall back to {@link RankManager#getDefaultRank()}'s join
+	 * messages if no join messages are present for the specified rank.</p>
 	 * 
 	 * @param rank Target rank
 	 * @param language Language used to translate the join messages
@@ -87,7 +89,6 @@ public abstract class JoinMessageManager implements ChatPluginManager {
 	@NotNull
 	public List<String> getJoinMessages(Rank rank, Language language) {
 		Rank otherRank = joinMessages.get(rank) == null ? RankManager.getInstance().getDefaultRank() : rank;
-		
 		return joinMessages.get(otherRank).get(joinMessages.get(otherRank).get(language) == null ? Language.getMainLanguage() : language);
 	}
 	

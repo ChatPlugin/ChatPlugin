@@ -52,7 +52,8 @@ public class StaffChatEvent extends ChatEvent implements CancellableEvent {
 	
 	/**
 	 * Gets the player involved with this event.
-	 * Will return <code>null</code> if the message has been sent by the console.
+	 * 
+	 * <p>Will return <code>null</code> if the message has been sent by the console.</p>
 	 * 
 	 * @return Player involved or <code>null</code> for console
 	 */

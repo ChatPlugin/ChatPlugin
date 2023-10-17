@@ -253,7 +253,7 @@ public class Utils {
 	/**
 	 * Converts the specified kilometers to miles.
 	 * 
-	 * <br>1 mi = 1609.344 m
+	 * <p>1 mi = 1609.344 m</p>
 	 * 
 	 * @param kilometers Kilometers to convert
 	 * @return Corresponding miles
@@ -264,7 +264,8 @@ public class Utils {
 	
 	/**
 	 * Converts the specified kilometers to nautical miles.
-	 * <br>1 km = 0.53995680345572 nm
+	 * 
+	 * <p>1 km = 0.53995680345572 nm</p>
 	 * 
 	 * @param kilometers Kilometers to convert
 	 * @return Corresponding nautical miles
@@ -468,7 +469,8 @@ public class Utils {
 	
 	/**
 	 * Gets the index of the specified string in the given array.
-	 * Will return -1 if the string is not present.
+	 * 
+	 * <p>Will return -1 if the string is not present.</p>
 	 * 
 	 * @param array Array to check
 	 * @param string String to check
@@ -532,8 +534,9 @@ public class Utils {
 	
 	/**
 	 * Calculates the time in milliseconds expressed by an input string.
-	 * Input string must not contain spaces and timestamps must be divided by a comma.
-	 * Will return -1 if the input is invalid or the time is &#60;= 0s.
+	 * 
+	 * <p>Will return -1 if the input is invalid or the time is &#60;= 0s.
+	 * Input string must not contain spaces and timestamps must be divided by a comma.</p>
 	 * 
 	 * 	<br><br><table class="borderless">
 	 * 		<caption>Recognized time indicators:</caption>
@@ -621,7 +624,8 @@ public class Utils {
 	}
 	
 	/**
-	 * Converts the specified years, months, days, hours, minutes and seconds to their milliseconds value.
+	 * Converts the specified years, months, days, hours,
+	 * minutes and seconds to their milliseconds value.
 	 * 
 	 * @param years Years amount
 	 * @param months Months amount

@@ -31,7 +31,9 @@ public class F3ServerName {
 	private Map<Language, String> texts;
 	
 	/**
-	 * Creates a new F3 server name. You have two ways to send it to a player:
+	 * Creates a new F3 server name.
+	 * 
+	 * <p>You have two ways to send it to a player:
 	 * 	<ul>
 	 * 		<li>using {@link F3ServerNameManager#sendF3ServerName(F3ServerName, ChatPluginServerPlayer)}</li>
 	 * 		<li>by adding it to {@link F3ServerNameManager#getF3ServerNames()}; in this case it will be removed on {@link F3ServerNameManager#unload()}</li>
@@ -62,8 +64,9 @@ public class F3ServerName {
 	
 	/**
 	 * Gets this F3 server name's texts.
-	 * You may modify the returned map, but it cannot point to a
-	 * <code>null</code> value for {@link Language#getMainLanguage()}.
+	 * 
+	 * <p>You may modify the returned map, but it cannot point to a
+	 * <code>null</code> value for {@link Language#getMainLanguage()}.</p>
 	 * 
 	 * @return F3 server name's texts
 	 */
@@ -73,9 +76,10 @@ public class F3ServerName {
 	
 	/**
 	 * Gets this F3 server name's text for the specified language.
-	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
+	 * 
+	 * <p>Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s text if no text is present for the specified language.
-	 * Will return <code>null</code> if {@link #getTexts()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.
+	 * Will return <code>null</code> if {@link #getTexts()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.</p>
 	 * 
 	 * @param language Language used to translate the text
 	 * @param avoidNull Whether to avoid returning <code>null</code>

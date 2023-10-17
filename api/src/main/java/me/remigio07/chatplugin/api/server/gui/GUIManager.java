@@ -59,8 +59,9 @@ public abstract class GUIManager implements ChatPluginManager {
 	
 	/**
 	 * Pattern representing the allowed per-player GUI IDs.
-	 * Strings allowed by this one are shorter (2-19 characters) than {@link #GUI_ID_PATTERN}'s ones
-	 * because they have to contain "-" plus a player's name, which might be 16 characters long.
+	 * 
+	 * <p>Strings allowed by this one are shorter (2-19 characters) than {@link #GUI_ID_PATTERN}'s ones
+	 * because they have to contain "-" plus a player's name, which might be 16 characters long.</p>
 	 * 
 	 * <p><strong>Regex:</strong> "^[a-zA-Z0-9-_]{2,19}$"</p>
 	 * 
@@ -84,7 +85,8 @@ public abstract class GUIManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the loaded GUIs' list.
-	 * Do not modify the returned list.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned list.</p>
 	 * 
 	 * @return Loaded GUIs' list
 	 */
@@ -94,7 +96,8 @@ public abstract class GUIManager implements ChatPluginManager {
 	
 	/**
 	 * Gets a {@link GUI} from {@link #getGUIs()} by its ID.
-	 * Will return <code>null</code> if the GUI is not loaded.
+	 * 
+	 * <p>Will return <code>null</code> if the GUI is not loaded.</p>
 	 * 
 	 * @param id GUI's ID
 	 * @return Loaded GUI
@@ -106,7 +109,8 @@ public abstract class GUIManager implements ChatPluginManager {
 	
 	/**
 	 * Adds a GUI to {@link #getGUIs()}.
-	 * Note that it will be removed on {@link #unload()}.
+	 * 
+	 * <p>Note that it will be removed on {@link #unload()}.</p>
 	 * 
 	 * @param gui GUI to add
 	 * @throws IllegalArgumentException If {@link GUI#getID()} is already in use by another GUI in {@link #getGUIs()}
@@ -130,7 +134,8 @@ public abstract class GUIManager implements ChatPluginManager {
 	
 	/**
 	 * Reads a single page GUI from the specified GUI layout.
-	 * Add it to {@link #getGUIs()} using {@link #addGUI(GUI)}.
+	 * 
+	 * <p>Add it to {@link #getGUIs()} using {@link #addGUI(GUI)}.</p>
 	 * 
 	 * @param layout Layout to read
 	 * @return New single page GUI
@@ -141,7 +146,8 @@ public abstract class GUIManager implements ChatPluginManager {
 	
 	/**
 	 * Reads a fillable GUI from the specified GUI layout.
-	 * Add it to {@link #getGUIs()} using {@link #addGUI(GUI)}.
+	 * 
+	 * <p>Add it to {@link #getGUIs()} using {@link #addGUI(GUI)}.</p>
 	 * 
 	 * @param layout Layout to read
 	 * @return New fillable GUI
@@ -183,10 +189,11 @@ public abstract class GUIManager implements ChatPluginManager {
 	
 	/**
 	 * Reads a GUI layout from the specified configuration.
-	 * The GUI layout's ID is obtained by removing {@link Configuration#getFile()}'s
+	 * 
+	 * <p>The GUI layout's ID is obtained by removing {@link Configuration#getFile()}'s
 	 * extension and has to match {@link #GUI_ID_PATTERN}.
 	 * The returned GUI layout is a {@link FillableGUILayout} if <code>configuration</code> contains
-	 * mappings for "settings.filling-function" or {@link SinglePageGUILayout} otherwise.
+	 * mappings for "settings.filling-function" or {@link SinglePageGUILayout} otherwise.</p>
 	 * 
 	 * @param configuration Configuration to read
 	 * @return New GUI layout
@@ -242,7 +249,7 @@ public abstract class GUIManager implements ChatPluginManager {
 	
 	/**
 	 * Reads a GUI from the specified GUI layout.
-	 * Add it to {@link #getGUIs()} using {@link #addGUI(GUI)}.
+	 * <p>Add it to {@link #getGUIs()} using {@link #addGUI(GUI)}.</p>
 	 * 
 	 * @param layout GUI layout to read
 	 * @return New GUI
@@ -252,10 +259,10 @@ public abstract class GUIManager implements ChatPluginManager {
 	/**
 	 * Reads a per-player GUI from the specified GUI layout
 	 * for a player and adds it to {@link #getGUIs()}.
-	 * The returned GUI's ID is set to {@link GUILayout#getID() layout.getID()}
-	 * <code> + "-" + </code>{@link ChatPluginServerPlayer#getName() player.getName()}.
 	 * 
-	 * <p>A task that unloads the returned GUI after {@link #getPerPlayerGUIsUnloadTime()}
+	 * <p>The returned GUI's ID is set to {@link GUILayout#getID() layout.getID()}
+	 * <code> + "-" + </code>{@link ChatPluginServerPlayer#getName() player.getName()}.
+	 * A task that unloads the returned GUI after {@link #getPerPlayerGUIsUnloadTime()}
 	 * of inactivity ({@link GUIOpenEvent}, {@link GUIClickEvent}) is automatically started.
 	 * The GUI gets removed when <code>player</code> is unloaded from {@link PlayerManager#getPlayers()}.</p>
 	 * 
@@ -271,12 +278,13 @@ public abstract class GUIManager implements ChatPluginManager {
 	
 	/**
 	 * Reads an icon from the specified configuration and path.
-	 * The icon's ID is the text after <code>path</code>'s last
+	 * 
+	 * <p>The icon's ID is the text after <code>path</code>'s last
 	 * dot ('.') or <code>path</code> if it does not contain
 	 * any and has to match {@link Icon#ICON_ID_PATTERN}.
 	 * The icon's type is {@link IconType#PAGE_SWITCHER} if its ID
 	 * is contained in {@link IconType#PAGE_SWITCHER_ICONS_IDS}
-	 * or {@link IconType#CUSTOM} otherwise.
+	 * or {@link IconType#CUSTOM} otherwise.</p>
 	 * 
 	 * @param configuration Configuration to read
 	 * @param path Icon's path
@@ -290,7 +298,8 @@ public abstract class GUIManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the GUI the specified player is currently viewing.
-	 * Will return <code>null</code> if they do not have a GUI open.
+	 * 
+	 * <p>Will return <code>null</code> if they do not have a GUI open.</p>
 	 * 
 	 * @param player Target player
 	 * @return Player's open GUI

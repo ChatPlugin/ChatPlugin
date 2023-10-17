@@ -44,8 +44,9 @@ public abstract class VanishManager implements DenyChatReasonHandler {
 	
 	/**
 	 * Checks if invisibility should be applied to vanished players.
-	 * Even if false, other players will not be able to see them: will
-	 * only affect other Staff members who will be able to see them.
+	 * 
+	 * <p>Even if <code>false</code>, other players will not be able to see them:
+	 * it will only affect other Staff members who will be able to see them.</p>
 	 * 
 	 * @return Whether vanished players should be invisible
 	 */
@@ -54,8 +55,10 @@ public abstract class VanishManager implements DenyChatReasonHandler {
 	}
 	
 	/**
-	 * Gets the vanished players' map. Every entry is composed of a {@link String}
-	 * which represents a world and a {@link List} of {@link ChatPluginServerPlayer}.
+	 * Gets the vanished players' map.
+	 * 
+	 * <p>Every entry is composed of a {@link String} which represents
+	 * a world and a {@link List} of {@link ChatPluginServerPlayer}.</p>
 	 * 
 	 * @return Vanished players' map
 	 */
@@ -65,8 +68,9 @@ public abstract class VanishManager implements DenyChatReasonHandler {
 	
 	/**
 	 * Gets the vanished players' list in the specified world.
-	 * Will return {@link Collections#emptyList()} if {@link #getVanishedMap()}
-	 * does not contain the specified <code>world</code>.
+	 * 
+	 * <p>Will return {@link Collections#emptyList()} if {@link #getVanishedMap()}
+	 * does not contain the specified <code>world</code>.</p>
 	 * 
 	 * @param world World to check
 	 * @return Vanished players' list

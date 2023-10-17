@@ -77,7 +77,8 @@ public class GUIClickEvent extends GUIEvent implements CancellableEvent, ChatPlu
 	
 	/**
 	 * Gets the page containing {@link #getIcon()}.
-	 * Will return 0 for {@link SinglePageGUI}s.
+	 * 
+	 * <p>Will return 0 for {@link SinglePageGUI}s.</p>
 	 * 
 	 * @return GUI's page
 	 */

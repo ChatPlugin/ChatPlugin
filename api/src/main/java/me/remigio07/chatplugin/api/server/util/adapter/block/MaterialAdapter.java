@@ -34,8 +34,8 @@ public class MaterialAdapter implements Cloneable {
 	private String id;
 	
 	/**
-	 * Constructs a material adapter that accepts a Bukkit's {@link org.bukkit.Material}
-	 * or Sponge's {@link org.spongepowered.api.item.ItemTypes} compatible material ID as input.
+	 * Constructs a material adapter that accepts a Bukkit's {@link org.bukkit.Material} or
+	 * Sponge's {@link org.spongepowered.api.item.ItemTypes} compatible material ID as input.
 	 * 
 	 * @param id Material's ID
 	 * @throws IllegalArgumentException If the specified material's ID is invalid
@@ -91,8 +91,9 @@ public class MaterialAdapter implements Cloneable {
 	
 	/**
 	 * Checks if an object is equal this material adapter.
-	 * A material dapter is considered equal to another
-	 * one if their {@link #getID()} are equal.
+	 * 
+	 * <p>A material dapter is considered equal to another
+	 * one if their {@link #getID()} are equal.</p>
 	 */
 	@Override
 	public boolean equals(Object obj) {

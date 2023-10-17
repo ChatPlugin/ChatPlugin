@@ -168,7 +168,8 @@ public abstract class DiscordIntegrationManager extends TimerTask implements Cha
 	
 	/**
 	 * Gets the {@link #run()}'s timer's task's ID.
-	 * You can interact with it using {@link TaskManager}'s methods.
+	 * 
+	 * <p>You can interact with it using {@link TaskManager}'s methods.</p>
 	 * 
 	 * @return Updating task's ID
 	 */
@@ -202,10 +203,12 @@ public abstract class DiscordIntegrationManager extends TimerTask implements Cha
 	
 	/**
 	 * Reloads the bot.
-	 * You can specify <code>null</code> as <code>whoReloaded</code> to not make
+	 * 
+	 * <p>You can specify <code>null</code> as <code>whoReloaded</code> to not make
 	 * appear in the logs the following message: <code>"User " + whoReloaded
-	 * + " has reloaded the Discord integration through the bot."</code>
-	 * You can specify -1 as <code>channelID</code> to not send {@link DiscordMessages.Main#RELOAD_END}.
+	 * + " has reloaded the Discord integration through the bot."</code></p>
+	 * 
+	 * <p>You can specify -1 as <code>channelID</code> to not send {@link DiscordMessages.Main#RELOAD_END}.</p>
 	 * 
 	 * @param whoReloaded Who reloaded the bot
 	 * @param channelID Reload command's channel's ID

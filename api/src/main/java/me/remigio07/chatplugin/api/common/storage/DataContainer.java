@@ -23,8 +23,9 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 
 /**
  * Represents the storage's data's containers.
- * They are equivalent to the database's tables if {@link StorageMethod#isDatabase()}
- * or to the files contained in {@link StorageManager#getFolder()} otherwise.
+ * 
+ * <p>They are equivalent to the database's tables if {@link StorageMethod#isDatabase()}
+ * or to the files contained in {@link StorageManager#getFolder()} otherwise.</p>
  */
 public enum DataContainer {
 	
@@ -84,7 +85,8 @@ public enum DataContainer {
 	}
 	
 	/**
-	 * Gets this data type's database table's ID, preceded by {@link DatabaseManager#getTablePrefix()}.
+	 * Gets this data type's database table's ID,
+	 * preceded by {@link DatabaseManager#getTablePrefix()}.
 	 * 
 	 * @return Database table's ID
 	 */
@@ -94,9 +96,10 @@ public enum DataContainer {
 	
 	/**
 	 * Gets this data type's ID column's label.
-	 * Will return {@link Utils#NOT_APPLICABLE} if called on {@link #CHAT_MESSAGES}
-	 * or {@link #PRIVATE_MESSAGES}, "player_id" if called on {@link #IP_ADDRESSES}
-	 * and "id" otherwise.
+	 * 
+	 * <p>Will return {@link Utils#NOT_APPLICABLE} if called on
+	 * {@link #CHAT_MESSAGES} or {@link #PRIVATE_MESSAGES}, "player_id"
+	 * if called on {@link #IP_ADDRESSES} and "id" otherwise.</p>
 	 * 
 	 * @return ID column's label
 	 */
@@ -129,7 +132,8 @@ public enum DataContainer {
 	
 	/**
 	 * Gets a data container by its database table's ID with the prefix.
-	 * Will return <code>null</code> if the specified ID is invalid.
+	 * 
+	 * <p>Will return <code>null</code> if the specified ID is invalid.</p>
 	 * 
 	 * <p><strong>Example:</strong> (with default settings) <code>"chatplugin_mutes"</code> -&gt; {@link #MUTES}</p>
 	 * 

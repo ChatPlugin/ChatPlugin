@@ -53,8 +53,8 @@ public abstract class PlayerIgnoreManager implements ChatPluginManager {
 	
 	/**
 	 * Makes the specified player ignore another player.
-	 * Will return <code>false</code> if one of the following is verified:
 	 * 
+	 * <p>Will return <code>false</code> if one of the following is verified:
 	 * 	<ul>
 	 * 		<li><code>!</code>{@link #isEnabled()}</li>
 	 * 		<li>they are already ignoring that player </li>
@@ -73,8 +73,8 @@ public abstract class PlayerIgnoreManager implements ChatPluginManager {
 	
 	/**
 	 * Makes the specified player unignore another player.
-	 * Will return <code>false</code> if one of the following is verified:
 	 * 
+	 * <p>Will return <code>false</code> if one of the following is verified:
 	 * 	<ul>
 	 * 		<li><code>!</code>{@link #isEnabled()}</li>
 	 * 		<li>they are not ignoring that player</li>

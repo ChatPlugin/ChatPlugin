@@ -16,8 +16,10 @@
 package me.remigio07.chatplugin.api.common.punishment.kick;
 
 /**
- * Represents a kick message type. There are two types
- * of kick messages: actual kick message and chat message.
+ * Represents a kick message type.
+ * 
+ * <p>There are two types of kick messages:
+ * actual kick message and chat message.</p>
  * 
  * @see KickManager
  */

@@ -62,8 +62,9 @@ public class Icon {
 	
 	/**
 	 * Constructs a new icon specifying another icon's values.
-	 * Note that changes made to that icon's lists, maps and leather
-	 * armor color will be reflected to this icon and vice versa.
+	 * 
+	 * <p>Note that changes made to that icon's lists, maps and leather
+	 * armor color will be reflected to this icon and vice versa.</p>
 	 * 
 	 * @param icon Icon to copy
 	 */
@@ -91,8 +92,9 @@ public class Icon {
 	/**
 	 * Constructs a new icon specifying only the essential
 	 * options and assuming the others as their default values.
-	 * Note that {@link GUIManager#createIcon(Configuration, String)} is capable of reading icons
-	 * from {@link Configuration}s. Use this constructor just to obtain custom icons via code.
+	 * 
+	 * <p>Note that {@link GUIManager#createIcon(Configuration, String)} is capable of reading icons
+	 * from {@link Configuration}s. Use this constructor just to obtain custom icons via code.</p>
 	 * 
 	 * @param id Icon's ID
 	 * @param type Icon's type
@@ -136,8 +138,9 @@ public class Icon {
 	
 	/**
 	 * Constructs a new icon specifying all the available options.
-	 * Note that {@link GUIManager#createIcon(Configuration, String)} is capable of reading icons
-	 * from {@link Configuration}s. Use this constructor just to obtain custom icons via code.
+	 * 
+	 * <p>Note that {@link GUIManager#createIcon(Configuration, String)} is capable of reading icons
+	 * from {@link Configuration}s. Use this constructor just to obtain custom icons via code.</p>
 	 * 
 	 * @param id Icon's ID
 	 * @param type Icon's type
@@ -335,7 +338,8 @@ public class Icon {
 	
 	/**
 	 * Gets this icon's skull's owner.
-	 * Will return <code>null</code> if the skull's owner has not been specified.
+	 * 
+	 * <p>Will return <code>null</code> if the skull's owner has not been specified.</p>
 	 * 
 	 * @return Icon's skull's owner
 	 */
@@ -346,7 +350,8 @@ public class Icon {
 	
 	/**
 	 * Sets this icon's skull's owner.
-	 * You can specify <code>null</code> to remove the skull's owner.
+	 * 
+	 * <p>You can specify <code>null</code> to remove the skull's owner.</p>
 	 * 
 	 * @param skullOwner Icon's skull's owner
 	 * @return This icon
@@ -358,7 +363,8 @@ public class Icon {
 	
 	/**
 	 * Gets this icon's skull's texture's URL.
-	 * Will return <code>null</code> if the skull's texture's URL has not been specified.
+	 * 
+	 * <p>Will return <code>null</code> if the skull's texture's URL has not been specified.</p>
 	 * 
 	 * @return Icon's skull's texture's URL
 	 */
@@ -369,7 +375,8 @@ public class Icon {
 	
 	/**
 	 * Sets this icon's skull's texture's URL.
-	 * You can specify <code>null</code> to remove the skull's texture's URL.
+	 * 
+	 * <p>You can specify <code>null</code> to remove the skull's texture's URL.</p>
 	 * 
 	 * @param skullTextureURL Icon's skull's texture's URL
 	 * @return This icon
@@ -381,7 +388,8 @@ public class Icon {
 	
 	/**
 	 * Gets this icon's leather armor's color.
-	 * Will return <code>null</code> if the leather armor's color has not been specified.
+	 * 
+	 * <p>Will return <code>null</code> if the leather armor's color has not been specified.</p>
 	 * 
 	 * @return Icon's leather armor's color
 	 */
@@ -392,8 +400,9 @@ public class Icon {
 	
 	/**
 	 * Sets this icon's leather armor's color.
-	 * If you need to reset the color to the default value, specify
-	 * <code>null</code> and the following hex code will be applied: "#A06540".
+	 * 
+	 * <p>If you need to reset the color to the default value, specify
+	 * <code>null</code> and the following hex code will be applied: "#A06540".</p>
 	 * 
 	 * @param leatherArmorColor Icon's leather armor's color
 	 * @return This icon
@@ -405,7 +414,8 @@ public class Icon {
 	
 	/**
 	 * Gets the commands that will be executed when this icon is clicked.
-	 * You may modify the returned list.
+	 * 
+	 * <p>You may modify the returned list.</p>
 	 * 
 	 * @return Icon's commands
 	 */
@@ -426,7 +436,8 @@ public class Icon {
 	
 	/**
 	 * Gets this icon's item flags.
-	 * You may modify the returned list.
+	 * 
+	 * <p>You may modify the returned list.</p>
 	 * 
 	 * @return Icon's item flags
 	 */
@@ -447,7 +458,8 @@ public class Icon {
 	
 	/**
 	 * Gets this icon's display names.
-	 * You may modify the returned map.
+	 * 
+	 * <p>You may modify the returned map.</p>
 	 * 
 	 * @return Icon's display names
 	 */
@@ -468,7 +480,8 @@ public class Icon {
 	
 	/**
 	 * Gets this icon's lores.
-	 * You may modify the returned map.
+	 * 
+	 * <p>You may modify the returned map.</p>
 	 * 
 	 * @return Icon's lores
 	 */
@@ -489,7 +502,8 @@ public class Icon {
 	
 	/**
 	 * Gets this icon's enchantments.
-	 * You may modify the returned map.
+	 * 
+	 * <p>You may modify the returned map.</p>
 	 * 
 	 * @return Icon's enchantments
 	 */

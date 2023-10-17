@@ -48,9 +48,10 @@ import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 public class DiscordMessages {
 	
 	/**
-	 * Array containing the supported embed options. The "fields" option
-	 * is also supported but unlike the others it represents a map of keys-values
-	 * and not just a key-value pair, so it is handled in a different way.
+	 * Array containing the supported embed options.
+	 * 
+	 * <p>The "fields" option is also supported but unlike the others it represents a map
+	 * of keys-values and not just a key-value pair, so it is handled in a different way.</p>
 	 * 
 	 * <p><strong>Content:</strong> ["title.text", "title.url", "description", "image", "thumbnail", "author.text", "author.url", "author.icon-url", "footer.text", "footer.icon-url", "color"]</p>
 	 */
@@ -157,8 +158,9 @@ public class DiscordMessages {
 		
 		/**
 		 * Translates an input String with the server's status' placeholders.
-		 * Unlike other methods of this class, this one is public just because
-		 * it needs to be visible to {@link DiscordIntegrationManager#run()}.
+		 * 
+		 * <p>Unlike other methods of this class, this one is public just because
+		 * it needs to be visible to {@link DiscordIntegrationManager#run()}.</p>
 		 * 
 		 * @param input Input containing placeholders
 		 * @return Translated placeholders

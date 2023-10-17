@@ -69,7 +69,8 @@ public abstract class ScoreboardManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the list of loaded scoreboards.
-	 * You may modify the returned list.
+	 * 
+	 * <p>You may modify the returned list.</p>
 	 * 
 	 * @return Loaded scoreboards' list
 	 */
@@ -79,7 +80,8 @@ public abstract class ScoreboardManager implements ChatPluginManager {
 	
 	/**
 	 * Adds a scoreboard to {@link #getScoreboards()}.
-	 * Note that it will be removed on {@link #unload()}.
+	 * 
+	 * <p>Note that it will be removed on {@link #unload()}.</p>
 	 * 
 	 * @param scoreboard Scoreboard to add
 	 * @throws IllegalArgumentException If {@link Scoreboard#getID()} is already in use
@@ -92,7 +94,8 @@ public abstract class ScoreboardManager implements ChatPluginManager {
 	
 	/**
 	 * Gets a scoreboard from {@link #getScoreboards()} by its ID.
-	 * Will return <code>null</code> if the scoreboard is not loaded.
+	 * 
+	 * <p>Will return <code>null</code> if the scoreboard is not loaded.</p>
 	 * 
 	 * @param id Scoreboard's ID
 	 * @return Loaded scoreboard
@@ -150,8 +153,9 @@ public abstract class ScoreboardManager implements ChatPluginManager {
 	
 	/**
 	 * Reads a scoreboard from the specified configuration.
-	 * The scoreboard's ID is obtained by removing {@link Configuration#getFile()}'s
-	 * extension and has to match {@link #SCOREBOARD_ID_PATTERN}.
+	 * 
+	 * <p>The scoreboard's ID is obtained by removing {@link Configuration#getFile()}'s
+	 * extension and has to match {@link #SCOREBOARD_ID_PATTERN}.</p>
 	 * 
 	 * @param configuration Configuration to read
 	 * @return New scoreboard

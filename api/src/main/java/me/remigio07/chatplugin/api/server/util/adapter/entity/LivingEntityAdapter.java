@@ -68,8 +68,9 @@ public class LivingEntityAdapter {
 	
 	/**
 	 * Gets this living entity's name.
-	 * Will return the entity type's name
-	 * if a display name is not provided.
+	 * 
+	 * <p>Will return the entity type's name
+	 * if a display name is not provided.</p>
 	 * 
 	 * @return Living entity's name
 	 */

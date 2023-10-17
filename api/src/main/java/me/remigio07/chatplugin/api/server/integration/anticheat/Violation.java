@@ -155,8 +155,9 @@ public abstract class Violation {
 	}
 	
 	/**
-	 * Translates an input string with {@link #PLACEHOLDERS}
-	 * placeholders, translated in the specified language.
+	 * Translates an input string with this violation's specific placeholders.
+	 * 
+	 * <p>Check {@link #PLACEHOLDERS} to find out the available placeholders.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param language Language used to translate the placeholders
@@ -165,8 +166,9 @@ public abstract class Violation {
 	public abstract String formatPlaceholders(String input, Language language);
 	
 	/**
-	 * Translates an input string list with {@link #PLACEHOLDERS}
-	 * placeholders, translated in the specified language.
+	 * Translates an input string with this violation's specific placeholders.
+	 * 
+	 * <p>Check {@link #PLACEHOLDERS} to find out the available placeholders.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param language Language used to translate the placeholders

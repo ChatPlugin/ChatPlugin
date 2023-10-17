@@ -64,8 +64,10 @@ public abstract class IntegrationManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets an integration's instance. Will return <code>null</code> if
-	 * <code>!{@link IntegrationType#getSupportedEnvironments()}.contains({@link Environment#getCurrent()})</code>.
+	 * Gets an integration's instance.
+	 * 
+	 * <p>Will return <code>null</code> if
+	 * <code>!{@link IntegrationType#getSupportedEnvironments()}.contains({@link Environment#getCurrent()})</code>.</p>
 	 * 
 	 * @param <T> Integration's type
 	 * @param type Integration's type
@@ -85,7 +87,8 @@ public abstract class IntegrationManager implements ChatPluginManager {
 	 * Checks if <code>{@link IntegrationType#MATRIX}.isEnabled()
 	 * || {@link IntegrationType#VULCAN}.isEnabled()
 	 * || {@link IntegrationType#NEGATIVITY}.isEnabled()</code>.
-	 * Will return <code>false</code> if <code>!</code>{@link #isEnabled()}.
+	 * 
+	 * <p>Will return <code>false</code> if <code>!</code>{@link #isEnabled()}.</p>
 	 * 
 	 * @return Whether at least one anti cheat is enabled
 	 */

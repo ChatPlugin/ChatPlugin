@@ -55,7 +55,8 @@ public abstract class FillableGUI<T> extends GUI {
 	
 	/**
 	 * Gets this GUI's fillers.
-	 * You may modify the returned list.
+	 * 
+	 * <p>You may modify the returned list.</p>
 	 * 
 	 * @return GUI's fillers
 	 */
@@ -94,8 +95,9 @@ public abstract class FillableGUI<T> extends GUI {
 	
 	/**
 	 * Adds a filler to this GUI.
-	 * Unlike {@link #addFiller(Object, BiFunction, boolean)},
-	 * this method supports the GUI filler's full customization.
+	 * 
+	 * <p>Unlike {@link #addFiller(Object, BiFunction, boolean)},
+	 * this method supports the GUI filler's full customization.</p>
 	 * 
 	 * @param filler Filler to add
 	 * @param refresh Whether to {@link #refresh()} this GUI
@@ -109,8 +111,9 @@ public abstract class FillableGUI<T> extends GUI {
 	
 	/**
 	 * Adds a filler to this GUI.
-	 * Unlike {@link #addFiller(GUIFiller, boolean)}, this method
-	 * does not support the GUI filler's full customization.
+	 * 
+	 * <p>Unlike {@link #addFiller(GUIFiller, boolean)}, this method
+	 * does not support the GUI filler's full customization.</p>
 	 * 
 	 * @param filler Filler to add ({@link GUIFiller#getFiller()})
 	 * @param formatPlaceholdersFunction {@link GUIFiller#formatPlaceholders(String, Language)}'s function
@@ -167,7 +170,8 @@ public abstract class FillableGUI<T> extends GUI {
 	
 	/**
 	 * Gets this GUI's generated icons.
-	 * Do not modify the returned list.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned list.</p>
 	 * 
 	 * @return GUI's generated icons
 	 */
@@ -178,8 +182,10 @@ public abstract class FillableGUI<T> extends GUI {
 	
 	/**
 	 * Gets this GUI's generated icons for the specified page.
-	 * Will return <code>null</code> if the page is not present.
-	 * Do not modify the returned list.
+	 * 
+	 * <p>Will return <code>null</code> if the page is not present.</p>
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned list.</p>
 	 * 
 	 * @param page GUI's page
 	 * @return GUI's generated icons
@@ -216,7 +222,8 @@ public abstract class FillableGUI<T> extends GUI {
 	
 	/**
 	 * Gets this GUI's inventory for the specified language and page.
-	 * Will return <code>null</code> if the page is not present.
+	 * 
+	 * <p>Will return <code>null</code> if the page is not present.</p>
 	 * 
 	 * @param language GUI's language
 	 * @param page GUI's page
@@ -233,7 +240,8 @@ public abstract class FillableGUI<T> extends GUI {
 	
 	/**
 	 * Gets this GUI's viewers.
-	 * Do not modify the returned map.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned map.</p>
 	 * 
 	 * @return GUI's viewers
 	 */
@@ -242,12 +250,15 @@ public abstract class FillableGUI<T> extends GUI {
 	}
 	
 	/**
-	 * Gets this GUI's titles' translator function. The GUI's title (a String)
-	 * is set to {@link TriFunction#apply(Object, Object, Object)}'s result
-	 * every time the GUI is loaded or a {@link GUI#refresh()} is performed.
-	 * Will return <code>null</code> if no title's translator has been set.
+	 * Gets this GUI's titles' translator function.
 	 * 
-	 * 	<p>The function is composed of the following arguments:
+	 * <p>Will return <code>null</code> if no title's translator has been set.</p>
+	 * 
+	 * <p>The GUI's title (a String) is set to
+	 * {@link TriFunction#apply(Object, Object, Object)}'s result every
+	 * time the GUI is loaded or a {@link GUI#refresh()} is performed.</p>
+	 * 
+	 * <p>The function is composed of the following arguments:
 	 * 	<ol>
 	 * 		<li>{@link FillableGUI} - this GUI's instance</li>
 	 * 		<li>{@link Language} - the language used to translate the title</li>
@@ -266,13 +277,16 @@ public abstract class FillableGUI<T> extends GUI {
 	}
 	
 	/**
-	 * Sets this GUI's titles' translator function. The GUI's title (a String)
-	 * is set to {@link TriFunction#apply(Object, Object, Object)}'s result
-	 * every time the GUI is loaded or a {@link GUI#refresh()} is performed.
-	 * You can specify <code>null</code> to remove the title's translator.
-	 * You may also want to {@link #refresh()} the GUI after this operation.
+	 * Sets this GUI's titles' translator function.
 	 * 
-	 * 	<p>The function is composed of the following arguments:
+	 * <p>You can specify <code>null</code> to remove the title's translator.</p>
+	 * 
+	 * <p>The GUI's title (a String) is set to
+	 * {@link TriFunction#apply(Object, Object, Object)}'s result every
+	 * time the GUI is loaded or a {@link GUI#refresh()} is performed.
+	 * You may also want to {@link #refresh()} the GUI after this operation.</p>
+	 * 
+	 * <p>The function is composed of the following arguments:
 	 * 	<ol>
 	 * 		<li>{@link FillableGUI} - this GUI's instance</li>
 	 * 		<li>{@link Language} - the language used to translate the title</li>
@@ -317,6 +331,8 @@ public abstract class FillableGUI<T> extends GUI {
 	
 	/**
 	 * Handles and processes a click event.
+	 * 
+	 * <p>Will do nothing if the slot is invalid.</p>
 	 * 
 	 * @param player Player involved
 	 * @param page Page involved

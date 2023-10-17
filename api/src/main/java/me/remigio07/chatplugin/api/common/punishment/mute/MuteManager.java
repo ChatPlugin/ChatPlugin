@@ -57,7 +57,8 @@ public abstract class MuteManager extends PunishmentManager implements DenyChatR
 	
 	/**
 	 * Gets the active mutes' list.
-	 * Do not modify the returned list.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned list.</p>
 	 * 
 	 * @return Active mutes' list
 	 */
@@ -79,7 +80,8 @@ public abstract class MuteManager extends PunishmentManager implements DenyChatR
 	
 	/**
 	 * Checks if a player is muted in the specified server.
-	 * Specify <code>null</code> as <code>server</code> to check global mutes.
+	 * 
+	 * <p>Specify <code>null</code> as <code>server</code> to check global mutes.</p>
 	 * 
 	 * @param player Player to check
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
@@ -127,7 +129,8 @@ public abstract class MuteManager extends PunishmentManager implements DenyChatR
 	
 	/**
 	 * Unmutes a player.
-	 * Specify <code>null</code> as <code>server</code> to disactive a global mute.
+	 * 
+	 * <p>Specify <code>null</code> as <code>server</code> to disactive a global mute.</p>
 	 * 
 	 * @param player Player to unmute
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
@@ -160,7 +163,8 @@ public abstract class MuteManager extends PunishmentManager implements DenyChatR
 	
 	/**
 	 * Gets the active mutes' list for the specified player.
-	 * Will return an empty list if the player is not muted in any server.
+	 * 
+	 * <p>Will return an empty list if the player is not muted in any server.</p>
 	 * 
 	 * @param player Player to check
 	 * @return Player's mutes
@@ -170,8 +174,10 @@ public abstract class MuteManager extends PunishmentManager implements DenyChatR
 	
 	/**
 	 * Gets the active mute for the specified player and server.
-	 * Will return <code>null</code> if the player is not muted in that server.
-	 * Specify <code>null</code> as <code>server</code> to check global mutes.
+	 * 
+	 * <p>Will return <code>null</code> if the player is not muted in that server.</p>
+	 * 
+	 * <p>Specify <code>null</code> as <code>server</code> to check global mutes.</p>
 	 * 
 	 * @param player Player to check
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
@@ -182,7 +188,8 @@ public abstract class MuteManager extends PunishmentManager implements DenyChatR
 	
 	/**
 	 * Gets the active mute for the specified ID.
-	 * Will return <code>null</code> if the mute is not active.
+	 * 
+	 * <p>Will return <code>null</code> if the mute is not active.</p>
 	 * 
 	 * @param id Mute's ID
 	 * @return Mute object
@@ -192,9 +199,11 @@ public abstract class MuteManager extends PunishmentManager implements DenyChatR
 	
 	/**
 	 * Gets a mute from the database.
-	 * Will return <code>null</code> if the mute does not exist.
-	 * This method is equivalent to {@link StorageConnector#getMute(int)}
-	 * with the difference that it suppresses {@link SQLException}s.
+	 * 
+	 * <p>Will return <code>null</code> if the mute does not exist.</p>
+	 * 
+	 * <p>This method is equivalent to {@link StorageConnector#getMute(int)}
+	 * with the difference that it suppresses {@link SQLException}s.</p>
 	 * 
 	 * @param id Mute's ID
 	 * @return Mute object
@@ -203,7 +212,8 @@ public abstract class MuteManager extends PunishmentManager implements DenyChatR
 	public abstract Mute getMute(int id);
 	
 	/**
-	 * Formats a mute's active message using the message set in the specified language's messages file.
+	 * Formats a mute's active message using the message
+	 * set in the specified language's messages file.
 	 * 
 	 * @param active Whether the mute is active
 	 * @param language Language used to translate the message
@@ -214,7 +224,8 @@ public abstract class MuteManager extends PunishmentManager implements DenyChatR
 	public abstract String formatActiveMessage(boolean active, Language language);
 	
 	/**
-	 * Formats a mute's global message using the message set in the specified language's messages file.
+	 * Formats a mute's global message using the message
+	 * set in the specified language's messages file.
 	 * 
 	 * @param global Whether the mute is global
 	 * @param language Language used to translate the message
@@ -225,7 +236,8 @@ public abstract class MuteManager extends PunishmentManager implements DenyChatR
 	public abstract String formatGlobalMessage(boolean global, Language language);
 	
 	/**
-	 * Formats a mute's silent message using the message set in the specified language's messages file.
+	 * Formats a mute's silent message using the message
+	 * set in the specified language's messages file.
 	 * 
 	 * @param silent Whether the mute is silent
 	 * @param language Language used to translate the message

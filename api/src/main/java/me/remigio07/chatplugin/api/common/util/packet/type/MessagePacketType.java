@@ -18,7 +18,8 @@ package me.remigio07.chatplugin.api.common.util.packet.type;
 import me.remigio07.chatplugin.api.common.util.Utils;
 
 /**
- * Represents the type of a packet sent through the <code>PlayerMessage</code> or the <code>PlayerDisconnect</code> subchannel.
+ * Represents the type of a packet sent through the <code>PlayerMessage</code>
+ * or the <code>PlayerDisconnect</code> subchannel.
  */
 public enum MessagePacketType {
 	

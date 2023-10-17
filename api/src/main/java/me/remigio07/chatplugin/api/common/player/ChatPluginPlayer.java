@@ -70,7 +70,7 @@ public interface ChatPluginPlayer {
 	 * Checks if this player is connected
 	 * through {@link IntegrationType#GEYSERMC}.
 	 * 
-	 * @return Whether this player is using the BE
+	 * @return Whether this player is using the Bedrock Edition
 	 */
 	public boolean isBedrockPlayer();
 	
@@ -91,7 +91,8 @@ public interface ChatPluginPlayer {
 	
 	/**
 	 * Connects this player to the specified server.
-	 * Will do nothing if called on a server with a single instance setup.
+	 * 
+	 * <p>Will do nothing if called on a server with a single instance setup.</p>
 	 * 
 	 * @param server Server to connect the player to
 	 * @throws UnsupportedOperationException If <code>!</code>{@link ChatPlugin#isPremium()}

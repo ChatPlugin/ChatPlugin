@@ -171,7 +171,8 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	
 	/**
 	 * Gets the list of loaded bossbars.
-	 * You may modify the returned list.
+	 * 
+	 * <p>You may modify the returned list.</p>
 	 * 
 	 * @return Loaded bossbars' list
 	 */
@@ -181,7 +182,8 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	
 	/**
 	 * Gets the loading bossbars' tasks' map.
-	 * Do not modify the returned map.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned map.</p>
 	 * 
 	 * @return Loading bossbars' tasks' map
 	 */
@@ -191,7 +193,8 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	
 	/**
 	 * Gets a bossbar from {@link #getBossbars()} by its ID.
-	 * Will return <code>null</code> if the bossbar is not loaded.
+	 * 
+	 * <p>Will return <code>null</code> if the bossbar is not loaded.</p>
 	 * 
 	 * @param id Bossbar's ID
 	 * @return Loaded bossbar
@@ -203,7 +206,8 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	
 	/**
 	 * Gets the current reflection bossbar timer's instance.
-	 * Will return <code>null</code> if reflection is not being used.
+	 * 
+	 * <p>Will return <code>null</code> if reflection is not being used.</p>
 	 * 
 	 * @return Current reflection bossbar timer's instance
 	 */
@@ -214,7 +218,8 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	
 	/**
 	 * Gets the {@link #run()}'s timer's task's ID.
-	 * You can interact with it using {@link TaskManager}'s methods.
+	 * 
+	 * <p>You can interact with it using {@link TaskManager}'s methods.</p>
 	 * 
 	 * @return Sending task's ID
 	 */
@@ -224,7 +229,8 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	
 	/**
 	 * Gets the {@link ReflectionBossbarTimer#run()}'s timer's task's ID.
-	 * You can interact with it using {@link TaskManager}'s methods.
+	 * 
+	 * <p>You can interact with it using {@link TaskManager}'s methods.</p>
 	 * 
 	 * @return Reflection timer's index
 	 */
@@ -278,7 +284,8 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	
 	/**
 	 * Sends a bossbar to a loaded player.
-	 * It will not be sent if {@link Bossbar#isHidden()}.
+	 * 
+	 * <p>It will not be sent if {@link Bossbar#isHidden()}.</p>
 	 * 
 	 * @param bossbar Bossbar to send
 	 * @param player Player to send the bossbar to

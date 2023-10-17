@@ -23,7 +23,8 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 
 /**
  * Util class used to calculate and fetch players' UUIDs and names.
- * Its methods are abstract as some of them use libraries' classes.
+ * 
+ * <p>Its methods are abstract as some of them use libraries' classes.</p>
  */
 public abstract class UUIDFetcher {
 	
@@ -50,12 +51,12 @@ public abstract class UUIDFetcher {
 	public abstract UUID getUUID(String name) throws IOException;
 	
 	/**
-	 * Fetches the specified player's online UUID4 from
-	 * Mojang's servers. Might take some time:
-	 * async calls of this method are recommended.
+	 * Fetches the specified player's online UUID4 from Mojang's servers.
 	 * 
 	 * <p>Will return {@link Utils#NIL_UUID} if the
 	 * specified name does not belong to a premium account.</p>
+	 * 
+	 * <p>Might take some time: async calls of this method are recommended.</p>
 	 * 
 	 * @param name Player's name
 	 * @return Player's online UUID
@@ -75,12 +76,12 @@ public abstract class UUIDFetcher {
 	public abstract UUID getOfflineUUID(String name);
 	
 	/**
-	 * Fetches the specified player's name from
-	 * Mojang's servers. Might take some time:
-	 * async calls of this method are recommended.
+	 * Fetches the specified player's name from Mojang's servers.
 	 * 
 	 * <p>Will return <code>null</code> if the
 	 * specified UUID does not belong to a premium account.</p>
+	 * 
+	 * <p>Might take some time: async calls of this method are recommended.</p>
 	 * 
 	 * @param uuid Player's online UUID
 	 * @return Player's name

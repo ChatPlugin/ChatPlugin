@@ -19,7 +19,8 @@ import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 
 /**
  * Represents a rank's tag, composed of a prefix, a suffix and a name color.
- * Prefix and suffix will appear first and after the player's name in the tablist.
+ * 
+ * <p>Prefix and suffix will appear first and after the player's name in the tablist.</p>
  */
 public abstract class RankTag {
 	
@@ -43,7 +44,7 @@ public abstract class RankTag {
 	}
 	
 	/**
-	 * Gets this tag's prefix. May be empty.
+	 * Gets this tag's prefix.
 	 * 
 	 * @return Tag's prefix
 	 */
@@ -53,7 +54,7 @@ public abstract class RankTag {
 	}
 	
 	/**
-	 * Gets this tag's suffix. May be empty.
+	 * Gets this tag's suffix.
 	 * 
 	 * @return Tag's suffix
 	 */
@@ -63,7 +64,7 @@ public abstract class RankTag {
 	}
 	
 	/**
-	 * Gets this tag's name color. May be empty.
+	 * Gets this tag's name color.
 	 * 
 	 * @return Tag's name color
 	 */
@@ -73,9 +74,11 @@ public abstract class RankTag {
 	}
 	
 	/**
-	 * Get this tag's representation as a simple string. This method is used to check if the tag is
-	 * empty: sometimes it can be useful as ChatPlugin won't have to set up any vanilla team's tag.
-	 * Example of output from this method (prefix + name color + suffix): "[S] &#167;e [*]".
+	 * Get this tag's representation as a simple string.
+	 * 
+	 * <p>This method is used to check if the tag is empty:
+	 * sometimes it can be useful as ChatPlugin won't have to set up any vanilla team's tag.
+	 * Example of output from this method (prefix + name color + suffix): "[S] &#167;e [*]".</p>
 	 * 
 	 * @return Tag's representation
 	 */

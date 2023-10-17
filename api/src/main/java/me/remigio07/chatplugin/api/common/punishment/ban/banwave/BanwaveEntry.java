@@ -62,8 +62,9 @@ public abstract class BanwaveEntry {
 	
 	/**
 	 * Gets this entry's player.
-	 * Will return <code>null</code> if they have not been specified
-	 * ({@link BanType#IP_ADDRESS} with no given player).
+	 * 
+	 * <p>Will return <code>null</code> if they have not been specified
+	 * ({@link BanType#IP_ADDRESS} with no given player).</p>
 	 * 
 	 * @return Entry's player
 	 */
@@ -74,7 +75,8 @@ public abstract class BanwaveEntry {
 	
 	/**
 	 * Gets this entry's IP address.
-	 * Will return <code>null</code> if the IP address is unknown.
+	 * 
+	 * <p>Will return <code>null</code> if the IP address is unknown.</p>
 	 * 
 	 * @return Entry's IP address
 	 */
@@ -104,7 +106,8 @@ public abstract class BanwaveEntry {
 	
 	/**
 	 * Gets who removed the entry.
-	 * Will return <code>null</code> if the entry has not been removed.
+	 * 
+	 * <p>Will return <code>null</code> if the entry has not been removed.</p>
 	 * 
 	 * @return Who removed the entry
 	 */
@@ -124,7 +127,8 @@ public abstract class BanwaveEntry {
 	
 	/**
 	 * Gets this entry's reason.
-	 * Will return <code>null</code> if no reason was specified.
+	 * 
+	 * <p>Will return <code>null</code> if no reason was specified.</p>
 	 * 
 	 * @return Entry's reason
 	 */
@@ -135,7 +139,8 @@ public abstract class BanwaveEntry {
 	
 	/**
 	 * Sets this entry's reason.
-	 * You can specify <code>null</code> to reset the reason.
+	 * 
+	 * <p>You can specify <code>null</code> to reset the reason.</p>
 	 * 
 	 * @param reason Entry's reason
 	 */
@@ -191,7 +196,8 @@ public abstract class BanwaveEntry {
 	
 	/**
 	 * Gets this entry's removal's date, in milliseconds.
-	 * Will return -1 if the entry has not been removed.
+	 * 
+	 * <p>Will return -1 if the entry has not been removed.</p>
 	 * 
 	 * @return Entry's removal's date
 	 */
@@ -210,7 +216,8 @@ public abstract class BanwaveEntry {
 	
 	/**
 	 * Gets this entry's duration, in milliseconds.
-	 * Will return -1 if this entry is permanent.
+	 * 
+	 * <p>Will return -1 if this entry is permanent.</p>
 	 * 
 	 * @return Entry's duration
 	 */
@@ -220,7 +227,8 @@ public abstract class BanwaveEntry {
 	
 	/**
 	 * Sets this entry's duration, in milliseconds.
-	 * You can specify -1 for a permanent entry.
+	 * 
+	 * <p>You can specify -1 for a permanent entry.</p>
 	 * 
 	 * @param duration Entry's duration
 	 */
@@ -229,8 +237,9 @@ public abstract class BanwaveEntry {
 	}
 	
 	/**
-	 * Checks if this entry affects all servers inside of the network
-	 * (if using a multi instance setup with a proxy).
+	 * Checks if this entry affects all servers inside of the network.
+	 * 
+	 * <p>Only applies on multi instance setups with a proxy.</p>
 	 * 
 	 * @return Whether this entry is global
 	 */
@@ -239,8 +248,9 @@ public abstract class BanwaveEntry {
 	}
 	
 	/**
-	 * Sets if this entry should affect all servers inside of the network
-	 * (if using a multi instance setup with a proxy).
+	 * Sets if this entry should affect all servers inside of the network.
+	 * 
+	 * <p>Only applies on multi instance setups with a proxy.</p>
 	 * 
 	 * @param global Whether this entry is global
 	 */
@@ -249,8 +259,9 @@ public abstract class BanwaveEntry {
 	}
 	
 	/**
-	 * Checks if this entry is silent
-	 * (only Staff members will receive the announcement).
+	 * Checks if this entry is silent.
+	 * 
+	 * <p>If <code>true</code>, only Staff members will receive the announcement.</p>
 	 * 
 	 * @return Whether this entry is silent
 	 */
@@ -259,8 +270,9 @@ public abstract class BanwaveEntry {
 	}
 	
 	/**
-	 * Sets if this entry should be silent
-	 * (only Staff members will receive the announcement).
+	 * Sets if this entry should be silent.
+	 * 
+	 * <p>If <code>true</code>, only Staff members will receive the announcement.</p>
 	 * 
 	 * @param silent Whether this entry is silent
 	 */
@@ -270,7 +282,8 @@ public abstract class BanwaveEntry {
 	
 	/**
 	 * Translates an input string with this entry's specific placeholders.
-	 * Check {@link #PLACEHOLDERS} to know the available placeholders.
+	 * 
+	 * <p>Check {@link #PLACEHOLDERS} to find out the available placeholders.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param language Language used to translate the placeholders
@@ -281,7 +294,8 @@ public abstract class BanwaveEntry {
 	
 	/**
 	 * Translates an input string list with this entry's specific placeholders.
-	 * Check {@link #PLACEHOLDERS} to know the available placeholders.
+	 * 
+	 * <p>Check {@link #PLACEHOLDERS} to find out the available placeholders.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param language Language used to translate the placeholders

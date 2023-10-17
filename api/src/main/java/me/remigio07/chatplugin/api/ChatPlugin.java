@@ -24,7 +24,7 @@ import me.remigio07.chatplugin.api.common.util.manager.LogManager.LoggerType;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
- * ChatPlugin's main class' abstraction.
+ * ChatPlugin's main class's abstraction.
  */
 public abstract class ChatPlugin {
 	
@@ -88,7 +88,13 @@ public abstract class ChatPlugin {
 	}
 	
 	/**
-	 * Gets the plugin's logger. There are two loggers supported.
+	 * Gets the plugin's logger.
+	 * 
+	 * <p>There are two loggers supported:
+	 * 	<ul>
+	 * 		<li><a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/Logger.html"><code>java.util.logging.Logger</code></a> - Bukkit and BungeeCord environments</li>
+	 * 		<li><a href="https://www.slf4j.org/api/org/slf4j/Logger.html"><code>org.slf4j.Logger</code></a> - Sponge and Velocity environments</li>
+	 * 	</ul>
 	 * 
 	 * @return Plugin's logger
 	 * @see LoggerType
@@ -135,8 +141,9 @@ public abstract class ChatPlugin {
 	
 	/**
 	 * Reloads ChatPlugin. Totally.
-	 * If the reload fails the plugin will be safely disabled
-	 * and an error message will be sent to the console.
+	 * 
+	 * <p>If the reload fails the plugin will be safely disabled
+	 * and an error message will be sent to the console.</p>
 	 * 
 	 * @return Time elapsed in milliseconds or 0 if not loaded or -1 if failed
 	 */
@@ -144,8 +151,9 @@ public abstract class ChatPlugin {
 	
 	/**
 	 * Unloads ChatPlugin.
-	 * If the unload fails the plugin will be safely disabled
-	 * and an error message will be sent to the console.
+	 * 
+	 * <p>If the unload fails the plugin will be safely disabled
+	 * and an error message will be sent to the console.</p>
 	 * 
 	 * @deprecated Internal use only. You should never need to manually unload ChatPlugin.
 	 * @return Time elapsed in milliseconds or 0 if already unloaded or -1 if failed

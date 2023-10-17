@@ -215,7 +215,8 @@ public abstract class ServerMoTDManager extends MoTDManager {
 	
 	/**
 	 * Gets the server socket's address.
-	 * Will return <code>null</code> if <code>!</code>{@link #isEnabled()}.
+	 * 
+	 * <p>Will return <code>null</code> if <code>!</code>{@link #isEnabled()}.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "motd.server-socket.address" in {@link ConfigurationType#MOTD}</p>
 	 * 
@@ -228,7 +229,8 @@ public abstract class ServerMoTDManager extends MoTDManager {
 	
 	/**
 	 * Gets the URL of the icon displayed to unknown players.
-	 * Will return <code>null</code> if <code>!</code>{@link #isEnabled()}.
+	 * 
+	 * <p>Will return <code>null</code> if <code>!</code>{@link #isEnabled()}.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "motd.unknown-player.icon-url" in {@link ConfigurationType#MOTD}</p>
 	 * 
@@ -241,7 +243,8 @@ public abstract class ServerMoTDManager extends MoTDManager {
 	
 	/**
 	 * Gets the URL of the icon displayed to stored players.
-	 * Will return <code>null</code> if <code>!</code>{@link #isEnabled()}.
+	 * 
+	 * <p>Will return <code>null</code> if <code>!</code>{@link #isEnabled()}.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "motd.stored-player.icon-url" in {@link ConfigurationType#MOTD}</p>
 	 * 
@@ -254,7 +257,8 @@ public abstract class ServerMoTDManager extends MoTDManager {
 	
 	/**
 	 * Gets the URL of the icon displayed to banned players.
-	 * Will return <code>null</code> if <code>!</code>{@link #isEnabled()}.
+	 * 
+	 * <p>Will return <code>null</code> if <code>!</code>{@link #isEnabled()}.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "motd.banned-player.icon-url" in {@link ConfigurationType#MOTD}</p>
 	 * 
@@ -267,7 +271,8 @@ public abstract class ServerMoTDManager extends MoTDManager {
 	
 	/**
 	 * Gets the URL of the icon displayed to players running an outdated version.
-	 * Will return <code>null</code> if <code>!</code>{@link #isEnabled()}.
+	 * 
+	 * <p>Will return <code>null</code> if <code>!</code>{@link #isEnabled()}.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "motd.outdated-version.icon-url" in {@link ConfigurationType#MOTD}</p>
 	 * 
@@ -423,8 +428,9 @@ public abstract class ServerMoTDManager extends MoTDManager {
 	 * Gets a new MoTD for an IP address translated using
 	 * {@link LanguageDetector#detectUsingGeolocalization(IPLookup)}
 	 * if necessary (if it is not associated to a player's language).
-	 * Note that this method might take some time
-	 * to be executed: async calls are recommended.
+	 * 
+	 * <p>Note that this method might take some time
+	 * to be executed: async calls are recommended.</p>
 	 * 
 	 * @param ipAddress The player's IP address
 	 * @param version The player's version
@@ -435,8 +441,9 @@ public abstract class ServerMoTDManager extends MoTDManager {
 	/**
 	 * Gets a new MoTD for an IP address
 	 * translated in the specified language.
-	 * Note that this method might take some time
-	 * to be executed: async calls are recommended.
+	 * 
+	 * <p>Note that this method might take some time
+	 * to be executed: async calls are recommended.</p>
 	 * 
 	 * @param ipAddress The player's IP address
 	 * @param version The player's version

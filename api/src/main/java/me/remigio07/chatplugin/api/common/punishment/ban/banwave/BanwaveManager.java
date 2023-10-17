@@ -152,7 +152,8 @@ public abstract class BanwaveManager extends TimerTask implements ChatPluginMana
 	
 	/**
 	 * Gets the banwave entries' list.
-	 * Do not modify the returned list.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned list.</p>
 	 * 
 	 * @return Banwave entries' list
 	 */
@@ -256,7 +257,8 @@ public abstract class BanwaveManager extends TimerTask implements ChatPluginMana
 	
 	/**
 	 * Removes a banwave entry not yet executed.
-	 * Specify <code>null</code> as <code>server</code> to disactive a global entry.
+	 * 
+	 * <p>Specify <code>null</code> as <code>server</code> to disactive a global entry.</p>
 	 * 
 	 * @param player Player of the entry to remove
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
@@ -273,7 +275,8 @@ public abstract class BanwaveManager extends TimerTask implements ChatPluginMana
 	
 	/**
 	 * Removes a banwave entry not yet executed.
-	 * Specify <code>null</code> as <code>server</code> to disactive a global entry.
+	 * 
+	 * <p>Specify <code>null</code> as <code>server</code> to disactive a global entry.</p>
 	 * 
 	 * @param ipAddress Entry's IP address to remove
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
@@ -290,7 +293,8 @@ public abstract class BanwaveManager extends TimerTask implements ChatPluginMana
 	
 	/**
 	 * Gets the active entries' list for the specified player.
-	 * Will return an empty list if the player is not about to be banned in any server.
+	 * 
+	 * <p>Will return an empty list if the player is not about to be banned in any server.</p>
 	 * 
 	 * @param player Player to check
 	 * @return Player's entries
@@ -300,7 +304,8 @@ public abstract class BanwaveManager extends TimerTask implements ChatPluginMana
 	
 	/**
 	 * Gets the active entries' list for the specified IP address.
-	 * Will return an empty list if the IP address is not about to be banned in any server.
+	 * 
+	 * <p>Will return an empty list if the IP address is not about to be banned in any server.</p>
 	 * 
 	 * @param ipAddress IP address to check
 	 * @return IP address' entries
@@ -310,8 +315,10 @@ public abstract class BanwaveManager extends TimerTask implements ChatPluginMana
 	
 	/**
 	 * Gets the entry for the specified player and server.
-	 * Will return <code>null</code> if the player is not about to be banned in that server.
-	 * Specify <code>null</code> as <code>server</code> to check global entries.
+	 * 
+	 * <p>Will return <code>null</code> if the player is not about to be banned in that server.</p>
+	 * 
+	 * <p>Specify <code>null</code> as <code>server</code> to check global entries.</p>
 	 * 
 	 * @param player Player to check
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
@@ -322,8 +329,10 @@ public abstract class BanwaveManager extends TimerTask implements ChatPluginMana
 	
 	/**
 	 * Gets the entry for the specified IP address and server.
-	 * Will return <code>null</code> if the IP address is not about to be banned in that server.
-	 * Specify <code>null</code> as <code>server</code> to check global entries.
+	 * 
+	 * <p>Will return <code>null</code> if the IP address is not about to be banned in that server.</p>
+	 * 
+	 * <p>Specify <code>null</code> as <code>server</code> to check global entries.</p>
 	 * 
 	 * @param ipAddress IP address to check
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
@@ -335,7 +344,8 @@ public abstract class BanwaveManager extends TimerTask implements ChatPluginMana
 	/**
 	 * Checks if the specified reason is contained in {@link #getReasonsStartWith()},
 	 * lowering case and stripping colors. See wiki for more info.
-	 * Will return <code>false</code> if <code>reason == null</code>.
+	 * 
+	 * <p>Will return <code>false</code> if <code>reason == null</code>.</p>
 	 * 
 	 * @param reason Ban's reason
 	 * @return Whether the reason is a banwave's reason

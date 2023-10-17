@@ -110,7 +110,8 @@ public abstract class TablistManager extends TimerTask implements ChatPluginMana
 	
 	/**
 	 * Gets the list of loaded tablists.
-	 * You may modify the returned list.
+	 * 
+	 * <p>You may modify the returned list.</p>
 	 * 
 	 * @return Loaded tablists' list
 	 */
@@ -120,7 +121,8 @@ public abstract class TablistManager extends TimerTask implements ChatPluginMana
 	
 	/**
 	 * Gets a tablist from {@link #getTablists()} by its ID.
-	 * Will return <code>null</code> if the tablist is not loaded.
+	 * 
+	 * <p>Will return <code>null</code> if the tablist is not loaded.</p>
 	 * 
 	 * @param id Tablist's ID
 	 * @return Loaded tablist
@@ -132,7 +134,8 @@ public abstract class TablistManager extends TimerTask implements ChatPluginMana
 	
 	/**
 	 * Gets the {@link #run()}'s timer's task's ID.
-	 * You can interact with it using {@link TaskManager}'s methods.
+	 * 
+	 * <p>You can interact with it using {@link TaskManager}'s methods.</p>
 	 * 
 	 * @return Sending task's ID
 	 */

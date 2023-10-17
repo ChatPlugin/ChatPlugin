@@ -42,9 +42,11 @@ public abstract class FormattedChatManager implements DenyChatReasonHandler {
 	}
 	
 	/**
-	 * Checks if formatted messages should be always sent, even if players
-	 * do not have the permission "chatplugin.formatted-chat". In that case,
-	 * the message will be sent not formatted and they will receive a warning.
+	 * Checks if formatted messages should be always sent, even if
+	 * players do not have the permission "chatplugin.formatted-chat".
+	 * 
+	 * <p>In that case, the message will be sent but not
+	 * formatted and they will receive a warning.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "chat.formatted-chat.send-anyway" in {@link ConfigurationType#CHAT}</p>
 	 * 

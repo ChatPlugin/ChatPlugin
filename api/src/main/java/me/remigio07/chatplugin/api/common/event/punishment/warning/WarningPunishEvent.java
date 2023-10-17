@@ -22,7 +22,8 @@ import me.remigio07.chatplugin.api.common.util.annotation.ServerImplementationOn
 import me.remigio07.chatplugin.api.server.language.Language;
 
 /**
- * Represents the event called after a player gets punished because of a warning.
+ * Represents the event called after a player
+ * gets punished because of a warning.
  * 
  * @see WarningManager#warn(OfflinePlayer, String, String, String, long, boolean, boolean)
  * @see WarningManager#isAmountPunished(int)

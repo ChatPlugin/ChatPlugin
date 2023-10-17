@@ -22,9 +22,10 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
  * Permission adapter used to prevent compatibility issues between Bukkit's and Sponge's libraries.
- * The method {@link RankPermission#bukkitValue()} returns a {@link org.bukkit.permissions.Permission}
+ * 
+ * <p>The method {@link RankPermission#bukkitValue()} returns a {@link org.bukkit.permissions.Permission}
  * object with a default value of {@link PermissionDefault#FALSE} which prevents OPs from having the
- * highest rank in the ranks list. Sponge doesn't support this feature, unluckily. (Or does it? LMK!)
+ * highest rank in the ranks list. Sponge doesn't support this feature, unluckily. (Or does it? LMK!)</p>
  */
 public abstract class RankPermission {
 	

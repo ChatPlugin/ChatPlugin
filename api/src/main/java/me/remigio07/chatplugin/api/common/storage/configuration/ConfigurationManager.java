@@ -65,7 +65,8 @@ public abstract class ConfigurationManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the loaded configurations' map.
-	 * Do not modify the returned map.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned map.</p>
 	 * 
 	 * @return Loaded configurations' map
 	 */
@@ -75,8 +76,9 @@ public abstract class ConfigurationManager implements ChatPluginManager {
 	
 	/**
 	 * Gets a configuration from its type.
-	 * Will return <code>null</code> if <code>type == </code>
-	 * {@link ConfigurationType#CUSTOM} or if it is not loaded.
+	 * 
+	 * <p>Will return <code>null</code> if <code>type == </code>
+	 * {@link ConfigurationType#CUSTOM} or if it is not loaded.</p>
 	 * 
 	 * @param type Configuration's type
 	 * @return Corresponding {@link Configuration}

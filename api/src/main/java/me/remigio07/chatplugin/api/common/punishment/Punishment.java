@@ -29,7 +29,8 @@ import me.remigio07.chatplugin.api.common.util.text.ComponentTranslator;
 import me.remigio07.chatplugin.api.server.language.Language;
 
 /**
- * Represents a punishment (ban, warning, kick, mute) handled by a {@link PunishmentManager}.
+ * Represents a punishment (ban, warning, kick,
+ * mute) handled by a {@link PunishmentManager}.
  */
 public abstract class Punishment {
 	
@@ -80,7 +81,8 @@ public abstract class Punishment {
 	
 	/**
 	 * Gets this punishment's reason.
-	 * Will return <code>null</code> if no reason was specified.
+	 * 
+	 * <p>Will return <code>null</code> if no reason was specified.</p>
 	 * 
 	 * @return Punishment's reason
 	 */
@@ -91,7 +93,8 @@ public abstract class Punishment {
 	
 	/**
 	 * Sets this punishment's reason.
-	 * You can specify <code>null</code> to reset the reason.
+	 * 
+	 * <p>You can specify <code>null</code> to reset the reason.</p>
 	 * 
 	 * @param reason Punishment's reason
 	 */
@@ -119,7 +122,8 @@ public abstract class Punishment {
 	}
 	
 	/**
-	 * Gets this punishment's creation or modification date, in milliseconds.
+	 * Gets this punishment's creation or
+	 * modification date, in milliseconds.
 	 * 
 	 * @return Punishment's creation or modification date
 	 */
@@ -137,8 +141,9 @@ public abstract class Punishment {
 	}
 	
 	/**
-	 * Checks if this punishment is silent
-	 * (only Staff members will receive the announcement).
+	 * Checks if this punishment is silent.
+	 * 
+	 * <p>If <code>true</code>, only Staff members will receive the announcement.</p>
 	 * 
 	 * @return Whether this punishment is silent
 	 */
@@ -147,8 +152,9 @@ public abstract class Punishment {
 	}
 	
 	/**
-	 * Sets if this punishment should be silent
-	 * (only Staff members will receive the announcement).
+	 * Sets if this punishment should be silent.
+	 * 
+	 * <p>If <code>true</code>, only Staff members will receive the announcement.</p>
 	 * 
 	 * @param silent Whether this punishment is silent
 	 */
@@ -158,7 +164,8 @@ public abstract class Punishment {
 	
 	/**
 	 * Translates an input string with this punishment's specific placeholders.
-	 * Every punishment has different placeholders available. Check the following fields:
+	 * 
+	 * <p>Every punishment has different placeholders available. Check the following fields:
 	 * 	<ul>
 	 * 		<li>{@link Ban#PLACEHOLDERS} - bans' placeholders</li>
 	 * 		<li>{@link Warning#PLACEHOLDERS} - warnings' placeholders</li>
@@ -175,7 +182,8 @@ public abstract class Punishment {
 	
 	/**
 	 * Translates an input string list with this punishment's specific placeholders.
-	 * Every punishment has different placeholders available. Check the following fields:
+	 * 
+	 * <p>Every punishment has different placeholders available. Check the following fields:
 	 * 	<ul>
 	 * 		<li>{@link Ban#PLACEHOLDERS} - bans' placeholders</li>
 	 * 		<li>{@link Warning#PLACEHOLDERS} - warnings' placeholders</li>

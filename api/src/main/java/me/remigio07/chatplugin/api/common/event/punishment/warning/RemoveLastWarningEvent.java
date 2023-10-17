@@ -20,7 +20,8 @@ import me.remigio07.chatplugin.api.common.punishment.warning.Warning;
 import me.remigio07.chatplugin.api.common.punishment.warning.WarningManager;
 
 /**
- * Represents the event called after a player's last warning gets removed.
+ * Represents the event called after a
+ * player's last warning gets removed.
  * 
  * @see WarningManager#removeLastWarning(OfflinePlayer, String, String)
  */

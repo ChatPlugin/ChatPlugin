@@ -20,7 +20,8 @@ import me.remigio07.chatplugin.api.common.event.ChatPluginEvent;
 import me.remigio07.chatplugin.api.common.telegram.TelegramBot;
 
 /**
- * Represents the event called just before the {@link TelegramBot}'s status is changed.
+ * Represents the event called just before the
+ * {@link TelegramBot}'s status is changed.
  * 
  * @see TelegramBot#setStatus(String)
  */

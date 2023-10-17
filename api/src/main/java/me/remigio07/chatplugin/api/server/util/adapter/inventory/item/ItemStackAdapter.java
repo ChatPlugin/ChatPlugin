@@ -117,8 +117,8 @@ public class ItemStackAdapter implements Cloneable {
 	}
 	
 	/**
-	 * Constructs an item stack with
-	 * the given {@link org.bukkit.inventory.ItemStack}.
+	 * Constructs an item stack with the given
+	 * {@link org.bukkit.inventory.ItemStack}.
 	 * 
 	 * @param itemStack Bukkit's item stack
 	 */
@@ -134,8 +134,8 @@ public class ItemStackAdapter implements Cloneable {
 	}
 	
 	/**
-	 * Constructs an item stack with
-	 * the given {@link org.spongepowered.api.item.inventory.ItemStack}.
+	 * Constructs an item stack with the given
+	 * {@link org.spongepowered.api.item.inventory.ItemStack}.
 	 * 
 	 * @param itemStack Sponge's item stack
 	 */
@@ -222,7 +222,8 @@ public class ItemStackAdapter implements Cloneable {
 	
 	/**
 	 * Checks if this item stack has item meta.
-	 * Only applies to Bukkit environments.
+	 * 
+	 * <p>It only applies to Bukkit environments.</p>
 	 * 
 	 * @return Whether this item stack has item meta
 	 */
@@ -380,7 +381,8 @@ public class ItemStackAdapter implements Cloneable {
 	
 	/**
 	 * Gets this item's display name.
-	 * Will return <code>null</code> if <code>!</code>{@link #hasDisplayName()}.
+	 * 
+	 * <p>Will return <code>null</code> if <code>!</code>{@link #hasDisplayName()}.</p>
 	 * 
 	 * @return Item's display name
 	 */
@@ -400,7 +402,8 @@ public class ItemStackAdapter implements Cloneable {
 	
 	/**
 	 * Sets this item's display name.
-	 * You can specify <code>null</code> to remove the display name.
+	 * 
+	 * <p>You can specify <code>null</code> to remove the display name.</p>
 	 * 
 	 * @param displayName Display name to set
 	 * @return This item stack
@@ -420,7 +423,8 @@ public class ItemStackAdapter implements Cloneable {
 	
 	/**
 	 * Gets this item's lore.
-	 * Will return <code>null</code> if <code>!</code>{@link #hasLore()}.
+	 * 
+	 * <p>Will return <code>null</code> if <code>!</code>{@link #hasLore()}.</p>
 	 * 
 	 * @return Item's lore
 	 */
@@ -440,7 +444,8 @@ public class ItemStackAdapter implements Cloneable {
 	
 	/**
 	 * Sets this item's lore.
-	 * You can specify <code>null</code> to remove the lore.
+	 * 
+	 * <p>You can specify <code>null</code> to remove the lore.</p>
 	 * 
 	 * @param lore Lore to set
 	 * @return This item stack
@@ -533,8 +538,9 @@ public class ItemStackAdapter implements Cloneable {
 	
 	/**
 	 * Gets this skull's owner.
-	 * Will return <code>null</code> if <code>!</code>{@link #isPlayerHead()}
-	 * or if the owner's name is <code>null</code>.
+	 * 
+	 * <p>Will return <code>null</code> if <code>!</code>{@link #isPlayerHead()}
+	 * or if the owner's name is <code>null</code>.</p>
 	 * 
 	 * @return Skull's owner
 	 */
@@ -546,8 +552,10 @@ public class ItemStackAdapter implements Cloneable {
 	
 	/**
 	 * Sets this skull's owner.
-	 * You can specify <code>null</code> to remove the skull's owner.
-	 * This method is asynchronous because may perform a request to Mojang's servers.
+	 * 
+	 * <p>You can specify <code>null</code> to remove the skull's owner.</p>
+	 * 
+	 * <p>This method is asynchronous because may perform a request to Mojang's servers.</p>
 	 * 
 	 * @param skullOwner Skull's owner
 	 * @return This item stack
@@ -571,8 +579,9 @@ public class ItemStackAdapter implements Cloneable {
 	
 	/**
 	 * Gets this skull's texture's URL.
-	 * Will return <code>null</code> if <code>!</code>{@link #isPlayerHead()}
-	 * or if the texture's URL is <code>null</code>.
+	 * 
+	 * <p>Will return <code>null</code> if <code>!</code>{@link #isPlayerHead()}
+	 * or if the texture's URL is <code>null</code>.</p>
 	 * 
 	 * @return Skull's texture's URL
 	 */
@@ -604,7 +613,8 @@ public class ItemStackAdapter implements Cloneable {
 	
 	/**
 	 * Sets this skull's texture found at given URL.
-	 * You can specify <code>null</code> to remove the skull's texture's URL.
+	 * 
+	 * <p>You can specify <code>null</code> to remove the skull's texture's URL.</p>
 	 * 
 	 * @param skullTextureURL Texture's URL
 	 * @return This item stack
@@ -649,7 +659,8 @@ public class ItemStackAdapter implements Cloneable {
 	
 	/**
 	 * Gets this leather armor's color.
-	 * Will return <code>null</code> if <code>!</code>{@link #isLeatherArmor()}.
+	 * 
+	 * <p>Will return <code>null</code> if <code>!</code>{@link #isLeatherArmor()}.</p>
 	 * 
 	 * @return Leather armor's color
 	 */
@@ -660,9 +671,11 @@ public class ItemStackAdapter implements Cloneable {
 	
 	/**
 	 * Sets this leather armor's color.
-	 * Will do nothing if <code>!</code>{@link #isLeatherArmor()}.
-	 * If you need to reset the color to the default value, specify
-	 * <code>null</code> and the following hex code will be applied: "#A06540".
+	 * 
+	 * <p>Will do nothing if <code>!</code>{@link #isLeatherArmor()}.</p>
+	 * 
+	 * <p>If you need to reset the color to the default value, specify
+	 * <code>null</code> and the following color will be applied: #A06540.</p>
 	 * 
 	 * @param leatherArmorColor Leather armor's color
 	 * @return This item stack

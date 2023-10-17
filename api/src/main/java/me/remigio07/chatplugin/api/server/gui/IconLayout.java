@@ -48,9 +48,10 @@ public class IconLayout {
 	
 	/**
 	 * Reads an icon layout from the specified configuration and path.
-	 * The icon's ID is the text after <code>path</code>'s last
+	 * 
+	 * <p>The icon's ID is the text after <code>path</code>'s last
 	 * dot ('.') or <code>path</code> if it does not contain
-	 * any and has to match {@link Icon#ICON_ID_PATTERN}.
+	 * any and has to match {@link Icon#ICON_ID_PATTERN}.</p>
 	 * 
 	 * @param configuration Configuration to read
 	 * @param path Icon layout's path
@@ -80,8 +81,9 @@ public class IconLayout {
 	/**
 	 * Constructs a new icon layout specifying onlt the essential
 	 * options and assuming the others as their default values.
-	 * Note that {@link #IconLayout(Configuration, String)} is capable of reading icon layouts from
-	 * {@link Configuration}s. Use this constructor just to obtain custom icon layouts via code.
+	 * 
+	 * <p>Note that {@link #IconLayout(Configuration, String)} is capable of reading icon layouts from
+	 * {@link Configuration}s. Use this constructor just to obtain custom icon layouts via code.</p>
 	 * 
 	 * @param id Icon layout's ID
 	 * @param material Icon layout's material
@@ -118,8 +120,9 @@ public class IconLayout {
 	
 	/**
 	 * Constructs a new icon layout specifying all the available options.
-	 * Note that {@link #IconLayout(Configuration, String)} is capable of reading icon layouts from
-	 * {@link Configuration}s. Use this constructor just to obtain custom icon layouts via code.
+	 * 
+	 * <p>Note that {@link #IconLayout(Configuration, String)} is capable of reading icon layouts from
+	 * {@link Configuration}s. Use this constructor just to obtain custom icon layouts via code.</p>
 	 * 
 	 * @param id Icon layout's ID
 	 * @param material Icon layout's material
@@ -269,7 +272,8 @@ public class IconLayout {
 	
 	/**
 	 * Gets this icon layout's skull's owner.
-	 * Will return <code>null</code> if the skull's owner has not been specified.
+	 * 
+	 * <p>Will return <code>null</code> if the skull's owner has not been specified.</p>
 	 * 
 	 * @return Icon layout's skull's owner
 	 */
@@ -280,7 +284,8 @@ public class IconLayout {
 	
 	/**
 	 * Sets this icon layout's skull's owner.
-	 * You can specify <code>null</code> to remove the skull's owner.
+	 * 
+	 * <p>You can specify <code>null</code> to remove the skull's owner.</p>
 	 * 
 	 * @param skullOwner Icon layout's skull's owner
 	 */
@@ -290,7 +295,8 @@ public class IconLayout {
 	
 	/**
 	 * Gets this icon layout's skull's texture's URL.
-	 * Will return <code>null</code> if the skull's texture's URL has not been specified.
+	 * 
+	 * <p>Will return <code>null</code> if the skull's texture's URL has not been specified.</p>
 	 * 
 	 * @return Icon layout's skull's texture's URL
 	 */
@@ -301,7 +307,8 @@ public class IconLayout {
 	
 	/**
 	 * Sets this icon layout's skull's texture's URL.
-	 * You can specify <code>null</code> to remove the skull's texture's URL.
+	 * 
+	 * <p>You can specify <code>null</code> to remove the skull's texture's URL.</p>
 	 * 
 	 * @param skullTextureURL Icon layout's skull's texture's URL
 	 */
@@ -311,7 +318,8 @@ public class IconLayout {
 	
 	/**
 	 * Gets this icon layout's leather armor's color.
-	 * Will return <code>null</code> if the leather armor's color has not been specified.
+	 * 
+	 * <p>Will return <code>null</code> if the leather armor's color has not been specified.</p>
 	 * 
 	 * @return Icon layout's leather armor's color
 	 */
@@ -322,8 +330,9 @@ public class IconLayout {
 	
 	/**
 	 * Sets this icon layout's leather armor's color.
-	 * If you need to reset the color to the default value, specify
-	 * <code>null</code> and the following hex code will be applied: "#A06540".
+	 * 
+	 * <p>If you need to reset the color to the default value, specify
+	 * <code>null</code> and the following hex code will be applied: "#A06540".</p>
 	 * 
 	 * @param leatherArmorColor Icon layout's leather armor's color
 	 */
@@ -333,7 +342,8 @@ public class IconLayout {
 	
 	/**
 	 * Gets the commands that will be executed when this icon layout is clicked.
-	 * You may modify the returned list.
+	 * 
+	 * <p>You may modify the returned list.</p>
 	 * 
 	 * @return Icon layout's commands executed on click
 	 */
@@ -343,7 +353,8 @@ public class IconLayout {
 	
 	/**
 	 * Gets this icon layout's item flags.
-	 * You may modify the returned list.
+	 * 
+	 * <p>You may modify the returned list.</p>
 	 * 
 	 * @return Icon layout's item flags
 	 */
@@ -353,7 +364,8 @@ public class IconLayout {
 	
 	/**
 	 * Gets this icon layout's display names.
-	 * You may modify the returned map.
+	 * 
+	 * <p>You may modify the returned map.</p>
 	 * 
 	 * @return Icon layout's display names
 	 */
@@ -363,7 +375,8 @@ public class IconLayout {
 	
 	/**
 	 * Gets this icon layout's lores.
-	 * You may modify the returned map.
+	 * 
+	 * <p>You may modify the returned map.</p>
 	 * 
 	 * @return Icon layout's lores
 	 */
@@ -373,7 +386,8 @@ public class IconLayout {
 	
 	/**
 	 * Gets this icon layout's enchantments.
-	 * You may modify the returned map.
+	 * 
+	 * <p>You may modify the returned map.</p>
 	 * 
 	 * @return Icon layout's enchantments
 	 */

@@ -39,7 +39,8 @@ public class Server extends Thread {
 	
 	/**
 	 * Constructs a new server socket.
-	 * Call {@link #start()} to start it up.
+	 * 
+	 * <p>Call {@link #start()} to start it up.</p>
 	 * 
 	 * @param address Server's address
 	 * @param port Port's number [0 - 65535]
@@ -52,7 +53,8 @@ public class Server extends Thread {
 	
 	/**
 	 * Starts this server.
-	 * Will do nothing if {@link Socket#isClosed()}.
+	 * 
+	 * <p>Will do nothing if {@link Socket#isClosed()}.</p>
 	 * 
 	 * @see ServerStartupEvent
 	 */
@@ -90,7 +92,8 @@ public class Server extends Thread {
 	
 	/**
 	 * Shuts down this server and closes its socket.
-	 * Will do nothing if {@link Socket#isClosed()}.
+	 * 
+	 * <p>Will do nothing if {@link Socket#isClosed()}.</p>
 	 * 
 	 * @throws IOException If something goes wrong
 	 * @see ServerShutdownEvent
@@ -117,7 +120,8 @@ public class Server extends Thread {
 	
 	/**
 	 * Gets the list of the connected client handlers.
-	 * Do not modify this list.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned list.</p>
 	 * 
 	 * @return Client handlers' list
 	 */

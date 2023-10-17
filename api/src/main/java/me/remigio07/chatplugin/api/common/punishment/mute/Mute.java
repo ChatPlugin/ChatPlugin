@@ -60,7 +60,8 @@ public abstract class Mute extends Punishment {
 	
 	/**
 	 * Gets who unmuted {@link #getPlayer()}.
-	 * Will return <code>null</code> if the player has not been manually unmuted.
+	 * 
+	 * <p>Will return <code>null</code> if the player has not been manually unmuted.</p>
 	 * 
 	 * @return Who unmuted the player
 	 */
@@ -80,7 +81,8 @@ public abstract class Mute extends Punishment {
 	
 	/**
 	 * Gets this mute's unmute date, in milliseconds.
-	 * Will return -1 if the player has not been manually unmuted.
+	 * 
+	 * <p>Will return -1 if the player has not been manually unmuted.</p>
 	 * 
 	 * @return Unmute's date
 	 */
@@ -99,7 +101,8 @@ public abstract class Mute extends Punishment {
 	
 	/**
 	 * Gets this mute's duration, in milliseconds.
-	 * Will return -1 if this mute is permanent.
+	 * 
+	 * <p>Will return -1 if this mute is permanent.</p>
 	 * 
 	 * @return Mute's duration
 	 */
@@ -109,7 +112,8 @@ public abstract class Mute extends Punishment {
 	
 	/**
 	 * Sets this mute's duration, in milliseconds.
-	 * You can specify -1 for a permanent mute.
+	 * 
+	 * <p>You can specify -1 for a permanent mute.</p>
 	 * 
 	 * @param duration Mute's duration
 	 */
@@ -119,8 +123,9 @@ public abstract class Mute extends Punishment {
 	
 	/**
 	 * Gets this mute's remaining time, in milliseconds.
-	 * Will return 0 if the player has been unmuted
-	 * otherwise -1 if the mute is permanent.
+	 * 
+	 * <p>Will return 0 if the player has been unmuted
+	 * otherwise -1 if the mute is permanent.</p>
 	 * 
 	 * @return Mute's remaining time
 	 */
@@ -130,9 +135,11 @@ public abstract class Mute extends Punishment {
 	
 	/**
 	 * Gets this mute's expiration task's ID.
-	 * May be used with {@link TaskManager#cancelAsync(long)}.
-	 * Will return -1 if this mute is permanent, if it has already expired
-	 * or if <code>!{@link Environment#isProxy()} &amp;&amp; {@link ProxyManager#isEnabled()}</code>.
+	 * 
+	 * <p>May be used with {@link TaskManager#cancelAsync(long)}.</p>
+	 * 
+	 * <p>Will return -1 if this mute is permanent, if it has already expired or if
+	 * <code>!{@link Environment#isProxy()} &amp;&amp; {@link ProxyManager#isEnabled()}</code>.</p>
 	 * 
 	 * @return Mute's expiration task's ID
 	 */
@@ -141,8 +148,9 @@ public abstract class Mute extends Punishment {
 	}
 	
 	/**
-	 * Checks if this mute affects all servers inside of the network
-	 * (if using a multi instance setup with a proxy).
+	 * Checks if this mute affects all servers inside of the network.
+	 * 
+	 * <p>Only applies on multi instance setups with a proxy.</p>
 	 * 
 	 * @return Whether this mute is global
 	 */
@@ -151,8 +159,9 @@ public abstract class Mute extends Punishment {
 	}
 	
 	/**
-	 * Sets if this mute should affect all servers inside of the network
-	 * (if using a multi instance setup with a proxy).
+	 * Sets if this mute should affect all servers inside of the network.
+	 * 
+	 * <p>Only applies on multi instance setups with a proxy.</p>
 	 * 
 	 * @param global Whether this mute is global
 	 */

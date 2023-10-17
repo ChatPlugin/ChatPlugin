@@ -163,7 +163,8 @@ public class PacketSerializer {
 	
 	/**
 	 * Writes an UTF string value.
-	 * You may specify a <code>null</code> string.
+	 * 
+	 * <p>You may specify a <code>null</code> string.</p>
 	 * 
 	 * @param arg UTF string to write
 	 * @return This packet serializer
@@ -178,7 +179,8 @@ public class PacketSerializer {
 	
 	/**
 	 * Writes an UTF string array value.
-	 * The array may contain <code>null</code> elements.
+	 * 
+	 * <p>The array may contain <code>null</code> elements.</p>
 	 * 
 	 * @param args UTF string array to write
 	 * @return This packet serializer
@@ -193,8 +195,8 @@ public class PacketSerializer {
 	
 	/**
 	 * Writes an UUID value.
-	 * Calls {@link #writeUTF(String)} with {@link UUID#toString()} as argument.
-	 * You may specify a <code>null</code> UUID.
+	 * 
+	 * <p>You may specify a <code>null</code> UUID.</p>
 	 * 
 	 * @param arg UUID to write
 	 * @return This packet serializer

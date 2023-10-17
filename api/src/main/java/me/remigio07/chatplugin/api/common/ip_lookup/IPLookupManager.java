@@ -142,7 +142,8 @@ public abstract class IPLookupManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the URL used for remote IP lookups (through MaxMind's website).
-	 * You should replace "{0}" with the IP address you want to get the lookup for.
+	 * 
+	 * <p>You should replace "{0}" with the IP address you want to get the lookup for.</p>
 	 * 
 	 * @return Lookup request URL
 	 */
@@ -151,8 +152,10 @@ public abstract class IPLookupManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the cached IP lookups. The returned map's keys are IPv4
-	 * addresses and the values are the corresponding IP lookups.
+	 * Gets the cached IP lookups.
+	 * 
+	 * <p>The returned map's keys are IPv4 addresses and
+	 * the values are the corresponding IP lookups.</p>
 	 * 
 	 * @return Cached lookups
 	 */
@@ -161,8 +164,10 @@ public abstract class IPLookupManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets a cached IP lookup. Will return <code>null</code>
-	 * if the specified IP address is not cached.
+	 * Gets a cached IP lookup.
+	 * 
+	 * <p>Will return <code>null</code> if the
+	 * specified IP address is not cached.</p>
 	 * 
 	 * @param ipAddress Cached IP address 
 	 * @return Cached lookup
@@ -173,8 +178,10 @@ public abstract class IPLookupManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the pending futures' map. Every entry is composed of an {@link InetAddress}
-	 * which represents an IPv4 and a {@link CompletableFuture} holding an {@link IPLookup}.
+	 * Gets the pending futures' map.
+	 * 
+	 * <p>Every entry is composed of an {@link InetAddress} which represents an
+	 * IPv4 and a {@link CompletableFuture} holding an {@link IPLookup}.</p>
 	 * 
 	 * @deprecated Internal use only.
 	 * @return Pending futures' map
@@ -208,7 +215,8 @@ public abstract class IPLookupManager implements ChatPluginManager {
 	
 	/**
 	 * Gets an IP lookup for the specified IPv4 address.
-	 * Returned lookup will be also {@link #putInCache(InetAddress, IPLookup)}.
+	 * 
+	 * <p>Returned lookup will be also {@link #putInCache(InetAddress, IPLookup)}.</p>
 	 * 
 	 * <p>You can specify <code>null</code> as <code>requesterName</code>
 	 * to prevent the proxy from sending them the message found at "misc.disabled-feature" if its
@@ -225,8 +233,10 @@ public abstract class IPLookupManager implements ChatPluginManager {
 	public abstract CompletableFuture<IPLookup> getIPLookup(InetAddress ipAddress, @Nullable(why = "Requester may not be specified") String requesterName);
 	
 	/**
-	 * Adds an IP address to {@link #getCache()}. Will overwrite an
-	 * existing entry identified by the specified IP if already present.
+	 * Adds an IP address to {@link #getCache()}.
+	 * 
+	 * <p>Will overwrite an existing entry identified
+	 * by the specified IP if already present.</p>
 	 * 
 	 * @param ipAddress IP address to add
 	 * @param lookup IP lookup to cache
@@ -236,7 +246,8 @@ public abstract class IPLookupManager implements ChatPluginManager {
 	
 	/**
 	 * Removes an IP address from {@link #getCache()}.
-	 * Will do nothing if it was not cached.
+	 * 
+	 * <p>Will do nothing if it was not cached.</p>
 	 * 
 	 * @param ipAddress Cached IP address
 	 * @see IPLookupCleanCacheEvent
@@ -244,7 +255,9 @@ public abstract class IPLookupManager implements ChatPluginManager {
 	public abstract void removeFromCache(InetAddress ipAddress);
 	
 	/**
-	 * Reads the specified URL's content. Designed to read MaxMind website's IP lookups only.
+	 * Reads the specified URL's content.
+	 * 
+	 * <p>Designed to read MaxMind website's IP lookups only.</p>
 	 * 
 	 * @param url The URL to check
 	 * @return The URL's content (should be a JSON string)

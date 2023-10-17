@@ -16,7 +16,8 @@
 package me.remigio07.chatplugin.api.common.util.packet.type;
 
 /**
- * Represents the type of a packet sent through the <code>PlayerViolation</code> subchannel.
+ * Represents the type of a packet sent through
+ * the <code>PlayerViolation</code> subchannel.
  */
 public enum ViolationPacketType {
 	

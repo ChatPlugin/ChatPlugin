@@ -62,7 +62,8 @@ public class Configuration {
 	
 	/**
 	 * Constructs a new configuration of type {@link ConfigurationType#CUSTOM}.
-	 * If <code>file</code> does not exist, it will be created.
+	 * 
+	 * <p>If <code>file</code> does not exist, it will be created.</p>
 	 * 
 	 * @param file Configuration's file
 	 * @throws IOException If {@link File#createNewFile()} fails
@@ -194,7 +195,8 @@ public class Configuration {
 	
 	/**
 	 * Shortcut for {@link ConfigurationMappings#getSection(String)}.
-	 * Will return <code>null</code> if the config does not contain the specified section.
+	 * 
+	 * <p>Will return <code>null</code> if the config does not contain the specified section.</p>
 	 * 
 	 * @param path Section's path
 	 * @return Section at specified path
@@ -247,8 +249,9 @@ public class Configuration {
 	
 	/**
 	 * Shortcut for {@link ConfigurationMappings#set(String, Object)}.
-	 * If you need to remove the mapping at the specified path,
-	 * specify a <code>null</code> as <code>value</code>.
+	 * 
+	 * <p>If you need to remove the mapping at the specified path,
+	 * specify a <code>null</code> as <code>value</code>.</p>
 	 * 
 	 * @param path Value's path
 	 * @param value Value to set
@@ -438,7 +441,8 @@ public class Configuration {
 	
 	/**
 	 * Shortcut for {@link ConfigurationMappings#getString(String, String)}.
-	 * You can specify <code>null</code> as <code>def</code>.
+	 * 
+	 * <p>You can specify <code>null</code> as <code>def</code>.</p>
 	 * 
 	 * @param path Path to check
 	 * @param def Default value
@@ -462,7 +466,8 @@ public class Configuration {
 	
 	/**
 	 * Shortcut for {@link ConfigurationMappings#getList(String, List)}.
-	 * You can specify <code>null</code> as <code>def</code>.
+	 * 
+	 * <p>You can specify <code>null</code> as <code>def</code>.</p>
 	 * 
 	 * @param <T> List's type
 	 * @param path Path to check
@@ -586,7 +591,8 @@ public class Configuration {
 	
 	/**
 	 * Shortcut for {@link ConfigurationMappings#translateString(String, String, boolean)}.
-	 * You can specify <code>null</code> as <code>def</code>.
+	 * 
+	 * <p>You can specify <code>null</code> as <code>def</code>.</p>
 	 * 
 	 * @param path Path to check
 	 * @param def Default value
@@ -611,7 +617,8 @@ public class Configuration {
 	
 	/**
 	 * Shortcut for {@link ConfigurationMappings#translateStringList(String, List, boolean)}.
-	 * You can specify <code>null</code> as <code>def</code>.
+	 * 
+	 * <p>You can specify <code>null</code> as <code>def</code>.</p>
 	 * 
 	 * @param path Path to check
 	 * @param def Default value

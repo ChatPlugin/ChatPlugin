@@ -28,29 +28,33 @@ public enum Environment {
 	
 	/**
 	 * Bukkit environment.
-	 * <br><code>enable(...)</code> method arguments' types:
-	 * {@link java.util.logging.Logger}, {@link java.io.File}.
+	 * 
+	 * <p><code>enable(...)</code> method's arguments' types:
+	 * {@link java.util.logging.Logger}, {@link java.io.File}</p>
 	 */
 	BUKKIT("Bukkit", new String[] { "java.util.logging.Logger", "java.io.File" }),
 	
 	/**
 	 * Sponge environment.
-	 * <br><code>enable(...)</code> method arguments' types:
-	 * {@link org.slf4j.Logger}, {@link java.nio.file.Path}.
+	 * 
+	 * <p><code>enable(...)</code> method's arguments' types:
+	 * {@link org.slf4j.Logger}, {@link java.nio.file.Path}</p>
 	 */
 	SPONGE("Sponge", new String[] { "org.slf4j.Logger", "java.nio.file.Path" }),
 	
 	/**
 	 * BungeeCord environment.
-	 * <br><code>enable(...)</code> method arguments' types:
-	 * {@link java.util.logging.Logger}, {@link java.io.File}.
+	 * 
+	 * <p><code>enable(...)</code> method's arguments' types:
+	 * {@link java.util.logging.Logger}, {@link java.io.File}</p>
 	 */
 	BUNGEECORD("BungeeCord", BUKKIT.getEnableMethodArgsTypes()),
 	
 	/**
 	 * Velocity environment.
-	 * <br><code>enable(...)</code> method arguments' types:
-	 * {@link com.velocitypowered.api.proxy.ProxyServer}, {@link org.slf4j.Logger}, {@link java.nio.file.Path}.
+	 * 
+	 * <p><code>enable(...)</code> method's arguments' types:
+	 * {@link com.velocitypowered.api.proxy.ProxyServer}, {@link org.slf4j.Logger}, {@link java.nio.file.Path}</p>
 	 */
 	VELOCITY("Velocity", new String[] { "com.velocitypowered.api.proxy.ProxyServer", "org.slf4j.Logger", "java.nio.file.Path" });
 	
@@ -76,7 +80,7 @@ public enum Environment {
 	 * Gets the arguments' types used by the
 	 * implementation's <code>enable(...)</code> method.
 	 * 
-	 * @return Enable method types
+	 * @return Enable method's arguments' types
 	 */
 	public String[] getEnableMethodArgsTypes() {
 		return enableMethodArgsTypes;

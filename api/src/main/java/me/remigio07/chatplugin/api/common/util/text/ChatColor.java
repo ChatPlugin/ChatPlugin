@@ -303,8 +303,9 @@ public class ChatColor {
 	
 	/**
 	 * Gets the string representation of this color.
-	 * Will return {@link #SECTION_SIGN}<code> + </code>{@link #getCode()} if {@link #isDefaultColor()}
-	 * and a hex string (example: "&sect;x&sect;f&sect;f&sect;5&sect;5&sect;f&sect;f", but translated) otherwise.
+	 * 
+	 * <p>Will return {@link #SECTION_SIGN}<code> + </code>{@link #getCode()} if {@link #isDefaultColor()} and a
+	 * hex string (example: "&sect;x&sect;f&sect;f&sect;5&sect;5&sect;f&sect;f", but translated) otherwise.</p>
 	 */
 	@Override
 	public String toString() {
@@ -325,7 +326,9 @@ public class ChatColor {
 	
 	/**
 	 * Gets the chat color adapted for Bukkit environments.
-	 * Will return {@link org.bukkit.ChatColor#RESET} if <code>!</code>{@link #isDefaultColor()}.
+	 * 
+	 * <p>Will return {@link org.bukkit.ChatColor#RESET}
+	 * if <code>!</code>{@link #isDefaultColor()}.</p>
 	 * 
 	 * @return Bukkit-adapted chat color
 	 * @throws UnsupportedOperationException If !{@link Environment#isBukkit()}
@@ -338,7 +341,9 @@ public class ChatColor {
 	
 	/**
 	 * Gets the chat color adapted for Sponge environments.
-	 * Will return {@link org.spongepowered.api.text.format.TextColors#RESET} if <code>!</code>{@link #isDefaultColor()}.
+	 * 
+	 * <p>Will return {@link org.spongepowered.api.text.format.TextColors#RESET}
+	 * if <code>!</code>{@link #isDefaultColor()}.</p>
 	 * 
 	 * @return Sponge-adapted chat color
 	 * @throws UnsupportedOperationException If !{@link Environment#isSponge()}
@@ -356,7 +361,8 @@ public class ChatColor {
 	
 	/**
 	 * Gets the chat color adapted for BungeeCord environments.
-	 * This method supports hex colors (<code>!</code>{@link #isDefaultColor()}).
+	 * 
+	 * <p>This method supports hex colors (<code>!</code>{@link #isDefaultColor()}).</p>
 	 * 
 	 * @return BungeeCord-adapted chat color
 	 * @throws UnsupportedOperationException If !{@link Environment#isBungeeCord()}
@@ -370,7 +376,8 @@ public class ChatColor {
 	
 	/**
 	 * Gets the chat color adapted for Velocity environments.
-	 * This method supports hex colors (<code>!</code>{@link #isDefaultColor()}).
+	 * 
+	 * <p>This method supports hex colors (<code>!</code>{@link #isDefaultColor()}).</p>
 	 * 
 	 * @return Velocity-adapted chat color
 	 * @throws UnsupportedOperationException If !{@link Environment#isVelocity()}
@@ -383,7 +390,8 @@ public class ChatColor {
 	
 	/**
 	 * Equivalent of {@link Enum#name()}.
-	 * Will return a hex string (example: "#FF55FF") if <code>!</code>{@link #isDefaultColor()}.
+	 * 
+	 * <p>Will return a hex string (example: "#FF55FF") if <code>!</code>{@link #isDefaultColor()}.</p>
 	 * 
 	 * @return Constant's name
 	 */
@@ -393,7 +401,8 @@ public class ChatColor {
 	
 	/**
 	 * Equivalent of {@link Enum#ordinal()}.
-	 * Will return -1 if <code>!</code>{@link #isDefaultColor()}.
+	 * 
+	 * <p>Will return -1 if <code>!</code>{@link #isDefaultColor()}.</p>
 	 * 
 	 * @return Constant's ordinal
 	 */
@@ -406,7 +415,8 @@ public class ChatColor {
 	
 	/**
 	 * Gets this color's code.
-	 * Will return <code>null</code> if <code>!</code>{@link #isDefaultColor()}.
+	 * 
+	 * <p>Will return <code>null</code> if <code>!</code>{@link #isDefaultColor()}.</p>
 	 * 
 	 * @return Color's code
 	 */
@@ -545,7 +555,8 @@ public class ChatColor {
 	
 	/**
 	 * Gets the last colors contained in a string.
-	 * Will return an empty string if there are no colors in the string.
+	 * 
+	 * <p>Will return an empty string if there are no colors in the string.</p>
 	 * 
 	 * @param input String to check
 	 * @return Last colors in string
@@ -620,7 +631,8 @@ public class ChatColor {
 	
 	/**
 	 * Gets a default chat color by its code.
-	 * Will return <code>null</code> if the code is invalid.
+	 * 
+	 * <p>Will return <code>null</code> if the code is invalid.</p>
 	 * 
 	 * @param code Color's code
 	 * @return Corresponding color
@@ -635,7 +647,8 @@ public class ChatColor {
 	 * with the only difference that instead of throwing
 	 * {@link IllegalArgumentException} <code>null</code>
 	 * is returned if the constant's name is invalid.
-	 * This method recognizes Bukkit's, Sponge's BungeeCord's and Velocity's IDs.
+	 * 
+	 * <p>This method recognizes Bukkit's, Sponge's BungeeCord's and Velocity's IDs.</p>
 	 * 
 	 * @param name Constant's name
 	 * @return Enum constant

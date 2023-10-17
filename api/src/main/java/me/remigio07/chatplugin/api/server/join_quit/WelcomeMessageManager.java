@@ -75,8 +75,9 @@ public abstract class WelcomeMessageManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the map of loaded welcome messages.
-	 * You may modify the returned map, but it cannot point to a
-	 * <code>null</code> value for {@link Language#getMainLanguage()}.
+	 * 
+	 * <p>You may modify the returned map, but it cannot point to a
+	 * <code>null</code> value for {@link Language#getMainLanguage()}.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "join-quit-modules.welcome-messages.values" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
 	 * 
@@ -88,9 +89,10 @@ public abstract class WelcomeMessageManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the welcome message for the specified language.
-	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
+	 * 
+	 * <p>Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s welcome message if no welcome message is present for the specified language.
-	 * Will return <code>null</code> if {@link #getWelcomeMessages()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.
+	 * Will return <code>null</code> if {@link #getWelcomeMessages()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.</p>
 	 * 
 	 * @param language Language used to translate the welcome message
 	 * @param avoidNull Whether to avoid returning <code>null</code>

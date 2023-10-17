@@ -31,9 +31,11 @@ import me.remigio07.chatplugin.api.common.event.discord.StatusUpdateEvent;
 public interface DiscordBot {
 	
 	/**
-	 * Gets a new embed message. This method returns an {@link Object}
-	 * because libraries' classes cannot be accessed directly from the API,
-	 * but it is an instance of <code>net.dv8tion.jda.api.entities.MessageEmbed</code>. 
+	 * Gets a new embed message.
+	 * 
+	 * <p>This method returns an {@link Object} because libraries' classes
+	 * cannot be accessed directly from the API, but it is an instance
+	 * of <code>net.dv8tion.jda.api.entities.MessageEmbed</code>.</p>
 	 * 
 	 * <p>The first list should contain 11 elements: it will call
 	 * {@link #newEmbedMessage(String, String, String, List, String, String, String, String, String, String, String, Color)}
@@ -86,7 +88,8 @@ public interface DiscordBot {
 	
 	/**
 	 * Gets the bot's instance.
-	 * This method calls {@link DiscordIntegrationManager#getBot()}.
+	 * 
+	 * <p>This method calls {@link DiscordIntegrationManager#getBot()}.</p>
 	 * 
 	 * @return Bot's instance
 	 */
@@ -127,9 +130,11 @@ public interface DiscordBot {
 	public void sendEmbedMessage(long channelID, DiscordMessage embed, Object... args);
 	
 	/**
-	 * Sends an embed message to the specified channel. The parameter is an {@link Object}
-	 * because libraries' classes cannot be accessed directly from the API, but it should
-	 * be instance of <code>net.dv8tion.jda.api.entities.MessageEmbed</code>.
+	 * Sends an embed message to the specified channel.
+	 * 
+	 * <p>The parameter is an {@link Object} because libraries' classes
+	 * cannot be accessed directly from the API, but it is an instance
+	 * of <code>net.dv8tion.jda.api.entities.MessageEmbed</code>.</p>
 	 * 
 	 * @param channelID Channel's ID
 	 * @param embed Embed to send
@@ -139,9 +144,11 @@ public interface DiscordBot {
 	public void sendEmbedMessage(long channelID, Object embed);
 	
 	/**
-	 * Gets the bot's JDA instance. This method returns an {@link Object}
-	 * because libraries' classes cannot be accessed directly from the API,
-	 * but it is an instance of <code>net.dv8tion.jda.api.JDA</code>.
+	 * Gets the bot's JDA instance.
+	 * 
+	 * <p>This method returns an {@link Object} because libraries'
+	 * classes cannot be accessed directly from the API, but it is
+	 * an instance of <code>net.dv8tion.jda.api.JDA</code>.</p>
 	 * 
 	 * @return JDA instance
 	 */
@@ -156,11 +163,14 @@ public interface DiscordBot {
 	public int getOnlineUsers();
 	
 	/**
-	 * Gets a new embed message. This method returns an {@link Object}
-	 * because libraries' classes cannot be accessed directly from the API,
-	 * but it is an instance of <code>net.dv8tion.jda.api.entities.MessageEmbed</code>.
-	 * Every passed argument may be <code>null</code>: in this case its value
-	 * will not be set, except for the color that defaults to {@link Color#WHITE}.
+	 * Gets a new embed message.
+	 * 
+	 * <p>This method returns an {@link Object} because libraries' classes
+	 * cannot be accessed directly from the API, but it is an instance
+	 * of <code>net.dv8tion.jda.api.entities.MessageEmbed</code>.</p>
+	 * 
+	 * <p>Every passed argument may be <code>null</code>: in this case its value
+	 * will not be set, except for the color that defaults to {@link Color#WHITE}.</p>
 	 * 
 	 * @param title Message's title
 	 * @param titleURL Message's title's URL
@@ -180,10 +190,11 @@ public interface DiscordBot {
 	public Object newEmbedMessage(String title, String titleURL, String description, List<FieldAdapter> fields, String imageURL, String thumbnailIconURL, String author, String authorURL, String authorIconURL, String footer, String footerIconURL, Color color);
 	
 	/**
-	 * Serializes the specified <code>net.dv8tion.jda.api.entities.MessageEmbed</code>
-	 * to a JSON string. All the options ({@link DiscordMessages#EMBED_OPTIONS})
-	 * are currently supported. The parameter is an {@link Object} because libraries' classes
-	 * cannot be accessed directly from the API: just ignore that and consider it an embed.
+	 * Serializes the specified <code>net.dv8tion.jda.api.entities.MessageEmbed</code> to a JSON string.
+	 * 
+	 * <p>All the options ({@link DiscordMessages#EMBED_OPTIONS}) are currently supported.
+	 * The parameter is an {@link Object} because libraries' classes cannot be accessed
+	 * directly from the API: just ignore that and consider it an embed.</p>
 	 * 
 	 * @param embed Message to serialize
 	 * @return Serialized JSON string
@@ -195,9 +206,10 @@ public interface DiscordBot {
 	
 	/**
 	 * Deserializes the specified JSON string to a <code>net.dv8tion.jda.api.entities.MessageEmbed</code>.
-	 * All the options ({@link DiscordMessages#EMBED_OPTIONS}) are currently supported.
-	 * This method returns an {@link Object} because libraries' classes cannot be
-	 * accessed directly from the API: just ignore that and consider it an embed.
+	 * 
+	 * <p>All the options ({@link DiscordMessages#EMBED_OPTIONS}) are currently supported.
+	 * This method returns an {@link Object} because libraries' classes cannot be accessed
+	 * directly from the API: just ignore that and consider it an embed.</p>
 	 * 
 	 * @param json JSON string to deserialize
 	 * @return Deserialized message

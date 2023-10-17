@@ -30,7 +30,8 @@ import me.remigio07.chatplugin.api.server.chat.ChatManager;
 
 /**
  * Class that handles ChatPlugin's managers.
- * The current instance is provided using {@link #getInstance()}.
+ * 
+ * <p>The current instance is provided using {@link #getInstance()}.</p>
  */
 public abstract class ChatPluginManagers {
 	
@@ -39,7 +40,8 @@ public abstract class ChatPluginManagers {
 	
 	/**
 	 * Gets the loaded managers map.
-	 * The returned map is an instance of {@link LinkedHashMap}.
+	 * 
+	 * <p>The returned map is an instance of {@link LinkedHashMap}.</p>
 	 * 
 	 * @return Loaded managers
 	 */
@@ -58,7 +60,8 @@ public abstract class ChatPluginManagers {
 	
 	/**
 	 * Unloads every manager in the list of loaded managers.
-	 * Some managers do not need to be unloaded and in those cases nothing will happen.
+	 * 
+	 * <p>Some managers do not need to be unloaded and in those cases nothing will happen.</p>
 	 * 
 	 * @throws ChatPluginManagerException If something goes wrong
 	 */
@@ -69,7 +72,8 @@ public abstract class ChatPluginManagers {
 	
 	/**
 	 * Gets a manager from the list of loaded managers.
-	 * Will return <code>null</code> if the class is invalid.
+	 * 
+	 * <p>Will return <code>null</code> if the class is invalid.</p>
 	 * 
 	 * @param <T> Manager's type
 	 * @param clazz Manager's API class
@@ -83,7 +87,8 @@ public abstract class ChatPluginManagers {
 	
 	/**
 	 * Gets a manager from the list of loaded managers by its name.
-	 * Will return <code>null</code> if the name is invalid.
+	 * 
+	 * <p>Will return <code>null</code> if the name is invalid.</p>
 	 * 
 	 * <p><strong>Example:</strong> "Chat" will return the current instance of {@link ChatManager}.
 	 * The check is performed ignoring the string's case.</p>
@@ -104,7 +109,6 @@ public abstract class ChatPluginManagers {
 	
 	/**
 	 * Adds a manager to {@link #getManagers()} and initializes it using {@link ChatPluginManager#load()}.
-	 * Internal use only unless you know what you are doing.
 	 * 
 	 * @param clazz Manager's API class
 	 * @param manager Corresponding manager's implementation
@@ -117,7 +121,8 @@ public abstract class ChatPluginManagers {
 	
 	/**
 	 * Reloads every reloadable manager in the list of loaded managers.
-	 * To check if a manager is reloadable, use {@link ChatPluginManager#isReloadable()}.
+	 * 
+	 * <p>To check if a manager is reloadable, use {@link ChatPluginManager#isReloadable()}.</p>
 	 * 
 	 * @throws ChatPluginManagerException If something goes wrong
 	 */

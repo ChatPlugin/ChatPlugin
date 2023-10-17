@@ -38,7 +38,9 @@ public class Bossbar {
 	private boolean hidden;
 	
 	/**
-	 * Constructs a new bossbar. You have two ways to send it to a player:
+	 * Constructs a new bossbar.
+	 * 
+	 * <p>You have two ways to send it to a player:
 	 * 	<ul>
 	 * 		<li>using {@link BossbarManager#sendBossbar(Bossbar, ChatPluginServerPlayer)}</li>
 	 * 		<li>by adding it to {@link BossbarManager#getBossbars()}; in this case it will be removed on {@link BossbarManager#unload()}</li>
@@ -87,8 +89,9 @@ public class Bossbar {
 	
 	/**
 	 * Gets this bossbar's titles.
-	 * You may modify the returned map, but it cannot point to a
-	 * <code>null</code> value for {@link Language#getMainLanguage()}.
+	 * 
+	 * <p>You may modify the returned map, but it cannot point to a
+	 * <code>null</code> value for {@link Language#getMainLanguage()}.</p>
 	 * 
 	 * @return Bossbar's titles
 	 */
@@ -98,9 +101,10 @@ public class Bossbar {
 	
 	/**
 	 * Gets this bossbar's title for the specified language.
-	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
+	 * 
+	 * <p>Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s title if no title is present for the specified language.
-	 * Will return <code>null</code> if {@link #getTitles()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.
+	 * Will return <code>null</code> if {@link #getTitles()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.</p>
 	 * 
 	 * @param language Language used to translate the title
 	 * @param avoidNull Whether to avoid returning <code>null</code>

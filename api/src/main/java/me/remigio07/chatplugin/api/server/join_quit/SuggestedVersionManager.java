@@ -74,7 +74,8 @@ public abstract class SuggestedVersionManager implements ChatPluginManager {
 	
 	/**
 	 * Checks if {@link ChatPluginServerPlayer#getVersion()}<code>.isAtLeast({@link #getVersion()})</code>.
-	 * If <code>true</code>, waits {@link #getDelay()} and then sends the suggested version message.
+	 * 
+	 * <p>If <code>true</code>, waits {@link #getDelay()} and then sends the suggested version message.</p>
 	 * 
 	 * @param player Player to check
 	 */

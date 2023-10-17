@@ -20,7 +20,8 @@ import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 
 /**
- * Represents a {@link ChatPluginIntegration} able to check if a {@link PlayerAdapter} is connected through a Bedrock client.
+ * Represents a {@link ChatPluginIntegration} able to check if a
+ * {@link PlayerAdapter} is connected through a Bedrock client.
  * 
  * <p><strong>Types:</strong> [{@link IntegrationType#GEYSERMC}]</p>
  */

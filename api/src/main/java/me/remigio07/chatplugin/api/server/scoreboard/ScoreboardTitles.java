@@ -61,9 +61,10 @@ public abstract class ScoreboardTitles extends TimerTask {
 	
 	/**
 	 * Gets these titles' values.
-	 * You may modify the returned map, but it cannot point to a
+	 * 
+	 * <p>You may modify the returned map, but it cannot point to a
 	 * <code>null</code> value for {@link Language#getMainLanguage()}
-	 * and empty Lists are not allowed.
+	 * and empty Lists are not allowed.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "titles.values" in {@link Scoreboard#getConfiguration()}</p>
 	 * 
@@ -75,9 +76,10 @@ public abstract class ScoreboardTitles extends TimerTask {
 	
 	/**
 	 * Gets these titles's values for the specified language.
-	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
+	 * 
+	 * <p>Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s values if no values are present for the specified language.
-	 * Will return <code>null</code> if {@link #getValues()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.
+	 * Will return <code>null</code> if {@link #getValues()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.</p>
 	 * 
 	 * @param language Language used to translate the values
 	 * @param avoidNull Whether to avoid returning <code>null</code>

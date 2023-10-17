@@ -111,7 +111,8 @@ public enum VersionChange {
 	
 	/**
 	 * Gets the current version change by checking the old version in the specified configuration.
-	 * Will return {@link #NULL} if the two versions match.
+	 * 
+	 * <p>Will return {@link #NULL} if the two versions match.</p>
 	 * 
 	 * @param configuration Configuration to check
 	 * @param versionPath Version's path to check

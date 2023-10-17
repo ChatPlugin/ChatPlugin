@@ -32,7 +32,8 @@ import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 
 /**
  * Manager that handles logging, the log file and the debug mode.
- * This is the first manager loaded by ChatPlugin at startup!
+ * 
+ * <p>This is the first manager loaded by ChatPlugin at startup!</p>
  */
 public abstract class LogManager implements ChatPluginManager {
 	
@@ -90,7 +91,6 @@ public abstract class LogManager implements ChatPluginManager {
 	 * Gets the current logger type.
 	 * 
 	 * @return Logger type
-	 * @see LoggerType
 	 */
 	public LoggerType getLoggerType() {
 		return loggerType;
@@ -100,7 +100,6 @@ public abstract class LogManager implements ChatPluginManager {
 	 * Sets the current logger type.
 	 * 
 	 * @param loggerType Logger type
-	 * @see LoggerType
 	 */
 	public void setLoggerType(LoggerType loggerType) {
 		this.loggerType = loggerType;
@@ -145,7 +144,8 @@ public abstract class LogManager implements ChatPluginManager {
 	
 	/**
 	 * Writes a line of text and the current date into {@link #getFile()}.
-	 * A {@link ChatColor#stripColor(String)} is performed before writing the message.
+	 * 
+	 * <p>A {@link ChatColor#stripColor(String)} is performed before writing the message.</p>
 	 * 
 	 * @param message Message to write
 	 */
@@ -160,9 +160,11 @@ public abstract class LogManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Logs a message and writes it to file. This static method calls the instance method
+	 * Logs a message and writes it to file.
+	 * 
+	 * <p>This static method calls the instance method
 	 * {@link #logMessage(String, LogLevel, Object...)} using the manager's current instance.
-	 * This method uses the log level's ID instead of the enum value, but they do the same thing.
+	 * It uses the log level's ID instead of the enum value, but they do the same thing.</p>
 	 * 
 	 * @param message Message to send and write to file
 	 * @param logLevel Log level's ID (0, 1, 2, 3, 4)
@@ -192,8 +194,10 @@ public abstract class LogManager implements ChatPluginManager {
 	public abstract void logMessage(String message, LogLevel logLevel, Object... args);
 	
 	/**
-	 * Represents a log level. There are currently 5 log levels available and every
-	 * of them is used to send different messages of various priority and importance.
+	 * Represents a log level.
+	 * 
+	 * <p>There are currently 5 log levels available and they are used
+	 * to send different messages of various priority and importance.</p>
 	 */
 	public enum LogLevel {
 		
@@ -219,8 +223,8 @@ public abstract class LogManager implements ChatPluginManager {
 		DEBUG("[DEBUG] "),
 		
 		/**
-		 * Represents the second debug level. Unlike {@link #DEBUG} messages,
-		 * these ones will not be sent to the console. Just written to {@link LogManager#getFile()}.
+		 * Represents the second debug level. Unlike {@link #DEBUG} messages, these ones
+		 * will not be sent to the console, but just written to {@link LogManager#getFile()}.
 		 */
 		DEBUG_FILE("[DEBUG] ");
 		
@@ -243,8 +247,9 @@ public abstract class LogManager implements ChatPluginManager {
 		
 		/**
 		 * Checks whether this log level's messages should be sent to the console.
-		 * Will return true unless <code>this == {@link #DEBUG_FILE}</code>
-		 * or <code>this == {@link #DEBUG} &amp;&amp; !{@link LogManager#isDebug()}</code>.
+		 * 
+		 * <p>Will return true unless <code>this == {@link #DEBUG_FILE}</code> or
+		 * <code>this == {@link #DEBUG} &amp;&amp; !{@link LogManager#isDebug()}</code>.</p>
 		 * 
 		 * @return Whether this log level's messages should be sent
 		 */
@@ -261,13 +266,15 @@ public abstract class LogManager implements ChatPluginManager {
 		
 		/**
 		 * Represents the Java integrated logger ({@link java.util.logging.Logger}).
-		 * This is used by the Bukkit and BungeeCord implementations of ChatPlugin.
+		 * 
+		 * <p>This is used by the Bukkit and BungeeCord implementations of ChatPlugin.</p>
 		 */
 		JAVA,
 		
 		/**
 		 * Represents the SLF4J logger ({@link org.slf4j.Logger}).
-		 * This is used by the Sponge and Velocity implementations of ChatPlugin.
+		 * 
+		 * <p>This is used by the Sponge and Velocity implementations of ChatPlugin.</p>
 		 */
 		SLF4J;
 		

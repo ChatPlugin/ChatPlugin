@@ -64,7 +64,8 @@ public abstract class TaskManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the next Sponge sync task's ID and increments it by 1.
-	 * Only applicable when {@link Environment#isSponge()}.
+	 * 
+	 * <p>It is only applicable when {@link Environment#isSponge()}.</p>
 	 * 
 	 * @return Next Sponge sync task's ID
 	 */
@@ -82,10 +83,13 @@ public abstract class TaskManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Runs a synchronous task on the main thread. Might impact performance
-	 * with heavy tasks: use {@link #runAsync(Runnable, long)} if possible.
-	 * Note that synchronous tasks are available on ChatPlugin's Bukkit
-	 * and Sponge implementations only.
+	 * Runs a synchronous task on the main thread.
+	 * 
+	 * <p>Might impact performance with heavy tasks: use
+	 * {@link #runAsync(Runnable, long)} if possible.</p>
+	 * 
+	 * <p>Note that synchronous tasks are available on ChatPlugin's Bukkit
+	 * and Sponge implementations only.</p>
 	 * 
 	 * @param runnable Task to run
 	 * @param delay Delay to wait for first execution, in milliseconds
@@ -129,10 +133,13 @@ public abstract class TaskManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Schedules a synchronous task on the main thread. Might impact performance
-	 * with heavy tasks: use {@link #scheduleAsync(Runnable, long, long)} if possible.
-	 * Note that synchronous tasks are available on ChatPlugin's Bukkit
-	 * and Sponge implementations only.
+	 * Schedules a synchronous task on the main thread.
+	 * 
+	 * <p>Might impact performance with heavy tasks: use
+	 * {@link #scheduleAsync(Runnable, long, long)} if possible.</p>
+	 * 
+	 * <p>Note that synchronous tasks are available on ChatPlugin's Bukkit
+	 * and Sponge implementations only.</p>
 	 * 
 	 * @param runnable Task to run
 	 * @param delay Delay to wait for first execution, in milliseconds
@@ -177,13 +184,15 @@ public abstract class TaskManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Cancels a synchronous task. If the specified ID does not belong to any
+	 * Cancels a synchronous task.
+	 * 
+	 * <p>If the specified ID does not belong to any
 	 * existing task, nothing will happen. If the task has not run yet, calling
 	 * this method will prevent it from running and if it is a repeating task
 	 * (obtained with {@link #scheduleSync(Runnable, long, long)})
 	 * and it has run already, calling this method will prevent it from running again.
 	 * Also, if the task is running in this moment, it will run to completion,
-	 * but will not be executed again.
+	 * but will not be executed again.</p>
 	 * 
 	 * @param id Task's ID
 	 * @see #getSyncTasks()
@@ -198,13 +207,15 @@ public abstract class TaskManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Cancels an asynchronous task. If the specified ID does not belong to any
+	 * Cancels an asynchronous task.
+	 * 
+	 * <p>If the specified ID does not belong to any
 	 * existing task, nothing will happen. If the task has not run yet, calling
 	 * this method will prevent it from running and if it is a repeating task
 	 * (obtained with {@link #scheduleAsync(Runnable, long, long)})
 	 * and it has run already, calling this method will prevent it from running again.
 	 * Also, if the task is running in this moment, it will run to completion,
-	 * but will not be executed again.
+	 * but will not be executed again.</p>
 	 * 
 	 * @param id Task's ID
 	 * @see #getAsyncTasks()

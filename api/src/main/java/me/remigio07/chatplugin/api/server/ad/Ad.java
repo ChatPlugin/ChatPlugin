@@ -36,7 +36,9 @@ public class Ad {
 	private List<Rank> disabledRanks;
 	
 	/**
-	 * Constructs a new ad. You have two ways to send it to a player:
+	 * Constructs a new ad.
+	 * 
+	 * <p>You have two ways to send it to a player:
 	 * 	<ul>
 	 * 		<li>using {@link AdManager#sendAd(Ad, ChatPluginServerPlayer)}</li>
 	 * 		<li>by adding it to {@link AdManager#getAds()}; in this case it will be removed on {@link AdManager#unload()}</li>
@@ -82,8 +84,9 @@ public class Ad {
 	
 	/**
 	 * Gets this ad's texts.
-	 * You may modify the returned map, but it cannot point to a
-	 * <code>null</code> value for {@link Language#getMainLanguage()}.
+	 * 
+	 * <p>You may modify the returned map, but it cannot point to a
+	 * <code>null</code> value for {@link Language#getMainLanguage()}.</p>
 	 * 
 	 * @return Ad's texts
 	 */
@@ -93,9 +96,10 @@ public class Ad {
 	
 	/**
 	 * Gets this ad's text for the specified language.
-	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
+	 * 
+	 * <p>Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s text if no text is present for the specified language.
-	 * Will return <code>null</code> if {@link #getTexts()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.
+	 * Will return <code>null</code> if {@link #getTexts()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.</p>
 	 * 
 	 * @param language Language used to translate the text
 	 * @param avoidNull Whether to avoid returning <code>null</code>
@@ -108,7 +112,8 @@ public class Ad {
 	
 	/**
 	 * Gets this ad's hovers.
-	 * You may modify the returned map.
+	 * 
+	 * <p>You may modify the returned map.</p>
 	 * 
 	 * @return Ad's hovers
 	 */
@@ -118,7 +123,8 @@ public class Ad {
 	
 	/**
 	 * Gets this ad's hover for the specified language.
-	 * Will return <code>null</code> if {@link #getHovers()}<code>.get(language) == null</code>.
+	 * 
+	 * <p>Will return <code>null</code> if {@link #getHovers()}<code>.get(language) == null</code>.</p>
 	 * 
 	 * @param language Language used to translate the hover
 	 * @return Ad's hover
@@ -130,7 +136,8 @@ public class Ad {
 	
 	/**
 	 * Gets this ad's click action.
-	 * Will return <code>null</code> if the click action has not been specified.
+	 * 
+	 * <p>Will return <code>null</code> if the click action has not been specified.</p>
 	 * 
 	 * @return Ad's click action
 	 */
@@ -141,7 +148,8 @@ public class Ad {
 	
 	/**
 	 * Sets this ad's click action.
-	 * Specify <code>null</code> to not specify a click action.
+	 * 
+	 * <p>Specify <code>null</code> to not specify a click action.</p>
 	 * 
 	 * @param clickAction Ad's click action
 	 * @return This ad
@@ -153,7 +161,8 @@ public class Ad {
 	
 	/**
 	 * Gets this ad's click values.
-	 * You may modify the returned map.
+	 * 
+	 * <p>You may modify the returned map.</p>
 	 * 
 	 * @return Ad's click values
 	 */
@@ -163,7 +172,8 @@ public class Ad {
 	
 	/**
 	 * Gets this ad's click value for the specified language.
-	 * Will return <code>null</code> if {@link #getClickValues()}<code>.get(language) == null</code>.
+	 * 
+	 * <p>Will return <code>null</code> if {@link #getClickValues()}<code>.get(language) == null</code>.</p>
 	 * 
 	 * @param language Language used to translate the click value
 	 * @return Ad's click value
@@ -175,7 +185,8 @@ public class Ad {
 	
 	/**
 	 * Gets the list of ranks that will not receive this ad.
-	 * You may modify the returned list.
+	 * 
+	 * <p>You may modify the returned list.</p>
 	 * 
 	 * @return Ad's disabled ranks
 	 */

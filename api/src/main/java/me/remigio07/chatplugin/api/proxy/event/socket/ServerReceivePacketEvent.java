@@ -20,7 +20,8 @@ import me.remigio07.chatplugin.api.proxy.util.socket.ClientHandler;
 import me.remigio07.chatplugin.api.proxy.util.socket.Server;
 
 /**
- * Represents the event called after a {@link Server} has received a {@link PacketDeserializer} from a {@link ClientHandler}.
+ * Represents the event called after a {@link Server} has received
+ * a {@link PacketDeserializer} from a {@link ClientHandler}.
  * 
  * @see ClientHandler#run()
  */

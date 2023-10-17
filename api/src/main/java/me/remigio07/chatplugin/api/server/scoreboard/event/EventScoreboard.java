@@ -35,7 +35,8 @@ public interface EventScoreboard {
 	
 	/**
 	 * Translates an input string with this event scoreboard's specific placeholders.
-	 * Check {@link ScoreboardEvent#getPlaceholders()} to know the available placeholders.
+	 * 
+	 * <p>Check {@link ScoreboardEvent#getPlaceholders()} to find out the available placeholders.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param player Target player

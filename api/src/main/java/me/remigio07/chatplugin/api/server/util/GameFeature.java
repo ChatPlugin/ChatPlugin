@@ -28,8 +28,9 @@ import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 
 /**
  * Annotation used to indicate that a Minecraft feature handled by a {@link ChatPluginManager} is not available under certain circumstances.
- * Should be applied to managers' class declarations and checked through {@link ChatPluginManager#checkAvailability(boolean)}. See wiki for more info:
- * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Features-availability">ChatPlugin wiki/Features availability</a>
+ * 
+ * <p>It should be applied to managers' class declarations and checked through {@link ChatPluginManager#checkAvailability(boolean)}. See wiki for more info:
+ * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Features-availability">ChatPlugin wiki/Features availability</a></p>
  * 
  * <p><strong>Note:</strong> the check is processed on the plugin's server implementations only (Bukkit and Sponge).</p>
  */
@@ -63,7 +64,8 @@ public @interface GameFeature {
 	
 	/**
 	 * Checks if Spigot is required to run this feature.
-	 * Applies to Bukkit environments only.
+	 * 
+	 * <p>Applies to Bukkit environments only.</p>
 	 * 
 	 * @return Whether Spigot is required to run this feature
 	 */

@@ -31,8 +31,9 @@ public class Tablist {
 	
 	/**
 	 * Tablist used to reset a player's header and footer.
-	 * Some of its instance methods will return <code>null</code>.
-	 * {@link TablistSendEvent} is not called when sending this tablist.
+	 * 
+	 * <p>Some of its instance methods will return <code>null</code>.
+	 * {@link TablistSendEvent} is not called when sending this tablist.</p>
 	 */
 	public static final Tablist NULL_TABLIST = new Tablist();
 	private String id;
@@ -44,7 +45,9 @@ public class Tablist {
 	}
 	
 	/**
-	 * Constructs a new tablist. You have two ways to send it to a player:
+	 * Constructs a new tablist.
+	 * 
+	 * <p>You have two ways to send it to a player:
 	 * 	<ul>
 	 * 		<li>using {@link TablistManager#sendTablist(Tablist, ChatPluginServerPlayer)}</li>
 	 * 		<li>by adding it to {@link TablistManager#getTablists()}; in this case it will be removed on {@link TablistManager#unload()}</li>
@@ -77,8 +80,9 @@ public class Tablist {
 	
 	/**
 	 * Gets this tablist's headers.
-	 * You may modify the returned map, but it cannot point to a
-	 * <code>null</code> value for {@link Language#getMainLanguage()}.
+	 * 
+	 * <p>You may modify the returned map, but it cannot point to a
+	 * <code>null</code> value for {@link Language#getMainLanguage()}.</p>
 	 * 
 	 * @return Tablist's headers
 	 */
@@ -88,9 +92,10 @@ public class Tablist {
 	
 	/**
 	 * Gets this tablist's header for the specified language.
-	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
+	 * 
+	 * <p>Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s header if no header is present for the specified language.
-	 * Will return <code>null</code> if {@link #getHeaders()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.
+	 * Will return <code>null</code> if {@link #getHeaders()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.</p>
 	 * 
 	 * @param language Language used to translate the text
 	 * @param avoidNull Whether to avoid returning <code>null</code>
@@ -103,8 +108,9 @@ public class Tablist {
 	
 	/**
 	 * Gets this tablist's footers.
-	 * You may modify the returned map, but it cannot point to a
-	 * <code>null</code> value for {@link Language#getMainLanguage()}.
+	 * 
+	 * <p>You may modify the returned map, but it cannot point to a
+	 * <code>null</code> value for {@link Language#getMainLanguage()}.</p>
 	 * 
 	 * @return Tablist's footers
 	 */
@@ -114,9 +120,10 @@ public class Tablist {
 	
 	/**
 	 * Gets this tablist's footer for the specified language.
-	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
+	 * 
+	 * <p>Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s footer if no footer is present for the specified language.
-	 * Will return <code>null</code> if {@link #getFooters()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.
+	 * Will return <code>null</code> if {@link #getFooters()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.</p>
 	 * 
 	 * @param language Language used to translate the text
 	 * @param avoidNull Whether to avoid returning <code>null</code>

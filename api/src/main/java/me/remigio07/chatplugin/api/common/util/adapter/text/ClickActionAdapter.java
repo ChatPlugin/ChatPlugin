@@ -27,7 +27,8 @@ public class ClickActionAdapter {
 	
 	/**
 	 * Copies text to the player's clipboard.
-	 * Only available on 1.15.2+ servers.
+	 * 
+	 * <p>It is only available on 1.15.2+ servers.</p>
 	 */
 	public static final ClickActionAdapter COPY_TEXT = new ClickActionAdapter("COPY_TEXT", "copy_to_clipboard");
 	
@@ -89,8 +90,9 @@ public class ClickActionAdapter {
 	 * with the only difference that instead of throwing
 	 * {@link IllegalArgumentException} <code>null</code>
 	 * is returned if the constant's name is invalid.
-	 * This method recognizes Bukkit's, Sponge's,
-	 * BungeeCord's and Velocity's IDs.
+	 * 
+	 * <p>This method recognizes Bukkit's, Sponge's,
+	 * BungeeCord's and Velocity's IDs.</p>
 	 * 
 	 * @param name Constant's name
 	 * @return Enum constant

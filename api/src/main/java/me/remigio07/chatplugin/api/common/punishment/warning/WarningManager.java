@@ -62,7 +62,8 @@ public abstract class WarningManager extends PunishmentManager {
 	
 	/**
 	 * Gets the active warnings' list.
-	 * Do not modify the returned list.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned list.</p>
 	 * 
 	 * @return Active warnings' list
 	 */
@@ -130,7 +131,8 @@ public abstract class WarningManager extends PunishmentManager {
 	
 	/**
 	 * Checks if a player is warned in the specified server.
-	 * Specify <code>null</code> as <code>server</code> to check global bans.
+	 * 
+	 * <p>Specify <code>null</code> as <code>server</code> to check global bans.</p>
 	 * 
 	 * @param player Player to check
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
@@ -191,7 +193,8 @@ public abstract class WarningManager extends PunishmentManager {
 	
 	/**
 	 * Removes a player's last active warning.
-	 * Specify <code>null</code> as <code>server</code> to disactive a global warning.
+	 * 
+	 * <p>Specify <code>null</code> as <code>server</code> to disactive a global warning.</p>
 	 * 
 	 * @param player Player to unwarn
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
@@ -211,7 +214,8 @@ public abstract class WarningManager extends PunishmentManager {
 	
 	/**
 	 * Clears a player's active warnings.
-	 * Specify <code>null</code> as <code>server</code> to disactive global warnings.
+	 * 
+	 * <p>Specify <code>null</code> as <code>server</code> to disactive global warnings.</p>
 	 * 
 	 * @param player Player to unwarn
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
@@ -231,8 +235,10 @@ public abstract class WarningManager extends PunishmentManager {
 	
 	/**
 	 * Gets the active warnings' list for the specified player.
-	 * The returned list is sorted with the oldest warning in the first position.
-	 * Will return an empty list if the player is not warned in any server.
+	 * 
+	 * <p>The returned list is sorted with the oldest warning in the first position.</p>
+	 * 
+	 * <p>Will return an empty list if the player is not warned in any server.</p>
 	 * 
 	 * @param player Player to check
 	 * @return Player's warnings
@@ -242,9 +248,12 @@ public abstract class WarningManager extends PunishmentManager {
 	
 	/**
 	 * Gets the active warnings' list for the specified player and server.
-	 * The returned list is sorted with the oldest warning in the first position.
-	 * Will return an empty list if the player is not warned in that server.
-	 * Specify <code>null</code> as <code>server</code> to check global warnings.
+	 * 
+	 * <p>The returned list is sorted with the oldest warning in the first position.</p>
+	 * 
+	 * <p>Will return an empty list if the player is not warned in that server.</p>
+	 * 
+	 * <p>Specify <code>null</code> as <code>server</code> to check global warnings.</p>
 	 * 
 	 * @param player Player to check
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
@@ -255,7 +264,8 @@ public abstract class WarningManager extends PunishmentManager {
 	
 	/**
 	 * Gets the active warning for the specified ID.
-	 * Will return <code>null</code> if the warning is not active.
+	 * 
+	 * <p>Will return <code>null</code> if the warning is not active.</p>
 	 * 
 	 * @param id Warning's ID
 	 * @return Warning object
@@ -265,9 +275,11 @@ public abstract class WarningManager extends PunishmentManager {
 	
 	/**
 	 * Gets a warning from the database.
-	 * Will return <code>null</code> if the warning does not exist.
-	 * This method is equivalent to {@link StorageConnector#getWarning(int)}
-	 * with the difference that it suppresses {@link SQLException}s.
+	 * 
+	 * <p>Will return <code>null</code> if the warning does not exist.</p>
+	 * 
+	 * <p>This method is equivalent to {@link StorageConnector#getWarning(int)}
+	 * with the difference that it suppresses {@link SQLException}s.</p>
 	 * 
 	 * @param id Warning's ID
 	 * @return Warning object
@@ -288,7 +300,8 @@ public abstract class WarningManager extends PunishmentManager {
 	public abstract List<String> getPunishCommands(int warnings, Language language);
 	
 	/**
-	 * Formats a warning's active message using the message set in the specified language's messages file.
+	 * Formats a warning's active message using the message
+	 * set in the specified language's messages file.
 	 * 
 	 * @param active Whether the warning is active
 	 * @param language Language used to translate the message
@@ -299,7 +312,8 @@ public abstract class WarningManager extends PunishmentManager {
 	public abstract String formatActiveMessage(boolean active, Language language);
 	
 	/**
-	 * Formats a warning's global message using the message set in the specified language's messages file.
+	 * Formats a warning's global message using the message
+	 * set in the specified language's messages file.
 	 * 
 	 * @param global Whether the warning is global
 	 * @param language Language used to translate the message
@@ -310,7 +324,8 @@ public abstract class WarningManager extends PunishmentManager {
 	public abstract String formatGlobalMessage(boolean global, Language language);
 	
 	/**
-	 * Formats a warning's silent message using the message set in the specified language's messages file.
+	 * Formats a warning's silent message using the message
+	 * set in the specified language's messages file.
 	 * 
 	 * @param silent Whether the warning is silent
 	 * @param language Language used to translate the message

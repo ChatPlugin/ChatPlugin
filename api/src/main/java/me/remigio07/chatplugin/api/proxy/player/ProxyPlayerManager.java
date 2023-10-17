@@ -54,7 +54,8 @@ public abstract class ProxyPlayerManager extends PlayerManager {
 	
 	/**
 	 * Gets the loaded {@link ChatPluginProxyPlayer}s' map.
-	 * Do not modify the returned map.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned map.</p>
 	 * 
 	 * @return Loaded players' map
 	 */
@@ -76,7 +77,8 @@ public abstract class ProxyPlayerManager extends PlayerManager {
 	
 	/**
 	 * Gets a player from {@link #getPlayers()} by their UUID.
-	 * Will return <code>null</code> if the player is not loaded.
+	 * 
+	 * <p>Will return <code>null</code> if the player is not loaded.</p>
 	 * 
 	 * @param uuid Player to get
 	 * @return Loaded {@link ChatPluginProxyPlayer}
@@ -89,7 +91,8 @@ public abstract class ProxyPlayerManager extends PlayerManager {
 	
 	/**
 	 * Gets a player from {@link #getPlayers()} by their name.
-	 * Will return <code>null</code> if the player is not loaded.
+	 * 
+	 * <p>Will return <code>null</code> if the player is not loaded.</p>
 	 * 
 	 * @deprecated Names should not be used to identify players. Use {@link #getPlayer(UUID)} instead.
 	 * @param name Player to get
@@ -121,7 +124,8 @@ public abstract class ProxyPlayerManager extends PlayerManager {
 	
 	/**
 	 * Adds a player to {@link #getPlayers()}.
-	 * Will do nothing and return 0 if they are already loaded.
+	 * 
+	 * <p>Will do nothing and return 0 if they are already loaded.</p>
 	 * 
 	 * @param player Player to load
 	 * @return Time elapsed, in milliseconds
@@ -131,7 +135,8 @@ public abstract class ProxyPlayerManager extends PlayerManager {
 	
 	/**
 	 * Removes a player from {@link #getPlayers()}.
-	 * Will do nothing and return 0 if they are not loaded.
+	 * 
+	 * <p>Will do nothing and return 0 if they are not loaded.</p>
 	 * 
 	 * @param player Player to unload
 	 * @return Time elapsed, in milliseconds

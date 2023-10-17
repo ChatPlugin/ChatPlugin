@@ -114,10 +114,11 @@ public abstract class StaffChatManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the list of who has the Staff chat mode enabled.
-	 * Do not modify the returned list.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned list.
 	 * Use {@link #addPlayer(UUID)}, {@link #removePlayer(UUID)},
 	 * {@link #clearPlayers()} and {@link #isUsingStaffChat(UUID)}
-	 * to interact with it.
+	 * to interact with it.</p>
 	 * 
 	 * @return Staff chat's users' list
 	 */

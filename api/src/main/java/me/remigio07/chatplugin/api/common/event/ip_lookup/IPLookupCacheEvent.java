@@ -21,7 +21,8 @@ import me.remigio07.chatplugin.api.common.ip_lookup.IPLookup;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 
 /**
- * Represents the event called after an {@link IPLookup} is cached into {@link IPLookupManager#getCache()}.
+ * Represents the event called after an {@link IPLookup}
+ * is cached into {@link IPLookupManager#getCache()}.
  * 
  * @see IPLookupManager#putInCache(InetAddress, IPLookup)
  */

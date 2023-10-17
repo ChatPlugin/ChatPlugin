@@ -101,7 +101,8 @@ public abstract class ProxyManager implements ChatPluginManager {
 	/**
 	 * Gets a map containing information
 	 * about servers under the network.
-	 * The keys represent the servers' ID.
+	 * 
+	 * <p>The keys represent the servers' ID.</p>
 	 * 
 	 * @return Servers under the network
 	 */
@@ -121,7 +122,8 @@ public abstract class ProxyManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the amount of online players in the specified server.
-	 * Specify "ALL" to get the amount of online players under the proxy.
+	 * 
+	 * <p>Specify "ALL" to get the amount of online players under the proxy.</p>
 	 * 
 	 * @param server Server to check
 	 * @param hideVanished Whether to subtract {@link #getVanishedPlayers(String)} from the amount
@@ -139,7 +141,8 @@ public abstract class ProxyManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the amount of vanished players in the specified server.
-	 * Specify "ALL" to get the amount of vanished players under the proxy.
+	 * 
+	 * <p>Specify "ALL" to get the amount of vanished players under the proxy.</p>
 	 * 
 	 * @param server Server to check
 	 * @return Vanished players amount
@@ -172,7 +175,8 @@ public abstract class ProxyManager implements ChatPluginManager {
 	
 	/**
 	 * Checks if the specified String is a valid server ID.
-	 * Will return <code>false</code> if you specify "proxy".
+	 * 
+	 * <p>Will return <code>false</code> if you specify "proxy".</p>
 	 * 
 	 * @param serverID Server ID to check
 	 * @return Whether the specified server ID is valid
@@ -193,7 +197,8 @@ public abstract class ProxyManager implements ChatPluginManager {
 	
 	/**
 	 * Sends a plugin message to the proxy.
-	 * Will do nothing if no players are online.
+	 * 
+	 * <p>Will do nothing if no players are online.</p>
 	 * 
 	 * @param packet Plugin message to send
 	 * @see PacketDeserializer

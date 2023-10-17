@@ -60,7 +60,8 @@ public abstract class Warning extends Punishment {
 	
 	/**
 	 * Gets who unwarned {@link #getPlayer()}.
-	 * Will return <code>null</code> if the player has not been manually unwarned.
+	 * 
+	 * <p>Will return <code>null</code> if the player has not been manually unwarned.</p>
 	 * 
 	 * @return Who unwarned the player
 	 */
@@ -80,7 +81,8 @@ public abstract class Warning extends Punishment {
 	
 	/**
 	 * Gets this warning's unwarn date, in milliseconds.
-	 * Will return -1 if the player has not been unwarned.
+	 * 
+	 * <p>Will return -1 if the player has not been unwarned.</p>
 	 * 
 	 * @return Unwarn's date
 	 */
@@ -108,7 +110,8 @@ public abstract class Warning extends Punishment {
 	
 	/**
 	 * Gets this warning's remaining time, in milliseconds.
-	 * Will return 0 if the player has been unwarned.
+	 * 
+	 * <p>Will return 0 if the player has been unwarned.</p>
 	 * 
 	 * @return Warning's remaining time
 	 */
@@ -118,9 +121,11 @@ public abstract class Warning extends Punishment {
 	
 	/**
 	 * Gets this warning's expiration task's ID.
-	 * May be used with {@link TaskManager#cancelAsync(long)}.
-	 * Will return -1 if this warning has already expired
-	 * or if <code>!{@link Environment#isProxy()} &amp;&amp; {@link ProxyManager#isEnabled()}</code>.
+	 * 
+	 * <p>May be used with {@link TaskManager#cancelAsync(long)}.</p>
+	 * 
+	 * <p>Will return -1 if this warning has already expired or if
+	 * <code>!{@link Environment#isProxy()} &amp;&amp; {@link ProxyManager#isEnabled()}</code>.</p>
 	 * 
 	 * @return Warning's expiration task's ID
 	 */
@@ -129,13 +134,25 @@ public abstract class Warning extends Punishment {
 	}
 	
 	/**
-	 * Checks if this warning affects all servers inside of the network
-	 * (if using a multi instance setup with a proxy).
+	 * Checks if this warning affects all servers inside of the network.
+	 * 
+	 * <p>Only applies on multi instance setups with a proxy.</p>
 	 * 
 	 * @return Whether this warning is global
 	 */
 	public boolean isGlobal() {
 		return global;
+	}
+	
+	/**
+	 * Sets if this warning should affect all servers inside of the network.
+	 * 
+	 * <p>Only applies on multi instance setups with a proxy.</p>
+	 * 
+	 * @param global Whether this warning is global
+	 */
+	public void setGlobal(boolean global) {
+		this.global = global;
 	}
 	
 	/**

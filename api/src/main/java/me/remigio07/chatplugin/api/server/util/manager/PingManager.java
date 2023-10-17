@@ -62,8 +62,9 @@ public abstract class PingManager extends TimerTask implements ChatPluginManager
 	}
 	
 	/**
-	 * Gets the update task's ID. You can interact
-	 * with it through {@link TaskManager}'s methods.
+	 * Gets the update task's ID.
+	 * 
+	 * <p>You can interact with it through {@link TaskManager}'s methods.</p>
 	 * 
 	 * @return Update task's ID
 	 */
@@ -72,12 +73,12 @@ public abstract class PingManager extends TimerTask implements ChatPluginManager
 	}
 	
 	/**
-	 * Returns a player's cached ping. Latencies are cached in
-	 * a map updated once every {@link #getUpdateTimeout()} ms.
+	 * Returns a player's cached ping.
 	 * 
+	 * <p>Latencies are cached in a map updated once every {@link #getUpdateTimeout()} ms.
 	 * If you need a real time ping (just a little more precise), you can use
 	 * {@link #getRealTimePing(ChatPluginServerPlayer)}, but it's not recommended,
-	 * as many calls of that method could be heavy to handle.
+	 * as many calls of that method could be heavy to handle.</p>
 	 * 
 	 * @param player Player to get the ping for
 	 * @return Player's cached ping, in milliseconds
@@ -135,8 +136,10 @@ public abstract class PingManager extends TimerTask implements ChatPluginManager
 	public abstract PingQuality getPingQuality(int ms);
 	
 	/**
-	 * Returns a string formatted with given ping's {@link PingQuality}'s colors. If you want just
-	 * a player's ping in milliseconds, use {@link #getCachedPing(ChatPluginServerPlayer)}.
+	 * Returns a string formatted with given ping's {@link PingQuality}'s colors.
+	 * 
+	 * <p>If you want just a player's ping in milliseconds,
+	 * use {@link #getCachedPing(ChatPluginServerPlayer)}.</p>
 	 * 
 	 * @param ms Latency, in milliseconds
 	 * @param language Language to get the message for
@@ -145,9 +148,11 @@ public abstract class PingManager extends TimerTask implements ChatPluginManager
 	public abstract String formatPing(int ms, Language language);
 	
 	/**
-	 * Represents a ping quality. You can specify different intervals for every quality
-	 * through the config at section <code>ping</code>. Every interval has a different
-	 * color which can be specified in the messages' files.
+	 * Represents a ping quality.
+	 * 
+	 * <p>You can specify different intervals for every quality through
+	 * the config at section <code>ping</code>. Every interval has a
+	 * different color which can be specified in the messages' files.</p>
 	 */
 	public class PingQuality {
 		

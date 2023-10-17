@@ -25,7 +25,9 @@ import java.lang.annotation.Target;
 /**
  * Annotation used to indicate that a field or a method contains or returns
  * sensitive or private data, like for example the Discord integration's bot's token.
- * The managers' (even the addons' ones) debugger will not print the values of variables denoted by this annotation.
+ * 
+ * <p>The managers' (even the addons' ones) debugger will not
+ * print the values of variables denoted by this annotation.</p>
  */
 @Target({ FIELD, METHOD })
 @Retention(RUNTIME)

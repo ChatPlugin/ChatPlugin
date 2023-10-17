@@ -66,7 +66,8 @@ public abstract class LanguageManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the list of loaded languages.
-	 * Do not modify the returned list.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned list.</p>
 	 * 
 	 * @return Loaded languages' list
 	 */
@@ -76,7 +77,8 @@ public abstract class LanguageManager implements ChatPluginManager {
 	
 	/**
 	 * Gets a language from {@link #getLanguages()} by its ID.
-	 * Will return <code>null</code> if the language is not loaded.
+	 * 
+	 * <p>Will return <code>null</code> if the language is not loaded.</p>
 	 * 
 	 * @param id Language's ID
 	 * @return Loaded language
@@ -119,8 +121,9 @@ public abstract class LanguageManager implements ChatPluginManager {
 	
 	/**
 	 * Gets a player's language using {@link ChatPluginServerPlayer#getLanguage()}
-	 * if they are loaded or from the storage if they are offline. Will return
-	 * {@link #getMainLanguage()} if they are not stored.
+	 * if they are loaded or from the storage if they are offline.
+	 * 
+	 * <p>Will return {@link #getMainLanguage()} if they are not stored.</p>
 	 * 
 	 * @param player Player to check
 	 * @return Player's language

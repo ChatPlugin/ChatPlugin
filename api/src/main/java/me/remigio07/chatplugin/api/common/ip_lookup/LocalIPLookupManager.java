@@ -24,7 +24,8 @@ import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 
 /**
  * Manager that handles {@link IPLookup} requests to the local database.
- * Only used when {@link IPLookupManager#getMethod()}<code> == </code>{@link IPLookupMethod#LOCAL}.
+ * 
+ * <p>Only used when {@link IPLookupManager#getMethod()}<code> == </code>{@link IPLookupMethod#LOCAL}.</p>
  */
 public abstract class LocalIPLookupManager implements ChatPluginManager {
 	
@@ -111,25 +112,31 @@ public abstract class LocalIPLookupManager implements ChatPluginManager {
 	public abstract URL formatURL(DatabaseType type);
 	
 	/**
-	 * Gets the MaxMind's city local database reader. This is an instance of <code>DatabaseReader</code>,
-	 * but the method returns just an <code>Object</code> because you cannot directly access the libraries'
-	 * classes. You can safely cast it to that class, but make sure the current class loader has loaded it.
+	 * Gets the MaxMind's city local database reader.
+	 * 
+	 * <p>This is an instance of <code>DatabaseReader</code>, but the method returns just
+	 * an <code>Object</code> because you cannot directly access the libraries' classes.
+	 * You can safely cast it to that class, but make sure the current class loader has loaded it.</p>
 	 * 
 	 * @return The city database reader
 	 */
 	public abstract Object getCityDatabaseReader();
 	
 	/**
-	 * Gets the MaxMind's ASN local database reader. This is an instance of <code>DatabaseReader</code>,
-	 * but the method returns just an <code>Object</code> because you cannot directly access the libraries'
-	 * classes. You can safely cast it to that class, but make sure the current class loader has loaded it.
+	 * Gets the MaxMind's ASN local database reader.
+	 * 
+	 * <p>This is an instance of <code>DatabaseReader</code>, but the method returns just
+	 * an <code>Object</code> because you cannot directly access the libraries' classes.
+	 * You can safely cast it to that class, but make sure the current class loader has loaded it.</p>
 	 * 
 	 * @return The ASN database reader
 	 */
 	public abstract Object getASNDatabaseReader();
 	
 	/**
-	 * Refreshes the specified database type's file. The following operations (in this order) are performed:
+	 * Refreshes the specified database type's file.
+	 * 
+	 * <p>The following operations (in this order) are performed:
 	 * 	<ol>
 	 * 		<li>check if the file exists already</li>
 	 * 		<li>if it does, delete it and create a new one</li>
@@ -143,7 +150,9 @@ public abstract class LocalIPLookupManager implements ChatPluginManager {
 	public abstract void refreshDatabaseFile(DatabaseType type) throws IOException;
 	
 	/**
-	 * Represents the type of a local database. There are just two types:
+	 * Represents the type of a local database.
+	 * 
+	 * <p>There are two types supported:
 	 * 	<ul>
 	 * 		<li>{@link #ASN} - database containing data about an IP's ISP</li>
 	 * 		<li>{@link #CITY} - database containing data about an IP's position</li>
@@ -169,7 +178,9 @@ public abstract class LocalIPLookupManager implements ChatPluginManager {
 		}
 		
 		/**
-		 * Gets this database type's name. Possible values:
+		 * Gets this database type's name.
+		 * 
+		 * <p>There are two values supported:
 		 * 	<ul>
 		 * 		<li>"ASN" - database containing data about an IP's ISP</li>
 		 * 		<li>"city" - database containing data about an IP's position</li>
@@ -182,8 +193,10 @@ public abstract class LocalIPLookupManager implements ChatPluginManager {
 		}
 		
 		/**
-		 * Gets the download URL of this database type. You have to replace "{0}" with your
-		 * license key in the returned string to obtain the permission to download it.
+		 * Gets the download URL of this database type.
+		 * 
+		 * <p>You have to replace "{0}" with your license key in the
+		 * returned string to obtain the permission to download it.</p>
 		 * 
 		 * @return Direct download URL
 		 */

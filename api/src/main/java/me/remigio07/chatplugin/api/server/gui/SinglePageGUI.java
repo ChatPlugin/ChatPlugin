@@ -76,12 +76,15 @@ public abstract class SinglePageGUI extends GUI {
 	}
 	
 	/**
-	 * Gets this GUI's titles' translator function. The GUI's title (a String)
-	 * is set to {@link BiFunction#apply(Object, Object)}'s result
-	 * every time the GUI is loaded or a {@link GUI#refresh()} is performed.
-	 * Will return <code>null</code> if no title's translator has been set.
+	 * Gets this GUI's titles' translator function.
 	 * 
-	 * 	<p>The function is composed of the following arguments:
+	 * <p>Will return <code>null</code> if no title's translator has been set.</p>
+	 * 
+	 * <p>The GUI's title (a String) is set to
+	 * {@link BiFunction#apply(Object, Object)}'s result every time
+	 * the GUI is loaded or a {@link GUI#refresh()} is performed.</p>
+	 * 
+	 * <p>The function is composed of the following arguments:
 	 * 	<ol>
 	 * 		<li>{@link SinglePageGUI} - this GUI's instance</li>
 	 * 		<li>{@link Language} - the language used to translate the title</li>
@@ -95,13 +98,16 @@ public abstract class SinglePageGUI extends GUI {
 	}
 	
 	/**
-	 * Sets this GUI's titles' translator function. The GUI's title (a String)
-	 * is set to {@link BiFunction#apply(Object, Object)}'s result
-	 * every time the GUI is loaded or a {@link GUI#refresh()} is performed.
-	 * You can specify <code>null</code> to remove the title's translator.
-	 * You may also want to {@link #refresh()} the GUI after this operation.
+	 * Sets this GUI's titles' translator function.
 	 * 
-	 * 	<p>The function is composed of the following arguments:
+	 * <p>You can specify <code>null</code> to remove the title's translator.</p>
+	 * 
+	 * <p>The GUI's title (a String) is set to
+	 * {@link BiFunction#apply(Object, Object)}'s result every time
+	 * the GUI is loaded or a {@link GUI#refresh()} is performed.
+	 * You may also want to {@link #refresh()} the GUI after this operation.</p>
+	 * 
+	 * <p>The function is composed of the following arguments:
 	 * 	<ol>
 	 * 		<li>{@link SinglePageGUI} - this GUI's instance</li>
 	 * 		<li>{@link Language} - the language used to translate the title</li>
@@ -139,7 +145,8 @@ public abstract class SinglePageGUI extends GUI {
 	
 	/**
 	 * Handles and processes a click event.
-	 * Will do nothing if the slot is invalid.
+	 * 
+	 * <p>Will do nothing if the slot is invalid.</p>
 	 * 
 	 * @param player Player involved
 	 * @param slot Slot involved

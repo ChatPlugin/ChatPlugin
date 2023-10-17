@@ -18,7 +18,8 @@ package me.remigio07.chatplugin.api.common.util.packet.type;
 import me.remigio07.chatplugin.api.common.discord.DiscordBot;
 
 /**
- * Represents the type of a packet sent through the <code>DiscordMessage</code> subchannel.
+ * Represents the type of a packet sent through
+ * the <code>DiscordMessage</code> subchannel.
  */
 public enum DiscordMessagePacketType {
 	
@@ -31,7 +32,8 @@ public enum DiscordMessagePacketType {
 	/**
 	 * Represents an embed message sent through the bot using
 	 * {@link DiscordBot#sendEmbedMessage(long, Object)}.
-	 * The message is serialized and represented as a JSON string.
+	 * 
+	 * <p>The message is serialized and represented as a JSON string.</p>
 	 */
 	EMBED;
 	

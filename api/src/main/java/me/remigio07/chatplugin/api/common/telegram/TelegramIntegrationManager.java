@@ -117,7 +117,8 @@ public abstract class TelegramIntegrationManager extends TimerTask implements Ch
 	
 	/**
 	 * Gets the {@link #run()}'s timer's task's ID.
-	 * You can interact with it using {@link TaskManager}'s methods.
+	 * 
+	 * <p>You can interact with it using {@link TaskManager}'s methods.</p>
 	 * 
 	 * @return Updating task's ID
 	 */

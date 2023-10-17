@@ -18,7 +18,9 @@ package me.remigio07.chatplugin.api.server.language;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookup;
 
 /**
- * Represents a language detector method. There are just two methods:
+ * Represents a language detector method.
+ * 
+ * <p>There are two methods supported:
  * 	<ul>
  * 		<li>{@link #CLIENT_LOCALE} - performed by checking the client's language settings</li>
  * 		<li>{@link #GEOLOCALIZATION} - performed through {@link IPLookup}s; check {@link Language#getCountryCodes()}</li>

@@ -71,8 +71,9 @@ public abstract class TPSManager extends TimerTask implements ChatPluginManager 
 	}
 	
 	/**
-	 * Gets the update task's ID. You can interact
-	 * with it through {@link TaskManager}'s methods.
+	 * Gets the update task's ID.
+	 * 
+	 * <p>You can interact with it through {@link TaskManager}'s methods.</p>
 	 * 
 	 * @return Update task's ID
 	 */
@@ -130,9 +131,11 @@ public abstract class TPSManager extends TimerTask implements ChatPluginManager 
 	public abstract String formatTPS(double tps, Language language);
 	
 	/**
-	 * Represents a TPS quality. You can specify different intervals for every quality
-	 * through the config at section <code>tps</code>. Every interval has a different
-	 * color which can be specified in the messages' files.
+	 * Represents a TPS quality.
+	 * 
+	 * <p>You can specify different intervals for every quality through
+	 * the config at section <code>tps</code>. Every interval has a
+	 * different color which can be specified in the messages' files.</p>
 	 */
 	public class TPSQuality {
 		

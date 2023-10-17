@@ -63,7 +63,8 @@ public abstract class RankManager implements ChatPluginManager {
 	
 	/**
 	 * Checks if ranks should be sorted from the top of the tablist.
-	 * Will return <code>false</code> if they should be sorted from the bottom.
+	 * 
+	 * <p>Will return <code>false</code> if they should be sorted from the bottom.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "ranks.settings.sorting.from-tablist-top" in {@link ConfigurationType#RANKS}</p>
 	 * 
@@ -86,7 +87,8 @@ public abstract class RankManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the permission format used to check if a player is part of a certain rank.
-	 * Should contain the placeholder "{0}" which should be replaced with the rank's ID.
+	 * 
+	 * <p>Should contain the placeholder "{0}" which should be replaced with the rank's ID.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "ranks.settings.permission-format" in {@link ConfigurationType#RANKS}</p>
 	 * 
@@ -98,7 +100,8 @@ public abstract class RankManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the list of loaded ranks.
-	 * Do not modify the returned list.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned list.</p>
 	 * 
 	 * @return Loaded ranks' list
 	 */
@@ -108,7 +111,8 @@ public abstract class RankManager implements ChatPluginManager {
 	
 	/**
 	 * Gets a rank from {@link #getRanks()} by its ID.
-	 * Will return <code>null</code> if the rank is not loaded.
+	 * 
+	 * <p>Will return <code>null</code> if the rank is not loaded.</p>
 	 * 
 	 * @param id Language's ID
 	 * @return Loaded language

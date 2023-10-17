@@ -23,7 +23,8 @@ import me.remigio07.chatplugin.api.common.punishment.ban.banwave.BanwaveEntry;
 import me.remigio07.chatplugin.api.common.punishment.ban.banwave.BanwaveManager;
 
 /**
- * Represents the event called after a banwave entry gets added to the entries' list.
+ * Represents the event called after a banwave
+ * entry gets added to the entries' list.
  * 
  * @see BanwaveManager#addEntry(OfflinePlayer, String, String, String, long, boolean, boolean)
  * @see BanwaveManager#addIPEntry(OfflinePlayer, String, String, String, long, boolean, boolean)

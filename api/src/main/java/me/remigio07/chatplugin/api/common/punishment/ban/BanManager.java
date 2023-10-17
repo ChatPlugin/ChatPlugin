@@ -58,7 +58,8 @@ public abstract class BanManager extends PunishmentManager {
 	
 	/**
 	 * Gets the active bans' list.
-	 * Do not modify the returned list.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned list.</p>
 	 * 
 	 * @return Active bans' list
 	 */
@@ -80,7 +81,8 @@ public abstract class BanManager extends PunishmentManager {
 	
 	/**
 	 * Checks if a player is banned in the specified server.
-	 * Specify <code>null</code> as <code>server</code> to check global bans.
+	 * 
+	 * <p>Specify <code>null</code> as <code>server</code> to check global bans.</p>
 	 * 
 	 * @param player Player to check
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
@@ -92,7 +94,8 @@ public abstract class BanManager extends PunishmentManager {
 	
 	/**
 	 * Checks if an IP address is banned in the specified server.
-	 * Specify <code>null</code> as <code>server</code> to check global bans.
+	 * 
+	 * <p>Specify <code>null</code> as <code>server</code> to check global bans.</p>
 	 * 
 	 * @param ipAddress IP address to check
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
@@ -195,7 +198,8 @@ public abstract class BanManager extends PunishmentManager {
 	
 	/**
 	 * Unbans a player.
-	 * Specify <code>null</code> as <code>server</code> to disactive a global ban.
+	 * 
+	 * <p>Specify <code>null</code> as <code>server</code> to disactive a global ban.</p>
 	 * 
 	 * @param player Player to unban
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
@@ -214,7 +218,8 @@ public abstract class BanManager extends PunishmentManager {
 	
 	/**
 	 * Unbans an IP address.
-	 * Specify <code>null</code> as <code>server</code> to disactive a global ban.
+	 * 
+	 * <p>Specify <code>null</code> as <code>server</code> to disactive a global ban.</p>
 	 * 
 	 * @param ipAddress IP address to unban
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
@@ -245,7 +250,8 @@ public abstract class BanManager extends PunishmentManager {
 	
 	/**
 	 * Gets the active bans' list for the specified player.
-	 * Will return an empty list if the player is not banned in any server.
+	 * 
+	 * <p>Will return an empty list if the player is not banned in any server.</p>
 	 * 
 	 * @param player Player to check
 	 * @return Player's bans
@@ -255,7 +261,8 @@ public abstract class BanManager extends PunishmentManager {
 	
 	/**
 	 * Gets the active bans' list for the specified IP address.
-	 * Will return an empty list if the IP address is not banned in any server.
+	 * 
+	 * <p>Will return an empty list if the IP address is not banned in any server.</p>
 	 * 
 	 * @param ipAddress IP address to check
 	 * @return IP address' bans
@@ -265,8 +272,10 @@ public abstract class BanManager extends PunishmentManager {
 	
 	/**
 	 * Gets the active ban for the specified player and server.
-	 * Will return <code>null</code> if the player is not banned in that server.
-	 * Specify <code>null</code> as <code>server</code> to check global bans.
+	 * 
+	 * <p>Will return <code>null</code> if the player is not banned in that server.</p>
+	 * 
+	 * <p>Specify <code>null</code> as <code>server</code> to check global bans.</p>
 	 * 
 	 * @param player Player to check
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
@@ -277,8 +286,10 @@ public abstract class BanManager extends PunishmentManager {
 	
 	/**
 	 * Gets the active ban for the specified IP address and server.
-	 * Will return <code>null</code> if the IP address is not banned in that server.
-	 * Specify <code>null</code> as <code>server</code> to check global bans.
+	 * 
+	 * <p>Will return <code>null</code> if the IP address is not banned in that server.</p>
+	 * 
+	 * <p>Specify <code>null</code> as <code>server</code> to check global bans.</p>
 	 * 
 	 * @param ipAddress IP address to check
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
@@ -289,7 +300,8 @@ public abstract class BanManager extends PunishmentManager {
 	
 	/**
 	 * Gets the active ban for the specified ID.
-	 * Will return <code>null</code> if the ban is not active.
+	 * 
+	 * <p>Will return <code>null</code> if the ban is not active.</p>
 	 * 
 	 * @param id Ban's ID
 	 * @return Ban object
@@ -299,9 +311,11 @@ public abstract class BanManager extends PunishmentManager {
 	
 	/**
 	 * Gets a ban from the database.
-	 * Will return <code>null</code> if the ban does not exist.
-	 * This method is equivalent to {@link StorageConnector#getBan(int)}
-	 * with the difference that it suppresses {@link SQLException}s.
+	 * 
+	 * <p>Will return <code>null</code> if the ban does not exist.</p>
+	 * 
+	 * <p>This method is equivalent to {@link StorageConnector#getBan(int)}
+	 * with the difference that it suppresses {@link SQLException}s.</p>
 	 * 
 	 * @param id Ban's ID
 	 * @return Ban object
@@ -310,7 +324,8 @@ public abstract class BanManager extends PunishmentManager {
 	public abstract Ban getBan(int id);
 	
 	/**
-	 * Formats a ban's type message using the message set in the specified language's messages file.
+	 * Formats a ban's type message using the message
+	 * set in the specified language's messages file.
 	 * 
 	 * @param type Type to format
 	 * @param language Language used to translate the message
@@ -321,7 +336,8 @@ public abstract class BanManager extends PunishmentManager {
 	public abstract String formatTypeMessage(BanType type, Language language);
 	
 	/**
-	 * Formats a ban's active message using the message set in the specified language's messages file.
+	 * Formats a ban's active message using the message
+	 * set in the specified language's messages file.
 	 * 
 	 * @param active Whether the ban is active
 	 * @param language Language used to translate the message
@@ -332,7 +348,8 @@ public abstract class BanManager extends PunishmentManager {
 	public abstract String formatActiveMessage(boolean active, Language language);
 	
 	/**
-	 * Formats a ban's global message using the message set in the specified language's messages file.
+	 * Formats a ban's global message using the message
+	 * set in the specified language's messages file.
 	 * 
 	 * @param global Whether the ban is global
 	 * @param language Language used to translate the message
@@ -343,7 +360,8 @@ public abstract class BanManager extends PunishmentManager {
 	public abstract String formatGlobalMessage(boolean global, Language language);
 	
 	/**
-	 * Formats a ban's silent message using the message set in the specified language's messages file.
+	 * Formats a ban's silent message using the message
+	 * set in the specified language's messages file.
 	 * 
 	 * @param silent Whether the ban is silent
 	 * @param language Language used to translate the message
@@ -354,7 +372,8 @@ public abstract class BanManager extends PunishmentManager {
 	public abstract String formatSilentMessage(boolean silent, Language language);
 	
 	/**
-	 * Formats a ban's kick message using the message set in the specified language's messages file.
+	 * Formats a ban's kick message using the message
+	 * set in the specified language's messages file.
 	 * 
 	 * @param type Type to format
 	 * @param language Language used to translate the message

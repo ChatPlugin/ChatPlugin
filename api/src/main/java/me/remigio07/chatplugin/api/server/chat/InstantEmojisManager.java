@@ -45,7 +45,8 @@ public abstract class InstantEmojisManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the map of loaded emojis.
-	 * You may modify the returned map.
+	 * 
+	 * <p>You may modify the returned map.</p>
 	 * 
 	 * @return Loaded emojis' map
 	 */
@@ -55,7 +56,8 @@ public abstract class InstantEmojisManager implements ChatPluginManager {
 	
 	/**
 	 * Gets an emoji from {@link #getEmojis()} by its ID.
-	 * Will return <code>null</code> if the emoji is not loaded.
+	 * 
+	 * <p>Will return <code>null</code> if the emoji is not loaded.</p>
 	 * 
 	 * @param id Emoji's ID
 	 * @return Loaded emoji

@@ -123,7 +123,8 @@ public abstract class AdManager extends TimerTask implements ChatPluginManager {
 	
 	/**
 	 * Gets the list of loaded ads.
-	 * You may modify the returned list.
+	 * 
+	 * <p>You may modify the returned list.</p>
 	 * 
 	 * @return Loaded ads' list
 	 */
@@ -133,7 +134,8 @@ public abstract class AdManager extends TimerTask implements ChatPluginManager {
 	
 	/**
 	 * Gets an ad from {@link #getAds()} by its ID.
-	 * Will return <code>null</code> if the ad is not loaded.
+	 * 
+	 * <p>Will return <code>null</code> if the ad is not loaded.</p>
 	 * 
 	 * @param id Ad's ID
 	 * @return Loaded ad
@@ -145,7 +147,8 @@ public abstract class AdManager extends TimerTask implements ChatPluginManager {
 	
 	/**
 	 * Gets the {@link #run()}'s timer's task's ID.
-	 * You can interact with it using {@link TaskManager}'s methods.
+	 * 
+	 * <p>You can interact with it using {@link TaskManager}'s methods.</p>
 	 * 
 	 * @return Sending task's ID
 	 */
@@ -190,7 +193,8 @@ public abstract class AdManager extends TimerTask implements ChatPluginManager {
 	
 	/**
 	 * Sends an ad to a loaded player.
-	 * It will not be sent if {@link Ad#getDisabledRanks()}<code>.contains({@link ChatPluginServerPlayer#getRank()})</code>.
+	 * 
+	 * <p>It will not be sent if {@link Ad#getDisabledRanks()}<code>.contains({@link ChatPluginServerPlayer#getRank()})</code>.</p>
 	 * 
 	 * @param ad Ad to send
 	 * @param player Player to send the ad to

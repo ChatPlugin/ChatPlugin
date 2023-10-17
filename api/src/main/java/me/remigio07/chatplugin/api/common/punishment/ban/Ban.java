@@ -58,8 +58,9 @@ public abstract class Ban extends Punishment {
 	
 	/**
 	 * Gets this ban's player.
-	 * Will return <code>null</code> if they have not been specified
-	 * ({@link BanType#IP_ADDRESS} with no given player).
+	 * 
+	 * <p>Will return <code>null</code> if they have not been specified
+	 * ({@link BanType#IP_ADDRESS} with no given player).</p>
 	 * 
 	 * @return Ban's player
 	 */
@@ -70,7 +71,8 @@ public abstract class Ban extends Punishment {
 	
 	/**
 	 * Gets the IP address the player had when this ban occurred.
-	 * Will return <code>null</code> if the IP address is unknown.
+	 * 
+	 * <p>Will return <code>null</code> if the IP address is unknown.</p>
 	 * 
 	 * @return Ban's IP address
 	 */
@@ -81,7 +83,8 @@ public abstract class Ban extends Punishment {
 	
 	/**
 	 * Gets who unbanned {@link #getPlayer()}.
-	 * Will return <code>null</code> if the player has not been manually unbanned.
+	 * 
+	 * <p>Will return <code>null</code> if the player has not been manually unbanned.</p>
 	 * 
 	 * @return Who unbanned the player
 	 */
@@ -110,7 +113,8 @@ public abstract class Ban extends Punishment {
 	
 	/**
 	 * Gets this ban's unban date, in milliseconds.
-	 * Will return -1 if the player has not been manually unbanned.
+	 * 
+	 * <p>Will return -1 if the player has not been manually unbanned.</p>
 	 * 
 	 * @return Unban's date
 	 */
@@ -129,7 +133,8 @@ public abstract class Ban extends Punishment {
 	
 	/**
 	 * Gets this ban's duration, in milliseconds.
-	 * Will return -1 if this ban is permanent.
+	 * 
+	 * <p>Will return -1 if this ban is permanent.</p>
 	 * 
 	 * @return Ban's duration
 	 */
@@ -139,7 +144,8 @@ public abstract class Ban extends Punishment {
 	
 	/**
 	 * Sets this ban's duration, in milliseconds.
-	 * You can specify -1 for a permanent ban.
+	 * 
+	 * <p>You can specify -1 for a permanent ban.</p>
 	 * 
 	 * @param duration Ban's duration
 	 */
@@ -149,8 +155,9 @@ public abstract class Ban extends Punishment {
 	
 	/**
 	 * Gets this ban's remaining time, in milliseconds.
-	 * Will return 0 if the player has been unbanned
-	 * otherwise -1 if the ban is permanent.
+	 * 
+	 * <p>Will return 0 if the player has been unbanned
+	 * otherwise -1 if the ban is permanent.</p>
 	 * 
 	 * @return Ban's remaining time
 	 */
@@ -160,9 +167,11 @@ public abstract class Ban extends Punishment {
 	
 	/**
 	 * Gets this ban's expiration task's ID.
-	 * May be used with {@link TaskManager#cancelAsync(long)}.
-	 * Will return -1 if this ban is permanent, if it has already expired
-	 * or if <code>!{@link Environment#isProxy()} &amp;&amp; {@link ProxyManager#isEnabled()}</code>.
+	 * 
+	 * <p>May be used with {@link TaskManager#cancelAsync(long)}.</p>
+	 * 
+	 * <p>Will return -1 if this ban is permanent, if it has already expired or if
+	 * <code>!{@link Environment#isProxy()} &amp;&amp; {@link ProxyManager#isEnabled()}</code>.</p>
 	 * 
 	 * @return Ban's expiration task's ID
 	 */
@@ -171,8 +180,9 @@ public abstract class Ban extends Punishment {
 	}
 	
 	/**
-	 * Checks if this ban affects all servers inside of the network
-	 * (if using a multi instance setup with a proxy).
+	 * Checks if this ban affects all servers inside of the network.
+	 * 
+	 * <p>Only applies on multi instance setups with a proxy.</p>
 	 * 
 	 * @return Whether this ban is global
 	 */
@@ -181,8 +191,9 @@ public abstract class Ban extends Punishment {
 	}
 	
 	/**
-	 * Sets if this ban should affect all servers inside of the network
-	 * (if using a multi instance setup with a proxy).
+	 * Sets if this ban should affect all servers inside of the network.
+	 * 
+	 * <p>Only applies on multi instance setups with a proxy.</p>
 	 * 
 	 * @param global Whether this ban is global
 	 */

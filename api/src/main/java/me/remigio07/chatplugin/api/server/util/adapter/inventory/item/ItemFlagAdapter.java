@@ -48,9 +48,10 @@ public class ItemFlagAdapter {
 	
 	/**
 	 * Hides a leather armor's color information.
-	 * Not available on Sponge yet: it is considered
+	 * 
+	 * <p>Not available on Sponge yet: it is considered
 	 * equal to {@link #HIDE_MISCELLANEOUS} if
-	 * running on a Sponge environment.
+	 * running on a Sponge environment.</p>
 	 */
 	public static final ItemFlagAdapter HIDE_DYE = new ItemFlagAdapter("HIDE_DYE", new String[] { "HIDE_DYE", "HIDE_MISCELLANEOUS" });
 	
@@ -134,8 +135,9 @@ public class ItemFlagAdapter {
 	
 	/**
 	 * Gets this item flag's IDs.
-	 * The first element in the array is the Bukkit-compatible
-	 * ID, the second one is the Sponge-compatible ID.
+	 * 
+	 * <p>The first element in the array is the Bukkit-compatible
+	 * ID, the second one is the Sponge-compatible ID.</p>
 	 * 
 	 * @return Item flag's IDs
 	 */
@@ -148,7 +150,8 @@ public class ItemFlagAdapter {
 	 * with the only difference that instead of throwing
 	 * {@link IllegalArgumentException} <code>null</code>
 	 * is returned if the constant's name is invalid.
-	 * This method recognizes both Bukkit's and Sponge's IDs.
+	 * 
+	 * <p>This method recognizes both Bukkit's and Sponge's IDs.</p>
 	 * 
 	 * @param name Constant's name
 	 * @return Enum constant

@@ -37,7 +37,8 @@ public class PlayersDataType<T> {
 	
 	/**
 	 * Player's UUID.
-	 * It is a {@link String} which uses the format supported by {@link UUID#fromString(String)}.
+	 * 
+	 * <p>It is a {@link String} which uses the format supported by {@link UUID#fromString(String)}.</p>
 	 */
 	public static final PlayersDataType<String> PLAYER_UUID = new PlayersDataType<>("PLAYER_UUID", String.class);
 	
@@ -53,7 +54,8 @@ public class PlayersDataType<T> {
 	
 	/**
 	 * Player's language's ID.
-	 * It is a {@link String} which represents a {@link Language#getID()}.
+	 * 
+	 * <p>It is a {@link String} which represents a {@link Language#getID()}.</p>
 	 */
 	public static final PlayersDataType<String> LANGUAGE = new PlayersDataType<>("LANGUAGE", String.class);
 	

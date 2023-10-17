@@ -26,8 +26,10 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.chat.ChatManager;
 
 /**
- * Util class used to validate URLs. Every method except
- * {@link #stripProtocol(String)} works only when {@link ChatManager#isEnabled()}.
+ * Util class used to validate URLs.
+ * 
+ * <p>Every method except {@link #stripProtocol(String)}
+ * works only when {@link ChatManager#isEnabled()}.</p>
  */
 public class URLValidator {
 	
@@ -36,8 +38,10 @@ public class URLValidator {
 	
 	/**
 	 * Gets the list of the URLs contained in the input String.
-	 * URLs' domain names are checked using {@link #getDomainName(String)}.
-	 * You may modify the returned list.
+	 * 
+	 * <p>URLs' domain names are checked using {@link #getDomainName(String)}.</p>
+	 * 
+	 * <p>You may modify the returned list.</p>
 	 * 
 	 * @param input Input containing URLs
 	 * @return URLs contained in given input
@@ -74,8 +78,9 @@ public class URLValidator {
 	
 	/**
 	 * Gets the specified URL's domain name.
-	 * Will return <code>null</code> if the URL is invalid or if <code>!</code>{@link ChatManager#isEnabled()} or if
-	 * {@link ChatManager#getRecognizedTLDs()} does not contain the URL's <a href="https://en.wikipedia.org/wiki/Top-level_domain">TLD</a>.
+	 * 
+	 * <p>Will return <code>null</code> if the URL is invalid or if <code>!</code>{@link ChatManager#isEnabled()} or if
+	 * {@link ChatManager#getRecognizedTLDs()} does not contain the URL's <a href="https://en.wikipedia.org/wiki/Top-level_domain">TLD</a>.</p>
 	 * 
 	 * @param url Target URL
 	 * @return Specified URL's domain name

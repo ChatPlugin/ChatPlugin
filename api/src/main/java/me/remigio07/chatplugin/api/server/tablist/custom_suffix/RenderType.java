@@ -99,7 +99,8 @@ public class RenderType {
 	 * with the only difference that instead of throwing
 	 * {@link IllegalArgumentException} <code>null</code>
 	 * is returned if the constant's name is invalid.
-	 * This method recognizes both Bukkit's and Sponge's IDs.
+	 * 
+	 * <p>This method recognizes both Bukkit's and Sponge's IDs.</p>
 	 * 
 	 * @param name Constant's name
 	 * @return Enum constant

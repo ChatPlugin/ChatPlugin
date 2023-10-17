@@ -88,8 +88,9 @@ public class ChatPluginManagerException extends Exception {
 	
 	/**
 	 * Gets the manager associated with this exception.
-	 * Will return <code>null</code> if this exception has
-	 * been initialized using the deprecated constructors.
+	 * 
+	 * <p>Will return <code>null</code> if this exception has
+	 * been initialized using the deprecated constructors.</p>
 	 * 
 	 * @return Exception's manager
 	 */
@@ -100,8 +101,9 @@ public class ChatPluginManagerException extends Exception {
 	
 	/**
 	 * Gets this exception's source's representation.
-	 * Will return the manager's name if this exception has
-	 * not been initialized using the deprecated constructors.
+	 * 
+	 * <p>Will return the manager's name if this exception has
+	 * not been initialized using the deprecated constructors.</p>
 	 * 
 	 * @return Exception's source
 	 */

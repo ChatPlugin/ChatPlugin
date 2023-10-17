@@ -91,8 +91,9 @@ public class BossbarAdapter {
 	
 	/**
 	 * Gets this bossbar's ID.
-	 * Will return <code>null</code> if this adapter
-	 * was initialized using {@link #BossbarAdapter(Object)}.
+	 * 
+	 * <p>Will return <code>null</code> if this adapter was
+	 * initialized using {@link #BossbarAdapter(Object)}.</p>
 	 * 
 	 * @return Bossbar's ID
 	 */

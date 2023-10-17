@@ -32,7 +32,8 @@ import me.remigio07.chatplugin.api.server.util.Utils;
 
 /**
  * Util class used to send translatable {@link Component}s between the proxy and the servers.
- * Its methods are abstract as some of them use libraries' classes.
+ * 
+ * <p>Its methods are abstract as some of them use libraries' classes.</p>
  */
 public abstract class ComponentTranslator {
 	
@@ -46,7 +47,8 @@ public abstract class ComponentTranslator {
 	
 	/**
 	 * Creates a component's JSON representation with given values.
-	 * The <code>values</code> array may contain <code>null</code> elements.
+	 * 
+	 * <p>The <code>values</code> array may contain <code>null</code> elements.</p>
 	 * 
 	 * @param component Component to create
 	 * @param values Component's values
@@ -59,8 +61,9 @@ public abstract class ComponentTranslator {
 	/**
 	 * Gets the component specified in the given JSON string
 	 * obtained using {@link #createJSON(Component, Object...)}.
-	 * Will return <code>null</code> if the format is invalid
-	 * or the string does not corresponds to a component.
+	 * 
+	 * <p>Will return <code>null</code> if the format is invalid
+	 * or the string does not corresponds to a component.</p>
 	 * 
 	 * @param json Component's JSON representation
 	 * @return Component specified in given string
@@ -70,7 +73,8 @@ public abstract class ComponentTranslator {
 	
 	/**
 	 * Translates the given component's JSON representation.
-	 * Will return <code>text</code> back if it is invalid.
+	 * 
+	 * <p>Will return <code>text</code> back if it is invalid.</p>
 	 * 
 	 * @param language Language used to translate the component
 	 * @param text Text or component to translate
@@ -302,7 +306,7 @@ public abstract class ComponentTranslator {
 		/**
 		 * Time format's component.
 		 * 
-		 * <p><strong>Keys:</strong> ["value", "everInsteadOfNever", "useZeroSecondsInstead"]
+		 * <p><strong>Keys:</strong> ["value", "everInsteadOfNever", "useZeroSecondsInstead"]</p>
 		 * 
 		 * @see Utils#formatTime(long, Language, boolean, boolean)
 		 */
@@ -311,7 +315,7 @@ public abstract class ComponentTranslator {
 		/**
 		 * Date format's component.
 		 * 
-		 * <p><strong>Keys:</strong> ["value", "format"]
+		 * <p><strong>Keys:</strong> ["value", "format"]</p>
 		 * 
 		 * @see Utils#formatDate(long, Language, DateFormat)
 		 */
@@ -320,7 +324,7 @@ public abstract class ComponentTranslator {
 		/**
 		 * Memory format's component.
 		 * 
-		 * <p><strong>Keys:</strong> ["value", "scale"]
+		 * <p><strong>Keys:</strong> ["value", "scale"]</p>
 		 * 
 		 * @see MemoryUtils#formatMemory(long, MemoryUtils)
 		 */
@@ -343,7 +347,7 @@ public abstract class ComponentTranslator {
 		/**
 		 * Translated message's (with arguments) component.
 		 * 
-		 * <p><strong>Keys:</strong> ["value", "args"]
+		 * <p><strong>Keys:</strong> ["value", "args"]</p>
 		 * 
 		 * @see Language#getMessage(String, Object...)
 		 */

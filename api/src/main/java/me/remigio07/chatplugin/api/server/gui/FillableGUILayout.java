@@ -88,9 +88,10 @@ public class FillableGUILayout extends GUILayout {
 	
 	/**
 	 * Gets the filling function's icons' layouts.
-	 * Do not modify the returned list.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned list.
 	 * Use {@link #setIconLayout(IconLayout)} and
-	 * {@link #removeIconLayout(String)} to interact with it.
+	 * {@link #removeIconLayout(String)} to interact with it.</p>
 	 * 
 	 * @return Filler icons' layouts
 	 */
@@ -101,7 +102,8 @@ public class FillableGUILayout extends GUILayout {
 	
 	/**
 	 * Gets an icon layout from {@link #getIconsLayouts()} by its ID.
-	 * Will return <code>null</code> if the icon layout is not loaded.
+	 * 
+	 * <p>Will return <code>null</code> if the icon layout is not loaded.</p>
 	 * 
 	 * @param id Icon layout's ID
 	 * @return Loaded icon layout

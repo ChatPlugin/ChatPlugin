@@ -100,7 +100,8 @@ public class BossbarStyleAdapter {
 	
 	/**
 	 * Gets the bossbar style adapted for Bukkit environments.
-	 * {@link #RANDOM} may only return a style that {@link #isSupported()}.
+	 * 
+	 * <p>{@link #RANDOM} may only return a style that {@link #isSupported()}.</p>
 	 * 
 	 * @return Bukkit-adapted bossbar style
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBukkit()}
@@ -113,7 +114,8 @@ public class BossbarStyleAdapter {
 	
 	/**
 	 * Gets the bossbar style adapted for Sponge environments.
-	 * {@link #RANDOM} may only return a style that {@link #isSupported()}.
+	 * 
+	 * <p>{@link #RANDOM} may only return a style that {@link #isSupported()}.</p>
 	 * 
 	 * @return Sponge-adapted bossbar style
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isSponge()}

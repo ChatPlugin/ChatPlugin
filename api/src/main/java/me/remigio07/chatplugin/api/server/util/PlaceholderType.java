@@ -75,9 +75,10 @@ public enum PlaceholderType {
 	}
 	
 	/**
-	 * Gets the list of available placeholders for this placeholder type. Note that if
-	 * <code>this == {@link #INTEGRATIONS}</code> an array with just some elements will be returned,
-	 * even if this includes all the placeholders from PlaceholderAPI and MVdWPlaceholderAPI.
+	 * Gets the list of available placeholders for this placeholder type.
+	 * 
+	 * <p>Note that if <code>this == {@link #INTEGRATIONS}</code> an array with just some elements will be
+	 * returned, even if this includes all the placeholders from PlaceholderAPI and MVdWPlaceholderAPI.</p>
 	 * 
 	 * @return Array of available placeholders
 	 */
@@ -86,9 +87,10 @@ public enum PlaceholderType {
 	}
 	
 	/**
-	 * Gets a placeholder type from an input String. The input should
-	 * be equals (ignoring case) to one of this enum's constants.
-	 * If not, <code>null</code> will be returned.
+	 * Gets a placeholder type from an input String.
+	 * 
+	 * <p>The input should be equals (ignoring case) to one of this
+	 * enum's constants. If not, <code>null</code> will be returned.</p>
 	 * 
 	 * @param input {@link #name()}, ignoring case
 	 * @return Requested placeholder type or <code>null</code> if the input is invalid
@@ -115,8 +117,9 @@ public enum PlaceholderType {
 	
 	/**
 	 * Gets the placeholder type that contains the given identifier.
-	 * Will return <code>null</code> if no placeholder types
-	 * contain the specified identifier.
+	 * 
+	 * <p>Will return <code>null</code> if no placeholder
+	 * types contain the specified identifier.</p>
 	 * 
 	 * @param identifierWithoutBrackets Identifier to check
 	 * @return Requested placeholder type

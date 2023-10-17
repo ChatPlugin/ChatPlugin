@@ -20,7 +20,8 @@ import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 
 /**
- * Represents a {@link ChatPluginIntegration} able to check an {@link OfflinePlayer}'s permissions.
+ * Represents a {@link ChatPluginIntegration} able
+ * to check an {@link OfflinePlayer}'s permissions.
  * 
  * <p><strong>Types:</strong> [{@link IntegrationType#LUCKPERMS}]</p>
  */
@@ -28,8 +29,9 @@ public interface PermissionIntegration extends ChatPluginIntegration {
 	
 	/**
 	 * Checks if an offline player has the specified permission.
-	 * Note: this method may take some time to check the
-	 * permission. It is recommended to call it asynchronously.
+	 * 
+	 * <p><strong>Note:</strong> this method may take some time to check the
+	 * permission. It is recommended to call it asynchronously.</p>
 	 * 
 	 * @param player Offline player to check
 	 * @param permission Permission to check

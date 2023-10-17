@@ -26,8 +26,9 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
  * Environment indipendent (Bukkit and Sponge) sound adapter.
- * It also contains additional information that are normally
- * not included with a sound type: a volume and a pitch.
+ * 
+ * <p>It also contains additional information that are normally
+ * not included with a sound type: a volume and a pitch.</p>
  */
 public class SoundAdapter {
 	
@@ -72,7 +73,8 @@ public class SoundAdapter {
 	
 	/**
 	 * Gets the sound adapted for Bukkit environments.
-	 * Will return <code>null</code> if {@link #getID()} is not a valid sound.
+	 * 
+	 * <p>Will return <code>null</code> if {@link #getID()} is not a valid sound.</p>
 	 * 
 	 * @return Bukkit-adapted sound
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBukkit()}
@@ -89,7 +91,8 @@ public class SoundAdapter {
 	
 	/**
 	 * Gets the sound adapted for Sponge environments.
-	 * Will return <code>null</code> if {@link #getID()} is not a valid sound.
+	 * 
+	 * <p>Will return <code>null</code> if {@link #getID()} is not a valid sound.</p>
 	 * 
 	 * @param warnIfInvalid Whether to send a warning message if sound is invalid
 	 * @return Sponge-adapted sound

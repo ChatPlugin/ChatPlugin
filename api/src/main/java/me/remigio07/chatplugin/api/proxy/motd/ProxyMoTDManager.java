@@ -68,7 +68,8 @@ public abstract class ProxyMoTDManager extends MoTDManager {
 	
 	/**
 	 * Gets the MoTD provider server's ID.
-	 * Will return <code>null</code> if <code>!</code>{@link #isEnabled()}.
+	 * 
+	 * <p>Will return <code>null</code> if <code>!</code>{@link #isEnabled()}.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "motd.provider-server-id" in {@link ConfigurationType#MOTD}</p>
 	 * 
@@ -82,7 +83,8 @@ public abstract class ProxyMoTDManager extends MoTDManager {
 	/**
 	 * Gets the description displayed to players when the MoTD
 	 * provider server is not reachable within 5 seconds.
-	 * Will return <code>null</code> if <code>!</code>{@link #isEnabled()}.
+	 * 
+	 * <p>Will return <code>null</code> if <code>!</code>{@link #isEnabled()}.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "motd.server-unreachable.description" in {@link ConfigurationType#MOTD}</p>
 	 * 
@@ -96,7 +98,8 @@ public abstract class ProxyMoTDManager extends MoTDManager {
 	/**
 	 * Gets the URL of the icon displayed to players when the
 	 * MoTD provider server is not reachable within 5 seconds.
-	 * Will return <code>null</code> if <code>!</code>{@link #isEnabled()}.
+	 * 
+	 * <p>Will return <code>null</code> if <code>!</code>{@link #isEnabled()}.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "motd.server-unreachable.url" in {@link ConfigurationType#MOTD}</p>
 	 * 
@@ -121,7 +124,8 @@ public abstract class ProxyMoTDManager extends MoTDManager {
 	
 	/**
 	 * Gets the MoTD packet server socket.
-	 * Will return <code>null</code> if <code>!</code>{@link #isEnabled()}.
+	 * 
+	 * <p>Will return <code>null</code> if <code>!</code>{@link #isEnabled()}.</p>
 	 * 
 	 * @return MoTD's server
 	 */
@@ -133,7 +137,8 @@ public abstract class ProxyMoTDManager extends MoTDManager {
 	/**
 	 * Gets the favicon displayed to players when the
 	 * MoTD provider server is not reachable within 5 seconds.
-	 * Will return <code>null</code> if <code>!</code>{@link #isEnabled()}.
+	 * 
+	 * <p>Will return <code>null</code> if <code>!</code>{@link #isEnabled()}.</p>
 	 * 
 	 * @return Server unreachable's favicon
 	 */

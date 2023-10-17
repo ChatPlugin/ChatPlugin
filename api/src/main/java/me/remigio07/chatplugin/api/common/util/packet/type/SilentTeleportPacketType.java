@@ -16,7 +16,8 @@
 package me.remigio07.chatplugin.api.common.util.packet.type;
 
 /**
- * Represents the type of a packet sent through the <code>SilentTeleport</code> subchannel.
+ * Represents the type of a packet sent through
+ * the <code>SilentTeleport</code> subchannel.
  */
 public enum SilentTeleportPacketType {
 	

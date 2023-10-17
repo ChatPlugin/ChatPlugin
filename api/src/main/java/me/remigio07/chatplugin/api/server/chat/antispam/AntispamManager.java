@@ -176,7 +176,8 @@ public abstract class AntispamManager implements DenyChatReasonHandler {
 	/**
 	 * Gets the spam cache's map, whose keys are players' UUIDs
 	 * and values are the message they have just sent.
-	 * Do not modify the returned map.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned map.</p>
 	 * 
 	 * @return Spam cache's map
 	 */
@@ -186,7 +187,8 @@ public abstract class AntispamManager implements DenyChatReasonHandler {
 	
 	/**
 	 * Gets the flood cache set, whose elements are players' UUIDs.
-	 * Do not modify the returned set.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned set.</p>
 	 * 
 	 * @return Flood cache's map
 	 */
@@ -205,7 +207,8 @@ public abstract class AntispamManager implements DenyChatReasonHandler {
 	
 	/**
 	 * Gets the reason why the specified message should be blocked.
-	 * Will return <code>null</code> if <code>player</code> has the permission to send the message.
+	 * 
+	 * <p>Will return <code>null</code> if <code>player</code> has the permission to send the message.</p>
 	 * 
 	 * <p><strong>Note:</strong> this method returns only reasons handled by the {@link AntispamManager}.
 	 * Check a {@link DenyChatReason}'s doc to know what manager handles it.</p>
@@ -243,9 +246,10 @@ public abstract class AntispamManager implements DenyChatReasonHandler {
 	public abstract boolean containsBlacklistedWord(String message);
 	
 	/**
-	 * Checks if a message is whitelisted. This means that the
-	 * antispam will not prevent it from being spammed more than
-	 * once every {@link #getSecondsBetweenSameMsg()} seconds.
+	 * Checks if a message is whitelisted.
+	 * 
+	 * <p>This means that the antispam will not prevent it from being sent
+	 * more than once every {@link #getSecondsBetweenSameMsg()} seconds.</p>
 	 * 
 	 * @param message Message to check
 	 * @return Whether the message is whitelisted

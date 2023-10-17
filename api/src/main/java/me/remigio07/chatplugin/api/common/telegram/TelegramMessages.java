@@ -99,8 +99,9 @@ public class TelegramMessages {
 		
 		/**
 		 * Translates an input String with the server's status' placeholders.
-		 * Unlike other methods of this class, this one is public just because
-		 * it needs to be visible to {@link TelegramIntegrationManager#run()}.
+		 * 
+		 * <p>Unlike other methods of this class, this one is public just because
+		 * it needs to be visible to {@link TelegramIntegrationManager#run()}.</p>
 		 * 
 		 * @param input Input containing placeholders
 		 * @return Translated placeholders

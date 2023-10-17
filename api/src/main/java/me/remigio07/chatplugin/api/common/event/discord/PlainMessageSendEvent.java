@@ -20,7 +20,8 @@ import me.remigio07.chatplugin.api.common.event.CancellableEvent;
 import me.remigio07.chatplugin.api.common.event.ChatPluginEvent;
 
 /**
- * Represents the event called just before a plain message is sent through the {@link DiscordBot}.
+ * Represents the event called just before a plain
+ * message is sent through the {@link DiscordBot}.
  * 
  * @see DiscordBot#sendPlainMessage(long, String)
  */

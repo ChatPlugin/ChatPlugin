@@ -77,8 +77,9 @@ public abstract class Scoreboard {
 	
 	/**
 	 * Gets the configuration associated with this scoreboard.
-	 * Will return <code>null</code> if this scoreboard was created using
-	 * {@link ScoreboardManager#createScoreboardBuilder(String, boolean, int, List)}.
+	 * 
+	 * <p>Will return <code>null</code> if this scoreboard was created using
+	 * {@link ScoreboardManager#createScoreboardBuilder(String, boolean, int, List)}.</p>
 	 * 
 	 * @return Associated configuration
 	 */
@@ -119,7 +120,8 @@ public abstract class Scoreboard {
 	
 	/**
 	 * Gets the red number displayed in the right side of the scoreboard.
-	 * Will work when {@link #isDisplayOnlyOneNumberEnabled()}.
+	 * 
+	 * <p>Will work when {@link #isDisplayOnlyOneNumberEnabled()}.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "settings.display-only-one-number.value" in {@link #getConfiguration()}</p>
 	 * 
@@ -143,9 +145,10 @@ public abstract class Scoreboard {
 	
 	/**
 	 * Gets the list of players this scoreboard is being displayed to.
-	 * Do not modify the returned list.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned list.
 	 * Use {@link #addPlayer(ChatPluginServerPlayer)} and {@link #removePlayer(ChatPluginServerPlayer)}
-	 * to interact with it.
+	 * to interact with it.</p>
 	 * 
 	 * @return Scoreboard's players
 	 */

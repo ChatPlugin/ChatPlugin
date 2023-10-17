@@ -66,7 +66,8 @@ public class GUIOpenEvent extends GUIEvent implements CancellableEvent, ChatPlug
 	
 	/**
 	 * Gets the page opened to the player.
-	 * Will return 0 for {@link SinglePageGUI}s.
+	 * 
+	 * <p>Will return 0 for {@link SinglePageGUI}s</p>.
 	 * 
 	 * @return GUI's page
 	 */

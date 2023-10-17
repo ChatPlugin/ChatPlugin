@@ -41,10 +41,12 @@ import me.remigio07.chatplugin.api.server.util.adapter.user.CommandSenderAdapter
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
- * Represents an offline player. This object contains just two values:
- * an {@link UUID} and a name. You can manually create offline players to interact with
- * the plugin's code (for example with the punishment system) from an online player
- * or just an UUID and a name. They may also be used to interact with the storage.
+ * Represents an offline player.
+ * 
+ * <p>This object contains just two values: an {@link UUID} and a name.
+ * You can manually create offline players to interact with the plugin's code
+ * (for example with the punishment system) from an online player or just an
+ * UUID and a name. They may also be used to interact with the storage.</p>
  * 
  * @see ChatPluginPlayer
  * @see PlayerAdapter
@@ -77,12 +79,13 @@ public class OfflinePlayer {
 	}
 	
 	/**
-	 * Constructs an offline player using given
-	 * UUID and name. Note that this constructor
-	 * is not checked and you should use it only
-	 * if you are sure that the specified UUID
-	 * and name corresponds to an existing account,
-	 * which could be either premium or cracked.
+	 * Constructs an offline player using given UUID and name.
+	 * 
+	 * <p>Note that this constructor is not
+	 * checked and you should use it only if you
+	 * are sure that the specified UUID and name
+	 * corresponds to an existing account, which
+	 * could be either premium or cracked.</p>
 	 * 
 	 * @param uuid Player's UUID
 	 * @param name Player's name
@@ -93,9 +96,9 @@ public class OfflinePlayer {
 	}
 	
 	/**
-	 * Gets an offline player by their UUID. In order to obtain
-	 * their name, the following operations will be performed:
+	 * Gets an offline player by their UUID.
 	 * 
+	 * <p>In order to obtain their name, the following operations will be performed:
 	 * 	<ul>
 	 * 		<li>if they are online, use the online player's name</li>
 	 * 		<li>check if they are saved in {@link DataContainer#PLAYERS}</li>
@@ -132,9 +135,9 @@ public class OfflinePlayer {
 	}
 	
 	/**
-	 * Gets an offline player by their name. In order to obtain
-	 * their UUID, the following operations will be performed:
+	 * Gets an offline player by their name.
 	 * 
+	 * <p>In order to obtain their UUID, the following operations will be performed:
 	 * 	<ul>
 	 * 		<li>if specified name <code>!</code>{@link Utils#isValidUsername(String)}, throw {@link IllegalArgumentException}</li>
 	 * 		<li>if they are online, use the online player's UUID and name</li>
@@ -196,9 +199,10 @@ public class OfflinePlayer {
 	
 	/**
 	 * Checks if an object is equal this offline player.
-	 * An offline player is considered equal to another one
-	 * if they have the same UUID if running on online mode or
-	 * if they have the same name ignoring case if running on offline mode.
+	 * 
+	 * <p>An offline player is considered equal to another one if
+	 * they have the same UUID if running on online mode or if they
+	 * have the same name ignoring case if running on offline mode.</p>
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -206,9 +210,10 @@ public class OfflinePlayer {
 	}
 	
 	/**
-	 * Gets this player's UUID. Will return {@link Utils#NIL_UUID} if
-	 * {@link ChatPlugin#isOnlineMode()} and the UUID or the name specified
-	 * at construction did not belong to a premium player.
+	 * Gets this player's UUID.
+	 * 
+	 * <p>Will return {@link Utils#NIL_UUID} if {@link ChatPlugin#isOnlineMode()} and the
+	 * UUID or the name specified at construction did not belong to a premium player.</p>
 	 * 
 	 * @return Player's UUID
 	 */
@@ -218,9 +223,10 @@ public class OfflinePlayer {
 	}
 	
 	/**
-	 * Gets this player's name. Will return <code>null</code> if
-	 * {@link ChatPlugin#isOnlineMode()} and the UUID or the name specified
-	 * at construction did not belong to a premium player.
+	 * Gets this player's name.
+	 * 
+	 * <p>Will return <code>null</code> if {@link ChatPlugin#isOnlineMode()} and the
+	 * UUID or the name specified at construction did not belong to a premium player.</p>
 	 * 
 	 * @return Player's name
 	 */
@@ -230,8 +236,10 @@ public class OfflinePlayer {
 	}
 	
 	/**
-	 * Gets this player's IP address. Will grab it from the storage if they are offline,
-	 * but it will return <code>null</code> if they have never joined the server before.
+	 * Gets this player's IP address.
+	 * 
+	 * <p>Will grab it from the storage if they are offline, but it will return
+	 * <code>null</code> if they have never joined the server before.</p>
 	 * 
 	 * <p><strong>Note:</strong> BungeeCord supports connections via <a href="https://en.wikipedia.org/wiki/Unix_domain_socket">Unix domain sockets</a>.
 	 * If this method is called on a player connected through a Unix domain socket, "127.0.0.1" is returned.</p>
@@ -286,9 +294,10 @@ public class OfflinePlayer {
 	
 	/**
 	 * Checks if this player has the specified permission.
-	 * Will always return <code>true</code> unless {@link #isOnline()}
+	 * 
+	 * <p>Will always return <code>true</code> unless {@link #isOnline()}
 	 * or a permission integration (LuckPerms, Vault) is enabled:
-	 * in those cases, it will be really checked.
+	 * in those cases, it will be really checked.</p>
 	 * 
 	 * <p>Note: this method may take some time to check the
 	 * permission. It is recommended to call it asynchronously.</p>
@@ -308,7 +317,8 @@ public class OfflinePlayer {
 	
 	/**
 	 * Gets this player's corresponding {@link PlayerAdapter} object.
-	 * Will return <code>null</code> if <code>!</code>{@link #isOnline()}.
+	 * 
+	 * <p>Will return <code>null</code> if <code>!</code>{@link #isOnline()}.</p>
 	 * 
 	 * @return Corresponding {@link PlayerAdapter}
 	 */
@@ -319,7 +329,8 @@ public class OfflinePlayer {
 	
 	/**
 	 * Gets this player's corresponding {@link ChatPluginServerPlayer} object.
-	 * Will return <code>null</code> if <code>!</code>{@link #isLoaded()}.
+	 * 
+	 * <p>Will return <code>null</code> if <code>!</code>{@link #isLoaded()}.</p>
 	 * 
 	 * @return Corresponding {@link ChatPluginServerPlayer}
 	 * @throws UnsupportedOperationException If {@link Environment#isProxy()}
@@ -333,7 +344,8 @@ public class OfflinePlayer {
 	
 	/**
 	 * Gets this player's corresponding {@link ChatPluginProxyPlayer} object.
-	 * Will return <code>null</code> if <code>!</code>{@link #isLoaded()}.
+	 * 
+	 * <p>Will return <code>null</code> if <code>!</code>{@link #isLoaded()}.</p>
 	 * 
 	 * @return Corresponding {@link ChatPluginProxyPlayer}
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isProxy()}

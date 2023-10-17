@@ -21,7 +21,8 @@ import me.remigio07.chatplugin.api.common.event.CancellableEvent;
 import me.remigio07.chatplugin.api.common.event.ChatPluginEvent;
 
 /**
- * Represents the event called just before the {@link DiscordBot}'s status is changed.
+ * Represents the event called just before
+ * the {@link DiscordBot}'s status is changed.
  * 
  * @see DiscordBot#setStatus(ActivityTypeAdapter, String)
  */

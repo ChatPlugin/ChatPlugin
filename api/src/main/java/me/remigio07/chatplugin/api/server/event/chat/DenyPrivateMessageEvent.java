@@ -31,8 +31,9 @@ public class DenyPrivateMessageEvent extends PrivateMessageEvent {
 	
 	/**
 	 * Constructs a new deny private message event.
-	 * Specify <code>null</code> as either the sender
-	 * or the recipient to indicate the console.
+	 * 
+	 * <p>Specify <code>null</code> as either the sender
+	 * or the recipient to indicate the console.</p>
 	 * 
 	 * @param player Player involved
 	 * @param recipient Recipient involved

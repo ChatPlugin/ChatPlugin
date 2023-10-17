@@ -38,7 +38,8 @@ public class ChatPluginReloadEvent implements ChatPluginEvent {
 	
 	/**
 	 * Gets the time elapsed during the last reload, in milliseconds.
-	 * This value may be obtained later using {@link ChatPlugin#getLastReloadTime()}.
+	 * 
+	 * <p>This value may be obtained later using {@link ChatPlugin#getLastReloadTime()}.</p>
 	 * 
 	 * @return Time elapsed, in milliseconds
 	 */

@@ -20,7 +20,8 @@ import me.remigio07.chatplugin.api.common.event.CancellableEvent;
 
 /**
  * Represents the event called when ChatPlugin crashes during a reload.
- * Hopefully this event gets never fired, but if it does, you can easily cancel it using {@link #setCancelled(boolean)}.
+ * 
+ * <p>Hopefully this event gets never fired, but if it does, you can easily cancel it using {@link #setCancelled(boolean)}.</p>
  * 
  * @see ChatPlugin#reload()
  */
@@ -46,7 +47,7 @@ public class ChatPluginCrashEvent implements CancellableEvent {
 	@Override
 	public void setCancelled(boolean cancelled) {
 		if (cancelled)
-			System.out.println("Yeah, good try... A plugin tried to cancel ChatPluginCrashEvent.");
+			System.out.println("Yeah, nice try... A plugin tried to cancel ChatPluginCrashEvent.");
 	}
 	
 	/**

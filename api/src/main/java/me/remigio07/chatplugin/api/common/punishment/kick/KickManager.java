@@ -109,9 +109,11 @@ public abstract class KickManager extends PunishmentManager {
 	
 	/**
 	 * Gets a kick from the database.
-	 * Will return <code>null</code> if the kick does not exist.
-	 * This method is equivalent to {@link StorageConnector#getKick(int)}
-	 * with the difference that it suppresses {@link SQLException}s.
+	 * 
+	 * <p>Will return <code>null</code> if the kick does not exist.</p>
+	 * 
+	 * <p>This method is equivalent to {@link StorageConnector#getKick(int)}
+	 * with the difference that it suppresses {@link SQLException}s.</p>
 	 * 
 	 * @param id Kick's ID
 	 * @return Kick object
@@ -120,7 +122,8 @@ public abstract class KickManager extends PunishmentManager {
 	public abstract Kick getKick(int id);
 	
 	/**
-	 * Formats a kick's type message using the message set in the specified language's messages file.
+	 * Formats a kick's type message using the message
+	 * set in the specified language's messages file.
 	 * 
 	 * @param type Type to format
 	 * @param language Language used to translate the message
@@ -131,7 +134,8 @@ public abstract class KickManager extends PunishmentManager {
 	public abstract String formatTypeMessage(KickType type, Language language);
 	
 	/**
-	 * Formats a kick's silent message using the message set in the specified language's messages file.
+	 * Formats a kick's silent message using the message
+	 * set in the specified language's messages file.
 	 * 
 	 * @param silent Whether the kick is silent
 	 * @param language Language used to translate the message
@@ -142,7 +146,8 @@ public abstract class KickManager extends PunishmentManager {
 	public abstract String formatSilentMessage(boolean silent, Language language);
 	
 	/**
-	 * Formats a kick's kick message using the message set in the specified language's messages file.
+	 * Formats a kick's kick message using the message
+	 * set in the specified language's messages file.
 	 * 
 	 * @param type Type to format
 	 * @param language Language used to translate the message

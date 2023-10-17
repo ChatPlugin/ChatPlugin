@@ -23,7 +23,8 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 
 /**
- * Represents the event called after a player's warnings get cleared.
+ * Represents the event called after
+ * a player's warnings get cleared.
  * 
  * @see WarningManager#clearWarnings(OfflinePlayer, String, String)
  */

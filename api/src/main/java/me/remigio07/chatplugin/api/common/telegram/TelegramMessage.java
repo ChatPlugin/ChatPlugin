@@ -26,8 +26,9 @@ public interface TelegramMessage {
 	
 	/**
 	 * Checks if this message is enabled and should be sent.
-	 * Will return true if nothing is specified in {@link ConfigurationType#TELEGRAM_INTEGRATION}
-	 * at path <code>"{@link #getPath()} + enabled"</code>; example: "messages.ban.info.enabled".
+	 * 
+	 * <p>Will return <code>true</code> if nothing is specified in {@link ConfigurationType#TELEGRAM_INTEGRATION}
+	 * at path <code>"{@link #getPath()} + enabled"</code>; example: "messages.ban.info.enabled".</p>
 	 * 
 	 * @return Whether this message is enabled
 	 */
@@ -37,7 +38,8 @@ public interface TelegramMessage {
 	
 	/**
 	 * Gets this message's path in {@link ConfigurationType#TELEGRAM_INTEGRATION}.
-	 * Does not include a dot at the end; example: "messages.ban.info".
+	 * 
+	 * <p>It does <strong>not</strong> include a dot at the end; example: "messages.ban.info".</p>
 	 * 
 	 * @return Message's path
 	 * @throws UnsupportedOperationException If this message has no path

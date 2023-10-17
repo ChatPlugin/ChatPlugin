@@ -115,7 +115,8 @@ public class MoTD {
 	}
 	
 	/**
-	 * Checks if the favicon found at {@link #getCustomIconURL()} should be displayed.
+	 * Checks if the favicon found at
+	 * {@link #getCustomIconURL()} should be displayed.
 	 * 
 	 * @return Whether the custom icon is visible
 	 */
@@ -249,8 +250,9 @@ public class MoTD {
 	
 	/**
 	 * Reads a MoTD from a <code>MoTDResponse</code> packet.
-	 * Will return <code>null</code> if {@link #getCustomIconURL()} is
-	 * invalid or the packet's subchannel is not <code>MoTDResponse</code>.
+	 * 
+	 * <p>Will return <code>null</code> if {@link #getCustomIconURL()} is
+	 * invalid or the packet's subchannel is not <code>MoTDResponse</code>.</p>
 	 * 
 	 * @param packet Packet to read
 	 * @return New MoTD

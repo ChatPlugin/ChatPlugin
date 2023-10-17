@@ -36,7 +36,8 @@ public class ChatPluginLoadEvent implements ChatPluginEvent {
 	
 	/**
 	 * Gets the time elapsed during the startup, in milliseconds.
-	 * This value may be obtained later using {@link ChatPlugin#getStartupTime()}.
+	 * 
+	 * <p>This value may be obtained later using {@link ChatPlugin#getStartupTime()}.</p>
 	 * 
 	 * @return Time elapsed, in milliseconds
 	 */

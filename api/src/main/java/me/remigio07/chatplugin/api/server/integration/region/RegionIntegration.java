@@ -39,7 +39,8 @@ public interface RegionIntegration extends ChatPluginIntegration {
 	
 	/**
 	 * Gets the ID of the protected region a player is currently inside of.
-	 * Will return <code>null</code> if they are not inside of any region.
+	 * 
+	 * <p>Will return <code>null</code> if they are not inside of any region.</p>
 	 * 
 	 * @param player Player to check
 	 * @return Protected region's ID

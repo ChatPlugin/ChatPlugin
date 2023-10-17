@@ -65,9 +65,10 @@ public abstract class Language {
 	}
 	
 	/**
-	 * Gets this language's list of <a href="https://en.wikipedia.org/wiki/ISO_3166-2#Current_codes">ISO 3166-2</a>
-	 * country codes. A player's language may be determined using {@link LanguageDetectorMethod#GEOLOCALIZATION}
-	 * if this list contains their {@link IPLookup#getCountryCode()}.
+	 * Gets this language's list of <a href="https://en.wikipedia.org/wiki/ISO_3166-2#Current_codes">ISO 3166-2</a> country codes.
+	 * 
+	 * <p>A player's language may be determined using {@link LanguageDetectorMethod#GEOLOCALIZATION}
+	 * if this list contains their {@link IPLookup#getCountryCode()}.</p>
 	 * 
 	 * @return Language's country codes
 	 */
@@ -87,8 +88,9 @@ public abstract class Language {
 	/**
 	 * Gets a message from this language's {@link #getConfiguration()} and
 	 * translates its placeholders using {@link Utils#numericPlaceholders(String, Object...)}.
-	 * The "{pfx}" placeholder will be translated with the message found at "misc.prefix".
-	 * Returned text will also be translated using {@link ChatColor#translate(String)}.
+	 * 
+	 * <p>The "{pfx}" placeholder will be translated with the message found at "misc.prefix".
+	 * Returned text will also be translated using {@link ChatColor#translate(String)}.</p>
 	 * 
 	 * @param path Message's path
 	 * @param args Optional arguments (translated using {@link Utils#numericPlaceholders(String, Object...)})
@@ -110,7 +112,8 @@ public abstract class Language {
 	
 	/**
 	 * Gets the plugin's main and default language.
-	 * This method calls {@link LanguageManager#getMainLanguage()}.
+	 * 
+	 * <p>This method calls {@link LanguageManager#getMainLanguage()}.</p>
 	 * 
 	 * @return Main language
 	 */

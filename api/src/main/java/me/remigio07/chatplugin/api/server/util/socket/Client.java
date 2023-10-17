@@ -34,8 +34,10 @@ import me.remigio07.chatplugin.api.server.event.socket.ClientDisconnectionEvent;
 import me.remigio07.chatplugin.api.server.event.socket.ClientReceivePacketEvent;
 
 /**
- * Client socket. Obtain instances of this class
- * with {@link #Client(InetAddress, int)}.
+ * Client socket.
+ * 
+ * <p>Obtain instances of this class with
+ * {@link #Client(InetAddress, int)}.</p>
  */
 public class Client {
 	
@@ -49,7 +51,8 @@ public class Client {
 	
 	/**
 	 * Constructs a new client socket.
-	 * Call {@link #connect(String)} to connect it.
+	 * 
+	 * <p>Call {@link #connect(String)} to connect it.</p>
 	 * 
 	 * @param serverAddress Server's address
 	 * @param serverPort Server's port [0 - 65535]
@@ -163,7 +166,8 @@ public class Client {
 	
 	/**
 	 * Sends a packet to the server.
-	 * Will do nothing if <code>!</code>{@link #isConnected()}.
+	 * 
+	 * <p>Will do nothing if <code>!</code>{@link #isConnected()}.</p>
 	 * 
 	 * @param packet Packet to send
 	 * @param async Whether the call should be asynchronous
@@ -214,8 +218,9 @@ public class Client {
 	
 	/**
 	 * Gets this client's socket.
-	 * Will return <code>null</code> if
-	 * <code>!</code>{@link #isConnected()}.
+	 * 
+	 * <p>Will return <code>null</code> if
+	 * <code>!</code>{@link #isConnected()}.</p>
 	 * 
 	 * @return Client's socket
 	 */
@@ -226,8 +231,9 @@ public class Client {
 	
 	/**
 	 * Gets this client's ID.
-	 * Will return <code>null</code> if
-	 * <code>!</code>{@link #isConnected()}.
+	 * 
+	 * <p>Will return <code>null</code> if
+	 * <code>!</code>{@link #isConnected()}.</p>
 	 * 
 	 * @return Client's ID
 	 */
@@ -238,8 +244,9 @@ public class Client {
 	
 	/**
 	 * Gets this client's data input stream.
-	 * Will return <code>null</code> if
-	 * <code>!</code>{@link #isConnected()}.
+	 * 
+	 * <p>Will return <code>null</code> if
+	 * <code>!</code>{@link #isConnected()}.</p>
 	 * 
 	 * @return Client's input stream
 	 */
@@ -250,8 +257,9 @@ public class Client {
 	
 	/**
 	 * Gets this client's data output stream.
-	 * Will return <code>null</code> if
-	 * <code>!</code>{@link #isConnected()}.
+	 * 
+	 * <p>Will return <code>null</code> if
+	 * <code>!</code>{@link #isConnected()}.</p>
 	 * 
 	 * @return Client's output stream
 	 */

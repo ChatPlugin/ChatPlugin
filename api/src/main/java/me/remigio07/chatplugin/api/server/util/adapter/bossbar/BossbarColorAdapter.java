@@ -114,7 +114,8 @@ public class BossbarColorAdapter {
 	
 	/**
 	 * Gets the bossbar color adapted for Bukkit environments.
-	 * {@link #RANDOM} may only return a color that {@link #isSupported()}.
+	 * 
+	 * <p>{@link #RANDOM} may only return a color that {@link #isSupported()}.</p>
 	 * 
 	 * @return Bukkit-adapted bossbar color
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBukkit()}
@@ -127,7 +128,8 @@ public class BossbarColorAdapter {
 	
 	/**
 	 * Gets the bossbar color adapted for Sponge environments.
-	 * {@link #RANDOM} may only return a color that {@link #isSupported()}.
+	 * 
+	 * <p>{@link #RANDOM} may only return a color that {@link #isSupported()}.</p>
 	 * 
 	 * @return Sponge-adapted bossbar color
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isSponge()}

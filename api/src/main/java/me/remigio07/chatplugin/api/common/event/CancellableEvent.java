@@ -28,8 +28,10 @@ public interface CancellableEvent extends ChatPluginEvent {
 	public boolean isCancelled();
 	
 	/**
-	 * Sets the cancellation state of this event. It will be passed through other
-	 * registered listeners even if it is cancelled, but it will not be executed.
+	 * Sets the cancellation state of this event.
+	 * 
+	 * <p>It will be passed through other registered listeners
+	 * even if it is cancelled, but it will not be executed.</p>
 	 * 
 	 * @param cancelled Whether this event should be cancelled
 	 */

@@ -131,7 +131,8 @@ public abstract class ActionbarManager extends TimerTask implements ChatPluginMa
 	
 	/**
 	 * Gets the list of loaded actionbars.
-	 * You may modify the returned list.
+	 * 
+	 * <p>You may modify the returned list.</p>
 	 * 
 	 * @return Loaded actionbars' list
 	 */
@@ -141,7 +142,8 @@ public abstract class ActionbarManager extends TimerTask implements ChatPluginMa
 	
 	/**
 	 * Gets an actionbar from {@link #getActionbars()} by its ID.
-	 * Will return <code>null</code> if the actionbar is not loaded.
+	 * 
+	 * <p>Will return <code>null</code> if the actionbar is not loaded.</p>
 	 * 
 	 * @param id Actionbar's ID
 	 * @return Loaded actionbar
@@ -153,7 +155,8 @@ public abstract class ActionbarManager extends TimerTask implements ChatPluginMa
 	
 	/**
 	 * Gets the {@link #run()}'s timer's task's ID.
-	 * You can interact with it using {@link TaskManager}'s methods.
+	 * 
+	 * <p>You can interact with it using {@link TaskManager}'s methods.</p>
 	 * 
 	 * @return Sending task's ID
 	 */
@@ -198,7 +201,8 @@ public abstract class ActionbarManager extends TimerTask implements ChatPluginMa
 	
 	/**
 	 * Sends an actionbar to a loaded player.
-	 * It will not be sent if {@link Actionbar#isHidden()}.
+	 * 
+	 * <p>It will not be sent if {@link Actionbar#isHidden()}.</p>
 	 * 
 	 * @param actionbar Actionbar to send
 	 * @param player Player to send the actionbar to

@@ -18,7 +18,8 @@ package me.remigio07.chatplugin.api.common.event.punishment.ban.banwave;
 import me.remigio07.chatplugin.api.common.punishment.ban.banwave.BanwaveEntry;
 
 /**
- * Represents the event called after a banwave entry gets removed from the entries' list.
+ * Represents the event called after a banwave
+ * entry gets removed from the entries' list.
  */
 public class BanwaveEntryRemoveEvent extends BanwaveEntryAddEvent {
 	

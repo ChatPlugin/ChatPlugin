@@ -41,8 +41,9 @@ import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 
 /**
  * Class used to create packets using {@link PacketSerializer}.
- * Every inner class of this class represents a category of packets.
- * Deprecated methods and inner classes are internal use only, thus not documented.
+ * 
+ * <p>Every inner class of this class represents a category of packets.
+ * Deprecated methods and inner classes are internal use only, thus not documented.</p>
  * 
  * @see PacketDeserializer
  */
@@ -55,9 +56,10 @@ public class Packets {
 		
 		/**
 		 * Sends a {@link MessagePacketType#PLAIN} message to the specified target(s).
-		 * You can specify <code>null</code> as <code>permission</code> if no permission is required to receive the message.
 		 * 
-		 * 	<p>Available targets:
+		 * <p>You can specify <code>null</code> as <code>permission</code> if no permission is required to receive the message.</p>
+		 * 
+		 * <p>Available targets:
 		 * 	<ul>
 		 * 		<li>"ALL CONNECTED" - every player connected to specified <code>server</code>(s)</li>
 		 * 		<li>"ALL ENABLED" - every loaded player ({@link OfflinePlayer#isLoaded()}) connected</li>
@@ -98,13 +100,15 @@ public class Packets {
 		
 		/**
 		 * Sends a {@link MessagePacketType#NUMERIC_PLACEHOLDERS} message to the specified target(s).
-		 * You can specify <code>null</code> as <code>permission</code> if no permission is required to receive the message.
-		 * Refer to {@link #plainPlayerMessage(String, String, String, boolean, String)} to know the available <code>targets</code>.
 		 * 
-		 * <p>This method supports {@link Component}s: the <code>args</code> array may be composed of strings obtained using
-		 * {@link ComponentTranslator#createJSON(Component, Object...)}.</p>
+		 * <p>You can specify <code>null</code> as <code>permission</code> if no permission is required to receive the message.
+		 * The <code>args</code> array cannot contain <code>null</code> elements.</p>
 		 * 
-		 * <p>The <code>args</code> array cannot contain <code>null</code> elements.</p>
+		 * <p>This method supports {@link Component}s: the <code>args</code> array may be composed of
+		 * strings obtained using {@link ComponentTranslator#createJSON(Component, Object...)}.</p>
+		 * 
+		 * <p>Refer to {@link #plainPlayerMessage(String, String, String, boolean, String)}
+		 * to find out the available <code>targets</code>.</p>
 		 * 
 		 * @param server Target server
 		 * @param targets Target player(s) or console
@@ -140,13 +144,15 @@ public class Packets {
 		
 		/**
 		 * Sends a {@link MessagePacketType#CUSTOM_PLACEHOLDERS} message to the specified target(s).
-		 * You can specify <code>null</code> as <code>permission</code> if no permission is required to receive the message.
-		 * Refer to {@link #plainPlayerMessage(String, String, String, boolean, String)} to know the available <code>targets</code>.
 		 * 
-		 * <p>This method supports {@link Component}s: the <code>args</code> array may be composed of strings obtained using
-		 * {@link ComponentTranslator#createJSON(Component, Object...)}.</p>
+		 * <p>You can specify <code>null</code> as <code>permission</code> if no permission is required to receive the message.
+		 * The <code>placeholders</code> and the <code>args</code> arrays cannot contain <code>null</code> elements.</p>
 		 * 
-		 * <p>The <code>placeholders</code> and the <code>args</code> arrays cannot contain <code>null</code> elements.</p>
+		 * <p>This method supports {@link Component}s: the <code>args</code> array may be composed of
+		 * strings obtained using {@link ComponentTranslator#createJSON(Component, Object...)}.</p>
+		 * 
+		 * <p>Refer to {@link #plainPlayerMessage(String, String, String, boolean, String)}
+		 * to find out the available <code>targets</code>.</p>
 		 * 
 		 * @param server Target server
 		 * @param targets Target player(s) or console
@@ -184,7 +190,8 @@ public class Packets {
 		}
 		
 		/**
-		 * Disconnects a player specifying a {@link MessagePacketType#PLAIN} message as the kick's reason.
+		 * Disconnects a player specifying a
+		 * {@link MessagePacketType#PLAIN} message as the kick's reason.
 		 * 
 		 * @param server Target server
 		 * @param player Player's UUID
@@ -207,10 +214,10 @@ public class Packets {
 		/**
 		 * Disconnects a player specifying a {@link MessagePacketType#NUMERIC_PLACEHOLDERS} message as the kick's reason.
 		 * 
-		 * <p>This method supports {@link Component}s: the <code>args</code> array may be composed of strings obtained using
-		 * {@link ComponentTranslator#createJSON(Component, Object...)}.</p>
-		 * 
 		 * <p>The <code>args</code> array cannot contain <code>null</code> elements.</p>
+		 * 
+		 * <p>This method supports {@link Component}s: the <code>args</code> array may be composed of
+		 * strings obtained using {@link ComponentTranslator#createJSON(Component, Object...)}.</p>
 		 * 
 		 * @param server Target server
 		 * @param player Player's UUID
@@ -241,10 +248,10 @@ public class Packets {
 		/**
 		 * Disconnects a player specifying a {@link MessagePacketType#CUSTOM_PLACEHOLDERS} message as the kick's reason.
 		 * 
-		 * <p>This method supports {@link Component}s: the <code>args</code> array may be composed of strings obtained using
-		 * {@link ComponentTranslator#createJSON(Component, Object...)}.</p>
-		 * 
 		 * <p>The <code>args</code> array cannot contain <code>null</code> elements.</p>
+		 * 
+		 * <p>This method supports {@link Component}s: the <code>args</code> array may be composed of
+		 * strings obtained using {@link ComponentTranslator#createJSON(Component, Object...)}.</p>
 		 * 
 		 * @param server Target server
 		 * @param player Player's UUID
@@ -296,7 +303,8 @@ public class Packets {
 		}
 		
 		/**
-		 * Sends a {@link DiscordMessagePacketType#PLAIN} message to the specified Discord channel.
+		 * Sends a {@link DiscordMessagePacketType#PLAIN}
+		 * message to the specified Discord channel.
 		 * 
 		 * @param server Origin server
 		 * @param sender Message's sender
@@ -320,7 +328,8 @@ public class Packets {
 		}
 		
 		/**
-		 * Sends a {@link DiscordMessagePacketType#EMBED} message to the specified Discord channel.
+		 * Sends a {@link DiscordMessagePacketType#EMBED}
+		 * message to the specified Discord channel.
 		 * 
 		 * @param server Origin server
 		 * @param sender Message's sender
@@ -346,12 +355,14 @@ public class Packets {
 	}
 	
 	/**
-	 * Contains packets used to inform the servers about players' joins and quits.
+	 * Contains packets used to inform the
+	 * servers about players' joins and quits.
 	 */
 	public static class JoinQuit {
 		
 		/**
-		 * Makes the target server load the specified player and send their join's message.
+		 * Makes the target server load the specified
+		 * player and send their join's message.
 		 * 
 		 * @param server Target server
 		 * @param player Player's UUID
@@ -381,7 +392,8 @@ public class Packets {
 		}
 		
 		/**
-		 * Makes the target server send a switch message for the specified player.
+		 * Makes the target server send a switch
+		 * message for the specified player.
 		 * 
 		 * @param server Target server
 		 * @param player Player's UUID
@@ -405,7 +417,8 @@ public class Packets {
 		}
 		
 		/**
-		 * Makes the target server send a quit message for the specified player.
+		 * Makes the target server send a quit
+		 * message for the specified player.
 		 * 
 		 * @param server Target server
 		 * @param player Player's UUID
@@ -518,7 +531,8 @@ public class Packets {
 		}
 		
 		/**
-		 * Makes a MoTD request to the proxy for the specified IP address.
+		 * Makes a MoTD request to the proxy
+		 * for the specified IP address.
 		 * 
 		 * @param server Target server
 		 * @param ipAddress Player's IP address
@@ -1202,7 +1216,8 @@ public class Packets {
 	public static class Misc {
 		
 		/**
-		 * Carries information about a server's online and vanished players' amount.
+		 * Carries information about a server's
+		 * online and vanished players' amount.
 		 * 
 		 * @param server Target server
 		 * @param onlinePlayers Online players' amount

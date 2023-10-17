@@ -149,7 +149,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("settings.anticheat-integration.matrix", true);
 		config.addDefault("settings.anticheat-integration.vulcan", false);
 		config.addDefault("settings.anticheat-integration.reasons-start-with", Arrays.asList("[Matrix]", "[Vulcan]"));
-		config.addDefault("settings.violations-expiration-timeout", "1m");
+		config.addDefault("settings.anticheat-integration.violations-expiration-timeout", "1m");
 		config.addDefault("settings.storage-placeholders-update-timeout", "1m");
 		config.addDefault("settings.enabled-worlds", Arrays.asList(Environment.isBukkit() ? Bukkit.getWorlds().get(0).getName() : Sponge.getServer().getWorlds().iterator().next().getName()));
 		config.addDefault("settings.displayed-memory.unit", "MEGABYTE");

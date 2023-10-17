@@ -152,8 +152,10 @@ public abstract class AccountCheckManager implements ChatPluginManager {
 	/**
 	 * Checks if the specified player owns multiple accounts
 	 * according to the module's current configuration.
-	 * This method is run asynchronously and may execute {@link #getPunishCommands()}.
-	 * Will do nothing if <code>!</code>{@link OfflinePlayer#hasPlayedBefore()}.
+	 * 
+	 * <p>Will do nothing if <code>!</code>{@link OfflinePlayer#hasPlayedBefore()}.</p>
+	 * 
+	 * <p>This method is run asynchronously and may execute {@link #getPunishCommands()}.</p>
 	 * 
 	 * @param player Player to check
 	 */
@@ -162,7 +164,8 @@ public abstract class AccountCheckManager implements ChatPluginManager {
 	/**
 	 * Gets a list of the accounts owned by the specified player,
 	 * including it at the first position of the list held by the future.
-	 * Will do nothing if <code>!</code>{@link OfflinePlayer#hasPlayedBefore()}.
+	 * 
+	 * <p>Will do nothing if <code>!</code>{@link OfflinePlayer#hasPlayedBefore()}.</p>
 	 * 
 	 * @param player Player to check
 	 * @param maxTimePlayed A player's max time played allowed to be considered reliable for a comparison, in milliseconds

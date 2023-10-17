@@ -77,8 +77,9 @@ public abstract class LanguageDetector {
 	
 	/**
 	 * Detects a player's language using {@link #getMethod()}.
-	 * Will fallback to {@link LanguageManager#getMainLanguage()}
-	 * if was not possible to detect the player's language.
+	 * 
+	 * <p>Will fallback to {@link LanguageManager#getMainLanguage()}
+	 * if was not possible to detect the player's language.</p>
 	 * 
 	 * @param player Target player
 	 * @return Player's language
@@ -102,8 +103,9 @@ public abstract class LanguageDetector {
 	
 	/**
 	 * Detects a player's language using {@link LanguageDetectorMethod#CLIENT_LOCALE}.
-	 * Will fallback to {@link LanguageManager#getMainLanguage()}
-	 * if was not possible to detect the player's language.
+	 * 
+	 * <p>Will fallback to {@link LanguageManager#getMainLanguage()}
+	 * if was not possible to detect the player's language.</p>
 	 * 
 	 * @param player Target player
 	 * @return Player's language
@@ -113,8 +115,9 @@ public abstract class LanguageDetector {
 	
 	/**
 	 * Detects an IP lookup's language using {@link LanguageDetectorMethod#GEOLOCALIZATION}.
-	 * Will fallback to {@link LanguageManager#getMainLanguage()}
-	 * if was not possible to detect the player's language.
+	 * 
+	 * <p>Will fallback to {@link LanguageManager#getMainLanguage()}
+	 * if was not possible to detect the player's language.</p>
 	 * 
 	 * @param ipLookup Target IP lookup
 	 * @return IP lookup's language

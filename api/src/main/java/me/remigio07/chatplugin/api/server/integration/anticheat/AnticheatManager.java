@@ -23,6 +23,7 @@ import java.util.Map;
 
 import me.remigio07.chatplugin.api.common.integration.IntegrationManager;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
+import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
@@ -41,7 +42,8 @@ public abstract class AnticheatManager implements ChatPluginManager {
 	
 	/**
 	 * Checks if this manager is enabled.
-	 * Will return {@link IntegrationManager#isAtLeastOneAnticheatEnabled()}.
+	 * 
+	 * <p>Will return {@link IntegrationManager#isAtLeastOneAnticheatEnabled()}.</p>
 	 */
 	@Override
 	public boolean isEnabled() {
@@ -49,8 +51,10 @@ public abstract class AnticheatManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets current violations' map. Every entry is composed
-	 * of a player and a list of {@link Violation}s.
+	 * Gets current violations' map.
+	 * 
+	 * <p>Every entry is composed of a player
+	 * and a list of {@link Violation}s.</p>
 	 * 
 	 * @return Current violations' map
 	 */
@@ -60,8 +64,9 @@ public abstract class AnticheatManager implements ChatPluginManager {
 	
 	/**
 	 * Gets a list of violations from {@link #getViolations()}.
-	 * Will return {@link Collections#emptyList()} if {@link #getViolations()}
-	 * does not contain the specified <code>player</code>.
+	 * 
+	 * <p>Will return {@link Collections#emptyList()} if {@link #getViolations()}
+	 * does not contain the specified <code>player</code>.</p>
 	 * 
 	 * @param player Player to check
 	 * @return Player's current violations
@@ -75,6 +80,8 @@ public abstract class AnticheatManager implements ChatPluginManager {
 	 * Gets the list of strings a punishment's reason has to start with
 	 * to be considered created automatically by the anticheat.
 	 * 
+	 * <p><strong>Found at:</strong> "settings.anticheat-integration.reasons-start-with" in {@link ConfigurationType#CONFIG}</p>
+	 * 
 	 * @return Anticheat integration's reasons
 	 */
 	public List<String> getReasonsStartWith() {
@@ -82,9 +89,9 @@ public abstract class AnticheatManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the time required for a violation to expire, specified at
-	 * <code>settings.violations-expiration-timeout</code> in config.yml,
-	 * expressed in milliseconds.
+	 * Gets the time required for a violation to expire, in milliseconds.
+	 * 
+	 * <p><strong>Found at:</strong> "settings.anticheat-integration.violations-expiration-timeout" in {@link ConfigurationType#CONFIG}</p>
 	 * 
 	 * @return Violations' expiration timeout
 	 */
@@ -103,8 +110,9 @@ public abstract class AnticheatManager implements ChatPluginManager {
 	
 	/**
 	 * Adds a violation to {@link #getViolations()}.
-	 * This operation will remove any previous violation
-	 * with the same {@link Violation#getCheatID()}.
+	 * 
+	 * <p>This operation will remove any previous violation
+	 * with the same {@link Violation#getCheatID()}.</p>
 	 * 
 	 * @param violation Violation to add
 	 */
@@ -128,8 +136,9 @@ public abstract class AnticheatManager implements ChatPluginManager {
 	
 	/**
 	 * Checks if the specified punishment's reason is contained in {@link #getReasonsStartWith()}.
-	 * Case will be lowered and colors will be stripped using {@link ChatColor#stripColor(String)}. See wiki for more info:
-	 * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Plugin-integrations#anticheats">ChatPlugin wiki/Plugin integrations/Anticheats</a>
+	 * 
+	 * <p>Case will be lowered and colors will be stripped using {@link ChatColor#stripColor(String)}. See wiki for more info:
+	 * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Plugin-integrations#anticheats">ChatPlugin wiki/Plugin integrations/Anticheats</a></p>
 	 * 
 	 * @param reason Punishment's reason
 	 * @return Whether the reason is an anticheat's reason

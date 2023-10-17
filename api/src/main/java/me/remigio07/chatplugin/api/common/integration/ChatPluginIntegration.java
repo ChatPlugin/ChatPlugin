@@ -47,7 +47,8 @@ public interface ChatPluginIntegration {
 	
 	/**
 	 * Gets this integration's API object, if present.
-	 * Will return <code>null</code> if not used.
+	 * 
+	 * <p>Will return <code>null</code> if not used.</p>
 	 * 
 	 * @return Integration's API object
 	 */

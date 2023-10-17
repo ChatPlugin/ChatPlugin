@@ -78,7 +78,7 @@ public abstract class Rank {
 	}
 	
 	/**
-	 * Gets the prefix every player in this rank will have. May be empty.
+	 * Gets the prefix every player in this rank will have.
 	 * 
 	 * @return Rank's prefix
 	 */
@@ -88,7 +88,7 @@ public abstract class Rank {
 	}
 	
 	/**
-	 * Gets the suffix every player in this rank will have. May be empty.
+	 * Gets the suffix every player in this rank will have.
 	 * 
 	 * @return Rank's suffix
 	 */
@@ -108,7 +108,7 @@ public abstract class Rank {
 	}
 	
 	/**
-	 * Gets the default chat color this rank will have. May be empty.
+	 * Gets the default chat color this rank will have.
 	 * 
 	 * @return Rank's chat color
 	 */
@@ -138,8 +138,9 @@ public abstract class Rank {
 	
 	/**
 	 * Gets this rank's descriptions.
-	 * You may modify the returned map, but it cannot point to a
-	 * <code>null</code> value for {@link Language#getMainLanguage()}.
+	 * 
+	 * <p>You may modify the returned map, but it cannot point to a
+	 * <code>null</code> value for {@link Language#getMainLanguage()}.</p>
 	 * 
 	 * @return Rank's descriptions
 	 */
@@ -149,9 +150,10 @@ public abstract class Rank {
 	
 	/**
 	 * Gets this rank's description for the specified language.
-	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
+	 * 
+	 * <p>Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s description if no description is present for the specified language.
-	 * Will return <code>null</code> if {@link #getDescriptions()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.
+	 * Will return <code>null</code> if {@link #getDescriptions()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.</p>
 	 * 
 	 * @param language Language used to translate the description
 	 * @param avoidNull Whether to avoid returning <code>null</code>
@@ -163,7 +165,9 @@ public abstract class Rank {
 	}
 	
 	/**
-	 * Gets this rank's max punishment durations. The returned array contains two elements:
+	 * Gets this rank's max punishment durations.
+	 * 
+	 * <p>The returned array contains two elements:
 	 * 	<ul>
 	 * 		<li>the max allowed /tempban or /tempbanip punishment duration, in milliseconds</li>
 	 * 		<li>the max allowed /mute punishment duration, in milliseconds</li>
@@ -192,7 +196,8 @@ public abstract class Rank {
 	
 	/**
 	 * Gets this rank's ID which will be set as the Vanilla team name.
-	 * It is obtained by joining {@link #formatPosition()} with {@link #getID()}.
+	 * 
+	 * <p>It is obtained by joining {@link #formatPosition()} with {@link #getID()}.</p>
 	 * 
 	 * @return The Vanilla team name
 	 */
@@ -202,7 +207,8 @@ public abstract class Rank {
 	
 	/**
 	 * Translates an input string with this rank's specific placeholders.
-	 * Check {@link #PLACEHOLDERS} to know the available placeholders.
+	 * 
+	 * <p>Check {@link #PLACEHOLDERS} to find out the available placeholders.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param language Language used to translate the placeholders
@@ -224,7 +230,8 @@ public abstract class Rank {
 	
 	/**
 	 * Translates an input string list with this rank's specific placeholders.
-	 * Check {@link #PLACEHOLDERS} to know the available placeholders.
+	 * 
+	 * <p>Check {@link #PLACEHOLDERS} to find out the available placeholders.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param language Language used to translate the placeholders

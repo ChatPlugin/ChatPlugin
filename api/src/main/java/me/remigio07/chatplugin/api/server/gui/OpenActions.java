@@ -71,8 +71,9 @@ public class OpenActions {
 	
 	/**
 	 * Gets these open actions' messages.
-	 * You may modify the returned map, but it cannot point to a
-	 * <code>null</code> value for {@link Language#getMainLanguage()}.
+	 * 
+	 * <p>You may modify the returned map, but it cannot point to a
+	 * <code>null</code> value for {@link Language#getMainLanguage()}.</p>
 	 * 
 	 * @return Open actions' messages
 	 */
@@ -82,9 +83,10 @@ public class OpenActions {
 	
 	/**
 	 * Gets these open actions' message for the specified language.
-	 * Specify <code>true</code> as <code>avoidNull</code> to fall back to
+	 * 
+	 * <p>Specify <code>true</code> as <code>avoidNull</code> to fall back to
 	 * {@link Language#getMainLanguage()}'s message if no message is present for the specified language.
-	 * Will return <code>null</code> if {@link #getMessages()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.
+	 * Will return <code>null</code> if {@link #getMessages()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.</p>
 	 * 
 	 * @param language Language used to translate the message
 	 * @param avoidNull Whether to avoid returning <code>null</code>

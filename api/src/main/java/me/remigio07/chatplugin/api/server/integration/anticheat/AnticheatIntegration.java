@@ -28,7 +28,8 @@ public interface AnticheatIntegration extends ChatPluginIntegration {
 	
 	/**
 	 * Gets a player's violations' amount for the specified cheat's ID.
-	 * Will return 0 if this integration does not recognize that ID.
+	 * 
+	 * <p>Will return 0 if this integration does not recognize that ID.</p>
 	 * 
 	 * @param player Player to check
 	 * @param cheatID Integration's cheat's ID

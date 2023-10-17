@@ -37,7 +37,8 @@ public interface TelegramBot {
 	
 	/**
 	 * Gets the bot's instance.
-	 * This method calls {@link TelegramIntegrationManager#getBot()}.
+	 * 
+	 * <p>This method calls {@link TelegramIntegrationManager#getBot()}.</p>
 	 * 
 	 * @return Bot's instance
 	 */

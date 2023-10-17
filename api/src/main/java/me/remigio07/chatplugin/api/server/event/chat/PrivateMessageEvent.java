@@ -35,7 +35,8 @@ public abstract class PrivateMessageEvent implements ChatPluginServerPlayerEvent
 	
 	/**
 	 * Gets the player involved with this event.
-	 * Will return <code>null</code> to indicate the console.
+	 * 
+	 * <p>Will return <code>null</code> to indicate the console.</p>
 	 */
 	@Nullable(why = "Null to represent the console")
 	@Override
@@ -45,7 +46,8 @@ public abstract class PrivateMessageEvent implements ChatPluginServerPlayerEvent
 	
 	/**
 	 * Gets this private message's recipient.
-	 * Will return <code>null</code> to indicate the console.
+	 * 
+	 * <p>Will return <code>null</code> to indicate the console.</p>
 	 * 
 	 * @return Recipient involved
 	 */

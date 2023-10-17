@@ -65,9 +65,10 @@ public abstract class PunishmentManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the amount of punishments stored in the storage.
-	 * This value is only used to translate "{total_punishments}",
+	 * 
+	 * <p>This value is only used to translate "{total_punishments}",
 	 * where "punishments" is one of the following:
-	 * "bans", "warnings", "kicks", "mutes".
+	 * "bans", "warnings", "kicks", "mutes".</p>
 	 * 
 	 * @return Amount of punishments
 	 */
@@ -77,10 +78,12 @@ public abstract class PunishmentManager implements ChatPluginManager {
 	
 	/**
 	 * Sets the amount of punishments stored in the storage.
-	 * This value is only used to translate "{total_punishments}",
+	 * 
+	 * <p>This value is only used to translate "{total_punishments}",
 	 * where "punishments" is one of the following:
-	 * "bans", "warnings", "kicks", "mutes".
-	 * This method also updates {@link #getNextID()}'s value.
+	 * "bans", "warnings", "kicks", "mutes".</p>
+	 * 
+	 * <p>This method also updates {@link #getNextID()}'s value.</p>
 	 * 
 	 * @param storageCount Amount of punishments
 	 */
@@ -91,9 +94,10 @@ public abstract class PunishmentManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the amount of punishments performed by Staff members stored in the storage.
-	 * This value is only used to translate "{total_staff_punishments}",
+	 * 
+	 * <p>This value is only used to translate "{total_staff_punishments}",
 	 * where "punishments" is one of the following:
-	 * "bans", "warnings", "kicks", "mutes".
+	 * "bans", "warnings", "kicks", "mutes".</p>
 	 * 
 	 * @return Amount of punishments
 	 */
@@ -103,9 +107,10 @@ public abstract class PunishmentManager implements ChatPluginManager {
 	
 	/**
 	 * Sets the amount of punishments performed by Staff members stored in the storage.
-	 * This value is only used to translate "{total_staff_punishments}",
+	 * 
+	 * <p>This value is only used to translate "{total_staff_punishments}",
 	 * where "punishments" is one of the following:
-	 * "bans", "warnings", "kicks", "mutes".
+	 * "bans", "warnings", "kicks", "mutes".</p>
 	 * 
 	 * @param staffStorageCount Amount of punishments
 	 */
@@ -115,9 +120,10 @@ public abstract class PunishmentManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the amount of punishments performed by the anticheat stored in the storage.
-	 * This value is only used to translate "{total_anticheat_punishments}",
+	 * 
+	 * <p>This value is only used to translate "{total_anticheat_punishments}",
 	 * where "punishments" is one of the following:
-	 * "bans", "warnings", "kicks", "mutes".
+	 * "bans", "warnings", "kicks", "mutes".</p>
 	 * 
 	 * @return Amount of punishments
 	 */
@@ -127,9 +133,10 @@ public abstract class PunishmentManager implements ChatPluginManager {
 	
 	/**
 	 * Sets the amount of punishments performed by the anticheat stored in the storage.
-	 * This value is only used to translate "{total_anticheat_punishments}",
+	 * 
+	 * <p>This value is only used to translate "{total_anticheat_punishments}",
 	 * where "punishments" is one of the following:
-	 * "bans", "warnings", "kicks", "mutes".
+	 * "bans", "warnings", "kicks", "mutes".</p>
 	 * 
 	 * @param anticheatStorageCount Amount of punishments
 	 */

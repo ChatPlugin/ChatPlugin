@@ -69,8 +69,9 @@ public class EntityAdapter {
 	
 	/**
 	 * Gets this entity's name.
-	 * Will return the entity type's name
-	 * if a display name is not provided.
+	 * 
+	 * <p>Will return the entity type's name
+	 * if a display name is not provided.</p>
 	 * 
 	 * @return Entity's name
 	 */

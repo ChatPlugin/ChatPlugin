@@ -265,8 +265,10 @@ public abstract class DatabaseConnector extends StorageConnector {
 	
 	/**
 	 * Prepares a statement and passes given parameters to it.
-	 * Refer to {@link Connection#prepareStatement(String)} for more information.
-	 * The <code>params</code> array can contain <code>null</code> values.
+	 * 
+	 * <p>The <code>params</code> array can contain <code>null</code> values.</p>
+	 * 
+	 * <p>Refer to {@link Connection#prepareStatement(String)} for more information.</p>
 	 * 
 	 * @param sql SQL statement to execute
 	 * @param params Parameters to pass
@@ -285,8 +287,10 @@ public abstract class DatabaseConnector extends StorageConnector {
 	
 	/**
 	 * Executes a SQL statement which must be a DML or a statement that returns nothing.
-	 * Refer to {@link PreparedStatement#executeUpdate()} for more information.
-	 * The <code>params</code> array can contain <code>null</code> values.
+	 * 
+	 * <p>The <code>params</code> array can contain <code>null</code> values.</p>
+	 * 
+	 * <p>Refer to {@link PreparedStatement#executeUpdate()} for more information.</p>
 	 * 
 	 * @param sql SQL statement to execute
 	 * @param params Parameters to pass
@@ -304,10 +308,13 @@ public abstract class DatabaseConnector extends StorageConnector {
 	
 	/**
 	 * Gets the data in the first row returned by the specified query.
-	 * Will return <code>null</code> if the query's result is a SQL <code>NULL</code>.
-	 * It is recommended to pass {@link Number} as <code>type</code>
-	 * if you are trying to read a number to avoid {@link ClassCastException}s.
-	 * The <code>params</code> array can contain <code>null</code> values.
+	 * 
+	 * <p>Will return <code>null</code> if the query's result is a SQL <code>NULL</code>.</p>
+	 * 
+	 * <p>The <code>params</code> array can contain <code>null</code> values.</p>
+	 * 
+	 * <p>It is recommended to pass {@link Number} as <code>type</code> if you
+	 * are trying to read a number to avoid {@link ClassCastException}s.</p>
 	 * 
 	 * @param <T> Data's type
 	 * @param query SQL statement
@@ -357,10 +364,13 @@ public abstract class DatabaseConnector extends StorageConnector {
 	
 	/**
 	 * Gets the data in the first row returned by the specified query.
-	 * Will return <code>null</code> if the query's result is a SQL <code>NULL</code>.
-	 * It is recommended to pass {@link Number} as <code>type</code>
-	 * if you are trying to read a number to avoid {@link ClassCastException}s.
-	 * The <code>params</code> array can contain <code>null</code> values.
+	 * 
+	 * <p>Will return <code>null</code> if the query's result is a SQL <code>NULL</code>.</p>
+	 * 
+	 * <p>The <code>params</code> array can contain <code>null</code> values.</p>
+	 * 
+	 * <p>It is recommended to pass {@link Number} as <code>type</code> if you
+	 * are trying to read a number to avoid {@link ClassCastException}s.</p>
 	 * 
 	 * @param <T> Data's type
 	 * @param query SQL statement
@@ -410,10 +420,13 @@ public abstract class DatabaseConnector extends StorageConnector {
 	
 	/**
 	 * Gets the list of data in the column returned by the specified query.
-	 * Will return a new {@link ArrayList} if the query has no results.
-	 * It is recommended to pass {@link Number} as <code>type</code>
-	 * if you are trying to read a number to avoid {@link ClassCastException}s.
-	 * The <code>params</code> array can contain <code>null</code> values.
+	 * 
+	 * <p>Will return a new {@link ArrayList} if the query has no results.</p>
+	 * 
+	 * <p>The <code>params</code> array can contain <code>null</code> values.</p>
+	 * 
+	 * <p>It is recommended to pass {@link Number} as <code>type</code> if you
+	 * are trying to read a number to avoid {@link ClassCastException}s.</p>
 	 * 
 	 * @param <T> Data's type
 	 * @param query SQL statement
@@ -441,10 +454,13 @@ public abstract class DatabaseConnector extends StorageConnector {
 	
 	/**
 	 * Gets the list of data in the column returned by the specified query.
-	 * Will return a new {@link ArrayList} if the query has no results.
-	 * It is recommended to pass {@link Number} as <code>type</code>
-	 * if you are trying to read a number to avoid {@link ClassCastException}s.
-	 * The <code>params</code> array can contain <code>null</code> values.
+	 * 
+	 * <p>Will return a new {@link ArrayList} if the query has no results.</p>
+	 * 
+	 * <p>The <code>params</code> array can contain <code>null</code> values.</p>
+	 * 
+	 * <p>It is recommended to pass {@link Number} as <code>type</code> if you
+	 * are trying to read a number to avoid {@link ClassCastException}s.</p>
 	 * 
 	 * @param <T> Data's type
 	 * @param query SQL statement

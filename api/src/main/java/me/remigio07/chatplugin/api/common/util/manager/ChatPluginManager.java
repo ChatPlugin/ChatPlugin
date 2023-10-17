@@ -34,7 +34,8 @@ public interface ChatPluginManager {
 	
 	/**
 	 * Unloads this manager.
-	 * Will do nothing if this method is not overridden.
+	 * 
+	 * <p>Will do nothing if this method is not overridden.</p>
 	 * 
 	 * @throws ChatPluginManagerException If something goes wrong
 	 */
@@ -44,8 +45,9 @@ public interface ChatPluginManager {
 	
 	/**
 	 * Reloads this manager.
-	 * Will call {@link #unload()} and then
-	 * {@link #load()} if not overridden.
+	 * 
+	 * <p>Will call {@link #unload()} and then
+	 * {@link #load()} if not overridden.</p>
 	 * 
 	 * @throws ChatPluginManagerException If something goes wrong
 	 */
@@ -63,7 +65,8 @@ public interface ChatPluginManager {
 	
 	/**
 	 * Checks if this manager will be reloaded on a plugin reload.
-	 * Will return <code>true</code> if this method is not overridden.
+	 * 
+	 * <p>Will return <code>true</code> if this method is not overridden.</p>
 	 * 
 	 * @return Whether this manager is reloadable
 	 */
@@ -73,8 +76,10 @@ public interface ChatPluginManager {
 	
 	/**
 	 * Checks if this manager specifies a {@link GameFeature} annotation.
-	 * In that case, if <code>{@link Environment#isProxy()} == false</code> ({@link GameFeature}s are not used on proxies),
-	 * the feature's availability on the current environment is checked through three steps:
+	 * 
+	 * <p>In that case, if <code>{@link Environment#isProxy()} == false</code>
+	 * ({@link GameFeature}s are not used on proxies), the feature's
+	 * availability on the current environment is checked through three steps:
 	 * 	<ol>
 	 * 		<li>environment compatibility - whether the feature is available on Bukkit/Sponge</li>
 	 * 		<li>Spigot requirement - whether the feature requires Spigot or a fork; Bukkit only</li>

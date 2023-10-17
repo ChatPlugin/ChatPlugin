@@ -102,8 +102,9 @@ public class InventoryAdapter {
 	}
 	
 	/**
-	 * Gets the item at the specified position. Will return <code>null</code>
-	 * if <code>!</code>{@link #containsItem(int)} at that position.
+	 * Gets the item at the specified position.
+	 * 
+	 * <p>Will return <code>null</code> if <code>!</code>{@link #containsItem(int)} at that position.</p>
 	 * 
 	 * @param position Position to check.
 	 * @return Item at specified position
@@ -115,8 +116,10 @@ public class InventoryAdapter {
 	
 	/**
 	 * Sets an item stack at the specified position.
-	 * Specify an item of type {@link MaterialAdapter#AIR} if you want to remove the icon.
-	 * Will do nothing if <code>position</code> is outside of allowed range.
+	 * 
+	 * <p>Will do nothing if <code>position</code> is outside of allowed range.</p>
+	 * 
+	 * <p>Specify an item of type {@link MaterialAdapter#AIR} if you want to remove the icon.</p>
 	 * 
 	 * @param itemStack Item stack to set
 	 * @param position Position to set [0 - ({@link #getSize()} - 1)]

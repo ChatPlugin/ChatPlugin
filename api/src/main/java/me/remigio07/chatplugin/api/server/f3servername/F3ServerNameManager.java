@@ -114,7 +114,8 @@ public abstract class F3ServerNameManager extends TimerTask implements ChatPlugi
 	
 	/**
 	 * Gets the list of loaded F3 server names.
-	 * You may modify the returned list.
+	 * 
+	 * <p>You may modify the returned list.</p>
 	 * 
 	 * @return Loaded F3 server names' list
 	 */
@@ -124,7 +125,8 @@ public abstract class F3ServerNameManager extends TimerTask implements ChatPlugi
 	
 	/**
 	 * Gets an F3ServerName from {@link #getF3ServerNames()} by its ID.
-	 * Will return <code>null</code> if the F3 server name is not loaded.
+	 * 
+	 * <p>Will return <code>null</code> if the F3 server name is not loaded.</p>
 	 * 
 	 * @param id F3 server name's ID
 	 * @return Loaded F3 server name
@@ -136,7 +138,8 @@ public abstract class F3ServerNameManager extends TimerTask implements ChatPlugi
 	
 	/**
 	 * Gets the {@link #run()}'s timer's task's ID.
-	 * You can interact with it using {@link TaskManager}'s methods.
+	 * 
+	 * <p>You can interact with it using {@link TaskManager}'s methods.</p>
 	 * 
 	 * @return Sending task's ID
 	 */

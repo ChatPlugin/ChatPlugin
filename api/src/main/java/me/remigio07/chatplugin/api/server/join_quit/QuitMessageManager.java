@@ -68,8 +68,9 @@ public abstract class QuitMessageManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the map of loaded quit messages.
-	 * You may modify the returned map, but it cannot point to a
-	 * <code>null</code> value for {@link RankManager#getDefaultRank()}.
+	 * 
+	 * <p>You may modify the returned map, but it cannot point to a
+	 * <code>null</code> value for {@link RankManager#getDefaultRank()}.</p>
 	 * 
 	 * @return Loaded quit messages' map
 	 */
@@ -79,8 +80,9 @@ public abstract class QuitMessageManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the list of loaded quit messages for the specified rank and language.
-	 * Will fall back to {@link RankManager#getDefaultRank()}'s quit messages
-	 * if no quit messages are present for the specified rank.
+	 * 
+	 * <p>Will fall back to {@link RankManager#getDefaultRank()}'s quit
+	 * messages if no quit messages are present for the specified rank.</p>
 	 * 
 	 * @param rank Target rank
 	 * @param language Language used to translate the quit messages
@@ -89,7 +91,6 @@ public abstract class QuitMessageManager implements ChatPluginManager {
 	@NotNull
 	public List<String> getQuitMessages(Rank rank, Language language) {
 		Rank otherRank = quitMessages.get(rank) == null ? RankManager.getInstance().getDefaultRank() : rank;
-		
 		return quitMessages.get(otherRank).get(quitMessages.get(otherRank).get(language) == null ? Language.getMainLanguage() : language);
 	}
 	
@@ -150,8 +151,9 @@ public abstract class QuitMessageManager implements ChatPluginManager {
 	
 	/**
 	 * Represents a quit packet belonging to a player.
-	 * Quit packets are used to translate placeholders of switch
-	 * and quit messages sent after a player has quit the server.
+	 * 
+	 * <p>Quit packets are used to translate placeholders of switch
+	 * and quit messages sent after a player has quit the server.</p>
 	 */
 	public static abstract class QuitPacket {
 		
@@ -206,7 +208,8 @@ public abstract class QuitMessageManager implements ChatPluginManager {
 		
 		/**
 		 * Translates an input string with this packet's specific placeholders.
-		 * Check {@link #PLACEHOLDERS} to know the available placeholders.
+		 * 
+		 * <p>Check {@link #PLACEHOLDERS} to find out the available placeholders.</p>
 		 * 
 		 * @param input Input containing placeholders
 		 * @param language Language used to translate the placeholders

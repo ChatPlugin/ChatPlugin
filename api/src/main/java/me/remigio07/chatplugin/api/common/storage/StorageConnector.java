@@ -412,8 +412,9 @@ public abstract class StorageConnector {
 	
 	/**
 	 * Selects the data in the specified position if the given conditions are met.
-	 * It is recommended to pass {@link Number} as <code>type</code>
-	 * if you are trying to read a number to avoid {@link ClassCastException}s.
+	 * 
+	 * <p>It is recommended to pass {@link Number} as <code>type</code> if you
+	 * are trying to read a number to avoid {@link ClassCastException}s.</p>
 	 * 
 	 * @param <T> Data's type
 	 * @param container Data's container
@@ -461,8 +462,9 @@ public abstract class StorageConnector {
 	
 	/**
 	 * Gets the list of data in the specified position if the given conditions are met.
-	 * It is recommended to pass {@link Number} as <code>type</code>
-	 * if you are trying to read a number to avoid {@link ClassCastException}s.
+	 * 
+	 * <p>It is recommended to pass {@link Number} as <code>type</code> if you
+	 * are trying to read a number to avoid {@link ClassCastException}s.</p>
 	 * 
 	 * @param <T> Data's type
 	 * @param container Data's container
@@ -508,7 +510,8 @@ public abstract class StorageConnector {
 	
 	/**
 	 * Sets data in the storage.
-	 * You can specify <code>null</code> as <code>data</code>.
+	 * 
+	 * <p>You can specify <code>null</code> as <code>data</code>.</p>
 	 * 
 	 * @param container Container to insert data into
 	 * @param position Data's position (path or column)
@@ -558,7 +561,8 @@ public abstract class StorageConnector {
 	
 	/**
 	 * Gets a player's data from the storage.
-	 * Will return <code>null</code> if the stored data is a SQL <code>NULL</code>.
+	 * 
+	 * <p>Will return <code>null</code> if the stored data is a SQL <code>NULL</code>.</p>
 	 * 
 	 * @param <T> Data's type
 	 * @param type Data's type
@@ -571,7 +575,8 @@ public abstract class StorageConnector {
 	
 	/**
 	 * Gets a player's data from the storage.
-	 * Will return <code>null</code> if the stored data is SQL <code>NULL</code>.
+	 * 
+	 * <p>Will return <code>null</code> if the stored data is SQL <code>NULL</code>.</p>
 	 * 
 	 * @param <T> Data's type
 	 * @param type Data's type
@@ -583,7 +588,8 @@ public abstract class StorageConnector {
 	
 	/**
 	 * Sets data for a player in the storage.
-	 * You can specify <code>null</code> as <code>data</code>.
+	 * 
+	 * <p>You can specify <code>null</code> as <code>data</code>.</p>
 	 * 
 	 * @param type Data's type
 	 * @param player Player to set data for
@@ -596,7 +602,8 @@ public abstract class StorageConnector {
 	
 	/**
 	 * Sets data for a player in the storage.
-	 * You can specify <code>null</code> as <code>data</code>.
+	 * 
+	 * <p>You can specify <code>null</code> as <code>data</code>.</p>
 	 * 
 	 * @param type Data's type
 	 * @param playerID ID of the player to set data for
@@ -609,9 +616,11 @@ public abstract class StorageConnector {
 	
 	/**
 	 * Gets all players with the specified IP address stored in {@link DataContainer#PLAYERS}.
-	 * Note that this method might take some time to be executed: async calls are recommended.
-	 * Specify <code>true</code> as <code>includeOlder</code> to check players' IP addresses
-	 * stored in {@link DataContainer#IP_ADDRESSES}. This operation will take extra time.
+	 * 
+	 * <p>Specify <code>true</code> as <code>includeOlder</code> to check players' IP addresses
+	 * stored in {@link DataContainer#IP_ADDRESSES}. This operation will take extra time.</p>
+	 * 
+	 * <p>Note that this method might take some time to be executed: async calls are recommended.</p>
 	 * 
 	 * @param ipAddress IP address to check
 	 * @param includeOlder Whether to include players stored in {@link DataContainer#IP_ADDRESSES}

@@ -73,9 +73,9 @@ public abstract class ProxyMessageManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets a map containing information
-	 * about servers under the network.
-	 * The keys represent the servers' ID.
+	 * Gets a map containing information about servers under the network.
+	 * 
+	 * <p>The keys represent the servers' ID.</p>
 	 * 
 	 * @return Servers under the network
 	 */
@@ -85,7 +85,8 @@ public abstract class ProxyMessageManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the packets queued for sending.
-	 * Do not modify the returned map.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned map.</p>
 	 * 
 	 * @deprecated Internal use only.
 	 * @return Packets' queue
@@ -105,8 +106,10 @@ public abstract class ProxyMessageManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Sends a plugin message to the specified server. If the target is
-	 * not reachable or has 0 players online, the message will not be sent.
+	 * Sends a plugin message to the specified server.
+	 * 
+	 * <p>If the target is not reachable or has 0
+	 * players online, the message will not be sent.</p>
 	 * 
 	 * @param server Target server, "ALL" for all servers
 	 * @param packet Plugin message to send
@@ -116,9 +119,11 @@ public abstract class ProxyMessageManager implements ChatPluginManager {
 	public abstract void sendPluginMessage(String server, PacketSerializer packet);
 	
 	/**
-	 * Sends a plugin message to the specified server, even if the
-	 * server has 0 players online. In that case the packet will
-	 * be read as soon as a player will join that server.
+	 * Sends a plugin message to the specified server,
+	 * even if the server has 0 players online.
+	 * 
+	 * <p>In that case the packet will be read as
+	 * soon as a player will join that server.</p>
 	 * 
 	 * <p>You can specify a max timeout to wait before discarding
 	 * the packet if the target server has 0 players online.

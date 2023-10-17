@@ -64,8 +64,9 @@ public abstract class SwitchMessageManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the loaded switch messages' map.
-	 * You may modify the returned map, but it cannot point to a
-	 * <code>null</code> value for {@link RankManager#getDefaultRank()}.
+	 * 
+	 * <p>You may modify the returned map, but it cannot point to a
+	 * <code>null</code> value for {@link RankManager#getDefaultRank()}.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "join-quit-modules.switch-messages.values" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
 	 * 
@@ -77,8 +78,9 @@ public abstract class SwitchMessageManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the list of loaded switch messages for the specified rank and language.
-	 * Will fall back to {@link RankManager#getDefaultRank()}'s switch messages
-	 * if no switch messages are present for the specified rank.
+	 * 
+	 * <p>Will fall back to {@link RankManager#getDefaultRank()}'s switch
+	 * messages if no switch messages are present for the specified rank.</p>
 	 * 
 	 * @param rank Target rank
 	 * @param language Language used to translate the switch messages
@@ -86,7 +88,6 @@ public abstract class SwitchMessageManager implements ChatPluginManager {
 	 */
 	public List<String> getSwitchMessages(Rank rank, Language language) {
 		Rank otherRank = switchMessages.get(rank) == null ? RankManager.getInstance().getDefaultRank() : rank;
-		
 		return switchMessages.get(otherRank).get(switchMessages.get(otherRank).get(language) == null ? Language.getMainLanguage() : language);
 	}
 	

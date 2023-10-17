@@ -162,8 +162,10 @@ public enum ScoreboardEvent {
 	}
 	
 	/**
-	 * Gets this event's ID. It is obtained by lowering
-	 * {@link #name()}'s case and replacing '_' with '-'.
+	 * Gets this event's ID.
+	 * 
+	 * <p>It is obtained by lowering {@link #name()}'s
+	 * case and replacing '_' with '-'.</p>
 	 * 
 	 * <p><strong>Example:</strong> {@link #BED_ENTER} -&gt; "bed-enter"</p>
 	 * 
@@ -175,8 +177,9 @@ public enum ScoreboardEvent {
 	
 	/**
 	 * Gets a scoreboard's event by its ID.
-	 * Will return <code>null</code> if specified
-	 * ID does not belong to any event.
+	 * 
+	 * <p>Will return <code>null</code> if specified
+	 * ID does not belong to any event.</p>
 	 * 
 	 * @param id Event's ID ({@link #getID()})
 	 * @return Scoreboard's event

@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.server.ad.Ad;
 import me.remigio07.chatplugin.api.server.ad.AdManager;
@@ -101,7 +100,7 @@ public class AdCommand extends BaseCommand {
 					PlayerAdapter player = PlayerAdapter.getPlayer(args[1], false);
 					
 					if (player != null) {
-						ChatPluginServerPlayer serverPlayer = (ChatPluginServerPlayer) PlayerManager.getInstance().getPlayer(player.getUUID());
+						ChatPluginServerPlayer serverPlayer = (ChatPluginServerPlayer) player.chatPluginValue();
 						
 						if (serverPlayer != null) {
 							Ad ad = AdManager.getInstance().getAd(args[2]);

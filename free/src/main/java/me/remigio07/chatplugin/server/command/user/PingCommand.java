@@ -42,11 +42,9 @@ public class PingCommand extends BaseCommand {
 	public void execute(CommandSenderAdapter sender, Language language, String[] args) {
 		if (args.length == 0) {
 			if (sender.isPlayer()) {
-				ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(sender.getUUID());
+				ChatPluginServerPlayer player = sender.toServerPlayer();
 				
-				if (player != null) {
-					sender.sendMessage(language.getMessage("ping.self", PingManager.getInstance().formatPing(player), PingManager.getInstance().getPingQuality(player.getPing()).getText(language)));
-				} else sender.sendMessage(language.getMessage("misc.disabled-world"));
+				player.sendTranslatedMessage("ping.self", PingManager.getInstance().formatPing(player), PingManager.getInstance().getPingQuality(player.getPing()).getText(language));
 			} else sender.sendMessage(language.getMessage("ping.self", PingManager.getInstance().formatPing(0, language), PingManager.getInstance().getPingQuality(0).getText(language)));
 		} else if (sender.hasPermission(getPermission() + ".others")) {
 			if (PlayerAdapter.getPlayer(args[0], false) != null) {

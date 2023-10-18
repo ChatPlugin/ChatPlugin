@@ -41,9 +41,6 @@ public class MuteAllCommand extends BaseCommand {
 		if (!ChatManager.getInstance().isEnabled()) {
 			sender.sendMessage(language.getMessage("misc.disabled-feature")); 
 			return;
-		} if (sender.isPlayer() && ServerPlayerManager.getInstance().getPlayer(sender.getUUID()) == null) {
-			sender.sendMessage(language.getMessage("misc.disabled-world"));
-			return;
 		} if (ChatManager.getInstance().isChatMuted()) {
 			for (ChatPluginServerPlayer player : ServerPlayerManager.getInstance().getPlayers().values())
 				player.sendMessage(language.getMessage("commands.muteall.unmuted"));

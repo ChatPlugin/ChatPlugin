@@ -20,7 +20,6 @@ import java.util.List;
 
 import me.remigio07.chatplugin.api.server.chat.StaffChatManager;
 import me.remigio07.chatplugin.api.server.language.Language;
-import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.util.adapter.user.CommandSenderAdapter;
 import me.remigio07.chatplugin.server.command.BaseCommand;
 
@@ -42,21 +41,17 @@ public class StaffChatCommand extends BaseCommand {
 			return;
 		} if (args.length == 0) {
 			if (reportOnlyPlayers(sender, language)) {
-				if (ServerPlayerManager.getInstance().getPlayer(sender.getUUID()) != null) {
-					if (StaffChatManager.getInstance().isUsingStaffChat(sender.getUUID())) {
-						sender.sendMessage(language.getMessage("commands.staff-chat.disabled"));
-						StaffChatManager.getInstance().removePlayer(sender.getUUID());
-					} else {
-						sender.sendMessage(language.getMessage("commands.staff-chat.enabled"));
-						StaffChatManager.getInstance().addPlayer(sender.getUUID());
-					}
-				} else sender.sendMessage(language.getMessage("misc.disabled-world"));
+				if (StaffChatManager.getInstance().isUsingStaffChat(sender.getUUID())) {
+					sender.sendMessage(language.getMessage("commands.staff-chat.disabled"));
+					StaffChatManager.getInstance().removePlayer(sender.getUUID());
+				} else {
+					sender.sendMessage(language.getMessage("commands.staff-chat.enabled"));
+					StaffChatManager.getInstance().addPlayer(sender.getUUID());
+				}
 			}
-		} else if (sender.isPlayer()) {
-			if (ServerPlayerManager.getInstance().getPlayer(sender.getUUID()) != null)
-				StaffChatManager.getInstance().sendPlayerMessage(ServerPlayerManager.getInstance().getPlayer(sender.getUUID()), String.join(" ", args));
-			else sender.sendMessage(language.getMessage("misc.disabled-world"));
-		} try {
+		} else if (sender.isPlayer())
+			StaffChatManager.getInstance().sendPlayerMessage(sender.toServerPlayer(), String.join(" ", args));
+		try {
 			StaffChatManager.getInstance().sendConsoleMessage(String.join(" ", args));
 		} catch (IllegalStateException e) {
 			sender.sendMessage(language.getMessage("misc.at-least-one-online"));

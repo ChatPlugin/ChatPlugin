@@ -58,14 +58,14 @@ public class BukkitCommandsHandler extends CommandsHandler implements CommandExe
 						CommandSenderAdapter senderAdapter = new CommandSenderAdapter(sender);
 						Language language = senderAdapter.isConsole() ? Language.getMainLanguage() : LanguageManager.getInstance().getLanguage(new OfflinePlayer(new PlayerAdapter((Player) sender)));
 						
-						if (command instanceof PlayerCommand) {
-							if (!(sender instanceof Player)) {
-								sender.sendMessage(language.getMessage("misc.only-players"));
-								return true;
-							} if (senderAdapter.toServerPlayer() == null) {
+						if (sender instanceof Player) {
+							if (senderAdapter.toServerPlayer() == null) {
 								sender.sendMessage(language.getMessage("misc.disabled-world"));
 								return true;
 							}
+						} else if (command instanceof PlayerCommand) {
+							sender.sendMessage(language.getMessage("misc.only-players"));
+							return true;
 						} if (command.getPermission() != null && !sender.hasPermission(command.getPermission())) {
 							sender.sendMessage(language.getMessage("misc.no-permission"));
 							return true;

@@ -61,14 +61,14 @@ public class SpongeCommandAdapter implements CommandCallable {
 				CommandSenderAdapter senderAdapter = new CommandSenderAdapter(sender);
 				Language language = senderAdapter.isConsole() ? Language.getMainLanguage() : LanguageManager.getInstance().getLanguage(new OfflinePlayer(new PlayerAdapter((Player) sender)));
 				
-				if (command instanceof PlayerCommand) {
-					if (!(sender instanceof Player)) {
-						sender.sendMessage(Utils.serializeSpongeText(language.getMessage("misc.only-players"), false));
-						return CommandResult.success();
-					} if (senderAdapter.toServerPlayer() == null) {
+				if (sender instanceof Player) {
+					if (senderAdapter.toServerPlayer() == null) {
 						sender.sendMessage(Utils.serializeSpongeText(language.getMessage("misc.disabled-world"), false));
 						return CommandResult.success();
 					}
+				} else if (command instanceof PlayerCommand) {
+					sender.sendMessage(Utils.serializeSpongeText(language.getMessage("misc.only-players"), false));
+					return CommandResult.success();
 				} if (command.getPermission() != null && !sender.hasPermission(command.getPermission())) {
 					sender.sendMessage(Utils.serializeSpongeText(language.getMessage("misc.no-permission"), false));
 					return CommandResult.success();

@@ -50,16 +50,12 @@ public class VanishCommand extends BaseCommand {
 		
 		if (args.length == 0) {
 			if (reportOnlyPlayers(sender, language)) {
-				ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(sender.getUUID());
-				
-				if (player == null) {
-					sender.sendMessage(language.getMessage("misc.disabled-world"));
-					return;
-				} String str, world = player.getWorld();
+				ChatPluginServerPlayer player = sender.toServerPlayer();
+				String str, world = player.getWorld();
 				
 				if (VanishManager.getInstance().isVanished(player)) {
 					if (QuitMessageManager.getInstance().hasFakeQuit(player.getUUID())) {
-						sender.sendMessage(language.getMessage("vanish.fakequit.already-fakequit"));
+						player.sendTranslatedMessage("vanish.fakequit.already-fakequit");
 						return;
 					} vanished.put(world, Utils.removeAndGet(VanishManager.getInstance().getVanishedList(world), Arrays.asList(player)));
 					VanishManager.getInstance().show(player);
@@ -68,7 +64,7 @@ public class VanishCommand extends BaseCommand {
 					vanished.put(world, Utils.addAndGet(VanishManager.getInstance().getVanishedList(world), Arrays.asList(player)));
 					VanishManager.getInstance().hide(player);
 					str = "vanish.enabled.self";
-				} player.sendMessage(language.getMessage(str));
+				} player.sendTranslatedMessage(str);
 			}
 		} else if (sender.hasPermission(getPermission() + ".others")) {
 			if (PlayerAdapter.getPlayer(args[0], false) != null) {

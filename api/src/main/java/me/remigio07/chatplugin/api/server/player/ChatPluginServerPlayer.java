@@ -41,6 +41,7 @@ import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.InventoryAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.scoreboard.ObjectiveAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
+import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 
 /**
  * Represents a {@link ChatPluginPlayer} loaded on a server (Bukkit/Sponge) environment.
@@ -297,6 +298,15 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	 */
 	public long getLoginTime() {
 		return loginTime;
+	}
+	
+	/**
+	 * Checks if this player is vanished.
+	 * 
+	 * @return Whether this player is vanished
+	 */
+	public boolean isVanished() {
+		return VanishManager.getInstance().isEnabled() && VanishManager.getInstance().isVanished(this);
 	}
 	
 	/**

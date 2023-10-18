@@ -32,6 +32,12 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
  */
 public abstract class VanishManager implements DenyChatReasonHandler {
 	
+	/**
+	 * Represents the permission required to vanish.
+	 * 
+	 * <p><strong>Content:</strong> "chatplugin.commands.vanish"</p>
+	 */
+	public static final String VANISH_PERMISSION = "chatplugin.commands.vanish";
 	protected static VanishManager instance;
 	protected boolean enabled, invisibility;
 	protected Map<String, List<ChatPluginServerPlayer>> vanished = new HashMap<>();
@@ -99,8 +105,7 @@ public abstract class VanishManager implements DenyChatReasonHandler {
 	}
 	
 	/**
-	 * Hides a player from the ones who do not have
-	 * the permission "chatplugin.commands.vanish".
+	 * Hides a player from the ones who do not have the {@link #VANISH_PERMISSION}.
 	 * 
 	 * @param player Player to hide
 	 */

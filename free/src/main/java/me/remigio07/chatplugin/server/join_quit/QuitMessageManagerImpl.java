@@ -33,7 +33,6 @@ import me.remigio07.chatplugin.api.server.rank.Rank;
 import me.remigio07.chatplugin.api.server.rank.RankManager;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
-import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 
 public class QuitMessageManagerImpl extends QuitMessageManager {
 	
@@ -104,7 +103,7 @@ public class QuitMessageManagerImpl extends QuitMessageManager {
 			this.player = new OfflinePlayer(player.getUUID(), player.getName());
 			rank = player.getRank();
 			playerID = player.getID();
-			vanished = VanishManager.getInstance().isVanished(player);
+			vanished = player.isVanished();
 			
 			QuitMessageManager.getInstance().getQuitPackets().put(player.getUUID(), this);
 		}

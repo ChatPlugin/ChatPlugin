@@ -118,7 +118,7 @@ public class DenyChatReason<H extends DenyChatReasonHandler> {
 	public static final DenyChatReason<AntispamManager> URL = new DenyChatReason<>("URL", "chat.antispam.no-url", AntispamManager.class);
 	
 	/**
-	 * When the sender {@link VanishManager#isVanished(ChatPluginServerPlayer)}.
+	 * When the sender {@link ChatPluginServerPlayer#isVanished()}.
 	 * 
 	 * <p><strong>Handler:</strong> {@link VanishManager}
 	 * <br><strong>Message path:</strong> "vanish.no-chat"</p>

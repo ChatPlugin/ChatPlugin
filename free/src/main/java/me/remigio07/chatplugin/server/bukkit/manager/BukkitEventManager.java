@@ -155,7 +155,7 @@ public class BukkitEventManager extends EventManager {
 		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getPlayer().getUniqueId());
 		
 		if (player != null) {
-			if (VanishManager.getInstance().isVanished(player)) {
+			if (player.isVanished()) {
 				VanishManager.getInstance().show(player);
 				player.toAdapter().bukkitValue().removePotionEffect(PotionEffectType.INVISIBILITY);
 			} else if (!ProxyManager.getInstance().isEnabled()) {

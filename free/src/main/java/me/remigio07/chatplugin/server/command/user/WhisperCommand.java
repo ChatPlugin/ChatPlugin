@@ -18,6 +18,7 @@ package me.remigio07.chatplugin.server.command.user;
 import java.util.Arrays;
 import java.util.List;
 
+import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
 import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
 import me.remigio07.chatplugin.api.server.language.Language;
@@ -48,15 +49,17 @@ public class WhisperCommand extends BaseCommand {
 				String message = String.join(" ", Arrays.asList(args).subList(1, args.length).toArray(new String[args.length - 1]));
 				
 				try {
-					if (recipient == null)
+					if (recipient == null) {
 						if (args[0].equalsIgnoreCase("console"))
 							if (sender.hasPermission(getPermission() + ".console"))
 								PrivateMessagesManager.getInstance().sendMessage(sender.toServerPlayer(), null, message);
 							else sender.sendMessage(language.getMessage("misc.no-permission"));
-						else sender.sendMessage(language.getMessage("misc.player-not-found", args[0]));
-					else {
-						if (VanishManager.getInstance().isEnabled() && VanishManager.getInstance().isVanished(recipient)) {
-							if (!sender.hasPermission("chatplugin.commands.vanish")) {
+						else if (PlayerAdapter.getPlayer(args[0], false) == null)
+							sender.sendMessage(language.getMessage("misc.player-not-found", args[0]));
+						else sender.sendMessage(language.getMessage("misc.disabled-world"));
+					} else {
+						if (VanishManager.getInstance().isEnabled() && recipient.isVanished()) {
+							if (!sender.hasPermission(VanishManager.VANISH_PERMISSION)) {
 								sender.sendMessage(language.getMessage("misc.player-not-found", args[0]));
 								return;
 							}

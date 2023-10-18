@@ -46,7 +46,7 @@ public class PlayerListCommand extends BaseCommand {
 	
 	@Override
 	public void execute(CommandSenderAdapter sender, Language language, String[] args) {
-		boolean hideVanished = VanishManager.getInstance().isEnabled() && !sender.hasPermission("chatplugin.commands.vanish");
+		boolean hideVanished = VanishManager.getInstance().isEnabled() && !sender.hasPermission(VanishManager.VANISH_PERMISSION);
 		final String vanishedColor, notVanishedColor;
 		
 		if (args.length == 0) {
@@ -60,8 +60,8 @@ public class PlayerListCommand extends BaseCommand {
 				sender.sendMessage(language.getMessage("commands.playerlist.all.message", hideVanished ? VanishManager.getInstance().getOnlineServer() : PlayerAdapter.getOnlinePlayers().size(), Utils.getMaxPlayers()));
 				
 				for (ChatPluginServerPlayer player : ServerPlayerManager.getInstance().getPlayers().values())
-					if (!hideVanished || !VanishManager.getInstance().isVanished(player) || player.getUUID().equals(sender.getUUID()))
-						temp.put(player.getRank(), Utils.addAndGet(temp.getOrDefault(player.getRank(), new ArrayList<>()), Arrays.asList((VanishManager.getInstance().isVanished(player) ? vanishedColor : notVanishedColor) + player.getName())));
+					if (!hideVanished || !player.isVanished() || player.getUUID().equals(sender.getUUID()))
+						temp.put(player.getRank(), Utils.addAndGet(temp.getOrDefault(player.getRank(), new ArrayList<>()), Arrays.asList((player.isVanished() ? vanishedColor : notVanishedColor) + player.getName())));
 				for (Entry<Rank, List<String>> rank : temp.entrySet())
 					sender.sendMessage(rank.getKey().formatPlaceholders(language.getMessage("commands.playerlist.all.rank-format", rank.getValue().size(), String.join(", " + notVanishedColor, rank.getValue().toArray(new String[0])) + "\u00A7r"), language));
 			}
@@ -74,8 +74,8 @@ public class PlayerListCommand extends BaseCommand {
 				notVanishedColor = language.getMessage("commands.playerlist.name-format.not-vanished");
 				
 				for (ChatPluginServerPlayer player : ServerPlayerManager.getInstance().getPlayers().values())
-					if (player.getRank().equals(rank) && (!hideVanished || !VanishManager.getInstance().isVanished(player) || player.getUUID().equals(sender.getUUID())))
-						players.add((VanishManager.getInstance().isVanished(player) ? vanishedColor : notVanishedColor) + player.getName());
+					if (player.getRank().equals(rank) && (!hideVanished || !player.isVanished() || player.getUUID().equals(sender.getUUID())))
+						players.add((player.isVanished() ? vanishedColor : notVanishedColor) + player.getName());
 				if (players.size() == 0)
 					sender.sendMessage(language.getMessage("commands.playerlist.rank.no-players-online"));
 				else sender.sendMessage(language.getMessage("commands.playerlist.rank.message", players.size(), rank.getDisplayName(), String.join(", " + notVanishedColor, players.toArray(new String[0])) + "\u00A7r"));

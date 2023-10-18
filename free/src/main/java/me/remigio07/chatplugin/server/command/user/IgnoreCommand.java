@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.util.Utils;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
@@ -79,7 +80,7 @@ public class IgnoreCommand extends PlayerCommand {
 								player.sendTranslatedMessage("misc.inexistent-player", args[1]);
 								return;
 							} if (target.hasPlayedBefore()) {
-								if (target.hasPermission(getPermission() + ".bypass")) {
+								if ((target.isOnline() || IntegrationType.LUCKPERMS.isEnabled() || IntegrationType.VAULT.isEnabled()) && !target.hasPermission(getPermission() + ".bypass")) {
 									java.util.List<OfflinePlayer> ignoredPlayers = player.getIgnoredPlayers();
 									
 									if (!ignoredPlayers.contains(target)) {

@@ -87,7 +87,7 @@ public class VanishManagerImpl extends VanishManager {
 				spongePlayer.offer(Keys.VANISH_PREVENTS_TARGETING, true);
 			}
 		} for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
-			if (!other.hasPermission("chatplugin.commands.vanish"))
+			if (!other.hasPermission(VANISH_PERMISSION))
 				if (Environment.isBukkit()) {
 					if (other.toAdapter().bukkitValue().canSee(player.toAdapter().bukkitValue()))
 						other.toAdapter().bukkitValue().hidePlayer(player.toAdapter().bukkitValue());
@@ -180,7 +180,7 @@ public class VanishManagerImpl extends VanishManager {
 								);
 				}
 			}
-		} if (player.hasPermission("chatplugin.commands.vanish"))
+		} if (player.hasPermission(VANISH_PERMISSION))
 			return;
 		for (ChatPluginServerPlayer vanishedPlayer : getVanishedList())
 			if (Environment.isBukkit())
@@ -200,7 +200,7 @@ public class VanishManagerImpl extends VanishManager {
 	
 	@Override
 	public boolean isVanished(ChatPluginServerPlayer player) {
-		return vanished.getOrDefault(player.getWorld(), Collections.emptyList()).contains(player);
+		return enabled && vanished.getOrDefault(player.getWorld(), Collections.emptyList()).contains(player);
 	}
 	
 	@Override

@@ -42,7 +42,7 @@ public class ReplyCommand extends PlayerCommand {
 				ChatPluginServerPlayer lastCorrespondent = player.getLastCorrespondent();
 				
 				if (lastCorrespondent != null) {
-					if (!VanishManager.getInstance().isEnabled() || !VanishManager.getInstance().isVanished(player) || player.hasPermission("chatplugin.commands.vanish")) {
+					if (!VanishManager.getInstance().isEnabled() || !player.isVanished() || player.hasPermission(VanishManager.VANISH_PERMISSION)) {
 						if (PlayerIgnoreManager.getInstance().isEnabled() && lastCorrespondent.getIgnoredPlayers().contains(player)) {
 							player.sendTranslatedMessage("commands.whisper.ignored", lastCorrespondent.getName());
 							return;

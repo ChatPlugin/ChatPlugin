@@ -48,7 +48,6 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 import me.remigio07.chatplugin.api.server.util.URLValidator;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
-import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.common.util.Utils;
 import net.kyori.adventure.text.TextComponent;
 
@@ -112,7 +111,7 @@ public class ChatManagerImpl extends ChatManager {
 		List<String> urls = URLValidator.getURLs(message);
 		
 		// 2. vanish
-		if (VanishManager.getInstance().isVanished(player))
+		if (player.isVanished())
 			reason = DenyChatReason.VANISH;
 		
 		// 3. mute

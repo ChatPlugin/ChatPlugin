@@ -295,9 +295,9 @@ public class OfflinePlayer {
 	/**
 	 * Checks if this player has the specified permission.
 	 * 
-	 * <p>Will always return <code>true</code> unless {@link #isOnline()}
-	 * or a permission integration (LuckPerms, Vault) is enabled:
-	 * in those cases, it will be really checked.</p>
+	 * <p>Will always return <code>true</code> unless {@link #isOnline()} or a permission
+	 * integration ({@link IntegrationType#LUCKPERMS LuckPerms}, {@link IntegrationType#VAULT Vault})
+	 * is enabled: in those cases, it will be really checked.</p>
 	 * 
 	 * <p>Note: this method may take some time to check the
 	 * permission. It is recommended to call it asynchronously.</p>

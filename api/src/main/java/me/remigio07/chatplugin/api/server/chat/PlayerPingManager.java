@@ -93,7 +93,8 @@ public abstract class PlayerPingManager implements ChatPluginManager {
 	 * 
 	 * <p>Will do nothing if the player does not have the permission "chatplugin.player-ping".</p>
 	 * 
-	 * <p>This method will consider that some players may be ignored by other players.</p>
+	 * <p>This method will consider that some players may be ignored
+	 * by other players and that some players may be vanished.</p>
 	 * 
 	 * @param player Player involved
 	 * @param message Message involved

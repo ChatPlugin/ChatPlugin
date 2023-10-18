@@ -175,7 +175,7 @@ public class ChatPluginCommand extends BaseCommand {
 		
 		public Language() {
 			super("/chatplugin language <language>");
-			tabCompletionArgs.put(1, new ArrayList<>(LanguageManager.getInstance().getLanguages().stream().map(me.remigio07.chatplugin.api.server.language.Language::getID).collect(Collectors.toList())));
+			tabCompletionArgs.put(1, Arrays.asList("{languages}"));
 		}
 		
 		@Override

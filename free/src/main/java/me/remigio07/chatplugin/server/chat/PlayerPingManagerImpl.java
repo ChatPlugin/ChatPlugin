@@ -60,11 +60,13 @@ public class PlayerPingManagerImpl extends PlayerPingManager {
 	public String performPing(ChatPluginServerPlayer player, String message) {
 		if (enabled && player.hasPermission("chatplugin.player-ping")) {
 			for (ChatPluginServerPlayer pinged : getPingedPlayers(player, message)) {
-				message = message.replace(pinged.getName(), ChatColor.translate(color) + "@" + pinged.getName() + "\u00A7r");
-				
-				if (!PlayerIgnoreManager.getInstance().isEnabled() || !pinged.getIgnoredPlayers().contains(player)) {
-					pinged.sendTranslatedMessage("chat.pinged", player.getName());
-					playPingSound(pinged);
+				if (!pinged.isVanished()) {
+					message = message.replace(pinged.getName(), ChatColor.translate(color) + "@" + pinged.getName() + "\u00A7r");
+					
+					if (!PlayerIgnoreManager.getInstance().isEnabled() || !pinged.getIgnoredPlayers().contains(player)) {
+						pinged.sendTranslatedMessage("chat.pinged", player.getName());
+						playPingSound(pinged);
+					}
 				}
 			}
 		} return message;

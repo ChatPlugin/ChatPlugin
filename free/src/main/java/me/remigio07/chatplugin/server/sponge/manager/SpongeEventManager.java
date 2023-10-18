@@ -154,7 +154,7 @@ public class SpongeEventManager extends EventManager {
 		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getTargetEntity().getUniqueId());
 		
 		if (player != null) {
-			if (VanishManager.getInstance().isVanished(player)) {
+			if (player.isVanished()) {
 				VanishManager.getInstance().show(player);
 				player.toAdapter().spongeValue().getOrCreate(PotionEffectData.class).get().asList().stream().filter(effect -> effect.getType().equals(PotionEffectTypes.INVISIBILITY)).forEach(effect -> player.toAdapter().spongeValue().get(PotionEffectData.class).get().remove(effect));
 			} else if (!ProxyManager.getInstance().isEnabled()) {

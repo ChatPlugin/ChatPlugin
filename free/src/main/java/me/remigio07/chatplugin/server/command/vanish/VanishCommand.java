@@ -53,7 +53,7 @@ public class VanishCommand extends BaseCommand {
 				ChatPluginServerPlayer player = sender.toServerPlayer();
 				String str, world = player.getWorld();
 				
-				if (VanishManager.getInstance().isVanished(player)) {
+				if (player.isVanished()) {
 					if (QuitMessageManager.getInstance().hasFakeQuit(player.getUUID())) {
 						player.sendTranslatedMessage("vanish.fakequit.already-fakequit");
 						return;
@@ -79,7 +79,7 @@ public class VanishCommand extends BaseCommand {
 				if (!player.hasPermission(getPermission())) {
 					sender.sendMessage(language.getMessage("vanish.no-permission", player.getName()));
 					return;
-				} if (VanishManager.getInstance().isVanished(player)) {
+				} if (player.isVanished()) {
 					if (QuitMessageManager.getInstance().hasFakeQuit(player.getUUID())) {
 						sender.sendMessage(language.getMessage("vanish.fakequit.already-fakequit"));
 						return;

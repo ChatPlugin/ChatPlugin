@@ -105,6 +105,9 @@ public class IntegrationType<T extends ChatPluginIntegration> {
 	
 	/**
 	 * Represents the <a href="https://www.spigotmc.org/resources/vault.34315/">Vault</a> integration.
+	 * 
+	 * <p>This is considered an {@link EconomyIntegration} but it is
+	 * used internally by the plugin also to check permissions.</p>
 	 */
 	public static final IntegrationType<EconomyIntegration> VAULT = new IntegrationType<>("Vault", "net.milkbowl.vault.Vault", Arrays.asList(Environment.BUKKIT)); // Vault is also a PermissionIntegration, but we consider it as an EconomyIntegration
 	

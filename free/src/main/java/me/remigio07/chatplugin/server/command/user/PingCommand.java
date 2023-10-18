@@ -24,6 +24,7 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.util.adapter.user.CommandSenderAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.PingManager;
+import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.server.command.BaseCommand;
 
 public class PingCommand extends BaseCommand {
@@ -51,9 +52,11 @@ public class PingCommand extends BaseCommand {
 				@SuppressWarnings("deprecation")
 				ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(args[0], false, true);
 				
-				if (player != null) {
-					sender.sendMessage(language.getMessage("ping.other", PingManager.getInstance().formatPing(player), player.getName(), PingManager.getInstance().getPingQuality(player.getPing()).getText(language)));
-				} else sender.sendMessage(language.getMessage("misc.disabled-world"));
+				if (player != null)
+					if (player.isVanished() && !sender.hasPermission(VanishManager.VANISH_PERMISSION))
+						sender.sendMessage(language.getMessage("misc.player-not-found", args[0]));
+					else sender.sendMessage(language.getMessage("ping.other", PingManager.getInstance().formatPing(player), player.getName(), PingManager.getInstance().getPingQuality(player.getPing()).getText(language)));
+				else sender.sendMessage(language.getMessage("misc.disabled-world"));
 			} else sender.sendMessage(language.getMessage("misc.player-not-found", args[0]));
 		} else sender.sendMessage(language.getMessage("misc.no-permission"));
 	}

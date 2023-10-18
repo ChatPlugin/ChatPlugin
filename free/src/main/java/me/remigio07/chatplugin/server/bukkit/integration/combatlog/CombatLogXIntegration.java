@@ -34,7 +34,6 @@ import me.remigio07.chatplugin.api.server.integration.combatlog.CombatLogIntegra
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.scoreboard.event.ScoreboardEvent;
-import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07.chatplugin.server.bukkit.integration.ChatPluginBukkitIntegration;
 import me.remigio07.chatplugin.server.bukkit.manager.BukkitEventManager;
@@ -57,7 +56,7 @@ public class CombatLogXIntegration extends ChatPluginBukkitIntegration<CombatLog
 					return;
 				ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(playerPreTagEvent.getPlayer().getUniqueId());
 				
-				if (player != null && VanishManager.getInstance().isVanished(player))
+				if (player != null && player.isVanished())
 					playerPreTagEvent.setCancelled(true);
 				else if (playerPreTagEvent.getEnemy() instanceof Player)
 					((BukkitEventManager) EventManager.getInstance()).applyScoreboard(ScoreboardEvent.COMBAT_TAG, playerPreTagEvent.getPlayer(), new PlayerAdapter(playerPreTagEvent.getEnemy()));

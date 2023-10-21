@@ -179,6 +179,22 @@ public class Utils {
 	}
 	
 	/**
+	 * Checks if the specified input is a valid long
+	 * using {@link Long#parseLong(String)}.
+	 * 
+	 * @param number Number to check
+	 * @return Whether input is a valid long
+	 */
+	public static boolean isLong(String number) {
+		try {
+			Long.parseLong(number);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+	
+	/**
 	 * Checks if the specified input is a positive
 	 * integer using {@link Integer#parseInt(String)}.
 	 * 

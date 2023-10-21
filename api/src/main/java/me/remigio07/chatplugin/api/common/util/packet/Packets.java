@@ -308,7 +308,7 @@ public class Packets {
 		 * 
 		 * @param server Origin server
 		 * @param sender Message's sender
-		 * @param channel Channel to send the message to
+		 * @param channelID Channel to send the message to
 		 * @param message Message to send
 		 * @return <code>DiscordMessage</code> packet
 		 */
@@ -316,13 +316,13 @@ public class Packets {
 		public static PacketSerializer plainDiscordMessage(
 				@NotNull String server,
 				@NotNull String sender,
-				long channel,
+				long channelID,
 				@NotNull String message
 				) {
 			return new PacketSerializer("DiscordMessage")
 					.writeUTF(server)
 					.writeUTF(sender)
-					.writeLong(channel)
+					.writeLong(channelID)
 					.writeUTF(DiscordMessagePacketType.PLAIN.name())
 					.writeUTF(message);
 		}
@@ -333,7 +333,7 @@ public class Packets {
 		 * 
 		 * @param server Origin server
 		 * @param sender Message's sender
-		 * @param channel Channel to send the message to
+		 * @param channelID Channel to send the message to
 		 * @param json Embed message's JSON representation
 		 * @return <code>DiscordMessage</code> packet
 		 */
@@ -341,15 +341,38 @@ public class Packets {
 		public static PacketSerializer embedDiscordMessage(
 				@NotNull String server,
 				@NotNull String sender,
-				long channel,
+				long channelID,
 				@NotNull String json
 				) {
 			return new PacketSerializer("DiscordMessage")
 					.writeUTF(server)
 					.writeUTF(sender)
-					.writeLong(channel)
+					.writeLong(channelID)
 					.writeUTF(DiscordMessagePacketType.EMBED.name())
 					.writeUTF(json);
+		}
+		
+		/**
+		 * Sends a message to the specified Telegram chat.
+		 * 
+		 * @param server Origin server
+		 * @param sender Message's sender
+		 * @param chatID Chat to send the message to
+		 * @param message Message to send
+		 * @return <code>TelegramMessage</code> packet
+		 */
+		@PacketScope(Scope.SERVER_TO_PROXY)
+		public static PacketSerializer telegramMessage(
+				@NotNull String server,
+				@NotNull String sender,
+				long chatID,
+				@NotNull String message
+				) {
+			return new PacketSerializer("TelegramMessage")
+					.writeUTF(server)
+					.writeUTF(sender)
+					.writeLong(chatID)
+					.writeUTF(message);
 		}
 		
 	}

@@ -121,7 +121,8 @@ commands:
         &f&l/broadcast &8- &eInvia un messaggio ad ogni giocatore online.
         &f&l/broadcastraw &8- &eCome /broadcast, ma senza il prefix.
         &f&l/globalbroadcast &8- &eCome /broadcast, ma cross-server.
-        &f&l/discordmessage &8- &eInvia un messaggio attraverso il bot.
+        &f&l/discordmessage &8- &eInvia un messaggio al server.
+        &f&l/telegrammessage &8- &eInvia un messaggio al gruppo.
   info: |-
     {pfx} &aInformazioni su &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
     &eSito web: &fhttps://megaproserver.com/chatplugin
@@ -285,7 +286,8 @@ commands:
       one: '{pfx} &aL''annuncio &f{0} &aè stato inviato con successo a &f{1}&a.'
       all: '{pfx} &aL''annuncio &f{0} &aè stato inviato con successo a &f{1} &agiocatori.'
     list: '{pfx} &eIDs degli annunci caricati: &f{0}&e.'
-  discordmessage: '{pfx} &aCercando di inviare il messaggio tramite il bot...'
+  discordmessage: '{pfx} &aCercando di inviare il messaggio tramite il bot Discord...'
+  telegrammessage: '{pfx} &aCercando di inviare il messaggio tramite il bot Telegram...'
   account-check:
     searching: '{pfx} &eRicerca di accounts multipli in corso...'
     found: '{pfx} &aSono stati trovati i seguenti accounts:'

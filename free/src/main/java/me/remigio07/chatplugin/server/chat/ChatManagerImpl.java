@@ -49,6 +49,7 @@ import me.remigio07.chatplugin.api.server.util.URLValidator;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.common.util.Utils;
+import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import net.kyori.adventure.text.TextComponent;
 
 public class ChatManagerImpl extends ChatManager {
@@ -182,7 +183,7 @@ public class ChatManagerImpl extends ChatManager {
 				
 				for (ChatPluginServerPlayer other : language.getOnlinePlayers())
 					if (!other.getIgnoredPlayers().contains(player))
-						other.sendMessage(text);
+						((BaseChatPluginServerPlayer) other).sendMessage(text);
 			}
 		} else for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
 			if (!other.getIgnoredPlayers().contains(player))

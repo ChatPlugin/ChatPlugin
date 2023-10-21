@@ -35,7 +35,8 @@ import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.rank.Rank;
 import me.remigio07.chatplugin.api.server.rank.RankManager;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
-import me.remigio07.chatplugin.common.util.Utils;
+import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
+import me.remigio07.chatplugin.server.util.Utils;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.ClickEvent.Action;
@@ -158,7 +159,7 @@ public class AdManagerImpl extends AdManager {
 			text = text.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(ad.getHover(language), true)));
 		if (ad.getClickAction() != null && ad.getClickValue(language) != null)
 			text = text.clickEvent(ClickEvent.clickEvent(Action.NAMES.value(ad.getClickAction().getID()), ad.getClickValue(language)));
-		player.sendMessage(text);
+		((BaseChatPluginServerPlayer) player).sendMessage(text);
 	}
 	
 	protected String checkPrefixes(String text) {

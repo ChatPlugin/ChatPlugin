@@ -29,8 +29,9 @@ import me.remigio07.chatplugin.api.server.rank.RankManager;
 import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
 import me.remigio07.chatplugin.api.server.util.adapter.scoreboard.ObjectiveAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
-import me.remigio07.chatplugin.common.util.Utils;
+import me.remigio07.chatplugin.server.util.Utils;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 
@@ -119,5 +120,7 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 				.clickEvent(ClickEvent.runCommand("/chatplugin language " + language.getID()))
 				);
 	}
+	
+	public abstract void sendMessage(Component component);
 	
 }

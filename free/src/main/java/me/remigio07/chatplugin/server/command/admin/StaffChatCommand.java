@@ -51,7 +51,7 @@ public class StaffChatCommand extends BaseCommand {
 			}
 		} else if (sender.isPlayer())
 			StaffChatManager.getInstance().sendPlayerMessage(sender.toServerPlayer(), String.join(" ", args));
-		try {
+		else try {
 			StaffChatManager.getInstance().sendConsoleMessage(String.join(" ", args));
 		} catch (IllegalStateException e) {
 			sender.sendMessage(language.getMessage("misc.at-least-one-online"));

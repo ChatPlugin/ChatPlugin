@@ -30,11 +30,8 @@ import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.Library;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
-import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.common.util.text.ComponentTranslatorImpl;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 	
@@ -76,8 +73,9 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 		try {
 			for (Library library : RELOCATION_LIBS)
 				LibrariesUtils.load(library);
-			for (Library library : ADVENTURE_LIBS)
-				LibrariesUtils.load(library);
+			if (!Environment.isVelocity())
+				for (Library library : ADVENTURE_LIBS)
+					LibrariesUtils.load(library);
 			if (Environment.isBukkit()) {
 				LibrariesUtils.load(Library.ADVENTURE_PLATFORM_BUKKIT);
 				LibrariesUtils.load(Library.ADVENTURE_PLATFORM_BUNGEECORD);
@@ -163,10 +161,6 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 			System.out.println("empty string");
 			return;
 		} System.out.println("[" + sb.toString() + "]");
-	}
-	
-	public static TextComponent deserializeLegacy(String text, boolean translate) {
-		return LegacyComponentSerializer.legacySection().deserialize(translate ? ChatColor.translate(text) : text);
 	}
 	
 }

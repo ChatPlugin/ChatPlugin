@@ -31,6 +31,7 @@ import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.text.title.Title;
 
+import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
@@ -48,18 +49,18 @@ import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.language.LanguageDetector;
 import me.remigio07.chatplugin.api.server.language.LanguageDetectorMethod;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
-import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.InventoryAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.server.bossbar.NativeBossbar;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
+import me.remigio07.chatplugin.server.util.Utils;
 import net.kyori.adventure.platform.spongeapi.SpongeAudiences;
-import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.text.Component;
 
 public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	
-	private static SpongeAudiences audiences = SpongeAudiences.create(Sponge.getPluginManager().getPlugin("chatplugin").get(), Sponge.getGame());
+	private static SpongeAudiences audiences = ChatPlugin.getInstance().isLoaded() ? SpongeAudiences.create(Sponge.getPluginManager().getPlugin("chatplugin").get(), Sponge.getGame()) : null;
 	private static Cause inventoryCause;
 	private Player player;
 	
@@ -180,8 +181,8 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	}
 	
 	@Override
-	public void sendMessage(Object adventureComponent) {
-		audience.sendMessage((ComponentLike) adventureComponent);
+	public void sendMessage(Component component) {
+		audience.sendMessage(component);
 	}
 	
 	@Override
@@ -208,7 +209,7 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public void sendActionbar(String actionbar) {
-		audience.sendActionBar(me.remigio07.chatplugin.common.util.Utils.deserializeLegacy(actionbar, true));
+		audience.sendActionBar(Utils.deserializeLegacy(actionbar, true));
 	}
 	
 	@Deprecated

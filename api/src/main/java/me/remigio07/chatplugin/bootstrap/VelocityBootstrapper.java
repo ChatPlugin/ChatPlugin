@@ -152,7 +152,7 @@ public class VelocityBootstrapper {
 		
 		private static void adapt(Object event) {
 			try {
-				Class.forName("me.remigio07.chatplugin.ChatPluginPremiumImpl$VelocityEventsAdapter", false, JARLibraryLoader.getInstance()).getMethod("on" + event.getClass().getSimpleName().substring(0, event.getClass().getSimpleName().indexOf("Event")), event.getClass()).invoke(null, event);
+				Class.forName("me.remigio07.chatplugin.ChatPluginPremiumImpl$VelocityAdapter", false, JARLibraryLoader.getInstance()).getMethod("on" + event.getClass().getSimpleName().substring(0, event.getClass().getSimpleName().indexOf("Event")), event.getClass()).invoke(null, event);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

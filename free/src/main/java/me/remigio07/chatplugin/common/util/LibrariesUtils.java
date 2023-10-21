@@ -55,7 +55,7 @@ public class LibrariesUtils {
 				if (file.exists()) {
 					if (ConfigurationManager.getInstance().getLastVersionChange().isMinor())
 						downloadFreshCopy("Updating {0} library (new plugin version detected)...", 0, library);
-					else if (!bytesToHexString(MessageDigest.getInstance("MD5").digest(Files.readAllBytes(getTarget(library).toPath()))).equals(library.getMD5Hash()))
+					else if (library.getMD5Hash() != null && !bytesToHexString(MessageDigest.getInstance("MD5").digest(Files.readAllBytes(getTarget(library).toPath()))).equals(library.getMD5Hash()))
 						downloadFreshCopy("The {0} library's file is corrupted; downloading a fresh copy...", 1, library);
 				} else {
 					file.getParentFile().mkdirs();

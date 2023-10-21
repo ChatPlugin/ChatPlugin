@@ -40,22 +40,20 @@ import me.remigio07.chatplugin.api.proxy.util.Utils;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.bootstrap.JARLibraryLoader;
 import me.remigio07.chatplugin.bootstrap.VelocityBootstrapper;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 
 /**
  * Environment indipendent (Bukkit, Sponge, BungeeCord and Velocity) player adapter.
  */
 public class PlayerAdapter {
 	
-	private static Method deserializeLegacy;
+	private static Method invokeAdventureMethod;
 	private Object player;
 	
 	static {
 		try {
-			deserializeLegacy = Class.forName("me.remigio07.chatplugin.common.util.Utils", false, JARLibraryLoader.getInstance()).getMethod("deserializeLegacy", String.class, boolean.class);
-		} catch (ClassNotFoundException | NoSuchMethodException e) {
-			e.printStackTrace();
+			invokeAdventureMethod = Class.forName("me.remigio07.chatplugin.ChatPluginPremiumImpl$VelocityAdapter", false, JARLibraryLoader.getInstance()).getMethod("invokeAdventureMethod", Object.class, String.class, String.class);
+		} catch (Throwable e) {
+			// not on Velocity
 		}
 	}
 	
@@ -244,7 +242,7 @@ public class PlayerAdapter {
 			break;
 		case VELOCITY:
 			try {
-				velocityValue().sendMessage((ComponentLike) deserializeLegacy.invoke(null, message, true));
+				invokeAdventureMethod.invoke(null, velocityValue(), "sendMessage", message);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				e.printStackTrace();
 			} break;
@@ -269,7 +267,7 @@ public class PlayerAdapter {
 			break;
 		case VELOCITY:
 			try {
-				velocityValue().disconnect((Component) deserializeLegacy.invoke(null, reason, true));
+				invokeAdventureMethod.invoke(null, velocityValue(), "disconnect", reason);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				e.printStackTrace();
 			} break;

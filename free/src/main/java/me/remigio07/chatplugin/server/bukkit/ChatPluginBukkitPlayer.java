@@ -30,6 +30,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
+import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
@@ -54,18 +55,18 @@ import me.remigio07.chatplugin.api.server.util.adapter.inventory.InventoryAdapte
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
-import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.bossbar.NativeBossbar;
 import me.remigio07.chatplugin.server.bossbar.ReflectionBossbar;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
+import me.remigio07.chatplugin.server.util.Utils;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.Title.Times;
 
 public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
-	private static BukkitAudiences audiences = BukkitAudiences.create(BukkitBootstrapper.getInstance());
+	private static BukkitAudiences audiences = ChatPlugin.getInstance().isLoaded() ? BukkitAudiences.create(BukkitBootstrapper.getInstance()) : null;
 	private Player player;
 	private Object craftPlayer;
 	private Locale lastLocale;
@@ -194,8 +195,8 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	}
 	
 	@Override
-	public void sendMessage(Object adventureComponent) {
-		audience.sendMessage((ComponentLike) adventureComponent);
+	public void sendMessage(Component component) {
+		audience.sendMessage(component);
 	}
 	
 	@Override

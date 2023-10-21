@@ -82,14 +82,6 @@ public interface ChatPluginPlayer {
 	public void sendMessage(String message);
 	
 	/**
-	 * Sends a text component to this player.
-	 * 
-	 * @param adventureComponent Message to send
-	 * @throws ClassCastException If specified object is not an Adventure component
-	 */
-	public void sendMessage(@NotNull Object adventureComponent);
-	
-	/**
 	 * Connects this player to the specified server.
 	 * 
 	 * <p>Will do nothing if called on a server with a single instance setup.</p>

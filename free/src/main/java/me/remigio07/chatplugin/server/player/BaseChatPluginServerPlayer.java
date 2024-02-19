@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.player;
@@ -25,7 +25,6 @@ import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
-import me.remigio07.chatplugin.api.server.rank.RankManager;
 import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
 import me.remigio07.chatplugin.api.server.util.adapter.scoreboard.ObjectiveAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
@@ -40,7 +39,6 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 	protected Audience audience;
 	protected boolean playerStored = false;
 	
-	@SuppressWarnings("deprecation")
 	public BaseChatPluginServerPlayer(PlayerAdapter player) {
 		super(player);
 		
@@ -49,7 +47,6 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 		if (PrivateMessagesManager.getInstance().isEnabled() && PrivateMessagesManager.getInstance().isSocialspyOnJoinEnabled() && player.hasPermission("chatplugin.commands.socialspy"))
 			socialspyEnabled = true;
 		bedrockPlayer = ServerPlayerManager.isBedrockPlayer(uuid);
-		rank = RankManager.getInstance().calculateRank(this);
 		loginTime = ServerPlayerManager.getPlayerLoginTime(uuid);
 		ignoredPlayers = PlayerIgnoreManager.getInstance().isEnabled() ? new ArrayList<>(PlayerIgnoreManager.getInstance().getIgnoredPlayers(this)) : Collections.emptyList();
 	}

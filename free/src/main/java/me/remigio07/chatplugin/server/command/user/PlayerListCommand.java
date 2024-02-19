@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.command.user;
@@ -47,12 +47,10 @@ public class PlayerListCommand extends BaseCommand {
 	@Override
 	public void execute(CommandSenderAdapter sender, Language language, String[] args) {
 		boolean hideVanished = VanishManager.getInstance().isEnabled() && !sender.hasPermission(VanishManager.VANISH_PERMISSION);
-		final String vanishedColor, notVanishedColor;
+		String vanishedColor, notVanishedColor;
 		
 		if (args.length == 0) {
-			if (PlayerAdapter.getOnlinePlayers().size() == 0) {
-				sender.sendMessage(language.getMessage("commands.playerlist.all.no-players-online"));
-			} else {
+			if (PlayerAdapter.getOnlinePlayers().size() != 0) {
 				HashMap<Rank, List<String>> temp = new HashMap<>();
 				vanishedColor = language.getMessage("commands.playerlist.name-format.vanished");
 				notVanishedColor = language.getMessage("commands.playerlist.name-format.not-vanished");
@@ -64,7 +62,7 @@ public class PlayerListCommand extends BaseCommand {
 						temp.put(player.getRank(), Utils.addAndGet(temp.getOrDefault(player.getRank(), new ArrayList<>()), Arrays.asList((player.isVanished() ? vanishedColor : notVanishedColor) + player.getName())));
 				for (Entry<Rank, List<String>> rank : temp.entrySet())
 					sender.sendMessage(rank.getKey().formatPlaceholders(language.getMessage("commands.playerlist.all.rank-format", rank.getValue().size(), String.join(", " + notVanishedColor, rank.getValue().toArray(new String[0])) + "\u00A7r"), language));
-			}
+			} else sender.sendMessage(language.getMessage("commands.playerlist.all.no-players-online"));
 		} else {
 			Rank rank = RankManager.getInstance().getRank(args[0]);
 			

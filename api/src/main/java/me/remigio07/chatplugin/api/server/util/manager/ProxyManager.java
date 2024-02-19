@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.util.manager;
@@ -40,9 +40,9 @@ public abstract class ProxyManager implements ChatPluginManager {
 	/**
 	 * String containing the default server ID.
 	 * 
-	 * <p><strong>Content:</strong> "set-as-server-id-in-proxy-config"</p>
+	 * <p><strong>Content:</strong> "default-server-id"</p>
 	 */
-	public static final String DEFAULT_SERVER_ID = "set-as-server-id-in-proxy-config";
+	public static final String DEFAULT_SERVER_ID = "default-server-id";
 	
 	/**
 	 * Pattern representing the allowed server IDs.
@@ -102,7 +102,9 @@ public abstract class ProxyManager implements ChatPluginManager {
 	 * Gets a map containing information
 	 * about servers under the network.
 	 * 
-	 * <p>The keys represent the servers' ID.</p>
+	 * <p>The keys represent the servers' ID.
+	 * Provided information may not be accurate
+	 * when there are no players online.</p>
 	 * 
 	 * @return Servers under the network
 	 */
@@ -123,7 +125,8 @@ public abstract class ProxyManager implements ChatPluginManager {
 	/**
 	 * Gets the amount of online players in the specified server.
 	 * 
-	 * <p>Specify "ALL" to get the amount of online players under the proxy.</p>
+	 * <p>Specify "ALL" to get the amount of online players under the proxy.
+	 * Provided information may not be accurate when there are no players online.</p>
 	 * 
 	 * @param server Server to check
 	 * @param hideVanished Whether to subtract {@link #getVanishedPlayers(String)} from the amount
@@ -142,7 +145,8 @@ public abstract class ProxyManager implements ChatPluginManager {
 	/**
 	 * Gets the amount of vanished players in the specified server.
 	 * 
-	 * <p>Specify "ALL" to get the amount of vanished players under the proxy.</p>
+	 * <p>Specify "ALL" to get the amount of vanished players under the proxy.
+	 * Provided information may not be accurate when there are no players online.</p>
 	 * 
 	 * @param server Server to check
 	 * @return Vanished players amount
@@ -160,6 +164,9 @@ public abstract class ProxyManager implements ChatPluginManager {
 	/**
 	 * Translates "{online@server}" and "{vanished@server}" with
 	 * the specified server's online and vanished players' amounts.
+	 * 
+	 * <p>Provided information may not be accurate
+	 * when there are no players online.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param hideVanished Whether to subtract {@link #getVanishedPlayers(String)} from the amount

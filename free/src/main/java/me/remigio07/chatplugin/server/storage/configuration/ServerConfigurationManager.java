@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.storage.configuration;
@@ -30,6 +30,7 @@ import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
+import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 public class ServerConfigurationManager extends ConfigurationManager {
@@ -82,7 +83,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			
 			if ((lastVersionChange = VersionChange.getCurrentVersionChange(ConfigurationType.CONFIG.get(), "version", ChatPlugin.VERSION)) != VersionChange.NULL) {
 				if (!lastVersionChange.isSupported())
-					throw new ChatPluginManagerException(this, "Downgrading ChatPlugin's version is not supported. If you wish to use an older version, please delete the plugin's folder and let it generate new configuration files. You can also edit settings.version in config.yml to avoid this check, but errors may occur and no support will be given if you ask for it.");
+					throw new ChatPluginManagerException(this, "Downgrading ChatPlugin's version is not supported. If you wish to use an older version, please delete the plugin's folder and let it generate new configuration files. You can also edit settings.version in config.yml to bypass this check, but errors may occur and no support will be given if you ask for it.");
 				addAllDefaults(true);
 			} else addAllDefaults(false);
 			
@@ -146,8 +147,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("settings.modify-display-name", false);
 		config.addDefault("settings.truncate-version-string", true);
 		config.addDefault("settings.use-week-timestamp", false);
-		config.addDefault("settings.anticheat-integration.matrix", true);
-		config.addDefault("settings.anticheat-integration.vulcan", false);
 		config.addDefault("settings.anticheat-integration.reasons-start-with", Arrays.asList("[Matrix]", "[Vulcan]"));
 		config.addDefault("settings.anticheat-integration.violations-expiration-timeout", "1m");
 		config.addDefault("settings.storage-placeholders-update-timeout", "1m");
@@ -158,10 +157,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		config.addDefault("multi-instance-mode.enabled", false);
 		config.addDefault("multi-instance-mode.proxy-online-mode", false);
-		config.addDefault("multi-instance-mode.server-id", "set-as-server-id-in-proxy-config");
+		config.addDefault("multi-instance-mode.server-id", ProxyManager.DEFAULT_SERVER_ID);
 		config.addDefault("multi-instance-mode.server-display-name", "default-server-name");
-		config.addDefault("multi-instance-mode.server-information-update-timeout", "1m");
-		config.addDefault("multi-instance-mode.log-filtered-packets", Arrays.asList("F3ServerName", "ServerInformation"));
+		config.addDefault("multi-instance-mode.server-information-update-timeout", "10s");
+		config.addDefault("multi-instance-mode.log-filtered-packets", Arrays.asList("F3ServerName", "ServerInformation", "IPLookupRequest", "IPLookupResponse", "PlayerJoin", "PlayerQuit", "PlayerSwitch"));
 		
 		config.addDefault("storage.method", "H2");
 		config.addDefault("storage.folder", "{0}/files");
@@ -296,7 +295,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("misc.debug.manager.disabled", "{pfx} &cThat manager is disabled.");
 		messages.addDefault("misc.at-least-one-online", "{pfx} &cAt least one player online is required to perform this action.");
 		messages.addDefault("misc.disabled-world", "{pfx} &cThat world is not enabled.");
-        messages.addDefault("misc.disabled-feature", "{pfx} &cThat feature is not enabled.");
+		messages.addDefault("misc.disabled-feature", "{pfx} &cThat feature is not enabled.");
 		messages.addDefault("misc.inexistent-id", "{pfx} &cThat ID does not exist.");
 		messages.addDefault("misc.inexistent-player", "{pfx} &f{0} &cis not a premium player's name.");
 		messages.addDefault("misc.cannot-fetch", "{pfx} &cUnable to reach &fhttps://api.mojang.com &cto fetch &f{0}&c's UUID: &f{1}&c.");
@@ -320,7 +319,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.help.premium.vanish", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/vanish &8- &eBecome invisible to non Staff members.\n&f&l/fakejoin &8- &eSend fake join message and disable vanish.\n&f&l/fakequit &8- &eSend fake quit message and enable vanish.\n&f&l/silentteleport &8- &eSilently teleport somewhere else.");
 		messages.addDefault("commands.help.premium.misc", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/tps &8- &eDisplay the server's current ticks per second.\n&f&l/ad &8- &eSend a loaded ad to one or more online players.\n&f&l/broadcast &8- &eSend a message to every online player.\n&f&l/broadcastraw &8- &eLike /broadcast, but without the prefix.\n&f&l/globalbroadcast &8- &eLike /broadcast, but cross-server.\n&f&l/discordmessage &8- &eSend a message to the server.\n&f&l/telegrammessage &8- &eSend a message to the group.");
 		
-		messages.addDefault("commands.info", "{pfx} &aInfo about &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&eWebsite: &fhttps://megaproserver.com/chatplugin\n&eGitHub: &fhttps://github.com/ChatPlugin/ChatPlugin\n&eDiscord: &fhttps://discord.gg/CPtysXTfQg");
+		messages.addDefault("commands.info", "{pfx} &aInfo about &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&eWebsite: &fhttps://remigio07.me/chatplugin\n&eGitHub: &fhttps://github.com/ChatPlugin/ChatPlugin\n&eDiscord: &fhttps://discord.gg/CPtysXTfQg");
 		messages.addDefault("commands.version", "{pfx} &aRunning &c&lChat&f&lPlugin {0} &fv{1} &aby &9Remigio07 &aon &f{2} {3}&a.");
 		messages.addDefault("commands.status", "{pfx} &aCurrent server status:\n&eServer version: &f{server_version} (protocol: {server_version_protocol})\n&eChatPlugin version: &f{plugin_version}\n&eUptime: &f{uptime}\n&eTPS (1m, 5m, 15m): &f{tps_1_min_format}&f, {tps_5_min_format}&f, {tps_15_min_format}\n&eUsed memory: &f{used_memory}/{max_memory} MB\n&eAllocated memory: &f{total_memory} MB\n&eFree memory: &f{free_memory} MB\n&eStorage used: &f{used_storage}/{total_storage} GB\n&eFree storage: &f{free_storage} GB\n&eEnabled worlds: &f{enabled_worlds}x\n&eEnabled players: &f{enabled_players}x\n&eEnabled managers: &f{enabled_managers}x\n&eStartup time: &f{startup_time} ms\n&eLast reload time: &f{last_reload_time} ms");
 		messages.addDefault("commands.scoreboard.enabled", "{pfx} &aThe scoreboard has been enabled.");
@@ -416,6 +415,12 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("chat.log.message-format.date-format", "MM/dd hh:mm:ss a");
 		messages.addDefault("chat.log.message-format.denied-format.yes", "&4denied &f({deny_chat_reason})");
 		messages.addDefault("chat.log.message-format.denied-format.no", "&2allowed");
+		messages.addDefault("chat.log.page-switcher.footer", "{pfx} &aPage &f{current_page}/{max_page}&a. Browse: &r{page_switcher}");
+		messages.addDefault("chat.log.page-switcher.invalid", "{pfx} &cPage &f{current_page} &cnot found. Last page: &f{max_page}&c.");
+		messages.addDefault("chat.log.page-switcher.previous.text", "&e[« {previous_page}/{max_page}]");
+		messages.addDefault("chat.log.page-switcher.previous.hover", "&9[Click here to go back to page {previous_page}]");
+		messages.addDefault("chat.log.page-switcher.next.text", "&e[{next_page}/{max_page} »]");
+		messages.addDefault("chat.log.page-switcher.next.hover", "&9[Click here to go to page {next_page}]");
 		
 		messages.addDefault("guis.no-permission", "{pfx} &cYou do not have the permission to use that GUI.");
 		messages.addDefault("guis.player-went-offline", "{pfx} &f{0} &cwent offline so your open GUI (&f{1}&c) has been closed.");
@@ -598,7 +603,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("proxy-messages.reload.start", "{pfx} &aChatPlugin is reloading...");
 		messages.addDefault("proxy-messages.reload.end", "{pfx} &aChatPlugin has been reloaded. Took &f{0} ms &ato complete.");
 		messages.addDefault("proxy-messages.version", "{pfx} &aRunning &c&lChat&f&lPlugin &6Premium &fv{0} &aby &9Remigio07 &aon &f{1} {2}&a.");
-		messages.addDefault("proxy-messages.info", "{pfx} &aInfo about &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&eWebsite: &fhttps://megaproserver.com/chatplugin\n&eGitHub: &fhttps://github.com/ChatPlugin/ChatPlugin\n&eDiscord: &fhttps://discord.gg/CPtysXTfQg");
+		messages.addDefault("proxy-messages.info", "{pfx} &aInfo about &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&eWebsite: &fhttps://remigio07.me/chatplugin\n&eGitHub: &fhttps://github.com/ChatPlugin/ChatPlugin\n&eDiscord: &fhttps://discord.gg/CPtysXTfQg");
 		
 		messages.save();
 	}
@@ -668,7 +673,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		chat.addDefault("chat.antispam.enabled", true);
 		chat.addDefault("chat.antispam.prevention.urls.enabled", true);
-		chat.addDefault("chat.antispam.prevention.urls.allowed-domains", Arrays.asList("megaproserver.com"));
+		chat.addDefault("chat.antispam.prevention.urls.allowed-domains", Arrays.asList("remigio07.me", "megaproserver.com"));
 		chat.addDefault("chat.antispam.prevention.urls.whitelist", Arrays.asList("spigotmc.org/forums"));
 		chat.addDefault("chat.antispam.prevention.ips.enabled", true);
 		chat.addDefault("chat.antispam.prevention.ips.whitelist", Arrays.asList("127.0.0.1"));
@@ -707,7 +712,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.hover-info.player.enabled", true);
 		chat.addDefault("chat.hover-info.player.click.action", "SUGGEST_TEXT");
 		chat.addDefault("chat.hover-info.player.click.value", "/msg {player} ");
-		chat.addDefault("chat.hover-info.player.placeholder-types", Arrays.asList("PLAYER"));
+		chat.addDefault("chat.hover-info.player.placeholder-types", Arrays.asList("PLAYER", "SERVER"));
 		chat.addDefault("chat.hover-info.player.hovers.english", "&ePlayer: &f{player}\n&eTime: &f{date_hour}\n&ePing: {ping_format} ms\n&d&oClick = send /msg");
 		chat.addDefault("chat.hover-info.player.hovers.italian", "&eGiocatore: &f{player}\n&eOrario: &f{date_hour}\n&ePing: {ping_format} ms\n&d&oClick = invia /msg");
 		chat.addDefault("chat.hover-info.url.enabled", true);
@@ -785,6 +790,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			return;
 		
 		defaultScoreboard.addDefault("settings.enabled", VersionUtils.getVersion().isAtLeast(Environment.isBukkit() ? Version.V1_5 : Version.V1_8));
+		defaultScoreboard.addDefault("settings.abbreviate-too-long-text", true);
 		defaultScoreboard.addDefault("settings.display-only-one-number.enabled", true);
 		defaultScoreboard.addDefault("settings.display-only-one-number.value", 0);
 		defaultScoreboard.addDefault("settings.placeholder-types", Arrays.asList("PLAYER", "SERVER", "INTEGRATIONS"));
@@ -843,6 +849,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		bossbars.addDefault("bossbars.settings.enabled", VersionUtils.getVersion().isAtLeast(Version.V1_9));
 		bossbars.addDefault("bossbars.settings.random-order", false);
+		bossbars.addDefault("bossbars.settings.abbreviate-too-long-titles", true);
 		bossbars.addDefault("bossbars.settings.reflection-wither-teleportation.distance", 42.0D);
 		bossbars.addDefault("bossbars.settings.reflection-wither-teleportation.timeout-ms", 250);
 		bossbars.addDefault("bossbars.settings.sending-timeout-ms", 10000);
@@ -855,31 +862,31 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		bossbars.addDefault("bossbars.settings.loading-bossbar.color", "RANDOM");
 		bossbars.addDefault("bossbars.settings.loading-bossbar.style", "SOLID");
 		
-		bossbars.addDefault("bossbars.discord.titles.english", "&9Remember to join Discord to chat with your friends!");
-		bossbars.addDefault("bossbars.discord.titles.italian", "&9Ricorda di entrare su Discord per chattare con i tuoi amici!");
+		bossbars.addDefault("bossbars.discord.titles.english", "&9Join the Discord server to chat with your friends!");
+		bossbars.addDefault("bossbars.discord.titles.italian", "&9Entra nel server Discord per chattare con i tuoi amici!");
 		bossbars.addDefault("bossbars.discord.color", "BLUE");
-		bossbars.addDefault("bossbars.ping-command.titles.english", "&eYou can check your ping using &f/ping&e.");
-		bossbars.addDefault("bossbars.ping-command.titles.italian", "&ePuoi controllare il tuo ping con &f/ping&e.");
+		bossbars.addDefault("bossbars.ping-command.titles.english", "&aYou can check your ping with &f/ping&a.");
+		bossbars.addDefault("bossbars.ping-command.titles.italian", "&aPuoi controllare il tuo ping con &f/ping&a.");
 		bossbars.addDefault("bossbars.ping-command.value", 75);
-		bossbars.addDefault("bossbars.ping-command.color", "WHITE");
-		bossbars.addDefault("bossbars.placeholders.titles.english", "&cPlaceholders are supported, &f{player}&c!");
-		bossbars.addDefault("bossbars.placeholders.titles.italian", "&cI placeholders sono supportati, &f{player}&c!");
+		bossbars.addDefault("bossbars.ping-command.color", "GREEN");
+		bossbars.addDefault("bossbars.placeholders.titles.english", "&cPlaceholders are supported. Hi, &f{player}&c!");
+		bossbars.addDefault("bossbars.placeholders.titles.italian", "&cI placeholders sono supportati. Ciao, &f{player}&c!");
 		bossbars.addDefault("bossbars.placeholders.value", 50);
 		bossbars.addDefault("bossbars.placeholders.color", "RED");
 		bossbars.addDefault("bossbars.bossbar-command.titles.english", "&5Bossbar can be toggled off using &f/bossbar&5.");
 		bossbars.addDefault("bossbars.bossbar-command.titles.italian", "&5La bossbar può essere disattivata con &f/bossbar&5.");
 		bossbars.addDefault("bossbars.bossbar-command.value", 25);
 		bossbars.addDefault("bossbars.bossbar-command.color", "PURPLE");
-		bossbars.addDefault("bossbars.5-star-review.titles.english", "&aLeave a &f5-star &areview on the plugin's page!");
-		bossbars.addDefault("bossbars.5-star-review.titles.italian", "&aLascia una review &f5-stelle &asulla pagina del plugin!");
+		bossbars.addDefault("bossbars.5-star-review.titles.english", "&eLeave a &f5-star &ereview on the plugin's page!");
+		bossbars.addDefault("bossbars.5-star-review.titles.italian", "&eLascia una recensione &f5-stelle &esulla pagina del plugin!");
 		bossbars.addDefault("bossbars.5-star-review.value", 0);
 		bossbars.addDefault("bossbars.5-star-review.color", "YELLOW");
-		bossbars.addDefault("bossbars.language-command.titles.english", "&dChange the plugin's language with &f/chatplugin lang&d!");
-		bossbars.addDefault("bossbars.language-command.titles.italian", "&dCambia la lingua del plugin con &f/chatplugin lang&d!");
+		bossbars.addDefault("bossbars.language-command.titles.english", "&aChange the plugin's language with &f/language&a!");
+		bossbars.addDefault("bossbars.language-command.titles.italian", "&aCambia la lingua del plugin con &f/language&a!");
 		bossbars.addDefault("bossbars.language-command.value", 25);
 		bossbars.addDefault("bossbars.language-command.color", "GREEN");
-		bossbars.addDefault("bossbars.instagram.titles.english", "&eVisit our Instagram page for memes about the Staff members!");
-		bossbars.addDefault("bossbars.instagram.titles.italian", "&eVisita la pagina Instagram per vedere memes sui membri dello Staff!");
+		bossbars.addDefault("bossbars.instagram.titles.english", "&dVisit our Instagram page for memes about the Staff members!");
+		bossbars.addDefault("bossbars.instagram.titles.italian", "&dVisita la pagina Instagram per memes sui membri dello Staff!");
 		bossbars.addDefault("bossbars.instagram.value", 50);
 		bossbars.addDefault("bossbars.instagram.color", "PINK");
 		bossbars.addDefault("bossbars.random.titles.english", "&cThis bar will have a random color and style.");
@@ -887,9 +894,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		bossbars.addDefault("bossbars.random.value", 75);
 		bossbars.addDefault("bossbars.random.color", "RANDOM");
 		bossbars.addDefault("bossbars.random.style", "RANDOM");
-		bossbars.addDefault("bossbars.last.titles.english", "&aLast bossbar. The next one will not be shown.");
-		bossbars.addDefault("bossbars.last.titles.italian", "&aUltima bossbar. La prossima non verrà mostrata.");
-		bossbars.addDefault("bossbars.last.color", "GREEN");
+		bossbars.addDefault("bossbars.last.titles.english", "&fLast bossbar. The next one will not be shown.");
+		bossbars.addDefault("bossbars.last.titles.italian", "&fUltima bossbar. La prossima non verrà mostrata.");
+		bossbars.addDefault("bossbars.last.color", "WHITE");
 		bossbars.addDefault("bossbars.hidden.titles.english", "&7This bossbar will not be shown.");
 		bossbars.addDefault("bossbars.hidden.titles.italian", "&7Questa bossbar non verrà mostrata.");
 		bossbars.addDefault("bossbars.hidden.hidden", true);
@@ -1048,7 +1055,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		joinQuitModules.addDefault("join-quit-modules.suggested-version.delay-ms", 10000L);
 		
 		joinQuitModules.addDefault("join-quit-modules.account-check.enabled", false);
-		joinQuitModules.addDefault("join-quit-modules.account-check.perform-on-first-join", true);
+		joinQuitModules.addDefault("join-quit-modules.account-check.perform-on-first-join", false);
 		joinQuitModules.addDefault("join-quit-modules.account-check.timeout-between-checks-ms", 10);
 		joinQuitModules.addDefault("join-quit-modules.account-check.max-time-played", "12h");
 		joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.2.english", Arrays.asList("staffchat &f{player} &cowns multiple (&f{amount}&c) accounts: &f{accounts}&c."));
@@ -1057,7 +1064,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.3.italian", Arrays.asList("tempban {player} 30d Accounts multipli ({amount}) rilevati: {accounts}. Questo è un ban automatico. -s"));
 		joinQuitModules.addDefault("join-quit-modules.account-check.ip-lookup.enabled", false);
 		joinQuitModules.addDefault("join-quit-modules.account-check.ip-lookup.max-accuracy-radius-km", 10);
-		joinQuitModules.addDefault("join-quit-modules.account-check.anti-ban-evading-system.enabled", true);
+		joinQuitModules.addDefault("join-quit-modules.account-check.anti-ban-evading-system.enabled", false);
 		joinQuitModules.addDefault("join-quit-modules.account-check.anti-ban-evading-system.commands.english", Arrays.asList("tempban {player} 30d Ban evading of account {account}. This is an automatic ban. -s"));
 		joinQuitModules.addDefault("join-quit-modules.account-check.anti-ban-evading-system.commands.italian", Arrays.asList("tempban {player} 30d Elusione del ban dell'account {account}. Questo è un ban automatico. -s"));
 		
@@ -1524,19 +1531,19 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		violationsGUI.addDefault("settings.filling-function.empty-list-icon.x", 5);
 		violationsGUI.addDefault("settings.filling-function.empty-list-icon.y", 3);
 		
-		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.display-names.english", "&c&l{player}");
-		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.display-names.italian", "&c&l{player}");
-		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.lores.english", Arrays.asList("&eServer: &f{server}&e, TPS: &f{tps}", "&eAnticheat: &f{anticheat}", "&eVersion: &f{version} ({version_protocol})", "&ePing: &f{ping_format} ms", "", "&eRecent violations:", "{violations}", "", "&d&oClick to teleport you there!"));
-		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.lores.italian", Arrays.asList("&eServer: &f{server}&e, TPS: &f{tps}", "&eAnticheat: &f{anticheat}", "&eVersione: &f{version} ({version_protocol})", "&ePing: &f{ping_format} ms", "", "&eViolazioni recenti:", "{violations}", "", "&d&oClicca per teletrasportarti!"));
+		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.display-names.english", "&c&l{cheater}");
+		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.display-names.italian", "&c&l{cheater}");
+		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.lores.english", Arrays.asList("&eAnticheat: &f{anticheat}", "&eServer: &f{server}", "&ePing: &f{ping_format} ms&e, TPS: &f{tps}", "&eVersion: &f{version} ({version_protocol})", "", "&eRecent violations:", "{violations}", "", "&d&oClick to teleport you there!"));
+		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.lores.italian", Arrays.asList("&eAnticheat: &f{anticheat}", "&eServer: &f{server}", "&ePing: &f{ping_format} ms&e, TPS: &f{tps}", "&eVersione: &f{version} ({version_protocol})", "", "&eViolazioni recenti:", "{violations}", "", "&d&oClicca per teletrasportarti!"));
 		
 		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
 			violationsGUI.addDefault("settings.filling-function.icon-layouts.player.material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			violationsGUI.addDefault("settings.filling-function.icon-layouts.player.damage", 3);
 		} else violationsGUI.addDefault("settings.filling-function.icon-layouts.player.material", "PLAYER_HEAD");
-		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.skull-owner", "{player}");
-		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.commands", Arrays.asList("p: silentteleport player {player}"));
+		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.skull-owner", "{cheater}");
+		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.commands", Arrays.asList("p: silentteleport player {cheater}"));
 		
-		violationsGUI.addDefault("settings.violations-list-format", "&7{cheat_id}: &f{amount}x");
+		violationsGUI.addDefault("settings.violations-list-format", "&7{cheat_display_name}: &f{amount}x");
 		
 		path = "icons.info.";
 		violationsGUI.addDefault(path + "display-names.english", "&3&lViolations");
@@ -1827,12 +1834,14 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		playerViolationsGUI.addDefault("settings.filling-function.empty-list-icon.x", 5);
 		playerViolationsGUI.addDefault("settings.filling-function.empty-list-icon.y", 3);
 		
-		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.display-names.english", "&c&l{cheat_id}");
-		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.display-names.italian", "&c&l{cheat_id}");
-		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.lores.english", Arrays.asList("&ePing: &f{ping_format} ms&e, TPS: &f{tps}", "&eAnticheat: &f{anticheat}", "&eLast time: &f{last_time} ago", "&eComponent: &f{component}", "&eViolations: &f{amount}x", "&d&oClick to teleport you there!"));
-		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.lores.italian", Arrays.asList("&ePing: &f{ping_format} ms&e, TPS: &f{tps}", "&eAnticheat: &f{anticheat}", "&eUltima volta: &f{last_time} fa", "&eComponente: &f{component}", "&eViolazioni: &f{amount}x", "&d&oClicca per teletrasportarti!"));
+		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.display-names.english", "&c&l{cheat_display_name}");
+		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.display-names.italian", "&c&l{cheat_display_name}");
+		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.lores.english", Arrays.asList("&eAnticheat: &f{anticheat}", "&eComponent: &f{component}", "&eViolations: &f{amount}x", "&ePing: &f{ping_format} ms&e, TPS: &f{tps}", "&eLast time: &f{last_time} ago", "&d&oClick to teleport you there!"));
+		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.lores.italian", Arrays.asList("&eAnticheat: &f{anticheat}", "&eComponente: &f{component}", "&eViolazioni: &f{amount}x", "&ePing: &f{ping_format} ms&e, TPS: &f{tps}", "&eUltima volta: &f{last_time} fa", "&d&oClicca per teletrasportarti!"));
 		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.material", "AIR");
-		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.commands", Arrays.asList("p: silentteleport player {player}"));
+		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.amount", "{amount}");
+		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.commands", Arrays.asList("p: silentteleport player {cheater}"));
+		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.item-flags", Arrays.asList("HIDE_ATTRIBUTES"));
 		
 		path = "icons.info.";
 		playerViolationsGUI.addDefault(path + "display-names.english", "&3&lViolations");
@@ -1887,149 +1896,227 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		boolean isAtLeastV1_13 = VersionUtils.getVersion().isAtLeast(Version.V1_13);
 		boolean isAtLeastV1_9 = VersionUtils.getVersion().isAtLeast(Version.V1_9);
 		
-		path = "violations-icons.matrix.";
+		path = "matrix.";
 		violationsIcons.addDefault(path + "killaura.name", "Combat hacks");
-		violationsIcons.addDefault(path + "killaura.id", "IRON_SWORD");
+		violationsIcons.addDefault(path + "killaura.material", "IRON_SWORD");
 		violationsIcons.addDefault(path + "click.name", "Click hacks");
-		violationsIcons.addDefault(path + "click.id", Environment.isSponge() || isAtLeastV1_13 ? "COMPARATOR" : "REDSTONE_COMPARATOR");
+		violationsIcons.addDefault(path + "click.material", Environment.isSponge() || isAtLeastV1_13 ? "COMPARATOR" : "REDSTONE_COMPARATOR");
 		violationsIcons.addDefault(path + "hitbox.name", "Reach hacks");
-		violationsIcons.addDefault(path + "hitbox.id", "FISHING_ROD");
+		violationsIcons.addDefault(path + "hitbox.material", "FISHING_ROD");
 		violationsIcons.addDefault(path + "move.name", "Movement hacks");
-		violationsIcons.addDefault(path + "move.id", Environment.isSponge() || isAtLeastV1_13 ? "GOLDEN_BOOTS" : "GOLD_BOOTS");
+		violationsIcons.addDefault(path + "move.material", Environment.isSponge() || isAtLeastV1_13 ? "GOLDEN_BOOTS" : "GOLD_BOOTS");
 		violationsIcons.addDefault(path + "badpackets.name", "Bad packets hacks");
-		violationsIcons.addDefault(path + "badpackets.id", Environment.isSponge() || isAtLeastV1_13 ? "TNT_MINECART" : "EXPLOSIVE_MINECART");
+		violationsIcons.addDefault(path + "badpackets.material", Environment.isSponge() || isAtLeastV1_13 ? "TNT_MINECART" : "EXPLOSIVE_MINECART");
 		violationsIcons.addDefault(path + "delay.name", "Delay hacks");
-		violationsIcons.addDefault(path + "delay.id",  Environment.isSponge() || isAtLeastV1_13 ? "CLOCK" : "WATCH");
+		violationsIcons.addDefault(path + "delay.material",  Environment.isSponge() || isAtLeastV1_13 ? "CLOCK" : "WATCH");
 		violationsIcons.addDefault(path + "block.name", "Fast blocks hacks");
-		violationsIcons.addDefault(path + "block.id", "DIAMOND_PICKAXE");
+		violationsIcons.addDefault(path + "block.material", "DIAMOND_PICKAXE");
 		violationsIcons.addDefault(path + "scaffold.name", "Scaffold hacks");
-		violationsIcons.addDefault(path + "scaffold.id", "LADDER");
+		violationsIcons.addDefault(path + "scaffold.material", "LADDER");
 		violationsIcons.addDefault(path + "velocity.name", "Velocity hacks");
-		violationsIcons.addDefault(path + "velocity.id", Environment.isBukkit() ? isAtLeastV1_13 ? "FIREWORK_ROCKET" : "FIREWORK" : "FIREWORKS");
+		violationsIcons.addDefault(path + "velocity.material", Environment.isBukkit() ? isAtLeastV1_13 ? "FIREWORK_ROCKET" : "FIREWORK" : "FIREWORKS");
 		violationsIcons.addDefault(path + "chat.name", "Spamming");
-		violationsIcons.addDefault(path + "chat.id", Environment.isSponge() || isAtLeastV1_9 ? "WRITABLE_BOOK" : "BOOK_AND_QUILL");
+		violationsIcons.addDefault(path + "chat.material", Environment.isSponge() || isAtLeastV1_9 ? "WRITABLE_BOOK" : "BOOK_AND_QUILL");
 		violationsIcons.addDefault(path + "interact.name", "Interact hacks");
-		violationsIcons.addDefault(path + "interact.id", Environment.isSponge() || isAtLeastV1_13 ? "CRAFTING_TABLE" : "WORKBENCH");
+		violationsIcons.addDefault(path + "interact.material", Environment.isSponge() || isAtLeastV1_13 ? "CRAFTING_TABLE" : "WORKBENCH");
 		violationsIcons.addDefault(path + "phase.name", "Phase");
-		violationsIcons.addDefault(path + "phase.id", "BEDROCK");
+		violationsIcons.addDefault(path + "phase.material", "BEDROCK");
 		violationsIcons.addDefault(path + "autobot.name", "Auto bot hacks");
 		
 		if (!isAtLeastV1_13) {
-			violationsIcons.addDefault(path + "autobot.id", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			violationsIcons.addDefault(path + "autobot.material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			violationsIcons.addDefault(path + "autobot.damage", 3);
-		} else violationsIcons.addDefault(path + "autobot.id", "PLAYER_HEAD");
+		} else violationsIcons.addDefault(path + "autobot.material", "PLAYER_HEAD");
 		violationsIcons.addDefault(path + "autobot.skull-owner", "zGhostTeo");
 		violationsIcons.addDefault(path + "elytra.name", "Elytra hacks");
-		violationsIcons.addDefault(path + "elytra.id", isAtLeastV1_9 ? "ELYTRA" : "FEATHER");
+		violationsIcons.addDefault(path + "elytra.material", isAtLeastV1_9 ? "ELYTRA" : "FEATHER");
 		violationsIcons.addDefault(path + "vehicle.name", "Vehicle hacks");
-		violationsIcons.addDefault(path + "vehicle.id", "MINECART");
-		path = "violations-icons.vulcan.";
+		violationsIcons.addDefault(path + "vehicle.material", "MINECART");
+		path = "vulcan.";
 		violationsIcons.addDefault(path + "aim.name", "Aim");
-		violationsIcons.addDefault(path + "aim.id", "ARROW");
+		violationsIcons.addDefault(path + "aim.material", "ARROW");
 		violationsIcons.addDefault(path + "autoblock.name", "Auto block");
-		violationsIcons.addDefault(path + "autoblock.id", "IRON_CHESTPLATE");
+		violationsIcons.addDefault(path + "autoblock.material", "IRON_CHESTPLATE");
 		violationsIcons.addDefault(path + "autoclicker.name", "Auto clicker");
-		violationsIcons.addDefault(path + "autoclicker.id",  Environment.isBukkit() || isAtLeastV1_13 ? "COMPARATOR" : "REDSTONE_COMPARATOR");
+		violationsIcons.addDefault(path + "autoclicker.material",  Environment.isBukkit() || isAtLeastV1_13 ? "COMPARATOR" : "REDSTONE_COMPARATOR");
 		violationsIcons.addDefault(path + "fastbow.name", "Fast bow");
-		violationsIcons.addDefault(path + "fastbow.id", "BOW");
-		violationsIcons.addDefault(path + "criticals.name", "Criticals");
-		violationsIcons.addDefault(path + "criticals.id", "IRON_SWORD");
+		violationsIcons.addDefault(path + "fastbow.material", "BOW");
 		violationsIcons.addDefault(path + "hitbox.name", "Hitbox");
-		violationsIcons.addDefault(path + "hitbox.id", "GLASS");
+		violationsIcons.addDefault(path + "hitbox.material", "GLASS");
 		violationsIcons.addDefault(path + "killaura.name", "Killaura");
-		violationsIcons.addDefault(path + "killaura.id", "DIAMOND_SWORD");
+		violationsIcons.addDefault(path + "killaura.material", "DIAMOND_SWORD");
 		violationsIcons.addDefault(path + "reach.name", "Reach");
-		violationsIcons.addDefault(path + "reach.id", "FISHING_ROD");
+		violationsIcons.addDefault(path + "reach.material", "FISHING_ROD");
 		violationsIcons.addDefault(path + "velocity.name", "Velocity");
-		violationsIcons.addDefault(path + "velocity.id", Environment.isBukkit() ? isAtLeastV1_13 ? "FIREWORK_ROCKET" : "FIREWORK" : "FIREWORKS");
+		violationsIcons.addDefault(path + "velocity.material", Environment.isBukkit() ? isAtLeastV1_13 ? "FIREWORK_ROCKET" : "FIREWORK" : "FIREWORKS");
+		violationsIcons.addDefault(path + "criticals.name", "Criticals");
+		violationsIcons.addDefault(path + "criticals.material", "IRON_SWORD");
 		violationsIcons.addDefault(path + "boatfly.name", "Boat fly");
-		violationsIcons.addDefault(path + "boatfly.id", isAtLeastV1_13 ? "OAK_BOAT" : "BOAT");
+		violationsIcons.addDefault(path + "boatfly.material", isAtLeastV1_13 ? "OAK_BOAT" : "BOAT");
 		violationsIcons.addDefault(path + "antilevitation.name", "Anti levitation");
 		
 		if (!isAtLeastV1_13) {
-			violationsIcons.addDefault(path + "antilevitation.id", Environment.isBukkit() ? "INK_SACK" : "DYE");
+			violationsIcons.addDefault(path + "antilevitation.material", Environment.isBukkit() ? "INK_SACK" : "DYE");
 			violationsIcons.addDefault(path + "antilevitation.damage", 15);
-		} else violationsIcons.addDefault(path + "antilevitation.id", "BONE_MEAL");
+		} else violationsIcons.addDefault(path + "antilevitation.material", "BONE_MEAL");
 		violationsIcons.addDefault(path + "nosaddle.name", "No saddle");
-		violationsIcons.addDefault(path + "nosaddle.id", "SADDLE");
+		violationsIcons.addDefault(path + "nosaddle.material", "SADDLE");
 		violationsIcons.addDefault(path + "entityspeed.name", "Entity speed");
-		violationsIcons.addDefault(path + "entityspeed.id", "MINECART");
+		violationsIcons.addDefault(path + "entityspeed.material", "MINECART");
 		violationsIcons.addDefault(path + "entityflight.name", "Entity flight");
-		violationsIcons.addDefault(path + "entityflight.id", "MINECART");
+		violationsIcons.addDefault(path + "entityflight.material", "MINECART");
 		violationsIcons.addDefault(path + "elytra.name", "Elytra");
-		violationsIcons.addDefault(path + "elytra.id", isAtLeastV1_13 ? "ELYTRA" : "FEATHER");
+		violationsIcons.addDefault(path + "elytra.material", isAtLeastV1_13 ? "ELYTRA" : "FEATHER");
 		violationsIcons.addDefault(path + "fastclimb.name", "Fast climb");
-		violationsIcons.addDefault(path + "fastclimb.id", "LADDER");
+		violationsIcons.addDefault(path + "fastclimb.material", "LADDER");
 		violationsIcons.addDefault(path + "flight.name", "Flight");
-		violationsIcons.addDefault(path + "flight.id", "FEATHER");
+		violationsIcons.addDefault(path + "flight.material", "FEATHER");
 		violationsIcons.addDefault(path + "jesus.name", "Jesus");
-		violationsIcons.addDefault(path + "jesus.id", "WATER_BUCKET");
+		violationsIcons.addDefault(path + "jesus.material", "WATER_BUCKET");
 		violationsIcons.addDefault(path + "jump.name", "Jump");
-		violationsIcons.addDefault(path + "jump.id", "SLIME_BALL");
+		violationsIcons.addDefault(path + "jump.material", "SLIME_BALL");
 		violationsIcons.addDefault(path + "motion.name", "Motion");
-		violationsIcons.addDefault(path + "motion.id", isAtLeastV1_13 ? "GOLD_BOOTS" : "GOLDEN_BOOTS");
+		violationsIcons.addDefault(path + "motion.material", Environment.isSponge() || isAtLeastV1_13 ? "GOLDEN_BOOTS" : "GOLD_BOOTS");
 		violationsIcons.addDefault(path + "noslow.name", "No slow");
-		violationsIcons.addDefault(path + "noslow.id", isAtLeastV1_13 ? "WEB" : "COBWEB");
+		violationsIcons.addDefault(path + "noslow.material", isAtLeastV1_13 ? "WEB" : "COBWEB");
 		violationsIcons.addDefault(path + "speed.name", "Speed");
-		violationsIcons.addDefault(path + "speed.id", "PACKED_ICE");
+		violationsIcons.addDefault(path + "speed.material", "PACKED_ICE");
 		violationsIcons.addDefault(path + "step.name", "Step");
-		violationsIcons.addDefault(path + "step.id", "LEATHER_BOOTS");
+		violationsIcons.addDefault(path + "step.material", "LEATHER_BOOTS");
 		violationsIcons.addDefault(path + "sprint.name", "Sprint");
-		violationsIcons.addDefault(path + "sprint.id", "CHAINMAIL_BOOTS");
+		violationsIcons.addDefault(path + "sprint.material", "CHAINMAIL_BOOTS");
 		violationsIcons.addDefault(path + "strafe.name", "Strafe");
-		violationsIcons.addDefault(path + "strafe.id", "IRON_BOOTS");
+		violationsIcons.addDefault(path + "strafe.material", "IRON_BOOTS");
 		violationsIcons.addDefault(path + "wallclimb.name", "Wall climb");
-		violationsIcons.addDefault(path + "wallclimb.id", "LADDER");
+		violationsIcons.addDefault(path + "wallclimb.material", "LADDER");
+		violationsIcons.addDefault(path + "vclip.name", "Vertical clip");
+		violationsIcons.addDefault(path + "vclip.material", "FEATHER");
 		violationsIcons.addDefault(path + "ghosthand.name", "Ghost hand");
 		
 		if (!isAtLeastV1_13) {
-			violationsIcons.addDefault(path + "ghosthand.id", "BED");
+			violationsIcons.addDefault(path + "ghosthand.material", "BED");
 			
 			if (VersionUtils.getVersion().isAtLeast(Version.V1_12))
 				violationsIcons.addDefault(path + "ghosthand.damage", 14);
-		} else violationsIcons.addDefault(path + "ghosthand.id", "RED_BED");
-		violationsIcons.addDefault(path + "crash.name", "Crash");
-		violationsIcons.addDefault(path + "crash.id", Environment.isSponge() || isAtLeastV1_13 ? "COMMAND_BLOCK" : "COMMAND");
+		} else violationsIcons.addDefault(path + "ghosthand.material", "RED_BED");
 		violationsIcons.addDefault(path + "baritone.name", "Baritone");
 		
 		if (!isAtLeastV1_13) {
-			violationsIcons.addDefault(path + "baritone.id", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			violationsIcons.addDefault(path + "baritone.material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			violationsIcons.addDefault(path + "baritone.damage", 3);
-		} else violationsIcons.addDefault(path + "baritone.id", "PLAYER_HEAD");
+		} else violationsIcons.addDefault(path + "baritone.material", "PLAYER_HEAD");
 		violationsIcons.addDefault(path + "baritone.skull-owner", "zGhostTeo");
 		violationsIcons.addDefault(path + "badpackets.name", "Bad packets");
-		violationsIcons.addDefault(path + "badpackets.id", Environment.isSponge() || isAtLeastV1_13 ? "TNT_MINECART" : "EXPLOSIVE_MINECART");
+		violationsIcons.addDefault(path + "badpackets.material", Environment.isSponge() || isAtLeastV1_13 ? "TNT_MINECART" : "EXPLOSIVE_MINECART");
 		violationsIcons.addDefault(path + "fastplace.name", "Fast place");
-		violationsIcons.addDefault(path + "fastplace.id", Environment.isBukkit() && isAtLeastV1_13 ? "GRASS_BLOCK" : "GRASS");
+		violationsIcons.addDefault(path + "fastplace.material", Environment.isBukkit() && isAtLeastV1_13 ? "GRASS_BLOCK" : "GRASS");
 		violationsIcons.addDefault(path + "fastbreak.name", "Fast break");
-		violationsIcons.addDefault(path + "fastbreak.id", "DIAMOND_PICKAXE");
-		violationsIcons.addDefault(path + "fastuse.name", "Fast use");
-		violationsIcons.addDefault(path + "fastuse.id", Environment.isSponge() || isAtLeastV1_13 ? "CRAFTING_TABLE" : "WORKBENCH");
+		violationsIcons.addDefault(path + "fastbreak.material", "DIAMOND_PICKAXE");
 		violationsIcons.addDefault(path + "groundspoof.name", "Ground spoof");
-		violationsIcons.addDefault(path + "groundspoof.id", "DIAMOND_BOOTS");
-		violationsIcons.addDefault(path + "interact.name", "Interact");
-		violationsIcons.addDefault(path + "interact.id", Environment.isSponge() || isAtLeastV1_13 ? "CRAFTING_TABLE" : "WORKBENCH");
+		violationsIcons.addDefault(path + "groundspoof.material", "DIAMOND_BOOTS");
 		violationsIcons.addDefault(path + "improbable.name", "Improbable");
 		
 		if (!isAtLeastV1_13) {
-			violationsIcons.addDefault(path + "improbable.id", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			violationsIcons.addDefault(path + "improbable.material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			violationsIcons.addDefault(path + "improbable.damage", 3);
-		} else violationsIcons.addDefault(path + "improbable.id", "PLAYER_HEAD");
+		} else violationsIcons.addDefault(path + "improbable.material", "PLAYER_HEAD");
 		violationsIcons.addDefault(path + "improbable.skull-owner", "mhf_question");
 		violationsIcons.addDefault(path + "invalid.name", "Invalid");
-		violationsIcons.addDefault(path + "invalid.id", "DIAMOND_BOOTS");
-		violationsIcons.addDefault(path + "boatglitch.name", "Boat glitch");
-		violationsIcons.addDefault(path + "boatglitch.id", isAtLeastV1_13 ? "OAK_BOAT" : "BOAT");
+		violationsIcons.addDefault(path + "invalid.material", "DIAMOND_BOOTS");
+		violationsIcons.addDefault(path + "airplace.name", "Air place");
+		violationsIcons.addDefault(path + "airplace.material", "BARRIER");
 		violationsIcons.addDefault(path + "inventory.name", "Inventory");
-		violationsIcons.addDefault(path + "inventory.id", "CHEST");
+		violationsIcons.addDefault(path + "inventory.material", "CHEST");
 		violationsIcons.addDefault(path + "scaffold.name", "Scaffold");
-		violationsIcons.addDefault(path + "scaffold.id", "LADDER");
+		violationsIcons.addDefault(path + "scaffold.material", "LADDER");
 		violationsIcons.addDefault(path + "timer.name", "Timer");
-		violationsIcons.addDefault(path + "timer.id", Environment.isSponge() || isAtLeastV1_13 ? "CLOCK" : "WATCH");
+		violationsIcons.addDefault(path + "timer.material", Environment.isSponge() || isAtLeastV1_13 ? "CLOCK" : "WATCH");
 		violationsIcons.addDefault(path + "tower.name", "Tower");
-		violationsIcons.addDefault(path + "tower.id", "LADDER");
-		violationsIcons.addDefault(path + "hackedclient.name", "Hacked client");
-		violationsIcons.addDefault(path + "hackedclient.id", "BARRIER");
+		violationsIcons.addDefault(path + "tower.material", "LADDER");
+		
+		path = "negativity.";
+		violationsIcons.addDefault(path + "aimbot.name", "Aim bot");
+		violationsIcons.addDefault(path + "aimbot.material", "IRON_SWORD");
+		violationsIcons.addDefault(path + "airjump.name", "Air jump");
+		violationsIcons.addDefault(path + "airjump.material", "FEATHER");
+		violationsIcons.addDefault(path + "airplace.name", "Air place");
+		violationsIcons.addDefault(path + "airplace.material", "BARRIER");
+		violationsIcons.addDefault(path + "antiknockback.name", "Anti knockback");
+		violationsIcons.addDefault(path + "antiknockback.material", isAtLeastV1_9 ? "SHIELD" : "IRON_CHESTPLATE");
+		violationsIcons.addDefault(path + "antipotion.name", "Anti potion");
+		violationsIcons.addDefault(path + "antipotion.material", "POTION");
+		violationsIcons.addDefault(path + "autoclick.name", "Auto click");
+		violationsIcons.addDefault(path + "autoclick.material", Environment.isSponge() || isAtLeastV1_13 ? "COMPARATOR" : "REDSTONE_COMPARATOR");
+		violationsIcons.addDefault(path + "autosteal.name", "Auto steal");
+		violationsIcons.addDefault(path + "autosteal.material", "CHEST");
+		violationsIcons.addDefault(path + "chat.name", "Spamming");
+		violationsIcons.addDefault(path + "chat.material", Environment.isSponge() || isAtLeastV1_9 ? "WRITABLE_BOOK" : "BOOK_AND_QUILL");
+		violationsIcons.addDefault(path + "critical.name", "Critical");
+		violationsIcons.addDefault(path + "critical.material", "IRON_SWORD");
+		violationsIcons.addDefault(path + "elytrafly.name", "Elytra hacks");
+		violationsIcons.addDefault(path + "elytrafly.material", isAtLeastV1_9 ? "ELYTRA" : "FEATHER");
+		violationsIcons.addDefault(path + "fastbow.name", "Fast bow");
+		violationsIcons.addDefault(path + "fastbow.material", "BOW");
+		violationsIcons.addDefault(path + "fasteat.name", "Fast eat");
+		violationsIcons.addDefault(path + "fasteat.material", "COOKED_BEEF");
+		violationsIcons.addDefault(path + "fastladder.name", "Fast ladder");
+		violationsIcons.addDefault(path + "fastladder.material", "LADDER");
+		violationsIcons.addDefault(path + "fastplace.name", "Fast place");
+		violationsIcons.addDefault(path + "fastplace.material", Environment.isBukkit() && isAtLeastV1_13 ? "GRASS_BLOCK" : "GRASS");
+		violationsIcons.addDefault(path + "faststairs.name", "Fast stairs");
+		violationsIcons.addDefault(path + "faststairs.material", "ACACIA_STAIRS");
+		violationsIcons.addDefault(path + "fly.name", "Fly");
+		violationsIcons.addDefault(path + "fly.material", "FEATHER");
+		violationsIcons.addDefault(path + "forcefield.name", "Force field");
+		violationsIcons.addDefault(path + "forcefield.material", "ENDER_PEARL");
+		violationsIcons.addDefault(path + "groundspoof.name", "Ground spoof");
+		violationsIcons.addDefault(path + "groundspoof.material", "DIAMOND_BOOTS");
+		violationsIcons.addDefault(path + "incorrectpacket.name", "Incorrect packet");
+		violationsIcons.addDefault(path + "incorrectpacket.material", Environment.isSponge() || isAtLeastV1_13 ? "TNT_MINECART" : "EXPLOSIVE_MINECART");
+		violationsIcons.addDefault(path + "inventorymove.name", "Inventory move");
+		violationsIcons.addDefault(path + "inventorymove.material", "CHEST");
+		violationsIcons.addDefault(path + "jesus.name", "Jesus");
+		violationsIcons.addDefault(path + "jesus.material", "WATER_BUCKET");
+		violationsIcons.addDefault(path + "nofall.name", "No fall");
+		violationsIcons.addDefault(path + "nofall.material", "DIAMOND_BOOTS");
+		violationsIcons.addDefault(path + "nopitchlimit.name", "No pitch limit");
+		violationsIcons.addDefault(path + "nopitchlimit.material", Environment.isSponge() || isAtLeastV1_13 ? "ENDER_EYE" : "EYE_OF_ENDER");
+		violationsIcons.addDefault(path + "noslowdown.name", "No slow down");
+		violationsIcons.addDefault(path + "noslowdown.material", isAtLeastV1_13 ? "WEB" : "COBWEB");
+		violationsIcons.addDefault(path + "noweb.name", "No web");
+		violationsIcons.addDefault(path + "noweb.material", isAtLeastV1_13 ? "WEB" : "COBWEB");
+		violationsIcons.addDefault(path + "nuker.name", "Nuker");
+		violationsIcons.addDefault(path + "nuker.material", "TNT");
+		violationsIcons.addDefault(path + "motion.name", "Motion");
+		violationsIcons.addDefault(path + "motion.material", Environment.isSponge() || isAtLeastV1_13 ? "GOLDEN_BOOTS" : "GOLD_BOOTS");
+		violationsIcons.addDefault(path + "pingspoof.name", "Ping spoof");
+		violationsIcons.addDefault(path + "pingspoof.material", "ENDER_PEARL");
+		violationsIcons.addDefault(path + "phase.name", "Phase");
+		violationsIcons.addDefault(path + "phase.material", "BEDROCK");
+		violationsIcons.addDefault(path + "reach.name", "Reach");
+		violationsIcons.addDefault(path + "reach.material", "FISHING_ROD");
+		violationsIcons.addDefault(path + "regen.name", "Regen");
+		violationsIcons.addDefault(path + "regen.material", "GOLDEN_APPLE");
+		violationsIcons.addDefault(path + "scaffold.name", "Scaffold");
+		violationsIcons.addDefault(path + "scaffold.material", "LADDER");
+		violationsIcons.addDefault(path + "sneak.name", "Sneak");
+		violationsIcons.addDefault(path + "sneak.material", "CHAINMAIL_BOOTS");
+		violationsIcons.addDefault(path + "speed.name", "Speed");
+		violationsIcons.addDefault(path + "speed.material", "PACKED_ICE");
+		violationsIcons.addDefault(path + "strafe.name", "Strafe");
+		violationsIcons.addDefault(path + "strafe.material", "IRON_BOOTS");
+		violationsIcons.addDefault(path + "spider.name", "Spider");
+		violationsIcons.addDefault(path + "spider.material", "LADDER");
+		violationsIcons.addDefault(path + "step.name", "Step");
+		violationsIcons.addDefault(path + "step.material", "LEATHER_BOOTS");
+		violationsIcons.addDefault(path + "superknockback.name", "Super knockback");
+		violationsIcons.addDefault(path + "superknockback.material", isAtLeastV1_9 ? "SHIELD" : "IRON_CHESTPLATE");
+		violationsIcons.addDefault(path + "timer.name", "Timer");
+		violationsIcons.addDefault(path + "timer.material", Environment.isSponge() || isAtLeastV1_13 ? "CLOCK" : "WATCH");
+		violationsIcons.addDefault(path + "unexpectedpacket.name", "Unexpected packet");
+		violationsIcons.addDefault(path + "unexpectedpacket.material", Environment.isSponge() || isAtLeastV1_13 ? "TNT_MINECART" : "EXPLOSIVE_MINECART");
+		violationsIcons.addDefault(path + "xray.name", "X-ray");
+		violationsIcons.addDefault(path + "xray.material", "DIAMOND_ORE");
 		
 		violationsIcons.save();
 	}
@@ -2046,49 +2133,50 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		motd.addDefault("motd.minimum-supported-version-protocol", 47);
 		motd.addDefault("motd.server-socket.address", "127.0.0.1");
 		motd.addDefault("motd.server-socket.port", 25599);
-		motd.addDefault("motd.max-players.one-more-instead-of-fixed-value", false);
+		motd.addDefault("motd.max-players.one-more-instead-of-fixed-value", true);
 		motd.addDefault("motd.max-players.fixed-value", 500);
+		motd.addDefault("motd.header-placeholders.english", "&1Another ChatPlugin server");
+		motd.addDefault("motd.header-placeholders.italian", "&1Un altro server con ChatPlugin");
 		
-		
-		motd.addDefault("motd.unknown-player.icon-url", "https://i.imgur.com/Md3OFay.png");
-		motd.addDefault("motd.unknown-player.descriptions.english", Arrays.asList("&1Another ChatPlugin server\n&7This is the default description."));
-		motd.addDefault("motd.unknown-player.descriptions.italian", Arrays.asList("&1Un altro server con ChatPlugin\n&7Questa è la descrizione predefinita."));
+		motd.addDefault("motd.unknown-player.icon-url", "https://i.imgur.com/s8OGafW.png");
+		motd.addDefault("motd.unknown-player.descriptions.english", Arrays.asList("{header}\n&7This is the default description."));
+		motd.addDefault("motd.unknown-player.descriptions.italian", Arrays.asList("{header}\n&7Questa è la descrizione predefinita."));
 		motd.addDefault("motd.unknown-player.hovers.enabled", true);
 		motd.addDefault("motd.unknown-player.hovers.values.english", Arrays.asList("&eWelcome to our server!\n&f{online_total} &eplayers are currently online."));
 		motd.addDefault("motd.unknown-player.hovers.values.italian", Arrays.asList("&eBenvenuti nel nostro server!\n&f{online_total} &egiocatori sono online al momento."));
-		motd.addDefault("motd.unknown-player.version-names.enabled", true);
+		motd.addDefault("motd.unknown-player.version-names.enabled", false);
 		motd.addDefault("motd.unknown-player.version-names.values.english", Arrays.asList("&7{online_total}&8/&7{online_total_plus_one}"));
 		motd.addDefault("motd.unknown-player.version-names.values.italian", Arrays.asList("&7{online_total}&8/&7{online_total_plus_one}"));
 		
-		motd.addDefault("motd.stored-player.icon-url", "https://i.imgur.com/Md3OFay.png");
-		motd.addDefault("motd.stored-player.descriptions.english", Arrays.asList("&1Another ChatPlugin server\n&7Welcome back, &f{player}&7!"));
-		motd.addDefault("motd.stored-player.descriptions.italian", Arrays.asList("&1Un altro server con ChatPlugin\n&7Bentornati, &f{player}&7!"));
+		motd.addDefault("motd.stored-player.icon-url", "https://i.imgur.com/s8OGafW.png");
+		motd.addDefault("motd.stored-player.descriptions.english", Arrays.asList("{header}\n&7Welcome back, &f{player}&7!"));
+		motd.addDefault("motd.stored-player.descriptions.italian", Arrays.asList("{header}\n&7Bentornati, &f{player}&7!"));
 		motd.addDefault("motd.stored-player.hovers.enabled", true);
 		motd.addDefault("motd.stored-player.hovers.values.english", Arrays.asList("&eWelcome back to our server, &f{player}&e!\n&f{online_total} &eplayers are currently online."));
 		motd.addDefault("motd.stored-player.hovers.values.italian", Arrays.asList("&eBentornati nel nostro server, &f{player}&e!\n&f{online_total} &egiocatori sono online al momento."));
-		motd.addDefault("motd.stored-player.version-names.enabled", true);
+		motd.addDefault("motd.stored-player.version-names.enabled", false);
 		motd.addDefault("motd.stored-player.version-names.values.english", Arrays.asList("&7{online_total}&8/&7{online_total_plus_one}"));
 		motd.addDefault("motd.stored-player.version-names.values.italian", Arrays.asList("&7{online_total}&8/&7{online_total_plus_one}"));
 		
 		motd.addDefault("motd.banned-player.enabled", true);
 		motd.addDefault("motd.banned-player.icon-url", "https://i.imgur.com/WcoT6SB.png");
-		motd.addDefault("motd.banned-player.descriptions.english", Arrays.asList("&1Another ChatPlugin server\n&4You are still banned for &f{remaining_time}&4."));
-		motd.addDefault("motd.banned-player.descriptions.italian", Arrays.asList("&1Un altro server con ChatPlugin\n&4Siete ancora bannati per &f{remaining_time}&4."));
+		motd.addDefault("motd.banned-player.descriptions.english", Arrays.asList("{header}\n&4You are still banned for &f{remaining_time}&4."));
+		motd.addDefault("motd.banned-player.descriptions.italian", Arrays.asList("{header}\n&4Siete ancora bannati per &f{remaining_time}&4."));
 		motd.addDefault("motd.banned-player.hovers.enabled", true);
 		motd.addDefault("motd.banned-player.hovers.values.english", Arrays.asList("&eLooks like you're banned, &f{player}&e...\n&f{online_total} &eplayers are currently online."));
 		motd.addDefault("motd.banned-player.hovers.values.italian", Arrays.asList("&eSembra che siate bannati, &f{player}&e...\n&f{online_total} &egiocatori sono online al momento."));
-		motd.addDefault("motd.banned-player.version-names.enabled", true);
+		motd.addDefault("motd.banned-player.version-names.enabled", false);
 		motd.addDefault("motd.banned-player.version-names.values.english", Arrays.asList("&7{online_total}&8/&7{online_total_plus_one}"));
 		motd.addDefault("motd.banned-player.version-names.values.italian", Arrays.asList("&7{online_total}&8/&7{online_total_plus_one}"));
 		
 		motd.addDefault("motd.outdated-version.enabled", true);
 		motd.addDefault("motd.outdated-version.icon-url", "https://i.imgur.com/zDO8ZbZ.png");
-		motd.addDefault("motd.outdated-version.descriptions.english", Arrays.asList("&1Another ChatPlugin server\n&cVersion &f{version} &cis outdated, try with a newer one."));
-		motd.addDefault("motd.outdated-version.descriptions.italian", Arrays.asList("&1Un altro server con ChatPlugin\n&cLa versione &f{version} &cè obsoleta, provane una più nuova."));
+		motd.addDefault("motd.outdated-version.descriptions.english", Arrays.asList("{header}\n&cVersion &f{version} &cis outdated, try with a newer one."));
+		motd.addDefault("motd.outdated-version.descriptions.italian", Arrays.asList("{header}\n&cLa versione &f{version} &cè obsoleta, provane un'altra."));
 		motd.addDefault("motd.outdated-version.hovers.enabled", true);
 		motd.addDefault("motd.outdated-version.hovers.values.english", Arrays.asList("&eVersion &f{version} &eis outdated.\n&f{online_total} &eplayers are currently online."));
 		motd.addDefault("motd.outdated-version.hovers.values.italian", Arrays.asList("&eLa versione &f{version} &eè obsoleta.\n&f{online_total} &egiocatori sono online al momento."));
-		motd.addDefault("motd.outdated-version.version-names.enabled", true);
+		motd.addDefault("motd.outdated-version.version-names.enabled", false);
 		motd.addDefault("motd.outdated-version.version-names.values.english", Arrays.asList("&4Outdated version"));
 		motd.addDefault("motd.outdated-version.version-names.values.italian", Arrays.asList("&4Versione obsoleta"));
 		
@@ -2116,7 +2204,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "messages.main.";
 		
 		discordIntegration.addDefault(path + "help.title.text", "Help for ChatPlugin");
-		discordIntegration.addDefault(path + "help.description", "Click [here](https://github.com/ChatPlugin/ChatPlugin/wiki/Discord-integration#commands) to visit the wiki with the commands list.");
+		discordIntegration.addDefault(path + "help.description", "Click [here](https://remigio07.me/chatplugin/wiki/modules/Discord-integration#commands) to visit the wiki with the commands list.");
 		discordIntegration.addDefault(path + "help.thumbnail", "https://i.imgur.com/9NhY4ps.png");
 		discordIntegration.addDefault(path + "help.color", "55FF55");
 		discordIntegration.addDefault(path + "info.title.text", "Info and contacts for ChatPlugin");
@@ -2387,7 +2475,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		telegramIntegration.addDefault("settings.status.value", "Playing with {online_minecraft} other players.");
 		telegramIntegration.addDefault("settings.status.update-timeout-ms", 30000L);
 		
-		telegramIntegration.addDefault("messages.main.help", "\u2754 Help for ChatPlugin\n\nClick <a href=\"https://github.com/ChatPlugin/ChatPlugin/wiki/Telegram-integration#commands\">here</a> to visit the wiki with the commands list.");
+		telegramIntegration.addDefault("messages.main.help", "\u2754 Help for ChatPlugin\n\nClick <a href=\"https://remigio07.me/chatplugin/wiki/modules/Telegram-integration#commands\">here</a> to visit the wiki with the commands list.");
 		telegramIntegration.addDefault("messages.main.info", "\u2139\uFE0F Info and contacts for ChatPlugin\n\n<strong>Website:</strong> https://remigio07.me/chatplugin\n<strong>GitHub:</strong> https://github.com/ChatPlugin/ChatPlugin\n<strong>Discord:</strong> https://discord.gg/CPtysXTfQg");
 		telegramIntegration.addDefault("messages.main.status", "\u2139\uFE0F Current server status\n\n<strong>OS:</strong> {os_name} {os_version}, <strong>Java:</strong> {java_version}\n<strong>Environment:</strong> {environment} {environment_version}\n<strong>ChatPlugin:</strong> {chatplugin_version}, <strong>Java Telegram Bot API version:</strong> {java_telegram_bot_api_version}\n<strong>Uptime:</strong> {uptime}\n<strong>Used memory:</strong> {used_memory}/{max_memory} MB\n<strong>Allocated:</strong> {total_memory} MB, <strong>free:</strong> {free_memory} MB\n<strong>Current threads count:</strong> {active_threads}x\n<strong>Used storage:</strong> {used_storage}/{total_storage} GB\n<strong>Free storage:</strong> {free_storage} GB\n<strong>Enabled players:</strong> {enabled_players}x\n<strong>Startup:</strong> {startup_time} ms, <strong>last reload:</strong> {last_reload_time} ms");
 		telegramIntegration.addDefault("messages.main.version", "\u2699\uFE0F Current plugin version\n\n<strong>ChatPlugin version:</strong> {chatplugin_version}\n<strong>Java Telegram Bot API version:</strong> {java_telegram_bot_api_version}");

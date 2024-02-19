@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.storage.database;
@@ -141,29 +141,25 @@ public abstract class DatabaseConnector extends StorageConnector {
 	}
 	
 	@Override
-	public int getNextID(DataContainer table) throws SQLException {
-		if (table == DataContainer.CHAT_MESSAGES || table == DataContainer.PRIVATE_MESSAGES)
-			throw new IllegalArgumentException("Unable to get next ID in table " + table.getDatabaseTableID() + " since that table does not have IDs");
-		Number id = get("SELECT MAX(" + table.getIDColumn() + ") FROM " + table.getDatabaseTableID(), 1, Number.class);
-		return id == null ? 1 : (id.intValue() + 1);
-	}
-	
-	@Override
 	public void removeEntry(DataContainer table, int id) throws SQLException {
 		if (table == DataContainer.CHAT_MESSAGES || table == DataContainer.PRIVATE_MESSAGES)
 			throw new IllegalArgumentException("Unable to remove entry in table " + table.getDatabaseTableID() + " using an ID since that table does not have IDs");
 		executeUpdate("DELETE FROM " + table.getDatabaseTableID() + " WHERE " + table.getIDColumn() + " = ?", id);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable(why = "Stored data may be SQL NULL")
 	public <T> T getPlayerData(PlayersDataType<T> type, OfflinePlayer player) throws SQLException {
-		return get("SELECT " + type.getDatabaseTableID() + " FROM " + DataContainer.PLAYERS.getDatabaseTableID() + " WHERE player_uuid = ?", type.getDatabaseTableID(), type.getType(), player.getUUID().toString());
+		Object data = get("SELECT " + type.getDatabaseTableID() + " FROM " + DataContainer.PLAYERS.getDatabaseTableID() + " WHERE player_uuid = ?", type.getDatabaseTableID(), type.getType(), player.getUUID().toString());
+		return (T) (type.getType() == long.class && data instanceof Integer ? new Long((int) data) : data);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getPlayerData(PlayersDataType<T> type, int playerID) throws SQLException {
-		return get("SELECT " + type.getDatabaseTableID() + " FROM " + DataContainer.PLAYERS.getDatabaseTableID() + " WHERE id = ?", type.getDatabaseTableID(), type.getType(), playerID);
+		Object data = get("SELECT " + type.getDatabaseTableID() + " FROM " + DataContainer.PLAYERS.getDatabaseTableID() + " WHERE id = ?", type.getDatabaseTableID(), type.getType(), playerID);
+		return (T) (type.getType() == long.class && data instanceof Integer ? new Long((int) data) : data);
 	}
 	
 	@Override
@@ -494,13 +490,5 @@ public abstract class DatabaseConnector extends StorageConnector {
 	public static DatabaseConnector getInstance() {
 		return (DatabaseConnector) instance;
 	}
-	
-	/**
-	 * Gets the database engine's version.
-	 * 
-	 * @return Engine's version
-	 * @throws SQLException If something goes wrong
-	 */
-	public abstract String getEngineVersion() throws SQLException;
 	
 }

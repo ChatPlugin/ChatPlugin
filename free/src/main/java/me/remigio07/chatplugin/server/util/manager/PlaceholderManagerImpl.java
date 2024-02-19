@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.util.manager;
@@ -197,7 +197,7 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 		if (output.contains("{uuid}"))
 			output = output.replace("{uuid}", player.getUUID().toString());
 		if (output.contains("{ip_address}"))
-			output = output.replace("{ip_address}", player.getIPAddress().getHostName());
+			output = output.replace("{ip_address}", player.getIPAddress().getHostAddress());
 		if (output.contains("{health}"))
 			output = output.replace("{health}", String.valueOf((int) (Environment.isBukkit() ? player.toAdapter().bukkitValue().getHealth() : player.toAdapter().spongeValue().health().get())));
 		if (output.contains("{max_health}"))
@@ -231,7 +231,7 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 		if (output.contains("{world}"))
 			output = output.replace("{world}", player.getWorld());
 		if (output.contains("{online_world}"))
-			output = output.replace("{online_world}", String.valueOf(Utils.getOnlineWorld(player.getWorld())));
+			output = output.replace("{online_world}", String.valueOf(VanishManager.getInstance().getOnlineWorld(player.getWorld())));
 		if (output.contains("{vanished_world}"))
 			output = output.replace("{vanished_world}", String.valueOf(VanishManager.getInstance().getVanishedList(player.getWorld()).size()));
 		if (output.contains("{player_id}"))
@@ -377,13 +377,13 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 					.replace("{tps_1_min_format}", tpsManager.formatTPS(TPSTimeInterval.ONE_MINUTE, language))
 					.replace("{tps_5_min_format}", tpsManager.formatTPS(TPSTimeInterval.FIVE_MINUTES, language))
 					.replace("{tps_15_min_format}", tpsManager.formatTPS(TPSTimeInterval.FIFTEEN_MINUTES, language));
-		} if (output.contains("_memory}") || output.contains("{cpu_cores}")) {
+		} if (output.contains("_memory}") || output.contains("{cpu_threads}")) {
 			output = output
 					.replace("{max_memory}", MemoryUtils.formatMemory(runtime.maxMemory()))
 					.replace("{total_memory}", MemoryUtils.formatMemory(runtime.totalMemory()))
 					.replace("{used_memory}", MemoryUtils.formatMemory(runtime.totalMemory() - runtime.freeMemory()))
 					.replace("{free_memory}", MemoryUtils.formatMemory(runtime.freeMemory()))
-					.replace("{cpu_cores}", String.valueOf(runtime.availableProcessors()));
+					.replace("{cpu_threads}", String.valueOf(runtime.availableProcessors()));
 		} if (output.contains("{discord_punishments_channel_id}"))
 			output = output.replace("{discord_punishments_channel_id}", String.valueOf(DiscordIntegrationManager.getInstance().isEnabled() ? DiscordIntegrationManager.getInstance().getPunishmentsChannelID() : -1));
 		if (output.contains("{discord_staff_notifications_channel_id}"))

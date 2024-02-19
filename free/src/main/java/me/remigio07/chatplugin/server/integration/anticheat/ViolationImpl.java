@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.integration.anticheat;
@@ -19,41 +19,53 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
-import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.server.integration.anticheat.AnticheatIntegration;
 import me.remigio07.chatplugin.api.server.integration.anticheat.Violation;
 import me.remigio07.chatplugin.api.server.language.Language;
-import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.manager.PingManager;
 import me.remigio07.chatplugin.api.server.util.manager.TPSManager;
 
 public class ViolationImpl extends Violation {
 	
-	public ViolationImpl(ChatPluginServerPlayer cheater, String server, IntegrationType<AnticheatIntegration> anticheat, String cheatID, String component, int amount, int ping, int versionProtocol, boolean versionPreNettyRewrite, double tps) {
-		super(cheater, server, anticheat, cheatID, component, amount, ping, versionProtocol, versionPreNettyRewrite, tps);
+	public ViolationImpl(OfflinePlayer cheater, IntegrationType<AnticheatIntegration> anticheat, String cheatID) {
+		super(cheater, anticheat, cheatID);
 	}
 	
+	@Override
 	public String formatPlaceholders(String input, Language language) {
 		return input
-				.replace("{player}", cheater.getName())
-				.replace("{player_uuid}", cheater.getUUID().toString())
-				.replace("{server}", server)
+				.replace("{cheater}", cheater.getName())
+				.replace("{cheater_uuid}", cheater.getUUID().toString())
 				.replace("{anticheat}", anticheat.getPlugin())
-				.replace("{cheat_id}", ConfigurationType.VIOLATIONS_ICONS.get().translateString(anticheat.name().toLowerCase() + "." + cheatID.toLowerCase() +  ".name"))
+				.replace("{cheat_id}", cheatID)
+				.replace("{cheat_display_name}", getCheatDisplayName())
 				.replace("{component}", component)
+				.replace("{server}", server)
 				.replace("{amount}", String.valueOf(amount))
 				.replace("{ping}", String.valueOf(ping))
 				.replace("{ping_format}", PingManager.getInstance().formatPing(ping, language))
-				.replace("{version}", Version.getVersion(versionProtocol, versionPreNettyRewrite).format())
-				.replace("{version_protocol}", String.valueOf(versionProtocol))
 				.replace("{tps}", TPSManager.getInstance().formatTPS(tps, language))
+				.replace("{version}", version.format())
+				.replace("{version_protocol}", String.valueOf(version.getProtocol()))
 				.replace("{last_time}", Utils.formatTime(System.currentTimeMillis() - lastTime, language, false, true));
 	}
 	
+	@Override
 	public List<String> formatPlaceholders(List<String> input, Language language) {
 		return input.stream().map(str -> formatPlaceholders(str, language)).collect(Collectors.toList());
+	}
+	
+	public void updateData(String component, String server, int amount, int ping, double tps, Version version) {
+		this.component = component;
+		this.server = server;
+		this.amount = amount;
+		this.ping = ping;
+		this.tps = tps;
+		this.version = version;
+		lastTime = System.currentTimeMillis();
 	}
 	
 }

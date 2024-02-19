@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.language;
@@ -18,18 +18,11 @@ package me.remigio07.chatplugin.api.server.language;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookup;
 
 /**
- * Represents a language detector method.
- * 
- * <p>There are two methods supported:
- * 	<ul>
- * 		<li>{@link #CLIENT_LOCALE} - performed by checking the client's language settings</li>
- * 		<li>{@link #GEOLOCALIZATION} - performed through {@link IPLookup}s; check {@link Language#getCountryCodes()}</li>
- * 	</ul>
+ * Represents a language detection's method.
  * 
  * @see LanguageDetector
- * @see LanguageManager
  */
-public enum LanguageDetectorMethod {
+public enum LanguageDetectionMethod {
 	
 	/**
 	 * Detection performed by checking the client's language settings.

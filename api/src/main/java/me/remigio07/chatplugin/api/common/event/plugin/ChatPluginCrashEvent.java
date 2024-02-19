@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.event.plugin;
@@ -21,7 +21,8 @@ import me.remigio07.chatplugin.api.common.event.CancellableEvent;
 /**
  * Represents the event called when ChatPlugin crashes during a reload.
  * 
- * <p>Hopefully this event gets never fired, but if it does, you can easily cancel it using {@link #setCancelled(boolean)}.</p>
+ * <p>Hopefully this event gets never fired, but if it does, you
+ * can easily cancel it using {@link #setCancelled(boolean)}.</p>
  * 
  * @see ChatPlugin#reload()
  */

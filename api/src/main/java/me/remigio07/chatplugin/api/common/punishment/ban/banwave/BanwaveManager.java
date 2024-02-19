@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.punishment.ban.banwave;
@@ -32,13 +32,15 @@ import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.annotation.ProxyImplementationOnly;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
+import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.common.util.text.ComponentTranslator;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
- * Manager that handles {@link BanwaveEntry}(i)es. See wiki for more info:
- * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Ban-system#banwaves">ChatPlugin wiki/Ban system/Banwaves</a>
+ * Manager that handles {@link BanwaveEntry}(i)es and interacts with the storage.
+ * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Punishments#banwaves">ChatPlugin wiki/Punishments/Bans/Banwaves</a>
  */
 public abstract class BanwaveManager extends TimerTask implements ChatPluginManager {
 	
@@ -342,8 +344,9 @@ public abstract class BanwaveManager extends TimerTask implements ChatPluginMana
 	public abstract BanwaveEntry getEntry(InetAddress ipAddress, @NotNull String server);
 	
 	/**
-	 * Checks if the specified reason is contained in {@link #getReasonsStartWith()},
-	 * lowering case and stripping colors. See wiki for more info.
+	 * Checks if the specified banwave entry's reason is contained in {@link #getReasonsStartWith()}.
+	 * 
+	 * <p>Case will be lowered and colors will be stripped using {@link ChatColor#stripColor(String)}.</p>
 	 * 
 	 * <p>Will return <code>false</code> if <code>reason == null</code>.</p>
 	 * 

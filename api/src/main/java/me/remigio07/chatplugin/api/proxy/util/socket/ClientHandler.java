@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,18 +10,15 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.proxy.util.socket;
 
-import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.regex.Pattern;
@@ -64,18 +61,18 @@ public class ClientHandler extends Thread {
 				for (int i = 0; i < 49; i++) {
 					if (id != null) {
 						if (!isValidClientID(id)) {
-							new PrintWriter(output, true).println("INVALID_ID");
+							output.writeUTF("INVALID_ID");
 							LogManager.log("[SOCKETS] Client {0} has just tried to connect using ID \"{1}\" but it does not respect the required pattern: \"{2}\".", 4, socket.getInetAddress().getHostAddress() + ":" + socket.getPort(), id, CLIENT_ID_PATTERN.pattern());
 							socket.close();
 							return;
 						} for (ClientHandler clientHandler : server.getClientHandlers()) {
 							if (clientHandler.getID().equals(id)) {
-								new PrintWriter(output, true).println("ID_ALREADY_IN_USE");
+								output.writeUTF("ID_ALREADY_IN_USE");
 								LogManager.log("[SOCKETS] Client {0} has just tried to connect using ID \"{1}\" but it was already in use by {2}.", 4, socket.getInetAddress().getHostAddress() + ":" + socket.getPort(), id, clientHandler.getSocket().getInetAddress().getHostAddress() + ":" + clientHandler.getSocket().getPort());
 								socket.close();
 								return;
 							}
-						} new PrintWriter(output, true).println("SUCCESS");
+						} output.writeUTF("SUCCESS");
 						server.getClientHandlers().add(this);
 						new ClientConnectionEvent(this).call();
 						LogManager.log("[SOCKETS] Client {0} has just connected using ID \"{1}\".", 4, socket.getInetAddress().getHostAddress() + ":" + socket.getPort(), id);
@@ -85,6 +82,7 @@ public class ClientHandler extends Thread {
 						Thread.sleep(100L);
 					} catch (InterruptedException e) {
 						LogManager.log("[SOCKETS] The identification task for client {0} has been suddenly interrupted: {1}", 2, socket.getInetAddress().getHostAddress() + ":" + socket.getPort(), e.getMessage());
+						break;
 					}
 				} LogManager.log("[SOCKETS] Client {0} did not send its ID within 5000ms so it was disconnected.", 4, socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
 				socket.close();
@@ -94,8 +92,8 @@ public class ClientHandler extends Thread {
 		}).start();
 		new Thread(() -> {
 			try {
-				id = new BufferedReader(new InputStreamReader(input)).readLine();
-			} catch (Exception e) { // NPE || IOE
+				id = input.readUTF();
+			} catch (Exception e) {
 				// handled by the for loop
 			}
 		}).start();
@@ -113,11 +111,13 @@ public class ClientHandler extends Thread {
 		short bytesRead;
 		
 		try {
-			while ((bytesRead = input.readShort()) != -1) {
-				byte[] data = new byte[bytesRead];
-				
-				input.readFully(data);
-				new ServerReceivePacketEvent(this, data).call();
+			synchronized (input) {
+				while ((bytesRead = input.readShort()) != -1) {
+					byte[] data = new byte[bytesRead];
+					
+					input.readFully(data);
+					new ServerReceivePacketEvent(this, data).call();
+				}
 			}
 		} catch (SocketException | EOFException e) {
 			// disconnection
@@ -136,19 +136,15 @@ public class ClientHandler extends Thread {
 	 * Sends a packet to this client handler.
 	 * 
 	 * @param packet Packet to send
-	 * @param async Whether the call should be asynchronous
 	 */
-	public void sendPacket(PacketSerializer packet, boolean async) {
-		if (async) {
-			new Thread(() -> {
-				sendPacket(packet, false);
-			}).start();
-			return;
-		} byte[] data = packet.toArray();
+	public void sendPacket(PacketSerializer packet) {
+		byte[] data = packet.toArray();
 		
 		try {
-			output.write(data.length);
-			output.write(data);
+			synchronized (output) {
+				output.writeShort(data.length);
+				output.write(data);
+			}
 		} catch (IOException e) {
 			LogManager.log("[SOCKETS] IOException occurred while writing a packet to send to client \"{0}\": {1}", 2, id, e.getMessage());
 		}
@@ -163,9 +159,7 @@ public class ClientHandler extends Thread {
 	 */
 	@SuppressWarnings("deprecation")
 	public void disconnect(String reason) throws IOException {
-		disconnectionReason = reason;
-		
-		sendPacket(Packets.Misc.clientDisconnection(reason), false);
+		sendPacket(Packets.Misc.clientDisconnection(disconnectionReason = reason));
 		socket.close();
 	}
 	

@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.common.util;
@@ -91,20 +91,20 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 		ComponentTranslatorImpl.setInstance(new ComponentTranslatorImpl());
 	}
 	
-	public static Object getGeyserConnectorPlayer(UUID player) {
+	public static boolean isBedrockPlayer(UUID player) {
 		try {
-			Class<?> clazz = Class.forName("org.geysermc.connector.GeyserConnector");
-			return clazz.getMethod("getPlayerByUuid", UUID.class).invoke(clazz.getMethod("getInstance").invoke(null), player);
+			Class<?> GeyserApi = Class.forName("org.geysermc.geyser.api.GeyserApi");
+			return (boolean) GeyserApi.getMethod("isBedrockPlayer", UUID.class).invoke(GeyserApi.getMethod("api").invoke(null), player);
 		} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
-		} return null;
+		} return false;
 	}
 	
 	public static InputStream download(URL url) throws IOException {
 		HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 		
-		connection.setRequestProperty("User-Agent", "Mozilla/5.0 +https://github.com/ChatPlugin/ChatPlugin ChatPlugin/" + ChatPlugin.VERSION);
-		connection.setConnectTimeout(10000);
+		connection.setRequestProperty("User-Agent", "Mozilla/5.0 +https://remigio07.me/chatplugin ChatPlugin/" + ChatPlugin.VERSION);
+		connection.setConnectTimeout(5000);
 		return connection.getInputStream();
 	}
 	
@@ -149,6 +149,12 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 			sb.append(totalSeconds + (totalSeconds == 1 ? " second" : " seconds"));
 		else sb.delete(sb.length() - 2, sb.length());
 		return sb.toString();
+	}
+	
+	public static String abbreviate(String input, int length) {
+		if (input.length() <= length)
+			return input;
+		return input.substring(0, length - 3) + "...";
 	}
 	
 	public static void debugPrint(List<String> list) {

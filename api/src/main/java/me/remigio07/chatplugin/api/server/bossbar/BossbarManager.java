@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.bossbar;
@@ -35,8 +35,9 @@ import me.remigio07.chatplugin.api.server.util.GameFeature;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 
 /**
- * Manager that handles {@link Bossbar}s. See wiki for more info:
- * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Bossbars">ChatPlugin wiki/Bossbars</a>
+ * Manager that handles {@link Bossbar}s.
+ * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Bossbars">ChatPlugin wiki/Modules/Bossbars</a>
  */
 @GameFeature(
 		name = "bossbar",
@@ -71,7 +72,7 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	 */
 	public static final String TITLE_TOO_LONG = "\u00A7cTitle exceeds \u00A7f64 \u00A7cchars";
 	protected static BossbarManager instance;
-	protected boolean enabled, randomOrder, loadingBossbarEnabled;
+	protected boolean enabled, abbreviateTooLongTitles, randomOrder, loadingBossbarEnabled;
 	protected double reflectionWitherTeleportationDistance;
 	protected long reflectionWitherTeleportationTimeout, sendingTimeout, loadingBossbarSendingTimeout, timerTaskID = -1, reflectionTimerTaskID = -1, lastRunTime = -1;
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
@@ -100,6 +101,19 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	 */
 	public boolean isRandomOrder() {
 		return randomOrder;
+	}
+	
+	/**
+	 * Checks if bossbars' titles should be abbreviated by
+	 * adding "..." at the end when they are too long to
+	 * be displayed instead of {@link #TITLE_TOO_LONG}.
+	 * 
+	 * <p><strong>Found at:</strong> "bossbars.settings.abbreviate-too-long-titles" in {@link ConfigurationType#BOSSBARS}</p>
+	 * 
+	 * @return Whether to abbreviate too long titles
+	 */
+	public boolean isAbbreviateTooLongTitles() {
+		return abbreviateTooLongTitles;
 	}
 	
 	/**

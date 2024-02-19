@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.scoreboard;
@@ -32,6 +32,8 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
  * Represents a scoreboard handled by the {@link ScoreboardManager}.
+ * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Scoreboards">ChatPlugin wiki/Modules/Scoreboards</a>
  */
 public abstract class Scoreboard {
 	
@@ -44,7 +46,7 @@ public abstract class Scoreboard {
 	protected Configuration configuration;
 	protected ScoreboardTitles titles;
 	protected ScoreboardLines lines;
-	protected boolean displayOnlyOneNumberEnabled;
+	protected boolean abbreviateTooLongText, displayOnlyOneNumberEnabled;
 	protected int displayOnlyOneNumberValue;
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
 	protected List<ChatPluginServerPlayer> players = new CopyOnWriteArrayList<>();
@@ -79,7 +81,7 @@ public abstract class Scoreboard {
 	 * Gets the configuration associated with this scoreboard.
 	 * 
 	 * <p>Will return <code>null</code> if this scoreboard was created using
-	 * {@link ScoreboardManager#createScoreboardBuilder(String, boolean, int, List)}.</p>
+	 * {@link ScoreboardManager#createScoreboardBuilder(String, boolean, boolean, int, List)}.</p>
 	 * 
 	 * @return Associated configuration
 	 */
@@ -104,6 +106,21 @@ public abstract class Scoreboard {
 	 */
 	public ScoreboardLines getLines() {
 		return lines;
+	}
+	
+	/**
+	 * Checks if text (scoreboards' lines and titles)
+	 * should be abbreviated by adding "..." at the
+	 * end when it is too long to be displayed instead
+	 * of {@link ScoreboardTitles#TITLE_TOO_LONG}
+	 * or {@link ScoreboardLines#LINE_TOO_LONG}.
+	 * 
+	 * <p><strong>Found at:</strong> "settings.abbreviate-too-long-text" in {@link #getConfiguration()}</p>
+	 * 
+	 * @return Whether to abbreviate too long text
+	 */
+	public boolean isAbbreviateTooLongText() {
+		return abbreviateTooLongText;
 	}
 	
 	/**
@@ -174,7 +191,7 @@ public abstract class Scoreboard {
 	
 	/**
 	 * Represents the builder used to create {@link Scoreboard}s using
-	 * {@link ScoreboardManager#createScoreboardBuilder(String, boolean, int, List)}.
+	 * {@link ScoreboardManager#createScoreboardBuilder(String, boolean, boolean, int, List)}.
 	 */
 	public static abstract class Builder {
 		

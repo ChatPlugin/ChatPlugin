@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.language;
@@ -26,11 +26,12 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.server.event.language.LanguageChangeEvent;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 
 /**
- * Manager that handles {@link Language}s. See wiki for more info:
- * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Languages">ChatPlugin wiki/Languages</a>
+ * Manager that handles {@link Language}s.
  * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Languages">ChatPlugin wiki/Modules/Languages</a>
  * @see LanguageDetector
  */
 public abstract class LanguageManager implements ChatPluginManager {
@@ -134,6 +135,10 @@ public abstract class LanguageManager implements ChatPluginManager {
 	/**
 	 * Sets a player's language, updates it in the storage
 	 * and reloads the player if they are loaded.
+	 * 
+	 * <p><strong>Note:</strong> you may need to obtain a new instance of the
+	 * provided player using {@link ServerPlayerManager#getPlayer(java.util.UUID)} as
+	 * they will be unloaded (which invalidates their references) and then reloaded.</p>
 	 * 
 	 * @param player Player to set the language for
 	 * @param language Language to set

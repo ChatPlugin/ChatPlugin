@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.util.manager;
@@ -23,8 +23,11 @@ import java.util.stream.Collectors;
 import com.google.common.collect.Lists;
 
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
+import me.remigio07.chatplugin.api.common.storage.StorageManager;
 import me.remigio07.chatplugin.api.common.storage.StorageMethod;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.storage.database.DatabaseManager;
+import me.remigio07.chatplugin.api.common.storage.flat_file.FlatFileManager;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.chat.ChatManager;
 
@@ -37,6 +40,8 @@ public abstract class ChatPluginManagers {
 	
 	protected static ChatPluginManagers instance;
 	protected Map<Class<? extends ChatPluginManager>, ChatPluginManager> managers = new LinkedHashMap<>();
+	protected DatabaseManager databaseManager;
+	protected FlatFileManager flatFileManager;
 	
 	/**
 	 * Gets the loaded managers map.
@@ -101,10 +106,12 @@ public abstract class ChatPluginManagers {
 	@Nullable(why = "The specified name may be invalid")
 	@Deprecated
 	public ChatPluginManager getManager(String name) {
-		for (Class<?> clazz : managers.keySet())
-			if (clazz.getSimpleName().substring(0, clazz.getSimpleName().indexOf("Manager")).equalsIgnoreCase(name))
+		for (Class<?> clazz : managers.keySet()) {
+			String clazzName = clazz.getSimpleName();
+			
+			if (clazzName.contains("Manager") && clazzName.substring(0, clazzName.indexOf("Manager")).equalsIgnoreCase(name))
 				return managers.get(clazz);
-		return null;
+		} return null;
 	}
 	
 	/**
@@ -122,17 +129,22 @@ public abstract class ChatPluginManagers {
 	/**
 	 * Reloads every reloadable manager in the list of loaded managers.
 	 * 
-	 * <p>To check if a manager is reloadable, use {@link ChatPluginManager#isReloadable()}.</p>
-	 * 
 	 * @throws ChatPluginManagerException If something goes wrong
+	 * @see ChatPluginManager#isReloadable()
 	 */
 	public void reloadManagers() throws ChatPluginManagerException {
 		List<ChatPluginManager> managers = this.managers.values().stream().filter(ChatPluginManager::isReloadable).collect(Collectors.toList());
 		
 		for (ChatPluginManager manager : Lists.reverse(managers.stream().filter(ChatPluginManager::isEnabled).collect(Collectors.toList())))
 			manager.unload();
+		
 		for (ChatPluginManager manager : managers)
-			manager.load();
+			if (manager instanceof StorageManager) {
+				StorageManager storageManager = getStorageMethod().isDatabase() ? getDatabaseManager() : getFlatFileManager();
+				
+				this.managers.put(StorageManager.class, storageManager);
+				storageManager.load();
+			} else manager.load();
 		PlayerManager.getInstance().loadOnlinePlayers();
 	}
 	
@@ -162,5 +174,9 @@ public abstract class ChatPluginManagers {
 	 * @throws ChatPluginManagerException If something goes wrong
 	 */
 	public abstract void loadManagers() throws ChatPluginManagerException;
+	
+	protected abstract DatabaseManager getDatabaseManager();
+	
+	protected abstract FlatFileManager getFlatFileManager();
 	
 }

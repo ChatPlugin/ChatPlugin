@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.util;
@@ -40,15 +40,17 @@ public class Utils extends me.remigio07.chatplugin.api.server.util.Utils {
 	@SuppressWarnings("deprecation")
 	public static void setTitle(ChatPluginServerPlayer viewer, String title, int rows) {
 		if (Environment.isBukkit()) {
-			int windowID = (int) BukkitReflection.getFieldValue("Container", BukkitReflection.getFieldValue("EntityHuman", BukkitReflection.invokeMethod("CraftHumanEntity", "getHandle", ((ChatPluginBukkitPlayer) viewer).getCraftPlayer()), VersionUtils.getVersion().isAtLeast(Version.V1_20) ? "bR" : VersionUtils.getVersion().isAtLeast(Version.V1_19_4) ? "bP" : "activeContainer", "bV", "bW", "containerMenu", "bU"), "windowId", "containerId", "j");
-			Object packet, component = BukkitReflection.invokeMethod("ChatSerializer", "a", null, "{\"text\":\"" + title + "\"}");
-			
-			if (VersionUtils.getVersion().isOlderThan(Version.V1_13))
-				packet = BukkitReflection.getInstance("PacketPlayOutOpenWindow", new Class[] { int.class, String.class, BukkitReflection.getLoadedClass("IChatBaseComponent"), int.class }, windowID, "minecraft:container", component, rows * 9);
-			else packet = BukkitReflection.getInstance("PacketPlayOutOpenWindow", new Class[] { int.class, BukkitReflection.getLoadedClass("Containers"), BukkitReflection.getLoadedClass("IChatBaseComponent") }, windowID, VersionUtils.getVersion().isAtLeast(Version.V1_14) ? BukkitReflection.getFieldValue("Containers", null, "GENERIC_9X" + rows, ATTEMPTS[rows - 1]) : ("minecraft:generic_9x" + rows), component);
-			
-			viewer.sendPacket(packet);
-			viewer.toAdapter().bukkitValue().updateInventory();
+			if (VersionUtils.getVersion().isOlderThan(Version.V1_20)) {
+				int windowID = (int) BukkitReflection.getFieldValue("Container", BukkitReflection.getFieldValue("EntityHuman", BukkitReflection.invokeMethod("CraftHumanEntity", "getHandle", ((ChatPluginBukkitPlayer) viewer).getCraftPlayer()), VersionUtils.getVersion().isAtLeast(Version.V1_20_2) ? "bS" : VersionUtils.getVersion().isAtLeast(Version.V1_20) ? "bR" : VersionUtils.getVersion().isAtLeast(Version.V1_19_4) ? "bP" : "activeContainer", "bV", "bW", "containerMenu", "bU"), "windowId", "containerId", "j");
+				Object packet, component = BukkitReflection.invokeMethod("ChatSerializer", "a", null, "{\"text\":\"" + title + "\"}");
+				
+				if (VersionUtils.getVersion().isOlderThan(Version.V1_13))
+					packet = BukkitReflection.getInstance("PacketPlayOutOpenWindow", new Class[] { int.class, String.class, BukkitReflection.getLoadedClass("IChatBaseComponent"), int.class }, windowID, "minecraft:container", component, rows * 9);
+				else packet = BukkitReflection.getInstance("PacketPlayOutOpenWindow", new Class[] { int.class, BukkitReflection.getLoadedClass("Containers"), BukkitReflection.getLoadedClass("IChatBaseComponent") }, windowID, VersionUtils.getVersion().isAtLeast(Version.V1_14) ? BukkitReflection.getFieldValue("Containers", null, "GENERIC_9X" + rows, ATTEMPTS[rows - 1]) : ("minecraft:generic_9x" + rows), component);
+				
+				viewer.sendPacket(packet);
+				viewer.toAdapter().bukkitValue().updateInventory();
+			} else viewer.toAdapter().bukkitValue().getOpenInventory().setTitle(title);
 		} else {
 			Object container = viewer.toAdapter().spongeValue().getOpenInventory().get();
 			
@@ -59,6 +61,10 @@ public class Utils extends me.remigio07.chatplugin.api.server.util.Utils {
 	
 	public static TextComponent deserializeLegacy(String text, boolean translate) {
 		return LegacyComponentSerializer.legacySection().deserialize(translate ? ChatColor.translate(text) : text);
+	}
+	
+	public static String serializeLegacy(TextComponent text) {
+		return LegacyComponentSerializer.legacySection().serialize(text);
 	}
 	
 }

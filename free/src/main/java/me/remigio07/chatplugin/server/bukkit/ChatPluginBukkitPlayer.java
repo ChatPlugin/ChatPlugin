@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.bukkit;
@@ -30,7 +30,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
@@ -48,9 +47,11 @@ import me.remigio07.chatplugin.api.server.event.player.PlayerFirstJoinEvent;
 import me.remigio07.chatplugin.api.server.f3servername.F3ServerNameManager;
 import me.remigio07.chatplugin.api.server.join_quit.AccountCheckManager;
 import me.remigio07.chatplugin.api.server.language.Language;
+import me.remigio07.chatplugin.api.server.language.LanguageDetectionMethod;
 import me.remigio07.chatplugin.api.server.language.LanguageDetector;
-import me.remigio07.chatplugin.api.server.language.LanguageDetectorMethod;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
+import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.rank.RankManager;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.InventoryAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
@@ -66,7 +67,7 @@ import net.kyori.adventure.title.Title.Times;
 
 public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
-	private static BukkitAudiences audiences = ChatPlugin.getInstance().isLoaded() ? BukkitAudiences.create(BukkitBootstrapper.getInstance()) : null;
+	private static BukkitAudiences audiences;
 	private Player player;
 	private Object craftPlayer;
 	private Locale lastLocale;
@@ -74,7 +75,8 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	public ChatPluginBukkitPlayer(Player player) {
 		super(new PlayerAdapter(player));
 		this.player = player;
-		audience = audiences.player(player);
+		audience = (audiences == null ? audiences = BukkitAudiences.create(BukkitBootstrapper.getInstance()) : audiences).player(player);
+		rank = RankManager.getInstance().calculateRank(this);
 		version = version == null ? IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(toAdapter()) : VersionUtils.getVersion() : version;
 		craftPlayer = BukkitReflection.getLoadedClass("CraftPlayer").cast(player);
 		playerConnection = BukkitReflection.getFieldValue("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", craftPlayer), "playerConnection", VersionUtils.getVersion().isAtLeast(Version.V1_20) ? "c" : "b");
@@ -92,9 +94,10 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 			try {
 				storage.insertNewPlayer(this);
 			} catch (Exception e) {
+				e.printStackTrace();
 				LogManager.log("{0} occurred while inserting {1} in the storage: {2}", 2, e.getClass().getSimpleName(), name, e.getMessage());
 			} if (detector.isEnabled()) {
-				if (detector.getMethod() == LanguageDetectorMethod.CLIENT_LOCALE) {
+				if (detector.getMethod() == LanguageDetectionMethod.CLIENT_LOCALE) {
 					TaskManager.runAsync(() -> {
 						if (isLoaded()) {
 							Language detected = detector.detectUsingClientLocale(this);
@@ -156,7 +159,7 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 					int maxIPsStored = IPLookupManager.getInstance().getMaxIPsStored();
 					
 					if (lastIPAddress != null && maxIPsStored != 1) {
-						List<String> ipAddresses = Utils.getListFromString(StorageConnector.getInstance().safeSelect(DataContainer.IP_ADDRESSES, "ip_addresses", "[]", new WhereCondition("player_id", WhereOperator.EQUAL, id)));
+						List<String> ipAddresses = Utils.getListFromString(storage.select(DataContainer.IP_ADDRESSES, "ip_addresses", String.class, new WhereCondition("player_id", WhereOperator.EQUAL, id)));
 						
 						if (!ipAddresses.contains(lastIPAddress)) {
 							ipAddresses.add(0, lastIPAddress);
@@ -168,7 +171,7 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 					}
 				} storage.setPlayerData(PlayersDataType.PLAYER_IP, id, currentIPAddress);
 			} catch (SQLException | IOException e) {
-				LogManager.log("{0} occurred while getting {1}'s name or ID from the storage: {2}", 2, e.getClass().getSimpleName(), name, e.getMessage());
+				LogManager.log("{0} occurred while getting {1}'s ID, name or IP address(es) from the storage: {2}", 2, e.getClass().getSimpleName(), name, e.getMessage());
 			} if (!playerStored) {
 				if (AccountCheckManager.getInstance().isPerformOnFirstJoin())
 					AccountCheckManager.getInstance().check(this);
@@ -209,7 +212,7 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 		audience.showTitle(
 				Title.title(Utils.deserializeLegacy(title, true),
 				Utils.deserializeLegacy(subtitle, true),
-				Times.times(Duration.ofMillis(fadeIn / 50), Duration.ofMillis(stay / 50), Duration.ofMillis(fadeOut / 50)))
+				Times.times(Duration.ofMillis(fadeIn), Duration.ofMillis(stay), Duration.ofMillis(fadeOut)))
 				);
 	}
 	
@@ -247,6 +250,11 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	@Override
 	public void executeCommand(String command) {
 		Bukkit.dispatchCommand(player, command);
+	}
+	
+	@Override
+	public void teleport(ChatPluginServerPlayer player) {
+		this.player.teleport(player.toAdapter().bukkitValue());
 	}
 	
 	@Override

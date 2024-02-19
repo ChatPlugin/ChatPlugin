@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.storage;
@@ -42,7 +42,7 @@ public abstract class StorageManager implements ChatPluginManager {
 	protected StorageMethod method;
 	protected File folder;
 	protected long playersAutoCleanerPeriod = -1, loadTime;
-	protected String engineVersion; // not used - here to be read by the debugger
+	protected String engine; // not used - here to be read by the debugger
 	
 	@Override
 	public boolean isEnabled() {
@@ -68,6 +68,7 @@ public abstract class StorageManager implements ChatPluginManager {
 		method = null;
 		folder = null;
 		playersAutoCleanerPeriod = -1;
+		engine = null;
 	}
 	
 	/**

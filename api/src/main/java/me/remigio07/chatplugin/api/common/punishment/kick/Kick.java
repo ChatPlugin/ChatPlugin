@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.punishment.kick;
@@ -24,16 +24,18 @@ import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 /**
  * Represents a kick handled by the {@link KickManager}.
  * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Punishments#kicks">ChatPlugin wiki/Modules/Punishments/Kicks</a>
  * @see KickType
  */
 public abstract class Kick extends Punishment {
 	
 	/**
-	 * Array containing all available placeholders that can
-	 * be translated with a kick's information. See wiki for more info:
-	 * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Kick-system#placeholders">ChatPlugin wiki/Kick system/Placeholders</a>
+	 * Array containing all available placeholders that
+	 * can be translated with a kick's information.
 	 * 
 	 * <p><strong>Content:</strong> ["id", "player", "player_uuid", "ip_address", "staff_member", "reason", "server", "type", "date", "silent"]</p>
+	 * 
+	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Punishments#placeholders-3">ChatPlugin wiki/Punishments/Kicks/Placeholders</a>
 	 */
 	public static final String[] PLACEHOLDERS = new String[] { "id", "player", "player_uuid", "ip_address", "staff_member", "reason", "server", "type", "date", "silent" };
 	protected InetAddress ipAddress;

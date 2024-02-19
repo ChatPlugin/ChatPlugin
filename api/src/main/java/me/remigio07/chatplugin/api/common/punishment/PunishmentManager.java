@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.punishment;
@@ -31,6 +31,7 @@ import me.remigio07.chatplugin.api.server.language.Language;
 /**
  * Abstract manager that handles {@link Punishment}s and interacts with the storage.
  * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Punishments">ChatPlugin wiki/Modules/Punishments</a>
  * @see BanManager
  * @see WarningManager
  * @see KickManager
@@ -145,8 +146,8 @@ public abstract class PunishmentManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Formats a punishment's reason checking if it was not specified (<code>== null</code>):
-	 * in that case, it will be replaced with the default one set in the specified language's messages file.
+	 * Formats a punishment's reason checking if it was not specified (<code>== null</code>): in that
+	 * case, it will be replaced with the default one set in the specified language's messages file.
 	 * 
 	 * @param reason Reason to format
 	 * @param language Language used to translate the reason

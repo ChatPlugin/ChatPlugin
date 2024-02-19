@@ -125,8 +125,8 @@ commands:
         &f&l/telegrammessage &8- &eInvia un messaggio al gruppo.
   info: |-
     {pfx} &aInformazioni su &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
-    &eSito web: &fhttps://megaproserver.com/chatplugin
-    &eGitHub: &fhttps://github.com/Remigio07/ChatPlugin
+    &eSito web: &fhttps://remigio07.me/chatplugin
+    &eGitHub: &fhttps://github.com/ChatPlugin/ChatPlugin
     &eDiscord: &fhttps://discord.gg/CPtysXTfQg
   version: '{pfx} &aIn esecuzione &c&lChat&f&lPlugin {0} &fv{1} &adi &9Remigio07 &asu &f{2} {3}&a.'
   status: |-
@@ -142,7 +142,7 @@ commands:
     &eStorage libero: &f{free_storage} GB
     &eMondi abilitati: &f{enabled_worlds}x
     &eGiocatori abilitati: &f{enabled_players}x
-    &eGestori abilitati: &f{enabled_managers}x
+    &eManagers abilitati: &f{enabled_managers}x
     &eTempo di avvio: &f{startup_time} ms
     &eTempo dell'ultima ricarica: &f{last_reload_time} ms
   scoreboard:
@@ -153,7 +153,7 @@ commands:
     disabled: '{pfx} &aLa bossbar è stata disabilitata.'
   rankinfo: |-
     {pfx} &aInformazioni sul rango di &f{player}&a:
-    &eRango: &f{rank}
+    &eRango: &f{rank_display_name}
     &ePrefisso: &f{prefix}
     &eSuffisso: &f{suffix}
     &eTag: &f{tag_prefix}{tag_name_color}{player}{tag_suffix}
@@ -169,7 +169,7 @@ commands:
       no-players-online: '{pfx} &eAttualmente non ci sono giocatori online appartenenti a quel rango.'
     name-format:
       vanished: '&o'
-      not-vanished: '&f&o'
+      not-vanished: '&f'
   staff-chat:
     enabled: '{pfx} &aModalità chat Staff abilitata.'
     disabled: '{pfx} &aModalità chat Staff disabilitata.'
@@ -264,7 +264,7 @@ commands:
     &ePosizione: &f{subdivisions}
     &eCittà: &f{city} (~{accuracy_radius_km} km)
     &ePing: &f{ping_format} ms
-    &eRango: &f{rank}
+    &eRango: &f{rank_display_name}
     &eTag: &f{tag_prefix}{tag_name_color}{tag_suffix}
     &eLingua: &f{language_display_name}
     &eUltimo accesso: &f{last_login} fa
@@ -360,8 +360,8 @@ chat:
           &aMittente: &f{sender}
           &aRango: &f{rank_id}
           &aServer: &f{server}
-          &aWorld: &f{world}
-          &aDate: &f{date}
+          &aMondo: &f{world}
+          &aData: &f{date}
           &aNegato: &f{denied}
       private:
         text: '&e[{date}] &8- &f&o{content}'
@@ -378,6 +378,15 @@ chat:
       denied-format:
         'yes': '&4negato &f({deny_chat_reason})'
         'no': '&2permesso'
+    page-switcher:
+      footer: '{pfx} &aPagina &f{current_page}/{max_page}&a. Sfoglia: &r{page_switcher}'
+      invalid: '{pfx} &cPagina &f{current_page} &cnon trovata. Ultima pagina: &f{max_page}&c.'
+      previous:
+        text: '&e[« {previous_page}/{max_page}]'
+        hover: '&9[Clicca qui per tornare alla pagina {previous_page}]'
+      next:
+        text: '&e[{next_page}/{max_page} »]'
+        hover: '&9[Clicca qui per andare alla pagina {next_page}]'
 guis:
   no-permission: '{pfx} &cNon hai il permesso di utilizzare quella GUI.'
   player-went-offline: '{pfx} &f{0} &csono andati offline quindi la tua GUI aperta (&f{1}&c) è stata chiusa.'
@@ -418,12 +427,12 @@ ban:
       ip: '{pfx} &cNon puoi rimuovere entries dell''IP con questo comando. Usa invece &f/removebanwaveentryip <player|IP address>&c.'
     not-contained: '{pfx} &f{0} &cnon sono contenuti nelle entries della prossima banwave.'
   preset-reasons:
-    - Griefing non consentito
-    - Cheating
-    - Esusione ban
-    - Abuso di bugs
-    - Accounts multipli
-    - Spam di URL/indirizzo non consentito
+  - Griefing non consentito
+  - Cheating
+  - Esusione ban
+  - Abuso di bugs
+  - Accounts multipli
+  - Spam di URL/indirizzo non consentito
   unspecified-reason: Motivo non specificato.
   no-ips-stored: '{pfx} &cNon ci sono indirizzi IP memorizzati per quel giocatore.'
   offline-player: '{pfx} &cNon puoi bannare giocatori offline.'
@@ -516,10 +525,10 @@ kick:
       {pfx} &cLa sintassi è errata. Utilizzo: &f{0}&c. Opzioni aggiuntive:
       &f&l-chat &8- &econnetti al server lobby con il motivo del kick in chat.
   preset-reasons:
-    - Caps
-    - Flood
-    - Linguaggio inappropriato
-    - Insulti
+  - Caps
+  - Flood
+  - Linguaggio inappropriato
+  - Insulti
   unspecified-reason: Motivo non specificato.
   kicked:
     other: '{pfx} &f{player} &csono stati espulsi (ID: &f#{id}&c) da &f{staff_member}&c: &f{reason}&c.'
@@ -553,8 +562,8 @@ mute:
     self: '{pfx} &aIl tuo mute (ID: &f#{id}&a) è appena scaduto.'
     other: '{pfx} &f{player} &esono stati smutati (ID: &f#{id}&e).'
   unmuted:
-    self: '{pfx} &aSiete stati mutati (ID: &f#{id}&a) da &f{who_unmuted}&a.'
-    other: '{pfx} &f{player} &esono stati mutati (ID: &f#{id}&e) da &f{who_unmuted}&e.'
+    self: '{pfx} &aSiete stati smutati (ID: &f#{id}&a) da &f{who_unmuted}&a.'
+    other: '{pfx} &f{player} &esono stati smutati (ID: &f#{id}&e) da &f{who_unmuted}&e.'
   no-chat: '{pfx} &cSiete mutati (ID: &f#{id}&c) per ancora &f{remaining_time}&c: &f{reason}&c.'
   unspecified-reason: Motivo non specificato.
   cannot-mute: '{pfx} &f{0} &cnon possono essere mutati.'
@@ -681,6 +690,6 @@ proxy-messages:
   version: '{pfx} &aIn esecuzione &c&lChat&f&lPlugin &6Premium &fv{0} &adi &9Remigio07 &asu &f{1} {2}&a.'
   info: |-
     {pfx} &aInformazioni su &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
-    &eSito web: &fhttps://megaproserver.com/chatplugin
-    &eGitHub: &fhttps://github.com/Remigio07/ChatPlugin
+    &eSito web: &fhttps://remigio07.me/chatplugin
+    &eGitHub: &fhttps://github.com/ChatPlugin/ChatPlugin
     &eDiscord: &fhttps://discord.gg/CPtysXTfQg

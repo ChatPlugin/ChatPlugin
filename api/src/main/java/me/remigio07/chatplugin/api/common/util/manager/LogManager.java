@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.util.manager;
@@ -56,7 +56,7 @@ public abstract class LogManager implements ChatPluginManager {
 				file.createNewFile();
 				
 				if (freshInstallation)
-					logMessage("Fresh installation? Welcome! Generating default files for you. Follow this guide for proper installation: https://github.com/ChatPlugin/ChatPlugin/wiki/Installation-({0})", LogLevel.INFO, ChatPlugin.getInstance().isPremium() ? "premium" : "free");
+					logMessage("Fresh installation? Welcome! Generating default files for you. Follow this guide for proper installation: https://remigio07.me/chatplugin/wiki/getting-started/Installation-({0})", LogLevel.WARNING, ChatPlugin.getInstance().isPremium() ? "premium" : "free");
 			} catch (IOException e) {
 				throw new ChatPluginManagerException(this, e);
 			}
@@ -68,6 +68,7 @@ public abstract class LogManager implements ChatPluginManager {
 	@Override
 	public void unload() throws ChatPluginManagerException {
 		enabled = false;
+		
 		debug = null;
 		loggerType = null;
 		file = null;

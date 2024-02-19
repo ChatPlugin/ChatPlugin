@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.gui;
@@ -20,10 +20,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
+import me.remigio07.chatplugin.api.common.util.ValueContainer;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
@@ -50,9 +52,10 @@ public class Icon {
 	private String id, skullOwner, skullTextureURL;
 	private IconType type;
 	private MaterialAdapter material;
-	private boolean keepOpen, glowing;
-	private int amount, position;
+	private ValueContainer<Short> amount;
 	private short damage;
+	private boolean keepOpen, glowing;
+	private int position;
 	private Color leatherArmorColor;
 	private List<String> commands;
 	private List<ItemFlagAdapter> itemFlags;
@@ -63,8 +66,8 @@ public class Icon {
 	/**
 	 * Constructs a new icon specifying another icon's values.
 	 * 
-	 * <p>Note that changes made to that icon's lists, maps and leather
-	 * armor color will be reflected to this icon and vice versa.</p>
+	 * <p><strong>Note:</strong> changes made to that icon's lists, maps and
+	 * leather armor color will be reflected to this icon and vice versa.</p>
 	 * 
 	 * @param icon Icon to copy
 	 */
@@ -73,11 +76,11 @@ public class Icon {
 				icon.getID(),
 				icon.getType(),
 				icon.getMaterial(),
+				icon.getAmount(),
+				icon.getDamage(),
 				icon.isKeepOpen(),
 				icon.isGlowing(),
-				icon.getAmount(),
 				icon.getPosition(),
-				icon.getDamage(),
 				icon.getSkullOwner(),
 				icon.getSkullTextureURL(),
 				icon.getLeatherArmorColor(),
@@ -93,38 +96,38 @@ public class Icon {
 	 * Constructs a new icon specifying only the essential
 	 * options and assuming the others as their default values.
 	 * 
-	 * <p>Note that {@link GUIManager#createIcon(Configuration, String)} is capable of reading icons
-	 * from {@link Configuration}s. Use this constructor just to obtain custom icons via code.</p>
+	 * <p><strong>Note:</strong> {@link GUIManager#createIcon(Configuration, String)} is capable of reading
+	 * icons from {@link Configuration}s. Use this constructor just to obtain custom icons via code.</p>
 	 * 
 	 * @param id Icon's ID
 	 * @param type Icon's type
 	 * @param material Icon's material
+	 * @param amount Icon's items' amount [1 - 64]
+	 * @param damage Icon's items' damage [0 - max durability]
 	 * @param keepOpen Whether the GUI will remain open on click
 	 * @param glowing Whether the glowing effect should be applied
-	 * @param amount Icon's items' amount [0 - 64]
 	 * @param position Icon's position [0 - ({@link InventoryAdapter#getSize()} - 1)]
-	 * @param damage Icon's items' damage [0 - max durability]
 	 * @throws IllegalArgumentException If specified ID <code>!</code>{@link #isValidIconID(String)}
 	 */
 	public Icon(
 			String id,
 			IconType type,
 			MaterialAdapter material,
+			ValueContainer<Short> amount,
+			short damage,
 			boolean keepOpen,
 			boolean glowing,
-			int amount,
-			int position,
-			short damage
+			int position
 			) {
 		this(
 				id,
 				type,
 				material,
+				amount,
+				damage,
 				keepOpen,
 				glowing,
-				amount,
 				position,
-				damage,
 				null,
 				null,
 				null,
@@ -139,17 +142,17 @@ public class Icon {
 	/**
 	 * Constructs a new icon specifying all the available options.
 	 * 
-	 * <p>Note that {@link GUIManager#createIcon(Configuration, String)} is capable of reading icons
-	 * from {@link Configuration}s. Use this constructor just to obtain custom icons via code.</p>
+	 * <p><strong>Note:</strong> {@link GUIManager#createIcon(Configuration, String)} is capable of reading
+	 * icons from {@link Configuration}s. Use this constructor just to obtain custom icons via code.</p>
 	 * 
 	 * @param id Icon's ID
 	 * @param type Icon's type
 	 * @param material Icon's material
+	 * @param amount Icon's items' amount [1 - 64]
+	 * @param damage Icon's items' damage [0 - max durability]
 	 * @param keepOpen Whether the GUI will remain open on click
 	 * @param glowing Whether the glowing effect should be applied
-	 * @param amount Icon's items' amount [0 - 64]
 	 * @param position Icon's position [0 - ({@link InventoryAdapter#getSize()} - 1)]
-	 * @param damage Icon's items' damage [0 - max durability]
 	 * @param skullOwner Icon's skull's owner
 	 * @param skullTextureURL Icon's skull's texture's URL
 	 * @param leatherArmorColor Icon's leather armor's color
@@ -164,11 +167,11 @@ public class Icon {
 			String id,
 			IconType type,
 			MaterialAdapter material,
+			ValueContainer<Short> amount,
+			short damage,
 			boolean keepOpen,
 			boolean glowing,
-			int amount,
 			int position,
-			short damage,
 			@Nullable(why = "Skull's owner is removed when null") String skullOwner,
 			@Nullable(why = "Skull's texture's URL is removed when null") String skullTextureURL,
 			@Nullable(why = "Color is set to #A06540 when null") Color leatherArmorColor,
@@ -183,11 +186,11 @@ public class Icon {
 		this.id = id;
 		this.type = type;
 		this.material = material;
+		this.amount = amount;
+		this.damage = damage;
 		this.keepOpen = keepOpen;
 		this.glowing = glowing;
-		this.amount = amount;
 		this.position = position;
-		this.damage = damage;
 		this.skullOwner = skullOwner;
 		this.skullTextureURL = skullTextureURL;
 		this.leatherArmorColor = leatherArmorColor;
@@ -237,6 +240,46 @@ public class Icon {
 	}
 	
 	/**
+	 * Gets this icon's items' amount.
+	 * 
+	 * @return Icon's items' amount [1 - 64]
+	 */
+	public ValueContainer<Short> getAmount() {
+		return amount;
+	}
+	
+	/**
+	 * Sets this icon's items' amount.
+	 * 
+	 * @param amount Icon's items' amount [1 - 64]
+	 * @return This icon
+	 */
+	public Icon setAmount(ValueContainer<Short> amount) {
+		this.amount = amount.placeholder() == null ? amount.value() < 1 ? new ValueContainer<>((short) 1) : amount.value() > 64 ? new ValueContainer<>((short) 64) : amount : amount;
+		return this;
+	}
+	
+	/**
+	 * Gets this icon's items' damage.
+	 * 
+	 * @return Icon's items' damage [0 - max durability]
+	 */
+	public short getDamage() {
+		return damage;
+	}
+	
+	/**
+	 * Sets this icon's items' damage.
+	 * 
+	 * @param damage Icon's items' damage [0 - max durability]
+	 * @return This icon
+	 */
+	public Icon setDamage(short damage) {
+		this.damage = damage < 0 ? 0 : damage;
+		return this;
+	}
+	
+	/**
 	 * Checks if the GUI should be kept open when this icon is clicked.
 	 * 
 	 * @return Whether the GUI will remain open on click
@@ -277,26 +320,6 @@ public class Icon {
 	}
 	
 	/**
-	 * Gets this icon's items' amount.
-	 * 
-	 * @return Icon's items' amount [0 - 64]
-	 */
-	public int getAmount() {
-		return amount;
-	}
-	
-	/**
-	 * Sets this icon's items' amount.
-	 * 
-	 * @param amount Icon's items' amount [0 - 64]
-	 * @return This icon
-	 */
-	public Icon setAmount(int amount) {
-		this.amount = amount < 0 ? 0 : amount > 64 ? 64 : amount;
-		return this;
-	}
-	
-	/**
 	 * Gets this icon's position in the GUI's inventory.
 	 * 
 	 * @return Icon's position [0 - ({@link InventoryAdapter#getSize()} - 1)]
@@ -313,26 +336,6 @@ public class Icon {
 	 */
 	public Icon setPosition(int position) {
 		this.position = position < 0 ? 0 : position;
-		return this;
-	}
-	
-	/**
-	 * Gets this icon's items' damage.
-	 * 
-	 * @return Icon's items' damage [0 - max durability]
-	 */
-	public short getDamage() {
-		return damage;
-	}
-	
-	/**
-	 * Sets this icon's items' damage.
-	 * 
-	 * @param damage Icon's items' damage [0 - max durability]
-	 * @return This icon
-	 */
-	public Icon setDamage(short damage) {
-		this.damage = damage < 0 ? 0 : damage;
 		return this;
 	}
 	
@@ -381,7 +384,7 @@ public class Icon {
 	 * @param skullTextureURL Icon's skull's texture's URL
 	 * @return This icon
 	 */
-	public Icon setSkullTextureURL(@Nullable(why = "Skull's owner is removed when null") String skullTextureURL) {
+	public Icon setSkullTextureURL(@Nullable(why = "Skull's texture's URL is removed when null") String skullTextureURL) {
 		this.skullTextureURL = skullTextureURL;
 		return this;
 	}
@@ -527,25 +530,68 @@ public class Icon {
 	 * translating placeholders using {@link #formatPlaceholders(String, GUI, Language)}
 	 * and {@link #formatPlaceholders(List, GUI, Language)}.
 	 * 
+	 * <p>This method takes no time to execute but it does not consider {@link #getSkullOwner()}.
+	 * To change a player head icon skull's owner use {@link #updateSkullOwner(ItemStackAdapter, GUI, Language)}.</p>
+	 * 
+	 * <p><strong>Note:</strong> {@link #getSkullTextureURL()} is considered because it takes no time to set.</p>
+	 * 
 	 * @param gui GUI containing this icon
 	 * @param language Language used to translate the placeholders
 	 * @return New item stack
 	 */
 	public ItemStackAdapter toItemStackAdapter(GUI gui, Language language) {
+		short amount;
+		
+		if (this.amount.value() == null)
+			try {
+				amount = Short.valueOf(formatPlaceholders(this.amount.placeholder(), gui, language));
+			} catch (NumberFormatException e) {
+				amount = 1;
+			}
+		else amount = this.amount.value();
+		
 		ItemStackAdapter itemStack = new ItemStackAdapter(material, amount, damage)
 				.setDisplayName(displayNames.get(language) == null ? null : formatPlaceholders(displayNames.get(language), gui, language))
 				.setLore(lores.get(language) == null ? null : formatPlaceholders(lores.get(language), gui, language))
 				.setLeatherArmorColor(leatherArmorColor)
+				.setSkullTextureURL(skullTextureURL == null ? null : formatPlaceholders(skullTextureURL, gui, language))
 				.addItemFlags(itemFlags.toArray(new ItemFlagAdapter[0]));
 		
 		if (glowing)
 			itemStack.setGlowing();
-		if (skullTextureURL != null)
-			itemStack.setSkullTextureURL(formatPlaceholders(skullTextureURL, gui, language)); // TODO: you cannot remove skullTextureURL once set
-		else itemStack.setSkullOwner(skullOwner == null ? null : formatPlaceholders(skullOwner, gui, language));
-		
 		enchantments.forEach((enchantment, level) -> itemStack.enchant(enchantment, level));
 		return itemStack;
+	}
+	
+	/**
+	 * Sets the skull's owner for the specified item stack if it is a player head.
+	 * 
+	 * <p>When the future is completed, you need to manually set the icon to the inventory
+	 * using {@link InventoryAdapter#setItem(ItemStackAdapter, int)} to update it.</p>
+	 * 
+	 * <p>The future will be completed instantly in the following cases:
+	 * 	<ul>
+	 * 		<li><code>!</code>{@link ItemStackAdapter#isPlayerHead()}</li>
+	 * 		<li>{@link #getSkullOwner()}<code> == null</code> (when skull owner is removed)</li>
+	 * 		<li>{@link #getSkullOwner()}'s skin is cached (caching is automatic)</li>
+	 * 	</ul>
+	 * 
+	 * Otherwise it will take some time to fetch the skin.
+	 * 
+	 * @param itemStack Original item stack
+	 * @param gui GUI containing this icon
+	 * @param language Language used to translate the placeholders
+	 * @return New item stack
+	 * @see InventoryAdapter#setItem(ItemStackAdapter, int)
+	 */
+	public CompletableFuture<ItemStackAdapter> updateSkullOwner(ItemStackAdapter itemStack, GUI gui, Language language) {
+		CompletableFuture<ItemStackAdapter> future = new CompletableFuture<>();
+		
+		try {
+			itemStack.setSkullOwner(skullOwner == null ? null : formatPlaceholders(skullOwner, gui, language)).thenAccept(newItemStack -> future.complete(newItemStack));
+		} catch (IllegalArgumentException e) {
+			future.complete(itemStack);
+		} return future;
 	}
 	
 	/**

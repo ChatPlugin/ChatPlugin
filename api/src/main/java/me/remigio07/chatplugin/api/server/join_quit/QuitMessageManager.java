@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.join_quit;
@@ -33,6 +33,9 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 
 /**
  * Manager that handles quit messages.
+ * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Join-quit#quit-messages">ChatPlugin wiki/Modules/Join-quit/Quit messages</a>
+ * @see QuitPacket
  */
 public abstract class QuitMessageManager implements ChatPluginManager {
 	
@@ -106,6 +109,8 @@ public abstract class QuitMessageManager implements ChatPluginManager {
 	/**
 	 * Gets the list of players that have performed a fake quit.
 	 * 
+	 * <p>This includes players who have performed a silent teleport.</p>
+	 * 
 	 * @return Fake quits' list
 	 */
 	public List<UUID> getFakeQuits() {
@@ -154,15 +159,19 @@ public abstract class QuitMessageManager implements ChatPluginManager {
 	 * 
 	 * <p>Quit packets are used to translate placeholders of switch
 	 * and quit messages sent after a player has quit the server.</p>
+	 * 
+	 * @see SwitchMessageManager
+	 * @see QuitMessageManager
 	 */
 	public static abstract class QuitPacket {
 		
 		/**
-		 * Array containing all available placeholders that can
-		 * be translated with a packet's information. See wiki for more info:
-		 * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Join%E2%80%90quit#placeholders">ChatPlugin wiki/Join-quit/Quit messages/Placeholders</a>
+		 * Array containing all available placeholders that
+		 * can be translated with a packet's information.
 		 * 
 		 * <p><strong>Content:</strong> ["player", "uuid", "player_id", "rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description"]</p>
+		 * 
+		 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Join-quit#placeholders">ChatPlugin wiki/Modules/Join-quit/Quit messages/Placeholders</a>
 		 */
 		public static final String[] PLACEHOLDERS = new String[] { "player", "uuid", "player_id", "rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description" };
 		protected OfflinePlayer player;

@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.storage.configuration;
@@ -31,6 +31,7 @@ import java.util.Map;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.error.YAMLException;
 import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.representer.Represent;
 import org.yaml.snakeyaml.representer.Representer;
@@ -70,9 +71,11 @@ public class Configuration {
 	 * @throws IllegalArgumentException If file's name does not end with ".yml" or ".yaml" (ignoring case)
 	 */
 	public Configuration(File file) throws IOException {
-		if (!file.exists())
+		if (!file.exists()) {
+			if (file.getParentFile() != null)
+				file.getParentFile().mkdirs();
 			file.createNewFile();
-		if (file.getName().toLowerCase().endsWith(".yml") || file.getName().toLowerCase().endsWith(".yaml")) {
+		} if (file.getName().toLowerCase().endsWith(".yml") || file.getName().toLowerCase().endsWith(".yaml")) {
 			type = ConfigurationType.CUSTOM;
 			this.file = file;
 		} else throw new IllegalArgumentException("File name \"" + file.getName() + "\" is invalid as it does not end with \".yml\" or \".yaml\" (ignoring case)");
@@ -157,7 +160,7 @@ public class Configuration {
 					
 				});
 			}};
-		} catch (NoSuchMethodError e) { // compatible with older snakeyaml versions
+		} catch (NoSuchMethodError e) { // compatible with older SnakeYAML versions
 			representer = new Representer() {{
 				representers.put(ConfigurationMappings.class, new Represent() {
 					
@@ -174,6 +177,8 @@ public class Configuration {
 			map = yaml.loadAs("", LinkedHashMap.class);
 		else try (InputStream input = new FileInputStream(file)) {
 			map = yaml.loadAs(input, LinkedHashMap.class);
+		} catch (YAMLException e) {
+			throw new IOException("failed to load " + file.getName() + " " + e.getMessage(), e);
 		} mappings = new ConfigurationMappings(map == null ? new LinkedHashMap<>() : map);
 	}
 	

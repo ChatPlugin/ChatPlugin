@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.rank;
@@ -25,17 +25,19 @@ import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.language.Language;
 
 /**
- * Represents a rank handled by the {@link RankManager}. See wiki for more info:
- * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Ranks">ChatPlugin wiki/Ranks</a>
+ * Represents a rank handled by the {@link RankManager}.
+ * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Ranks">ChatPlugin wiki/Modules/Ranks</a>
  */
 public abstract class Rank {
 	
 	/**
-	 * Array containing all available placeholders that can
-	 * be translated with a rank's information. See wiki for more info:
-	 * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Ranks#placeholders">ChatPlugin wiki/Ranks/Placeholders</a>
+	 * Array containing all available placeholders that
+	 * can be translated with a rank's information.
 	 * 
 	 * <p><strong>Content:</strong> ["rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description"]</p>
+	 * 
+	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Ranks#placeholders">ChatPlugin wiki/Modules/Ranks/Placeholders</a>
 	 */
 	public static final String[] PLACEHOLDERS = new String[] { "rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description" };
 	private String id, displayName, prefix, suffix, chatColor;
@@ -222,8 +224,8 @@ public abstract class Rank {
 				.replace("{suffix}", suffix)
 				.replace("{tag_prefix}", tag.getPrefix())
 				.replace("{tag_suffix}", tag.getSuffix())
-				.replace("{tag_name_color}", tag.getNameColor())
-				.replace("{chat_color}", chatColor)
+				.replace("{tag_name_color}", tag.getNameColor().isEmpty() ? "&r" : tag.getNameColor())
+				.replace("{chat_color}", chatColor.isEmpty() ? "&r" : chatColor)
 				.replace("{rank_description}", descriptions.get(language))
 				);
 	}

@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.storage;
@@ -127,27 +127,6 @@ public abstract class StorageConnector {
 	public void clearWarnings(OfflinePlayer player) throws SQLException, IOException {
 		for (Warning warning : WarningManager.getInstance().getActiveWarnings(player))
 			disactiveWarning(warning);
-	}
-	
-	/**
-	 * Calls {@link #select(DataContainer, String, Class, WhereCondition...)}
-	 * and returns <code>def</code> if a {@link SQLException} gets thrown.
-	 * 
-	 * @param <T> Data's type
-	 * @param container Data's container
-	 * @param position Data's position (path or column)
-	 * @param def Default value
-	 * @param conditions Optional conditions
-	 * @return Requested data
-	 */
-	@SuppressWarnings("unchecked")
-	@Nullable(why = "Default value may be null or query's result SQL NULL")
-	public <T> T safeSelect(DataContainer container, String position, T def, WhereCondition... conditions) {
-		try {
-			return (T) select(container, position, Object.class, conditions);
-		} catch (SQLException e) {
-			return def;
-		}
 	}
 	
 	/**
@@ -584,6 +563,7 @@ public abstract class StorageConnector {
 	 * @return Data if found, <code>null</code> otherwise
 	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
 	 */
+	@Nullable(why = "Stored data may be SQL NULL")
 	public abstract <T> T getPlayerData(PlayersDataType<T> type, int playerID) throws SQLException;
 	
 	/**
@@ -620,7 +600,8 @@ public abstract class StorageConnector {
 	 * <p>Specify <code>true</code> as <code>includeOlder</code> to check players' IP addresses
 	 * stored in {@link DataContainer#IP_ADDRESSES}. This operation will take extra time.</p>
 	 * 
-	 * <p>Note that this method might take some time to be executed: async calls are recommended.</p>
+	 * <p><strong>Note:</strong> this method might take some
+	 * time to be executed: async calls are recommended.</p>
 	 * 
 	 * @param ipAddress IP address to check
 	 * @param includeOlder Whether to include players stored in {@link DataContainer#IP_ADDRESSES}
@@ -644,6 +625,21 @@ public abstract class StorageConnector {
 	 * {@link StorageManager#getPlayersAutoCleanerPeriod()} from the storage.
 	 */
 	public abstract void cleanOldPlayers();
+	
+	/**
+	 * Gets the connector's engine's name.
+	 * 
+	 * @return Engine's name
+	 */
+	public abstract String getEngineName();
+	
+	/**
+	 * Gets the connector's engine's version.
+	 * 
+	 * @return Engine's version
+	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
+	 */
+	public abstract String getEngineVersion() throws SQLException;
 	
 	/**
 	 * Represents a <code>WHERE</code> condition.

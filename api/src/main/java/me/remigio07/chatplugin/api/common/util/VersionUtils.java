@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.util;
@@ -46,7 +46,7 @@ public class VersionUtils {
 	public static void initVersionUtils() throws ChatPluginManagerException {
 		switch (Environment.getCurrent()) {
 		case BUKKIT:
-			version = Version.getVersion(Bukkit.getBukkitVersion());
+			version = Version.getVersion(Bukkit.getBukkitVersion().substring(0, Bukkit.getBukkitVersion().indexOf('-')));
 			nmsVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 			implementationVersion = Bukkit.getVersion();
 			implementationName = isPaper() ? "Paper" : isSpigot() ? "Spigot" : "Bukkit";
@@ -57,7 +57,8 @@ public class VersionUtils {
 			implementationName = "Sponge";
 			break;
 		case BUNGEECORD:
-			version = Version.getVersion((int) Utils.invokeBungeeCordMethod("getProtocolVersion", null), false);
+			String str = ((String) Utils.invokeBungeeCordMethod("getVersion", null)).substring(15).replace(':', '-');
+			version = Version.getVersion(str.substring(str.indexOf('-') + 1, str.indexOf('-', str.indexOf('.'))));
 			implementationVersion = (String) Utils.invokeBungeeCordMethod("getVersion", null);
 			implementationName = isFlameCord() ? "FlameCord" : isWaterfall() ? "Waterfall" : "BungeeCord";
 			break;
@@ -67,7 +68,7 @@ public class VersionUtils {
 			implementationName = "Velocity";
 			break;
 		} if (version == Version.UNSUPPORTED || version.isOlderThan(Version.V1_8))
-			throw new ChatPluginManagerException("version utils", "This version is not supported. Is ChatPlugin up to date? Compatible versions: 1.8-{0}. Note: snapshots, pre-releases and release candidates are not supported.", Version.values()[Version.values().length - 1].getName());
+			throw new ChatPluginManagerException("version utils", "This version is not supported. Is ChatPlugin up to date? Compatible versions: 1.8-{0}. Note: snapshots, pre-releases and release candidates are not supported", Version.values()[Version.values().length - 1].getName());
 	}
 	
 	/**
@@ -879,7 +880,23 @@ public class VersionUtils {
 		 * <p><strong>Protocol version number:</strong> 764
 		 * <br><strong>Release date:</strong> September 21, 2023</p>
 		 */
-		V1_20_2(764, 1695247200000L);
+		V1_20_2(764, 1695247200000L),
+		
+		/**
+		 * Version 1.20.3.
+		 * 
+		 * <p><strong>Protocol version number:</strong> 765
+		 * <br><strong>Release date:</strong> December 5, 2023</p>
+		 */
+		V1_20_3(765, 1701730800000L, "1.20.3/4"),
+		
+		/**
+		 * Version 1.20.4.
+		 * 
+		 * <p><strong>Protocol version number:</strong> 765
+		 * <br><strong>Release date:</strong> December 7, 2023</p>
+		 */
+		V1_20_4(765, 1701903600000L, "1.20.3/4");
 		
 		private int protocol;
 		private long releaseDate;
@@ -898,6 +915,8 @@ public class VersionUtils {
 		/**
 		 * Gets this version's protocol number.
 		 * 
+		 * <p>Will return -1 if <code>this == </code>{@link #UNSUPPORTED}.</p>
+		 * 
 		 * @return Version's protocol
 		 */
 		public int getProtocol() {
@@ -906,6 +925,8 @@ public class VersionUtils {
 		
 		/**
 		 * Gets this version's release date, in milliseconds.
+		 * 
+		 * <p>Will return -1 if <code>this == </code>{@link #UNSUPPORTED}.</p>
 		 * 
 		 * @return Version's release date
 		 */
@@ -924,6 +945,8 @@ public class VersionUtils {
 		
 		/**
 		 * Checks if this version is a pre-Netty rewrite version.
+		 * 
+		 * <p>Will return <code>false</code> if <code>this == </code>{@link #UNSUPPORTED}.</p>
 		 * 
 		 * @return Whether this is a pre-Netty rewrite version
 		 */
@@ -957,7 +980,7 @@ public class VersionUtils {
 		}
 		
 		/**
-		 * Formats this version based according to the setting
+		 * Formats this version according to the setting
 		 * at <code>settings.truncate-version-string</code>
 		 * in {@link ConfigurationType#CONFIG}.
 		 * 
@@ -988,10 +1011,13 @@ public class VersionUtils {
 		@NotNull
 		public static Version getVersion(String input) {
 			Version version = Version.UNSUPPORTED;
+			input = input.endsWith(".0") ? input.substring(0, input.lastIndexOf('.')) : input;
 			
 			for (Version value : values())
-				if (input.contains(value.toString()) || (value.getName() != null && value.getName().contains(input)))
+				if (input.equals(value.name().substring(1).replace('_', '.'))) {
 					version = value;
+					break;
+				}
 			return version;
 		}
 		

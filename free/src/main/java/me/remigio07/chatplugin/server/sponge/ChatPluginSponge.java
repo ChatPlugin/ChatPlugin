@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.sponge;
@@ -81,7 +81,7 @@ public class ChatPluginSponge extends ChatPlugin {
 				LogManager.log("This server is running an old Minecraft version. Note that this software is {0} old. Even though it is still supported, fixing any bugs is not a priority. It's recommended to upgrade to a newer version.", 1, me.remigio07.chatplugin.common.util.Utils.formatTime(System.currentTimeMillis() - VersionUtils.getVersion().getReleaseDate()));
 			managers.loadManagers();
 			SpongeCommandsHandler.registerCommands();
-			TaskManager.scheduleAsync(() -> LogManager.log(me.remigio07.chatplugin.common.util.Utils.FREE_VERSION_ADS[ThreadLocalRandom.current().nextInt(me.remigio07.chatplugin.common.util.Utils.FREE_VERSION_ADS.length)], 0), 3600000L, 3600000L);
+			TaskManager.scheduleAsync(() -> LogManager.log(me.remigio07.chatplugin.common.util.Utils.FREE_VERSION_ADS[ThreadLocalRandom.current().nextInt(me.remigio07.chatplugin.common.util.Utils.FREE_VERSION_ADS.length)], 0), 3600000L, 3600000L); // yeah, I've put it right here... remove it if you want, I guess 🙄
 			TaskManager.runAsync(() -> {
 				long ms2 = System.currentTimeMillis();
 				
@@ -145,7 +145,7 @@ public class ChatPluginSponge extends ChatPlugin {
 			// ChatPlugin's stuff which might crash
 			ChatPluginSpongePlayer.closeAudiences();
 			managers.unloadManagers();
-			LogManager.log("Plugin unloaded successfully in {0} ms.", 3, ms = System.currentTimeMillis() - ms); // XXX might not work (called after .unloadManagers())
+			LogManager.log("Plugin unloaded successfully in {0} ms.", 3, ms = System.currentTimeMillis() - ms);
 			return (int) ms;
 		} catch (NoClassDefFoundError e) {
 			System.err.println("You cannot replace the plugin JAR while the server is running. Reloads are supported but not in this case; shutting down...");
@@ -206,6 +206,7 @@ public class ChatPluginSponge extends ChatPlugin {
 						if (args.length == 1 && args[0].equalsIgnoreCase("recover")) {
 							if (sender.hasPermission("chatplugin.commands.recover")) {
 								sender.sendMessage(Utils.serializeSpongeText("&eTrying to recover ChatPlugin... Don't get your hopes up.", true));
+								Sponge.getServer().getOnlinePlayers().forEach(player -> player.kick(Utils.serializeSpongeText("&ePerforming ChatPlugin recovery...", true)));
 								
 								int startupTime = load((Logger) logger, dataFolder.toPath());
 								
@@ -275,7 +276,7 @@ public class ChatPluginSponge extends ChatPlugin {
 		CommandSource console = Sponge.getServer().getConsole();
 		
 		console.sendMessage(Utils.serializeSpongeText( "   &c__  &f__   ", true));
-		console.sendMessage(Utils.serializeSpongeText( "  &c/   &f|__)  &aRunning &cChat&fPlugin &2Free &aversion &f" + VERSION + " &aon Sponge", true));
+		console.sendMessage(Utils.serializeSpongeText( "  &c/   &f|__)  &aRunning &cChat&fPlugin &2Free &aversion &f" + VERSION + " &aon &fSponge", true));
 		console.sendMessage(Utils.serializeSpongeText("  &c\\__ &f|     &8Detected server version: " + VersionUtils.getVersion().getName() + " (protocol: " + VersionUtils.getVersion().getProtocol() + ")", true));
 		console.sendMessage(Utils.serializeSpongeText("", false));
 	}

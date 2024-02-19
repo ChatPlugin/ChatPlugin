@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.event;
@@ -31,8 +31,9 @@ import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerExceptio
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 
 /**
- * Manager that handles {@link ChatPluginEvent}s and {@link EventSubscriber}s. See wiki for more info:
- * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Developer-API#events">ChatPlugin wiki/Developer API/Events</a>
+ * Manager that handles {@link ChatPluginEvent}s and {@link EventSubscriber}s.
+ * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/development/API#events">ChatPlugin wiki/Development/API/Events</a>
  */
 public abstract class EventManager implements ChatPluginManager {
 	
@@ -86,7 +87,7 @@ public abstract class EventManager implements ChatPluginManager {
 				try {
 					((EventSubscriber<E>) subscriber).getConsumer().accept(event);
 				} catch (Throwable e) {
-					LogManager.log("{0} occurred while calling event {1}:", 2, e.getClass().getSimpleName(), event.getClass().getSimpleName());
+					LogManager.log("{0} occurred while calling event {1}: {2}", 2, e.getClass().getSimpleName(), event.getClass().getSimpleName(), e.getMessage());
 					e.printStackTrace();
 				}
 			});

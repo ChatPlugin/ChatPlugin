@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.util.manager;
@@ -28,6 +28,8 @@ import me.remigio07.chatplugin.api.common.punishment.kick.KickManager;
 import me.remigio07.chatplugin.api.common.punishment.mute.MuteManager;
 import me.remigio07.chatplugin.api.common.punishment.warning.WarningManager;
 import me.remigio07.chatplugin.api.common.storage.StorageManager;
+import me.remigio07.chatplugin.api.common.storage.database.DatabaseManager;
+import me.remigio07.chatplugin.api.common.storage.flat_file.FlatFileManager;
 import me.remigio07.chatplugin.api.common.telegram.TelegramIntegrationManager;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagers;
@@ -117,6 +119,9 @@ import me.remigio07.chatplugin.server.tablist.custom_suffix.DummyCustomSuffixMan
 
 public class ChatPluginServerManagers extends ChatPluginManagers {
 	
+	private DatabaseManager databaseManager = new DatabaseManagerImpl();
+	private FlatFileManager flatFileManager = new FlatFileManagerImpl();
+	
 	public ChatPluginServerManagers() {
 		instance = this;
 	}
@@ -124,7 +129,7 @@ public class ChatPluginServerManagers extends ChatPluginManagers {
 	@Override
 	public void loadManagers() throws ChatPluginManagerException {
 		addManager(TaskManager.class, new TaskManagerImpl());
-		addManager(StorageManager.class, getStorageMethod().isDatabase() ? new DatabaseManagerImpl() : new FlatFileManagerImpl());
+		addManager(StorageManager.class, getStorageMethod().isDatabase() ? databaseManager : flatFileManager);
 		addManager(ProxyManager.class, new ProxyManagerImpl());
 		addManager(IPLookupManager.class, new IPLookupManagerImpl());
 		addManager(LocalIPLookupManager.class, new DummyLocalIPLookupManager());
@@ -173,6 +178,16 @@ public class ChatPluginServerManagers extends ChatPluginManagers {
 		addManager(TelegramIntegrationManager.class, new DummyTelegramIntegrationManager());
 		
 		PlayerManager.getInstance().loadOnlinePlayers();
+	}
+	
+	@Override
+	protected DatabaseManager getDatabaseManager() {
+		return databaseManager;
+	}
+	
+	@Override
+	protected FlatFileManager getFlatFileManager() {
+		return flatFileManager;
 	}
 	
 }

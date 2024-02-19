@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.bukkit.integration.anticheat;
@@ -35,7 +35,6 @@ import me.remigio07.chatplugin.api.server.util.manager.TPSManager.TPSTimeInterva
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07.chatplugin.server.bukkit.integration.ChatPluginBukkitIntegration;
 import me.remigio07.chatplugin.server.bukkit.manager.BukkitEventManager;
-import me.remigio07.chatplugin.server.integration.anticheat.ViolationImpl;
 import me.rerere.matrix.api.HackType;
 import me.rerere.matrix.api.MatrixAPI;
 import me.rerere.matrix.api.MatrixAPIProvider;
@@ -68,27 +67,27 @@ public class MatrixIntegration extends ChatPluginBukkitIntegration<AnticheatInte
 					ProxyManager.getInstance().sendPluginMessage(Packets.Sync.addPlayerViolation(
 							ProxyManager.getInstance().getServerID(),
 							player.getUUID(),
+							player.getName(),
 							IntegrationType.MATRIX,
 							violationEvent.getHackType().name(),
 							violationEvent.getComponent(),
 							violations,
 							player.getPing(),
+							TPSManager.getInstance().getTPS(TPSTimeInterval.ONE_MINUTE),
 							player.getVersion().getProtocol(),
-							false,
-							TPSManager.getInstance().getTPS(TPSTimeInterval.ONE_MINUTE)
+							player.getVersion().isPreNettyRewrite()
 							));
-				else AnticheatManager.getInstance().addViolation(new ViolationImpl(
+				else AnticheatManager.getInstance().addViolation(
 						player,
-						ProxyManager.getInstance().getServerID(),
 						IntegrationType.MATRIX,
 						violationEvent.getHackType().name(),
 						violationEvent.getComponent(),
+						ProxyManager.getInstance().getServerID(),
 						violations,
 						player.getPing(),
-						player.getVersion().getProtocol(),
-						false,
-						TPSManager.getInstance().getTPS(TPSTimeInterval.ONE_MINUTE)
-						));
+						TPSManager.getInstance().getTPS(TPSTimeInterval.ONE_MINUTE),
+						player.getVersion()
+						);
 			}
 		}, BukkitBootstrapper.getInstance());
 	}

@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.discord;
@@ -34,6 +34,8 @@ import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector.WhereCondition;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector.WhereCondition.WhereOperator;
+import me.remigio07.chatplugin.api.common.storage.StorageManager;
+import me.remigio07.chatplugin.api.common.storage.StorageMethod;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.MemoryUtils;
 import me.remigio07.chatplugin.api.common.util.Utils;
@@ -427,9 +429,9 @@ public class DiscordMessages {
 		private List<String> formatValues(me.remigio07.chatplugin.api.common.punishment.ban.Ban ban) {
 			int id = ban.getID();
 			List<String> values = new ArrayList<>(EMBED_OPTIONS.length);
-			String whoUnbanned = StorageConnector.getInstance().safeSelect(DataContainer.BANS, "who_unbanned", null, new WhereCondition("id", WhereOperator.EQUAL, id));
-			Number unbanDate = StorageConnector.getInstance().safeSelect(DataContainer.BANS, "unban_date", null, new WhereCondition("id", WhereOperator.EQUAL, id));
-			Boolean active = StorageConnector.getInstance().safeSelect(DataContainer.BANS, "active", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			String whoUnbanned = safeSelect(DataContainer.BANS, "who_unbanned", String.class, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Number unbanDate = safeSelect(DataContainer.BANS, "unban_date", Number.class, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Boolean active = safeSelect(DataContainer.BANS, "active", Boolean.class, new WhereCondition("id", WhereOperator.EQUAL, id));
 			long duration = ban.getDuration();
 			
 			for (String value : getValues(getPath()))
@@ -441,7 +443,7 @@ public class DiscordMessages {
 						.replace("{ip_address}", ban.getIPAddress() == null ? getString("placeholders.not-present") : ban.getIPAddress().getHostAddress())
 						.replace("{staff_member}", ban.getStaffMember())
 						.replace("{who_unbanned}", whoUnbanned == null ? getString("placeholders.nobody") : whoUnbanned)
-						.replace("{reason}", ban.getReason() == null ? getString("messages.ban.unspecified-reason") : ChatColor.stripColor(ban.getReason()))
+						.replace("{reason}", ban.getReason() == null ? getString("messages.ban.unspecified-reason") : ChatColor.stripColor(ChatColor.translate(ban.getReason())))
 						.replace("{server}", ban.getServer())
 						.replace("{type}", getFormat("types." + ban.getType().name().toLowerCase()))
 						.replace("{date}", formatDate(ban.getDate()))
@@ -459,9 +461,9 @@ public class DiscordMessages {
 		private List<FieldAdapter> formatFields(me.remigio07.chatplugin.api.common.punishment.ban.Ban ban) {
 			int id = ban.getID();
 			List<FieldAdapter> fields = getFields(getPath());
-			String whoUnbanned = StorageConnector.getInstance().safeSelect(DataContainer.BANS, "who_unbanned", null, new WhereCondition("id", WhereOperator.EQUAL, id));
-			Number unbanDate = StorageConnector.getInstance().safeSelect(DataContainer.BANS, "unban_date", null, new WhereCondition("id", WhereOperator.EQUAL, id));
-			Boolean active = StorageConnector.getInstance().safeSelect(DataContainer.BANS, "active", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			String whoUnbanned = safeSelect(DataContainer.BANS, "who_unbanned", String.class, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Number unbanDate = safeSelect(DataContainer.BANS, "unban_date", Number.class, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Boolean active = safeSelect(DataContainer.BANS, "active", Boolean.class, new WhereCondition("id", WhereOperator.EQUAL, id));
 			me.remigio07.chatplugin.api.common.player.OfflinePlayer player = ban.getPlayer();
 			long duration = ban.getDuration();
 			
@@ -473,7 +475,7 @@ public class DiscordMessages {
 						.replace("{ip_address}", ban.getIPAddress() == null ? getString("placeholders.not-present") : ban.getIPAddress().getHostAddress())
 						.replace("{staff_member}", ban.getStaffMember())
 						.replace("{who_unbanned}", whoUnbanned == null ? getString("placeholders.nobody") : whoUnbanned)
-						.replace("{reason}", ban.getReason() == null ? getString("messages.ban.unspecified-reason") : ChatColor.stripColor(ban.getReason()))
+						.replace("{reason}", ban.getReason() == null ? getString("messages.ban.unspecified-reason") : ChatColor.stripColor(ChatColor.translate(ban.getReason())))
 						.replace("{server}", ban.getServer())
 						.replace("{type}", getFormat("types." + ban.getType().name().toLowerCase()))
 						.replace("{date}", formatDate(ban.getDate()))
@@ -492,7 +494,7 @@ public class DiscordMessages {
 						.replace("{ip_address}", ban.getIPAddress() == null ? getString("placeholders.not-present") : ban.getIPAddress().getHostAddress())
 						.replace("{staff_member}", ban.getStaffMember())
 						.replace("{who_unbanned}", whoUnbanned == null ? getString("placeholders.nobody") : whoUnbanned)
-						.replace("{reason}", ban.getReason() == null ? getString("messages.ban.unspecified-reason") : ChatColor.stripColor(ban.getReason()))
+						.replace("{reason}", ban.getReason() == null ? getString("messages.ban.unspecified-reason") : ChatColor.stripColor(ChatColor.translate(ban.getReason())))
 						.replace("{server}", ban.getServer())
 						.replace("{type}", getFormat("types." + ban.getType().name().toLowerCase()))
 						.replace("{date}", formatDate(ban.getDate()))
@@ -631,9 +633,9 @@ public class DiscordMessages {
 		private List<String> formatValues(me.remigio07.chatplugin.api.common.punishment.warning.Warning warning) {
 			int id = warning.getID();
 			List<String> values = new ArrayList<>(EMBED_OPTIONS.length);
-			String whoUnwarned = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "who_unwarned", null, new WhereCondition("id", WhereOperator.EQUAL, id));
-			Number unwarnDate = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "unwarn_date", null, new WhereCondition("id", WhereOperator.EQUAL, id));
-			Boolean active = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "active", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			String whoUnwarned = safeSelect(DataContainer.WARNINGS, "who_unwarned", String.class, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Number unwarnDate = safeSelect(DataContainer.WARNINGS, "unwarn_date", Number.class, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Boolean active = safeSelect(DataContainer.WARNINGS, "active", Boolean.class, new WhereCondition("id", WhereOperator.EQUAL, id));
 			me.remigio07.chatplugin.api.common.player.OfflinePlayer player = warning.getPlayer();
 			
 			for (String value : getValues(getPath()))
@@ -644,7 +646,7 @@ public class DiscordMessages {
 						.replace("{player_uuid}", player.getUUID().toString())
 						.replace("{staff_member}", warning.getStaffMember())
 						.replace("{who_unwarned}", whoUnwarned == null ? getString("placeholders.nobody") : whoUnwarned)
-						.replace("{reason}", warning.getReason() == null ? getString("messages.warning.unspecified-reason") : ChatColor.stripColor(warning.getReason()))
+						.replace("{reason}", warning.getReason() == null ? getString("messages.warning.unspecified-reason") : ChatColor.stripColor(ChatColor.translate(warning.getReason())))
 						.replace("{server}", warning.getServer())
 						.replace("{date}", formatDate(warning.getDate()))
 						.replace("{unwarn_date}", unwarnDate == null ? getString("timestamps.never") : formatDate(unwarnDate.longValue()))
@@ -663,9 +665,9 @@ public class DiscordMessages {
 		private List<FieldAdapter> formatFields(me.remigio07.chatplugin.api.common.punishment.warning.Warning warning) {
 			int id = warning.getID();
 			List<FieldAdapter> fields = getFields(getPath());
-			String whoUnwarned = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "who_unwarned", null, new WhereCondition("id", WhereOperator.EQUAL, id));
-			Number unwarnDate = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "unwarn_date", null, new WhereCondition("id", WhereOperator.EQUAL, id));
-			Boolean active = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "active", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			String whoUnwarned = safeSelect(DataContainer.WARNINGS, "who_unwarned", String.class, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Number unwarnDate = safeSelect(DataContainer.WARNINGS, "unwarn_date", Number.class, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Boolean active = safeSelect(DataContainer.WARNINGS, "active", Boolean.class, new WhereCondition("id", WhereOperator.EQUAL, id));
 			me.remigio07.chatplugin.api.common.player.OfflinePlayer player = warning.getPlayer();
 			
 			for (FieldAdapter field : fields) {
@@ -675,7 +677,7 @@ public class DiscordMessages {
 						.replace("{player_uuid}", player.getUUID().toString())
 						.replace("{staff_member}", warning.getStaffMember())
 						.replace("{who_unwarned}", whoUnwarned == null ? getString("placeholders.nobody") : whoUnwarned)
-						.replace("{reason}", warning.getReason() == null ? getString("messages.warning.unspecified-reason") : ChatColor.stripColor(warning.getReason()))
+						.replace("{reason}", warning.getReason() == null ? getString("messages.warning.unspecified-reason") : ChatColor.stripColor(ChatColor.translate(warning.getReason())))
 						.replace("{server}", warning.getServer())
 						.replace("{date}", formatDate(warning.getDate()))
 						.replace("{unwarn_date}", unwarnDate == null ? getString("timestamps.never") : formatDate(unwarnDate.longValue()))
@@ -694,7 +696,7 @@ public class DiscordMessages {
 						.replace("{player_uuid}", player.getUUID().toString())
 						.replace("{staff_member}", warning.getStaffMember())
 						.replace("{who_unwarned}", whoUnwarned == null ? getString("placeholders.nobody") : whoUnwarned)
-						.replace("{reason}", warning.getReason() == null ? getString("messages.warning.unspecified-reason") : ChatColor.stripColor(warning.getReason()))
+						.replace("{reason}", warning.getReason() == null ? getString("messages.warning.unspecified-reason") : ChatColor.stripColor(ChatColor.translate(warning.getReason())))
 						.replace("{server}", warning.getServer())
 						.replace("{date}", formatDate(warning.getDate()))
 						.replace("{unwarn_date}", unwarnDate == null ? getString("timestamps.never") : formatDate(unwarnDate.longValue()))
@@ -791,7 +793,7 @@ public class DiscordMessages {
 						.replace("{player_uuid}", player.getUUID().toString())
 						.replace("{ip_address}", kick.getIPAddress() == null ? getString("placeholders.not-present") : kick.getIPAddress().getHostAddress())
 						.replace("{staff_member}", kick.getStaffMember())
-						.replace("{reason}", kick.getReason() == null ? getString("messages.kick.unspecified-reason") : ChatColor.stripColor(kick.getReason()))
+						.replace("{reason}", kick.getReason() == null ? getString("messages.kick.unspecified-reason") : ChatColor.stripColor(ChatColor.translate(kick.getReason())))
 						.replace("{server}", kick.getServer())
 						.replace("{type}", getFormat("types." + kick.getType().name().toLowerCase()))
 						.replace("{date}", formatDate(kick.getDate()))
@@ -811,7 +813,7 @@ public class DiscordMessages {
 						.replace("{player_uuid}", player.getUUID().toString())
 						.replace("{ip_address}", kick.getIPAddress() == null ? getString("placeholders.not-present") : kick.getIPAddress().getHostAddress())
 						.replace("{staff_member}", kick.getStaffMember())
-						.replace("{reason}", kick.getReason() == null ? getString("messages.kick.unspecified-reason") : ChatColor.stripColor(kick.getReason()))
+						.replace("{reason}", kick.getReason() == null ? getString("messages.kick.unspecified-reason") : ChatColor.stripColor(ChatColor.translate(kick.getReason())))
 						.replace("{server}", kick.getServer())
 						.replace("{type}", getFormat("types." + kick.getType().name().toLowerCase()))
 						.replace("{date}", formatDate(kick.getDate()))
@@ -823,7 +825,7 @@ public class DiscordMessages {
 						.replace("{player_uuid}", player.getUUID().toString())
 						.replace("{ip_address}", kick.getIPAddress() == null ? getString("placeholders.not-present") : kick.getIPAddress().getHostAddress())
 						.replace("{staff_member}", kick.getStaffMember())
-						.replace("{reason}", kick.getReason() == null ? getString("messages.kick.unspecified-reason") : ChatColor.stripColor(kick.getReason()))
+						.replace("{reason}", kick.getReason() == null ? getString("messages.kick.unspecified-reason") : ChatColor.stripColor(ChatColor.translate(kick.getReason())))
 						.replace("{server}", kick.getServer())
 						.replace("{type}", getFormat("types." + kick.getType().name().toLowerCase()))
 						.replace("{date}", formatDate(kick.getDate()))
@@ -947,9 +949,9 @@ public class DiscordMessages {
 		private List<String> formatValues(me.remigio07.chatplugin.api.common.punishment.mute.Mute mute) {
 			int id = mute.getID();
 			List<String> values = new ArrayList<>();
-			String whoUnmuted = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "who_unmuted", null, new WhereCondition("id", WhereOperator.EQUAL, id));
-			Number unmuteDate = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "unmute_date", null, new WhereCondition("id", WhereOperator.EQUAL, id));
-			Boolean active = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "active", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			String whoUnmuted = safeSelect(DataContainer.WARNINGS, "who_unmuted", String.class, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Number unmuteDate = safeSelect(DataContainer.WARNINGS, "unmute_date", Number.class, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Boolean active = safeSelect(DataContainer.WARNINGS, "active", Boolean.class, new WhereCondition("id", WhereOperator.EQUAL, id));
 			me.remigio07.chatplugin.api.common.player.OfflinePlayer player = mute.getPlayer();
 			long duration = mute.getDuration();
 			
@@ -961,7 +963,7 @@ public class DiscordMessages {
 						.replace("{player_uuid}", player.getUUID().toString())
 						.replace("{staff_member}", mute.getStaffMember())
 						.replace("{who_unmuted}", whoUnmuted == null ? getString("placeholders.nobody") : whoUnmuted)
-						.replace("{reason}", mute.getReason() == null ? getString("messages.mute.unspecified-reason") : ChatColor.stripColor(mute.getReason()))
+						.replace("{reason}", mute.getReason() == null ? getString("messages.mute.unspecified-reason") : ChatColor.stripColor(ChatColor.translate(mute.getReason())))
 						.replace("{server}", mute.getServer())
 						.replace("{date}", formatDate(mute.getDate()))
 						.replace("{unmute_date}", unmuteDate == null ? getString("timestamps.never") : formatDate(unmuteDate.longValue()))
@@ -978,9 +980,9 @@ public class DiscordMessages {
 		private List<FieldAdapter> formatFields(me.remigio07.chatplugin.api.common.punishment.mute.Mute mute) {
 			int id = mute.getID();
 			List<FieldAdapter> fields = getFields(getPath());
-			String whoUnmuted = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "who_unmuted", null, new WhereCondition("id", WhereOperator.EQUAL, id));
-			Number unmuteDate = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "unmute_date", null, new WhereCondition("id", WhereOperator.EQUAL, id));
-			Boolean active = StorageConnector.getInstance().safeSelect(DataContainer.WARNINGS, "active", null, new WhereCondition("id", WhereOperator.EQUAL, id));
+			String whoUnmuted = safeSelect(DataContainer.WARNINGS, "who_unmuted", String.class, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Number unmuteDate = safeSelect(DataContainer.WARNINGS, "unmute_date", Number.class, new WhereCondition("id", WhereOperator.EQUAL, id));
+			Boolean active = safeSelect(DataContainer.WARNINGS, "active", Boolean.class, new WhereCondition("id", WhereOperator.EQUAL, id));
 			me.remigio07.chatplugin.api.common.player.OfflinePlayer player = mute.getPlayer();
 			long duration = mute.getDuration();
 			
@@ -991,7 +993,7 @@ public class DiscordMessages {
 						.replace("{player_uuid}", player.getUUID().toString())
 						.replace("{staff_member}", mute.getStaffMember())
 						.replace("{who_unmuted}", whoUnmuted == null ? getString("placeholders.nobody") : whoUnmuted)
-						.replace("{reason}", mute.getReason() == null ? getString("messages.mute.unspecified-reason") : ChatColor.stripColor(mute.getReason()))
+						.replace("{reason}", mute.getReason() == null ? getString("messages.mute.unspecified-reason") : ChatColor.stripColor(ChatColor.translate(mute.getReason())))
 						.replace("{server}", mute.getServer())
 						.replace("{date}", formatDate(mute.getDate()))
 						.replace("{unmute_date}", unmuteDate == null ? getString("timestamps.never") : formatDate(unmuteDate.longValue()))
@@ -1008,7 +1010,7 @@ public class DiscordMessages {
 						.replace("{player_uuid}", player.getUUID().toString())
 						.replace("{staff_member}", mute.getStaffMember())
 						.replace("{who_unmuted}", whoUnmuted == null ? getString("placeholders.nobody") : whoUnmuted)
-						.replace("{reason}", mute.getReason() == null ? getString("messages.mute.unspecified-reason") : ChatColor.stripColor(mute.getReason()))
+						.replace("{reason}", mute.getReason() == null ? getString("messages.mute.unspecified-reason") : ChatColor.stripColor(ChatColor.translate(mute.getReason())))
 						.replace("{server}", mute.getServer())
 						.replace("{date}", formatDate(mute.getDate()))
 						.replace("{unmute_date}", unmuteDate == null ? getString("timestamps.never") : formatDate(unmuteDate.longValue()))
@@ -1107,6 +1109,21 @@ public class DiscordMessages {
 	
 	private static String formatDate(long ms) {
 		return new SimpleDateFormat(getString("simple-date-format")).format(new Date(ms));
+	}
+	
+	@SuppressWarnings("unchecked")
+	private static <T> T safeSelect(DataContainer container, String position, Class<T> def, WhereCondition... conditions) {
+		try {
+			if (StorageManager.getInstance().getMethod() != StorageMethod.SQLITE || def != Boolean.class)
+				return (T) StorageConnector.getInstance().select(container, position, def, conditions);
+			Object data = StorageConnector.getInstance().select(container, position, Number.class, conditions);
+			
+			if (data == null)
+				return null;
+			return (T) (Boolean) (((Number) data).intValue() == 1);
+		} catch (SQLException e) {
+			return null;
+		}
 	}
 	
 	/**

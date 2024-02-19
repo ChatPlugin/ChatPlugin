@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.punishment.ban.banwave;
@@ -27,17 +27,19 @@ import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.language.Language;
 
 /**
- * Represents a banwave entry handled by the {@link BanwaveManager}. See wiki for more info:
- * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Ban-system#banwaves">ChatPlugin wiki/Ban system/Banwaves</a>
+ * Represents a banwave entry handled by the {@link BanwaveManager}.
+ * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Punishments#banwaves">ChatPlugin wiki/Punishments/Bans/Banwaves</a>
  */
 public abstract class BanwaveEntry {
 	
 	/**
 	 * Array containing all available placeholders that can
-	 * be translated with a banwave entry's information. See wiki for more info:
-	 * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Ban-system#placeholders">ChatPlugin wiki/Ban system/Placeholders</a>
+	 * be translated with a banwave entry's information.
 	 * 
 	 * <p><strong>Content:</strong> ["player", "player_uuid", "ip_address", "staff_member", "who_removed", "reason", "server", "type", "date", "removal_date", "duration", "active", "global", "silent"]</p>
+	 * 
+	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Punishments#placeholders-1">ChatPlugin wiki/Punishments/Bans/Banwaves/Placeholders</a>
 	 */
 	public static final String[] PLACEHOLDERS = new String[] { "player", "player_uuid", "ip_address", "staff_member", "who_removed", "reason", "server", "type", "date", "removal_date", "duration", "active", "global", "silent" };
 	protected OfflinePlayer player;

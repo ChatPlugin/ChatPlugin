@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.bukkit;
@@ -37,7 +37,6 @@ import me.remigio07.chatplugin.api.common.event.plugin.ChatPluginCrashEvent;
 import me.remigio07.chatplugin.api.common.event.plugin.ChatPluginLoadEvent;
 import me.remigio07.chatplugin.api.common.event.plugin.ChatPluginReloadEvent;
 import me.remigio07.chatplugin.api.common.event.plugin.ChatPluginUnloadEvent;
-import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationManager;
@@ -84,7 +83,7 @@ public class ChatPluginBukkit extends ChatPlugin {
 				LogManager.log("This server is running an old Minecraft version. Note that this software is {0} old. Even though it is still supported, fixing any bugs is not a priority. It's recommended to upgrade to a newer version.", 1, Utils.formatTime(System.currentTimeMillis() - VersionUtils.getVersion().getReleaseDate()));
 			managers.loadManagers();
 			BukkitCommandsHandler.registerCommands();
-			TaskManager.scheduleAsync(() -> LogManager.log(Utils.FREE_VERSION_ADS[ThreadLocalRandom.current().nextInt(Utils.FREE_VERSION_ADS.length)], 0), 3600000L, 3600000L);
+			TaskManager.scheduleAsync(() -> LogManager.log(Utils.FREE_VERSION_ADS[ThreadLocalRandom.current().nextInt(Utils.FREE_VERSION_ADS.length)], 0), 3600000L, 3600000L); // yeah, I've put it right here... remove it if you want, I guess 🙄
 			TaskManager.runAsync(() -> {
 				long ms2 = System.currentTimeMillis();
 				
@@ -141,7 +140,7 @@ public class ChatPluginBukkit extends ChatPlugin {
 			boolean reload = !(boolean) BukkitReflection.getFieldValue("MinecraftServer", BukkitReflection.invokeMethod("MinecraftServer", "getServer", null), "hasStopped");
 			loaded = false;
 			
-			if (reload && !IntegrationType.VIAVERSION.isEnabled())
+			if (reload)
 				try {
 					File file = new File(getDataFolder(), "online-players-data.yml");
 					
@@ -174,7 +173,7 @@ public class ChatPluginBukkit extends ChatPlugin {
 			// ChatPlugin's stuff which might crash
 			ChatPluginBukkitPlayer.closeAudiences();
 			managers.unloadManagers();
-			LogManager.log("Plugin unloaded successfully in {0} ms.", 3, ms = System.currentTimeMillis() - ms); // XXX might not work (called after .unloadManagers())
+			LogManager.log("Plugin unloaded successfully in {0} ms.", 3, ms = System.currentTimeMillis() - ms);
 			return (int) ms;
 		} catch (NoClassDefFoundError e) {
 			System.err.println("You cannot replace the plugin JAR while the server is running. Reloads are supported but not in this case; shutting down...");
@@ -207,6 +206,7 @@ public class ChatPluginBukkit extends ChatPlugin {
 						if (args.length == 1 && args[0].equalsIgnoreCase("recover")) {
 							if (sender.hasPermission("chatplugin.commands.recover")) {
 								sender.sendMessage("\u00A7eTrying to recover ChatPlugin... Don't get your hopes up.");
+								Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer("\u00A7ePerforming ChatPlugin recovery..."));
 								
 								int startupTime = load((Logger) logger, dataFolder);
 								
@@ -260,7 +260,7 @@ public class ChatPluginBukkit extends ChatPlugin {
 		CommandSender console = Bukkit.getConsoleSender();
 		
 		console.sendMessage( "   \u00A7c__  \u00A7f__   ");
-		console.sendMessage( "  \u00A7c/   \u00A7f|__)  \u00A7aRunning \u00A7cChat\u00A7fPlugin \u00A72Free \u00A7aversion \u00A7f" + VERSION + " \u00A7aon " + VersionUtils.getImplementationName());
+		console.sendMessage( "  \u00A7c/   \u00A7f|__)  \u00A7aRunning \u00A7cChat\u00A7fPlugin \u00A72Free \u00A7aversion \u00A7f" + VERSION + " \u00A7aon \u00A7f" + VersionUtils.getImplementationName());
 		console.sendMessage("  \u00A7c\\__ \u00A7f|     \u00A78Detected server version: " + VersionUtils.getVersion().getName() + " (protocol: " + VersionUtils.getVersion().getProtocol() + ")");
 		console.sendMessage("");
 	}

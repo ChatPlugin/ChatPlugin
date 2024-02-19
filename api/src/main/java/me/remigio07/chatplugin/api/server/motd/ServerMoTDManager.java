@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.motd;
@@ -44,7 +44,7 @@ import me.remigio07.chatplugin.api.server.util.GameFeature;
 		)
 public abstract class ServerMoTDManager extends MoTDManager {
 	
-	protected boolean fixedValuePlusOneEnabled,
+	protected boolean maxPlayersPlusOneEnabled,
 			unknownPlayerHoversEnabled, unknownPlayerVersionNamesEnabled,
 			storedPlayerHoversEnabled, storedPlayerVersionNamesEnabled,
 			bannedPlayerMoTDEnabled, bannedPlayerHoversEnabled, bannedPlayerVersionNamesEnabled,
@@ -52,6 +52,7 @@ public abstract class ServerMoTDManager extends MoTDManager {
 	protected int minimumSupportedVersionProtocol, serverSocketPort, maxPlayersFixedValue;
 	protected InetAddress serverSocketAddress;
 	protected URL unknownPlayerIconURL, storedPlayerIconURL, bannedPlayerIconURL, outdatedVersionIconURL;
+	protected Map<Language, String> headerPlaceholders = new HashMap<>();
 	protected Map<Language, List<String>> unknownPlayerDescriptions = new HashMap<>(), unknownPlayerHovers = new HashMap<>(), unknownPlayerVersionNames = new HashMap<>(),
 			storedPlayerDescriptions = new HashMap<>(), storedPlayerHovers = new HashMap<>(), storedPlayerVersionNames = new HashMap<>(),
 			bannedPlayerDescriptions = new HashMap<>(), bannedPlayerHovers = new HashMap<>(), bannedPlayerVersionNames = new HashMap<>(),
@@ -66,8 +67,8 @@ public abstract class ServerMoTDManager extends MoTDManager {
 	 * 
 	 * @return Whether max players' fixed value plus one is enabled
 	 */
-	public boolean isFixedValuePlusOneEnabled() {
-		return fixedValuePlusOneEnabled;
+	public boolean isMaxPlayersPlusOneEnabled() {
+		return maxPlayersPlusOneEnabled;
 	}
 	
 	/**
@@ -284,6 +285,17 @@ public abstract class ServerMoTDManager extends MoTDManager {
 	}
 	
 	/**
+	 * Gets the values that will translate the {header} placeholder.
+	 * 
+	 * <p><strong>Found at:</strong> "motd.header-placeholders" in {@link ConfigurationType#MOTD}</p>
+	 * 
+	 * @return Header placeholders' translations
+	 */
+	public Map<Language, String> getHeaderPlaceholders() {
+		return headerPlaceholders;
+	}
+	
+	/**
 	 * Gets the MoTD's descriptions for an unknown player.
 	 * 
 	 * <p><strong>Found at:</strong> "motd.unknown-player.descriptions" in {@link ConfigurationType#MOTD}</p>
@@ -429,8 +441,8 @@ public abstract class ServerMoTDManager extends MoTDManager {
 	 * {@link LanguageDetector#detectUsingGeolocalization(IPLookup)}
 	 * if necessary (if it is not associated to a player's language).
 	 * 
-	 * <p>Note that this method might take some time
-	 * to be executed: async calls are recommended.</p>
+	 * <p><strong>Note:</strong> this method might take some
+	 * time to be executed: async calls are recommended.</p>
 	 * 
 	 * @param ipAddress The player's IP address
 	 * @param version The player's version
@@ -440,10 +452,10 @@ public abstract class ServerMoTDManager extends MoTDManager {
 	
 	/**
 	 * Gets a new MoTD for an IP address
-	 * translated in the specified language.
+	 * translated using the specified language.
 	 * 
-	 * <p>Note that this method might take some time
-	 * to be executed: async calls are recommended.</p>
+	 * <p><strong>Note:</strong> this method might take some
+	 * time to be executed: async calls are recommended.</p>
 	 * 
 	 * @param ipAddress The player's IP address
 	 * @param version The player's version

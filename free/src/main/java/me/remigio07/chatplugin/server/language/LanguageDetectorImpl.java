@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.language;
@@ -20,8 +20,8 @@ import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.server.language.Language;
+import me.remigio07.chatplugin.api.server.language.LanguageDetectionMethod;
 import me.remigio07.chatplugin.api.server.language.LanguageDetector;
-import me.remigio07.chatplugin.api.server.language.LanguageDetectorMethod;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
@@ -34,9 +34,9 @@ public class LanguageDetectorImpl extends LanguageDetector {
 		delay = ConfigurationType.CONFIG.get().getLong("languages.detector.delay-ms");
 		
 		try {
-			method = LanguageDetectorMethod.valueOf(ConfigurationType.CONFIG.get().getString("languages.detector.method"));
+			method = LanguageDetectionMethod.valueOf(ConfigurationType.CONFIG.get().getString("languages.detector.method"));
 			
-			if (method == LanguageDetectorMethod.GEOLOCALIZATION) {
+			if (method == LanguageDetectionMethod.GEOLOCALIZATION) {
 				if (!IPLookupManager.getInstance().isEnabled()) {
 					LogManager.log("Language detector method GEOLOCALIZATION specified at \"languages.detector.method\" in config.yml requires the IP lookup module to be enabled. You can enable it at \"ip-lookup.enabled\" in config.yml. The module will be disabled; all new players' languages will be set to the default language, specified at \"languages.main-language-id\" in config.yml.", 2);
 					unload();
@@ -54,7 +54,7 @@ public class LanguageDetectorImpl extends LanguageDetector {
 					ConfigurationType.CONFIG.get().getString("languages.detector.method")
 					);
 			
-			method = LanguageDetectorMethod.CLIENT_LOCALE;
+			method = LanguageDetectionMethod.CLIENT_LOCALE;
 		} enabled = true;
 	}
 	

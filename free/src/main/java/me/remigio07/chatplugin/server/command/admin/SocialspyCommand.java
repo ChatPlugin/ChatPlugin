@@ -1,14 +1,16 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
- * 	Unlike the public version found at <https://github.com/ChatPlugin/ChatPlugin>,
- * 	this version of ChatPlugin is private and can only be obtainted by paying
- * 	Remigio07, its developer, through one of the authorized marketplaces.
+ * 	This program is distributed in the hope that it will be useful,
+ * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * 	GNU Affero General Public License for more details.
  * 	
- * 	Nobody except him should be in possession of this code.  Please report on
- * 	the Discord server (<https://discord.gg/CPtysXTfQg>) the website or person
- * 	that has provided it to you, then delete this code.
+ * 	You should have received a copy of the GNU Affero General Public License
+ * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * 	
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.command.admin;

@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.common.ip_lookup;
@@ -20,11 +20,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.concurrent.CompletableFuture;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.event.ip_lookup.IPLookupCacheEvent;
 import me.remigio07.chatplugin.api.common.event.ip_lookup.IPLookupCleanCacheEvent;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookup;
@@ -49,7 +51,7 @@ public abstract class BaseIPLookupManager extends IPLookupManager {
 	protected boolean load0() throws ChatPluginManagerException {
 		instance = this;
 		ms = System.currentTimeMillis();
-		disabledFeatureConstructor = new IPLookupImpl();
+		disabledFeatureConstructor = new IPLookupImpl(Utils.getInetAddress("127.0.0.1"));
 		
 		if (!ConfigurationType.CONFIG.get().getBoolean("ip-lookup.enabled"))
 			return false;
@@ -74,7 +76,7 @@ public abstract class BaseIPLookupManager extends IPLookupManager {
 				LogManager.log("IP lookup is enabled but the MaxMind user ID set in the config at \"ip-lookup.maxmind-account.user-id\" is empty. Insert one and reload the plugin.", 1);
 				unload();
 				return false;
-			} else base64AuthString = Base64.getEncoder().encodeToString((maxMindUserID + ":" + ConfigurationType.CONFIG.get().getString("ip-lookup.maxmind-account.key")).getBytes());
+			} else base64AuthString = Base64.getEncoder().encodeToString((maxMindUserID + ":" + ConfigurationType.CONFIG.get().getString("ip-lookup.maxmind-account.key")).getBytes(StandardCharsets.ISO_8859_1));
 			
 			if (maxIPsStored < 1 || maxIPsStored > 15) {
 				LogManager.log("Invalid max IPs stored amount ({0}) set at \"ip-lookup.max-stored-ips\" in config.yml: only values between 1 and 15 are permitted; setting to default value of 5.", 1, maxIPsStored);
@@ -137,25 +139,21 @@ public abstract class BaseIPLookupManager extends IPLookupManager {
 	
 	@Override
 	public String readURL(String url) throws IOException {
-		HttpsURLConnection con = (HttpsURLConnection) new URL(url).openConnection();
+		HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
 		
-		con.setRequestMethod("GET");
-		con.addRequestProperty("Authorization", "Basic " + base64AuthString);
-		con.addRequestProperty("Content-Type", "application/json");
+		connection.setRequestProperty("Authorization", "Basic " + base64AuthString);
+		connection.setRequestProperty("User-Agent", "Mozilla/5.0 +https://remigio07.me/chatplugin ChatPlugin/" + ChatPlugin.VERSION);
+		connection.setConnectTimeout(5000);
 		
-		if (con.getResponseCode() != 200) {
-			if (con.getResponseCode() != 400)
-				LogManager.log(con.getResponseCode() + " - " + con.getResponseMessage() + " returned while querying MaxMind's APIs to geolocate an IP address.", 2);
-			return "Error: " + con.getResponseCode() + " - " + con.getResponseMessage();
-		} StringBuilder output = new StringBuilder();
-		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+		StringBuilder output = new StringBuilder();
 		String line;
 		
-		while ((line = in.readLine()) != null)
-			output.append(line);
-		in.close();
-		con.disconnect();
-		return output.toString();
+		try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+			while ((line = in.readLine()) != null)
+				output.append(line);
+		} finally {
+			connection.disconnect();
+		} return output.toString();
 	}
 	
 }

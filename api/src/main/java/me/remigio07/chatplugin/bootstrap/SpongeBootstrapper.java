@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.bootstrap;
@@ -27,6 +27,8 @@ import org.spongepowered.api.plugin.Plugin;
 
 import com.google.inject.Inject;
 
+import me.remigio07.chatplugin.api.ChatPlugin;
+
 /**
  * Represents the Sponge's bootstrapper.
  */
@@ -34,8 +36,8 @@ import com.google.inject.Inject;
 		id = "chatplugin",
 		name = "ChatPlugin",
 		version = "${version}",
-		url = "https://megaproserver.com/chatplugin",
-		description = "A lightweight yet complete plugin which handles just too many features! Check the wiki for info: https://github.com/ChatPlugin/ChatPlugin",
+		url = "https://remigio07.me/chatplugin",
+		description = "A lightweight yet complete plugin which handles just too many features!",
 		authors = "Remigio07",
 		dependencies = {
 				@Dependency(
@@ -76,9 +78,10 @@ public class SpongeBootstrapper {
 	 * 
 	 * @param event Shutdown event
 	 */
+	@SuppressWarnings("deprecation")
 	@Listener
 	public void onGameStoppedServer(GameStoppedServerEvent event) {
-		JARLibraryLoader.getInstance().disable();
+		ChatPlugin.getInstance().unload();
 	}
 	
 	/**

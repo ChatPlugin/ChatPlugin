@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.chat;
@@ -31,6 +31,8 @@ import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 
 /**
  * Manager that handles private messages.
+ * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Chat#private-messages">ChatPlugin wiki/Modules/Chat/Private messages</a>
  */
 public abstract class PrivateMessagesManager implements ChatPluginManager {
 	
@@ -175,18 +177,18 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	 * <p>This method will <strong>not</strong> consider that
 	 * some players may be ignored by other players.</p>
 	 * 
-	 * @param sender Message's sender
-	 * @param recipient Message's recipient
-	 * @param message Message to send
+	 * @param sender Private message's sender
+	 * @param recipient Private message's recipient
+	 * @param privateMessage Private message to send
 	 * @throws IllegalArgumentException If the sender and the recipient correspond
 	 * @see PrePrivateMessageEvent
 	 * @see AllowPrivateMessageEvent
 	 * @see DenyPrivateMessageEvent
 	 */
-	public abstract void sendMessage(
+	public abstract void sendPrivateMessage(
 			@Nullable(why = "Null to represent the console") ChatPluginServerPlayer sender,
 			@Nullable(why = "Null to represent the console") ChatPluginServerPlayer recipient,
-			String message
+			String privateMessage
 			);
 	
 }

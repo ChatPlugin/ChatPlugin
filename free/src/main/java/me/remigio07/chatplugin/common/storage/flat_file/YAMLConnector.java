@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,26 +10,29 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.common.storage.flat_file;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.InetAddress;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 import org.bukkit.Statistic;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.statistic.Statistics;
+import org.yaml.snakeyaml.Yaml;
 
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
@@ -71,6 +74,7 @@ public class YAMLConnector extends FlatFileConnector {
 	public void unload() throws IOException {
 		for (Configuration configuration : yamls.values())
 			configuration.save();
+		yamls.clear();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -79,7 +83,7 @@ public class YAMLConnector extends FlatFileConnector {
 		Configuration configuration = yamls.get(container);
 		
 		for (String id : configuration.getKeys())
-			if (checkConditions(id, configuration, conditions))
+			if (Utils.isPositiveInteger(id) && checkConditions(id, configuration, conditions))
 				return container.getIDColumn().equals(adaptPosition(position)) ? (T) Integer.valueOf(id) : configuration.getMappings().get(id + "." + adaptPosition(position), null);
 		return null;
 	}
@@ -90,7 +94,7 @@ public class YAMLConnector extends FlatFileConnector {
 		int amount = 0;
 		
 		for (String id : configuration.getKeys())
-			if (checkConditions(id, configuration, conditions))
+			if (Utils.isPositiveInteger(id) && checkConditions(id, configuration, conditions))
 				amount++;
 		return amount;
 	}
@@ -101,7 +105,7 @@ public class YAMLConnector extends FlatFileConnector {
 		int amount = 0;
 		
 		for (String id : configuration.getKeys())
-			if (checkConditions(id, configuration, conditions)) {
+			if (Utils.isPositiveInteger(id) && checkConditions(id, configuration, conditions)) {
 				configuration.set(id + "." + adaptPosition(position), data);
 				amount++;
 			}
@@ -117,7 +121,7 @@ public class YAMLConnector extends FlatFileConnector {
 		int amount = 0;
 		
 		for (String id : configuration.getKeys())
-			if (checkConditions(id, configuration, conditions)) {
+			if (Utils.isPositiveInteger(id) && checkConditions(id, configuration, conditions)) {
 				mappings.remove(id);
 				amount++;
 			}
@@ -133,7 +137,7 @@ public class YAMLConnector extends FlatFileConnector {
 		List<T> values = new ArrayList<>();
 		
 		for (String id : configuration.getKeys())
-			if (checkConditions(id, configuration, conditions))
+			if (Utils.isPositiveInteger(id) && checkConditions(id, configuration, conditions))
 				values.add(container.getIDColumn().equals(adaptPosition(position)) ? (T) Integer.valueOf(id) : configuration.getMappings().get(id + "." + adaptPosition(position), null));
 		return values;
 	}
@@ -201,28 +205,24 @@ public class YAMLConnector extends FlatFileConnector {
 		yamls.get(container).save();
 	}
 	
+	private String adaptPosition(String position) {
+		return position.toLowerCase().replace('_', '-');
+	}
+	
 	@Override
 	public @NotNull List<Integer> getIDs(DataContainer container) {
 		if (container == DataContainer.CHAT_MESSAGES || container == DataContainer.PRIVATE_MESSAGES)
 			throw new IllegalArgumentException("Unable to get IDs in container " + container.getName() + " since that container does not have IDs");
-		return getIDs0(container);
-	}
-	
-	private List<Integer> getIDs0(DataContainer container) {
-		return yamls.get(container).getKeys().stream().filter(id -> Utils.isPositiveInteger(id)).map(Integer::parseInt).collect(Collectors.toList());
+		return yamls.get(container).getKeys().stream().filter(Utils::isPositiveInteger).map(Integer::valueOf).collect(Collectors.toList());
 	}
 	
 	@Override
 	public int getNextID(DataContainer container) {
 		if (container == DataContainer.CHAT_MESSAGES || container == DataContainer.PRIVATE_MESSAGES)
 			throw new IllegalArgumentException("Unable to get next ID in container " + container.getName() + " since that container does not have IDs");
-		return getNextID0(container);
-	}
-	
-	private int getNextID0(DataContainer container) {
-		List<Integer> ids = getIDs0(container);
-		
-		return ids.isEmpty() ? 1 : Collections.max(ids) + 1; 
+		if (container == DataContainer.IP_ADDRESSES)
+			container = DataContainer.PLAYERS;
+		return yamls.get(container).getInt("current-id") + 1;
 	}
 	
 	@Override
@@ -241,21 +241,25 @@ public class YAMLConnector extends FlatFileConnector {
 		Configuration players = yamls.get(DataContainer.PLAYERS);
 		String uuid = player.getUUID().toString();
 		
-		for (String id : players.getKeys())
-			if (uuid.equals(players.getString(id + ".player-uuid")))
-				return type == PlayersDataType.ID ? (T) Integer.valueOf(id) : players.getMappings().get(id + "." + type.getName(), null);
-		return null;
+		for (String id : players.getKeys()) {
+			if (Utils.isPositiveInteger(id) && uuid.equals(players.getString(id + ".player-uuid"))) {
+				Object data = type == PlayersDataType.ID ? Integer.valueOf(id) : players.getMappings().get(id + "." + type.getName(), type.getType() == String.class ? null : 0);
+				return (T) (type.getType() == long.class && data instanceof Integer ? new Long((int) data) : data);
+			}
+		} return null;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getPlayerData(PlayersDataType<T> type, int playerID) {
+	public <T> @Nullable(why = "Stored data may be SQL NULL") T getPlayerData(PlayersDataType<T> type, int playerID) {
 		Configuration players = yamls.get(DataContainer.PLAYERS);
 		
-		for (int id : players.getKeys().stream().map(Integer::valueOf).collect(Collectors.toList()))
-			if (id == playerID)
-				return type == PlayersDataType.ID ? (T) Integer.valueOf(id) : players.getMappings().get(id + "." + type.getName(), null);
-		return null;
+		for (int id : players.getKeys().stream().filter(Utils::isPositiveInteger).map(Integer::valueOf).collect(Collectors.toList())) {
+			if (id == playerID) {
+				Object data = type == PlayersDataType.ID ? Integer.valueOf(id) : players.getMappings().get(id + "." + type.getName(), type.getType() == String.class ? null : 0);
+				return (T) (type.getType() == long.class && data instanceof Integer ? new Long((int) data) : data);
+			}
+		} return null;
 	}
 	
 	@Override
@@ -268,7 +272,7 @@ public class YAMLConnector extends FlatFileConnector {
 				String uuid = player.getUUID().toString();
 				
 				for (String id : players.getKeys()) {
-					if (uuid.equals(players.getString(id + ".player-uuid"))) {
+					if (Utils.isPositiveInteger(id) && uuid.equals(players.getString(id + ".player-uuid"))) {
 						players.set(id + "." + type.getName(), data);
 						players.save();
 						break;
@@ -288,7 +292,7 @@ public class YAMLConnector extends FlatFileConnector {
 			if (isPlayerStored(playerID)) {
 				Configuration players = yamls.get(DataContainer.PLAYERS);
 				
-				for (int id : players.getKeys().stream().map(Integer::valueOf).collect(Collectors.toList())) {
+				for (int id : players.getKeys().stream().filter(Utils::isPositiveInteger).map(Integer::valueOf).collect(Collectors.toList())) {
 					if (id == playerID) {
 						players.set(id + "." + type.getName(), data);
 						players.save();
@@ -309,7 +313,9 @@ public class YAMLConnector extends FlatFileConnector {
 		String hostAddress = ipAddress.getHostAddress();
 		
 		try {
-			for (String id : playersConfiguration.getKeys())
+			for (String id : playersConfiguration.getKeys()) {
+				if (!Utils.isPositiveInteger(id))
+					continue;
 				if (playersConfiguration.contains(id + ".player-ip") && hostAddress.equals(playersConfiguration.getString(id + ".player-ip")))
 					players.add(new OfflinePlayer(
 							UUID.fromString(playersConfiguration.getString(id + ".player-uuid")),
@@ -317,6 +323,7 @@ public class YAMLConnector extends FlatFileConnector {
 							));
 				else if (includeOlder && (ipAddressesConfiguration.contains(id + ".ip-addresses") && Utils.getListFromString(ipAddressesConfiguration.getString(id + ".ip-addresses")).contains(ipAddress.getHostAddress())))
 					players.add(getPlayer(Integer.valueOf(id)));
+			}
 		} catch (SQLException e) {
 			// never called
 		} return players;
@@ -337,7 +344,8 @@ public class YAMLConnector extends FlatFileConnector {
 				players.set(id + ".time-played", player.toAdapter().bukkitValue().getStatistic(Statistic.valueOf(VersionUtils.getVersion().getProtocol() < 341 ? "PLAY_ONE_TICK" : "PLAY_ONE_MINUTE")) * 50);
 			else if (Environment.isSponge())
 				players.set(id + ".time-played", player.toAdapter().spongeValue().getStatisticData().get(Keys.STATISTICS).get().get(Statistics.TIME_PLAYED) * 50);
-		} players.save();
+		} players.set("current-id", id);
+		players.save();
 	}
 	
 	@Override
@@ -349,14 +357,13 @@ public class YAMLConnector extends FlatFileConnector {
 				long ms = System.currentTimeMillis();
 				int old = 0;
 				
-				for (String id : new ArrayList<>(players.getKeys()))
-					if (players.getLong(id + ".last-logout") < System.currentTimeMillis() - StorageManager.getInstance().getPlayersAutoCleanerPeriod()) {
+				for (String id : new ArrayList<>(players.getKeys())) {
+					if (Utils.isPositiveInteger(id) && players.getLong(id + ".last-logout") < System.currentTimeMillis() - StorageManager.getInstance().getPlayersAutoCleanerPeriod()) {
 						playersMappings.remove(id);
 						ipAddressesMappings.remove(id);
 						old++;
 					}
-				
-				try {
+				} try {
 					players.save();
 					ipAddresses.save();
 				} catch (IOException e) {
@@ -364,6 +371,20 @@ public class YAMLConnector extends FlatFileConnector {
 				} if (old > 0)
 					LogManager.log("[ASYNC] Cleaned {0} old player{1} from the storage in {2} ms.", 4, old, old == 1 ? "" : "s", System.currentTimeMillis() - ms);
 			}, 0L);
+	}
+	
+	@Override
+	public String getEngineName() {
+		return "SnakeYAML";
+	}
+	
+	@Override
+	public String getEngineVersion() {
+		try (JarFile jar = new JarFile(new File(Yaml.class.getProtectionDomain().getCodeSource().getLocation().toURI()))) {
+			return jar.getManifest().getMainAttributes().getValue("Bundle-Version").toString();
+		} catch (IOException | URISyntaxException | NullPointerException e) {
+			return "<unknown>";
+		}
 	}
 	
 }

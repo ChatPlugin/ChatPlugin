@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.storage.configuration;
@@ -255,7 +255,7 @@ public class ConfigurationMappings {
 	 */
 	public byte getByte(String path, byte def) {
 		Object value = get(path, def);
-		return value instanceof Number ? ((Number) value).byteValue() : (byte) 0;
+		return value instanceof Number ? ((Number) value).byteValue() : def;
 	}
 	
 	/**
@@ -308,7 +308,7 @@ public class ConfigurationMappings {
 	 */
 	public short getShort(String path, short def) {
 		Object value = get(path, def);
-		return value instanceof Number ? ((Number) value).shortValue() : (short) 0;
+		return value instanceof Number ? ((Number) value).shortValue() : def;
 	}
 	
 	/**
@@ -334,7 +334,7 @@ public class ConfigurationMappings {
 	 */
 	public int getInt(String path, int def) {
 		Object value = get(path, def);
-		return value instanceof Number ? ((Number) value).intValue() : 0;
+		return value instanceof Number ? ((Number) value).intValue() : def;
 	}
 	
 	/**
@@ -360,7 +360,7 @@ public class ConfigurationMappings {
 	 */
 	public long getLong(String path, long def) {
 		Object value = get(path, def);
-		return value instanceof Number ? ((Number) value).longValue() : 0L;
+		return value instanceof Number ? ((Number) value).longValue() : def;
 	}
 	
 	/**
@@ -386,7 +386,7 @@ public class ConfigurationMappings {
 	 */
 	public float getFloat(String path, float def) {
 		Object value = get(path, def);
-		return value instanceof Number ? ((Number) value).floatValue() : 0F;
+		return value instanceof Number ? ((Number) value).floatValue() : def;
 	}
 	
 	/**
@@ -412,7 +412,7 @@ public class ConfigurationMappings {
 	 */
 	public double getDouble(String path, double def) {
 		Object value = get(path, def);
-		return value instanceof Number ? ((Number) value).doubleValue() : 0D;
+		return value instanceof Number ? ((Number) value).doubleValue() : def;
 	}
 	
 	/**

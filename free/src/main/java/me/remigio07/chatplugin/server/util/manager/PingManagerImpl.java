@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.util.manager;
@@ -39,20 +39,23 @@ public class PingManagerImpl extends PingManager {
 		instance = this;
 		long ms = System.currentTimeMillis();
 		updateTimeout = ConfigurationType.CONFIG.get().getLong("ping.update-timeout-ms");
-		Configuration messages = ConfigurationType.MESSAGES.get();
+		Configuration messages = Language.getMainLanguage().getConfiguration();
 		
 		for (String id : ConfigurationType.CONFIG.get().getKeys("ping.qualities")) {
 			int maxMs = ConfigurationType.CONFIG.get().getInt("ping.qualities." + id);
 			
 			if (messages.contains("ping." + id + ".color") && messages.contains("ping." + id + ".text"))
 				qualities.add(new PingQuality(id, maxMs));
-			else LogManager.log("Missing translation in messages.yml for ping quality with ID " + id + "; skipping.", 2);
-		} PingQuality last = qualities.get(0);
+			else LogManager.log("Missing translation in {0} for ping quality with ID {1}; skipping.", 2, messages.getFile().getName(), id);
+		} PingQuality last = qualities.isEmpty() ? new PingQuality("default-quality", Integer.MAX_VALUE) : qualities.get(0);
 		
 		for (PingQuality maxMs : qualities)
 			if (maxMs.getMaxMs() > last.getMaxMs())
 				last = maxMs;
+		if (qualities.isEmpty())
+			qualities.add(last);
 		last.setMaxMs(Integer.MAX_VALUE);
+		
 		timerTaskID = TaskManager.scheduleAsync(this, 0L, updateTimeout);
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
@@ -79,7 +82,7 @@ public class PingManagerImpl extends PingManager {
 	@Deprecated
 	@Override
 	public int getRealTimePing(ChatPluginServerPlayer player) {
-		return player.isOnline() ? Environment.isBukkit() ? (int) BukkitReflection.getFieldValue("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", ((ChatPluginBukkitPlayer) player).getCraftPlayer()), "ping", VersionUtils.getVersion().isAtLeast(Version.V1_20) ? "f" : "e") : player.toAdapter().spongeValue().getConnection().getLatency() : 0;
+		return player.isOnline() ? Environment.isBukkit() ? VersionUtils.getVersion().isAtLeast(Version.V1_16_5) ? player.toAdapter().bukkitValue().getPing() : (int) BukkitReflection.getFieldValue("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", ((ChatPluginBukkitPlayer) player).getCraftPlayer()), "ping", "e") : player.toAdapter().spongeValue().getConnection().getLatency() : 0;
 	}
 	
 	@Override

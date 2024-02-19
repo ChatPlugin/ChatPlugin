@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.command.user;
@@ -52,7 +52,7 @@ public class WhisperCommand extends BaseCommand {
 					if (recipient == null) {
 						if (args[0].equalsIgnoreCase("console"))
 							if (sender.hasPermission(getPermission() + ".console"))
-								PrivateMessagesManager.getInstance().sendMessage(sender.toServerPlayer(), null, message);
+								PrivateMessagesManager.getInstance().sendPrivateMessage(sender.toServerPlayer(), null, message);
 							else sender.sendMessage(language.getMessage("misc.no-permission"));
 						else if (PlayerAdapter.getPlayer(args[0], false) == null)
 							sender.sendMessage(language.getMessage("misc.player-not-found", args[0]));
@@ -66,7 +66,7 @@ public class WhisperCommand extends BaseCommand {
 						} if (PlayerIgnoreManager.getInstance().isEnabled() && recipient.getIgnoredPlayers().contains(sender.toServerPlayer())) {
 							sender.sendMessage(language.getMessage("commands.whisper.ignored", recipient.getName()));
 							return;
-						} PrivateMessagesManager.getInstance().sendMessage(sender.toServerPlayer(), recipient, message);
+						} PrivateMessagesManager.getInstance().sendPrivateMessage(sender.toServerPlayer(), recipient, message);
 					}
 				} catch (IllegalArgumentException e) {
 					sender.sendMessage(language.getMessage("commands.whisper.self"));

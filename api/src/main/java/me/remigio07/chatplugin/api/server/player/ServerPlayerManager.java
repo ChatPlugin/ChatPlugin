@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.player;
@@ -28,6 +28,7 @@ import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
+import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.Utils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
@@ -54,7 +55,7 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	@Override
 	public void load() throws ChatPluginManagerException {
 		try {
-			StorageConnector.getInstance().count(DataContainer.PLAYERS).intValue();
+			storageCount = StorageConnector.getInstance().count(DataContainer.PLAYERS).intValue();
 		} catch (SQLException e) {
 			throw new ChatPluginManagerException(this, e);
 		}
@@ -135,6 +136,8 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	/**
 	 * Checks if every world is enabled by default.
 	 * 
+	 * <p><strong>Found at:</strong> "settings.enable-every-world" in {@link ConfigurationType#CONFIG}</p>
+	 * 
 	 * @return Whether every world is enabled
 	 */
 	public boolean isEveryWorldEnabled() {
@@ -146,6 +149,8 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	 * 
 	 * <p>Every feature of this plugin only
 	 * applies to players in enabled worlds.</p>
+	 * 
+	 * <p><strong>Found at:</strong> "settings.enabled-worlds" in {@link ConfigurationType#CONFIG}</p>
 	 * 
 	 * @return List of enabled worlds
 	 */
@@ -268,8 +273,7 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	 * @param player Player to load
 	 * @return Time elapsed, in milliseconds
 	 * @throws IllegalStateException If {@link ProxyManager#isEnabled()} and this server has not received a
-	 * <code><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Plugin-messages#PlayerJoin">PlayerJoin</a></code>
-	 * plugin message from the proxy containing information about the specified player's version
+	 * <code>PlayerJoin</code> packet from the proxy containing information about the specified player's version
 	 * @see ServerPlayerLoadEvent
 	 * @see Packets.JoinQuit#playerJoin(String, UUID, int, boolean, boolean, boolean)
 	 */

@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.event;
@@ -18,11 +18,11 @@ package me.remigio07.chatplugin.api.common.event;
 import java.util.function.Consumer;
 
 /**
- * Represents an event subscriber containing an event's
- * class and a consumer to execute when the event is fired.
+ * Represents an event subscriber handled by the {@link EventManager} which
+ * contains an event's class and a consumer to execute when the event is fired.
  * 
  * @param <E> Event's class
- * @see EventManager
+ * @see <a href="https://remigio07.me/chatplugin/wiki/development/API#events">ChatPlugin wiki/Development/API/Events</a>
  */
 public class EventSubscriber<E extends ChatPluginEvent> {
 	

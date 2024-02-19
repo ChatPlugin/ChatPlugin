@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.util.packet;
@@ -25,6 +25,7 @@ import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.punishment.ban.BanType;
 import me.remigio07.chatplugin.api.common.punishment.kick.KickType;
+import me.remigio07.chatplugin.api.common.util.ValueContainer;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -607,8 +608,8 @@ public class Packets {
 				boolean hoverDisplayed,
 				boolean versionNameDisplayed,
 				boolean customIconDisplayed,
-				int onlinePlayers,
-				int maxPlayers
+				ValueContainer<Integer> onlinePlayers,
+				ValueContainer<Integer> maxPlayers
 				) {
 			return new PacketSerializer("MoTDResponse")
 					.writeUTF(server)
@@ -620,8 +621,8 @@ public class Packets {
 					.writeBoolean(hoverDisplayed)
 					.writeBoolean(versionNameDisplayed)
 					.writeBoolean(customIconDisplayed)
-					.writeInt(onlinePlayers)
-					.writeInt(maxPlayers);
+					.writeUTF(onlinePlayers.value() == null ? onlinePlayers.placeholder() : onlinePlayers.value().toString())
+					.writeUTF(maxPlayers.value() == null ? maxPlayers.placeholder() : maxPlayers.value().toString());
 		}
 		
 		/**
@@ -629,42 +630,45 @@ public class Packets {
 		 * using a packet of type {@link ViolationPacketType#ADD}.
 		 * 
 		 * @param server Target server
-		 * @param player Player's UUID
-		 * @param anticheat Anticheat that detected the violations
+		 * @param playerUUID Player's UUID
+		 * @param playerName Player's name
+		 * @param anticheat Anticheat that flagged the player
 		 * @param cheatID Cheat's ID
 		 * @param component Cheat's component
-		 * @param amount Violations' amount
+		 * @param amount Amount of times the player got flagged
 		 * @param ping Player's ping, in milliseconds
+		 * @param tps Server's ticks per second
 		 * @param versionProtocol Player's version's protocol
 		 * @param versionPreNettyRewrite Whether the player is using a pre-Netty rewrite version
-		 * @param tps Server's ticks per second
 		 * @return <code>PlayerViolation</code> packet
 		 */
 		@PacketScope(Scope.SERVER_TO_SERVER)
 		public static PacketSerializer addPlayerViolation(
 				@NotNull String server,
-				@NotNull UUID player,
+				@NotNull UUID playerUUID,
+				@NotNull String playerName,
 				@NotNull IntegrationType<AnticheatIntegration> anticheat,
 				@NotNull String cheatID,
 				@NotNull String component,
 				int amount,
 				int ping,
+				double tps,
 				int versionProtocol,
-				boolean versionPreNettyRewrite,
-				double tps
+				boolean versionPreNettyRewrite
 				) {
 			return new PacketSerializer("PlayerViolation")
 					.writeUTF(server)
-					.writeUUID(player)
+					.writeUUID(playerUUID)
+					.writeUTF(playerName)
 					.writeUTF(ViolationPacketType.ADD.name())
 					.writeUTF(anticheat.name())
 					.writeUTF(cheatID)
 					.writeUTF(component)
 					.writeInt(amount)
 					.writeInt(ping)
+					.writeDouble(tps)
 					.writeInt(versionProtocol)
-					.writeBoolean(versionPreNettyRewrite)
-					.writeDouble(tps);
+					.writeBoolean(versionPreNettyRewrite);
 		}
 		
 		/**
@@ -672,7 +676,8 @@ public class Packets {
 		 * using a packet of type {@link ViolationPacketType#REMOVE}.
 		 * 
 		 * @param server Target server
-		 * @param player Player's UUID
+		 * @param playerUUID Player's UUID
+		 * @param playerName Player's name
 		 * @param anticheat Anticheat that detected the violations
 		 * @param cheatID Cheat's ID
 		 * @return <code>PlayerViolation</code> packet
@@ -680,13 +685,15 @@ public class Packets {
 		@PacketScope(Scope.SERVER_TO_SERVER)
 		public static PacketSerializer removePlayerViolation(
 				@NotNull String server,
-				@NotNull UUID player,
+				@NotNull UUID playerUUID,
+				@NotNull String playerName,
 				@NotNull IntegrationType<AnticheatIntegration> anticheat,
 				@NotNull String cheatID
 				) {
 			return new PacketSerializer("PlayerViolation")
 					.writeUTF(server)
-					.writeUUID(player)
+					.writeUUID(playerUUID)
+					.writeUTF(playerName)
 					.writeUTF(ViolationPacketType.REMOVE.name())
 					.writeUTF(anticheat.name())
 					.writeUTF(cheatID);
@@ -697,17 +704,20 @@ public class Packets {
 		 * using a packet of type {@link ViolationPacketType#CLEAR}.
 		 * 
 		 * @param server Target server
-		 * @param player Player's UUID
+		 * @param playerUUID Player's UUID
+		 * @param playerName Player's name
 		 * @return <code>PlayerViolation</code> packet
 		 */
 		@PacketScope(Scope.SERVER_TO_SERVER)
 		public static PacketSerializer clearPlayerViolation(
 				@NotNull String server,
-				@NotNull UUID player
+				@NotNull UUID playerUUID,
+				@NotNull String playerName
 				) {
 			return new PacketSerializer("PlayerViolation")
 					.writeUTF(server)
-					.writeUUID(player)
+					.writeUUID(playerUUID)
+					.writeUTF(playerName)
 					.writeUTF(ViolationPacketType.CLEAR.name());
 		}
 		
@@ -1255,6 +1265,7 @@ public class Packets {
 				int vanishedPlayers
 				) {
 			return new PacketSerializer("ServerInformation")
+					.writeUTF("ALL")
 					.writeUTF(server)
 					.writeInt(onlinePlayers)
 					.writeInt(vanishedPlayers);

@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.util.manager;
@@ -88,8 +88,8 @@ public abstract class TaskManager implements ChatPluginManager {
 	 * <p>Might impact performance with heavy tasks: use
 	 * {@link #runAsync(Runnable, long)} if possible.</p>
 	 * 
-	 * <p>Note that synchronous tasks are available on ChatPlugin's Bukkit
-	 * and Sponge implementations only.</p>
+	 * <p><strong>Note:</strong> synchronous tasks are available
+	 * on ChatPlugin's Bukkit and Sponge implementations only.</p>
 	 * 
 	 * @param runnable Task to run
 	 * @param delay Delay to wait for first execution, in milliseconds
@@ -138,8 +138,8 @@ public abstract class TaskManager implements ChatPluginManager {
 	 * <p>Might impact performance with heavy tasks: use
 	 * {@link #scheduleAsync(Runnable, long, long)} if possible.</p>
 	 * 
-	 * <p>Note that synchronous tasks are available on ChatPlugin's Bukkit
-	 * and Sponge implementations only.</p>
+	 * <p><strong>Note:</strong> synchronous tasks are available
+	 * on ChatPlugin's Bukkit and Sponge implementations only.</p>
 	 * 
 	 * @param runnable Task to run
 	 * @param delay Delay to wait for first execution, in milliseconds

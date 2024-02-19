@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.util.text;
@@ -489,7 +489,7 @@ public class ChatColor {
 	 * @param string String to translate
 	 * @return Translated string
 	 */
-	public static String translate(String string) {
+	public static String translate(@NotNull String string) {
 		return translate(string, true);
 	}
 	
@@ -501,7 +501,7 @@ public class ChatColor {
 	 * @param retainNewLines Whether to retain new lines or to replace them with spaces
 	 * @return Translated string
 	 */
-	public static String translate(String string, boolean retainNewLines) {
+	public static String translate(@NotNull String string, boolean retainNewLines) {
 		String message = string;
 		
 		if (VersionUtils.getVersion().isAtLeast(Version.V1_16)) {
@@ -526,7 +526,7 @@ public class ChatColor {
 	 * @return Translated string list
 	 * @see #translate(String)
 	 */
-	public static List<String> translate(List<String> list) {
+	public static List<String> translate(@NotNull List<String> list) {
 		return translate(list, true);
 	}
 	
@@ -538,12 +538,12 @@ public class ChatColor {
 	 * @return Translated string list
 	 * @see #translate(String, boolean)
 	 */
-	public static List<String> translate(List<String> list, boolean retainNewLines) {
+	public static List<String> translate(@NotNull List<String> list, boolean retainNewLines) {
 		return list.stream().map(string -> translate(string, retainNewLines)).collect(Collectors.toList());
 	}
 	
 	/**
-	 * Strip a string from any color and/or formatting codes.
+	 * Strips a string from any color and/or formatting codes.
 	 * 
 	 * @param input String to strip
 	 * @return Stripped string
@@ -562,7 +562,7 @@ public class ChatColor {
 	 * @return Last colors in string
 	 */
 	@NotNull
-	public static String getLastColors(String input) {
+	public static String getLastColors(@NotNull String input) {
 		String result = "";
 		int length = input.length();
 		
@@ -610,7 +610,7 @@ public class ChatColor {
 	 * @param input String to check
 	 * @return Whether the string contains colors
 	 */
-	public static boolean isColorString(String input) {
+	public static boolean isColorString(@NotNull String input) {
 		input = input.trim();
 		
 		if (input.length() % 2 != 0)

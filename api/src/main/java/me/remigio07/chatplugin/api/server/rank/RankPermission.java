@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.rank;
@@ -23,9 +23,9 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 /**
  * Permission adapter used to prevent compatibility issues between Bukkit's and Sponge's libraries.
  * 
- * <p>The method {@link RankPermission#bukkitValue()} returns a {@link org.bukkit.permissions.Permission}
- * object with a default value of {@link PermissionDefault#FALSE} which prevents OPs from having the
- * highest rank in the ranks list. Sponge doesn't support this feature, unluckily. (Or does it? LMK!)</p>
+ * <p>The method {@link #bukkitValue()} returns a {@link org.bukkit.permissions.Permission} object
+ * with a default value of {@link PermissionDefault#FALSE} which prevents OPs from having the highest
+ * rank in the ranks list. Sponge doesn't support this feature, unluckily. (Or does it? LMK!)</p>
  */
 public abstract class RankPermission {
 	

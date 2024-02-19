@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,17 +10,15 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.util.socket;
 
-import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
@@ -42,7 +40,7 @@ import me.remigio07.chatplugin.api.server.event.socket.ClientReceivePacketEvent;
 public class Client {
 	
 	private InetAddress serverAddress;
-	private int serverPort, byteRead;
+	private int serverPort;
 	private Socket socket;
 	private String id, disconnectionReason;
 	private DataInputStream input;
@@ -68,18 +66,19 @@ public class Client {
 	 * @param id Client's ID
 	 * @return Connection's outcome
 	 * @throws IOException If something goes wrong
+	 * @throws InterruptedException If the identification task gets interrupted
 	 * @see ClientConnectionEvent
 	 */
-	public ConnectionOutcome connect(String id) throws IOException {
+	public ConnectionOutcome connect(String id) throws IOException, InterruptedException {
 		if (isConnected())
 			return ConnectionOutcome.ALREADY_CONNECTED;
 		Socket socket = new Socket(serverAddress, serverPort);
 		
-		new PrintWriter(socket.getOutputStream(), true).println(id);
+		new DataOutputStream(socket.getOutputStream()).writeUTF(id);
 		LogManager.log("[SOCKETS] Connection accepted for client \"{0}\"; waiting for the server to validate the ID...", 4, id);
 		new Thread(() -> {
 			try {
-				temp = ConnectionOutcome.valueOf(new BufferedReader(new InputStreamReader(socket.getInputStream())).readLine());
+				temp = ConnectionOutcome.valueOf(new DataInputStream(socket.getInputStream()).readUTF());
 			} catch (Exception e) { // NPE || IOE || IAE
 				// handled by the for loop
 			}
@@ -91,6 +90,8 @@ public class Client {
 					Thread.sleep(100L);
 				} catch (InterruptedException e) {
 					LogManager.log("[SOCKETS] The identification task for client \"{0}\" has been suddenly interrupted: {1}", 2, id, e.getMessage());
+					socket.close();
+					throw e;
 				}
 			} else {
 				if (temp == ConnectionOutcome.SUCCESS) {
@@ -124,7 +125,6 @@ public class Client {
 			return;
 		output.writeShort(-1);
 		socket.close();
-		LogManager.log("[SOCKETS] Client \"{0}\" has just disconnected from the server", 4, id);
 	}
 	
 	/**
@@ -135,19 +135,23 @@ public class Client {
 	 */
 	@Deprecated
 	public void run() {
+		short bytesRead;
+		
 		try {
-			while ((byteRead = input.read()) != -1) {
-				byte[] data = new byte[byteRead];
-				
-				input.readFully(data);
-				new ClientReceivePacketEvent(this, data).call();
-				
-				PacketDeserializer packet = new PacketDeserializer(data);
-				
-				if (packet.readUTF().equals("ClientDisconnection"))
-					disconnectionReason = packet.readUTF();
+			synchronized (input) {
+				while ((bytesRead = input.readShort()) != -1) {
+					byte[] data = new byte[bytesRead];
+					
+					input.readFully(data);
+					new ClientReceivePacketEvent(this, data).call();
+					
+					PacketDeserializer packet = new PacketDeserializer(data);
+					
+					if (packet.readUTF().equals("ClientDisconnection"))
+						disconnectionReason = packet.readUTF();
+				}
 			}
-		} catch (SocketException e) {
+		} catch (SocketException | EOFException e) {
 			// disconnection
 		} catch (IOException e) {
 			LogManager.log("[SOCKETS] IOException occurred while reading a packet for client \"{0}\": {1}", 2, id, e.getMessage());
@@ -170,19 +174,17 @@ public class Client {
 	 * <p>Will do nothing if <code>!</code>{@link #isConnected()}.</p>
 	 * 
 	 * @param packet Packet to send
-	 * @param async Whether the call should be asynchronous
 	 */
-	public void sendPacket(PacketSerializer packet, boolean async) {
+	public void sendPacket(PacketSerializer packet) {
 		if (!isConnected())
 			return;
-		if (async) {
-			new Thread(() -> sendPacket(packet, false)).start();
-			return;
-		} byte[] data = packet.toArray();
+		byte[] data = packet.toArray();
 		
 		try {
-			output.writeShort(data.length);
-			output.write(data);
+			synchronized (output) {
+				output.writeShort(data.length);
+				output.write(data);
+			}
 		} catch (IOException e) {
 			LogManager.log("[SOCKETS] IOException occurred while writing a packet for client \"{0}\": {1}", 2, id, e.getMessage());
 		}

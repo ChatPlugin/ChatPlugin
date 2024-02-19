@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.util.manager;
@@ -34,10 +34,10 @@ public class ProxyManagerImpl extends ProxyManager {
 		serverDisplayName = ConfigurationType.CONFIG.get().getString("multi-instance-mode.server-display-name");
 		
 		if (serverID.equals(DEFAULT_SERVER_ID))
-			LogManager.log("Server ID at multi-instance-mode.server-id in config.yml is still set to the default value. You should fix it even if you are not using multi instance mode.", 1);
+			LogManager.log("Server ID at \"multi-instance-mode.server-id\" in config.yml is still set to the default value. You should change it even if you are not using multi instance mode.", 1);
 		else if (!isValidServerID(serverID)) {
 			serverID = "invalid-ID";
-			LogManager.log("Invalid server ID set at \"multi-instance-mode.server-id\" in config.yml: the ID can only contain alphanumeric values, hypens or underscores and it must be between 3 and 36 characters long and it cannot be \"proxy\". You should fix it even if you are not using multi instance mode.", 1);
+			LogManager.log("Invalid server ID set at \"multi-instance-mode.server-id\" in config.yml: the ID can only contain alphanumeric values, hypens or underscores and it must be between 3 and 36 characters long and it cannot be \"proxy\". You should change it even if you are not using multi instance mode.", 1);
 		} serversInformation.put(serverID, new ServerInformation(serverID, 0, 0));
 		
 		long serverInformationUpdateTimeout = Utils.getTime(ConfigurationType.CONFIG.get().getString("multi-instance-mode.server-information-update-timeout"), false);

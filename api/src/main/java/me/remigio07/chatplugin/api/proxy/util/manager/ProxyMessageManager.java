@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.proxy.util.manager;
@@ -46,9 +46,9 @@ public abstract class ProxyMessageManager implements ChatPluginManager {
 		long ms = System.currentTimeMillis();
 		taskID = TaskManager.scheduleAsync(() -> {
 			for (String server : new HashSet<>(serversInformation.keySet()))
-				if (serversInformation.get(server).getLastEdit() < System.currentTimeMillis() - 305000L) // max: 5m,5s
+				if (serversInformation.get(server).getLastEdit() < System.currentTimeMillis() - 31000L) // max: 31s
 					serversInformation.remove(server);
-		}, 0L, 30000L);
+		}, 0L, 5000L);
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}
@@ -81,6 +81,60 @@ public abstract class ProxyMessageManager implements ChatPluginManager {
 	 */
 	public Map<String, ServerInformation> getServersInformation() {
 		return serversInformation;
+	}
+	
+	/**
+	 * Gets the amount of online players in the specified server.
+	 * 
+	 * <p>Specify "ALL" to get the amount of online players under the proxy.
+	 * Provided information may not be accurate when there are no players online.</p>
+	 * 
+	 * @param server Server to check
+	 * @param hideVanished Whether to subtract {@link #getVanishedPlayers(String)} from the amount
+	 * @return Online players amount
+	 */
+	public int getOnlinePlayers(String server, boolean hideVanished) {
+		if (server.equals("ALL")) {
+			int total = 0;
+			
+			for (ServerInformation info : serversInformation.values())
+				total += (info.getOnlinePlayers() - (hideVanished ? info.getVanishedPlayers() : 0));
+			return total;
+		} return serversInformation.containsKey(server) ? serversInformation.get(server).getOnlinePlayers() - (hideVanished ? serversInformation.get(server).getVanishedPlayers() : 0) : 0;
+	}
+	
+	/**
+	 * Gets the amount of vanished players in the specified server.
+	 * 
+	 * <p>Specify "ALL" to get the amount of vanished players under the proxy.</p>
+	 * 
+	 * @param server Server to check
+	 * @return Vanished players amount
+	 */
+	public int getVanishedPlayers(String server) {
+		if (server.equals("ALL")) {
+			int total = 0;
+			
+			for (ServerInformation info : serversInformation.values())
+				total += info.getVanishedPlayers();
+			return total;
+		} return serversInformation.containsKey(server) ? serversInformation.get(server).getVanishedPlayers() : 0;
+	}
+	
+	/**
+	 * Translates "{online@server}" and "{vanished@server}" with
+	 * the specified server's online and vanished players' amounts.
+	 * 
+	 * @param input Input containing placeholders
+	 * @param hideVanished Whether to subtract {@link #getVanishedPlayers(String)} from the amount
+	 * @return Translated placeholders
+	 */
+	public String formatOnlineAndVanishedPlaceholders(String input, boolean hideVanished) {
+		for (ServerInformation info : serversInformation.values()) {
+			input = input
+					.replace("{online@" + info.getID() + "}", String.valueOf(info.getOnlinePlayers() - (hideVanished ? info.getVanishedPlayers() : 0)))
+					.replace("{vanished@" + info.getID() + "}", String.valueOf(info.getVanishedPlayers()));
+		} return input;
 	}
 	
 	/**

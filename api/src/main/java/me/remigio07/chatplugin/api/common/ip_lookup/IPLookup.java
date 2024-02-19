@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.ip_lookup;
@@ -23,21 +23,23 @@ import java.util.List;
 import me.remigio07.chatplugin.api.common.util.Utils;
 
 /**
- * Represents an IP lookup handled by the {@link IPLookupManager}. See wiki for more info:
- * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/IP-lookup">ChatPlugin wiki/IP lookup</a>
+ * Represents an IP lookup handled by the {@link IPLookupManager}.
+ * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/IP-lookup">ChatPlugin wiki/Modules/IP lookup</a>
  */
 public abstract class IPLookup {
 	
 	/**
-	 * Array containing all available placeholders that can
-	 * be translated with an IP lookup's information. See wiki for more info:
-	 * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/IP-lookup#placeholders">ChatPlugin wiki/IP lookup/Placeholders</a>
+	 * Array containing all available placeholders that
+	 * can be translated with an IP lookup's information.
 	 * 
 	 * <p><strong>Content:</strong> ["ip_address", "isp", "continent", "country", "subdivisions", "city", "postal_code", "latitude", "longitude", "accuracy_radius_km", "accuracy_radius_mi", "accuracy_radius_nm"]</p>
+	 * 
+	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/IP-lookup#placeholders">ChatPlugin wiki/Modules/IP lookup/Placeholders</a>
 	 */
 	public static final String[] PLACEHOLDERS = new String[] { "ip_address", "isp", "continent", "country", "subdivisions", "city", "postal_code", "latitude", "longitude", "accuracy_radius_km", "accuracy_radius_mi", "accuracy_radius_nm" };
 	protected IPLookupMethod method = IPLookupMethod.REMOTE;
-	protected InetAddress ipAddress = Utils.getInetAddress("127.0.0.1");
+	protected InetAddress ipAddress;
 	protected String json = "{}";
 	protected String isp = "unknown ISP";
 	protected String continent = "unknown continent";
@@ -256,7 +258,7 @@ public abstract class IPLookup {
 	/**
 	 * Gets this lookup's position's postal code.
 	 * 
-	 * <p>Note that not all countries use postal codes.</p>
+	 * <p><strong>Note:</strong> not all countries use postal codes.</p>
 	 * 
 	 * @return Lookup's postal code
 	 */

@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.proxy.motd;
@@ -19,6 +19,7 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 
 import me.remigio07.chatplugin.api.common.motd.MoTD;
@@ -37,7 +38,7 @@ public abstract class ProxyMoTDManager extends MoTDManager {
 	protected int serverSocketPort;
 	protected String providerServerID, serverUnreachableDescription;
 	protected URL serverUnreachableIconURL;
-	protected Map<InetAddress, CompletableFuture<MoTD>> pendingFutures = new HashMap<>();
+	protected Map<InetAddress, Queue<CompletableFuture<MoTD>>> pendingFutures = new HashMap<>();
 	protected Server server;
 	protected FaviconAdapter serverUnreachableFavicon;
 	
@@ -111,14 +112,16 @@ public abstract class ProxyMoTDManager extends MoTDManager {
 	}
 	
 	/**
-	 * Gets the pending futures' map. Every entry is composed of a {@link InetAddress}
-	 * which represents a connection and a {@link CompletableFuture} holding a {@link MoTD}.
+	 * Gets the pending futures' map.
+	 * 
+	 * <p>Every entry is composed of a {@link InetAddress} which represents a connection
+	 * and a {@link Queue} of {@link CompletableFuture}s holding a {@link MoTD}.</p>
 	 * 
 	 * @deprecated Internal use only.
 	 * @return Pending futures' map
 	 */
 	@Deprecated
-	public Map<InetAddress, CompletableFuture<MoTD>> getPendingFutures() {
+	public Map<InetAddress, Queue<CompletableFuture<MoTD>>> getPendingFutures() {
 		return pendingFutures;
 	}
 	

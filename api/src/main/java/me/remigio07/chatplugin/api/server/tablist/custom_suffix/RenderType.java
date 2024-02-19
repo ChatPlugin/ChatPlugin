@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.tablist.custom_suffix;
@@ -22,12 +22,12 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
- * Represents the tablist's custom suffixes' render type. See wiki for more info:
- * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Tablist#custom-suffix">ChatPlugin wiki/Tablist#Custom suffix</a>
+ * Represents the tablist's custom suffixes' render type.
  * 
  * <p>This class is a pseudo-{@link Enum}. It contains the following methods:
  * {@link #name()}, {@link #ordinal()}, {@link #valueOf(String)} and {@link #values()}.</p>
  * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Tablists#render-types">ChatPlugin wiki/Modules/Tablists/Custom suffix/Render types</a>
  * @see CustomSuffixManager
  */
 public class RenderType {

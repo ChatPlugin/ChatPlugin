@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.common.util;
@@ -57,12 +57,12 @@ public class Debugger {
 		Runtime runtime = Runtime.getRuntime();
 		
 		sb.append("Environment: " + VersionUtils.getImplementationName() + " " + VersionUtils.getImplementationVersion() + "\n");
-		sb.append("Minecraft version: " + VersionUtils.getVersion().format() + "\n");
+		sb.append("Minecraft version: " + VersionUtils.getVersion().format() + " (protocol: " + VersionUtils.getVersion().getProtocol() + ")\n");
 		sb.append("ChatPlugin version: " + ChatPlugin.VERSION + "\n");
 		sb.append("\n");
 		sb.append("OS: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + ", " + System.getProperty("os.arch") + "\n");
 		sb.append("Java version: " + System.getProperty("java.version") + "\n");
-		sb.append("CPU cores: " + runtime.availableProcessors() + "x\n");
+		sb.append("CPU threads: " + runtime.availableProcessors() + "x\n");
 		sb.append("Active threads: " + Thread.activeCount() + "x\n");
 		sb.append("\n");
 		sb.append("Uptime: " + Utils.formatTime(ManagementFactory.getRuntimeMXBean().getUptime()) + "\n");

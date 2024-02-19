@@ -3,8 +3,8 @@
 		"modid": "chatplugin",
 		"name": "ChatPlugin",
 		"version": "${version}",
-		"url": "https://megaproserver.com/chatplugin",
-		"description": "A lightweight yet complete plugin which handles just too many features! Check the wiki for info: https://github.com/Remigio07/ChatPlugin",
+		"url": "https://remigio07.me/chatplugin",
+		"description": "A lightweight yet complete plugin which handles just too many features!",
 		"authorList": ["Remigio07"],
 		"dependencies": [
             "negativity@[1.9.0,)",

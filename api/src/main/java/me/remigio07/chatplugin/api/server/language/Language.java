@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.language;
@@ -30,8 +30,9 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 
 /**
- * Represents a language handled by the {@link LanguageManager}. See wiki for more info:
- * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Languages">ChatPlugin wiki/Languages</a>
+ * Represents a language handled by the {@link LanguageManager}.
+ * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Languages">ChatPlugin wiki/Modules/Languages</a>
  */
 public abstract class Language {
 	
@@ -43,7 +44,7 @@ public abstract class Language {
 		this.id = id;
 		this.displayName = displayName;
 		this.countryCodes = countryCodes;
-		configuration = id.equals(ConfigurationType.CONFIG.get().getString("languages.main-language-id")) ? ConfigurationType.MESSAGES.get() : new Configuration(new File(ChatPlugin.getInstance().getDataFolder().getAbsolutePath() + File.separator + "custom-messages", "messages-" + id + ".yml"));
+		configuration = id.equals("english") ? ConfigurationType.MESSAGES.get() : new Configuration(new File(ChatPlugin.getInstance().getDataFolder().getAbsolutePath() + File.separator + "custom-messages", "messages-" + id + ".yml"));
 	}
 	
 	/**
@@ -67,7 +68,7 @@ public abstract class Language {
 	/**
 	 * Gets this language's list of <a href="https://en.wikipedia.org/wiki/ISO_3166-2#Current_codes">ISO 3166-2</a> country codes.
 	 * 
-	 * <p>A player's language may be determined using {@link LanguageDetectorMethod#GEOLOCALIZATION}
+	 * <p>A player's language may be determined using {@link LanguageDetectionMethod#GEOLOCALIZATION}
 	 * if this list contains their {@link IPLookup#getCountryCode()}.</p>
 	 * 
 	 * @return Language's country codes
@@ -97,7 +98,7 @@ public abstract class Language {
 	 * @return Translated message
 	 */
 	public String getMessage(String path, Object... args) {
-		return ChatColor.translate(Utils.numericPlaceholders(configuration.getString(path, getMainLanguage().getConfiguration().getString(path)), args).replace("{pfx}", configuration.getString("misc.prefix", getMainLanguage().getConfiguration().getString("misc.prefix"))));
+		return ChatColor.translate(Utils.numericPlaceholders(configuration.getString(path, ConfigurationType.MESSAGES.get().getString(path)), args).replace("{pfx}", configuration.getString("misc.prefix", ConfigurationType.MESSAGES.get().getString("misc.prefix"))));
 	}
 	
 	/**

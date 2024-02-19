@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.bootstrap;
@@ -21,15 +21,7 @@ import org.slf4j.Logger;
 
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
-import com.velocitypowered.api.event.connection.DisconnectEvent;
-import com.velocitypowered.api.event.connection.PluginMessageEvent;
-import com.velocitypowered.api.event.connection.PostLoginEvent;
-import com.velocitypowered.api.event.player.ServerConnectedEvent;
-import com.velocitypowered.api.event.player.ServerPostConnectEvent;
-import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
-import com.velocitypowered.api.event.proxy.ProxyPingEvent;
-import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
@@ -42,8 +34,8 @@ import com.velocitypowered.api.proxy.ProxyServer;
 		id = "chatplugin",
 		name = "ChatPlugin",
 		version = "${version}",
-		url = "https://megaproserver.com/chatplugin",
-		description = "A lightweight yet complete plugin which handles just too many features! Check the wiki for info: https://github.com/ChatPlugin/ChatPlugin",
+		url = "https://remigio07.me/chatplugin",
+		description = "A lightweight yet complete plugin which handles just too many features!",
 		authors = "Remigio07",
 		dependencies = {
 				@Dependency(
@@ -87,7 +79,6 @@ public class VelocityBootstrapper {
 		Environment.currentEnvironment = Environment.VELOCITY;
 		
 		JARLibraryLoader.getInstance().initialize(proxy, logger, dataFolder);
-		proxy.getEventManager().register(this, new VelocityEventsAdapter());
 	}
 	
 	/**
@@ -106,58 +97,6 @@ public class VelocityBootstrapper {
 	 */
 	public static VelocityBootstrapper getInstance() {
 		return instance;
-	}
-	
-	private static class VelocityEventsAdapter {
-		
-		@Subscribe
-		public void onProxyShutdown(ProxyShutdownEvent event) {
-			JARLibraryLoader.getInstance().disable();
-		}
-		
-		@Subscribe
-		public void onPluginMessage(PluginMessageEvent event) {
-			adapt(event);
-		}
-		
-		@Subscribe
-		public void onPostLogin(PostLoginEvent event) {
-			adapt(event);
-		}
-		
-		@Subscribe
-		public void onServerPreConnect(ServerPreConnectEvent event) {
-			adapt(event);
-		}
-		
-		@Subscribe
-		public void onServerConnected(ServerConnectedEvent event) {
-			adapt(event);
-		}
-		
-		@Subscribe
-		public void onServerPostConnect(ServerPostConnectEvent event) {
-			adapt(event);
-		}
-		
-		@Subscribe
-		public void onDisconnect(DisconnectEvent event) {
-			adapt(event);
-		}
-		
-		@Subscribe
-		public void onProxyPing(ProxyPingEvent event) {
-			adapt(event);
-		}
-		
-		private static void adapt(Object event) {
-			try {
-				Class.forName("me.remigio07.chatplugin.ChatPluginPremiumImpl$VelocityAdapter", false, JARLibraryLoader.getInstance()).getMethod("on" + event.getClass().getSimpleName().substring(0, event.getClass().getSimpleName().indexOf("Event")), event.getClass()).invoke(null, event);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
 	}
 	
 }

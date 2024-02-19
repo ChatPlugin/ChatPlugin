@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.common.ip_lookup;
@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.github.cliftonlabs.json_simple.JsonArray;
-import com.github.cliftonlabs.json_simple.JsonException;
 import com.github.cliftonlabs.json_simple.JsonObject;
 import com.github.cliftonlabs.json_simple.Jsoner;
 
@@ -35,12 +34,12 @@ import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 
 public class IPLookupImpl extends IPLookup {
 	
-	public IPLookupImpl() {
-		// disabled feature constructor
+	public IPLookupImpl(InetAddress ipAddress) {
+		this.ipAddress = ipAddress;
 	}
 	
 	public IPLookupImpl(InetAddress ipAddress, boolean setValues) {
-		this.ipAddress = ipAddress;
+		this(ipAddress);
 		IPLookupManager manager = IPLookupManager.getInstance();
 		
 		TaskManager.runAsync(() -> {
@@ -62,30 +61,32 @@ public class IPLookupImpl extends IPLookup {
 	}
 	
 	@Override
-	public IPLookup setJSON(String jsonString) throws JsonException {
+	public IPLookup setJSON(String jsonString) throws Exception {
 		json = jsonString;
 		JsonObject json = (JsonObject) Jsoner.deserialize(jsonString);
 		JsonObject location = (JsonObject) json.get("location");
 		JsonObject country = (JsonObject) json.get("country");
 		
-		if (location.containsKey("latitude"))
-			latitude = ((Number) location.get("latitude")).doubleValue();
-		if (location.containsKey("longitude"))
-			longitude = ((Number) location.get("longitude")).doubleValue();
-		if (location.containsKey("accuracy_radius"))
-			accuracyRadius = ((Number) location.get("accuracy_radius")).longValue();
-		if (country.containsKey("names"))
-			this.country = (String) ((JsonObject) country.get("names")).get("en");
-		if (json.containsKey("continent") && ((JsonObject) json.get("continent")).containsKey("names"))
+		if (location != null) {
+			if (location.containsKey("latitude"))
+				latitude = ((Number) location.get("latitude")).doubleValue();
+			if (location.containsKey("longitude"))
+				longitude = ((Number) location.get("longitude")).doubleValue();
+			if (location.containsKey("accuracy_radius"))
+				accuracyRadius = ((Number) location.get("accuracy_radius")).longValue();
+		} if (country != null) {
+			if (country.containsKey("names"))
+				this.country = (String) ((JsonObject) country.get("names")).get("en");
+			if (country.containsKey("is_in_european_union") && (boolean) country.get("is_in_european_union"))
+				insideEU = true;
+			if (country.containsKey("iso_code"))
+				countryCode = (String) country.get("iso_code");
+		} if (json.containsKey("continent") && ((JsonObject) json.get("continent")).containsKey("names"))
 			continent = (String) ((JsonObject) ((JsonObject) json.get("continent")).get("names")).get("en");
 		if (json.containsKey("traits") && ((JsonObject) json.get("traits")).containsKey("autonomous_system_organization"))
 			isp = (String) ((JsonObject) json.get("traits")).get("autonomous_system_organization");
 		if (json.containsKey("city") && ((JsonObject) json.get("city")).containsKey("names"))
 			city = (String) ((JsonObject) ((JsonObject) json.get("city")).get("names")).get("en");
-		if (country.containsKey("is_in_european_union") && (boolean) country.get("is_in_european_union"))
-			insideEU = true;
-		if (country.containsKey("iso_code"))
-			countryCode = (String) country.get("iso_code");
 		if (json.containsKey("postal") && ((JsonObject) json.get("postal")).containsKey("code"))
 			postalCode = (String) ((JsonObject) json.get("postal")).get("code");
 		if (json.containsKey("subdivisions")) {

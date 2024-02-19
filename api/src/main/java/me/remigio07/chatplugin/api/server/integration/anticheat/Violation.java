@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.integration.anticheat;
@@ -18,8 +18,10 @@ package me.remigio07.chatplugin.api.server.integration.anticheat;
 import java.util.List;
 
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
+import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
+import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.server.language.Language;
-import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
  * Represents an {@link AnticheatIntegration}'s violation handled by the {@link AnticheatManager}.
@@ -27,32 +29,26 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 public abstract class Violation {
 	
 	/**
-	 * Array containing all available placeholders that can
-	 * be translated with a violation's information. See wiki for more info:
-	 * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Plugin-integrations#violations-placeholders">ChatPlugin wiki/Plugin integrations/Anticheats/Violations' placeholders</a>
+	 * Array containing all available placeholders that
+	 * can be translated with a violation's information.
 	 * 
-	 * <p><strong>Content:</strong> ["cheater", "cheater_uuid", "server", "anticheat", "cheat_id", "component", "amount", "ping", "ping_format", "version", "version_protocol", "tps", "last_time"]</p>
+	 * <p><strong>Content:</strong> ["cheater", "cheater_uuid", "anticheat", "cheat_id", "cheat_display_name", "component", "server", "amount", "ping", "ping_format", "tps", "version", "version_protocol", "last_time"]</p>
+	 * 
+	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Integrations#placeholders-1">ChatPlugin wiki/Modules/Integrations/Anticheats/Placeholders</a>
 	 */
-	public static final String[] PLACEHOLDERS = new String[] { "cheater", "cheater_uuid", "server", "anticheat", "cheat_id", "component", "amount", "ping", "ping_format", "version", "version_protocol", "tps", "last_time" };
-	protected ChatPluginServerPlayer cheater;
-	protected String server, cheatID, component;
+	public static final String[] PLACEHOLDERS = new String[] { "cheater", "cheater_uuid", "anticheat", "cheat_id", "cheat_display_name", "component", "server", "amount", "ping", "ping_format", "tps", "version", "version_protocol", "last_time" };
+	protected OfflinePlayer cheater;
 	protected IntegrationType<AnticheatIntegration> anticheat;
-	protected int amount, versionProtocol, ping;
-	protected boolean versionPreNettyRewrite;
+	protected String cheatID, component, server;
+	protected int amount, ping;
 	protected double tps;
+	protected Version version;
 	protected long lastTime = System.currentTimeMillis();
 	
-	protected Violation(ChatPluginServerPlayer cheater, String server, IntegrationType<AnticheatIntegration> anticheat, String cheatID, String component, int amount, int ping, int versionProtocol, boolean versionPreNettyRewrite, double tps) {
-		this.server = server;
+	protected Violation(OfflinePlayer cheater, IntegrationType<AnticheatIntegration> anticheat, String cheatID) {
 		this.cheater = cheater;
 		this.anticheat = anticheat;
 		this.cheatID = cheatID;
-		this.component = component;
-		this.amount = amount;
-		this.ping = ping;
-		this.versionProtocol = versionProtocol;
-		this.versionPreNettyRewrite = versionPreNettyRewrite;
-		this.tps = tps;
 	}
 	
 	/**
@@ -60,17 +56,8 @@ public abstract class Violation {
 	 * 
 	 * @return Violation's cheater
 	 */
-	public ChatPluginServerPlayer getCheater() {
+	public OfflinePlayer getCheater() {
 		return cheater;
-	}
-	
-	/**
-	 * Gets this violation's origin server.
-	 * 
-	 * @return Violation's origin server
-	 */
-	public String getServer() {
-		return server;
 	}
 	
 	/**
@@ -92,6 +79,16 @@ public abstract class Violation {
 	}
 	
 	/**
+	 * Gets this violation's cheat's display name found
+	 * in {@link ConfigurationType#VIOLATIONS_ICONS}.
+	 * 
+	 * @return Violation's cheat's display name
+	 */
+	public String getCheatDisplayName() {
+		return ConfigurationType.VIOLATIONS_ICONS.get().translateString(anticheat.name().toLowerCase() + "." + cheatID.toLowerCase() +  ".name");
+	}
+	
+	/**
 	 * Gets this violation's component.
 	 * 
 	 * @return Violation's component
@@ -101,39 +98,30 @@ public abstract class Violation {
 	}
 	
 	/**
-	 * Gets this violation's amount.
+	 * Gets this violation's origin server.
 	 * 
-	 * @return Violation's amount
+	 * @return Violation's origin server
+	 */
+	public String getServer() {
+		return server;
+	}
+	
+	/**
+	 * Gets the amount of times the player has been flagged.
+	 * 
+	 * @return Amount of times the player got flagged
 	 */
 	public int getAmount() {
 		return amount;
 	}
 	
 	/**
-	 * Gets the cheater's latency, in milliseconds.
+	 * Gets the cheater's latency at {@link #getLastTime()}, in milliseconds.
 	 * 
 	 * @return Cheater's ping
 	 */
 	public int getPing() {
 		return ping;
-	}
-	
-	/**
-	 * Gets the cheater's version's protocol.
-	 * 
-	 * @return Cheater's version's protocol
-	 */
-	public int getVersionProtocol() {
-		return versionProtocol;
-	}
-	
-	/**
-	 * Checks if the cheater's version is a pre-Netty rewrite version.
-	 * 
-	 * @return Whether the cheater's version is a pre-Netty rewrite version
-	 */
-	public boolean isVersionPreNettyRewrite() {
-		return versionPreNettyRewrite;
 	}
 	
 	/**
@@ -146,9 +134,18 @@ public abstract class Violation {
 	}
 	
 	/**
-	 * Gets the last time the anticheat flagged this {@link #getCheatID()}.
+	 * Gets the cheater's version.
 	 * 
-	 * @return Last time this violation got flagged, in milliseconds
+	 * @return Cheater's version
+	 */
+	public Version getVersion() {
+		return version;
+	}
+	
+	/**
+	 * Gets the last time the anticheat flagged this {@link #getCheatID()}, in milliseconds.
+	 * 
+	 * @return Last time this violation got flagged
 	 */
 	public long getLastTime() {
 		return lastTime;

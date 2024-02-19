@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.common.storage.database;
@@ -43,7 +43,7 @@ public class H2Connector extends DatabaseConnector {
 		instance = this;
 		
 		try {
-			LibrariesUtils.load(Library.H2_DRIVER);
+			LibrariesUtils.load(Library.H2_DATABASE_ENGINE);
 			
 			boolean serverMode = ConfigurationType.CONFIG.get().getBoolean("storage.database.use-server-mode");
 			
@@ -211,6 +211,21 @@ public class H2Connector extends DatabaseConnector {
 					+ ")";
 			break;
 		} executeUpdate(update.replace("{table_id}", container.getDatabaseTableID()));
+	}
+	
+	@Override
+	public int getNextID(DataContainer table) throws SQLException {
+		if (table == DataContainer.CHAT_MESSAGES || table == DataContainer.PRIVATE_MESSAGES)
+			throw new IllegalArgumentException("Unable to get next ID in table " + table.getDatabaseTableID() + " since that table does not have IDs");
+		if (table == DataContainer.IP_ADDRESSES)
+			table = DataContainer.PLAYERS;
+		Number id = get("SELECT identity_base FROM information_schema.columns WHERE table_name = '" + table.getDatabaseTableID() + "' AND column_name = ?", "identity_base", Number.class, table.getIDColumn());
+		return id == null ? 1 : id.intValue();
+	}
+	
+	@Override
+	public String getEngineName() {
+		return Library.H2_DATABASE_ENGINE.getName();
 	}
 	
 	@Override

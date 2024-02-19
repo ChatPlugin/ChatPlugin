@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.util.manager;
@@ -85,9 +85,6 @@ public interface ChatPluginManager {
 	 * 		<li>Spigot requirement - whether the feature requires Spigot or a fork; Bukkit only</li>
 	 * 		<li>minimum version - the minimum Vanilla version required to run the feature</li>
 	 * 	</ol>
-	 * 
-	 * <p>See wiki for more info:
-	 * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Features-availability">ChatPlugin wiki/Features availability</a></p>
 	 * 
 	 * @param warnIfUnavailable Whether to send a message if the feature is unavailable
 	 * @return Whether this manager's features may run on {@link Environment#getCurrent()}

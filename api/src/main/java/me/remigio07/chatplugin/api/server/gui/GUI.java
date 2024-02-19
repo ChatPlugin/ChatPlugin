@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,12 +10,14 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.gui;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import me.remigio07.chatplugin.api.common.util.TriFunction;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
@@ -23,11 +25,13 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.event.gui.GUIClickEvent;
 import me.remigio07.chatplugin.api.server.event.gui.GUIRefreshEvent;
 import me.remigio07.chatplugin.api.server.language.Language;
+import me.remigio07.chatplugin.api.server.util.adapter.inventory.item.ItemStackAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 
 /**
  * Represents a GUI handled by the {@link GUIManager}.
  * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/GUIs">ChatPlugin wiki/Modules/GUIs</a>
  * @see SinglePageGUI
  * @see FillableGUI
  */
@@ -36,6 +40,7 @@ public abstract class GUI {
 	protected String id;
 	protected boolean loaded;
 	protected GUILayout layout;
+	protected List<CompletableFuture<ItemStackAdapter>> skullOwnerFutures = new ArrayList<>();
 	private TriFunction<Icon, String, Language, String> stringPlaceholdersTranslator;
 	private TriFunction<Icon, List<String>, Language, List<String>> stringListPlaceholdersTranslator;
 	

@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.player;
@@ -18,6 +18,8 @@ package me.remigio07.chatplugin.api.server.player;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookup;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
@@ -65,14 +67,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	protected ChatPluginServerPlayer lastCorrespondent;
 	protected List<OfflinePlayer> ignoredPlayers;
 	
-	/**
-	 * Constructs a new server player with the given {@link PlayerAdapter} object.
-	 * 
-	 * @deprecated Internal use only. Use {@link ServerPlayerManager#loadPlayer(PlayerAdapter)} to load a player and {@link ServerPlayerManager#getPlayer(java.util.UUID)} to obtain their instance.
-	 * @param player Player object
-	 */
-	@Deprecated
-	public ChatPluginServerPlayer(PlayerAdapter player) {
+	protected ChatPluginServerPlayer(PlayerAdapter player) {
 		super(player);
 	}
 	
@@ -153,8 +148,8 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	 * if <code>!</code>{@link IPLookupManager#isEnabled()} or <code>!generateIfNull</code>
 	 * and there are no cached IP lookups for this player or an error occurrs.</p>
 	 * 
-	 * <p>Note that this method might take some time
-	 * to be executed: async calls are recommended.</p>
+	 * <p><strong>Note:</strong> this method might take some
+	 * time to be executed: async calls are recommended.</p>
 	 * 
 	 * @param generateIfNull Whether to generate the lookup if it is not cached
 	 * @return Lookup for this player
@@ -164,8 +159,8 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 		if (ipLookup == null) {
 			if (IPLookupManager.getInstance().isEnabled() && generateIfNull) {
 				try {
-					return ipLookup = IPLookupManager.getInstance().getIPLookup(getIPAddress()).get();
-				} catch (InterruptedException | ExecutionException e) {
+					return ipLookup = IPLookupManager.getInstance().getIPLookup(getIPAddress()).get(5L, TimeUnit.SECONDS);
+				} catch (InterruptedException | ExecutionException | TimeoutException e) {
 					LogManager.log("{0} occurred while waiting for {1}'s IP ({2}) lookup: {3}", 2, e.getClass().getSimpleName(), name, getIPAddress().getHostName(), e.getMessage());
 				}
 			} return IPLookupManager.getInstance().getDisabledFeatureConstructor();
@@ -204,7 +199,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	/**
 	 * Gets this player's {@link PlayersDataType#ID} from {@link DataContainer#PLAYERS}.
 	 * 
-	 * @return Player's ID in the database
+	 * @return Player's ID in the storage
 	 */
 	public int getID() {
 		return id;
@@ -213,7 +208,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	/**
 	 * Gets this player's {@link PlayersDataType#BANS} from {@link DataContainer#PLAYERS}.
 	 * 
-	 * @return Player's bans in the database
+	 * @return Player's bans in the storage
 	 */
 	public int getBans() {
 		return bans;
@@ -222,7 +217,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	/**
 	 * Gets this player's anticheat bans from {@link DataContainer#BANS}.
 	 * 
-	 * @return Player's anticheat bans in the database
+	 * @return Player's anticheat bans in the storage
 	 */
 	public short getAnticheatBans() {
 		return anticheatBans;
@@ -231,7 +226,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	/**
 	 * Gets this player's {@link PlayersDataType#WARNINGS} from {@link DataContainer#PLAYERS}.
 	 * 
-	 * @return Player's warnings in the database
+	 * @return Player's warnings in the storage
 	 */
 	public int getWarnings() {
 		return warnings;
@@ -240,7 +235,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	/**
 	 * Gets this player's anticheat warnings from {@link DataContainer#WARNINGS}.
 	 * 
-	 * @return Player's anticheat warnings in the database
+	 * @return Player's anticheat warnings in the storage
 	 */
 	public short getAnticheatWarnings() {
 		return anticheatWarnings;
@@ -249,7 +244,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	/**
 	 * Gets this player's {@link PlayersDataType#KICKS} from {@link DataContainer#PLAYERS}.
 	 * 
-	 * @return Player's kicks in the database
+	 * @return Player's kicks in the storage
 	 */
 	public int getKicks() {
 		return kicks;
@@ -258,7 +253,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	/**
 	 * Gets this player's anticheat kicks from {@link DataContainer#KICKS}.
 	 * 
-	 * @return Player's anticheat kicks in the database
+	 * @return Player's anticheat kicks in the storage
 	 */
 	public short getAnticheatKicks() {
 		return anticheatKicks;
@@ -267,7 +262,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	/**
 	 * Gets this player's {@link PlayersDataType#MUTES} from {@link DataContainer#PLAYERS}.
 	 * 
-	 * @return Player's mutes in the database
+	 * @return Player's mutes in the storage
 	 */
 	public int getMutes() {
 		return mutes;
@@ -276,7 +271,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	/**
 	 * Gets this player's anticheat mutes from {@link DataContainer#MUTES}.
 	 * 
-	 * @return Player's anticheat mutes in the database
+	 * @return Player's anticheat mutes in the storage
 	 */
 	public short getAnticheatMutes() {
 		return anticheatMutes;
@@ -285,7 +280,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	/**
 	 * Gets this player's {@link PlayersDataType#MESSAGES_SENT} from {@link DataContainer#PLAYERS}.
 	 * 
-	 * @return Player's messages sent in the database
+	 * @return Player's messages sent in the storage
 	 */
 	public int getMessagesSent() {
 		return messagesSent;
@@ -363,13 +358,13 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	
 	/**
 	 * Calls {@link #sendTitle(String, String, int, int, int)} specifying default
-	 * values of <code>10</code>, <code>70</code> and <code>20</code> ticks.
+	 * values of 500, 3500 and 1000 milliseconds (or 10, 70 and 20 ticks).
 	 * 
 	 * @param title Title to send
 	 * @param subtitle Subtitle to send
 	 */
 	public void sendTitle(@Nullable(why = "Title may not be specified") String title, @Nullable(why = "Subtitle may not be specified") String subtitle) {
-		sendTitle(title, subtitle, 10, 70, 20);
+		sendTitle(title, subtitle, 500, 3500, 1000);
 	}
 	
 	/**
@@ -377,9 +372,9 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	 * 
 	 * @param title Title to send
 	 * @param subtitle Subtitle to send
-	 * @param fadeIn Fading in effect's duration, in ticks
-	 * @param stay Stay effect's duration, in ticks
-	 * @param fadeOut Fading out effect's duration, in ticks
+	 * @param fadeIn Fading in effect's duration, in milliseconds
+	 * @param stay Stay effect's duration, in milliseconds
+	 * @param fadeOut Fading out effect's duration, in milliseconds
 	 */
 	public abstract void sendTitle(@Nullable(why = "Title may not be specified") String title, @Nullable(why = "Subtitle may not be specified") String subtitle, int fadeIn, int stay, int fadeOut);
 	
@@ -421,9 +416,16 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	/**
 	 * Makes this player execute a command.
 	 * 
-	 * @param command Command to execute
+	 * @param command Command to execute without "/"
 	 */
 	public abstract void executeCommand(String command);
+	
+	/**
+	 * Teleports this player to another player.
+	 * 
+	 * @param player Destination player
+	 */
+	public abstract void teleport(ChatPluginServerPlayer player);
 	
 	/**
 	 * Gets this player's world's name.

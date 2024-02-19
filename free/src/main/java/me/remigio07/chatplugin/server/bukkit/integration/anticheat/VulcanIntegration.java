@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.bukkit.integration.anticheat;
@@ -29,6 +29,7 @@ import me.frep.vulcan.api.VulcanAPI;
 import me.frep.vulcan.api.VulcanAPI.Factory;
 import me.frep.vulcan.api.check.Check;
 import me.frep.vulcan.api.event.VulcanFlagEvent;
+import me.frep.vulcan.api.event.VulcanViolationResetEvent;
 import me.remigio07.chatplugin.api.common.event.EventManager;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.util.packet.Packets;
@@ -42,11 +43,10 @@ import me.remigio07.chatplugin.api.server.util.manager.TPSManager.TPSTimeInterva
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07.chatplugin.server.bukkit.integration.ChatPluginBukkitIntegration;
 import me.remigio07.chatplugin.server.bukkit.manager.BukkitEventManager;
-import me.remigio07.chatplugin.server.integration.anticheat.ViolationImpl;
 
 public class VulcanIntegration extends ChatPluginBukkitIntegration<AnticheatIntegration> implements AnticheatIntegration {
 	
-	public static final List<String> CHEATS_IDS = Arrays.asList("aim", "autoblock", "autoclicker", "fastbow", "criticals", "hitbox", "killaura", "reach", "velocity", "boatfly", "antilevitation", "nosaddle", "entityspeed", "entityflight", "elytra", "fastclimb", "flight", "jesus", "jump", "motion", "noslow", "speed", "step", "sprint", "strafe", "wallclimb", "ghosthand", "crash", "baritone", "badpackets", "fastplace", "fastbreak", "fastuse", "groundspoof", "interact", "improbable", "invalid", "boatglitch", "inventory", "scaffold", "timer", "tower", "hackedclient");
+	public static final List<String> CHEATS_IDS = Arrays.asList("aim", "autoblock", "autoclicker", "fastbow", "hitbox", "killaura", "reach", "velocity", "criticals", "boatfly", "antilevitation", "nosaddle", "entityspeed", "entityflight", "elytra", "fastclimb", "flight", "jesus", "jump", "motion", "noslow", "speed", "step", "sprint", "strafe", "wallclimb", "vclip", "ghosthand", "baritone", "badpackets", "fastplace", "fastbreak", "groundspoof", "improbable", "invalid", "airplace", "inventory", "scaffold", "timer", "tower");
 	
 	public VulcanIntegration() {
 		super(IntegrationType.VULCAN);
@@ -56,7 +56,7 @@ public class VulcanIntegration extends ChatPluginBukkitIntegration<AnticheatInte
 	protected void loadAPI() {
 		api = Factory.getApi();
 		
-		Bukkit.getPluginManager().registerEvent(VulcanFlagEvent.class, ((BukkitEventManager) EventManager.getInstance()).getListener(), EventPriority.NORMAL, new EventExecutor() {
+		registerEvent(VulcanFlagEvent.class, new EventExecutor() {
 			
 			@Override
 			public void execute(Listener listener, Event event) throws EventException {
@@ -65,7 +65,7 @@ public class VulcanIntegration extends ChatPluginBukkitIntegration<AnticheatInte
 				
 				if (player == null)
 					return;
-				int violations = getViolations(player, flagEvent.getCheck().getName());
+				int violations = flagEvent.getCheck().getVl() + 1;
 				
 				if (violations < 1)
 					return;
@@ -73,35 +73,54 @@ public class VulcanIntegration extends ChatPluginBukkitIntegration<AnticheatInte
 					ProxyManager.getInstance().sendPluginMessage(Packets.Sync.addPlayerViolation(
 							ProxyManager.getInstance().getServerID(),
 							player.getUUID(),
+							player.getName(),
 							IntegrationType.VULCAN,
 							flagEvent.getCheck().getName(),
 							(flagEvent.getCheck().getType() + "").toUpperCase(),
 							violations,
 							player.getPing(),
+							TPSManager.getInstance().getTPS(TPSTimeInterval.ONE_MINUTE),
 							player.getVersion().getProtocol(),
-							false,
-							TPSManager.getInstance().getTPS(TPSTimeInterval.ONE_MINUTE)
+							player.getVersion().isPreNettyRewrite()
 							));
-				else AnticheatManager.getInstance().addViolation(new ViolationImpl(
+				else AnticheatManager.getInstance().addViolation(
 						player,
-						ProxyManager.getInstance().getServerID(),
 						IntegrationType.VULCAN,
 						flagEvent.getCheck().getName(),
 						(flagEvent.getCheck().getType() + "").toUpperCase(),
+						ProxyManager.getInstance().getServerID(),
 						violations,
 						player.getPing(),
-						player.getVersion().getProtocol(),
-						false,
-						TPSManager.getInstance().getTPS(TPSTimeInterval.ONE_MINUTE)
-						));
+						TPSManager.getInstance().getTPS(TPSTimeInterval.ONE_MINUTE),
+						player.getVersion()
+						);
 			}
-		}, BukkitBootstrapper.getInstance());
+		});
+		registerEvent(VulcanViolationResetEvent.class, new EventExecutor() {
+			
+			@Override
+			public void execute(Listener listener, Event event) throws EventException {
+				for (ChatPluginServerPlayer player : ServerPlayerManager.getInstance().getPlayers().values())
+					if (ProxyManager.getInstance().isEnabled())
+						ProxyManager.getInstance().sendPluginMessage(Packets.Sync.clearPlayerViolation(
+								ProxyManager.getInstance().getServerID(),
+								player.getUUID(),
+								player.getName()
+								));
+					else AnticheatManager.getInstance().clearViolations(player);
+			}
+			
+		});
+	}
+	
+	private static void registerEvent(Class<? extends Event> clazz, EventExecutor executor) {
+		Bukkit.getPluginManager().registerEvent(clazz, ((BukkitEventManager) EventManager.getInstance()).getListener(), EventPriority.NORMAL, executor, BukkitBootstrapper.getInstance());
 	}
 	
 	@Override
 	public int getViolations(ChatPluginServerPlayer player, String cheatID) {
 		for (Check check : ((VulcanAPI) api).getChecks(player.toAdapter().bukkitValue()))
-			if (check.getName().equals(cheatID))
+			if (check.getName().equalsIgnoreCase(cheatID))
 				return check.getVl();
 		return 0;
 	}

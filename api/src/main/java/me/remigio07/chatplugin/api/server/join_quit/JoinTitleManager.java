@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.join_quit;
@@ -29,6 +29,8 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 
 /**
  * Manager that handles join titles.
+ * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Join-quit#join-titles">ChatPlugin wiki/Modules/Join-quit/Join titles</a>
  */
 public abstract class JoinTitleManager implements ChatPluginManager {
 	

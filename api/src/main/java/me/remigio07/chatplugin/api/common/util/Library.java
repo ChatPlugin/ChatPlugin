@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.util;
@@ -54,32 +54,32 @@ public enum Library {
 	/**
 	 * Represents the <a href="https://docs.advntr.dev">Adventure Platform API</a> library.
 	 */
-	ADVENTURE_PLATFORM_API("Adventure Platform", "net.kyori.adventure.platform.AudienceProvider", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-api/4.3.0/adventure-platform-api-4.3.0.jar", "adventure-platform-api.jar"),
+	ADVENTURE_PLATFORM_API("Adventure Platform", "net.kyori.adventure.platform.AudienceProvider", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-api/4.3.2/adventure-platform-api-4.3.2.jar", "adventure-platform-api.jar"),
 	
 	/**
 	 * Represents the <a href="https://docs.advntr.dev">Adventure Platform Bukkit</a> library.
 	 */
-	ADVENTURE_PLATFORM_BUKKIT("Adventure Platform Bukkit", "net.kyori.adventure.platform.bukkit.BukkitAudiences", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-bukkit/4.3.0/adventure-platform-bukkit-4.3.0.jar", "adventure-platform-bukkit.jar"),
+	ADVENTURE_PLATFORM_BUKKIT("Adventure Platform Bukkit", "net.kyori.adventure.platform.bukkit.BukkitAudiences", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-bukkit/4.3.2/adventure-platform-bukkit-4.3.2.jar", "adventure-platform-bukkit.jar"),
 	
 	/**
 	 * Represents the <a href="https://docs.advntr.dev">Adventure Platform BungeeCord</a> library.
 	 */
-	ADVENTURE_PLATFORM_BUNGEECORD("Adventure Platform Bukkit", "net.kyori.adventure.platform.bungeecord.BungeeAudiences", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-bungeecord/4.3.0/adventure-platform-bungeecord-4.3.0.jar", "adventure-platform-bungeecord.jar"),
+	ADVENTURE_PLATFORM_BUNGEECORD("Adventure Platform BungeeCord", "net.kyori.adventure.platform.bungeecord.BungeeAudiences", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-bungeecord/4.3.2/adventure-platform-bungeecord-4.3.2.jar", "adventure-platform-bungeecord.jar"),
 	
 	/**
 	 * Represents the <a href="https://docs.advntr.dev">Adventure Platform Facet</a> library.
 	 */
-	ADVENTURE_PLATFORM_FACET("Adventure Platform Facet", "net.kyori.adventure.platform.facet.Facet", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-facet/4.3.0/adventure-platform-facet-4.3.0.jar", "adventure-platform-facet.jar"),
+	ADVENTURE_PLATFORM_FACET("Adventure Platform Facet", "net.kyori.adventure.platform.facet.Facet", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-facet/4.3.2/adventure-platform-facet-4.3.2.jar", "adventure-platform-facet.jar"),
 	
 	/**
 	 * Represents the <a href="https://docs.advntr.dev">Adventure Platform SpongeAPI</a> library.
 	 */
-	ADVENTURE_PLATFORM_SPONGEAPI("Adventure Platform SpongeAPI", "net.kyori.adventure.platform.spongeapi.SpongeAudiences", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-spongeapi/4.3.0/adventure-platform-spongeapi-4.3.0.jar", "adventure-platform-spongeapi.jar"),
+	ADVENTURE_PLATFORM_SPONGEAPI("Adventure Platform SpongeAPI", "net.kyori.adventure.platform.spongeapi.SpongeAudiences", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-spongeapi/4.3.2/adventure-platform-spongeapi-4.3.2.jar", "adventure-platform-spongeapi.jar"),
 	
 	/**
 	 * Represents the <a href="https://docs.advntr.dev">Adventure Platform Viaversion</a> library.
 	 */
-	ADVENTURE_PLATFORM_VIAVERSION("Adventure Platform Viaversion", "net.kyori.adventure.platform.viaversion.ViaFacet", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-viaversion/4.3.0/adventure-platform-viaversion-4.3.0.jar", "adventure-platform-viaversion.jar"),
+	ADVENTURE_PLATFORM_VIAVERSION("Adventure Platform Viaversion", "net.kyori.adventure.platform.viaversion.ViaFacet", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-viaversion/4.3.2/adventure-platform-viaversion-4.3.2.jar", "adventure-platform-viaversion.jar"),
 	
 	/**
 	 * Represents the <a href="https://docs.advntr.dev">Adventure Text Serializer Gson</a> library.
@@ -192,9 +192,9 @@ public enum Library {
 	GUAVA("Guava", "com.google.common.annotations.GwtCompatible", new Relocation("com.google"), "https://repo1.maven.org/maven2/com/google/guava/guava/31.0.1-jre/guava-31.0.1-jre.jar", "guava.jar"),
 	
 	/**
-	 * Represents the <a href="https://h2database.com/html/main.html">H2 Driver</a> library.
+	 * Represents the <a href="https://h2database.com/html/main.html">H2 Database Engine</a> library.
 	 */
-	H2_DRIVER("H2 Driver", "org.h2.Driver", "https://repo1.maven.org/maven2/com/h2database/h2/2.2.224/h2-2.2.224.jar", "h2-driver.jar", "769D5A85D19CCC2B06620F8C81D6D8F8"),
+	H2_DATABASE_ENGINE("H2 Database Engine", "org.h2.Driver", "https://repo1.maven.org/maven2/com/h2database/h2/2.2.224/h2-2.2.224.jar", "h2-driver.jar", "769D5A85D19CCC2B06620F8C81D6D8F8"),
 	
 	/**
 	 * Represents the <a href="http://www.trustice.com/java/tar/">Ice TAR</a> library.
@@ -277,9 +277,9 @@ public enum Library {
 	MAXMIND_GEOIP2("MaxMind GeoIP2", "com.maxmind.geoip2.GeoIp2Provider", new Relocation("com.maxmind.geoip2"), "https://repo1.maven.org/maven2/com/maxmind/geoip2/geoip2/2.16.1/geoip2-2.16.1.jar", "maxmind-geoip2.jar"),
 	
 	/**
-	 * Represents the <a href="https://dev.mysql.com/doc/connector-j/8.1/en/">MySQL Connector</a> library.
+	 * Represents the <a href="https://dev.mysql.com/doc/connector-j/8.1/en/">MySQL Connector/J</a> library.
 	 */
-	MYSQL_CONNECTOR("MySQL Connector", "com.mysql.jdbc.Driver", new Relocation("com.mysql"), "https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.27/mysql-connector-java-8.0.27.jar", "mysql-connector.jar"),
+	MYSQL_CONNECTOR_J("MySQL Connector/J", "com.mysql.jdbc.Driver", new Relocation("com.mysql"), "https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.2.0/mysql-connector-j-8.2.0.jar", "mysql-connector-j.jar"),
 	
 	/**
 	 * Represents the <a href="https://github.com/TakahikoKawasaki/nv-websocket-client">NV WebSocket Client</a> library.
@@ -307,9 +307,9 @@ public enum Library {
 	SLF4J_SIMPLE_PROVIDER("SLF4J Simple Provider", "org.slf4j.impl.SimpleLogger", new Relocation("org.slf4j.impl"), "https://repo1.maven.org/maven2/org/slf4j/slf4j-simple/1.7.32/slf4j-simple-1.7.32.jar", "slf4j-simple-provider.jar"),
 	
 	/**
-	 * Represents the <a href="https://github.com/xerial/sqlite-jdbc">SQLite Driver</a> library.
+	 * Represents the <a href="https://github.com/xerial/sqlite-jdbc">SQLite JDBC</a> library.
 	 */
-	SQLITE_DRIVER("SQLite Driver", "org.sqlite.JDBC", "https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.43.0.0/sqlite-jdbc-3.43.0.0.jar", "sqlite-driver.jar", "CE4481C5A3E9D4C97613FD263B651883");
+	SQLITE_JDBC("SQLite JDBC", "org.sqlite.JDBC", "https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.43.0.0/sqlite-jdbc-3.43.0.0.jar", "sqlite-driver.jar", "CE4481C5A3E9D4C97613FD263B651883");
 	
 	private String name, clazz, url, fileName, md5Hash;
 	private Relocation relocation;

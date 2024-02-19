@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.language;
@@ -28,7 +28,7 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 public abstract class LanguageDetector {
 	
 	protected boolean enabled;
-	protected LanguageDetectorMethod method;
+	protected LanguageDetectionMethod method;
 	protected long delay;
 	
 	/**
@@ -53,13 +53,13 @@ public abstract class LanguageDetector {
 	}
 	
 	/**
-	 * Gets the language detector method currently in use.
+	 * Gets the language detection method currently in use.
 	 * 
 	 * <p><strong>Found at:</strong> "languages.detector.method" in {@link ConfigurationType#CONFIG}</p>
 	 * 
 	 * @return Current language detector method
 	 */
-	public LanguageDetectorMethod getMethod() {
+	public LanguageDetectionMethod getMethod() {
 		return method;
 	}
 	
@@ -80,6 +80,9 @@ public abstract class LanguageDetector {
 	 * 
 	 * <p>Will fallback to {@link LanguageManager#getMainLanguage()}
 	 * if was not possible to detect the player's language.</p>
+	 * 
+	 * <p><strong>Note:</strong> this method might take some
+	 * time to be executed: async calls are recommended.</p>
 	 * 
 	 * @param player Target player
 	 * @return Player's language
@@ -102,7 +105,7 @@ public abstract class LanguageDetector {
 	public abstract void load();
 	
 	/**
-	 * Detects a player's language using {@link LanguageDetectorMethod#CLIENT_LOCALE}.
+	 * Detects a player's language using {@link LanguageDetectionMethod#CLIENT_LOCALE}.
 	 * 
 	 * <p>Will fallback to {@link LanguageManager#getMainLanguage()}
 	 * if was not possible to detect the player's language.</p>
@@ -114,7 +117,7 @@ public abstract class LanguageDetector {
 	public abstract Language detectUsingClientLocale(ChatPluginServerPlayer player);
 	
 	/**
-	 * Detects an IP lookup's language using {@link LanguageDetectorMethod#GEOLOCALIZATION}.
+	 * Detects an IP lookup's language using {@link LanguageDetectionMethod#GEOLOCALIZATION}.
 	 * 
 	 * <p>Will fallback to {@link LanguageManager#getMainLanguage()}
 	 * if was not possible to detect the player's language.</p>

@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.command;
@@ -247,9 +247,8 @@ public class ChatPluginCommand extends BaseCommand {
 			
 			int ms = ChatPlugin.getInstance().reload();
 			
-			if (ms == -1)
-				sender.sendMessage("\u00A7cChatPlugin could not reload and will be disabled. Check the console for more information.");
-			else sender.sendMessage((sender.isConsole() ? me.remigio07.chatplugin.api.server.language.Language.getMainLanguage() : LanguageManager.getInstance().getLanguage(new OfflinePlayer(sender.getUUID(), sender.getName()))).getMessage("misc.reload.end", ms));
+			sender.sendMessage(ms == -1 ? "\u00A7cChatPlugin could not reload and will be disabled. Check the console for more information."
+					: (sender.isConsole() ? me.remigio07.chatplugin.api.server.language.Language.getMainLanguage() : LanguageManager.getInstance().getLanguage(new OfflinePlayer(sender.getUUID(), sender.getName()))).getMessage("misc.reload.end", ms));
 		}
 		
 	}

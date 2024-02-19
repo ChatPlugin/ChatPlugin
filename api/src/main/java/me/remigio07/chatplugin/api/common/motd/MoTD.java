@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.motd;
@@ -19,6 +19,8 @@ import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import me.remigio07.chatplugin.api.common.util.Utils;
+import me.remigio07.chatplugin.api.common.util.ValueContainer;
 import me.remigio07.chatplugin.api.common.util.annotation.ServerImplementationOnly;
 import me.remigio07.chatplugin.api.common.util.packet.PacketDeserializer;
 import me.remigio07.chatplugin.api.common.util.packet.PacketSerializer;
@@ -27,13 +29,15 @@ import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 
 /**
  * Represents a MoTD handled by the {@link MoTDManager}.
+ * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/MoTDs">ChatPlugin wiki/Modules/MoTDs</a>
  */
 public class MoTD {
 	
 	private String description, hover, versionName;
 	private URL customIconURL;
 	private boolean hoverDisplayed, versionNameDisplayed, customIconDisplayed;
-	private int onlinePlayers, maxPlayers;
+	private ValueContainer<Integer> onlinePlayers, maxPlayers;
 	
 	/**
 	 * Constructs a new MoTD.
@@ -48,7 +52,7 @@ public class MoTD {
 	 * @param onlinePlayers MoTD's online players
 	 * @param maxPlayers MoTD's max players
 	 */
-	public MoTD(String description, String hover, String versionName, URL customIconURL, boolean hoverDisplayed, boolean versionNameDisplayed, boolean customIconDisplayed, int onlinePlayers, int maxPlayers) {
+	public MoTD(String description, String hover, String versionName, URL customIconURL, boolean hoverDisplayed, boolean versionNameDisplayed, boolean customIconDisplayed, ValueContainer<Integer> onlinePlayers, ValueContainer<Integer> maxPlayers) {
 		this.description = description;
 		this.hover = hover;
 		this.versionName = versionName;
@@ -129,7 +133,7 @@ public class MoTD {
 	 * 
 	 * @return MoTD's online players
 	 */
-	public int getOnlinePlayers() {
+	public ValueContainer<Integer> getOnlinePlayers() {
 		return onlinePlayers;
 	}
 	
@@ -138,7 +142,7 @@ public class MoTD {
 	 * 
 	 * @return MoTD's max players
 	 */
-	public int getMaxPlayers() {
+	public ValueContainer<Integer> getMaxPlayers() {
 		return maxPlayers;
 	}
 	
@@ -210,7 +214,7 @@ public class MoTD {
 	 * 
 	 * @param onlinePlayers MoTD's online players
 	 */
-	public void setOnlinePlayers(int onlinePlayers) {
+	public void setOnlinePlayers(ValueContainer<Integer> onlinePlayers) {
 		this.onlinePlayers = onlinePlayers;
 	}
 	
@@ -219,7 +223,7 @@ public class MoTD {
 	 * 
 	 * @param maxPlayers MoTD's max players
 	 */
-	public void setMaxPlayers(int maxPlayers) {
+	public void setMaxPlayers(ValueContainer<Integer> maxPlayers) {
 		this.maxPlayers = maxPlayers;
 	}
 	
@@ -261,6 +265,8 @@ public class MoTD {
 		PacketDeserializer deserializer = new PacketDeserializer(packet);
 		
 		if (deserializer.readUTF().equals("MoTDResponse")) {
+			String tmp;
+			
 			deserializer.readUTF();
 			deserializer.readUTF();
 			
@@ -273,8 +279,8 @@ public class MoTD {
 						deserializer.readBoolean(),
 						deserializer.readBoolean(),
 						deserializer.readBoolean(),
-						deserializer.readInt(),
-						deserializer.readInt()
+						new ValueContainer<>(Utils.isInteger(tmp = deserializer.readUTF()) ? Integer.valueOf(tmp) : tmp),
+						new ValueContainer<>(Utils.isInteger(tmp = deserializer.readUTF()) ? Integer.valueOf(tmp) : tmp)
 						);
 			} catch (MalformedURLException e) {
 				

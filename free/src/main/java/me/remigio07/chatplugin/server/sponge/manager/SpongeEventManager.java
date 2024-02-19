@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,14 +10,12 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.sponge.manager;
 
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.data.manipulator.mutable.PotionEffectData;
-import org.spongepowered.api.effect.potion.PotionEffectTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.EventListener;
@@ -143,9 +141,10 @@ public class SpongeEventManager extends EventManager {
 		JoinTitleManager.getInstance().sendJoinTitle(player, true);
 		WelcomeMessageManager.getInstance().sendWelcomeMessage(player, true);
 		
-		if (vanished)
+		if (vanished) {
 			VanishManager.getInstance().hide(player);
-		else JoinMessageManager.getInstance().sendJoinMessage(player);
+			QuitMessageManager.getInstance().getFakeQuits().add(player.getUUID());
+		} else JoinMessageManager.getInstance().sendJoinMessage(player);
 	}
 	
 	public void onClientConnection$Disconnect(ClientConnectionEvent.Disconnect event) {
@@ -154,10 +153,7 @@ public class SpongeEventManager extends EventManager {
 		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getTargetEntity().getUniqueId());
 		
 		if (player != null) {
-			if (player.isVanished()) {
-				VanishManager.getInstance().show(player);
-				player.toAdapter().spongeValue().getOrCreate(PotionEffectData.class).get().asList().stream().filter(effect -> effect.getType().equals(PotionEffectTypes.INVISIBILITY)).forEach(effect -> player.toAdapter().spongeValue().get(PotionEffectData.class).get().remove(effect));
-			} else if (!ProxyManager.getInstance().isEnabled()) {
+			if (!ProxyManager.getInstance().isEnabled()) {
 				QuitMessageManager.getInstance().sendQuitMessage(QuitMessageManager.getInstance().getQuitPackets().get(player.getUUID()));
 				QuitMessageManager.getInstance().getQuitPackets().remove(player.getUUID());
 			} AnticheatManager.getInstance().clearViolations(player);

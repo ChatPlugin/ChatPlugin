@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.util.manager;
@@ -43,7 +43,7 @@ public class ChatPluginManagerException extends Exception {
 	 * @param exception Exception caught by the manager
 	 */
 	public ChatPluginManagerException(ChatPluginManager manager, Exception exception) {
-		super(exception.getCause().getClass().getSimpleName() + " occurred while (un)loading " + Utils.getOriginalClass(manager).getSimpleName() + ": " + exception.getMessage());
+		super((exception.getCause() == null ? exception : exception.getCause()).getClass().getSimpleName() + " occurred while (un)loading " + Utils.getOriginalClass(manager).getSimpleName() + ": " + exception.getMessage());
 		this.manager = manager;
 	}
 	
@@ -68,7 +68,7 @@ public class ChatPluginManagerException extends Exception {
 	 */
 	@Deprecated
 	public ChatPluginManagerException(String source, Exception exception) {
-		super(exception.getCause().getClass().getSimpleName() + " occurred while (un)loading <" + source + ">: " + exception.getMessage());
+		super((exception.getCause() == null ? exception : exception.getCause()).getClass().getSimpleName() + " occurred while (un)loading <" + source + ">: " + exception.getMessage());
 		this.source = source;
 	}
 	

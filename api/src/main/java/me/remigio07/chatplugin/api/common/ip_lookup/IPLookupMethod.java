@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,19 +10,13 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.ip_lookup;
 
 /**
- * Represents an IP lookup method.
- * 
- * <p>There are two methods supported:
- * 	<ul>
- * 		<li>{@link #LOCAL} - a local request handled by the local database</li>
- * 		<li>{@link #REMOTE} - a remote request from MaxMind's website</li>
- * 	</ul>
+ * Represents an IP lookup's method.
  * 
  * @see IPLookupManager
  */

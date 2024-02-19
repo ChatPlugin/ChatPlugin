@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,12 +10,14 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.bukkit.integration.cosmetic.gadgetsmenu;
 
 import java.util.List;
+
+import com.yapzhenyie.GadgetsMenu.api.GadgetsMenuAPI;
 
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.server.integration.cosmetics.CosmeticsIntegration;
@@ -39,6 +41,10 @@ public class GadgetsMenuIntegration extends ChatPluginBukkitIntegration<Cosmetic
 	@Override
 	public List<String> removeActiveCosmetics(ChatPluginServerPlayer player) {
 		return integration.removeActiveCosmetics(player);
+	}
+	
+	public boolean isRenamingPet(ChatPluginServerPlayer player) {
+		return integration instanceof GadgetsMenuPremiumIntegration ? GadgetsMenuAPI.getPlayerManager(player.toAdapter().bukkitValue()).isRenamingPet() : false;
 	}
 	
 }

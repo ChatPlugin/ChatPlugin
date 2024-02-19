@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.motd;
@@ -21,9 +21,9 @@ import me.remigio07.chatplugin.api.proxy.motd.ProxyMoTDManager;
 import me.remigio07.chatplugin.api.server.motd.ServerMoTDManager;
 
 /**
- * Manager that handles {@link MoTD}s. See wiki for more info:
- * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/MoTD">ChatPlugin wiki/MoTD</a>
+ * Manager that handles {@link MoTD}s.
  * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/MoTDs">ChatPlugin wiki/Modules/MoTDs</a>
  * @see ServerMoTDManager
  * @see ProxyMoTDManager
  */

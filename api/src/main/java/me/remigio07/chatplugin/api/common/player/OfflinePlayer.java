@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.player;
@@ -28,6 +28,7 @@ import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector.WhereCondition;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector.WhereCondition.WhereOperator;
+import me.remigio07.chatplugin.api.common.storage.StorageMethod;
 import me.remigio07.chatplugin.api.common.util.UUIDFetcher;
 import me.remigio07.chatplugin.api.common.util.Utils;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
@@ -43,9 +44,9 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 /**
  * Represents an offline player.
  * 
- * <p>This object contains just two values: an {@link UUID} and a name.
+ * <p>This object contains just two values: a {@link UUID} and a name.
  * You can manually create offline players to interact with the plugin's code
- * (for example with the punishment system) from an online player or just an
+ * (for example with the punishment system) from an online player or just a
  * UUID and a name. They may also be used to interact with the storage.</p>
  * 
  * @see ChatPluginPlayer
@@ -81,11 +82,11 @@ public class OfflinePlayer {
 	/**
 	 * Constructs an offline player using given UUID and name.
 	 * 
-	 * <p>Note that this constructor is not
-	 * checked and you should use it only if you
+	 * <p><strong>Note:</strong> this constructor is
+	 * not checked and you should use it only if you
 	 * are sure that the specified UUID and name
 	 * corresponds to an existing account, which
-	 * could be either premium or cracked.</p>
+	 * could be either premium or unauthenticated.</p>
 	 * 
 	 * @param uuid Player's UUID
 	 * @param name Player's name
@@ -110,17 +111,19 @@ public class OfflinePlayer {
 	 * 		</li>
 	 * 	</ul>
 	 * 
-	 * Note that this constructor might take some time to be executed: async calls are recommended.
+	 * <strong>Note:</strong> this constructor might take
+	 * some time to be executed: async calls are recommended.
 	 * 
 	 * @param uuid Player's UUID
 	 * @throws UnsupportedOperationException When trying to obtain the name using an offline UUID
+	 * @throws SQLException If a database error occurrs ({@link StorageMethod#isDatabase()})
 	 * @throws IOException If name fetching is required and could not be completed
 	 */
-	public OfflinePlayer(@NotNull UUID uuid) throws IOException {
+	public OfflinePlayer(@NotNull UUID uuid) throws SQLException, IOException {
 		PlayerAdapter player = PlayerAdapter.getPlayer(uuid);
 		
 		if (player == null) {
-			String name = StorageConnector.getInstance().safeSelect(DataContainer.PLAYERS, "player_name", null, new WhereCondition("player_uuid", WhereOperator.EQUAL, uuid.toString()));
+			String name = StorageConnector.getInstance().select(DataContainer.PLAYERS, "player_name", String.class, new WhereCondition("player_uuid", WhereOperator.EQUAL, uuid.toString()));
 			
 			if (name == null) {
 				if (uuid.version() == 4) {
@@ -151,35 +154,34 @@ public class OfflinePlayer {
 	 * 		</li>
 	 * 	</ul>
 	 * 
-	 * Note that this constructor might take some time to be executed: async calls are recommended.
+	 * <strong>Note:</strong> this constructor might take
+	 * some time to be executed: async calls are recommended.
 	 * 
 	 * @param name Player's name
 	 * @throws IllegalArgumentException If specified name <code>!</code>{@link Utils#isValidUsername(String)}
+	 * @throws SQLException If a database error occurrs ({@link StorageMethod#isDatabase()})
 	 * @throws IOException If name or UUID fetching is required and could not be completed
 	 */
-	public OfflinePlayer(@NotNull String name) throws IOException { // I've finally realized why developers hate offline mode - it's just a mess
+	public OfflinePlayer(@NotNull String name) throws SQLException, IOException { // I've finally realized why developers hate offline mode - it's just a mess
 		if (!Utils.isValidUsername(name))
 			throw new IllegalArgumentException("Username \"" + name + "\" is invalid as it does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
 		PlayerAdapter player = PlayerAdapter.getPlayer(name, false);
 		
 		if (player == null) {
-			String uuid = StorageConnector.getInstance().safeSelect(DataContainer.PLAYERS, "player_uuid", null, new WhereCondition("player_name", WhereOperator.EQUAL, name));
+			String uuid = StorageConnector.getInstance().select(DataContainer.PLAYERS, "player_uuid", String.class, new WhereCondition("player_name", WhereOperator.EQUAL, name));
 			
 			if (uuid == null) {
 				if (ChatPlugin.getInstance().isOnlineMode()) {
 					UUID onlineUUID = UUIDFetcher.getInstance().getOnlineUUID(name);
-					
-					if (onlineUUID.equals(Utils.NIL_UUID)) {
-						this.uuid = onlineUUID;
-						this.name = null;
-					} else this.name = UUIDFetcher.getInstance().getOnlineName(onlineUUID);
+					this.uuid = onlineUUID;
+					this.name = onlineUUID.equals(Utils.NIL_UUID) ? null : UUIDFetcher.getInstance().getOnlineName(onlineUUID);
 				} else {
 					this.uuid = UUIDFetcher.getInstance().getOfflineUUID(name);
 					this.name = name;
 				}
 			} else {
 				this.uuid = UUID.fromString(uuid);
-				this.name = StorageConnector.getInstance().safeSelect(DataContainer.PLAYERS, "player_name", null, new WhereCondition("player_uuid", WhereOperator.EQUAL, uuid));
+				this.name = StorageConnector.getInstance().select(DataContainer.PLAYERS, "player_name", String.class, new WhereCondition("player_uuid", WhereOperator.EQUAL, uuid));
 			}
 		} else {
 			uuid = player.getUUID();
@@ -299,8 +301,7 @@ public class OfflinePlayer {
 	 * integration ({@link IntegrationType#LUCKPERMS LuckPerms}, {@link IntegrationType#VAULT Vault})
 	 * is enabled: in those cases, it will be really checked.</p>
 	 * 
-	 * <p>Note: this method may take some time to check the
-	 * permission. It is recommended to call it asynchronously.</p>
+	 * <p><strong>Note:</strong> this method might take some time to be executed: async calls are recommended.</p>
 	 * 
 	 * @param permission Permission to check
 	 * @return Whether this player has the permission

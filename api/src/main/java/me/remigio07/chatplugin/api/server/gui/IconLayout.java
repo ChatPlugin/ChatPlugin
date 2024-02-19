@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.gui;
@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
+import me.remigio07.chatplugin.api.common.util.ValueContainer;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.language.Language;
@@ -36,9 +37,9 @@ public class IconLayout {
 	
 	private String id, skullOwner, skullTextureURL;
 	private MaterialAdapter material;
-	private boolean keepOpen, glowing;
-	private int amount;
+	private ValueContainer<Short> amount;
 	private short damage;
+	private boolean keepOpen, glowing;
 	private Color leatherArmorColor;
 	private List<String> commands;
 	private List<ItemFlagAdapter> itemFlags;
@@ -64,10 +65,10 @@ public class IconLayout {
 		Icon icon = GUIManager.getInstance().createIcon(configuration, path);
 		id = icon.getID();
 		material = icon.getMaterial();
-		keepOpen = icon.isKeepOpen();
-		glowing = icon.isGlowing();
 		amount = icon.getAmount();
 		damage = icon.getDamage();
+		keepOpen = icon.isKeepOpen();
+		glowing = icon.isGlowing();
 		skullOwner = icon.getSkullOwner();
 		skullTextureURL = icon.getSkullTextureURL();
 		leatherArmorColor = icon.getLeatherArmorColor();
@@ -82,8 +83,8 @@ public class IconLayout {
 	 * Constructs a new icon layout specifying onlt the essential
 	 * options and assuming the others as their default values.
 	 * 
-	 * <p>Note that {@link #IconLayout(Configuration, String)} is capable of reading icon layouts from
-	 * {@link Configuration}s. Use this constructor just to obtain custom icon layouts via code.</p>
+	 * <p><strong>Note:</strong> {@link #IconLayout(Configuration, String)} is capable of reading icon layouts
+	 * from {@link Configuration}s. Use this constructor just to obtain custom icon layouts via code.</p>
 	 * 
 	 * @param id Icon layout's ID
 	 * @param material Icon layout's material
@@ -97,16 +98,16 @@ public class IconLayout {
 			MaterialAdapter material,
 			boolean keepOpen,
 			boolean glowing,
-			int amount,
+			ValueContainer<Short> amount,
 			short damage
 			) {
 		this(
 				id,
 				material,
-				keepOpen,
-				glowing,
 				amount,
 				damage,
+				keepOpen,
+				glowing,
 				null,
 				null,
 				null,
@@ -121,15 +122,15 @@ public class IconLayout {
 	/**
 	 * Constructs a new icon layout specifying all the available options.
 	 * 
-	 * <p>Note that {@link #IconLayout(Configuration, String)} is capable of reading icon layouts from
-	 * {@link Configuration}s. Use this constructor just to obtain custom icon layouts via code.</p>
+	 * <p><strong>Note:</strong> {@link #IconLayout(Configuration, String)} is capable of reading icon layouts
+	 * from {@link Configuration}s. Use this constructor just to obtain custom icon layouts via code.</p>
 	 * 
 	 * @param id Icon layout's ID
 	 * @param material Icon layout's material
-	 * @param keepOpen Whether the GUI will remain open on click
-	 * @param glowing Whether the glowing effect should be applied
 	 * @param amount Icon layout's items' amount [0 - 64]
 	 * @param damage Icon layout's items' damage [0 - max durability]
+	 * @param keepOpen Whether the GUI will remain open on click
+	 * @param glowing Whether the glowing effect should be applied
 	 * @param skullOwner Icon layout's skull's owner
 	 * @param skullTextureURL Icon layout's skull's texture's URL
 	 * @param leatherArmorColor Icon layout's leather armor's color
@@ -142,10 +143,10 @@ public class IconLayout {
 	public IconLayout(
 			String id,
 			MaterialAdapter material,
+			ValueContainer<Short> amount,
+			short damage,
 			boolean keepOpen,
 			boolean glowing,
-			int amount,
-			short damage,
 			@Nullable(why = "Skull's owner is removed when null") String skullOwner,
 			@Nullable(why = "Skull's texture's URL is removed when null") String skullTextureURL,
 			@Nullable(why = "Color is set to #A06540 when null") Color leatherArmorColor,
@@ -157,10 +158,10 @@ public class IconLayout {
 			) {
 		this.id = id;
 		this.material = material;
-		this.keepOpen = keepOpen;
-		this.glowing = glowing;
 		this.amount = amount;
 		this.damage = damage;
+		this.keepOpen = keepOpen;
+		this.glowing = glowing;
 		this.skullOwner = skullOwner;
 		this.skullTextureURL = skullTextureURL;
 		this.leatherArmorColor = leatherArmorColor;
@@ -193,45 +194,11 @@ public class IconLayout {
 	 * Sets this icon layout's material.
 	 * 
 	 * @param material Icon layout's material
+	 * @return This icon layout
 	 */
-	public void setMaterial(MaterialAdapter material) {
+	public IconLayout setMaterial(MaterialAdapter material) {
 		this.material = material;
-	}
-	
-	/**
-	 * Checks if the GUI should be kept open when this icon layout is clicked.
-	 * 
-	 * @return Whether the GUI will remain open on click
-	 */
-	public boolean isKeepOpen() {
-		return keepOpen;
-	}
-	
-	/**
-	 * Sets if the GUI should be kept open when this icon layout is clicked.
-	 * 
-	 * @param keepOpen Whether the GUI will remain open on click
-	 */
-	public void setKeepOpen(boolean keepOpen) {
-		this.keepOpen = keepOpen;
-	}
-	
-	/**
-	 * Checks if the glowing effect should be applied to this icon layout.
-	 * 
-	 * @return Whether the glowing effect should be applied
-	 */
-	public boolean isGlowing() {
-		return glowing;
-	}
-	
-	/**
-	 * Sets if the glowing effect should be applied to this icon layout.
-	 * 
-	 * @param glowing Whether the glowing effect should be applied
-	 */
-	public void setGlowing(boolean glowing) {
-		this.glowing = glowing;
+		return this;
 	}
 	
 	/**
@@ -239,7 +206,7 @@ public class IconLayout {
 	 * 
 	 * @return Icon layout's items' amount [0 - 64]
 	 */
-	public int getAmount() {
+	public ValueContainer<Short> getAmount() {
 		return amount;
 	}
 	
@@ -247,9 +214,11 @@ public class IconLayout {
 	 * Sets this icon layout's items' amount.
 	 * 
 	 * @param amount Icon layout's items' amount [0 - 64]
+	 * @return This icon layout
 	 */
-	public void setAmount(int amount) {
-		this.amount = amount < 0 ? 0 : amount > 64 ? 64 : amount;
+	public IconLayout setAmount(ValueContainer<Short> amount) {
+		this.amount = amount.placeholder() == null ? amount.value() < 1 ? new ValueContainer<>((short) 1) : amount.value() > 64 ? new ValueContainer<>((short) 64) : amount : amount;
+		return this;
 	}
 	
 	/**
@@ -265,9 +234,51 @@ public class IconLayout {
 	 * Sets this icon layout's items' damage.
 	 * 
 	 * @param damage Icon layout's items' damage [0 - max durability]
+	 * @return This icon layout
 	 */
-	public void setDamage(short damage) {
+	public IconLayout setDamage(short damage) {
 		this.damage = damage < 0 ? 0 : damage;
+		return this;
+	}
+	
+	/**
+	 * Checks if the GUI should be kept open when this icon layout is clicked.
+	 * 
+	 * @return Whether the GUI will remain open on click
+	 */
+	public boolean isKeepOpen() {
+		return keepOpen;
+	}
+	
+	/**
+	 * Sets if the GUI should be kept open when this icon layout is clicked.
+	 * 
+	 * @param keepOpen Whether the GUI will remain open on click
+	 * @return This icon layout
+	 */
+	public IconLayout setKeepOpen(boolean keepOpen) {
+		this.keepOpen = keepOpen;
+		return this;
+	}
+	
+	/**
+	 * Checks if the glowing effect should be applied to this icon layout.
+	 * 
+	 * @return Whether the glowing effect should be applied
+	 */
+	public boolean isGlowing() {
+		return glowing;
+	}
+	
+	/**
+	 * Sets if the glowing effect should be applied to this icon layout.
+	 * 
+	 * @param glowing Whether the glowing effect should be applied
+	 * @return This icon layout
+	 */
+	public IconLayout setGlowing(boolean glowing) {
+		this.glowing = glowing;
+		return this;
 	}
 	
 	/**
@@ -288,9 +299,11 @@ public class IconLayout {
 	 * <p>You can specify <code>null</code> to remove the skull's owner.</p>
 	 * 
 	 * @param skullOwner Icon layout's skull's owner
+	 * @return This icon layout
 	 */
-	public void setSkullOwner(@Nullable(why = "Skull's owner is removed when null") String skullOwner) {
+	public IconLayout setSkullOwner(@Nullable(why = "Skull's owner is removed when null") String skullOwner) {
 		this.skullOwner = skullOwner;
+		return this;
 	}
 	
 	/**
@@ -311,9 +324,11 @@ public class IconLayout {
 	 * <p>You can specify <code>null</code> to remove the skull's texture's URL.</p>
 	 * 
 	 * @param skullTextureURL Icon layout's skull's texture's URL
+	 * @return This icon layout
 	 */
-	public void setSkullTextureURL(@Nullable(why = "Skull's owner is removed when null") String skullTextureURL) {
+	public IconLayout setSkullTextureURL(@Nullable(why = "Skull's owner is removed when null") String skullTextureURL) {
 		this.skullTextureURL = skullTextureURL;
+		return this;
 	}
 	
 	/**
@@ -335,9 +350,11 @@ public class IconLayout {
 	 * <code>null</code> and the following hex code will be applied: "#A06540".</p>
 	 * 
 	 * @param leatherArmorColor Icon layout's leather armor's color
+	 * @return This icon layout
 	 */
-	public void setLeatherArmorColor(@Nullable(why = "Color is set to #A06540 when null") Color leatherArmorColor) {
+	public IconLayout setLeatherArmorColor(@Nullable(why = "Color is set to #A06540 when null") Color leatherArmorColor) {
 		this.leatherArmorColor = leatherArmorColor;
+		return this;
 	}
 	
 	/**

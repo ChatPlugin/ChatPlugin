@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.common.storage.database;
@@ -44,21 +44,22 @@ public class SQLiteConnector extends DatabaseConnector {
 		instance = this;
 		
 		try {
-			LibrariesUtils.load(Library.SQLITE_DRIVER);
+			LibrariesUtils.load(Library.SQLITE_JDBC);
 			
 			String dbName = ConfigurationType.CONFIG.get().getString("storage.database.file-name") + ".db";
 			String file = StorageManager.getInstance().getFolder().getAbsolutePath() + File.separator + dbName;
 			boolean serverMode = ConfigurationType.CONFIG.get().getBoolean("storage.database.use-server-mode");
 			
 			if (serverMode)
-				LogManager.log("H2 is selected as storage method with the server mode (\"storage.database.use-server-mode\" in config.yml) enabled. This may require extra time to start the database if no connections are open.", 0);
+				LogManager.log("SQLite is selected as storage method with the server mode (\"storage.database.use-server-mode\" in config.yml) enabled. This may require extra time to start the database if no connections are open.", 0);
 			connection = (Connection) IsolatedClassLoader.getInstance().loadClass("org.sqlite.jdbc4.JDBC4Connection").getConstructor(String.class, String.class, Properties.class).newInstance(
 					"jdbc:sqlite:" + file + (serverMode ? "?cache=shared" : ""),
 					file,
 					new Properties()
 					);
 			
-			executeUpdate("ATTACH DATABASE '" + dbName + "' AS 'chatplugin'");
+			if (serverMode)
+				prepareStatement("PRAGMA journal_mode=WAL").executeQuery().close();
 		} catch (Exception e) {
 			throw new ChatPluginManagerException(DatabaseManager.getInstance(), e);
 		}
@@ -209,6 +210,21 @@ public class SQLiteConnector extends DatabaseConnector {
 					+ ")";
 			break;
 		} executeUpdate(update.replace("{table_id}", container.getDatabaseTableID()));
+	}
+	
+	@Override
+	public int getNextID(DataContainer table) throws SQLException {
+		if (table == DataContainer.CHAT_MESSAGES || table == DataContainer.PRIVATE_MESSAGES)
+			throw new IllegalArgumentException("Unable to get next ID in table " + table.getDatabaseTableID() + " since that table does not have IDs");
+		if (table == DataContainer.IP_ADDRESSES)
+			table = DataContainer.PLAYERS;
+		Number id = get("SELECT seq FROM sqlite_sequence WHERE name = ?", "seq", Number.class, table.getDatabaseTableID());
+		return id == null ? 1 : (id.intValue() + 1);
+	}
+	
+	@Override
+	public String getEngineName() {
+		return Library.SQLITE_JDBC.getName();
 	}
 	
 	@Override

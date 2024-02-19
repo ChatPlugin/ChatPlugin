@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.bukkit.manager;
@@ -28,7 +28,6 @@ import org.bukkit.event.player.PlayerLocaleChangeEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.potion.PotionEffectType;
 
 import me.remigio07.chatplugin.api.common.event.EventManager;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
@@ -58,6 +57,7 @@ import me.remigio07.chatplugin.api.server.scoreboard.event.ScoreboardEvent;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
+import me.remigio07.chatplugin.server.bukkit.integration.cosmetic.gadgetsmenu.GadgetsMenuIntegration;
 import me.remigio07.chatplugin.server.command.misc.TPSCommand;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 
@@ -112,7 +112,7 @@ public class BukkitEventManager extends EventManager {
 		Player player = event.getPlayer();
 		ChatPluginServerPlayer serverPlayer = ServerPlayerManager.getInstance().getPlayer(player.getUniqueId());
 		
-		if (event.isCancelled() || serverPlayer == null)
+		if (event.isCancelled() || serverPlayer == null || (IntegrationType.GADGETSMENU.isEnabled() && ((GadgetsMenuIntegration) IntegrationType.GADGETSMENU.get()).isRenamingPet(serverPlayer)))
 			return;
 		ChatManager.getInstance().handleChatEvent(serverPlayer, event.getMessage());
 		applyScoreboard(ScoreboardEvent.CHAT, player);
@@ -144,9 +144,10 @@ public class BukkitEventManager extends EventManager {
 		JoinTitleManager.getInstance().sendJoinTitle(player, true);
 		WelcomeMessageManager.getInstance().sendWelcomeMessage(player, true);
 		
-		if (vanished)
+		if (vanished) {
 			VanishManager.getInstance().hide(player);
-		else JoinMessageManager.getInstance().sendJoinMessage(player);
+			QuitMessageManager.getInstance().getFakeQuits().add(player.getUUID());
+		} else JoinMessageManager.getInstance().sendJoinMessage(player);
 	}
 	
 	public void onPlayerQuit(PlayerQuitEvent event) {
@@ -155,10 +156,7 @@ public class BukkitEventManager extends EventManager {
 		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getPlayer().getUniqueId());
 		
 		if (player != null) {
-			if (player.isVanished()) {
-				VanishManager.getInstance().show(player);
-				player.toAdapter().bukkitValue().removePotionEffect(PotionEffectType.INVISIBILITY);
-			} else if (!ProxyManager.getInstance().isEnabled()) {
+			if (!ProxyManager.getInstance().isEnabled()) {
 				QuitMessageManager.getInstance().sendQuitMessage(QuitMessageManager.getInstance().getQuitPackets().get(player.getUUID()));
 				QuitMessageManager.getInstance().getQuitPackets().remove(player.getUUID());
 			} AnticheatManager.getInstance().clearViolations(player);

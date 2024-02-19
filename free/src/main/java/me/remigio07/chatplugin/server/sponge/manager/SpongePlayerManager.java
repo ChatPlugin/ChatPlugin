@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.sponge.manager;
@@ -39,6 +39,7 @@ import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.bossbar.BossbarManager;
 import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
+import me.remigio07.chatplugin.api.server.chat.StaffChatManager;
 import me.remigio07.chatplugin.api.server.event.player.ServerPlayerLoadEvent;
 import me.remigio07.chatplugin.api.server.event.player.ServerPlayerUnloadEvent;
 import me.remigio07.chatplugin.api.server.gui.GUIManager;
@@ -61,6 +62,7 @@ import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.server.join_quit.QuitMessageManagerImpl.QuitPacketImpl;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import me.remigio07.chatplugin.server.sponge.ChatPluginSpongePlayer;
+import me.remigio07.chatplugin.server.util.manager.VanishManagerImpl;
 
 public class SpongePlayerManager extends ServerPlayerManager {
 	
@@ -173,9 +175,11 @@ public class SpongePlayerManager extends ServerPlayerManager {
 		if (IPLookupManager.getInstance().isEnabled())
 			IPLookupManager.getInstance().removeFromCache(serverPlayer.getIPAddress());
 		if (VanishManager.getInstance().isEnabled())
-			VanishManager.getInstance().show(serverPlayer);
+			((VanishManagerImpl) VanishManager.getInstance()).show(serverPlayer, false);
 		if (BossbarManager.getInstance().getLoadingBossbarsTasks().containsKey(serverPlayer))
 			TaskManager.getInstance().getAsyncTasks().get(BossbarManager.getInstance().getLoadingBossbarsTasks().remove(serverPlayer)).run();
+		if (StaffChatManager.getInstance().isEnabled())
+			StaffChatManager.getInstance().removePlayer(player);
 		if (PrivateMessagesManager.getInstance().isEnabled())
 			for (ChatPluginServerPlayer other : players.values())
 				if (other.getLastCorrespondent().equals(serverPlayer))

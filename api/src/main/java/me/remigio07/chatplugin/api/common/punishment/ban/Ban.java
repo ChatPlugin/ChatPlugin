@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.punishment.ban;
@@ -28,16 +28,18 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 /**
  * Represents a ban handled by the {@link BanManager}.
  * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Punishments#bans">ChatPlugin wiki/Modules/Punishments/Bans</a>
  * @see BanType
  */
 public abstract class Ban extends Punishment {
 	
 	/**
-	 * Array containing all available placeholders that can
-	 * be translated with a ban's information. See wiki for more info:
-	 * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Ban-system#placeholders">ChatPlugin wiki/Ban system/Placeholders</a>
+	 * Array containing all available placeholders that
+	 * can be translated with a ban's information.
 	 * 
 	 * <p><strong>Content:</strong> ["id", "player", "player_uuid", "ip_address", "staff_member", "who_unbanned", "reason", "server", "type", "date", "unban_date", "expiration_date", "duration", "remaining_time", "active", "global", "silent"]</p>
+	 * 
+	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Punishments#placeholders">ChatPlugin wiki/Punishments/Bans/Placeholders</a>
 	 */
 	public static final String[] PLACEHOLDERS = new String[] { "id", "player", "player_uuid", "ip_address", "staff_member", "who_unbanned", "reason", "server", "type", "date", "unban_date", "expiration_date", "duration", "remaining_time", "active", "global", "silent" };
 	protected InetAddress ipAddress;

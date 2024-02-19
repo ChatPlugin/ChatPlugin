@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,12 +10,14 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.command.user;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -64,6 +66,11 @@ public class IgnoreCommand extends PlayerCommand {
 		}
 		
 		@Override
+		public String getPermission() {
+			return "chatplugin.commands.ignore.add";
+		}
+		
+		@Override
 		public boolean isSubCommand() {
 			return true;
 		}
@@ -98,9 +105,11 @@ public class IgnoreCommand extends PlayerCommand {
 										} else player.sendTranslatedMessage("commands.ignore.max-reached");
 									} else player.sendTranslatedMessage("commands.ignore.added.already-ignoring", target.getName());
 								} else player.sendTranslatedMessage("commands.ignore.cannot-ignore.other", target.getName());
-							} else player.sendTranslatedMessage("misc.player-not-stored", player.getName());
+							} else player.sendTranslatedMessage("misc.player-not-stored", target.getName());
 						} catch (IllegalArgumentException e) {
 							player.sendTranslatedMessage("misc.invalid-player-name");
+						} catch (SQLException e) {
+							player.sendTranslatedMessage("misc.database-error", e.getClass().getSimpleName(), e.getMessage());
 						} catch (IOException e) {
 							player.sendTranslatedMessage("misc.cannot-fetch", args[1], e.getMessage());
 						}
@@ -121,6 +130,11 @@ public class IgnoreCommand extends PlayerCommand {
 		@Override
 		public java.util.List<String> getMainArgs() {
 			return Arrays.asList("remove", "r");
+		}
+		
+		@Override
+		public String getPermission() {
+			return "chatplugin.commands.ignore.remove";
 		}
 		
 		@Override
@@ -157,6 +171,8 @@ public class IgnoreCommand extends PlayerCommand {
 							} else player.sendTranslatedMessage("misc.player-not-stored", target.getName());
 						} catch (IllegalArgumentException e) {
 							player.sendTranslatedMessage("misc.invalid-player-name");
+						} catch (SQLException e) {
+							player.sendTranslatedMessage("misc.database-error", e.getClass().getSimpleName(), e.getMessage());
 						} catch (IOException e) {
 							player.sendTranslatedMessage("misc.cannot-fetch", args[1], e.getMessage());
 						}
@@ -179,6 +195,11 @@ public class IgnoreCommand extends PlayerCommand {
 		}
 		
 		@Override
+		public String getPermission() {
+			return "chatplugin.commands.ignore.clear";
+		}
+		
+		@Override
 		public boolean isSubCommand() {
 			return true;
 		}
@@ -189,7 +210,7 @@ public class IgnoreCommand extends PlayerCommand {
 				java.util.List<OfflinePlayer> ignoredPlayers = player.getIgnoredPlayers();
 				
 				if (ignoredPlayers.size() != 0) {
-					for (OfflinePlayer ignored : ignoredPlayers)
+					for (OfflinePlayer ignored : new ArrayList<>(ignoredPlayers))
 						if (!PlayerIgnoreManager.getInstance().unignore(player, ignored))
 							return;
 					player.sendTranslatedMessage("commands.ignore.cleared");
@@ -212,6 +233,11 @@ public class IgnoreCommand extends PlayerCommand {
 		}
 		
 		@Override
+		public String getPermission() {
+			return "chatplugin.commands.ignore.list";
+		}
+		
+		@Override
 		public boolean isSubCommand() {
 			return true;
 		}
@@ -220,7 +246,7 @@ public class IgnoreCommand extends PlayerCommand {
 		public void execute(ChatPluginServerPlayer player, String[] args) {
 			if (PlayerIgnoreManager.getInstance().isEnabled()) {
 				if (args.length == 2) {
-					if (player.hasPermission(getPermission() + ".other")) {
+					if (player.hasPermission(getPermission() + ".others")) {
 						TaskManager.runAsync(() -> {
 							try {
 								OfflinePlayer target = new OfflinePlayer(args[1]);
@@ -237,6 +263,8 @@ public class IgnoreCommand extends PlayerCommand {
 								} else player.sendTranslatedMessage("misc.player-not-stored", target.getName());
 							} catch (IllegalArgumentException e) {
 								player.sendTranslatedMessage("misc.invalid-player-name");
+							} catch (SQLException e) {
+								player.sendTranslatedMessage("misc.database-error", e.getClass().getSimpleName(), e.getMessage());
 							} catch (IOException e) {
 								player.sendTranslatedMessage("misc.cannot-fetch", args[1], e.getMessage());
 							}

@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.command.user;
@@ -46,7 +46,7 @@ public class ReplyCommand extends PlayerCommand {
 						if (PlayerIgnoreManager.getInstance().isEnabled() && lastCorrespondent.getIgnoredPlayers().contains(player)) {
 							player.sendTranslatedMessage("commands.whisper.ignored", lastCorrespondent.getName());
 							return;
-						} PrivateMessagesManager.getInstance().sendMessage(player, lastCorrespondent, String.join(" ", args));
+						} PrivateMessagesManager.getInstance().sendPrivateMessage(player, lastCorrespondent, String.join(" ", args));
 						return;
 					}
 				} player.sendTranslatedMessage("commands.reply.not-found");

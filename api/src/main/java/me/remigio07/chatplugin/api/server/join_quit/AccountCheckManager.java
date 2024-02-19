@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.join_quit;
@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookup;
+import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
@@ -29,6 +30,8 @@ import me.remigio07.chatplugin.api.server.language.Language;
 
 /**
  * Manager that handles account checks.
+ * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Join-quit#account-check">ChatPlugin wiki/Modules/Join-quit/Account check</a>
  */
 public abstract class AccountCheckManager implements ChatPluginManager {
 	
@@ -171,6 +174,8 @@ public abstract class AccountCheckManager implements ChatPluginManager {
 	 * @param maxTimePlayed A player's max time played allowed to be considered reliable for a comparison, in milliseconds
 	 * @param useIPLookup Whether to compare every IP address' lookup (requires extra time)
 	 * @return Player's accounts, including given one
+	 * @throws IllegalStateException If <code>useIPLookup</code> and
+	 * {@link IPLookupManager#getIPLookup(java.net.InetAddress)} throws it
 	 */
 	public abstract CompletableFuture<List<OfflinePlayer>> getAccounts(OfflinePlayer player, long maxTimePlayed, boolean useIPLookup);
 	

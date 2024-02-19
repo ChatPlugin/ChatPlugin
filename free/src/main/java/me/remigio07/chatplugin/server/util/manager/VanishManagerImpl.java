@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.util.manager;
@@ -38,12 +38,13 @@ import com.yapzhenyie.GadgetsMenu.utils.WorldUtils;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.util.VersionUtils;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.server.join_quit.QuitMessageManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.util.Utils;
-import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.server.join_quit.QuitMessageManagerImpl.QuitPacketImpl;
@@ -95,7 +96,7 @@ public class VanishManagerImpl extends VanishManager {
 					other.toAdapter().spongeValue().getTabList().removeEntry(player.getUUID());
 		} if (invisibility)
 			if (Environment.isBukkit())
-				player.toAdapter().bukkitValue().addPotionEffect(new org.bukkit.potion.PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, true, false));
+				player.toAdapter().bukkitValue().addPotionEffect(new org.bukkit.potion.PotionEffect(PotionEffectType.INVISIBILITY, VersionUtils.getVersion().isAtLeast(Version.V1_20) ? -1 : Integer.MAX_VALUE, 0, true, false));
 			else player.toAdapter().spongeValue().getOrCreate(PotionEffectData.class).get().addElement(PotionEffect.of(PotionEffectTypes.INVISIBILITY, 0, Integer.MAX_VALUE));
 		List<String> removedCosmetics = new ArrayList<>();
 		
@@ -113,9 +114,13 @@ public class VanishManagerImpl extends VanishManager {
 			((QuitPacketImpl) QuitMessageManager.getInstance().getQuitPackets().get(player.getUUID())).setVanished(true);
 	}
 	
-	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
 	public void show(ChatPluginServerPlayer player) {
+		show(player, true);
+	}
+	
+	@SuppressWarnings({ "deprecation", "unchecked" })
+	public void show(ChatPluginServerPlayer player, boolean fixQuitPacket) {
 		if (!enabled)
 			return;
 		vanished.put(player.getWorld(), Utils.removeAndGet(getVanishedList(player.getWorld()), Arrays.asList(player)));
@@ -150,7 +155,7 @@ public class VanishManagerImpl extends VanishManager {
 			if (Environment.isBukkit())
 				player.toAdapter().bukkitValue().removePotionEffect(PotionEffectType.INVISIBILITY);
 			else player.toAdapter().spongeValue().getOrCreate(PotionEffectData.class).get().remove(PotionEffect.of(org.spongepowered.api.effect.potion.PotionEffectTypes.INVISIBILITY, 0, Integer.MAX_VALUE));
-		if (ProxyManager.getInstance().isEnabled() && QuitMessageManager.getInstance().getQuitPackets().containsKey(player.getUUID()))
+		if (QuitMessageManager.getInstance().getQuitPackets().containsKey(player.getUUID()) && fixQuitPacket)
 			((QuitPacketImpl) QuitMessageManager.getInstance().getQuitPackets().get(player.getUUID())).setVanished(false);
 	}
 	

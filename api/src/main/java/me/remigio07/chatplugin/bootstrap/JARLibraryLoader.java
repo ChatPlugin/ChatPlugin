@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.bootstrap;
@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import me.remigio07.chatplugin.api.ChatPlugin;
 
 /**
  * Class used to load ChatPlugin's libraries from JAR files.
@@ -68,19 +66,6 @@ public class JARLibraryLoader extends URLClassLoader {
 				mainClass.getMethod("load", Object.class, Object.class, Object.class).invoke(null, args);
 			else mainClass.getMethod("load", Object.class, Object.class).invoke(null, args);
 		} catch (IOException | ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException  e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Calls {@link ChatPlugin#unload()}.}
-	 */
-	public void disable() {
-		try {
-			Class<?> clazz = Class.forName("me.remigio07.chatplugin.api.ChatPlugin");
-			
-			clazz.getMethod("unload").invoke(clazz.getMethod("getInstance").invoke(null));
-		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}

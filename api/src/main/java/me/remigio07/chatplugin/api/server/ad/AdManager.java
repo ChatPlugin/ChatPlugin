@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.ad;
@@ -32,7 +32,8 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 
 /**
  * Manager that handles {@link Ad}s.
- * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Ads">ChatPlugin wiki/Ads</a>
+ * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Ads">ChatPlugin wiki/Modules/Ads</a>
  */
 public abstract class AdManager extends TimerTask implements ChatPluginManager {
 	
@@ -194,7 +195,8 @@ public abstract class AdManager extends TimerTask implements ChatPluginManager {
 	/**
 	 * Sends an ad to a loaded player.
 	 * 
-	 * <p>It will not be sent if {@link Ad#getDisabledRanks()}<code>.contains({@link ChatPluginServerPlayer#getRank()})</code>.</p>
+	 * <p>It will be sent even if {@link Ad#getDisabledRanks()}
+	 * contains the specified player's rank.</p>
 	 * 
 	 * @param ad Ad to send
 	 * @param player Player to send the ad to

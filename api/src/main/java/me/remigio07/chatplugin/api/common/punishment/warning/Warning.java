@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.common.punishment.warning;
@@ -25,15 +25,18 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
  * Represents a warning handled by the {@link WarningManager}.
+ * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Punishments#warnings">ChatPlugin wiki/Modules/Punishments/Warnings</a>
  */
 public abstract class Warning extends Punishment {
 	
 	/**
-	 * Array containing all available placeholders that can
-	 * be translated with a warning's information. See wiki for more info:
-	 * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Warning-system#placeholders">ChatPlugin wiki/Warning system/Placeholders</a>
+	 * Array containing all available placeholders that
+	 * can be translated with a warning's information.
 	 * 
 	 * <p><strong>Content:</strong> ["id", "player", "player_uuid", "staff_member", "who_unwarned", "reason", "server", "date", "unwarn_date", "expiration_date", "duration", "remaining_time", "amount", "max_amount", "active", "global", "silent"]</p>
+	 * 
+	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Punishments#placeholders-2">ChatPlugin wiki/Punishments/Warnings/Placeholders</a>
 	 */
 	public static final String[] PLACEHOLDERS = new String[] { "id", "player", "player_uuid", "staff_member", "who_unwarned", "reason", "server", "date", "unwarn_date", "expiration_date", "duration", "remaining_time", "amount", "max_amount", "active", "global", "silent" };
 	protected String whoUnwarned;

@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.scoreboard;
@@ -30,8 +30,9 @@ import me.remigio07.chatplugin.api.server.util.GameFeature;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 
 /**
- * Manager that handles {@link Scoreboard}s. See wiki for more info:
- * <br><a href="https://github.com/ChatPlugin/ChatPlugin/wiki/Scoreboards">ChatPlugin wiki/Scoreboards</a>
+ * Manager that handles {@link Scoreboard}s.
+ * 
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Scoreboards">ChatPlugin wiki/Modules/Scoreboards</a>
  */
 @GameFeature(
 		name = "scoreboard",
@@ -81,7 +82,7 @@ public abstract class ScoreboardManager implements ChatPluginManager {
 	/**
 	 * Adds a scoreboard to {@link #getScoreboards()}.
 	 * 
-	 * <p>Note that it will be removed on {@link #unload()}.</p>
+	 * <p><strong>Note:</strong> the scoreboard will be removed on {@link #unload()}.</p>
 	 * 
 	 * @param scoreboard Scoreboard to add
 	 * @throws IllegalArgumentException If {@link Scoreboard#getID()} is already in use
@@ -138,6 +139,7 @@ public abstract class ScoreboardManager implements ChatPluginManager {
 	 * Creates a new scoreboard builder.
 	 * 
 	 * @param id Scoreboard's ID
+	 * @param abbreviateTooLongText Whether to abbreviate too long text ({@link Scoreboard#isAbbreviateTooLongText()})
 	 * @param displayOnlyOneNumberEnabled Whether to display only one number ({@link Scoreboard#isDisplayOnlyOneNumberEnabled()})
 	 * @param displayOnlyOneNumberValue Number displayed in the scoreboard ({@link Scoreboard#getDisplayOnlyOneNumberValue()})
 	 * @param placeholderTypes Placeholders used to translate titles and lines ({@link Scoreboard#getPlaceholderTypes()})
@@ -146,6 +148,7 @@ public abstract class ScoreboardManager implements ChatPluginManager {
 	 */
 	public abstract Scoreboard.Builder createScoreboardBuilder(
 			String id,
+			boolean abbreviateTooLongText,
 			boolean displayOnlyOneNumberEnabled,
 			int displayOnlyOneNumberValue,
 			List<PlaceholderType> placeholderTypes

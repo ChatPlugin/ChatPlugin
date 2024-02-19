@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.api.server.event.player;
@@ -24,7 +24,7 @@ import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 /**
  * Represents the event called after a {@link ChatPluginServerPlayer} has joined for the first time.
  * 
- * <p><strong>Note:</strong> This event will be fired during {@link ServerPlayerManager#loadPlayer(PlayerAdapter)}
+ * <p><strong>Note:</strong> this event will be fired during {@link ServerPlayerManager#loadPlayer(PlayerAdapter)}
  * only if <code>!</code>{@link OfflinePlayer#hasPlayedBefore()}. Because of this, if {@link ProxyManager#isEnabled()},
  * this event is fired only on the first server the player joins. This does not include the proxy.</p>
  */

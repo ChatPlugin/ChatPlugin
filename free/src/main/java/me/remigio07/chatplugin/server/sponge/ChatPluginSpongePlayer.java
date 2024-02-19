@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.sponge;
@@ -31,7 +31,6 @@ import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.text.title.Title;
 
-import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
@@ -46,9 +45,11 @@ import me.remigio07.chatplugin.api.server.bossbar.BossbarManager;
 import me.remigio07.chatplugin.api.server.event.player.PlayerFirstJoinEvent;
 import me.remigio07.chatplugin.api.server.join_quit.AccountCheckManager;
 import me.remigio07.chatplugin.api.server.language.Language;
+import me.remigio07.chatplugin.api.server.language.LanguageDetectionMethod;
 import me.remigio07.chatplugin.api.server.language.LanguageDetector;
-import me.remigio07.chatplugin.api.server.language.LanguageDetectorMethod;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
+import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.rank.RankManager;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.InventoryAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
@@ -60,7 +61,7 @@ import net.kyori.adventure.text.Component;
 
 public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	
-	private static SpongeAudiences audiences = ChatPlugin.getInstance().isLoaded() ? SpongeAudiences.create(Sponge.getPluginManager().getPlugin("chatplugin").get(), Sponge.getGame()) : null;
+	private static SpongeAudiences audiences;
 	private static Cause inventoryCause;
 	private Player player;
 	
@@ -75,7 +76,8 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	public ChatPluginSpongePlayer(Player player) {
 		super(new PlayerAdapter(player));
 		this.player = player;
-		audience = audiences.player(player);
+		audience = (audiences == null ? audiences = SpongeAudiences.create(Sponge.getPluginManager().getPlugin("chatplugin").get(), Sponge.getGame()) : audiences).player(player);
+		rank = RankManager.getInstance().calculateRank(this);
 		version = version == null ? VersionUtils.getVersion() : version;
 		playerConnection = player.getConnection();
 		StorageConnector storage = StorageConnector.getInstance();
@@ -94,7 +96,7 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 			} catch (Exception e) {
 				LogManager.log("{0} occurred while inserting {1} in the storage: {2}", 2, e.getClass().getSimpleName(), name, e.getMessage());
 			} if (detector.isEnabled()) {
-				if (detector.getMethod() == LanguageDetectorMethod.CLIENT_LOCALE) {
+				if (detector.getMethod() == LanguageDetectionMethod.CLIENT_LOCALE) {
 					TaskManager.runAsync(() -> {
 						if (isLoaded()) {
 							Language detected = detector.detectUsingClientLocale(this);
@@ -142,7 +144,7 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 					int maxIPsStored = IPLookupManager.getInstance().getMaxIPsStored();
 					
 					if (lastIPAddress != null && maxIPsStored != 1) {
-						List<String> ipAddresses = Utils.getListFromString(StorageConnector.getInstance().safeSelect(DataContainer.IP_ADDRESSES, "ip_addresses", "[]", new WhereCondition("player_id", WhereOperator.EQUAL, id)));
+						List<String> ipAddresses = Utils.getListFromString(storage.select(DataContainer.IP_ADDRESSES, "ip_addresses", String.class, new WhereCondition("player_id", WhereOperator.EQUAL, id)));
 						
 						if (!ipAddresses.contains(lastIPAddress)) {
 							ipAddresses.add(0, lastIPAddress);
@@ -154,7 +156,7 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 					}
 				} storage.setPlayerData(PlayersDataType.PLAYER_IP, id, currentIPAddress);
 			} catch (SQLException | IOException e) {
-				LogManager.log("{0} occurred while getting {1}'s name or ID from the storage: {2}", 2, e.getClass().getSimpleName(), name, e.getMessage());
+				LogManager.log("{0} occurred while getting {1}'s ID, name or IP address(es) from the storage: {2}", 2, e.getClass().getSimpleName(), name, e.getMessage());
 			} if (!playerStored) {
 				if (AccountCheckManager.getInstance().isPerformOnFirstJoin())
 					AccountCheckManager.getInstance().check(this);
@@ -248,6 +250,11 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	@Override
 	public void executeCommand(String command) {
 		Sponge.getCommandManager().process(player, command);
+	}
+	
+	@Override
+	public void teleport(ChatPluginServerPlayer player) {
+		this.player.setLocation(player.toAdapter().spongeValue().getLocation());
 	}
 	
 	@Override

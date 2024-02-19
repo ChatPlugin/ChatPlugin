@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2023  Remigio07
+ * 	Copyright 2024  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,7 +10,7 @@
  * 	You should have received a copy of the GNU Affero General Public License
  * 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 	
- * 	<https://github.com/ChatPlugin/ChatPlugin>
+ * 	<https://remigio07.me/chatplugin>
  */
 
 package me.remigio07.chatplugin.server.util.manager;
@@ -43,13 +43,16 @@ public class TPSManagerImpl extends TPSManager {
 			
 			if (messages.contains("tps-qualities." + id))
 				qualities.add(new TPSQuality(id, minTPS));
-			else LogManager.log("Missing translation in messages.yml for TPS quality with ID " + id + "; skipping.", 2);
-		} TPSQuality last = qualities.get(qualities.size() - 1);
+			else LogManager.log("Missing translation in {0} for TPS quality with ID {1}; skipping.", 2, messages.getFile().getName(), id);
+		} TPSQuality last = qualities.isEmpty() ? new TPSQuality("default-quality", 0) : qualities.get(qualities.size() - 1);
 		
 		for (TPSQuality minTPS : qualities)
 			if (minTPS.getMinTPS() < last.getMinTPS())
 				last = minTPS;
+		if (qualities.isEmpty())
+			qualities.add(last);
 		last.setMinTPS(0);
+		
 		timerTaskID = TaskManager.scheduleAsync(this, 0L, updateTimeout);
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;

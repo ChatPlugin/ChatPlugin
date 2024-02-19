@@ -10,7 +10,7 @@
 ChatPlugin is a powerful and modular plugin that allows you to customize your server's appearance by modifying the chat's and the tablist's format and much more.
 It also offers several modules to make server administration easier. Here are some of its features:
 - lightweight and standalone: the plugin is built on a fully modular system for maximum performance
-- 100% configurable and translatable: multiple custom languages are supported and every message can be translated
+- 100% configurable and translatable: multiple custom languages are supported and everything can be translated
 - easy to use: setup is simple and the [wiki](https://remigio07.me/chatplugin/wiki) offers comprehensive explanations for every module's configuration
 
 A complete list of features is available [here](https://remigio07.me/chatplugin/wiki/getting-started/Features).

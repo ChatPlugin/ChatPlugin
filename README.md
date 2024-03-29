@@ -1,11 +1,11 @@
 ![chatplugin-repo-card-template-wide](https://i.imgur.com/rJeiEvw.png)
 
 # ChatPlugin
-[![Version](https://img.shields.io/github/v/release/ChatPlugin/ChatPlugin?style=plastic&label=version)](/ChatPlugin/ChatPlugin/releases)
+[![Version](https://img.shields.io/github/v/release/ChatPlugin/ChatPlugin?style=plastic&label=version)](https://github.com/ChatPlugin/ChatPlugin/releases)
 [![License](https://img.shields.io/github/license/ChatPlugin/ChatPlugin?style=plastic)](https://www.gnu.org/licenses/agpl-3.0.en.html)
 [![Discord](https://img.shields.io/discord/847934628014587924?logo=discord&logoColor=5662F6&label=Discord&color=5662F6&style=plastic)](https://discord.gg/CPtysXTfQg)
-[![Lines of code](https://tokei.rs/b1/github/ChatPlugin/ChatPlugin?category=code&color=magenta)](/ChatPlugin/ChatPlugin)
-[![Downloads](https://img.shields.io/github/downloads/ChatPlugin/ChatPlugin/total?style=plastic&color=green)](/ChatPlugin/ChatPlugin/releases)
+[![Lines of code](https://tokei.rs/b1/github/ChatPlugin/ChatPlugin?category=code&color=magenta)](https://github.com/ChatPlugin/ChatPlugin)
+[![Downloads](https://img.shields.io/github/downloads/ChatPlugin/ChatPlugin/total?style=plastic&color=green)](https://github.com/ChatPlugin/ChatPlugin/releases)
 
 ChatPlugin is a powerful and modular plugin that allows you to customize your server's appearance by modifying the chat's and the tablist's format and much more.
 It also offers several modules to make server administration easier. Here are some of its features:

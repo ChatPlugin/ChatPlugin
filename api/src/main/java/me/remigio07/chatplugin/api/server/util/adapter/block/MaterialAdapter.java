@@ -90,14 +90,27 @@ public class MaterialAdapter implements Cloneable {
 	}
 	
 	/**
-	 * Checks if an object is equal this material adapter.
+	 * Checks if another object is an instance of {@link MaterialAdapter} and if
+	 * this material's {@link #getID()} value is equal to the other object's one.
 	 * 
-	 * <p>A material dapter is considered equal to another
-	 * one if their {@link #getID()} are equal.</p>
+	 * @param obj Object to compare
+	 * @return Whether the two objects are equal
 	 */
 	@Override
 	public boolean equals(Object obj) {
 		return obj instanceof MaterialAdapter && ((MaterialAdapter) obj).getID().equals(id);
+	}
+	
+	/**
+	 * Gets this material's hash code.
+	 * 
+	 * <p>Will return {@link #getID()}'s hash code.</p>
+	 * 
+	 * @return Material's hash code
+	 */
+	@Override
+	public int hashCode() {
+		return id.hashCode();
 	}
 	
 }

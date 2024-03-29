@@ -185,7 +185,6 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 				scoreboard.registerNewTeam("line_" + i).addEntry(Scoreboard.SCORES[i]);
 			else BukkitReflection.invokeMethod("Scoreboard", "addPlayerToTeam", BukkitReflection.invokeMethod("CraftScoreboard", "getHandle", scoreboard), Scoreboard.SCORES[i], scoreboard.registerNewTeam("line_" + i).getName());
 		bukkitValue.setScoreboard(scoreboard);
-		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 		serverPlayer.setObjective(new ObjectiveAdapter(objective));
 		
 		for (Rank rank : RankManager.getInstance().getRanks()) {

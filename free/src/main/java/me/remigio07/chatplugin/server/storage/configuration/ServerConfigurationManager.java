@@ -182,6 +182,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("languages.command.cooldown", "5m");
 		config.addDefault("languages.command.commands", Arrays.asList());
 		config.addDefault("languages.english.display-name", "&fEnglish");
+		config.addDefault("languages.english.country-codes", Arrays.asList("AU", "NZ", "GB", "US"));
 		config.addDefault("languages.italian.display-name", "&fitaliano");
 		config.addDefault("languages.italian.country-codes", Arrays.asList("IT"));
 		
@@ -1150,6 +1151,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		mainGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca per aprire la GUI", "&7violazioni recenti dell'anticheat."));
 		mainGUI.addDefault(path + "material", "IRON_SWORD");
 		mainGUI.addDefault(path + "glowing", true);
+		mainGUI.addDefault(path + "item-flags", Arrays.asList("HIDE_ATTRIBUTES"));
 		mainGUI.addDefault(path + "commands", Arrays.asList("p: violations"));
 		mainGUI.addDefault(path + "x", 9);
 		mainGUI.addDefault(path + "y", 3);
@@ -1197,9 +1199,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		languagesGUI.addDefault(path + "y", 1);
 		path = "icons.english.";
 		languagesGUI.addDefault(path + "display-names.english", "&9&lEnglish");
-		languagesGUI.addDefault(path + "display-names.italian", "&9&lInglese");
+		languagesGUI.addDefault(path + "display-names.italian", "&9&lEnglish");
 		languagesGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set", "&7your language to English."));
-		languagesGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per", "&7settare la lingua in inglese.")); // improvement: per impostare?
+		languagesGUI.addDefault(path + "lores.italian", Arrays.asList("&7Click this icon to set", "&7your language to English."));
 		
 		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
 			languagesGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
@@ -1210,10 +1212,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		languagesGUI.addDefault(path + "x", 1);
 		languagesGUI.addDefault(path + "y", 2);
 		path = "icons.italian.";
-		languagesGUI.addDefault(path + "display-names.english", "&9&lItalian");
+		languagesGUI.addDefault(path + "display-names.english", "&9&lItaliano");
 		languagesGUI.addDefault(path + "display-names.italian", "&9&lItaliano");
-		languagesGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set", "&7your language to Italian."));
-		languagesGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per", "&7settare la lingua in italiano.")); // improvement: per impostare?
+		languagesGUI.addDefault(path + "lores.english", Arrays.asList("&7Clicca questa icona per impostare", "&7la tua lingua su italiano."));
+		languagesGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare", "&7la tua lingua su italiano."));
 		
 		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
 			languagesGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
@@ -2138,7 +2140,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		motd.addDefault("motd.header-placeholders.english", "&1Another ChatPlugin server");
 		motd.addDefault("motd.header-placeholders.italian", "&1Un altro server con ChatPlugin");
 		
-		motd.addDefault("motd.unknown-player.icon-url", "https://i.imgur.com/s8OGafW.png");
+		motd.addDefault("motd.unknown-player.icon-url", "https://live.staticflickr.com/65535/53597769749_fef9c6a017_o_d.png");
 		motd.addDefault("motd.unknown-player.descriptions.english", Arrays.asList("{header}\n&7This is the default description."));
 		motd.addDefault("motd.unknown-player.descriptions.italian", Arrays.asList("{header}\n&7Questa è la descrizione predefinita."));
 		motd.addDefault("motd.unknown-player.hovers.enabled", true);
@@ -2148,7 +2150,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		motd.addDefault("motd.unknown-player.version-names.values.english", Arrays.asList("&7{online_total}&8/&7{online_total_plus_one}"));
 		motd.addDefault("motd.unknown-player.version-names.values.italian", Arrays.asList("&7{online_total}&8/&7{online_total_plus_one}"));
 		
-		motd.addDefault("motd.stored-player.icon-url", "https://i.imgur.com/s8OGafW.png");
+		motd.addDefault("motd.stored-player.icon-url", "https://live.staticflickr.com/65535/53597769749_fef9c6a017_o_d.png");
 		motd.addDefault("motd.stored-player.descriptions.english", Arrays.asList("{header}\n&7Welcome back, &f{player}&7!"));
 		motd.addDefault("motd.stored-player.descriptions.italian", Arrays.asList("{header}\n&7Bentornati, &f{player}&7!"));
 		motd.addDefault("motd.stored-player.hovers.enabled", true);
@@ -2159,7 +2161,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		motd.addDefault("motd.stored-player.version-names.values.italian", Arrays.asList("&7{online_total}&8/&7{online_total_plus_one}"));
 		
 		motd.addDefault("motd.banned-player.enabled", true);
-		motd.addDefault("motd.banned-player.icon-url", "https://i.imgur.com/WcoT6SB.png");
+		motd.addDefault("motd.banned-player.icon-url", "https://live.staticflickr.com/65535/53597769754_7c4f98bed5_o_d.png");
 		motd.addDefault("motd.banned-player.descriptions.english", Arrays.asList("{header}\n&4You are still banned for &f{remaining_time}&4."));
 		motd.addDefault("motd.banned-player.descriptions.italian", Arrays.asList("{header}\n&4Siete ancora bannati per &f{remaining_time}&4."));
 		motd.addDefault("motd.banned-player.hovers.enabled", true);
@@ -2170,7 +2172,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		motd.addDefault("motd.banned-player.version-names.values.italian", Arrays.asList("&7{online_total}&8/&7{online_total_plus_one}"));
 		
 		motd.addDefault("motd.outdated-version.enabled", true);
-		motd.addDefault("motd.outdated-version.icon-url", "https://i.imgur.com/zDO8ZbZ.png");
+		motd.addDefault("motd.outdated-version.icon-url", "https://live.staticflickr.com/65535/53597769744_0d2ca4b809_o_d.png");
 		motd.addDefault("motd.outdated-version.descriptions.english", Arrays.asList("{header}\n&cVersion &f{version} &cis outdated, try with a newer one."));
 		motd.addDefault("motd.outdated-version.descriptions.italian", Arrays.asList("{header}\n&cLa versione &f{version} &cè obsoleta, provane un'altra."));
 		motd.addDefault("motd.outdated-version.hovers.enabled", true);
@@ -2205,27 +2207,27 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		discordIntegration.addDefault(path + "help.title.text", "Help for ChatPlugin");
 		discordIntegration.addDefault(path + "help.description", "Click [here](https://remigio07.me/chatplugin/wiki/modules/Discord-integration#commands) to visit the wiki with the commands list.");
-		discordIntegration.addDefault(path + "help.thumbnail", "https://i.imgur.com/9NhY4ps.png");
+		discordIntegration.addDefault(path + "help.thumbnail", "https://live.staticflickr.com/65535/53596116157_d426b5c1c8_o_d.png");
 		discordIntegration.addDefault(path + "help.color", "55FF55");
 		discordIntegration.addDefault(path + "info.title.text", "Info and contacts for ChatPlugin");
 		discordIntegration.addDefault(path + "info.description", "**Website:** https://remigio07.me/chatplugin\n**GitHub:** https://github.com/ChatPlugin/ChatPlugin\n**Discord:** https://discord.gg/CPtysXTfQg");
-		discordIntegration.addDefault(path + "info.thumbnail", "https://i.imgur.com/3XBxeNx.png");
+		discordIntegration.addDefault(path + "info.thumbnail", "https://live.staticflickr.com/65535/53597447830_f9933947a8_o_d.png");
 		discordIntegration.addDefault(path + "info.color", "55FF55");
 		discordIntegration.addDefault(path + "reload-start.title.text", "Reload started");
 		discordIntegration.addDefault(path + "reload-start.description", "ChatPlugin's Discord bot is reloading...");
-		discordIntegration.addDefault(path + "reload-start.thumbnail", "https://i.imgur.com/00DHN3z.png");
+		discordIntegration.addDefault(path + "reload-start.thumbnail", "https://live.staticflickr.com/65535/53596116162_6f5a68c410_o_d.png");
 		discordIntegration.addDefault(path + "reload-start.color", "55FF55");
 		discordIntegration.addDefault(path + "reload-end.title.text", "Reloaded successfully");
 		discordIntegration.addDefault(path + "reload-end.description", "The bot has been reloaded. Took **{last_reload_time} ms** to complete.");
-		discordIntegration.addDefault(path + "reload-end.thumbnail", "https://i.imgur.com/LYPzmVV.png");
+		discordIntegration.addDefault(path + "reload-end.thumbnail", "https://live.staticflickr.com/65535/53597447840_45bcbe8901_o_d.png");
 		discordIntegration.addDefault(path + "reload-end.color", "55FF55");
 		discordIntegration.addDefault(path + "status.title.text", "Current server status");
 		discordIntegration.addDefault(path + "status.description", "**OS:** {os_name} {os_version}, **Java:** {java_version}\n**Environment:** {environment} {environment_version}\n**ChatPlugin:** {chatplugin_version}, **JDA:** {jda_version}\n**Uptime:** {uptime}\n**Used memory:** {used_memory}/{max_memory} MB\n**Allocated:** {total_memory} MB, **free:** {free_memory} MB\n**Current threads count:** {active_threads}x\n**Used storage:** {used_storage}/{total_storage} GB\n**Free storage:** {free_storage} GB\n**Enabled players:** {enabled_players}x\n**Startup:** {startup_time} ms, **last reload:** {last_reload_time} ms");
-		discordIntegration.addDefault(path + "status.thumbnail", "https://i.imgur.com/ovtYIIz.png");
+		discordIntegration.addDefault(path + "status.thumbnail", "https://live.staticflickr.com/65535/53597756194_8f7c5a2213_o_d.png");
 		discordIntegration.addDefault(path + "status.color", "55FF55");
 		discordIntegration.addDefault(path + "version.title.text", "Current plugin version");
 		discordIntegration.addDefault(path + "version.description", "**ChatPlugin version:** {chatplugin_version}\n**JDA version:** {jda_version}");
-		discordIntegration.addDefault(path + "version.thumbnail", "https://i.imgur.com/4fNAG2F.png");
+		discordIntegration.addDefault(path + "version.thumbnail", "https://live.staticflickr.com/65535/53596550622_bf7816d18e_o_d.png");
 		discordIntegration.addDefault(path + "version.color", "55FF55");
 		
 		path = "messages.ban.";
@@ -2236,11 +2238,11 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		discordIntegration.addDefault(path + "info.color", "AA0000");
 		discordIntegration.addDefault(path + "list.title.text", "Banlist");
 		discordIntegration.addDefault(path + "list.description", "**Active bans' IDs:** {bans}.");
-		discordIntegration.addDefault(path + "list.thumbnail", "https://i.imgur.com/2OSaajT.png");
+		discordIntegration.addDefault(path + "list.thumbnail", "https://live.staticflickr.com/65535/53597885450_768654f4cb_o_d.png");
 		discordIntegration.addDefault(path + "list.color", "AA0000");
 		discordIntegration.addDefault(path + "empty-list.title.text", "Empty list");
 		discordIntegration.addDefault(path + "empty-list.description", "There are no active bans.");
-		discordIntegration.addDefault(path + "empty-list.thumbnail", "https://i.imgur.com/soyOo5r.png");
+		discordIntegration.addDefault(path + "empty-list.thumbnail", "https://live.staticflickr.com/65535/53596550572_decef9c6d2_o_d.png");
 		discordIntegration.addDefault(path + "empty-list.color", "55FF55");
 		discordIntegration.addDefault(path + "banned.enabled", true);
 		discordIntegration.addDefault(path + "banned.title.text", "Ban **#{id}**: {player}");
@@ -2280,11 +2282,11 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		discordIntegration.addDefault(path + "info.color", "FF5555");
 		discordIntegration.addDefault(path + "list.title.text", "Warnlist");
 		discordIntegration.addDefault(path + "list.description", "**Active warnings' IDs:** {warnings}.");
-		discordIntegration.addDefault(path + "list.thumbnail", "https://i.imgur.com/X71kYjM.png");
+		discordIntegration.addDefault(path + "list.thumbnail", "https://live.staticflickr.com/65535/53597428861_2f63295099_o_d.png");
 		discordIntegration.addDefault(path + "list.color", "FF5555");
 		discordIntegration.addDefault(path + "empty-list.title.text", "Empty list");
 		discordIntegration.addDefault(path + "empty-list.description", "There are no active warnings.");
-		discordIntegration.addDefault(path + "empty-list.thumbnail", "https://i.imgur.com/soyOo5r.png");
+		discordIntegration.addDefault(path + "empty-list.thumbnail", "https://live.staticflickr.com/65535/53596550572_decef9c6d2_o_d.png");
 		discordIntegration.addDefault(path + "empty-list.color", "55FF55");
 		discordIntegration.addDefault(path + "warned.enabled", true);
 		discordIntegration.addDefault(path + "warned.title.text", "Warning **#{id}**: {player}");
@@ -2337,11 +2339,11 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		discordIntegration.addDefault(path + "info.color", "FFFF55");
 		discordIntegration.addDefault(path + "list.title.text", "Mutelist");
 		discordIntegration.addDefault(path + "list.description", "**Active mutes' IDs:** {mutes}.");
-		discordIntegration.addDefault(path + "list.thumbnail", "https://i.imgur.com/LdD9xUo.png");
+		discordIntegration.addDefault(path + "list.thumbnail", "https://live.staticflickr.com/65535/53597428856_5bf1c0f710_o_d.png");
 		discordIntegration.addDefault(path + "list.color", "FFFF55");
 		discordIntegration.addDefault(path + "empty-list.title.text", "Empty list");
 		discordIntegration.addDefault(path + "empty-list.description", "There are no active mutes.");
-		discordIntegration.addDefault(path + "empty-list.thumbnail", "https://i.imgur.com/soyOo5r.png");
+		discordIntegration.addDefault(path + "empty-list.thumbnail", "https://live.staticflickr.com/65535/53596550572_decef9c6d2_o_d.png");
 		discordIntegration.addDefault(path + "empty-list.color", "55FF55");
 		discordIntegration.addDefault(path + "muted.enabled", true);
 		discordIntegration.addDefault(path + "muted.title.text", "Mute **#{id}**: {player}");
@@ -2375,50 +2377,50 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		discordIntegration.addDefault(path + "title.text", "Inexistent ID");
 		discordIntegration.addDefault(path + "description", "The specified ID does not exist. Try with a different one.");
-		discordIntegration.addDefault(path + "thumbnail", "https://i.imgur.com/C2lN5aC.png");
+		discordIntegration.addDefault(path + "thumbnail", "https://live.staticflickr.com/65535/53597756249_c3908ff7a7_o_d.png");
 		discordIntegration.addDefault(path + "color", "FF5555");
 		
 		path = "messages.no-permission.";
 		
 		discordIntegration.addDefault(path + "title.text", "No permission");
 		discordIntegration.addDefault(path + "description", "You do not have the permission to execute this command.");
-		discordIntegration.addDefault(path + "thumbnail", "https://i.imgur.com/C2lN5aC.png");
+		discordIntegration.addDefault(path + "thumbnail", "https://live.staticflickr.com/65535/53597756249_c3908ff7a7_o_d.png");
 		discordIntegration.addDefault(path + "color", "FF5555");
 		
 		path = "messages.guild-only-action.";
 		
 		discordIntegration.addDefault(path + "title.text", "Guild only action");
 		discordIntegration.addDefault(path + "description", "This action can only be performed inside of the configured guild.");
-		discordIntegration.addDefault(path + "thumbnail", "https://i.imgur.com/C2lN5aC.png");
+		discordIntegration.addDefault(path + "thumbnail", "https://live.staticflickr.com/65535/53597756249_c3908ff7a7_o_d.png");
 		discordIntegration.addDefault(path + "color", "FF5555");
 		
 		path = "messages.disabled-feature.";
 		
 		discordIntegration.addDefault(path + "title.text", "Disabled feature");
 		discordIntegration.addDefault(path + "description", "That feature is disabled. Set it up in the server's config files.");
-		discordIntegration.addDefault(path + "thumbnail", "https://i.imgur.com/C2lN5aC.png");
+		discordIntegration.addDefault(path + "thumbnail", "https://live.staticflickr.com/65535/53597756249_c3908ff7a7_o_d.png");
 		discordIntegration.addDefault(path + "color", "FF5555");
 		
 		path = "messages.invalid-ip-address.";
 		
 		discordIntegration.addDefault(path + "title.text", "Invalid IP address");
 		discordIntegration.addDefault(path + "description", "The specified IP address is invalid. Try with a different one.");
-		discordIntegration.addDefault(path + "thumbnail", "https://i.imgur.com/C2lN5aC.png");
+		discordIntegration.addDefault(path + "thumbnail", "https://live.staticflickr.com/65535/53597756249_c3908ff7a7_o_d.png");
 		discordIntegration.addDefault(path + "color", "FF5555");
 		
 		path = "messages.at-least-one-online.";
 		
 		discordIntegration.addDefault(path + "title.text", "No players online");
 		discordIntegration.addDefault(path + "description", "At least one player online is required to perform this action.");
-		discordIntegration.addDefault(path + "thumbnail", "https://i.imgur.com/C2lN5aC.png");
-		discordIntegration.addDefault(path + "color", "FF5555");		
+		discordIntegration.addDefault(path + "thumbnail", "https://live.staticflickr.com/65535/53597756249_c3908ff7a7_o_d.png");
+		discordIntegration.addDefault(path + "color", "FF5555");
 		
 		path = "messages.ip-lookup.";
 		
 		discordIntegration.addDefault(path + "title.text", "IP lookup of {ip_address}");
 		discordIntegration.addDefault(path + "title.url", "https://www.maxmind.com/en/geoip2-precision-demo");
 		discordIntegration.addDefault(path + "description", "**ISP:** {isp}\n**Country:** {country}, {continent}\n**Subdivision(s):** {subdivisions}\n**City:** {city} (postal code: {postal_code})\n**Coords:** {latitude}° {longitude}°\n**Accuracy radius:** ~{accuracy_radius_km} km");
-		discordIntegration.addDefault(path + "thumbnail", "https://i.imgur.com/VIVD1jT.png");
+		discordIntegration.addDefault(path + "thumbnail", "https://live.staticflickr.com/65535/53597756269_8e08b3dfb1_o_d.png");
 		discordIntegration.addDefault(path + "color", "5555FF");
 		
 		discordIntegration.addDefault("simple-date-format", "E, MM/dd/yyyy hh:mm a");

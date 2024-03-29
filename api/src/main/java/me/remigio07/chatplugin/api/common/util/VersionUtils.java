@@ -1011,9 +1011,15 @@ public class VersionUtils {
 		@NotNull
 		public static Version getVersion(String input) {
 			Version version = Version.UNSUPPORTED;
-			input = input.endsWith(".0") ? input.substring(0, input.lastIndexOf('.')) : input;
 			
-			for (Version value : values())
+			try {
+				if (input.contains("/"))
+					input = input.substring(0, input.indexOf('/'));
+				if (input.endsWith(".0"))
+					input = input.substring(0, input.lastIndexOf('.'));
+			} catch (IndexOutOfBoundsException e) {
+				return version;
+			} for (Version value : values())
 				if (input.equals(value.name().substring(1).replace('_', '.'))) {
 					version = value;
 					break;

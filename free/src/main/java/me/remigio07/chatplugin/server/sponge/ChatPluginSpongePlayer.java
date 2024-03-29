@@ -167,7 +167,7 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public void sendMessage(String message) {
-		player.sendMessage(Utils.serializeSpongeText(message, true));
+		player.sendMessage(Utils.serializeSpongeText(message, false));
 	}
 	
 	@Override

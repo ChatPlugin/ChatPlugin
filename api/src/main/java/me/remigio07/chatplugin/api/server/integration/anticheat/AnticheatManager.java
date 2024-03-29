@@ -127,8 +127,6 @@ public abstract class AnticheatManager implements ChatPluginManager {
 	/**
 	 * Adds a violation to {@link #getViolations()}.
 	 * 
-	 * <p>Calling this method will add a {@link Violation} to {@link #getViolations()}.</p>
-	 * 
 	 * @param cheater Violation's cheater
 	 * @param anticheat Anticheat that flagged the player
 	 * @param cheatID Violation's cheat's ID

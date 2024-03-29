@@ -133,7 +133,7 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 				@SuppressWarnings("unchecked")
 				Set<String> playerChannels = (Set<String>) channels.get(player);
 				
-				if (playerChannels.contains(F3ServerNameManager.CHANNEL_ID))
+				if (!playerChannels.contains(F3ServerNameManager.CHANNEL_ID))
 					playerChannels.add(F3ServerNameManager.CHANNEL_ID);
 			} catch (NoSuchFieldException | IllegalAccessException e) {
 				LogManager.log("{0} occurred while enabling the F3 server names' channels for {1}: {2}", 2, e.getClass().getSimpleName(), name, e.getMessage());

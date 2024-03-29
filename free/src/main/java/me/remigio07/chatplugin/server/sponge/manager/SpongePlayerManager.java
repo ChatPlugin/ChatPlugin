@@ -116,7 +116,6 @@ public class SpongePlayerManager extends ServerPlayerManager {
 			scoreboard.registerTeam(team);
 			team.addMember(Utils.serializeSpongeText(Scoreboard.SCORES[i], false));
 		} player.spongeValue().setScoreboard(scoreboard);
-		scoreboard.updateDisplaySlot(objective, DisplaySlots.SIDEBAR);
 		serverPlayer.setObjective(new ObjectiveAdapter(objective));
 		
 		for (Rank rank : RankManager.getInstance().getRanks()) {

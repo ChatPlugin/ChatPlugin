@@ -206,9 +206,35 @@ public class OfflinePlayer {
 	 * they have the same UUID if running on online mode or if they
 	 * have the same name ignoring case if running on offline mode.</p>
 	 */
+	
+	
+	/**
+	 * Checks if another object is an instance of {@link OfflinePlayer} and if this
+	 * player's {@link #getUUID()} (if running on online mode) or {@link #getName()}
+	 * (if running on offline mode) value is equal to the other object's one.
+	 * 
+	 * @param obj Object to compare
+	 * @return Whether the two objects are equal
+	 * @throws IllegalStateException If {@link ChatPlugin#isOnlineMode()} cannot be run yet
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		return obj instanceof OfflinePlayer ? ChatPlugin.getInstance().isOnlineMode() ? ((OfflinePlayer) obj).getUUID().equals(uuid) : ((OfflinePlayer) obj).getName() == null ? false : ((OfflinePlayer) obj).getName().equalsIgnoreCase(name) : false;
+	}
+	
+	/**
+	 * Gets this player's hash code.
+	 * 
+	 * <p>Will return {@link #getUUID()}'s (if running on online mode)
+	 * or {@link #getName()}'s (if running on offline mode) hash code
+	 * or -1 if the name is <code>null</code>.</p>
+	 * 
+	 * @return Player's hash code
+	 * @throws IllegalStateException If {@link ChatPlugin#isOnlineMode()} cannot be run yet
+	 */
+	@Override
+	public int hashCode() {
+		return ChatPlugin.getInstance().isOnlineMode() ? uuid.hashCode() : name == null ? -1 : name.hashCode();
 	}
 	
 	/**

@@ -313,8 +313,8 @@ public class ChatColor {
 	}
 	
 	/**
-	 * Checks if another object is an instance of {@link ChatColor}
-	 * and if this color's {@link #toString()} value is equal to the other object's one.
+	 * Checks if another object is an instance of {@link ChatColor} and if this
+	 * color's {@link #toString()} value is equal to the other object's one.
 	 * 
 	 * @param obj Object to compare
 	 * @return Whether the two objects are equal
@@ -322,6 +322,18 @@ public class ChatColor {
 	@Override
 	public boolean equals(Object obj) {
 		return obj instanceof ChatColor && ((ChatColor) obj).toString().equals(toString());
+	}
+	
+	/**
+	 * Gets this color's hash code.
+	 * 
+	 * <p>Will return {@link #toString()}'s hash code.</p>
+	 * 
+	 * @return Color's hash code
+	 */
+	@Override
+	public int hashCode() {
+		return toString.hashCode();
 	}
 	
 	/**

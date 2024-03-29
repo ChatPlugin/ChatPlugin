@@ -149,9 +149,29 @@ public class CommandSenderAdapter {
 		return isConsole() ? null : ServerPlayerManager.getInstance().getPlayer(getUUID());
 	}
 	
+	/**
+	 * Checks if another object is an instance of {@link CommandSenderAdapter} and
+	 * if the sender specified by the constructor is equal to the other object's one.
+	 * 
+	 * @param obj Object to compare
+	 * @return Whether the two objects are equal
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		return obj instanceof CommandSenderAdapter ? ((CommandSenderAdapter) obj).commandSender.equals(commandSender) : false;
+	}
+	
+	/**
+	 * Gets this sender's hash code.
+	 * 
+	 * <p>Will return the hash code of the
+	 * sender specified by the constructor.</p>
+	 * 
+	 * @return Sender's hash code
+	 */
+	@Override
+	public int hashCode() {
+		return commandSender.hashCode();
 	}
 	
 }

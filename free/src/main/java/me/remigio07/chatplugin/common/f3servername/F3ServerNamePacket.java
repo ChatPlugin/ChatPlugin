@@ -27,7 +27,6 @@ public class F3ServerNamePacket {
 	
 	public F3ServerNamePacket(String value) {
 		value += "\u00A7r";
-		
 		array = value.getBytes(StandardCharsets.UTF_8);
 		int length = array.length;
 		

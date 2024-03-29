@@ -32,7 +32,7 @@ public class WhisperCommand extends BaseCommand {
 	
 	public WhisperCommand() {
 		super("/whisper <recipient> <message>");
-		tabCompletionArgs.put(0, players);
+		tabCompletionArgs.put(0, Arrays.asList("{players_excluding_self}"));
 	}
 	
 	@Override

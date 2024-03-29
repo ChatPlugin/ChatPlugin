@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagers;
@@ -80,8 +81,10 @@ public abstract class BaseCommand {
 		
 		if (args.contains("{players}")) {
 			args.remove("{players}");
-			args.addAll(sender.hasPermission(VanishManager.VANISH_PERMISSION) ? PlayerManager.getInstance().getPlayersNames()
-					: PlayerManager.getInstance().getPlayersNames().stream().filter(name -> !VanishManager.getInstance().getVanishedNames().contains(name)).collect(Collectors.toList()));
+			args.addAll(getVisiblePlayers(sender).collect(Collectors.toList()));
+		} if (args.contains("{players_excluding_self}")) {
+			args.remove("{players_excluding_self}");
+			args.addAll(getVisiblePlayers(sender).filter(player -> !player.equals(sender.getName())).collect(Collectors.toList()));
 		} if (args.contains("{ips}")) {
 			args.remove("{ips}");
 			args.addAll(PlayerManager.getInstance().getPlayersIPs().stream().map(InetAddress::getHostAddress).collect(Collectors.toList()));
@@ -112,6 +115,11 @@ public abstract class BaseCommand {
 			if (!str.toLowerCase().startsWith(startsWith.toLowerCase()))
 				args.remove(str);
 		return args;
+	}
+	
+	private Stream<String> getVisiblePlayers(CommandSenderAdapter sender) {
+		return sender.hasPermission(VanishManager.VANISH_PERMISSION) ? PlayerManager.getInstance().getPlayersNames().stream()
+				: PlayerManager.getInstance().getPlayersNames().stream().filter(name -> !VanishManager.getInstance().getVanishedNames().contains(name));
 	}
 	
 	protected void sendUsage(CommandSenderAdapter sender, Language language) {

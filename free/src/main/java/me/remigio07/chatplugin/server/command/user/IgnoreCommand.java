@@ -57,7 +57,7 @@ public class IgnoreCommand extends PlayerCommand {
 		
 		public Add() {
 			super("/ignore add <player>");
-			tabCompletionArgs.put(1, players);
+			tabCompletionArgs.put(1, Arrays.asList("{players_excluding_self}"));
 		}
 		
 		@Override
@@ -124,7 +124,7 @@ public class IgnoreCommand extends PlayerCommand {
 		
 		public Remove() {
 			super("/ignore remove <player>");
-			tabCompletionArgs.put(1, players);
+			tabCompletionArgs.put(1, Arrays.asList("{players_excluding_self}"));
 		}
 		
 		@Override

@@ -29,7 +29,7 @@ publishing {
 			pom {
 				name = 'ChatPlugin'
 				description = 'A complete yet lightweight plugin which handles just too many features!'
-				url = 'https://github.com/ChatPlugin/ChatPlugin'
+				url = 'https://remigio07.me/chatplugin'
 				licenses {
 					license {
 						name = 'AGPL-3.0'
@@ -40,13 +40,19 @@ publishing {
 					developer {
 						id = 'remigio07'
 						name = 'Remigio07'
-						email = 'remipiova@gmail.com'
+						email = 'remigio07@outlook.it'
+						url = 'https://remigio07.me'
+					}
+				}
+				contributors {
+					contributor {
+						name = 'Keresael'
 					}
 				}
 				scm {
-					connection = 'scm:svn:https://github.com/ChatPlugin/ChatPlugin.git'
-					developerConnection = 'scm:svn:https://github.com/ChatPlugin/ChatPlugin.git'
-					url = 'https://github.com/ChatPlugin/ChatPlugin'
+					connection = 'scm:git:git:https://github.com/ChatPlugin/ChatPlugin.git'
+					developerConnection = 'scm:git:ssh:https://github.com/ChatPlugin/ChatPlugin.git'
+					url = 'https://github.com/ChatPlugin/ChatPlugin/tree/main'
 				}
 			}
 		}

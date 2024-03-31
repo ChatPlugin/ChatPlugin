@@ -15,11 +15,27 @@
 
 package me.remigio07.chatplugin.common.util.bstats;
 
+import me.remigio07.chatplugin.api.common.integration.ChatPluginIntegration;
+import me.remigio07.chatplugin.api.common.integration.IntegrationManager;
+import me.remigio07.chatplugin.api.common.storage.database.DatabaseManager;
+import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
+import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagers;
 import me.remigio07.chatplugin.common.util.bstats.charts.CustomChart;
+import me.remigio07.chatplugin.common.util.bstats.charts.SimplePie;
 
 public abstract class CommonMetrics {
 	
 	protected MetricsBase metricsBase;
+	
+	public CommonMetrics load() {
+		addCustomChart(new SimplePie("databaseStorageMethod", () -> DatabaseManager.getInstance().getMethod().getName()));
+		addCustomChart(new SimplePie("enabledIntegrations", () -> range(IntegrationManager.class, (int) IntegrationManager.getInstance().getIntegrations().values().stream().filter(ChatPluginIntegration::isEnabled).count())));
+		return this;
+	}
+	
+	protected static String range(Class<? extends ChatPluginManager> manager, int amount) {
+		return ChatPluginManagers.getInstance().getManager(manager).isEnabled() ? String.valueOf(amount > 4 ? amount > 9 ? amount > 14 ? "15+" : "10-14" : "5-9" : "0-4") : "Disabled";
+	}
 	
 	public CommonMetrics addCustomChart(CustomChart chart) {
 		metricsBase.addCustomChart(chart);
@@ -29,8 +45,6 @@ public abstract class CommonMetrics {
 	public MetricsBase getMetricsBase() {
 		return metricsBase;
 	}
-	
-	public abstract CommonMetrics load();
 	
 	public abstract boolean areMetricsEnabled();
 	

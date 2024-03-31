@@ -230,7 +230,6 @@ public class MetricsBase {
             // Maven's Relocate is clever and changes strings, too. So we have to use this little "trick" ... :D
             final String defaultPackage = new String(new byte[]{'o', 'r', 'g', '.', 'b', 's', 't', 'a', 't', 's'});
             final String examplePackage = new String(new byte[]{'y', 'o', 'u', 'r', '.', 'p', 'a', 'c', 'k', 'a', 'g', 'e'});
-//            final String examplePackage = new String(new byte[]{'m', 'e', '.', 'r', 'e', 'm', 'i', 'g', 'i', 'o', '0', '7', '_', '.', 'c', 'h', 'a', 't', 'p', 'l', 'u', 'g', 'i', 'n', '.', 'c', 'o', 'm', 'm', 'o', 'n', '.', 'u', 't', 'i', 'l', '.', 'b', 's', 't', 'a', 't', 's'});
             // We want to make sure no one just copy & pastes the example and uses the wrong package names
             if (MetricsBase.class.getPackage().getName().startsWith(defaultPackage) || MetricsBase.class.getPackage().getName().startsWith(examplePackage)) {
                 throw new IllegalStateException("bStats Metrics class has not been relocated correctly!");

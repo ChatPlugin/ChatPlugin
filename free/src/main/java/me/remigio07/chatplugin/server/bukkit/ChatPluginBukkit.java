@@ -87,7 +87,7 @@ public class ChatPluginBukkit extends ChatPlugin {
 			TaskManager.runAsync(() -> {
 				long ms2 = System.currentTimeMillis();
 				
-				if ((metrics = new BukkitMetrics(BukkitBootstrapper.getInstance(), 12759)).load().areMetricsEnabled());
+				if ((metrics = new BukkitMetrics(BukkitBootstrapper.getInstance(), 12757)).load().areMetricsEnabled());
 					LogManager.log("[ASYNC] Metrics loaded in {0} ms.", 4, System.currentTimeMillis() - ms2);
 			}, 0L);
 		} catch (ChatPluginManagerException e) {

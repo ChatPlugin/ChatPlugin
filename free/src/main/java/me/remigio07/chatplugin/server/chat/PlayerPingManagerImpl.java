@@ -38,6 +38,7 @@ public class PlayerPingManagerImpl extends PlayerPingManager {
 		
 		if (!ChatManager.getInstance().isEnabled() || !ConfigurationType.CHAT.get().getBoolean("chat.player-ping.enabled"))
 			return;
+		atSignRequired = ConfigurationType.CHAT.get().getBoolean("chat.player-ping.at-sign-required");
 		soundEnabled = ConfigurationType.CHAT.get().getBoolean("chat.player-ping.sound.enabled");
 		color = ConfigurationType.CHAT.get().getString("chat.player-ping.color");
 		sound = new SoundAdapter(
@@ -51,7 +52,7 @@ public class PlayerPingManagerImpl extends PlayerPingManager {
 	
 	@Override
 	public void unload() throws ChatPluginManagerException {
-		enabled = soundEnabled = false;
+		enabled = atSignRequired = soundEnabled = false;
 		color = null;
 		sound = null;
 	}
@@ -61,7 +62,7 @@ public class PlayerPingManagerImpl extends PlayerPingManager {
 		if (enabled && player.hasPermission("chatplugin.player-ping")) {
 			for (ChatPluginServerPlayer pinged : getPingedPlayers(player, message)) {
 				if (!pinged.isVanished()) {
-					message = message.replace(pinged.getName(), ChatColor.translate(color) + "@" + pinged.getName() + "\u00A7r");
+					message = message.replace((atSignRequired ? "@" : "") + pinged.getName(), ChatColor.translate(color) + "@" + pinged.getName() + "\u00A7r");
 					
 					if (!PlayerIgnoreManager.getInstance().isEnabled() || !pinged.getIgnoredPlayers().contains(player)) {
 						pinged.sendTranslatedMessage("chat.pinged", player.getName());
@@ -77,7 +78,8 @@ public class PlayerPingManagerImpl extends PlayerPingManager {
 	public List<ChatPluginServerPlayer> getPingedPlayers(ChatPluginServerPlayer player, String message) {
 		return Arrays.asList(message.split(" "))
 				.stream()
-				.map(str -> ServerPlayerManager.getInstance().getPlayer(str, false, false))
+				.filter(str -> str.startsWith("@") || !atSignRequired)
+				.map(str -> ServerPlayerManager.getInstance().getPlayer(atSignRequired ? str.substring(1) : str, false, false))
 				.distinct()
 				.filter(other -> other != null && other != player)
 				.collect(Collectors.toList());

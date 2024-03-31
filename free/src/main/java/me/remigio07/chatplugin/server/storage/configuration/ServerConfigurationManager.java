@@ -686,6 +686,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.antispam.messages-whitelist", Arrays.asList("hello", "hey", "ok"));
 		
 		chat.addDefault("chat.player-ping.enabled", true);
+		chat.addDefault("chat.player-ping.at-sign-required", false);
 		chat.addDefault("chat.player-ping.color", "&b");
 		chat.addDefault("chat.player-ping.sound.enabled", true);
 		chat.addDefault("chat.player-ping.sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "ENTITY_EXPERIENCE_ORB_PICKUP" : "ORB_PICKUP");

@@ -31,7 +31,7 @@ import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 public abstract class PlayerPingManager implements ChatPluginManager {
 	
 	protected static PlayerPingManager instance;
-	protected boolean enabled, soundEnabled;
+	protected boolean enabled, atSignRequired, soundEnabled;
 	protected String color;
 	protected SoundAdapter sound;
 	protected long loadTime;
@@ -44,6 +44,18 @@ public abstract class PlayerPingManager implements ChatPluginManager {
 	@Override
 	public boolean isEnabled() {
 		return enabled;
+	}
+	
+	/**
+	 * Checks if @ in front of player names is
+	 * required to ping them; example: "@Remigio07".
+	 * 
+	 * <p><strong>Found at:</strong> "chat.player-ping.at-sign-required" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Whether @ is required
+	 */
+	public boolean isAtSignRequired() {
+		return atSignRequired;
 	}
 	
 	/**

@@ -22,6 +22,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 import java.util.UUID;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -30,6 +31,8 @@ import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.Library;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
+import me.remigio07.chatplugin.api.common.util.manager.LogManager;
+import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.common.util.text.ComponentTranslatorImpl;
 
@@ -89,6 +92,21 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 			throw new ChatPluginManagerException("libraries utils", e.getMessage());
 		} UUIDFetcherImpl.setInstance(new UUIDFetcherImpl());
 		ComponentTranslatorImpl.setInstance(new ComponentTranslatorImpl());
+	}
+	
+	public static void startUpdateChecker() {
+		TaskManager.scheduleAsync(() -> {
+			try (Scanner scanner = new Scanner(new URL("https://api.spigotmc.org/legacy/update.php?resource=115169/~").openStream())) {
+				if (scanner.hasNext()) {
+					String latestVersion = scanner.next();
+					
+					if (!latestVersion.equals(ChatPlugin.VERSION))
+						LogManager.log("You are running an outdated version of ChatPlugin. It is recommended to update to the latest version ({0}) to avoid bugs and incompatibilities.", 1, latestVersion);
+				}
+			} catch (IOException e) {
+				LogManager.log("Unable to check for updates using SpigotMC's API: {0}", 2, e.getMessage());
+			}
+		}, 0L, 7200000L);
 	}
 	
 	public static boolean isBedrockPlayer(UUID player) {

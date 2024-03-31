@@ -83,6 +83,7 @@ public class ChatPluginBukkit extends ChatPlugin {
 				LogManager.log("This server is running an old Minecraft version. Note that this software is {0} old. Even though it is still supported, fixing any bugs is not a priority. It's recommended to upgrade to a newer version.", 1, Utils.formatTime(System.currentTimeMillis() - VersionUtils.getVersion().getReleaseDate()));
 			managers.loadManagers();
 			BukkitCommandsHandler.registerCommands();
+			Utils.startUpdateChecker();
 			TaskManager.scheduleAsync(() -> LogManager.log(Utils.FREE_VERSION_ADS[ThreadLocalRandom.current().nextInt(Utils.FREE_VERSION_ADS.length)], 0), 3600000L, 3600000L); // yeah, I've put it right here... remove it if you want, I guess 🙄
 			TaskManager.runAsync(() -> {
 				long ms2 = System.currentTimeMillis();

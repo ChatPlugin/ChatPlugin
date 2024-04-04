@@ -952,6 +952,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		ads.addDefault("ads.settings.random-order", true);
 		ads.addDefault("ads.settings.prefix.enabled", false);
 		ads.addDefault("ads.settings.prefix.format", "&8[&5&lAds&8] &r");
+		ads.addDefault("ads.settings.sound.enabled", true);
+		ads.addDefault("ads.settings.sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : Environment.isBukkit() ? "CLICK" : "GUI_BUTTON");
+		ads.addDefault("ads.settings.sound.volume", 1F);
+		ads.addDefault("ads.settings.sound.pitch", 1F);
 		ads.addDefault("ads.settings.sending-timeout", "5m");
 		ads.addDefault("ads.settings.placeholder-types", Arrays.asList());
 		

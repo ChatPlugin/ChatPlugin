@@ -35,6 +35,7 @@ import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.rank.Rank;
 import me.remigio07.chatplugin.api.server.rank.RankManager;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
+import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import me.remigio07.chatplugin.server.util.Utils;
 import net.kyori.adventure.text.TextComponent;
@@ -53,7 +54,9 @@ public class AdManagerImpl extends AdManager {
 			return;
 		randomOrder = ConfigurationType.ADS.get().getBoolean("ads.settings.random-order");
 		hasPrefix = ConfigurationType.ADS.get().getBoolean("ads.settings.prefix.enabled");
+		soundEnabled = ConfigurationType.ADS.get().getBoolean("ads.settings.sound.enabled");
 		prefix = ConfigurationType.ADS.get().getString("ads.settings.prefix.format");
+		sound = new SoundAdapter(ConfigurationType.ADS.get(), "ads.settings.sound");
 		sendingTimeout = Utils.getTime(ConfigurationType.ADS.get().getString("ads.settings.sending-timeout"), false);
 		placeholderTypes = PlaceholderType.getPlaceholders(ConfigurationType.ADS.get().getStringList("ads.settings.placeholder-types"));
 		
@@ -109,8 +112,9 @@ public class AdManagerImpl extends AdManager {
 		ads.clear();
 		placeholderTypes.clear();
 		
-		randomOrder = hasPrefix = false;
+		randomOrder = hasPrefix = soundEnabled = false;
 		prefix = null;
+		sound = null;
 		sendingTimeout = 0;
 		timerTaskID = timerIndex = -1;
 	}
@@ -160,6 +164,8 @@ public class AdManagerImpl extends AdManager {
 			text = text.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(ad.getHover(language), true)));
 		if (ad.getClickAction() != null && ad.getClickValue(language) != null)
 			text = text.clickEvent(ClickEvent.clickEvent(Action.NAMES.value(ad.getClickAction().getID()), ad.getClickValue(language)));
+		if (soundEnabled)
+			player.playSound(sound);
 		((BaseChatPluginServerPlayer) player).sendMessage(text);
 	}
 	

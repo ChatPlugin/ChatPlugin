@@ -29,6 +29,7 @@ import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.event.ad.AdSendEvent;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
+import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 
 /**
  * Manager that handles {@link Ad}s.
@@ -46,8 +47,9 @@ public abstract class AdManager extends TimerTask implements ChatPluginManager {
 	 */
 	public static final Pattern AD_ID_PATTERN = Pattern.compile("^[a-zA-Z0-9-_]{2,36}$");
 	protected static AdManager instance;
-	protected boolean enabled, randomOrder, hasPrefix;
+	protected boolean enabled, randomOrder, hasPrefix, soundEnabled;
 	protected String prefix;
+	protected SoundAdapter sound;
 	protected long sendingTimeout, timerTaskID = -1;
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
 	protected List<Ad> ads = new ArrayList<>();
@@ -87,6 +89,17 @@ public abstract class AdManager extends TimerTask implements ChatPluginManager {
 	}
 	
 	/**
+	 * Checks if {@link #getSound()} should be played when sending ads.
+	 * 
+	 * <p><strong>Found at:</strong> "ads.settings.sound.enabled" in {@link ConfigurationType#ADS}</p>
+	 * 
+	 * @return Whether to use sounds
+	 */
+	public boolean isSoundEnabled() {
+		return soundEnabled;
+	}
+	
+	/**
 	 * Gets the ads' prefix.
 	 * 
 	 * <p><strong>Found at:</strong> "ads.settings.prefix.format" in {@link ConfigurationType#ADS}</p>
@@ -97,6 +110,18 @@ public abstract class AdManager extends TimerTask implements ChatPluginManager {
 	@NotNull
 	public String getPrefix() {
 		return prefix;
+	}
+	
+	/**
+	 * Gets the sound played to players when they receive an ad.
+	 * 
+	 * <p><strong>Found at:</strong> "ads.settings.sound" in {@link ConfigurationType#ADS}</p>
+	 * 
+	 * @return Ads' sound
+	 * @see #isSoundEnabled()
+	 */
+	public SoundAdapter getSound() {
+		return sound;
 	}
 	
 	/**

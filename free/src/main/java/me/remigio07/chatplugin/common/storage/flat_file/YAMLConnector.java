@@ -244,7 +244,7 @@ public class YAMLConnector extends FlatFileConnector {
 		for (String id : players.getKeys()) {
 			if (Utils.isPositiveInteger(id) && uuid.equals(players.getString(id + ".player-uuid"))) {
 				Object data = type == PlayersDataType.ID ? Integer.valueOf(id) : players.getMappings().get(id + "." + type.getName(), type.getType() == String.class ? null : 0);
-				return (T) (type.getType() == long.class && data instanceof Integer ? new Long((int) data) : data);
+				return (T) (type.getType() == long.class && data instanceof Integer ? Long.valueOf((int) data) : data);
 			}
 		} return null;
 	}
@@ -257,7 +257,7 @@ public class YAMLConnector extends FlatFileConnector {
 		for (int id : players.getKeys().stream().filter(Utils::isPositiveInteger).map(Integer::valueOf).collect(Collectors.toList())) {
 			if (id == playerID) {
 				Object data = type == PlayersDataType.ID ? Integer.valueOf(id) : players.getMappings().get(id + "." + type.getName(), type.getType() == String.class ? null : 0);
-				return (T) (type.getType() == long.class && data instanceof Integer ? new Long((int) data) : data);
+				return (T) (type.getType() == long.class && data instanceof Integer ? Long.valueOf((int) data) : data);
 			}
 		} return null;
 	}

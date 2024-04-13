@@ -73,12 +73,14 @@ public class Client {
 		if (isConnected())
 			return ConnectionOutcome.ALREADY_CONNECTED;
 		Socket socket = new Socket(serverAddress, serverPort);
+		DataInputStream tempInput = new DataInputStream(socket.getInputStream());
+		DataOutputStream tempOutput = new DataOutputStream(socket.getOutputStream());
 		
-		new DataOutputStream(socket.getOutputStream()).writeUTF(id);
+		tempOutput.writeUTF(id);
 		LogManager.log("[SOCKETS] Connection accepted for client \"{0}\"; waiting for the server to validate the ID...", 4, id);
 		new Thread(() -> {
 			try {
-				temp = ConnectionOutcome.valueOf(new DataInputStream(socket.getInputStream()).readUTF());
+				temp = ConnectionOutcome.valueOf(tempInput.readUTF());
 			} catch (Exception e) { // NPE || IOE || IAE
 				// handled by the for loop
 			}
@@ -91,25 +93,31 @@ public class Client {
 				} catch (InterruptedException e) {
 					LogManager.log("[SOCKETS] The identification task for client \"{0}\" has been suddenly interrupted: {1}", 2, id, e.getMessage());
 					socket.close();
+					tempInput.close();
+					tempOutput.close();
 					throw e;
 				}
 			} else {
 				if (temp == ConnectionOutcome.SUCCESS) {
 					this.socket = socket;
 					this.id = id;
-					input = new DataInputStream(socket.getInputStream());
-					output = new DataOutputStream(socket.getOutputStream());
+					input = tempInput;
+					output = tempOutput;
 					new Thread(() -> run()).start();
 					new ClientConnectionEvent(this).call();
 					LogManager.log("[SOCKETS] Client \"{0}\" has just connected to the server using address {1}.", 4, id, socket.getInetAddress().getHostAddress() + ":" + socket.getLocalPort());
 				} else {
 					socket.close();
+					tempInput.close();
+					tempOutput.close();
 					LogManager.log("[SOCKETS] Client \"{0}\" has just tried to connect but the {1}.", 2, id, temp.getMessage());
 				} ConnectionOutcome temp2 = temp;
 				temp = null;
 				return temp2;
 			}
 		} socket.close();
+		tempInput.close();
+		tempOutput.close();
 		LogManager.log("[SOCKETS] Client \"{0}\" did not receive a response within 5000 ms so it was disconnected.", 4, id);
 		return ConnectionOutcome.TIMEOUT;
 	}

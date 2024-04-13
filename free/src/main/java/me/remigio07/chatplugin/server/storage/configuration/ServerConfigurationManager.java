@@ -673,8 +673,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.formatted-chat.send-anyway", true);
 		
 		chat.addDefault("chat.antispam.enabled", true);
+		chat.addDefault("chat.antispam.leet-filter-enabled", true);
 		chat.addDefault("chat.antispam.prevention.urls.enabled", true);
-		chat.addDefault("chat.antispam.prevention.urls.allowed-domains", Arrays.asList("remigio07.me", "megaproserver.com"));
+		chat.addDefault("chat.antispam.prevention.urls.allowed-domains", Arrays.asList("remigio07.me", "megaproserver.com", "youtube.com"));
 		chat.addDefault("chat.antispam.prevention.urls.whitelist", Arrays.asList("spigotmc.org/forums"));
 		chat.addDefault("chat.antispam.prevention.ips.enabled", true);
 		chat.addDefault("chat.antispam.prevention.ips.whitelist", Arrays.asList("127.0.0.1"));
@@ -682,8 +683,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.antispam.max-caps-percent", 50);
 		chat.addDefault("chat.antispam.seconds-between-msg", 2);
 		chat.addDefault("chat.antispam.seconds-between-same-msg", 10);
-		chat.addDefault("chat.antispam.words-blacklist", Arrays.asList("fuck", "dick", "shit"));
-		chat.addDefault("chat.antispam.messages-whitelist", Arrays.asList("hello", "hey", "ok"));
+		chat.addDefault("chat.antispam.words-blacklist", Arrays.asList(" arse", " ass ", "asshole", "bastard", "bitch", "blowjob", "bollock", "cocksucker", " crap", " cum", "dick", "faggot", "fuck", "handjob", "nigga", "nigger", "pussy", " shit", "slut", "twat", "whore", "arrap", "bocchin", " caca", "caga", " cazz", "coglion", "cojon", "ditalin", "figa", "fotter", "fottut", "froci", "merd", "mignott", "minchi", "puttan", "pompin", "ricchion", "sborra", "stronz", "troia", "troie", "zoccola", "zoccole"));
+		chat.addDefault("chat.antispam.messages-whitelist", Arrays.asList("hello", "hey", "ok", "ciao"));
 		
 		chat.addDefault("chat.player-ping.enabled", true);
 		chat.addDefault("chat.player-ping.at-sign-required", false);

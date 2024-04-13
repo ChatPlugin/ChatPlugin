@@ -19,11 +19,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import com.google.common.net.InetAddresses;
-
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.util.Utils;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
@@ -35,6 +36,10 @@ import me.remigio07.chatplugin.api.server.util.URLValidator;
 
 public class AntispamManagerImpl extends AntispamManager {
 	
+	private static final Pattern DOMAIN_PATTERN = Pattern.compile("((?!-)[A-Za-z0-9-]{1,63}([^A-Za-z0-9\\s\\/]+))+[A-Za-z]{2,6}");
+	private static final Pattern IPV4_PATTERN = Pattern.compile("(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\D+){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)");
+	private List<Pattern> wordsBlacklistPatterns = new ArrayList<>();
+	
 	@Override
 	public void load() throws ChatPluginManagerException {
 		instance = this;
@@ -42,6 +47,7 @@ public class AntispamManagerImpl extends AntispamManager {
 		
 		if (!ChatManager.getInstance().isEnabled() || !ConfigurationType.CHAT.get().getBoolean("chat.antispam.enabled"))
 			return;
+		leetFilterEnabled = ConfigurationType.CHAT.get().getBoolean("chat.antispam.leet-filter-enabled");
 		urlsPreventionEnabled = ConfigurationType.CHAT.get().getBoolean("chat.antispam.prevention.urls.enabled");
 		ipsPreventionEnabled = ConfigurationType.CHAT.get().getBoolean("chat.antispam.prevention.ips.enabled");
 		maxCapsLength = ConfigurationType.CHAT.get().getInt("chat.antispam.max-caps-length");
@@ -50,6 +56,7 @@ public class AntispamManagerImpl extends AntispamManager {
 		secondsBetweenSameMsg = ConfigurationType.CHAT.get().getInt("chat.antispam.seconds-between-same-msg");
 		wordsBlacklist = lowerCase(ConfigurationType.CHAT.get().getStringList("chat.antispam.words-blacklist"));
 		messagesWhitelist = lowerCase(ConfigurationType.CHAT.get().getStringList("chat.antispam.messages-whitelist"));
+		wordsBlacklistPatterns = patterns(wordsBlacklist);
 		
 		for (String allowedDomain : ConfigurationType.CHAT.get().getStringList("chat.antispam.prevention.urls.allowed-domains")) {
 			String domainName = URLValidator.getDomainName(allowedDomain);
@@ -58,13 +65,15 @@ public class AntispamManagerImpl extends AntispamManager {
 				LogManager.log("Invalid domain (\"{0}\") specified at \"chat.antispam.prevention.urls.allowed-domains\" in chat.yml; skipping it.", 1, allowedDomain);
 			else allowedDomains.add(domainName);
 		} for (String whitelistedURL : ConfigurationType.CHAT.get().getStringList("chat.antispam.prevention.urls.whitelist")) {
-			String domainName = URLValidator.getDomainName(whitelistedURL);
-			
-			if (domainName == null)
-				LogManager.log("Invalid URL (\"{0}\") specified at \"chat.antispam.prevention.urls.whitelist\" in chat.yml; skipping it.", 1, whitelistedURL);
-			else urlsWhitelist.add(URLValidator.stripProtocol((whitelistedURL.endsWith("/") ? whitelistedURL.substring(0, whitelistedURL.length() - 1) : whitelistedURL).toLowerCase()));
+			if (!whitelistedURL.contains(" ")) {
+				String domainName = URLValidator.getDomainName(whitelistedURL);
+				
+				if (domainName == null)
+					LogManager.log("Invalid URL (\"{0}\") specified at \"chat.antispam.prevention.urls.whitelist\" in chat.yml; skipping it.", 1, whitelistedURL);
+				else urlsWhitelist.add(URLValidator.stripProtocol((whitelistedURL.endsWith("/") ? whitelistedURL.substring(0, whitelistedURL.length() - 1) : whitelistedURL).toLowerCase()));
+			} else LogManager.log("Invalid URL (\"{0}\") specified at \"chat.antispam.prevention.urls.whitelist\" in chat.yml: URLs cannot contain spaces; skipping it.", 1);
 		} for (String whitelistedIP : ConfigurationType.CHAT.get().getStringList("chat.antispam.prevention.ips.whitelist")) {
-			if (InetAddresses.isInetAddress(whitelistedIP))
+			if (Utils.isValidIPv4(whitelistedIP))
 				ipsWhitelist.add(whitelistedIP);
 			else LogManager.log("Invalid IPv4 (\"{0}\") specified at \"chat.antispam.prevention.ips.whitelist\" in chat.yml; skipping it.", 1, whitelistedIP);
 		} enabled = true;
@@ -75,9 +84,24 @@ public class AntispamManagerImpl extends AntispamManager {
 		return list.stream().map(String::toLowerCase).collect(Collectors.toCollection(ArrayList::new));
 	}
 	
+	private static List<Pattern> patterns(List<String> list) {
+		List<Pattern> patterns = new ArrayList<>();
+		
+		for (String word : list) {
+			StringBuilder sb = new StringBuilder((word.startsWith(" ") ? "\\b" : "") + "(");
+			boolean endsWithSpace = word.endsWith(" ");
+			word = word.trim();
+			
+			for (char character : word.toCharArray())
+				sb.append(character + "+(\\W|\\d|_)*");
+			sb.append(")" + (endsWithSpace ? "\\b" : ""));
+			patterns.add(Pattern.compile(sb.toString()));
+		} return patterns;
+	}
+	
 	@Override
 	public void unload() throws ChatPluginManagerException {
-		enabled = urlsPreventionEnabled = ipsPreventionEnabled = false;
+		enabled = leetFilterEnabled = urlsPreventionEnabled = ipsPreventionEnabled = false;
 		
 		allowedDomains.clear();
 		urlsWhitelist.clear();
@@ -86,6 +110,7 @@ public class AntispamManagerImpl extends AntispamManager {
 		messagesWhitelist.clear();
 		spamCache.clear();
 		floodCache.clear();
+		wordsBlacklistPatterns.clear();
 		
 		maxCapsLength = maxCapsPercent = secondsBetweenMsg = secondsBetweenSameMsg = 0;
 	}
@@ -129,28 +154,65 @@ public class AntispamManagerImpl extends AntispamManager {
 	
 	@Override
 	public boolean containsDisallowedURL(String message) {
-		List<String> urls = URLValidator.getURLs(message);
+		Matcher matcher = DOMAIN_PATTERN.matcher(message);
 		
-		if (urls.isEmpty())
-			return false;
-		for (String url : urls) {
-			if (!allowedDomains.contains(URLValidator.getDomainName(url)) && !urlsWhitelist.contains(URLValidator.stripProtocol((url.endsWith("/") ? url.substring(0, url.length() - 1) : url).toLowerCase())))
-				return true;
+		while (matcher.find()) {
+			String dirtyDomain = matcher.group();
+			String domainName = matcher.group(1);
+			String tld = dirtyDomain.substring(dirtyDomain.lastIndexOf(domainName.charAt(domainName.length() - 1)) + 1).toLowerCase();
+			
+			if (ChatManager.getInstance().getRecognizedTLDs().contains(tld)) {
+				StringBuilder domain = new StringBuilder();
+				
+				for (int i = 0; i < domainName.length(); i++) {
+					int codePoint = (int) domainName.charAt(i);
+					
+					if (Character.isLetter(codePoint) || codePoint > 47 && codePoint < 58 || codePoint == 45) {
+						domain.append((char) codePoint);
+					} else if (domain.charAt(domain.length() - 1) != '.')
+						domain.append('.');
+				} domain.append(tld);
+				
+				String finalDomain = domain.toString().toLowerCase();
+				String rest = message.substring(matcher.end());
+				
+				if (!allowedDomains.contains(finalDomain) && !urlsWhitelist.contains(finalDomain + (rest.contains(" ") ? rest.substring(0, rest.indexOf(' ')) : rest).toLowerCase()))
+					return true;
+			}
 		} return false;
 	}
 	
 	@Override
 	public boolean containsDisallowedIP(String message) {
-		for (String arg : message.split(" "))
-			if (InetAddresses.isInetAddress(arg) && !ipsWhitelist.contains(arg))
+		Matcher matcher = IPV4_PATTERN.matcher(message);
+		
+		while (matcher.find()) {
+			StringBuilder ipAddress = new StringBuilder();
+			String dirtyIPAddress = matcher.group();
+			
+			for (int i = 0; i < dirtyIPAddress.length(); i++) {
+				int codePoint = (int) dirtyIPAddress.charAt(i);
+				
+				if (codePoint > 47 && codePoint < 58)
+					ipAddress.append((char) codePoint);
+				else if (ipAddress.charAt(ipAddress.length() - 1) != '.')
+					ipAddress.append('.');
+			} if (!ipsWhitelist.contains(ipAddress.toString()))
 				return true;
-		return false;
+		} return false;
 	}
 	
 	@Override
 	public boolean containsBlacklistedWord(String message) {
-		for (String word : message.toLowerCase().split(" "))
-			if (wordsBlacklist.contains(word))
+		if (leetFilterEnabled)
+			for (LeetLetter letter : LeetLetter.values())
+				message = letter.replace(message);
+		return containsBlacklistedWord0(message);
+	}
+	
+	private boolean containsBlacklistedWord0(String message) {
+		for (int i = 0; i < wordsBlacklist.size(); i++)
+			if (wordsBlacklistPatterns.get(i).matcher(message.toLowerCase()).find())
 				return true;
 		return false;
 	}

@@ -36,7 +36,7 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 public abstract class AntispamManager implements DenyChatReasonHandler {
 	
 	protected static AntispamManager instance;
-	protected boolean enabled, urlsPreventionEnabled, ipsPreventionEnabled;
+	protected boolean enabled, leetFilterEnabled, urlsPreventionEnabled, ipsPreventionEnabled;
 	protected int maxCapsLength, maxCapsPercent, secondsBetweenMsg, secondsBetweenSameMsg;
 	protected List<String> allowedDomains = new ArrayList<>(), urlsWhitelist = new ArrayList<>(), ipsWhitelist = new ArrayList<>(), wordsBlacklist = new ArrayList<>(), messagesWhitelist = new ArrayList<>();
 	protected Map<UUID, List<String>> spamCache = new HashMap<>();
@@ -51,6 +51,18 @@ public abstract class AntispamManager implements DenyChatReasonHandler {
 	@Override
 	public boolean isEnabled() {
 		return enabled;
+	}
+	
+	/**
+	 * Checks if the antispam should consider <a href="https://en.wikipedia.org/wiki/Leet">leetspeak</a>
+	 * when checking if a message {@link #containsBlacklistedWord(String)}.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.antispam.leet-filter-enabled" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Whether the leet filter is enabled
+	 */
+	public boolean isLeetFilterEnabled() {
+		return leetFilterEnabled;
 	}
 	
 	/**
@@ -240,6 +252,8 @@ public abstract class AntispamManager implements DenyChatReasonHandler {
 	
 	/**
 	 * Checks if the specified message contains a blacklisted word.
+	 * 
+	 * <p>This will consider <a href="https://en.wikipedia.org/wiki/Leet">leetspeak</a> if {@link #isLeetFilterEnabled()}.</p>
 	 * 
 	 * @param message Message to check
 	 * @return Whether the message contains a disallowed word

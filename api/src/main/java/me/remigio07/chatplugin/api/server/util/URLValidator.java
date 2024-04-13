@@ -33,7 +33,14 @@ import me.remigio07.chatplugin.api.server.chat.ChatManager;
  */
 public class URLValidator {
 	
-	private static Pattern domainNamePattern = Pattern.compile("^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}$");
+	/**
+	 * Pattern representing the allowed domains.
+	 * 
+	 * <p><strong>Regex:</strong> "^((?!-)[A-Za-z0-9-]{1,63}(?&lt;!-)\.)+[A-Za-z]{2,6}$"</p>
+	 * 
+	 * @see #getDomainName(String)
+	 */
+	public static final Pattern DOMAIN_NAME_PATTERN = Pattern.compile("^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}$");
 	private static List<String> protocols = Arrays.asList("http://", "https://");
 	
 	/**
@@ -84,6 +91,7 @@ public class URLValidator {
 	 * 
 	 * @param url Target URL
 	 * @return Specified URL's domain name
+	 * @see #DOMAIN_NAME_PATTERN
 	 */
 	@Nullable(why = "Null if the URL is invalid or if !ChatManager#isEnabled() or if ChatManager#getRecognizedTLDs() does not contain the URL's TLD")
 	public static String getDomainName(String url) {
@@ -93,7 +101,7 @@ public class URLValidator {
 		
 		if (url.contains("/"))
 			url = url.substring(0, url.indexOf('/'));
-		return domainNamePattern.matcher(url).find() ? (ChatManager.getInstance().getRecognizedTLDs().contains(url.substring(url.lastIndexOf('.') + 1).toLowerCase()) ? url : null) : null;
+		return DOMAIN_NAME_PATTERN.matcher(url).find() ? (ChatManager.getInstance().getRecognizedTLDs().contains(url.substring(url.lastIndexOf('.') + 1).toLowerCase()) ? url : null) : null;
 	}
 	
 }

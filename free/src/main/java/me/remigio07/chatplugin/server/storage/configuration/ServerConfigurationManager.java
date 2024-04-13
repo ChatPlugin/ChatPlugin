@@ -611,8 +611,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	
 	public void addRanksDefaults(boolean forceAdd) throws IOException {
 		Configuration ranks = configurations.get(ConfigurationType.RANKS);
+		boolean fileMissing = !ranks.getFile().exists();
 		
-		if (!ranks.getFile().exists())
+		if (fileMissing)
 			ranks.createFile();
 		else if (!forceAdd)
 			return;
@@ -622,43 +623,44 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		ranks.addDefault("ranks.settings.sorting.enabled", true);
 		ranks.addDefault("ranks.settings.sorting.from-tablist-top", true);
 		
-		ranks.addDefault("ranks.user.display-name", "User");
-		ranks.addDefault("ranks.user.prefix", "&8[&f&lUser&8] &f");
-		ranks.addDefault("ranks.user.suffix", "");
-		ranks.addDefault("ranks.user.tag.prefix", "");
-		ranks.addDefault("ranks.user.tag.suffix", "");
-		ranks.addDefault("ranks.user.tag.name-color", "");
-		ranks.addDefault("ranks.user.descriptions.english", "&aRank: &f&lUser\n&aType: &fdefault");
-		ranks.addDefault("ranks.user.descriptions.italian", "&aRank: &f&lUser\n&aTipo: &fpredefinito");
-		
-		ranks.addDefault("ranks.vip.display-name", "VIP");
-		ranks.addDefault("ranks.vip.prefix", "&8[&d&lVIP&8] &f");
-		ranks.addDefault("ranks.vip.suffix", " &a[*]");
-		ranks.addDefault("ranks.vip.tag.prefix", "&8[&d&lV&8] &f");
-		ranks.addDefault("ranks.vip.tag.suffix", " &a[*]");
-		ranks.addDefault("ranks.vip.tag.name-color", "");
-		ranks.addDefault("ranks.vip.descriptions.english", "&aRank: &d&lVIP\n&aType: &fpaid &o($4.99)");
-		ranks.addDefault("ranks.vip.descriptions.italian", "&aRank: &d&lVIP\n&aTipo: &fpagato &o($4.99)");
-		
-		ranks.addDefault("ranks.staff.display-name", "Staff");
-		ranks.addDefault("ranks.staff.prefix", "&8[&b&lStaff&8] &f");
-		ranks.addDefault("ranks.staff.suffix", " &4[*]");
-		ranks.addDefault("ranks.staff.tag.prefix", "&8[&b&lS&8] &f");
-		ranks.addDefault("ranks.staff.tag.suffix", " &4[*]");
-		ranks.addDefault("ranks.staff.tag.name-color", "&f");
-		ranks.addDefault("ranks.staff.chat-color", "&f");
-		ranks.addDefault("ranks.staff.descriptions.english", "&aRank: &b&lStaff\n&aType: &fadmin.");
-		ranks.addDefault("ranks.staff.descriptions.italian", "&aRank: &b&lStaff\n&aTipo: &famministr.");
-		ranks.addDefault("ranks.staff.max-punishment-duration.ban", "14d");
-		ranks.addDefault("ranks.staff.max-punishment-duration.mute", "14d");
-		
-		ranks.save();
+		if (fileMissing) {
+			ranks.addDefault("ranks.user.display-name", "User");
+			ranks.addDefault("ranks.user.prefix", "&8[&f&lUser&8] &f");
+			ranks.addDefault("ranks.user.suffix", "");
+			ranks.addDefault("ranks.user.tag.prefix", "");
+			ranks.addDefault("ranks.user.tag.suffix", "");
+			ranks.addDefault("ranks.user.tag.name-color", "");
+			ranks.addDefault("ranks.user.descriptions.english", "&aRank: &f&lUser\n&aType: &fdefault");
+			ranks.addDefault("ranks.user.descriptions.italian", "&aRank: &f&lUser\n&aTipo: &fpredefinito");
+			
+			ranks.addDefault("ranks.vip.display-name", "VIP");
+			ranks.addDefault("ranks.vip.prefix", "&8[&d&lVIP&8] &f");
+			ranks.addDefault("ranks.vip.suffix", " &a[*]");
+			ranks.addDefault("ranks.vip.tag.prefix", "&8[&d&lV&8] &f");
+			ranks.addDefault("ranks.vip.tag.suffix", " &a[*]");
+			ranks.addDefault("ranks.vip.tag.name-color", "");
+			ranks.addDefault("ranks.vip.descriptions.english", "&aRank: &d&lVIP\n&aType: &fpaid &o($4.99)");
+			ranks.addDefault("ranks.vip.descriptions.italian", "&aRank: &d&lVIP\n&aTipo: &fpagato &o($4.99)");
+			
+			ranks.addDefault("ranks.staff.display-name", "Staff");
+			ranks.addDefault("ranks.staff.prefix", "&8[&b&lStaff&8] &f");
+			ranks.addDefault("ranks.staff.suffix", " &4[*]");
+			ranks.addDefault("ranks.staff.tag.prefix", "&8[&b&lS&8] &f");
+			ranks.addDefault("ranks.staff.tag.suffix", " &4[*]");
+			ranks.addDefault("ranks.staff.tag.name-color", "&f");
+			ranks.addDefault("ranks.staff.chat-color", "&f");
+			ranks.addDefault("ranks.staff.descriptions.english", "&aRank: &b&lStaff\n&aType: &fadmin.");
+			ranks.addDefault("ranks.staff.descriptions.italian", "&aRank: &b&lStaff\n&aTipo: &famministr.");
+			ranks.addDefault("ranks.staff.max-punishment-duration.ban", "14d");
+			ranks.addDefault("ranks.staff.max-punishment-duration.mute", "14d");
+		} ranks.save();
 	}
 	
 	public void addChatDefaults(boolean forceAdd) throws IOException {
 		Configuration chat = configurations.get(ConfigurationType.CHAT);
+		boolean fileMissing = !chat.getFile().exists();
 		
-		if (!chat.getFile().exists())
+		if (fileMissing)
 			chat.createFile();
 		else if (!forceAdd)
 			return;
@@ -725,21 +727,24 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.hover-info.url.hovers.italian", "&9[Clicca qui per aprire l'URL]");
 		
 		chat.addDefault("chat.instant-emojis.enabled", true);
-		chat.addDefault("chat.instant-emojis.values.copyright", "\u00A9");
-		chat.addDefault("chat.instant-emojis.values.registered", "\u00AE");
-		chat.addDefault("chat.instant-emojis.values.trademark", "\u2122");
-		chat.addDefault("chat.instant-emojis.values.alpha", "\u03B1");
-		chat.addDefault("chat.instant-emojis.values.beta", "\u03B2");
-		chat.addDefault("chat.instant-emojis.values.gamma", "\u03B3");
-		chat.addDefault("chat.instant-emojis.values.euro", "\u20AC");
-		chat.addDefault("chat.instant-emojis.values.pound", "\u00A3");
-		chat.addDefault("chat.instant-emojis.values.yen", "\u00A5");
-		chat.addDefault("chat.instant-emojis.values.infinity", "\u221E");
-		chat.addDefault("chat.instant-emojis.values.pi", "\u03C0");
-		chat.addDefault("chat.instant-emojis.values.degree", "\u00B0");
-		chat.addDefault("chat.instant-emojis.values.plus-minus", "\u00B1");
-		chat.addDefault("chat.instant-emojis.values.division", "\u00F7");
-		chat.addDefault("chat.instant-emojis.values.caret", "\u005E");
+		
+		if (fileMissing) {
+			chat.addDefault("chat.instant-emojis.values.copyright", "\u00A9");
+			chat.addDefault("chat.instant-emojis.values.registered", "\u00AE");
+			chat.addDefault("chat.instant-emojis.values.trademark", "\u2122");
+			chat.addDefault("chat.instant-emojis.values.alpha", "\u03B1");
+			chat.addDefault("chat.instant-emojis.values.beta", "\u03B2");
+			chat.addDefault("chat.instant-emojis.values.gamma", "\u03B3");
+			chat.addDefault("chat.instant-emojis.values.euro", "\u20AC");
+			chat.addDefault("chat.instant-emojis.values.pound", "\u00A3");
+			chat.addDefault("chat.instant-emojis.values.yen", "\u00A5");
+			chat.addDefault("chat.instant-emojis.values.infinity", "\u221E");
+			chat.addDefault("chat.instant-emojis.values.pi", "\u03C0");
+			chat.addDefault("chat.instant-emojis.values.degree", "\u00B0");
+			chat.addDefault("chat.instant-emojis.values.plus-minus", "\u00B1");
+			chat.addDefault("chat.instant-emojis.values.division", "\u00F7");
+			chat.addDefault("chat.instant-emojis.values.caret", "\u005E");
+		}
 		
 		chat.addDefault("chat.staff-chat.enabled", true);
 		chat.addDefault("chat.staff-chat.format.player.chat", "&7«&8[&6&lSC&8] &f{tag_prefix}{tag_name_color}{player}{tag_suffix}&7» &f");
@@ -757,8 +762,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	
 	public void addTablistsDefaults(boolean forceAdd) throws IOException {
 		Configuration tablists = configurations.get(ConfigurationType.TABLISTS);
+		boolean fileMissing = !tablists.getFile().exists();
 		
-		if (!tablists.getFile().exists())
+		if (fileMissing)
 			tablists.createFile();
 		else if (!forceAdd)
 			return;
@@ -772,22 +778,23 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		tablists.addDefault("tablists.settings.custom-suffix.render-type", "INTEGER");
 		tablists.addDefault("tablists.settings.custom-suffix.placeholder-types", Arrays.asList("PLAYER"));
 		
-		tablists.addDefault("tablists.tl-0.headers.english", "&eWelcome to the server, &f{player}&e!\n&aBe respectful and have fun!");
-		tablists.addDefault("tablists.tl-0.headers.italian", "&eBenvenuti nel server, &f{player}&e!\n&aSiate rispettosi e divertitevi!");
-		tablists.addDefault("tablists.tl-0.footers.english", "&bRemember to vote us &feveryday&b!");
-		tablists.addDefault("tablists.tl-0.footers.italian", "&bRicorda di votarci &fogni giorno&b!");
-		tablists.addDefault("tablists.tl-1.headers.english", "&eWelcome to the server, &f{player}&e!\n&cBe respectful and have fun!");
-		tablists.addDefault("tablists.tl-1.headers.italian", "&eBenvenuti nel server, &f{player}&e!\n&cSiate rispettosi e divertitevi!");
-		tablists.addDefault("tablists.tl-1.footers.english", "&9Remember to vote us &feveryday&9!");
-		tablists.addDefault("tablists.tl-1.footers.italian", "&9Ricorda di votarci &fogni giorno&9!");
-		
-		tablists.save();
+		if (fileMissing) {
+			tablists.addDefault("tablists.tl-0.headers.english", "&eWelcome to the server, &f{player}&e!\n&aBe respectful and have fun!");
+			tablists.addDefault("tablists.tl-0.headers.italian", "&eBenvenuti nel server, &f{player}&e!\n&aSiate rispettosi e divertitevi!");
+			tablists.addDefault("tablists.tl-0.footers.english", "&bRemember to vote us &feveryday&b!");
+			tablists.addDefault("tablists.tl-0.footers.italian", "&bRicorda di votarci &fogni giorno&b!");
+			tablists.addDefault("tablists.tl-1.headers.english", "&eWelcome to the server, &f{player}&e!\n&cBe respectful and have fun!");
+			tablists.addDefault("tablists.tl-1.headers.italian", "&eBenvenuti nel server, &f{player}&e!\n&cSiate rispettosi e divertitevi!");
+			tablists.addDefault("tablists.tl-1.footers.english", "&9Remember to vote us &feveryday&9!");
+			tablists.addDefault("tablists.tl-1.footers.italian", "&9Ricorda di votarci &fogni giorno&9!");
+		} tablists.save();
 	}
 	
 	public void addDefaultScoreboardDefaults(boolean forceAdd) throws IOException {
 		Configuration defaultScoreboard = configurations.get(ConfigurationType.DEFAULT_SCOREBOARD);
+		boolean fileMissing = !defaultScoreboard.getFile().exists();
 		
-		if (!defaultScoreboard.getFile().exists())
+		if (fileMissing)
 			defaultScoreboard.createFile();
 		else if (!forceAdd)
 			return;
@@ -810,42 +817,44 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		//6 tps
 		//7 
 		//8 -----
-		defaultScoreboard.addDefault("lines.0.values.english", Arrays.asList("&8&m                        "));
-		defaultScoreboard.addDefault("lines.0.values.italian", Arrays.asList("&8&m                        "));
-		defaultScoreboard.addDefault("lines.0.random-order", false);
-		defaultScoreboard.addDefault("lines.0.sending-timeout-ms", 1000); //-1 if just 1 value
-		defaultScoreboard.addDefault("lines.1.values.english", Arrays.asList(""));
-		defaultScoreboard.addDefault("lines.1.values.italian", Arrays.asList(""));
-		defaultScoreboard.addDefault("lines.1.sending-timeout-ms", 1000); //-1 if just 1 value
-		defaultScoreboard.addDefault("lines.2.values.english", Arrays.asList("&aName: &f{player}", "&eName: &f{player}", "&6Name: &f{player}", "&eName: &f{player}"));
-		defaultScoreboard.addDefault("lines.2.values.italian", Arrays.asList("&aNome: &f{player}", "&eNome: &f{player}", "&6Nome: &f{player}", "&eNome: &f{player}"));
-		defaultScoreboard.addDefault("lines.2.sending-timeout-ms", 250);
-		defaultScoreboard.addDefault("lines.3.values.english", Arrays.asList("&aRank: &f{rank_display_name}", "&eRank: &f{rank_display_name}", "&6Rank: &f{rank_display_name}", "&eRank: &f{rank_display_name}"));
-		defaultScoreboard.addDefault("lines.3.values.italian", Arrays.asList("&aRank: &f{rank_display_name}", "&eRank: &f{rank_display_name}", "&6Rank: &f{rank_display_name}", "&eRank: &f{rank_display_name}"));
-		defaultScoreboard.addDefault("lines.3.sending-timeout-ms", 250);
-		defaultScoreboard.addDefault("lines.4.values.english", Arrays.asList("&aPing: &f{ping_format} ms", "&ePing: &f{ping_format} ms", "&6Ping: &f{ping_format} ms", "&ePing: &f{ping_format} ms"));
-		defaultScoreboard.addDefault("lines.4.values.italian", Arrays.asList("&aPing: &f{ping_format} ms", "&ePing: &f{ping_format} ms", "&6Ping: &f{ping_format} ms", "&ePing: &f{ping_format} ms"));
-		defaultScoreboard.addDefault("lines.4.sending-timeout-ms", 250);
-		defaultScoreboard.addDefault("lines.5.values.english", Arrays.asList("&aOnline: &f{online}/{max_players}", "&eOnline: &f{online}/{max_players}", "&6Online: &f{online}/{max_players}", "&eOnline: &f{online}/{max_players}"));
-		defaultScoreboard.addDefault("lines.5.values.italian", Arrays.asList("&aOnline: &f{online}/{max_players}", "&eOnline: &f{online}/{max_players}", "&6Online: &f{online}/{max_players}", "&eOnline: &f{online}/{max_players}"));
-		defaultScoreboard.addDefault("lines.5.sending-timeout-ms", 250);
-		defaultScoreboard.addDefault("lines.6.values.english", Arrays.asList("&aTPS: &f{tps_1_min_format}", "&eTPS: &f{tps_1_min_format}", "&6TPS: &f{tps_1_min_format}", "&eTPS: &f{tps_1_min_format}"));
-		defaultScoreboard.addDefault("lines.6.values.italian", Arrays.asList("&aTPS: &f{tps_1_min_format}", "&eTPS: &f{tps_1_min_format}", "&6TPS: &f{tps_1_min_format}", "&eTPS: &f{tps_1_min_format}"));
-		defaultScoreboard.addDefault("lines.6.sending-timeout-ms", 250);
-		defaultScoreboard.addDefault("lines.7.values.english", Arrays.asList(""));
-		defaultScoreboard.addDefault("lines.7.values.italian", Arrays.asList(""));
-		defaultScoreboard.addDefault("lines.7.sending-timeout-ms", 1000); //-1 if just 1 value
-		defaultScoreboard.addDefault("lines.8.values.english", Arrays.asList("&8&m                        "));
-		defaultScoreboard.addDefault("lines.8.values.italian", Arrays.asList("&8&m                        "));
-		defaultScoreboard.addDefault("lines.8.sending-timeout-ms", 1000); //-1 if just 1 value
 		
-		defaultScoreboard.save();
+		if (fileMissing) {
+			defaultScoreboard.addDefault("lines.0.values.english", Arrays.asList("&8&m                        "));
+			defaultScoreboard.addDefault("lines.0.values.italian", Arrays.asList("&8&m                        "));
+			defaultScoreboard.addDefault("lines.0.random-order", false);
+			defaultScoreboard.addDefault("lines.0.sending-timeout-ms", 1000); //-1 if just 1 value
+			defaultScoreboard.addDefault("lines.1.values.english", Arrays.asList(""));
+			defaultScoreboard.addDefault("lines.1.values.italian", Arrays.asList(""));
+			defaultScoreboard.addDefault("lines.1.sending-timeout-ms", 1000); //-1 if just 1 value
+			defaultScoreboard.addDefault("lines.2.values.english", Arrays.asList("&aName: &f{player}", "&eName: &f{player}", "&6Name: &f{player}", "&eName: &f{player}"));
+			defaultScoreboard.addDefault("lines.2.values.italian", Arrays.asList("&aNome: &f{player}", "&eNome: &f{player}", "&6Nome: &f{player}", "&eNome: &f{player}"));
+			defaultScoreboard.addDefault("lines.2.sending-timeout-ms", 250);
+			defaultScoreboard.addDefault("lines.3.values.english", Arrays.asList("&aRank: &f{rank_display_name}", "&eRank: &f{rank_display_name}", "&6Rank: &f{rank_display_name}", "&eRank: &f{rank_display_name}"));
+			defaultScoreboard.addDefault("lines.3.values.italian", Arrays.asList("&aRank: &f{rank_display_name}", "&eRank: &f{rank_display_name}", "&6Rank: &f{rank_display_name}", "&eRank: &f{rank_display_name}"));
+			defaultScoreboard.addDefault("lines.3.sending-timeout-ms", 250);
+			defaultScoreboard.addDefault("lines.4.values.english", Arrays.asList("&aPing: &f{ping_format} ms", "&ePing: &f{ping_format} ms", "&6Ping: &f{ping_format} ms", "&ePing: &f{ping_format} ms"));
+			defaultScoreboard.addDefault("lines.4.values.italian", Arrays.asList("&aPing: &f{ping_format} ms", "&ePing: &f{ping_format} ms", "&6Ping: &f{ping_format} ms", "&ePing: &f{ping_format} ms"));
+			defaultScoreboard.addDefault("lines.4.sending-timeout-ms", 250);
+			defaultScoreboard.addDefault("lines.5.values.english", Arrays.asList("&aOnline: &f{online}/{max_players}", "&eOnline: &f{online}/{max_players}", "&6Online: &f{online}/{max_players}", "&eOnline: &f{online}/{max_players}"));
+			defaultScoreboard.addDefault("lines.5.values.italian", Arrays.asList("&aOnline: &f{online}/{max_players}", "&eOnline: &f{online}/{max_players}", "&6Online: &f{online}/{max_players}", "&eOnline: &f{online}/{max_players}"));
+			defaultScoreboard.addDefault("lines.5.sending-timeout-ms", 250);
+			defaultScoreboard.addDefault("lines.6.values.english", Arrays.asList("&aTPS: &f{tps_1_min_format}", "&eTPS: &f{tps_1_min_format}", "&6TPS: &f{tps_1_min_format}", "&eTPS: &f{tps_1_min_format}"));
+			defaultScoreboard.addDefault("lines.6.values.italian", Arrays.asList("&aTPS: &f{tps_1_min_format}", "&eTPS: &f{tps_1_min_format}", "&6TPS: &f{tps_1_min_format}", "&eTPS: &f{tps_1_min_format}"));
+			defaultScoreboard.addDefault("lines.6.sending-timeout-ms", 250);
+			defaultScoreboard.addDefault("lines.7.values.english", Arrays.asList(""));
+			defaultScoreboard.addDefault("lines.7.values.italian", Arrays.asList(""));
+			defaultScoreboard.addDefault("lines.7.sending-timeout-ms", 1000); //-1 if just 1 value
+			defaultScoreboard.addDefault("lines.8.values.english", Arrays.asList("&8&m                        "));
+			defaultScoreboard.addDefault("lines.8.values.italian", Arrays.asList("&8&m                        "));
+			defaultScoreboard.addDefault("lines.8.sending-timeout-ms", 1000); //-1 if just 1 value
+		} defaultScoreboard.save();
 	}
 	
 	public void addBossbarsDefaults(boolean forceAdd) throws IOException {
 		Configuration bossbars = configurations.get(ConfigurationType.BOSSBARS);
+		boolean fileMissing = !bossbars.getFile().exists();
 		
-		if (!bossbars.getFile().exists())
+		if (fileMissing)
 			bossbars.createFile();
 		else if (!forceAdd)
 			return;
@@ -865,52 +874,53 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		bossbars.addDefault("bossbars.settings.loading-bossbar.color", "RANDOM");
 		bossbars.addDefault("bossbars.settings.loading-bossbar.style", "SOLID");
 		
-		bossbars.addDefault("bossbars.discord.titles.english", "&9Join the Discord server to chat with your friends!");
-		bossbars.addDefault("bossbars.discord.titles.italian", "&9Entra nel server Discord per chattare con i tuoi amici!");
-		bossbars.addDefault("bossbars.discord.color", "BLUE");
-		bossbars.addDefault("bossbars.ping-command.titles.english", "&aYou can check your ping with &f/ping&a.");
-		bossbars.addDefault("bossbars.ping-command.titles.italian", "&aPuoi controllare il tuo ping con &f/ping&a.");
-		bossbars.addDefault("bossbars.ping-command.value", 75);
-		bossbars.addDefault("bossbars.ping-command.color", "GREEN");
-		bossbars.addDefault("bossbars.placeholders.titles.english", "&cPlaceholders are supported. Hi, &f{player}&c!");
-		bossbars.addDefault("bossbars.placeholders.titles.italian", "&cI placeholders sono supportati. Ciao, &f{player}&c!");
-		bossbars.addDefault("bossbars.placeholders.value", 50);
-		bossbars.addDefault("bossbars.placeholders.color", "RED");
-		bossbars.addDefault("bossbars.bossbar-command.titles.english", "&5Bossbar can be toggled off using &f/bossbar&5.");
-		bossbars.addDefault("bossbars.bossbar-command.titles.italian", "&5La bossbar può essere disattivata con &f/bossbar&5.");
-		bossbars.addDefault("bossbars.bossbar-command.value", 25);
-		bossbars.addDefault("bossbars.bossbar-command.color", "PURPLE");
-		bossbars.addDefault("bossbars.5-star-review.titles.english", "&eLeave a &f5-star &ereview on the plugin's page!");
-		bossbars.addDefault("bossbars.5-star-review.titles.italian", "&eLascia una recensione &f5-stelle &esulla pagina del plugin!");
-		bossbars.addDefault("bossbars.5-star-review.value", 0);
-		bossbars.addDefault("bossbars.5-star-review.color", "YELLOW");
-		bossbars.addDefault("bossbars.language-command.titles.english", "&aChange the plugin's language with &f/language&a!");
-		bossbars.addDefault("bossbars.language-command.titles.italian", "&aCambia la lingua del plugin con &f/language&a!");
-		bossbars.addDefault("bossbars.language-command.value", 25);
-		bossbars.addDefault("bossbars.language-command.color", "GREEN");
-		bossbars.addDefault("bossbars.instagram.titles.english", "&dVisit our Instagram page for memes about the Staff members!");
-		bossbars.addDefault("bossbars.instagram.titles.italian", "&dVisita la pagina Instagram per memes sui membri dello Staff!");
-		bossbars.addDefault("bossbars.instagram.value", 50);
-		bossbars.addDefault("bossbars.instagram.color", "PINK");
-		bossbars.addDefault("bossbars.random.titles.english", "&cThis bar will have a random color and style.");
-		bossbars.addDefault("bossbars.random.titles.italian", "&cQuesta barra avrà colore e stile casuali.");
-		bossbars.addDefault("bossbars.random.value", 75);
-		bossbars.addDefault("bossbars.random.color", "RANDOM");
-		bossbars.addDefault("bossbars.random.style", "RANDOM");
-		bossbars.addDefault("bossbars.last.titles.english", "&fLast bossbar. The next one will not be shown.");
-		bossbars.addDefault("bossbars.last.titles.italian", "&fUltima bossbar. La prossima non verrà mostrata.");
-		bossbars.addDefault("bossbars.last.color", "WHITE");
-		bossbars.addDefault("bossbars.hidden.titles.english", "&7This bossbar will not be shown.");
-		bossbars.addDefault("bossbars.hidden.titles.italian", "&7Questa bossbar non verrà mostrata.");
-		bossbars.addDefault("bossbars.hidden.hidden", true);
-		
-		bossbars.save();
+		if (fileMissing) {
+			bossbars.addDefault("bossbars.discord.titles.english", "&9Join the Discord server to chat with your friends!");
+			bossbars.addDefault("bossbars.discord.titles.italian", "&9Entra nel server Discord per chattare con i tuoi amici!");
+			bossbars.addDefault("bossbars.discord.color", "BLUE");
+			bossbars.addDefault("bossbars.ping-command.titles.english", "&aYou can check your ping with &f/ping&a.");
+			bossbars.addDefault("bossbars.ping-command.titles.italian", "&aPuoi controllare il tuo ping con &f/ping&a.");
+			bossbars.addDefault("bossbars.ping-command.value", 75);
+			bossbars.addDefault("bossbars.ping-command.color", "GREEN");
+			bossbars.addDefault("bossbars.placeholders.titles.english", "&cPlaceholders are supported. Hi, &f{player}&c!");
+			bossbars.addDefault("bossbars.placeholders.titles.italian", "&cI placeholders sono supportati. Ciao, &f{player}&c!");
+			bossbars.addDefault("bossbars.placeholders.value", 50);
+			bossbars.addDefault("bossbars.placeholders.color", "RED");
+			bossbars.addDefault("bossbars.bossbar-command.titles.english", "&5Bossbar can be toggled off using &f/bossbar&5.");
+			bossbars.addDefault("bossbars.bossbar-command.titles.italian", "&5La bossbar può essere disattivata con &f/bossbar&5.");
+			bossbars.addDefault("bossbars.bossbar-command.value", 25);
+			bossbars.addDefault("bossbars.bossbar-command.color", "PURPLE");
+			bossbars.addDefault("bossbars.5-star-review.titles.english", "&eLeave a &f5-star &ereview on the plugin's page!");
+			bossbars.addDefault("bossbars.5-star-review.titles.italian", "&eLascia una recensione &f5-stelle &esulla pagina del plugin!");
+			bossbars.addDefault("bossbars.5-star-review.value", 0);
+			bossbars.addDefault("bossbars.5-star-review.color", "YELLOW");
+			bossbars.addDefault("bossbars.language-command.titles.english", "&aChange the plugin's language with &f/language&a!");
+			bossbars.addDefault("bossbars.language-command.titles.italian", "&aCambia la lingua del plugin con &f/language&a!");
+			bossbars.addDefault("bossbars.language-command.value", 25);
+			bossbars.addDefault("bossbars.language-command.color", "GREEN");
+			bossbars.addDefault("bossbars.instagram.titles.english", "&dVisit our Instagram page for memes about the Staff members!");
+			bossbars.addDefault("bossbars.instagram.titles.italian", "&dVisita la pagina Instagram per memes sui membri dello Staff!");
+			bossbars.addDefault("bossbars.instagram.value", 50);
+			bossbars.addDefault("bossbars.instagram.color", "PINK");
+			bossbars.addDefault("bossbars.random.titles.english", "&cThis bar will have a random color and style.");
+			bossbars.addDefault("bossbars.random.titles.italian", "&cQuesta barra avrà colore e stile casuali.");
+			bossbars.addDefault("bossbars.random.value", 75);
+			bossbars.addDefault("bossbars.random.color", "RANDOM");
+			bossbars.addDefault("bossbars.random.style", "RANDOM");
+			bossbars.addDefault("bossbars.last.titles.english", "&fLast bossbar. The next one will not be shown.");
+			bossbars.addDefault("bossbars.last.titles.italian", "&fUltima bossbar. La prossima non verrà mostrata.");
+			bossbars.addDefault("bossbars.last.color", "WHITE");
+			bossbars.addDefault("bossbars.hidden.titles.english", "&7This bossbar will not be shown.");
+			bossbars.addDefault("bossbars.hidden.titles.italian", "&7Questa bossbar non verrà mostrata.");
+			bossbars.addDefault("bossbars.hidden.hidden", true);
+		} bossbars.save();
 	}
 	
 	public void addActionbarsDefaults(boolean forceAdd) throws IOException {
 		Configuration actionbars = configurations.get(ConfigurationType.ACTIONBARS);
+		boolean fileMissing = !actionbars.getFile().exists();
 		
-		if (!actionbars.getFile().exists())
+		if (fileMissing)
 			actionbars.createFile();
 		else if (!forceAdd)
 			return;
@@ -922,29 +932,30 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		actionbars.addDefault("actionbars.settings.sending-timeout-ms", 10000);
 		actionbars.addDefault("actionbars.settings.placeholder-types", Arrays.asList("JUST_NAME", "SERVER"));
 		
-		actionbars.addDefault("actionbars.discord.texts.english", "&9Join Discord to chat with friends!");
-		actionbars.addDefault("actionbars.discord.texts.italian", "&9Entra su Discord per chattare con amici!");
-		actionbars.addDefault("actionbars.store.texts.english", "&6Visit the Store if you want to donate!");
-		actionbars.addDefault("actionbars.store.texts.italian", "&6Visita lo Store se vuoi fare una donazione!");
-		actionbars.addDefault("actionbars.vote.texts.english", "&aRemember to vote us everyday!");
-		actionbars.addDefault("actionbars.vote.texts.italian", "&aRicorda di votarci ogni giorno!");
-		actionbars.addDefault("actionbars.welcome.texts.english", "&bWelcome to the server, &f{player}&b!");
-		actionbars.addDefault("actionbars.welcome.texts.italian", "&bBenvenuti nel server, &f{player}&b!");
-		actionbars.addDefault("actionbars.date.texts.english", "&dDate: &f{date_full}&d.");
-		actionbars.addDefault("actionbars.date.texts.italian", "&dData: &f{date_full}&d.");
-		actionbars.addDefault("actionbars.last.texts.english", "&cNext one will not be shown.");
-		actionbars.addDefault("actionbars.last.texts.italian", "&cLa prossima non verrà mostrata.");
-		actionbars.addDefault("actionbars.hidden.texts.english", "&fThis text will not be shown.");
-		actionbars.addDefault("actionbars.hidden.texts.italian", "&fQuesto testo non verrà mostrato.");
-		actionbars.addDefault("actionbars.hidden.hidden", true);
-		
-		actionbars.save();
+		if (fileMissing) {
+			actionbars.addDefault("actionbars.discord.texts.english", "&9Join Discord to chat with friends!");
+			actionbars.addDefault("actionbars.discord.texts.italian", "&9Entra su Discord per chattare con amici!");
+			actionbars.addDefault("actionbars.store.texts.english", "&6Visit the Store if you want to donate!");
+			actionbars.addDefault("actionbars.store.texts.italian", "&6Visita lo Store se vuoi fare una donazione!");
+			actionbars.addDefault("actionbars.vote.texts.english", "&aRemember to vote us everyday!");
+			actionbars.addDefault("actionbars.vote.texts.italian", "&aRicorda di votarci ogni giorno!");
+			actionbars.addDefault("actionbars.welcome.texts.english", "&bWelcome to the server, &f{player}&b!");
+			actionbars.addDefault("actionbars.welcome.texts.italian", "&bBenvenuti nel server, &f{player}&b!");
+			actionbars.addDefault("actionbars.date.texts.english", "&dDate: &f{date_full}&d.");
+			actionbars.addDefault("actionbars.date.texts.italian", "&dData: &f{date_full}&d.");
+			actionbars.addDefault("actionbars.last.texts.english", "&cNext one will not be shown.");
+			actionbars.addDefault("actionbars.last.texts.italian", "&cLa prossima non verrà mostrata.");
+			actionbars.addDefault("actionbars.hidden.texts.english", "&fThis text will not be shown.");
+			actionbars.addDefault("actionbars.hidden.texts.italian", "&fQuesto testo non verrà mostrato.");
+			actionbars.addDefault("actionbars.hidden.hidden", true);
+		} actionbars.save();
 	}
 	
 	public void addAdsDefaults(boolean forceAdd) throws IOException {
 		Configuration ads = configurations.get(ConfigurationType.ADS);
+		boolean fileMissing = !ads.getFile().exists();
 		
-		if (!ads.getFile().exists())
+		if (fileMissing)
 			ads.createFile();
 		else if (!forceAdd)
 			return;
@@ -960,61 +971,60 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		ads.addDefault("ads.settings.sending-timeout", "5m");
 		ads.addDefault("ads.settings.placeholder-types", Arrays.asList());
 		
-		ads.addDefault("ads.discord.texts.english", "&e&lJoin our Discord server:\n&b&nstay updated about the new features!\n\n&7&oClick this message to receive the invitation.");
-		ads.addDefault("ads.discord.texts.italian", "&e&lEntra nel nostro Discord:\n&b&nrimanete aggiornati sulle novità!\n\n&7&oClicca questo messaggio per ricevere l'invito.");
-		ads.addDefault("ads.discord.hovers.english", "&9[Click here to open the link]");
-		ads.addDefault("ads.discord.hovers.italian", "&9[Clicca qui per aprire il link]");
-		ads.addDefault("ads.discord.click.action", "OPEN_URL");
-		ads.addDefault("ads.discord.click.values.english", "https://discord.gg/psEw7gW");
-		ads.addDefault("ads.discord.click.values.italian", "https://discord.gg/psEw7gW");
-		
-		ads.addDefault("ads.store.texts.english", "&e&lVisit our Store:\n&b&nbuy perks and cosmetics and support the server!\n\n&7&oClick this message to get the link.");
-		ads.addDefault("ads.store.texts.italian", "&e&lVisita il nostro Store:\n&b&ncompra benefici e cosmetici e supporta il server!\n\n&7&oClicca questo messaggio per ricevere il link.");
-		ads.addDefault("ads.store.hovers.english", "&9[Click here to open the link]");
-		ads.addDefault("ads.store.hovers.italian", "&9[Clicca qui per aprire il link]");
-		ads.addDefault("ads.store.click.action", "OPEN_URL");
-		ads.addDefault("ads.store.click.values.english", "https://megaproserver.com/store");
-		ads.addDefault("ads.store.click.values.italian", "https://megaproserver.com/store");
-		ads.addDefault("ads.store.disabled-ranks", Arrays.asList("staff", "vip"));
-		
-		ads.save();
+		if (fileMissing) {
+			ads.addDefault("ads.discord.texts.english", "&e&lJoin our Discord server:\n&b&nstay updated about the new features!\n\n&7&oClick this message to receive the invitation.");
+			ads.addDefault("ads.discord.texts.italian", "&e&lEntra nel nostro Discord:\n&b&nrimanete aggiornati sulle novità!\n\n&7&oClicca questo messaggio per ricevere l'invito.");
+			ads.addDefault("ads.discord.hovers.english", "&9[Click here to open the link]");
+			ads.addDefault("ads.discord.hovers.italian", "&9[Clicca qui per aprire il link]");
+			ads.addDefault("ads.discord.click.action", "OPEN_URL");
+			ads.addDefault("ads.discord.click.values.english", "https://discord.gg/psEw7gW");
+			ads.addDefault("ads.discord.click.values.italian", "https://discord.gg/psEw7gW");
+			
+			ads.addDefault("ads.store.texts.english", "&e&lVisit our Store:\n&b&nbuy perks and cosmetics and support the server!\n\n&7&oClick this message to get the link.");
+			ads.addDefault("ads.store.texts.italian", "&e&lVisita il nostro Store:\n&b&ncompra benefici e cosmetici e supporta il server!\n\n&7&oClicca questo messaggio per ricevere il link.");
+			ads.addDefault("ads.store.hovers.english", "&9[Click here to open the link]");
+			ads.addDefault("ads.store.hovers.italian", "&9[Clicca qui per aprire il link]");
+			ads.addDefault("ads.store.click.action", "OPEN_URL");
+			ads.addDefault("ads.store.click.values.english", "https://megaproserver.com/store");
+			ads.addDefault("ads.store.click.values.italian", "https://megaproserver.com/store");
+			ads.addDefault("ads.store.disabled-ranks", Arrays.asList("staff", "vip"));
+		} ads.save();
 	}
 	
 	public void addF3ServerNamesDefaults(boolean forceAdd) throws IOException {
 		Configuration f3ServerNames = configurations.get(ConfigurationType.F3_SERVER_NAMES);
+		boolean fileMissing = !f3ServerNames.getFile().exists();
 		
-		if (!f3ServerNames.getFile().exists())
+		if (fileMissing)
 			f3ServerNames.createFile();
 		else if (!forceAdd)
 			return;
-		
-		path = "f3-server-names.";
 		
 		f3ServerNames.addDefault("f3-server-names.settings.enabled", Environment.isBukkit() && VersionUtils.getVersion().isAtLeast(Version.V1_7_2));
 		f3ServerNames.addDefault("f3-server-names.settings.random-order", true);
 		f3ServerNames.addDefault("f3-server-names.settings.sending-timeout-ms", 5000);
 		f3ServerNames.addDefault("f3-server-names.settings.placeholder-types", Arrays.asList("SERVER"));
 		
-		f3ServerNames.addDefault("f3-server-names.f3sn-0.texts.english", "&e&l{server_version} &7server");
-		f3ServerNames.addDefault("f3-server-names.f3sn-0.texts.italian", "&e&l{server_version} &7server");
-		f3ServerNames.addDefault("f3-server-names.f3sn-1.texts.english", "&a&l{server_version} &7server");
-		f3ServerNames.addDefault("f3-server-names.f3sn-1.texts.italian", "&a&l{server_version} &7server");
-		f3ServerNames.addDefault("f3-server-names.f3sn-2.texts.english", "&b&l{server_version} &7server");
-		f3ServerNames.addDefault("f3-server-names.f3sn-2.texts.italian", "&b&l{server_version} &7server");
-		f3ServerNames.addDefault("f3-server-names.f3sn-3.texts.english", "&9&l{server_version} &7server");
-		f3ServerNames.addDefault("f3-server-names.f3sn-3.texts.italian", "&9&l{server_version} &7server");
-		f3ServerNames.addDefault("f3-server-names.f3sn-4.texts.english", "&d&l{server_version} &7server");
-		f3ServerNames.addDefault("f3-server-names.f3sn-4.texts.italian", "&d&l{server_version} &7server");
-		f3ServerNames.addDefault("f3-server-names.f3sn-5.texts.english", "&5&l{server_version} &7server");
-		f3ServerNames.addDefault("f3-server-names.f3sn-5.texts.italian", "&5&l{server_version} &7server");
-		f3ServerNames.addDefault("f3-server-names.f3sn-6.texts.english", "&4&l{server_version} &7server");
-		f3ServerNames.addDefault("f3-server-names.f3sn-6.texts.italian", "&4&l{server_version} &7server");
-		f3ServerNames.addDefault("f3-server-names.f3sn-7.texts.english", "&c&l{server_version} &7server");
-		f3ServerNames.addDefault("f3-server-names.f3sn-7.texts.italian", "&c&l{server_version} &7server");
-		f3ServerNames.addDefault("f3-server-names.f3sn-8.texts.english", "&6&l{server_version} &7server");
-		f3ServerNames.addDefault("f3-server-names.f3sn-8.texts.italian", "&6&l{server_version} &7server");
-		
-		f3ServerNames.save();
+		if (fileMissing) {
+			f3ServerNames.addDefault("f3-server-names.f3sn-0.texts.english", "&e&l{server_version} &7server");
+			f3ServerNames.addDefault("f3-server-names.f3sn-0.texts.italian", "&e&l{server_version} &7server");
+			f3ServerNames.addDefault("f3-server-names.f3sn-1.texts.english", "&a&l{server_version} &7server");
+			f3ServerNames.addDefault("f3-server-names.f3sn-1.texts.italian", "&a&l{server_version} &7server");
+			f3ServerNames.addDefault("f3-server-names.f3sn-2.texts.english", "&b&l{server_version} &7server");
+			f3ServerNames.addDefault("f3-server-names.f3sn-2.texts.italian", "&b&l{server_version} &7server");
+			f3ServerNames.addDefault("f3-server-names.f3sn-3.texts.english", "&9&l{server_version} &7server");
+			f3ServerNames.addDefault("f3-server-names.f3sn-3.texts.italian", "&9&l{server_version} &7server");
+			f3ServerNames.addDefault("f3-server-names.f3sn-4.texts.english", "&d&l{server_version} &7server");
+			f3ServerNames.addDefault("f3-server-names.f3sn-4.texts.italian", "&d&l{server_version} &7server");
+			f3ServerNames.addDefault("f3-server-names.f3sn-5.texts.english", "&5&l{server_version} &7server");
+			f3ServerNames.addDefault("f3-server-names.f3sn-5.texts.italian", "&5&l{server_version} &7server");
+			f3ServerNames.addDefault("f3-server-names.f3sn-6.texts.english", "&4&l{server_version} &7server");
+			f3ServerNames.addDefault("f3-server-names.f3sn-6.texts.italian", "&4&l{server_version} &7server");
+			f3ServerNames.addDefault("f3-server-names.f3sn-7.texts.english", "&c&l{server_version} &7server");
+			f3ServerNames.addDefault("f3-server-names.f3sn-7.texts.italian", "&c&l{server_version} &7server");
+			f3ServerNames.addDefault("f3-server-names.f3sn-8.texts.english", "&6&l{server_version} &7server");
+			f3ServerNames.addDefault("f3-server-names.f3sn-8.texts.italian", "&6&l{server_version} &7server");
+		} f3ServerNames.save();
 	}
 	
 	public void addJoinQuitModulesDefaults(boolean forceAdd) throws IOException {

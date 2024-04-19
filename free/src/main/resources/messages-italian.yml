@@ -127,7 +127,7 @@ commands:
     {pfx} &aInformazioni su &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
     &eSito web: &fhttps://remigio07.me/chatplugin
     &eGitHub: &fhttps://github.com/ChatPlugin/ChatPlugin
-    &eDiscord: &fhttps://discord.gg/CPtysXTfQg
+    &eDiscord: &fhttps://discord.gg/eSnAPhvMTG
   version: '{pfx} &aIn esecuzione &c&lChat&f&lPlugin {0} &fv{1} &adi &9Remigio07 &asu &f{2} {3}&a.'
   status: |-
     {pfx} &aStato attuale del server:
@@ -692,4 +692,4 @@ proxy-messages:
     {pfx} &aInformazioni su &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
     &eSito web: &fhttps://remigio07.me/chatplugin
     &eGitHub: &fhttps://github.com/ChatPlugin/ChatPlugin
-    &eDiscord: &fhttps://discord.gg/CPtysXTfQg
+    &eDiscord: &fhttps://discord.gg/eSnAPhvMTG

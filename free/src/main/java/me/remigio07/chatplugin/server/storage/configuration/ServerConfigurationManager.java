@@ -320,7 +320,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.help.premium.vanish", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/vanish &8- &eBecome invisible to non Staff members.\n&f&l/fakejoin &8- &eSend fake join message and disable vanish.\n&f&l/fakequit &8- &eSend fake quit message and enable vanish.\n&f&l/silentteleport &8- &eSilently teleport somewhere else.");
 		messages.addDefault("commands.help.premium.misc", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/tps &8- &eDisplay the server's current ticks per second.\n&f&l/ad &8- &eSend a loaded ad to one or more online players.\n&f&l/broadcast &8- &eSend a message to every online player.\n&f&l/broadcastraw &8- &eLike /broadcast, but without the prefix.\n&f&l/globalbroadcast &8- &eLike /broadcast, but cross-server.\n&f&l/discordmessage &8- &eSend a message to the server.\n&f&l/telegrammessage &8- &eSend a message to the group.");
 		
-		messages.addDefault("commands.info", "{pfx} &aInfo about &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&eWebsite: &fhttps://remigio07.me/chatplugin\n&eGitHub: &fhttps://github.com/ChatPlugin/ChatPlugin\n&eDiscord: &fhttps://discord.gg/CPtysXTfQg");
+		messages.addDefault("commands.info", "{pfx} &aInfo about &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&eWebsite: &fhttps://remigio07.me/chatplugin\n&eGitHub: &fhttps://github.com/ChatPlugin/ChatPlugin\n&eDiscord: &fhttps://discord.gg/eSnAPhvMTG");
 		messages.addDefault("commands.version", "{pfx} &aRunning &c&lChat&f&lPlugin {0} &fv{1} &aby &9Remigio07 &aon &f{2} {3}&a.");
 		messages.addDefault("commands.status", "{pfx} &aCurrent server status:\n&eServer version: &f{server_version} (protocol: {server_version_protocol})\n&eChatPlugin version: &f{plugin_version}\n&eUptime: &f{uptime}\n&eTPS (1m, 5m, 15m): &f{tps_1_min_format}&f, {tps_5_min_format}&f, {tps_15_min_format}\n&eUsed memory: &f{used_memory}/{max_memory} MB\n&eAllocated memory: &f{total_memory} MB\n&eFree memory: &f{free_memory} MB\n&eStorage used: &f{used_storage}/{total_storage} GB\n&eFree storage: &f{free_storage} GB\n&eEnabled worlds: &f{enabled_worlds}x\n&eEnabled players: &f{enabled_players}x\n&eEnabled managers: &f{enabled_managers}x\n&eStartup time: &f{startup_time} ms\n&eLast reload time: &f{last_reload_time} ms");
 		messages.addDefault("commands.scoreboard.enabled", "{pfx} &aThe scoreboard has been enabled.");
@@ -604,7 +604,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("proxy-messages.reload.start", "{pfx} &aChatPlugin is reloading...");
 		messages.addDefault("proxy-messages.reload.end", "{pfx} &aChatPlugin has been reloaded. Took &f{0} ms &ato complete.");
 		messages.addDefault("proxy-messages.version", "{pfx} &aRunning &c&lChat&f&lPlugin &6Premium &fv{0} &aby &9Remigio07 &aon &f{1} {2}&a.");
-		messages.addDefault("proxy-messages.info", "{pfx} &aInfo about &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&eWebsite: &fhttps://remigio07.me/chatplugin\n&eGitHub: &fhttps://github.com/ChatPlugin/ChatPlugin\n&eDiscord: &fhttps://discord.gg/CPtysXTfQg");
+		messages.addDefault("proxy-messages.info", "{pfx} &aInfo about &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&eWebsite: &fhttps://remigio07.me/chatplugin\n&eGitHub: &fhttps://github.com/ChatPlugin/ChatPlugin\n&eDiscord: &fhttps://discord.gg/eSnAPhvMTG");
 		
 		messages.save();
 	}
@@ -977,8 +977,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			ads.addDefault("ads.discord.hovers.english", "&9[Click here to open the link]");
 			ads.addDefault("ads.discord.hovers.italian", "&9[Clicca qui per aprire il link]");
 			ads.addDefault("ads.discord.click.action", "OPEN_URL");
-			ads.addDefault("ads.discord.click.values.english", "https://discord.gg/psEw7gW");
-			ads.addDefault("ads.discord.click.values.italian", "https://discord.gg/psEw7gW");
+			ads.addDefault("ads.discord.click.values.english", "https://discord.gg/eSnAPhvMTG");
+			ads.addDefault("ads.discord.click.values.italian", "https://discord.gg/eSnAPhvMTG");
 			
 			ads.addDefault("ads.store.texts.english", "&e&lVisit our Store:\n&b&nbuy perks and cosmetics and support the server!\n\n&7&oClick this message to get the link.");
 			ads.addDefault("ads.store.texts.italian", "&e&lVisita il nostro Store:\n&b&ncompra benefici e cosmetici e supporta il server!\n\n&7&oClicca questo messaggio per ricevere il link.");
@@ -2226,7 +2226,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		discordIntegration.addDefault(path + "help.thumbnail", "https://live.staticflickr.com/65535/53596116157_d426b5c1c8_o_d.png");
 		discordIntegration.addDefault(path + "help.color", "55FF55");
 		discordIntegration.addDefault(path + "info.title.text", "Info and contacts for ChatPlugin");
-		discordIntegration.addDefault(path + "info.description", "**Website:** https://remigio07.me/chatplugin\n**GitHub:** https://github.com/ChatPlugin/ChatPlugin\n**Discord:** https://discord.gg/CPtysXTfQg");
+		discordIntegration.addDefault(path + "info.description", "**Website:** https://remigio07.me/chatplugin\n**GitHub:** https://github.com/ChatPlugin/ChatPlugin\n**Discord:** https://discord.gg/eSnAPhvMTG");
 		discordIntegration.addDefault(path + "info.thumbnail", "https://live.staticflickr.com/65535/53597447830_f9933947a8_o_d.png");
 		discordIntegration.addDefault(path + "info.color", "55FF55");
 		discordIntegration.addDefault(path + "reload-start.title.text", "Reload started");
@@ -2494,7 +2494,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		telegramIntegration.addDefault("settings.status.update-timeout-ms", 30000L);
 		
 		telegramIntegration.addDefault("messages.main.help", "\u2754 Help for ChatPlugin\n\nClick <a href=\"https://remigio07.me/chatplugin/wiki/modules/Telegram-integration#commands\">here</a> to visit the wiki with the commands list.");
-		telegramIntegration.addDefault("messages.main.info", "\u2139\uFE0F Info and contacts for ChatPlugin\n\n<strong>Website:</strong> https://remigio07.me/chatplugin\n<strong>GitHub:</strong> https://github.com/ChatPlugin/ChatPlugin\n<strong>Discord:</strong> https://discord.gg/CPtysXTfQg");
+		telegramIntegration.addDefault("messages.main.info", "\u2139\uFE0F Info and contacts for ChatPlugin\n\n<strong>Website:</strong> https://remigio07.me/chatplugin\n<strong>GitHub:</strong> https://github.com/ChatPlugin/ChatPlugin\n<strong>Discord:</strong> https://discord.gg/eSnAPhvMTG");
 		telegramIntegration.addDefault("messages.main.status", "\u2139\uFE0F Current server status\n\n<strong>OS:</strong> {os_name} {os_version}, <strong>Java:</strong> {java_version}\n<strong>Environment:</strong> {environment} {environment_version}\n<strong>ChatPlugin:</strong> {chatplugin_version}, <strong>Java Telegram Bot API version:</strong> {java_telegram_bot_api_version}\n<strong>Uptime:</strong> {uptime}\n<strong>Used memory:</strong> {used_memory}/{max_memory} MB\n<strong>Allocated:</strong> {total_memory} MB, <strong>free:</strong> {free_memory} MB\n<strong>Current threads count:</strong> {active_threads}x\n<strong>Used storage:</strong> {used_storage}/{total_storage} GB\n<strong>Free storage:</strong> {free_storage} GB\n<strong>Enabled players:</strong> {enabled_players}x\n<strong>Startup:</strong> {startup_time} ms, <strong>last reload:</strong> {last_reload_time} ms");
 		telegramIntegration.addDefault("messages.main.version", "\u2699\uFE0F Current plugin version\n\n<strong>ChatPlugin version:</strong> {chatplugin_version}\n<strong>Java Telegram Bot API version:</strong> {java_telegram_bot_api_version}");
 		

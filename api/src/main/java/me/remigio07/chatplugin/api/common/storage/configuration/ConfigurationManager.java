@@ -16,9 +16,7 @@
 package me.remigio07.chatplugin.api.common.storage.configuration;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
@@ -37,7 +35,6 @@ public abstract class ConfigurationManager implements ChatPluginManager {
 	protected static ConfigurationManager instance;
 	protected boolean enabled;
 	protected Map<ConfigurationType, Configuration> configurations = new HashMap<>();
-	protected List<Configuration> customConfigurations = new ArrayList<>();
 	protected VersionChange lastVersionChange;
 	protected String path; // temp path string
 	protected long loadTime;
@@ -53,7 +50,6 @@ public abstract class ConfigurationManager implements ChatPluginManager {
 				throw new ChatPluginManagerException(this, e);
 			}
 		configurations.clear();
-		customConfigurations.clear();
 		
 		path = null;
 	}
@@ -89,16 +85,6 @@ public abstract class ConfigurationManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the custom configurations' list.
-	 * 
-	 * @return Custom configurations' list
-	 */
-	@NotNull
-	public List<Configuration> getCustomConfigurations() {
-		return customConfigurations;
-	}
-	
-	/**
 	 * Loads every internal configuration from its file.
 	 * 
 	 * @throws IOException If something goes wrong
@@ -128,15 +114,6 @@ public abstract class ConfigurationManager implements ChatPluginManager {
 	
 	protected void putConfiguration(Configuration configuration) {
 		configurations.put(configuration.getType(), configuration);
-	}
-	
-	/**
-	 * Adds a custom configuration to {@link #getCustomConfigurations()}.
-	 * 
-	 * @param customConfiguration Configuration to add
-	 */
-	public void addCustomConfiguration(Configuration customConfiguration) {
-		customConfigurations.add(customConfiguration);
 	}
 	
 	/**

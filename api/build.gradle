@@ -9,12 +9,12 @@ java {
 }
 
 javadoc {
-	title = 'ChatPlugin ' + rootProject.version + ' API'
-	options.docTitle = title
-	options.windowTitle = title
-	options.header = title
-	options.encoding = 'UTF-8'
-	options.charSet = 'UTF-8'
+	title 'ChatPlugin ' + rootProject.version + ' API'
+	options.docTitle title
+	options.windowTitle title
+	options.header title
+	options.encoding 'UTF-8'
+	options.charSet 'UTF-8'
 	options.links 'https://docs.oracle.com/javase/8/docs/api'
 	options.addStringOption 'Xdoclint:all', '-public'
 }
@@ -22,9 +22,9 @@ javadoc {
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			groupId = rootProject.group
-			artifactId = 'api'
-			version = rootProject.version
+			groupId rootProject.group
+			artifactId 'api'
+			version rootProject.version
 			from components.java
 			pom {
 				name = 'ChatPlugin'
@@ -38,30 +38,37 @@ publishing {
 				}
 				developers {
 					developer {
-						id = 'remigio07'
+						id = 'Remigio07'
 						name = 'Remigio07'
 						email = 'remigio07@outlook.it'
 						url = 'https://remigio07.me'
+						timezone = 'UTC+01:00 (CET)/UTC+02:00 (CEST)'
+						roles = ['Lead Developer']
 					}
 				}
 				contributors {
 					contributor {
 						name = 'Keresael'
+						timezone = 'UTC+01:00 (CET)/UTC+02:00 (CEST)'
+						roles = ['Community Manager']
 					}
 				}
 				scm {
-					connection = 'scm:git:git:https://github.com/ChatPlugin/ChatPlugin.git'
-					developerConnection = 'scm:git:ssh:https://github.com/ChatPlugin/ChatPlugin.git'
-					url = 'https://github.com/ChatPlugin/ChatPlugin/tree/main'
+					connection = 'scm:git:https://github.com/ChatPlugin/ChatPlugin.git'
+					developerConnection = 'scm:git:git@github.com:ChatPlugin/ChatPlugin.git'
+					url = 'https://github.com/ChatPlugin/ChatPlugin'
+				}
+				issueManagement {
+					system = 'GitHub'
+					url = 'https://github.com/ChatPlugin/ChatPlugin/issues'
 				}
 			}
 		}
-		
 	}
 	repositories {
 		maven {
-			name = 'OSSRH'
-			url = version.endsWith('SNAPSHOT') ? 'https://s01.oss.sonatype.org/content/repositories/snapshots/' : 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+			name 'OSSRH'
+			url version.endsWith('SNAPSHOT') ? 'https://s01.oss.sonatype.org/content/repositories/snapshots/' : 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
 			
 			credentials {
 				username ossrhUsername

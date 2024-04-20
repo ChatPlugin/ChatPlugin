@@ -290,6 +290,8 @@ public abstract class AntispamManager implements DenyChatReasonHandler {
 	/**
 	 * Gets the amount of caps characters in the specified message.
 	 * 
+	 * <p>This will consider player names as lower case.</p>
+	 * 
 	 * @param message Message to check
 	 * @return Caps characters in the message
 	 */
@@ -297,6 +299,8 @@ public abstract class AntispamManager implements DenyChatReasonHandler {
 	
 	/**
 	 * Gets the caps percentage amount of a message.
+	 * 
+	 * <p>This will consider player names as lower case.</p>
 	 * 
 	 * @param message Message to check
 	 * @return Caps percentage in the message

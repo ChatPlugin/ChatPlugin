@@ -32,6 +32,7 @@ import me.remigio07.chatplugin.api.server.chat.ChatManager;
 import me.remigio07.chatplugin.api.server.chat.antispam.AntispamManager;
 import me.remigio07.chatplugin.api.server.chat.antispam.DenyChatReason;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.util.URLValidator;
 
 public class AntispamManagerImpl extends AntispamManager {
@@ -165,10 +166,10 @@ public class AntispamManagerImpl extends AntispamManager {
 				StringBuilder domain = new StringBuilder();
 				
 				for (int i = 0; i < domainName.length(); i++) {
-					int codePoint = (int) domainName.charAt(i);
+					char character = domainName.charAt(i);
 					
-					if (Character.isLetter(codePoint) || codePoint > 47 && codePoint < 58 || codePoint == 45) {
-						domain.append((char) codePoint);
+					if (isNumber(character) || Character.isLetter(character) || character == '-') {
+						domain.append(character);
 					} else if (domain.charAt(domain.length() - 1) != '.')
 						domain.append('.');
 				} domain.append(tld);
@@ -191,15 +192,19 @@ public class AntispamManagerImpl extends AntispamManager {
 			String dirtyIPAddress = matcher.group();
 			
 			for (int i = 0; i < dirtyIPAddress.length(); i++) {
-				int codePoint = (int) dirtyIPAddress.charAt(i);
+				char character = dirtyIPAddress.charAt(i);
 				
-				if (codePoint > 47 && codePoint < 58)
-					ipAddress.append((char) codePoint);
+				if (isNumber(character))
+					ipAddress.append(character);
 				else if (ipAddress.charAt(ipAddress.length() - 1) != '.')
 					ipAddress.append('.');
 			} if (!ipsWhitelist.contains(ipAddress.toString()))
 				return true;
 		} return false;
+	}
+	
+	private boolean isNumber(char character) {
+		return character > 47 && character < 58;
 	}
 	
 	@Override
@@ -234,12 +239,17 @@ public class AntispamManagerImpl extends AntispamManager {
 	
 	@Override
 	public int getCapsLength(String message) {
-		int i = 0;
+		List<String> playersNames = ServerPlayerManager.getInstance().getPlayersNames();
+		int length = 0;
 		
-		for (Character character : message.toCharArray())
-			if (Character.isUpperCase(character))
-				i++;
-		return i;
+		for (String word : message.split(" "))
+			if (!playersNames.contains(isAllowedInPlayerNames((word = word.startsWith("@") && word.length() > 1 ? word.substring(1) : word).charAt(word.length() - 1)) ? word : word.substring(0, word.length() - 1)))
+				length += word.chars().filter(Character::isUpperCase).count();
+		return length;
+	}
+	
+	private boolean isAllowedInPlayerNames(char character) {
+		return isNumber(character) || Character.isLetter(character) || character == '_';
 	}
 	
 	@Override

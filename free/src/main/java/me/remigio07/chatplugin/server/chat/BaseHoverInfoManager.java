@@ -30,12 +30,12 @@ public abstract class BaseHoverInfoManager extends HoverInfoManager {
 		instance = this;
 	}
 	
-	public abstract TextComponent getMessageHoverInfo(String message, List<String> urls, ChatPluginServerPlayer player, Language language);
+	public abstract TextComponent getMessageHoverInfo(String message, boolean globalChat, List<String> urls, ChatPluginServerPlayer player, Language language);
 	
 	public static class DummyHoverInfoManager extends BaseHoverInfoManager {
 		
 		@Override
-		public TextComponent getMessageHoverInfo(String message, List<String> urls, ChatPluginServerPlayer player, Language language) {
+		public TextComponent getMessageHoverInfo(String message, boolean globalChat, List<String> urls, ChatPluginServerPlayer player, Language language) {
 			return null;
 		}
 		

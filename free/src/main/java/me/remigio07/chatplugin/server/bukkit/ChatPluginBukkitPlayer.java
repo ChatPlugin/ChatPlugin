@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
@@ -198,6 +199,11 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	}
 	
 	@Override
+	public double getDistance(double x, double y, double z) {
+		return player.getLocation().distance(new Location(player.getWorld(), x, y, z));
+	}
+	
+	@Override
 	public void sendMessage(Component component) {
 		audience.sendMessage(component);
 	}
@@ -260,6 +266,21 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	@Override
 	public String getWorld() {
 		return player.getWorld().getName();
+	}
+	
+	@Override
+	public double getX() {
+		return player.getLocation().getX();
+	}
+	
+	@Override
+	public double getY() {
+		return player.getLocation().getY();
+	}
+	
+	@Override
+	public double getZ() {
+		return player.getLocation().getZ();
 	}
 	
 	@Override

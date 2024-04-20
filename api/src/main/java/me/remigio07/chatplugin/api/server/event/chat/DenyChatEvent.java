@@ -24,7 +24,7 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
  * 
  * @see ChatManager#handleChatEvent(ChatPluginServerPlayer, String)
  */
-public class DenyChatEvent extends ChatEvent {
+public class DenyChatEvent extends PublicMessageEvent {
 	
 	private DenyChatReason<?> reason;
 	
@@ -33,10 +33,11 @@ public class DenyChatEvent extends ChatEvent {
 	 * 
 	 * @param player Player involved
 	 * @param message Message involved
+	 * @param global Whether the message is global
 	 * @param reason Deny chat reason
 	 */
-	public DenyChatEvent(ChatPluginServerPlayer player, String message, DenyChatReason<?> reason) {
-		super(player, message);
+	public DenyChatEvent(ChatPluginServerPlayer player, String message, boolean global, DenyChatReason<?> reason) {
+		super(player, message, global);
 		this.reason = reason;
 	}
 	

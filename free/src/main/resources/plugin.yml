@@ -50,6 +50,10 @@ commands:
     description: Socialspy command.
     usage: /socialspy
     aliases: [chatspy, ss]
+  rangedchatspy:
+    description: Ranged chat spy command.
+    usage: /rangedchatspy
+    aliases: [rcs]
   iplookup:
     description: IP lookup command.
     usage: /iplookup <player|IP address>

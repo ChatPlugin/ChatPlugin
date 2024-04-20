@@ -82,15 +82,15 @@ public abstract class ChatLogManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets a logged chat messages' list for the specified sender and text.
+	 * Gets a logged public messages' list for the specified sender and text.
 	 * 
-	 * @param sender Chat messages' sender
-	 * @param timeAgo Chat messages' maximum age
+	 * @param sender Public messages' sender
+	 * @param timeAgo Public messages' maximum age
 	 * @param query Text to search
-	 * @return Sender's logged chat messages
+	 * @return Sender's logged public messages
 	 */
 	@NotNull
-	public abstract List<LoggedChatMessage> getLoggedChatMessages(OfflinePlayer sender, long timeAgo, String query);
+	public abstract List<LoggedPublicMessage> getLoggedPublicMessages(OfflinePlayer sender, long timeAgo, String query);
 	
 	/**
 	 * Gets a logged private messages' list for the specified sender and text.
@@ -104,20 +104,22 @@ public abstract class ChatLogManager implements ChatPluginManager {
 	public abstract List<LoggedPrivateMessage> getLoggedPrivateMessages(OfflinePlayer sender, long timeAgo, String query);
 	
 	/**
-	 * Logs a player's chat message and inserts it into {@link DataContainer#CHAT_MESSAGES}.
+	 * Logs a player's public message and inserts it into {@link DataContainer#PUBLIC_MESSAGES}.
 	 * 
 	 * <p>Specify <code>null</code> as <code>denyChatReason</code> if the chat
 	 * message has not been blocked by a {@link DenyChatReasonHandler}.</p>
 	 * 
-	 * @param sender Chat message's sender
-	 * @param chatMessage Chat message to log
-	 * @param denyChatReason Chat message's deny chat reason
-	 * @throws IllegalArgumentException If chat message's length exceeds 256 characters
+	 * @param sender Public message's sender
+	 * @param publicMessage Public message to log
+	 * @param global Whether the message is global
+	 * @param denyChatReason Public message's deny chat reason
+	 * @throws IllegalArgumentException If the public message's length exceeds 256 characters
 	 */
-	public abstract void logChatMessage(
+	public abstract void logPublicMessage(
 			ChatPluginServerPlayer sender,
-			String chatMessage,
-			@Nullable(why = "Chat message may not have been blocked") DenyChatReason<?> denyChatReason
+			String publicMessage,
+			boolean global,
+			@Nullable(why = "Public message may not have been blocked") DenyChatReason<?> denyChatReason
 			);
 	
 	/**
@@ -132,7 +134,7 @@ public abstract class ChatLogManager implements ChatPluginManager {
 	 * @param recipient Private message's recipient
 	 * @param privateMessage Private message to log
 	 * @param denyChatReason Private message's deny chat reason
-	 * @throws IllegalArgumentException If private message's length exceeds 256 characters
+	 * @throws IllegalArgumentException If the private message's length exceeds 256 characters
 	 */
 	public abstract void logPrivateMessage(
 			@NotNull ChatPluginServerPlayer sender,

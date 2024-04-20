@@ -53,7 +53,7 @@ import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 public abstract class ChatPluginServerPlayer extends OfflinePlayer implements ChatPluginPlayer {
 	
 	protected Version version;
-	protected boolean bedrockPlayer, socialspyEnabled;
+	protected boolean bedrockPlayer, socialspyEnabled, rangedChatSpyEnabled;
 	protected Rank rank;
 	protected Language language;
 	protected Scoreboard scoreboard;
@@ -91,12 +91,30 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	}
 	
 	/**
+	 * Checks if this player has the ranged chat spy enabled.
+	 * 
+	 * @return Whether the ranged chat spy is enabled
+	 */
+	public boolean hasRangedChatSpyEnabled() {
+		return rangedChatSpyEnabled;
+	}
+	
+	/**
 	 * Sets whether this player should have socialspy enabled.
 	 * 
 	 * @param socialspyEnabled Whether socialspy is enabled
 	 */
 	public void setSocialspyEnabled(boolean socialspyEnabled) {
 		this.socialspyEnabled = socialspyEnabled;
+	}
+	
+	/**
+	 * Sets whether this player should have the ranged chat spy enabled.
+	 * 
+	 * @param rangedChatSpyEnabled Whether the ranged chat spy is enabled
+	 */
+	public void setRangedChatSpyEnabled(boolean rangedChatSpyEnabled) {
+		this.rangedChatSpyEnabled = rangedChatSpyEnabled;
 	}
 	
 	/**
@@ -433,6 +451,27 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	 * @return Player's world's name
 	 */
 	public abstract String getWorld();
+	
+	/**
+	 * Gets this player's location's X coordinate.
+	 * 
+	 * @return Player's X coord
+	 */
+	public abstract double getX();
+	
+	/**
+	 * Gets this player's location's Y coordinate.
+	 * 
+	 * @return Player's Y coord
+	 */
+	public abstract double getY();
+	
+	/**
+	 * Gets this player's location's Z coordinate.
+	 * 
+	 * @return Player's Z coord
+	 */
+	public abstract double getZ();
 	
 	/**
 	 * Gets this player's locale set in their game's settings.

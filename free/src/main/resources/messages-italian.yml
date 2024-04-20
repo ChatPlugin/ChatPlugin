@@ -54,6 +54,7 @@ commands:
         {pfx} &aAiuto per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/staffchat &8- &eStaff chat cross-server molto utile.
         &f&l/socialspy &8- &eSpia i messaggi privati degli altri giocatori.
+        &f&l/rangedchatspy &8- &eSpia i messaggi locali degli altri giocatori.
         &f&l/iplookup &8- &eEsegui il lookup di un indirizzo IP.
         &f&l/lastseen &8- &eControlla l'ultimo login di un giocatore.
         &f&l/clearchat &8- &eCancella la chat e nascondi gli ultimi messaggi.
@@ -81,6 +82,7 @@ commands:
         {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/staffchat &8- &eStaff chat cross-server molto utile.
         &f&l/socialspy &8- &eSpia i messaggi privati degli altri giocatori.
+        &f&l/rangedchatspy &8- &eSpia i messaggi locali degli altri giocatori.
         &f&l/iplookup &8- &eEsegui il lookup di un indirizzo IP.
         &f&l/lastseen &8- &eControlla l'ultimo login di un giocatore.
         &f&l/clearchat &8- &eCancella la chat e nascondi gli ultimi messaggi.
@@ -332,6 +334,9 @@ commands:
   socialspy:
     enabled: '{pfx} &aModalità socialspy abilitata'
     disabled: '{pfx} &aModalità socialspy disabilitata.'
+  rangedchatspy:
+    enabled: '{pfx} &aModalità spia chat locale abilitata'
+    disabled: '{pfx} &aModalità spia chat locale disabilitata.'
 chat:
   broadcast-format:
     local: '&8[&c&lBroadcast&8] &r{0}'
@@ -353,7 +358,7 @@ chat:
     found: '{pfx} &aSono stati trovati i seguenti messaggi:'
     not-found: '{pfx} &cNessun messaggio registrato trovato.'
     message-format:
-      chat:
+      public:
         text: '&e[{date}] &8- &f{content}'
         hover: |-
           &aTipo: &emessaggio della chat
@@ -363,6 +368,10 @@ chat:
           &aMondo: &f{world}
           &aData: &f{date}
           &aNegato: &f{denied}
+          &aGlobale: &f{global}
+        global-format:
+          'yes': globale
+          'no': locale
       private:
         text: '&e[{date}] &8- &f&o{content}'
         hover: |-

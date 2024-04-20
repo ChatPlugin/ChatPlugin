@@ -27,6 +27,7 @@ import me.remigio07.chatplugin.server.command.admin.ClearChatCommand;
 import me.remigio07.chatplugin.server.command.admin.IPLookupCommand;
 import me.remigio07.chatplugin.server.command.admin.LastSeenCommand;
 import me.remigio07.chatplugin.server.command.admin.MuteAllCommand;
+import me.remigio07.chatplugin.server.command.admin.RangedChatSpyCommand;
 import me.remigio07.chatplugin.server.command.admin.SocialspyCommand;
 import me.remigio07.chatplugin.server.command.admin.StaffChatCommand;
 import me.remigio07.chatplugin.server.command.misc.AdCommand;
@@ -77,6 +78,7 @@ public abstract class CommandsHandler {
 		// admin
 		put("staffchat", new StaffChatCommand());
 		put("socialspy", new SocialspyCommand());
+		put("rangedchatspy", new RangedChatSpyCommand());
 		put("iplookup", new IPLookupCommand());
 		put("lastseen", new LastSeenCommand());
 		put("clearchat", new ClearChatCommand());

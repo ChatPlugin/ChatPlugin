@@ -34,9 +34,9 @@ import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.server.chat.log.ChatLogManager;
-import me.remigio07.chatplugin.api.server.chat.log.LoggedChatMessage;
 import me.remigio07.chatplugin.api.server.chat.log.LoggedMessage;
 import me.remigio07.chatplugin.api.server.chat.log.LoggedPrivateMessage;
+import me.remigio07.chatplugin.api.server.chat.log.LoggedPublicMessage;
 
 /**
  * Represents the storage connector used by the plugin.
@@ -324,9 +324,9 @@ public abstract class StorageConnector {
 	}
 	
 	/**
-	 * Gets a list of logged chat messages from the storage.
+	 * Gets a list of logged public messages from the storage.
 	 * 
-	 * @param sender Messages' sender
+	 * @param sender Public messages' sender
 	 * @param timeAgo Maximum time elapsed
 	 * @param query Text to search
 	 * @return List of logged messages
@@ -334,14 +334,14 @@ public abstract class StorageConnector {
 	 * @throws UnsupportedOperationException If <code>!</code>{@link ChatPlugin#isPremium()}
 	 */
 	@NotNull
-	public List<LoggedChatMessage> getChatMessages(@NotNull OfflinePlayer sender, long timeAgo, String query) throws SQLException {
-		throw new UnsupportedOperationException("Unable to get messages from the storage on the free version");
+	public List<LoggedPublicMessage> getPublicMessages(@NotNull OfflinePlayer sender, long timeAgo, String query) throws SQLException {
+		throw new UnsupportedOperationException("Unable to get public messages from the storage on the free version");
 	}
 	
 	/**
 	 * Gets a list of logged private messages from the storage.
 	 * 
-	 * @param sender Messages' sender
+	 * @param sender Private messages' sender
 	 * @param timeAgo Maximum time elapsed
 	 * @param query Text to search
 	 * @return List of logged private messages
@@ -355,7 +355,7 @@ public abstract class StorageConnector {
 	
 	/**
 	 * Cleans messages older than {@link ChatLogManager#getMessagesAutoCleanerPeriod()}
-	 * from {@link DataContainer#CHAT_MESSAGES} and {@link DataContainer#PRIVATE_MESSAGES}.
+	 * from {@link DataContainer#PUBLIC_MESSAGES} and {@link DataContainer#PRIVATE_MESSAGES}.
 	 * 
 	 * <p>Will do nothing if called on a proxy environment.</p>
 	 * 
@@ -463,7 +463,7 @@ public abstract class StorageConnector {
 	 * @param id Data's ID
 	 * @return Requested list of data
 	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
-	 * @throws IllegalArgumentException If <code>container == </code>{@link DataContainer#CHAT_MESSAGES}
+	 * @throws IllegalArgumentException If <code>container == </code>{@link DataContainer#PUBLIC_MESSAGES}
 	 * <code>|| container == </code>{@link DataContainer#PRIVATE_MESSAGES}
 	 */
 	@NotNull
@@ -498,7 +498,7 @@ public abstract class StorageConnector {
 	 * @param data Data to set or <code>null</code>
 	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
 	 * @throws IOException If something goes wrong and {@link StorageMethod#isFlatFile()}
-	 * @throws IllegalArgumentException If <code>container == </code>{@link DataContainer#CHAT_MESSAGES}
+	 * @throws IllegalArgumentException If <code>container == </code>{@link DataContainer#PUBLIC_MESSAGES}
 	 * <code>|| container == </code>{@link DataContainer#PRIVATE_MESSAGES}
 	 */
 	public abstract void setData(DataContainer container, String position, int id, @Nullable(why = "Data will become SQL NULL if null") Object data) throws SQLException, IOException;
@@ -509,7 +509,7 @@ public abstract class StorageConnector {
 	 * @param container Container to check
 	 * @return All entries' IDs
 	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
-	 * @throws IllegalArgumentException If <code>container == </code>{@link DataContainer#CHAT_MESSAGES}
+	 * @throws IllegalArgumentException If <code>container == </code>{@link DataContainer#PUBLIC_MESSAGES}
 	 * <code>|| container == </code>{@link DataContainer#PRIVATE_MESSAGES}
 	 */
 	@NotNull
@@ -521,7 +521,7 @@ public abstract class StorageConnector {
 	 * @param container Container to check
 	 * @return Next entry's ID
 	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
-	 * @throws IllegalArgumentException If <code>container == </code>{@link DataContainer#CHAT_MESSAGES}
+	 * @throws IllegalArgumentException If <code>container == </code>{@link DataContainer#PUBLIC_MESSAGES}
 	 * <code>|| container == </code>{@link DataContainer#PRIVATE_MESSAGES}
 	 */
 	public abstract int getNextID(DataContainer container) throws SQLException;
@@ -533,7 +533,7 @@ public abstract class StorageConnector {
 	 * @param id Entry's ID
 	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
 	 * @throws IOException If something goes wrong and {@link StorageMethod#isFlatFile()}
-	 * @throws IllegalArgumentException If <code>container == </code>{@link DataContainer#CHAT_MESSAGES}
+	 * @throws IllegalArgumentException If <code>container == </code>{@link DataContainer#PUBLIC_MESSAGES}
 	 * <code>|| container == </code>{@link DataContainer#PRIVATE_MESSAGES}
 	 */
 	public abstract void removeEntry(DataContainer container, int id) throws SQLException, IOException;

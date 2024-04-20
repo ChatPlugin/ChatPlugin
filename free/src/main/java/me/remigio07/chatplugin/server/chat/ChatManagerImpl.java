@@ -33,6 +33,7 @@ import me.remigio07.chatplugin.api.server.chat.FormattedChatManager;
 import me.remigio07.chatplugin.api.server.chat.HoverInfoManager;
 import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager;
 import me.remigio07.chatplugin.api.server.chat.PlayerPingManager;
+import me.remigio07.chatplugin.api.server.chat.RangedChatManager;
 import me.remigio07.chatplugin.api.server.chat.StaffChatManager;
 import me.remigio07.chatplugin.api.server.chat.antispam.AntispamManager;
 import me.remigio07.chatplugin.api.server.chat.antispam.DenyChatReason;
@@ -93,40 +94,54 @@ public class ChatManagerImpl extends ChatManager {
 	
 	@Override
 	public void handleChatEvent(ChatPluginServerPlayer player, String message) {
-		message = message.trim().replaceAll(" +", " ");
-		PreChatEvent preChatEvent = new PreChatEvent(player, message);
+		message = message.trim();
+		boolean global = false;
+		RangedChatManager rangedChatManager = RangedChatManager.getInstance();
+		
+		// 0. ranged-chat
+		if (rangedChatManager.isEnabled()) {
+			if (message.startsWith(rangedChatManager.getGlobalModePrefix())
+					&& message.length() > rangedChatManager.getGlobalModePrefix().length()
+					&& player.hasPermission("chatplugin.global-chat")) {
+				message = message.substring(rangedChatManager.getGlobalModePrefix().length()).trim();
+				global = true;
+			}
+		} else global = true;
+		
+		message = message.replaceAll(" +", " ");
+		PreChatEvent preChatEvent = new PreChatEvent(player, message, global);
 		
 		preChatEvent.call();
 		
 		if (preChatEvent.isCancelled())
 			return;
 		
-		// 0. instant-emojis
+		// 1. instant-emojis
 		if (InstantEmojisManager.getInstance().isEnabled())
 			message = InstantEmojisManager.getInstance().format(message);
 		
-		// 1. staff-chat
+		// 2. staff-chat
 		if (StaffChatManager.getInstance().isEnabled() && player.hasPermission("chatplugin.commands.staffchat") && StaffChatManager.getInstance().isUsingStaffChat(player.getUUID())) {
 			StaffChatManager.getInstance().sendPlayerMessage(player, message);
 			return;
 		} DenyChatReason<?> reason = null;
 		List<String> urls = URLValidator.getURLs(message);
 		
-		// 2. vanish
+		// 3. vanish
 		if (player.isVanished())
 			reason = DenyChatReason.VANISH;
 		
-		// 3. mute
+		// 4. mute
 		if (chatMuted && !player.hasPermission("chatplugin.commands.muteall"))
 			reason = DenyChatReason.MUTEALL;
 		else if (MuteManager.getInstance().isEnabled() && MuteManager.getInstance().isMuted(player, ProxyManager.getInstance().getServerID()))
 			reason = DenyChatReason.MUTE;
 		
-		// 4. antispam
+		// 5. antispam
 		if (reason == null && AntispamManager.getInstance().isEnabled())
 			reason = AntispamManager.getInstance().getDenyChatReason(player, message, Collections.emptyList());
 		
-		// 5. formatted-chat
+		// 6. formatted-chat
 		if (reason == null && FormattedChatManager.getInstance().isEnabled() && FormattedChatManager.getInstance().containsFormattedText(message, urls, true)) {
 			if (!player.hasPermission("chatplugin.formatted-chat"))
 				if (!FormattedChatManager.getInstance().isSendAnyway())
@@ -135,7 +150,7 @@ public class ChatManagerImpl extends ChatManager {
 			else message = FormattedChatManager.getInstance().translate(message, urls, true);
 		}
 		
-		// 6. player-ping
+		// 7. player-ping
 		if (reason == null && PlayerPingManager.getInstance().isEnabled() && !PlayerPingManager.getInstance().getPingedPlayers(player, message).isEmpty() && player.hasPermission("chatplugin.player-ping"))
 			message = PlayerPingManager.getInstance().performPing(player, message);
 		
@@ -143,7 +158,7 @@ public class ChatManagerImpl extends ChatManager {
 		if (reason != null) {
 			String denyMessage = reason.getMessage(player.getLanguage());
 			
-			new DenyChatEvent(player, message, reason).call();
+			new DenyChatEvent(player, message, global, reason).call();
 			
 			switch (reason.name()) {
 			case "CAPS":
@@ -168,27 +183,40 @@ public class ChatManagerImpl extends ChatManager {
 			} player.sendMessage(denyMessage);
 			
 			if (ChatLogManager.getInstance().isEnabled())
-				ChatLogManager.getInstance().logChatMessage(player, message, reason);
+				ChatLogManager.getInstance().logPublicMessage(player, message, global, reason);
 			return;
-		} AllowChatEvent allowChatEvent = new AllowChatEvent(player, message);
+		} AllowChatEvent allowChatEvent = new AllowChatEvent(player, message, global);
 		
 		allowChatEvent.call();
 		
 		if (allowChatEvent.isCancelled())
 			return;
 		if (ChatLogManager.getInstance().isEnabled())
-			ChatLogManager.getInstance().logChatMessage(player, message, null);
+			ChatLogManager.getInstance().logPublicMessage(player, message, global, null);
 		if (HoverInfoManager.getInstance().isEnabled()) {
 			for (Language language : LanguageManager.getInstance().getLanguages()) {
-				TextComponent text = ((BaseHoverInfoManager) HoverInfoManager.getInstance()).getMessageHoverInfo(message, urls, player, language);
+				TextComponent text = ((BaseHoverInfoManager) HoverInfoManager.getInstance()).getMessageHoverInfo(message, rangedChatManager.isEnabled() && global, urls, player, language);
 				
 				for (ChatPluginServerPlayer other : language.getOnlinePlayers())
-					if (!other.getIgnoredPlayers().contains(player))
-						((BaseChatPluginServerPlayer) other).sendMessage(text);
+					if (!other.getIgnoredPlayers().contains(player)) {
+						if (rangedChatManager.isEnabled() && !global && ((BaseChatPluginServerPlayer) other).getDistance(player.getX(), player.getY(), player.getZ()) > rangedChatManager.getRange()) {
+							if (other.hasRangedChatSpyEnabled())
+								other.sendMessage(PlaceholderManager.getInstance().translatePlaceholders(rangedChatManager.getSpyFormat(), player, language, placeholderTypes) + message);
+							continue;
+						} ((BaseChatPluginServerPlayer) other).sendMessage(text);
+					}
 			}
-		} else for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
-			if (!other.getIgnoredPlayers().contains(player))
-				other.sendMessage(PlaceholderManager.getInstance().translatePlaceholders(format, player, other.getLanguage(), placeholderTypes) + message);
+		} else for (Language language : LanguageManager.getInstance().getLanguages()) {
+			String text = PlaceholderManager.getInstance().translatePlaceholders(rangedChatManager.isEnabled() && global ? rangedChatManager.getGlobalModeFormat() : format, player, language, placeholderTypes) + message;
+			
+			for (ChatPluginServerPlayer other : language.getOnlinePlayers())
+				if (!other.getIgnoredPlayers().contains(player)) {
+					if (rangedChatManager.isEnabled() && !global && ((BaseChatPluginServerPlayer) other).getDistance(player.getX(), player.getY(), player.getZ()) > rangedChatManager.getRange()) {
+						if (other.hasRangedChatSpyEnabled())
+							other.sendMessage(PlaceholderManager.getInstance().translatePlaceholders(rangedChatManager.getSpyFormat(), player, language, placeholderTypes) + message);
+						continue;
+					} other.sendMessage(text);
+				}
 		} try {
 			StorageConnector.getInstance().incrementPlayerStat(PlayersDataType.MESSAGES_SENT, player);
 		} catch (Exception e) {

@@ -184,7 +184,7 @@ public class YAMLConnector extends FlatFileConnector {
 	
 	@Override
 	public @NotNull List<Object> getRowValues(DataContainer container, int id) {
-		if (container == DataContainer.CHAT_MESSAGES || container == DataContainer.PRIVATE_MESSAGES)
+		if (container == DataContainer.PUBLIC_MESSAGES || container == DataContainer.PRIVATE_MESSAGES)
 			throw new IllegalArgumentException("Unable to get row values in container " + container.getName() + " using an ID since that container does not have IDs");
 		Configuration configuration = yamls.get(container);
 		List<Object> values = new ArrayList<>();
@@ -199,7 +199,7 @@ public class YAMLConnector extends FlatFileConnector {
 	
 	@Override
 	public void setData(DataContainer container, String position, int id, @Nullable(why = "Data will become SQL NULL if null") Object data) throws IOException {
-		if (container == DataContainer.CHAT_MESSAGES || container == DataContainer.PRIVATE_MESSAGES)
+		if (container == DataContainer.PUBLIC_MESSAGES || container == DataContainer.PRIVATE_MESSAGES)
 			throw new IllegalArgumentException("Unable to set data to container " + container.getName() + " using an ID since that container does not have IDs");
 		yamls.get(container).set(id + "." + adaptPosition(position), data);
 		yamls.get(container).save();
@@ -211,14 +211,14 @@ public class YAMLConnector extends FlatFileConnector {
 	
 	@Override
 	public @NotNull List<Integer> getIDs(DataContainer container) {
-		if (container == DataContainer.CHAT_MESSAGES || container == DataContainer.PRIVATE_MESSAGES)
+		if (container == DataContainer.PUBLIC_MESSAGES || container == DataContainer.PRIVATE_MESSAGES)
 			throw new IllegalArgumentException("Unable to get IDs in container " + container.getName() + " since that container does not have IDs");
 		return yamls.get(container).getKeys().stream().filter(Utils::isPositiveInteger).map(Integer::valueOf).collect(Collectors.toList());
 	}
 	
 	@Override
 	public int getNextID(DataContainer container) {
-		if (container == DataContainer.CHAT_MESSAGES || container == DataContainer.PRIVATE_MESSAGES)
+		if (container == DataContainer.PUBLIC_MESSAGES || container == DataContainer.PRIVATE_MESSAGES)
 			throw new IllegalArgumentException("Unable to get next ID in container " + container.getName() + " since that container does not have IDs");
 		if (container == DataContainer.IP_ADDRESSES)
 			container = DataContainer.PLAYERS;
@@ -227,7 +227,7 @@ public class YAMLConnector extends FlatFileConnector {
 	
 	@Override
 	public void removeEntry(DataContainer container, int id) throws IOException {
-		if (container == DataContainer.CHAT_MESSAGES || container == DataContainer.PRIVATE_MESSAGES)
+		if (container == DataContainer.PUBLIC_MESSAGES || container == DataContainer.PRIVATE_MESSAGES)
 			throw new IllegalArgumentException("Unable to remove entry in container " + container.getName() + " using an ID since that container does not have IDs");
 		Configuration configuration = yamls.get(container);
 		

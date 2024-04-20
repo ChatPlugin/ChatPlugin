@@ -26,7 +26,7 @@ import me.remigio07.chatplugin.api.server.language.Language;
 /**
  * Represents a logged message.
  * 
- * @see LoggedChatMessage
+ * @see LoggedPublicMessage
  * @see LoggedPrivateMessage
  * @see ChatLogManager
  */
@@ -110,7 +110,7 @@ public interface LoggedMessage extends Comparable<LoggedMessage> {
 	 * 
 	 * <p>Every logged message has different placeholders available. Check the following fields:
 	 * 	<ul>
-	 * 		<li>{@link LoggedChatMessage#PLACEHOLDERS} - chat messages' placeholders</li>
+	 * 		<li>{@link LoggedPublicMessage#PLACEHOLDERS} - public messages' placeholders</li>
 	 * 		<li>{@link LoggedPrivateMessage#PLACEHOLDERS} - private messages' placeholders</li>
 	 * 	</ul>
 	 * 
@@ -125,7 +125,7 @@ public interface LoggedMessage extends Comparable<LoggedMessage> {
 	 * 
 	 * <p>Every logged message has different placeholders available. Check the following fields:
 	 * 	<ul>
-	 * 		<li>{@link LoggedChatMessage#PLACEHOLDERS} - chat messages' placeholders</li>
+	 * 		<li>{@link LoggedPublicMessage#PLACEHOLDERS} - public messages' placeholders</li>
 	 * 		<li>{@link LoggedPrivateMessage#PLACEHOLDERS} - private messages' placeholders</li>
 	 * 	</ul>
 	 * 

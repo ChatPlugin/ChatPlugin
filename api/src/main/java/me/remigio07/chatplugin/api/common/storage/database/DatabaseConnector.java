@@ -108,7 +108,7 @@ public abstract class DatabaseConnector extends StorageConnector {
 	
 	@Override
 	public @NotNull List<Object> getRowValues(DataContainer table, int id) throws SQLException {
-		if (table == DataContainer.CHAT_MESSAGES || table == DataContainer.PRIVATE_MESSAGES)
+		if (table == DataContainer.PUBLIC_MESSAGES || table == DataContainer.PRIVATE_MESSAGES)
 			throw new IllegalArgumentException("Unable to get row values in table " + table.getDatabaseTableID() + " using an ID since that table does not have IDs");
 		List<Object> list = new ArrayList<>();
 		
@@ -127,7 +127,7 @@ public abstract class DatabaseConnector extends StorageConnector {
 	
 	@Override
 	public void setData(DataContainer table, String column, int id, @Nullable(why = "Data will become SQL NULL if null") Object data) throws SQLException {
-		if (table == DataContainer.CHAT_MESSAGES || table == DataContainer.PRIVATE_MESSAGES)
+		if (table == DataContainer.PUBLIC_MESSAGES || table == DataContainer.PRIVATE_MESSAGES)
 			throw new IllegalArgumentException("Unable to set data to table " + table.getDatabaseTableID() + " using an ID since that table does not have IDs");
 		executeUpdate("UPDATE " + table.getDatabaseTableID() + " SET " + column + " = ? WHERE " + table.getIDColumn() + " = ?", data, id);
 	}
@@ -135,14 +135,14 @@ public abstract class DatabaseConnector extends StorageConnector {
 	@NotNull
 	@Override
 	public List<Integer> getIDs(DataContainer table) throws SQLException {
-		if (table == DataContainer.CHAT_MESSAGES || table == DataContainer.PRIVATE_MESSAGES)
+		if (table == DataContainer.PUBLIC_MESSAGES || table == DataContainer.PRIVATE_MESSAGES)
 			throw new IllegalArgumentException("Unable to get IDs in table " + table.getDatabaseTableID() + " since that table does not have IDs");
 		return Utils.numberListToIntegerList(getColumnValues("SELECT " + table.getIDColumn() + " FROM " + table.getDatabaseTableID(), 1, Number.class));
 	}
 	
 	@Override
 	public void removeEntry(DataContainer table, int id) throws SQLException {
-		if (table == DataContainer.CHAT_MESSAGES || table == DataContainer.PRIVATE_MESSAGES)
+		if (table == DataContainer.PUBLIC_MESSAGES || table == DataContainer.PRIVATE_MESSAGES)
 			throw new IllegalArgumentException("Unable to remove entry in table " + table.getDatabaseTableID() + " using an ID since that table does not have IDs");
 		executeUpdate("DELETE FROM " + table.getDatabaseTableID() + " WHERE " + table.getIDColumn() + " = ?", id);
 	}

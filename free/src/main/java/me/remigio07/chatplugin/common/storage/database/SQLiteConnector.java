@@ -177,7 +177,7 @@ public class SQLiteConnector extends DatabaseConnector {
 					+ "`ignored_players` TEXT"
 					+ ")";
 			break;
-		case CHAT_MESSAGES:
+		case PUBLIC_MESSAGES:
 			update = "CREATE TABLE IF NOT EXISTS {table_id} ("
 					+ "`sender_uuid` TEXT NOT NULL, "
 					+ "`sender_name` TEXT NOT NULL, "
@@ -186,7 +186,8 @@ public class SQLiteConnector extends DatabaseConnector {
 					+ "`world` TEXT NOT NULL, "
 					+ "`content` TEXT NOT NULL, "
 					+ "`date` INTEGER NOT NULL, "
-					+ "`deny_chat_reason` NUMERIC"
+					+ "`deny_chat_reason` NUMERIC,"
+					+ "`global` NUMERIC NOT NULL"
 					+ ")";
 			break;
 		case PRIVATE_MESSAGES:
@@ -214,7 +215,7 @@ public class SQLiteConnector extends DatabaseConnector {
 	
 	@Override
 	public int getNextID(DataContainer table) throws SQLException {
-		if (table == DataContainer.CHAT_MESSAGES || table == DataContainer.PRIVATE_MESSAGES)
+		if (table == DataContainer.PUBLIC_MESSAGES || table == DataContainer.PRIVATE_MESSAGES)
 			throw new IllegalArgumentException("Unable to get next ID in table " + table.getDatabaseTableID() + " since that table does not have IDs");
 		if (table == DataContainer.IP_ADDRESSES)
 			table = DataContainer.PLAYERS;

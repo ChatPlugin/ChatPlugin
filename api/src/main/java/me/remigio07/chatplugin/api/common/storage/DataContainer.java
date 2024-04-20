@@ -55,9 +55,9 @@ public enum DataContainer {
 	PLAYERS("id", "player_uuid", "player_name", "player_ip", "language", "last_logout", "time_played", "messages_sent", "bans", "warnings", "kicks", "mutes", "ignored_players"),
 	
 	/**
-	 * Represents the chat messages' data.
+	 * Represents the public messages' data.
 	 */
-	CHAT_MESSAGES("player_uuid", "player_name", "rank_id", "server", "world", "message", "date", "deny_chat_reason"),
+	PUBLIC_MESSAGES("player_uuid", "player_name", "rank_id", "server", "world", "message", "date", "deny_chat_reason", "global"),
 	
 	/**
 	 * Represents the private messages' data.
@@ -98,13 +98,13 @@ public enum DataContainer {
 	 * Gets this data type's ID column's label.
 	 * 
 	 * <p>Will return {@link Utils#NOT_APPLICABLE} if called on
-	 * {@link #CHAT_MESSAGES} or {@link #PRIVATE_MESSAGES}, "player_id"
+	 * {@link #PUBLIC_MESSAGES} or {@link #PRIVATE_MESSAGES}, "player_id"
 	 * if called on {@link #IP_ADDRESSES} and "id" otherwise.</p>
 	 * 
 	 * @return ID column's label
 	 */
 	public String getIDColumn() {
-		return this == CHAT_MESSAGES || this == PRIVATE_MESSAGES ? Utils.NOT_APPLICABLE : this == IP_ADDRESSES ? "player_id" : "id";
+		return this == PUBLIC_MESSAGES || this == PRIVATE_MESSAGES ? Utils.NOT_APPLICABLE : this == IP_ADDRESSES ? "player_id" : "id";
 	}
 	
 	/**

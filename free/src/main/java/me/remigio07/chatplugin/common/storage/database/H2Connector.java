@@ -178,7 +178,7 @@ public class H2Connector extends DatabaseConnector {
 					+ "`ignored_players` VARCHAR(255)"
 					+ ")";
 			break;
-		case CHAT_MESSAGES:
+		case PUBLIC_MESSAGES:
 			update = "CREATE TABLE IF NOT EXISTS {table_id} ("
 					+ "`sender_uuid` VARCHAR(36) NOT NULL, "
 					+ "`sender_name` VARCHAR(16) NOT NULL, "
@@ -187,7 +187,8 @@ public class H2Connector extends DatabaseConnector {
 					+ "`world` VARCHAR(248) NOT NULL, "
 					+ "`content` VARCHAR(256) NOT NULL, "
 					+ "`date` BIGINT NOT NULL, "
-					+ "`deny_chat_reason` ENUM('CAPS', 'FLOOD', 'FORMAT', 'IP_ADDRESS', 'MUTE', 'MUTEALL', 'SPAM', 'SWEAR', 'URL', 'VANISH')"
+					+ "`deny_chat_reason` ENUM('CAPS', 'FLOOD', 'FORMAT', 'IP_ADDRESS', 'MUTE', 'MUTEALL', 'SPAM', 'SWEAR', 'URL', 'VANISH'), "
+					+ "`global` BOOLEAN NOT NULL"
 					+ ")";
 			break;
 		case PRIVATE_MESSAGES:
@@ -215,7 +216,7 @@ public class H2Connector extends DatabaseConnector {
 	
 	@Override
 	public int getNextID(DataContainer table) throws SQLException {
-		if (table == DataContainer.CHAT_MESSAGES || table == DataContainer.PRIVATE_MESSAGES)
+		if (table == DataContainer.PUBLIC_MESSAGES || table == DataContainer.PRIVATE_MESSAGES)
 			throw new IllegalArgumentException("Unable to get next ID in table " + table.getDatabaseTableID() + " since that table does not have IDs");
 		if (table == DataContainer.IP_ADDRESSES)
 			table = DataContainer.PLAYERS;

@@ -23,8 +23,8 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.server.chat.antispam.DenyChatReason;
 import me.remigio07.chatplugin.api.server.chat.log.ChatLogManager;
-import me.remigio07.chatplugin.api.server.chat.log.LoggedChatMessage;
 import me.remigio07.chatplugin.api.server.chat.log.LoggedPrivateMessage;
+import me.remigio07.chatplugin.api.server.chat.log.LoggedPublicMessage;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 public class DummyChatLogManager extends ChatLogManager {
@@ -35,7 +35,7 @@ public class DummyChatLogManager extends ChatLogManager {
 	}
 	
 	@Override
-	public @NotNull List<LoggedChatMessage> getLoggedChatMessages(OfflinePlayer sender, long timeAgo, String query) {
+	public @NotNull List<LoggedPublicMessage> getLoggedPublicMessages(OfflinePlayer sender, long timeAgo, String query) {
 		return null;
 	}
 	
@@ -45,10 +45,11 @@ public class DummyChatLogManager extends ChatLogManager {
 	}
 	
 	@Override
-	public void logChatMessage(
+	public void logPublicMessage(
 			ChatPluginServerPlayer sender,
 			String message,
-			@Nullable(why = "Message may not have been blocked") DenyChatReason<?> denyChatReason
+			boolean global,
+			@Nullable(why = "Public message may not have been blocked") DenyChatReason<?> denyChatReason
 			) {
 		
 	}

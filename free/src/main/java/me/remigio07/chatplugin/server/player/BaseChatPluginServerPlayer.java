@@ -22,6 +22,7 @@ import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.server.bossbar.PlayerBossbar;
 import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
 import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
+import me.remigio07.chatplugin.api.server.chat.RangedChatManager;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
@@ -46,6 +47,8 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 			throw new IllegalStateException("Server has not received a PlayerJoin plugin message from the proxy");
 		if (PrivateMessagesManager.getInstance().isEnabled() && PrivateMessagesManager.getInstance().isSocialspyOnJoinEnabled() && player.hasPermission("chatplugin.commands.socialspy"))
 			socialspyEnabled = true;
+		if (RangedChatManager.getInstance().isEnabled() && RangedChatManager.getInstance().isSpyOnJoinEnabled() && player.hasPermission("chatplugin.commands.rangedchatspy"))
+			rangedChatSpyEnabled = true;
 		bedrockPlayer = ServerPlayerManager.isBedrockPlayer(uuid);
 		loginTime = ServerPlayerManager.getPlayerLoginTime(uuid);
 		ignoredPlayers = PlayerIgnoreManager.getInstance().isEnabled() ? new ArrayList<>(PlayerIgnoreManager.getInstance().getIgnoredPlayers(this)) : Collections.emptyList();
@@ -117,6 +120,8 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 				.clickEvent(ClickEvent.runCommand("/chatplugin language " + language.getID()))
 				);
 	}
+	
+	public abstract double getDistance(double x, double y, double z);
 	
 	public abstract void sendMessage(Component component);
 	

@@ -183,6 +183,11 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	}
 	
 	@Override
+	public double getDistance(double x, double y, double z) {
+		return player.getLocation().getPosition().distance(x, y, z);
+	}
+	
+	@Override
 	public void sendMessage(Component component) {
 		audience.sendMessage(component);
 	}
@@ -260,6 +265,21 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	@Override
 	public String getWorld() {
 		return player.getWorld().getName();
+	}
+	
+	@Override
+	public double getX() {
+		return player.getLocation().getX();
+	}
+	
+	@Override
+	public double getY() {
+		return player.getLocation().getY();
+	}
+	
+	@Override
+	public double getZ() {
+		return player.getLocation().getZ();
 	}
 	
 	@Override

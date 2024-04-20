@@ -24,7 +24,7 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
  * 
  * @see ChatManager#handleChatEvent(ChatPluginServerPlayer, String)
  */
-public class PreChatEvent extends ChatEvent implements CancellableEvent {
+public class PreChatEvent extends PublicMessageEvent implements CancellableEvent {
 	
 	private boolean cancelled;
 	
@@ -33,9 +33,10 @@ public class PreChatEvent extends ChatEvent implements CancellableEvent {
 	 * 
 	 * @param player Player involved
 	 * @param message Message involved
+	 * @param global Whether the message is global
 	 */
-	public PreChatEvent(ChatPluginServerPlayer player, String message) {
-		super(player, message);
+	public PreChatEvent(ChatPluginServerPlayer player, String message, boolean global) {
+		super(player, message, global);
 	}
 	
 	@Override

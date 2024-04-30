@@ -96,6 +96,15 @@ public class CommandSenderAdapter {
 	}
 	
 	/**
+	 * Checks if this command sender is a player and loaded.
+	 * 
+	 * @return {@link #toServerPlayer()}<code> != null</code>
+	 */
+	public boolean isLoaded() {
+		return toServerPlayer() != null;
+	}
+	
+	/**
 	 * Gets this command sender's name.
 	 * 
 	 * @return Command sender's name

@@ -29,7 +29,6 @@ import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
-import me.remigio07.chatplugin.api.common.util.Utils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -37,6 +36,7 @@ import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerExceptio
 import me.remigio07.chatplugin.api.common.util.packet.Packets;
 import me.remigio07.chatplugin.api.server.event.player.ServerPlayerLoadEvent;
 import me.remigio07.chatplugin.api.server.event.player.ServerPlayerUnloadEvent;
+import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 
 /**
@@ -58,7 +58,8 @@ public abstract class ServerPlayerManager extends PlayerManager {
 			storageCount = StorageConnector.getInstance().count(DataContainer.PLAYERS).intValue();
 		} catch (SQLException e) {
 			throw new ChatPluginManagerException(this, e);
-		}
+		} if (everyWorldEnabled)
+			enabledWorlds = Utils.getWorlds();
 	}
 	
 	@Override

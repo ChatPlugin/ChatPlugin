@@ -71,14 +71,14 @@ public class SpongePlayerManager extends ServerPlayerManager {
 		instance = this;
 		long ms = System.currentTimeMillis();
 		
-		super.load();
-		
 		if (!(everyWorldEnabled = ConfigurationType.CONFIG.get().getBoolean("settings.enable-every-world"))) {
 			for (String world : ConfigurationType.CONFIG.get().getStringList("settings.enabled-worlds"))
 				if (!Sponge.getServer().getWorld(world).isPresent())
-					LogManager.log("World {0} specified at \"settings.enabled-worlds\" in config.yml does not exist (yet); skipping it.", 2, world);
+					LogManager.log("World \"{0}\" specified at \"settings.enabled-worlds\" in config.yml does not exist (yet); skipping it.", 2, world);
 				else enabledWorlds.add(world);
-		} enabled = true;
+		} super.load();
+		
+		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}
 	

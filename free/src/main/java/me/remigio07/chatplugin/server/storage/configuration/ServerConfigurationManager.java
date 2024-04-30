@@ -878,6 +878,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		bossbars.addDefault("bossbars.settings.reflection-wither-teleportation.timeout-ms", 250);
 		bossbars.addDefault("bossbars.settings.sending-timeout-ms", 10000);
 		bossbars.addDefault("bossbars.settings.placeholder-types", Arrays.asList("JUST_NAME"));
+		bossbars.addDefault("bossbars.settings.enabled-worlds", Arrays.asList("*"));
 		
 		bossbars.addDefault("bossbars.settings.loading-bossbar.enabled", true);
 		bossbars.addDefault("bossbars.settings.loading-bossbar.sending-timeout-ms", 200);

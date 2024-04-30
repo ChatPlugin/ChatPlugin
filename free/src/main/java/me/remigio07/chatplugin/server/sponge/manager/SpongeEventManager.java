@@ -36,6 +36,7 @@ import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
+import me.remigio07.chatplugin.api.server.bossbar.BossbarManager;
 import me.remigio07.chatplugin.api.server.chat.ChatManager;
 import me.remigio07.chatplugin.api.server.integration.anticheat.AnticheatManager;
 import me.remigio07.chatplugin.api.server.join_quit.JoinMessageManager;
@@ -55,6 +56,7 @@ import me.remigio07.chatplugin.api.server.scoreboard.event.ScoreboardEvent;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.bootstrap.SpongeBootstrapper;
+import me.remigio07.chatplugin.server.bossbar.NativeBossbar;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 
 public class SpongeEventManager extends EventManager {
@@ -175,9 +177,24 @@ public class SpongeEventManager extends EventManager {
 		ChatPluginServerPlayer player = playerManager.getPlayer(event.getTargetEntity().getUniqueId());
 		boolean oldWorld = playerManager.isWorldEnabled(event.getFromTransform().getExtent().getName());
 		
-		if (oldWorld == playerManager.isWorldEnabled(player.getWorld()))
-			return;
-		if (oldWorld) {
+		if (oldWorld == playerManager.isWorldEnabled(player.getWorld())) {
+			if (BossbarManager.getInstance().isEnabled()) {
+				boolean oldWorld2 = BossbarManager.getInstance().isWorldEnabled(event.getFromTransform().getExtent().getName());
+				
+				if (oldWorld2 == BossbarManager.getInstance().isWorldEnabled(player.getWorld()))
+					return;
+				if (oldWorld2) {
+					player.getBossbar().unregister();
+					((BaseChatPluginServerPlayer) player).setBossbar(null);
+				} else {
+					((BaseChatPluginServerPlayer) player).setBossbar(new NativeBossbar(player));
+					
+					if (BossbarManager.getInstance().isLoadingBossbarEnabled())
+						BossbarManager.getInstance().startLoading(player);
+					else BossbarManager.getInstance().sendBossbar(BossbarManager.getInstance().getBossbars().get(BossbarManager.getInstance().getTimerIndex() == -1 ? 0 : BossbarManager.getInstance().getTimerIndex()), player);
+				}
+			} return;
+		} if (oldWorld) {
 			VanishManager.getInstance().update(player, false);
 			playerManager.unloadPlayer(player.getUUID());
 		} else playerManager.loadPlayer(player.toAdapter());

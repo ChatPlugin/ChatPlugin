@@ -76,6 +76,7 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	protected double reflectionWitherTeleportationDistance;
 	protected long reflectionWitherTeleportationTimeout, sendingTimeout, loadingBossbarSendingTimeout, timerTaskID = -1, reflectionTimerTaskID = -1, lastRunTime = -1;
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
+	protected List<String> enabledWorlds = new ArrayList<>();
 	protected List<Bossbar> bossbars = new ArrayList<>();
 	protected Map<ChatPluginServerPlayer, Long> loadingBossbarsTasks = new HashMap<>();
 	protected ReflectionBossbarTimer reflectionBossbarTimer;
@@ -181,6 +182,29 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	 */
 	public List<PlaceholderType> getPlaceholderTypes() {
 		return placeholderTypes;
+	}
+	
+	/**
+	 * Gets the list of enabled worlds.
+	 * 
+	 * <p>Bossbars only apply to their enabled worlds.</p>
+	 * 
+	 * <p><strong>Found at:</strong> "bossbars.settings.enabled-worlds" in {@link ConfigurationType#BOSSBARS}</p>
+	 * 
+	 * @return Enabled worlds' list
+	 */
+	public List<String> getEnabledWorlds() {
+		return enabledWorlds;
+	}
+	
+	/**
+	 * Checks if a world is contained in the enabled worlds list.
+	 * 
+	 * @param world Name of the world to check
+	 * @return Whether the world is enabled
+	 */
+	public boolean isWorldEnabled(String world) {
+		return enabledWorlds.contains(world);
 	}
 	
 	/**

@@ -118,11 +118,12 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 					}, 0L);
 				}
 			} language = Language.getMainLanguage();
-		} if (BossbarManager.getInstance().isEnabled()) {
+		} if (BossbarManager.getInstance().isEnabled() && BossbarManager.getInstance().isWorldEnabled(getWorld())) {
 			bossbar = new NativeBossbar(this);
 			
 			if (BossbarManager.getInstance().isLoadingBossbarEnabled())
 				BossbarManager.getInstance().startLoading(this);
+			else BossbarManager.getInstance().sendBossbar(BossbarManager.getInstance().getBossbars().get(BossbarManager.getInstance().getTimerIndex() == -1 ? 0 : BossbarManager.getInstance().getTimerIndex()), this);
 		} TaskManager.runAsync(() -> {
 			try {
 				String currentIPAddress = player.getConnection().getAddress().getAddress().getHostAddress();

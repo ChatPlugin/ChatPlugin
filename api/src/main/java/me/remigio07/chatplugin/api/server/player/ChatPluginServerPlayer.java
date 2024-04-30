@@ -34,7 +34,6 @@ import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.packet.type.MessagePacketType;
-import me.remigio07.chatplugin.api.server.bossbar.BossbarManager;
 import me.remigio07.chatplugin.api.server.bossbar.PlayerBossbar;
 import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
 import me.remigio07.chatplugin.api.server.language.Language;
@@ -150,11 +149,11 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	/**
 	 * Gets this player's active bossbar.
 	 * 
-	 * <p>Will return <code>null</code> if <code>!</code>{@link BossbarManager#isEnabled()}.</p>
+	 * <p>Will return <code>null</code> if this player does not have an active bossbar.</p>
 	 * 
 	 * @return Player's bossbar
 	 */
-	@Nullable(why = "BossbarManager may be disabled")
+	@Nullable(why = "Player may not have an active bossbar")
 	public PlayerBossbar getBossbar() {
 		return bossbar;
 	}

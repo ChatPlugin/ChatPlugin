@@ -276,6 +276,7 @@ public class ChatColor {
 	 * <p><strong>Regex:</strong> "#([A-Fa-f0-9]){6}"</p>
 	 */
 	public static final Pattern HEX_COLORS = Pattern.compile("#([A-Fa-f0-9]){6}");
+	private static final Pattern TRANSLATED_HEX_COLORS = Pattern.compile("(?i)§X(§[A-F0-9]){6}");
 	private static final ChatColor[] VALUES = new ChatColor[] { BLACK, DARK_BLUE, DARK_GREEN, DARK_AQUA, DARK_RED, DARK_PURPLE, GOLD, GRAY, DARK_GRAY, BLUE, GREEN, AQUA, RED, LIGHT_PURPLE, YELLOW, WHITE, OBFUSCATED, BOLD, STRIKETHROUGH, UNDERLINE, ITALIC, RESET };
 	private String name, toString;
 	private Character code;
@@ -557,12 +558,12 @@ public class ChatColor {
 	/**
 	 * Strips a string from any color and/or formatting codes.
 	 * 
-	 * @param input String to strip
+	 * @param string String to strip
 	 * @return Stripped string
 	 */
 	@NotNull
-	public static String stripColor(@NotNull String input) {
-		return STRIP_COLOR.matcher(input).replaceAll("");
+	public static String stripColor(@NotNull String string) {
+		return STRIP_COLOR.matcher(string).replaceAll("");
 	}
 	
 	/**
@@ -570,28 +571,30 @@ public class ChatColor {
 	 * 
 	 * <p>Will return an empty string if there are no colors in the string.</p>
 	 * 
-	 * @param input String to check
+	 * @param string String to check
 	 * @return Last colors in string
 	 */
 	@NotNull
-	public static String getLastColors(@NotNull String input) {
-		String result = "";
-		int length = input.length();
+	public static String getLastColors(@NotNull String string) {
+		String colors = "";
 		
-		for (int index = length - 1; index > -1; index--) {
-			char section = input.charAt(index);
-			if (section == SECTION_SIGN && index < length - 1) {
-				char c = input.charAt(index + 1);
-				ChatColor color = getByChar(c);
-				
-				if (color != null) {
-					result = color.toString() + result;
-					
-					if (COLOR_CODES.contains(String.valueOf(c)))
-						break;
-				}
-			}
-		} return result;
+		if (VersionUtils.getVersion().isAtLeast(Version.V1_16)) {
+			Matcher matcher = TRANSLATED_HEX_COLORS.matcher(string);
+			int index = 0;
+			
+			while (matcher.find()) {
+				colors = matcher.group();
+				index = matcher.end();
+			} if (index != 0)
+				string = string.substring(index);
+		} char[] array = string.toCharArray();
+		
+		for (int i = 0; i < array.length - 1; i++)
+			if (array[i] == '§' && CODES.indexOf(array[i + 1]) != -1)
+				if (COLOR_CODES.indexOf(array[i + 1]) != -1)
+					colors = "§" + array[i + 1];
+				else colors += "§" + array[i + 1];
+		return colors;
 	}
 	
 	/**
@@ -619,22 +622,22 @@ public class ChatColor {
 	/**
 	 * Checks if the specified string contains color codes.
 	 * 
-	 * @param input String to check
+	 * @param string String to check
 	 * @return Whether the string contains colors
 	 */
-	public static boolean isColorString(@NotNull String input) {
-		input = input.trim();
+	public static boolean isColorString(@NotNull String string) {
+		string = string.trim();
 		
-		if (input.length() % 2 != 0)
+		if (string.length() % 2 != 0)
 			return false;
-		int index = input.length() - 1;
+		int index = string.length() - 1;
 		boolean colorCodeExpected = true;
 		
 		while (index > 0) {
 			if (colorCodeExpected) {
-				if (!isColorCode(input.charAt(index)) && !isFormatCode(input.charAt(index)))
+				if (!isColorCode(string.charAt(index)) && !isFormatCode(string.charAt(index)))
 					return false;
-			} else if (input.charAt(index) != SECTION_SIGN)
+			} else if (string.charAt(index) != SECTION_SIGN)
 				return false;
 			colorCodeExpected = !colorCodeExpected;
 			index--;

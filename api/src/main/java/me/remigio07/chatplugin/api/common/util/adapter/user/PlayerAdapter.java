@@ -307,7 +307,7 @@ public class PlayerAdapter {
 	 * 
 	 * <p>Will return <code>null</code> if they are not online.</p>
 	 * 
-	 * @param name Player's name
+	 * @param name Player's name, case insensitive
 	 * @param checkPattern Whether to check the name against {@link Utils#USERNAME_PATTERN}
 	 * @return Player if online or <code>null</code> otherwise
 	 * @throws IllegalArgumentException If <code>checkPattern</code> and specified name <code>!{@link Utils#isValidUsername(String)}</code>

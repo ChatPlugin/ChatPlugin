@@ -167,14 +167,15 @@ public class SQLiteConnector extends DatabaseConnector {
 					+ "`player_name` TEXT NOT NULL, "
 					+ "`player_ip` TEXT, "
 					+ "`language` TEXT, "
+					+ "`ignored_players` TEXT, "
+					+ "`chat_color` INTEGER, "
 					+ "`last_logout` INTEGER DEFAULT 0, "
 					+ "`time_played` INTEGER DEFAULT 0, "
 					+ "`messages_sent` INTEGER DEFAULT 0, "
 					+ "`bans` INTEGER DEFAULT 0, "
 					+ "`warnings` INTEGER DEFAULT 0, "
 					+ "`kicks` INTEGER DEFAULT 0, "
-					+ "`mutes` INTEGER DEFAULT 0, "
-					+ "`ignored_players` TEXT"
+					+ "`mutes` INTEGER DEFAULT 0"
 					+ ")";
 			break;
 		case PUBLIC_MESSAGES:

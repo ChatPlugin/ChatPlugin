@@ -41,6 +41,10 @@ commands:
     description: Player list command.
     usage: /playerlist [rank]
     aliases: [plist, list, online]
+  chatcolor:
+    description: Chat color command.
+    usage: /chatcolor <color> [player]
+    aliases: [color, cc]
   # admin
   staffchat:
     description: Staff chat command.

@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.common.storage;
 
 import java.util.UUID;
 
+import me.remigio07.chatplugin.api.common.util.Utils;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.language.Language;
 
@@ -38,7 +39,8 @@ public class PlayersDataType<T> {
 	/**
 	 * Player's UUID.
 	 * 
-	 * <p>It is a {@link String} which uses the format supported by {@link UUID#fromString(String)}.</p>
+	 * <p>It is a {@link String} which uses the format
+	 * supported by {@link UUID#fromString(String)}.</p>
 	 */
 	public static final PlayersDataType<String> PLAYER_UUID = new PlayersDataType<>("PLAYER_UUID", String.class);
 	
@@ -49,6 +51,9 @@ public class PlayersDataType<T> {
 	
 	/**
 	 * Player's last IP address.
+	 * 
+	 * <p>It is a {@link String} which uses the format
+	 * supported by {@link Utils#getInetAddress(String)}.</p>
 	 */
 	public static final PlayersDataType<String> PLAYER_IP = new PlayersDataType<>("PLAYER_IP", String.class);
 	
@@ -58,6 +63,21 @@ public class PlayersDataType<T> {
 	 * <p>It is a {@link String} which represents a {@link Language#getID()}.</p>
 	 */
 	public static final PlayersDataType<String> LANGUAGE = new PlayersDataType<>("LANGUAGE", String.class);
+	
+	/**
+	 * Player's ignored players' IDs.
+	 * 
+	 * <p>It is a {@link String} which represents a list of player IDs.
+	 * Its format can be read using {@link Utils#getListFromString(String)}.</p>
+	 */
+	public static final PlayersDataType<String> IGNORED_PLAYERS = new PlayersDataType<>("IGNORED_PLAYERS", String.class);
+	
+	/**
+	 * Player's chat's color.
+	 * 
+	 * <p>It is an {@link Integer} which represents a RGB color.</p>
+	 */
+	public static final PlayersDataType<Integer> CHAT_COLOR = new PlayersDataType<>("CHAT_COLOR", int.class);
 	
 	/**
 	 * Player's last logout time, in milliseconds.
@@ -93,12 +113,7 @@ public class PlayersDataType<T> {
 	 * Player's mutes' amount.
 	 */
 	public static final PlayersDataType<Short> MUTES = new PlayersDataType<>("MUTES", short.class);
-	
-	/**
-	 * Player's ignored players' IDs.
-	 */
-	public static final PlayersDataType<String> IGNORED_PLAYERS = new PlayersDataType<String>("IGNORED_PLAYERS", String.class);
-	private static final PlayersDataType<?>[] VALUES = new PlayersDataType[] { ID, PLAYER_UUID, PLAYER_NAME, PLAYER_IP, LANGUAGE, LAST_LOGOUT, TIME_PLAYED, MESSAGES_SENT, BANS, WARNINGS, KICKS, MUTES, IGNORED_PLAYERS };
+	private static final PlayersDataType<?>[] VALUES = new PlayersDataType[] { ID, PLAYER_UUID, PLAYER_NAME, PLAYER_IP, LANGUAGE, IGNORED_PLAYERS, CHAT_COLOR, LAST_LOGOUT, TIME_PLAYED, MESSAGES_SENT, BANS, WARNINGS, KICKS, MUTES };
 	private String name;
 	private Class<T> type;
 	

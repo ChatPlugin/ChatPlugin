@@ -34,6 +34,7 @@ import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.packet.type.MessagePacketType;
+import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.bossbar.PlayerBossbar;
 import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
 import me.remigio07.chatplugin.api.server.language.Language;
@@ -65,6 +66,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	protected long loginTime;
 	protected ChatPluginServerPlayer lastCorrespondent;
 	protected List<OfflinePlayer> ignoredPlayers;
+	protected ChatColor chatColor;
 	
 	protected ChatPluginServerPlayer(PlayerAdapter player) {
 		super(player);
@@ -347,6 +349,19 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	}
 	
 	/**
+	 * Gets this player's chat's default color.
+	 * 
+	 * <p>Will return {@link ChatColor#RESET} if
+	 * no chat color is set for this player.</p>
+	 * 
+	 * @return Player's chat's color
+	 */
+	@NotNull
+	public ChatColor getChatColor() {
+		return chatColor;
+	}
+	
+	/**
 	 * Sends a {@link MessagePacketType#NUMERIC_PLACEHOLDERS} message to this player.
 	 * 
 	 * @param path Message's path
@@ -478,5 +493,15 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	 * @return Player's locale
 	 */
 	public abstract Locale getLocale();
+	
+	/**
+	 * Sets this player's chat's default color.
+	 * 
+	 * <p>Specify {@link ChatColor#RESET} to reset it and make it appear as
+	 * their rank's {@link Rank#getChatColor()} when they type in chat.</p>
+	 * 
+	 * @param chatColor Player's chat's color
+	 */
+	public abstract void setChatColor(@NotNull ChatColor chatColor);
 	
 }

@@ -40,6 +40,7 @@ import me.remigio07.chatplugin.api.server.gui.GUIManager;
 import me.remigio07.chatplugin.api.server.integration.anticheat.AnticheatIntegration;
 import me.remigio07.chatplugin.api.server.integration.anticheat.AnticheatManager;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
+import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.rank.RankManager;
 import me.remigio07.chatplugin.api.server.scoreboard.ScoreboardManager;
 import me.remigio07.chatplugin.api.server.scoreboard.ScoreboardType;
@@ -174,6 +175,16 @@ public enum ConfigurationType {
 	 * @see LanguageManager
 	 */
 	LANGUAGES_GUI,
+	
+	/**
+	 * Chat color GUI's configuration file.
+	 * 
+	 * <p><strong>Path:</strong> ChatPlugin/guis/chat-color.yml</p>
+	 * 
+	 * @see GUIManager
+	 * @see ChatPluginServerPlayer#getChatColor()
+	 */
+	CHAT_COLOR_GUI,
 	
 	/**
 	 * Banlist GUI's configuration file.

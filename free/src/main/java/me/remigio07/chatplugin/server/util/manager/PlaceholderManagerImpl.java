@@ -169,7 +169,7 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 	}
 	
 	@Override
-	public String translatePlaceholders(String input, ChatPluginServerPlayer player, Language language, List<PlaceholderType> placeholders) {
+	public String translatePlaceholders(String input, ChatPluginServerPlayer player, Language language, List<PlaceholderType> placeholders, boolean translateColors) {
 		if (input == null)
 			return null;
 		String output = input;
@@ -182,12 +182,13 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 			output = translatePlayerPlaceholders(output, player, language);
 		if (placeholders.contains(PlaceholderType.INTEGRATIONS))
 			output = translateIntegrationsPlaceholders(output, player, language);
-		return ChatColor.translate(output.replace("{pfx}", language.getConfiguration().getString("misc.prefix", Language.getMainLanguage().getConfiguration().getString("misc.prefix"))));
+		return translateColors ? ChatColor.translate(output.replace("{pfx}", language.getConfiguration().getString("misc.prefix", Language.getMainLanguage().getConfiguration().getString("misc.prefix"))))
+				: output.replace("{pfx}", language.getConfiguration().getString("misc.prefix", Language.getMainLanguage().getConfiguration().getString("misc.prefix")));
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public String translatePlayerPlaceholders(String input, ChatPluginServerPlayer player, Language language) {
+	public String translatePlayerPlaceholders(String input, ChatPluginServerPlayer player, Language language, boolean translateColors) {
 		if (input == null)
 			return null;
 		String output = input;
@@ -265,7 +266,7 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 					.replace("{yaw}", String.valueOf(Environment.isBukkit() ? ((org.bukkit.Location) location).getYaw() : ((Vector3d) headRotation).getX()))
 					.replace("{pitch}", String.valueOf(Environment.isBukkit() ? ((org.bukkit.Location) location).getPitch() : ((Vector3d) headRotation).getY()));
 		} if (output.contains("{rank") || output.contains("prefix}") || output.contains("suffix}") || output.contains("color}") || output.contains("{rank_description}"))
-			output = player.getRank().formatPlaceholders(output, language);
+			output = player.getRank().formatPlaceholders(player.getChatColor() == ChatColor.RESET ? output : output.replace("{chat_color}", player.getChatColor().toString()), language);
 		if (output.contains("{isp}") || output.contains("{continent}") || output.contains("{country}") || output.contains("{subdivisions}") || output.contains("{city}") || output.contains("{country_code}")
 				|| output.contains("{postal_code}") || output.contains("{latitude}") || output.contains("{longitude}") || output.contains("{accuracy_radius")) {
 			if (IPLookupManager.getInstance().isEnabled()) {
@@ -274,11 +275,11 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 				if (ipLookup != null && ipLookup.isValid())
 					output = ipLookup.formatPlaceholders(output);
 			} else output = IPLookupManager.getInstance().getDisabledFeatureConstructor().formatPlaceholders(output);
-		} return ChatColor.translate(output);
+		} return translateColors ? ChatColor.translate(output) : output;
 	}
 	
 	@Override
-	public String translateServerPlaceholders(String input, Language language) {
+	public String translateServerPlaceholders(String input, Language language, boolean translateColors) {
 		if (input == null)
 			return null;
 		String output = input;
@@ -388,11 +389,13 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 			output = output.replace("{discord_punishments_channel_id}", String.valueOf(DiscordIntegrationManager.getInstance().isEnabled() ? DiscordIntegrationManager.getInstance().getPunishmentsChannelID() : -1));
 		if (output.contains("{discord_staff_notifications_channel_id}"))
 			output = output.replace("{discord_staff_notifications_channel_id}", String.valueOf(DiscordIntegrationManager.getInstance().isEnabled() ? DiscordIntegrationManager.getInstance().getStaffNotificationsChannelID() : -1));
-		return ChatColor.translate(ProxyManager.getInstance().formatOnlineAndVanishedPlaceholders(output, true));
+		if (output.contains("{random_color}"))
+			output = output.replace("{random_color}", ChatColor.getRandomColor().toString());
+		return translateColors ? ChatColor.translate(ProxyManager.getInstance().formatOnlineAndVanishedPlaceholders(output, true)) : ProxyManager.getInstance().formatOnlineAndVanishedPlaceholders(output, true);
 	}
 	
 	@Override
-	public String translateIntegrationsPlaceholders(String input, ChatPluginServerPlayer player, Language language) {
+	public String translateIntegrationsPlaceholders(String input, ChatPluginServerPlayer player, Language language, boolean translateColors) {
 		if (input == null)
 			return null;
 		String output = input;
@@ -410,7 +413,7 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 				output = ((PlaceholderIntegration) IntegrationType.PLACEHOLDERAPI.get()).translatePlaceholders(output, player);
 			if (IntegrationType.MVDWPLACEHOLDERAPI.isEnabled())
 				output = ((PlaceholderIntegration) IntegrationType.MVDWPLACEHOLDERAPI.get()).translatePlaceholders(output, player);
-			return ChatColor.translate(output);
+			return translateColors ? ChatColor.translate(output) : output;
 		} catch (NullPointerException e) {
 			return input;
 		}

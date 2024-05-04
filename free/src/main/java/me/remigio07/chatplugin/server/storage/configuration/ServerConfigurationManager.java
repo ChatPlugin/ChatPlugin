@@ -63,6 +63,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 				
 				putConfiguration(new Configuration(ConfigurationType.MAIN_GUI));
 				putConfiguration(new Configuration(ConfigurationType.LANGUAGES_GUI));
+				putConfiguration(new Configuration(ConfigurationType.CHAT_COLOR_GUI));
 				putConfiguration(new Configuration(ConfigurationType.BANLIST_GUI));
 				putConfiguration(new Configuration(ConfigurationType.WARNLIST_GUI));
 				putConfiguration(new Configuration(ConfigurationType.MUTELIST_GUI));
@@ -114,6 +115,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			
 			addMainGUIDefaults(forceAdd);
 			addLanguagesGUIDefaults(forceAdd);
+			addChatColorGUIDefaults(forceAdd);
 			addBanlistGUIDefaults(forceAdd);
 			addWarnlistGUIDefaults(forceAdd);
 			addMutelistGUIDefaults(forceAdd);
@@ -308,12 +310,12 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("misc.invalid-ip-address", "{pfx} &f{0} &cis not a valid IP address.");
 		messages.addDefault("misc.database-error", "{pfx} &f{0} &coccurred while trying to access the database: &f{1}&c.");
 		
-		messages.addDefault("commands.help.free.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/whisper &8- &eSend a private message to another player.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.");
+		messages.addDefault("commands.help.free.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/whisper &8- &eSend a private message to another player.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.\n&f&l/chatcolor &8- &eChange your chat's default color.");
 		messages.addDefault("commands.help.free.admin", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/staffchat &8- &eVery handy cross-server Staff chat.\n&f&l/socialspy &8- &eSpy other players' private messages.\n&f&l/rangedchatspy &8- &eSpy other players' local messages.\n&f&l/iplookup &8- &ePerform a lookup of an IP address.\n&f&l/lastseen &8- &eCheck when a player was last seen.\n&f&l/clearchat &8- &eClear chat to hide last messages.\n&f&l/muteall &8- &eToggle chat for non Staff members.");
 		messages.addDefault("commands.help.free.vanish", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/vanish &8- &eBecome invisible to non Staff members.");
 		messages.addDefault("commands.help.free.misc", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/tps &8- &eDisplay the server's current ticks per second.\n&f&l/ad &8- &eSend a loaded ad to one or more online players.\n&f&l/broadcast &8- &eSend a message to every online player.\n&f&l/broadcastraw &8- &eLike /broadcast, but without the prefix.");
 		
-		messages.addDefault("commands.help.premium.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/whisper &8- &eSend a private message to another player.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.\n&f&l/bossbar &8- &eToggle the bossbar's visibility.\n&f&l/scoreboard &8- &eToggle the scoreboard's visibility.");
+		messages.addDefault("commands.help.premium.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/whisper &8- &eSend a private message to another player.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.\n&f&l/chatcolor &8- &eChange your chat's default color.\n&f&l/bossbar &8- &eToggle the bossbar's visibility.\n&f&l/scoreboard &8- &eToggle the scoreboard's visibility.");
 		messages.addDefault("commands.help.premium.admin", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/staffchat &8- &eVery handy cross-server Staff chat.\n&f&l/socialspy &8- &eSpy other players' private messages.\n&f&l/rangedchatspy &8- &eSpy other players' local messages.\n&f&l/iplookup &8- &ePerform a lookup of an IP address.\n&f&l/lastseen &8- &eCheck when a player was last seen.\n&f&l/clearchat &8- &eClear chat to hide last messages.\n&f&l/muteall &8- &eToggle chat for non Staff members.\n&f&l/chatlog &8- &eLook up messages containing certain text.\n&f&l/accountcheck &8- &eCheck a player's alt accounts.");
 		messages.addDefault("commands.help.premium.punishments", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/ban &8- &eBan a player (/tempban also available).\n&f&l/unban &8- &eUnban a previously banned player.\n&f&l/warning &8- &eWarn a player for a certain time.\n&f&l/removelastwarning &8- &eRemove a player's last warning.\n&f&l/clearwarnings &8- &eClear a player's active warnings.\n&f&l/kick &8- &eDisconnect a player from the server.\n&f&l/fakekick &8- &eKick using a random error as reason.\n&f&l/mute &8- &eMake a player unable to use the chat.\n&f&l/unmute &8- &eUnmute a previously muted player.");
 		messages.addDefault("commands.help.premium.guis", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/cp status &8- &eDisplay the server's current status\n&f&l/banlist &8- &eDisplay the active bans list.\n&f&l/warnlist &8- &eDisplay the active warnings list.\n&f&l/mutelist &8- &eDisplay the active mutes list.\n&f&l/violations &8- &eDisplay last players' violations.\n&f&l/playerinfo &8- &eShow detailed info about a player.\n&f&l/playerpunishments &8- &eShow a player's punishments list.\n&f&l/playerviolations &8- &eShow a player's last violations.");
@@ -336,6 +338,14 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.playerlist.rank.no-players-online", "{pfx} &eThere are currently no players online who belong to that rank.");
 		messages.addDefault("commands.playerlist.name-format.vanished", "&f&o");
 		messages.addDefault("commands.playerlist.name-format.not-vanished", "&f");
+		
+		messages.addDefault("commands.chatcolor.set.self", "{pfx} &aChat's default color set to &r{0}&a.");
+		messages.addDefault("commands.chatcolor.set.other", "{pfx} &f{0}&a's chat's default color set to &r{1}&a.");
+		messages.addDefault("commands.chatcolor.reset.self", "{pfx} &aChat's default color reset.");
+		messages.addDefault("commands.chatcolor.reset.other", "{pfx} &f{0}&a's chat's default color reset.");
+		messages.addDefault("commands.chatcolor.hex-usage", "{pfx} &eTo set a hexadecimal color, type &f/chatcolor #&r{0}&e. This code is just an example: you can use any color.");
+		messages.addDefault("commands.chatcolor.invalid-color", "{pfx} &r{0} &cis not a valid color.");
+		messages.addDefault("commands.chatcolor.no-permission", "{pfx} &cYou do not have the permission to use that color.");
 		
 		messages.addDefault("commands.staff-chat.enabled", "{pfx} &aStaff chat mode enabled.");
 		messages.addDefault("commands.staff-chat.disabled", "{pfx} &aStaff chat mode disabled.");
@@ -1256,6 +1266,285 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		languagesGUI.addDefault(path + "y", 2);
 		
 		languagesGUI.save();
+	}
+	
+	public void addChatColorGUIDefaults(boolean forceAdd) throws IOException {
+		Configuration chatColorGUI = configurations.get(ConfigurationType.CHAT_COLOR_GUI);
+		
+		if (!chatColorGUI.getFile().exists())
+			chatColorGUI.createFile();
+		else if (!forceAdd)
+			return;
+		
+		chatColorGUI.addDefault("settings.rows", 4);
+		chatColorGUI.addDefault("settings.titles.english", "{random_color}&lChat color");
+		chatColorGUI.addDefault("settings.titles.italian", "{random_color}&lColore chat");
+		chatColorGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &f&lChat color &aGUI.");
+		chatColorGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &f&lColore chat &ain corso.");
+		chatColorGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
+		chatColorGUI.addDefault("settings.open-actions.play-sound.volume", 1F);
+		chatColorGUI.addDefault("settings.open-actions.play-sound.pitch", 1F);
+		chatColorGUI.addDefault("settings.click-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : Environment.isBukkit() ? "CLICK" : "GUI_BUTTON");
+		chatColorGUI.addDefault("settings.click-sound.volume", 1F);
+		chatColorGUI.addDefault("settings.click-sound.pitch", 1F);
+		path = "icons.info.";
+		chatColorGUI.addDefault(path + "display-names.english", "&f&lChat color");
+		chatColorGUI.addDefault(path + "display-names.italian", "&f&lColore chat");
+		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7This GUI allows you to change", "&7your chat's default color."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Questa GUI ti consente di cambiare", "&7il colore predefinito della tua chat."));
+		chatColorGUI.addDefault(path + "material", "PAPER");
+		chatColorGUI.addDefault(path + "keep-open", true);
+		chatColorGUI.addDefault(path + "x", 5);
+		chatColorGUI.addDefault(path + "y", 1);
+		path = "icons.dark-red.";
+		chatColorGUI.addDefault(path + "display-names.english", "&4&lDark red &f(&&f4)");
+		chatColorGUI.addDefault(path + "display-names.italian", "&4&lRosso scuro &f(&&f4)");
+		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to dark red."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su rosso scuro."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			chatColorGUI.addDefault(path + "damage", 3);
+		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
+		chatColorGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/c65f3bae0d203ba16fe1dc3d1307a86a638be924471f23e82abd9d78f8a3fca");
+		chatColorGUI.addDefault(path + "commands", Arrays.asList("p: chatcolor &4"));
+		chatColorGUI.addDefault(path + "x", 1);
+		chatColorGUI.addDefault(path + "y", 2);
+		path = "icons.red.";
+		chatColorGUI.addDefault(path + "display-names.english", "&c&lRed &f(&&fc)");
+		chatColorGUI.addDefault(path + "display-names.italian", "&c&lRosso &f(&&fc)");
+		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to red."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su rosso."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			chatColorGUI.addDefault(path + "damage", 3);
+		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
+		chatColorGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/2062d8d72f5891c71fab30d52e0481795b3d2d3d2ed2f8b9b517d7d2821e35d6");
+		chatColorGUI.addDefault(path + "commands", Arrays.asList("p: chatcolor &c"));
+		chatColorGUI.addDefault(path + "x", 2);
+		chatColorGUI.addDefault(path + "y", 2);
+		path = "icons.gold.";
+		chatColorGUI.addDefault(path + "display-names.english", "&6&lGold &f(&&f6)");
+		chatColorGUI.addDefault(path + "display-names.italian", "&6&lOro &f(&&f6)");
+		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to gold."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su oro."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			chatColorGUI.addDefault(path + "damage", 3);
+		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
+		chatColorGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/5189f347f42450cd2a2e9b8a5398807d28c7f4254bd99a8a499ce5435320955");
+		chatColorGUI.addDefault(path + "commands", Arrays.asList("p: chatcolor &6"));
+		chatColorGUI.addDefault(path + "x", 3);
+		chatColorGUI.addDefault(path + "y", 2);
+		path = "icons.yellow.";
+		chatColorGUI.addDefault(path + "display-names.english", "&e&lYellow &f(&&fe)");
+		chatColorGUI.addDefault(path + "display-names.italian", "&e&lGiallo &f(&&fe)");
+		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to yellow."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su giallo."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			chatColorGUI.addDefault(path + "damage", 3);
+		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
+		chatColorGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/200bf4bf14c8699c0f9209ca79fe18253e901e9ec3876a2ba095da052f69eba7");
+		chatColorGUI.addDefault(path + "commands", Arrays.asList("p: chatcolor &e"));
+		chatColorGUI.addDefault(path + "x", 4);
+		chatColorGUI.addDefault(path + "y", 2);
+		path = "icons.dark-green.";
+		chatColorGUI.addDefault(path + "display-names.english", "&2&lDark green &f(&&f2)");
+		chatColorGUI.addDefault(path + "display-names.italian", "&2&lVerde scuro &f(&&f2)");
+		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to dark green."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su verde scuro."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			chatColorGUI.addDefault(path + "damage", 3);
+		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
+		chatColorGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/a3e9f4dbadde0f727c5803d75d8bb378fb9fcb4b60d33bec19092a3a2e7b07a9");
+		chatColorGUI.addDefault(path + "commands", Arrays.asList("p: chatcolor &2"));
+		chatColorGUI.addDefault(path + "x", 5);
+		chatColorGUI.addDefault(path + "y", 2);
+		path = "icons.green.";
+		chatColorGUI.addDefault(path + "display-names.english", "&a&lGreen &f(&&fa)");
+		chatColorGUI.addDefault(path + "display-names.italian", "&a&lVerde &f(&&fa)");
+		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to green."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su verde."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			chatColorGUI.addDefault(path + "damage", 3);
+		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
+		chatColorGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/b985a29957d40fa564d5e31cbd905e3694a616393ce13710bfc31b1b8b0a522d");
+		chatColorGUI.addDefault(path + "commands", Arrays.asList("p: chatcolor &a"));
+		chatColorGUI.addDefault(path + "x", 6);
+		chatColorGUI.addDefault(path + "y", 2);
+		path = "icons.aqua.";
+		chatColorGUI.addDefault(path + "display-names.english", "&b&lAqua &f(&&fb)");
+		chatColorGUI.addDefault(path + "display-names.italian", "&b&lAcqua &f(&&fb)");
+		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to aqua."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su acqua."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			chatColorGUI.addDefault(path + "damage", 3);
+		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
+		chatColorGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/f9e16979309b5a9b673d60d1390bbab0d0385eac7254d828ada2a36a46f73a59");
+		chatColorGUI.addDefault(path + "commands", Arrays.asList("p: chatcolor &b"));
+		chatColorGUI.addDefault(path + "x", 7);
+		chatColorGUI.addDefault(path + "y", 2);
+		path = "icons.dark-aqua.";
+		chatColorGUI.addDefault(path + "display-names.english", "&3&lDark aqua &f(&&f3)");
+		chatColorGUI.addDefault(path + "display-names.italian", "&3&lAcqua scuro &f(&&f3)");
+		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to dark aqua."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su acqua scuro."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			chatColorGUI.addDefault(path + "damage", 3);
+		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
+		chatColorGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/975b7ac9f0c712303cd3b654e646ce1c4bf243ab348a6a25370f2603e79a62a0");
+		chatColorGUI.addDefault(path + "commands", Arrays.asList("p: chatcolor &3"));
+		chatColorGUI.addDefault(path + "x", 8);
+		chatColorGUI.addDefault(path + "y", 2);
+		path = "icons.dark-blue.";
+		chatColorGUI.addDefault(path + "display-names.english", "&1&lDark blue &f(&&f1)");
+		chatColorGUI.addDefault(path + "display-names.italian", "&1&lBlu scuro &f(&&f1)");
+		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to dark blue."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su blu scuro."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			chatColorGUI.addDefault(path + "damage", 3);
+		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
+		chatColorGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/7e7ab712c87f67d48b98f70634d1dcfcd5980c3d6f0d622cdc3230912361b54e");
+		chatColorGUI.addDefault(path + "commands", Arrays.asList("p: chatcolor &1"));
+		chatColorGUI.addDefault(path + "x", 9);
+		chatColorGUI.addDefault(path + "y", 2);
+		path = "icons.blue.";
+		chatColorGUI.addDefault(path + "display-names.english", "&9&lBlue &f(&&f9)");
+		chatColorGUI.addDefault(path + "display-names.italian", "&9&lBlu &f(&&f9)");
+		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to blue."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su blu."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			chatColorGUI.addDefault(path + "damage", 3);
+		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
+		chatColorGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/3b5106b060eaf398217349f3cfb4f2c7c4fd9a0b0307a17eba6af7889be0fbe6");
+		chatColorGUI.addDefault(path + "commands", Arrays.asList("p: chatcolor &9"));
+		chatColorGUI.addDefault(path + "x", 1);
+		chatColorGUI.addDefault(path + "y", 3);
+		path = "icons.light-purple.";
+		chatColorGUI.addDefault(path + "display-names.english", "&d&lLight purple &f(&&fd)");
+		chatColorGUI.addDefault(path + "display-names.italian", "&d&lViola chiaro &f(&&fd)");
+		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to light purple."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su viola chiaro."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			chatColorGUI.addDefault(path + "damage", 3);
+		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
+		chatColorGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/7a9ea6e36f9e579f586adb1937bb14377b0d74034ffcb2556a2acb435671448f");
+		chatColorGUI.addDefault(path + "commands", Arrays.asList("p: chatcolor &d"));
+		chatColorGUI.addDefault(path + "x", 2);
+		chatColorGUI.addDefault(path + "y", 3);
+		path = "icons.dark-purple.";
+		chatColorGUI.addDefault(path + "display-names.english", "&5&lDark purple &f(&&f5)");
+		chatColorGUI.addDefault(path + "display-names.italian", "&5&lViola scuro &f(&&f5)");
+		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to dark purple."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su viola scuro."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			chatColorGUI.addDefault(path + "damage", 3);
+		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
+		chatColorGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/467f2b506370c1e84f90fbf29c80e0cb7e2ac93230301b5d8e42c68fdde89fe0");
+		chatColorGUI.addDefault(path + "commands", Arrays.asList("p: chatcolor &5"));
+		chatColorGUI.addDefault(path + "x", 3);
+		chatColorGUI.addDefault(path + "y", 3);
+		path = "icons.white.";
+		chatColorGUI.addDefault(path + "display-names.english", "&f&lWhite &f(&&ff)");
+		chatColorGUI.addDefault(path + "display-names.italian", "&f&lBianco &f(&&ff)");
+		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to white."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su bianco."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			chatColorGUI.addDefault(path + "damage", 3);
+		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
+		chatColorGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/8e0e8acabad27d4616fae9e472c0de60853d203c1c6f31367c939b619f3e3831");
+		chatColorGUI.addDefault(path + "commands", Arrays.asList("p: chatcolor &f"));
+		chatColorGUI.addDefault(path + "x", 4);
+		chatColorGUI.addDefault(path + "y", 3);
+		path = "icons.gray.";
+		chatColorGUI.addDefault(path + "display-names.english", "&7&lGray &f(&&f7)");
+		chatColorGUI.addDefault(path + "display-names.italian", "&7&lGrigio &f(&&f7)");
+		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to gray."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su grigio."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			chatColorGUI.addDefault(path + "damage", 3);
+		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
+		chatColorGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/c328dcde173beff9f3f41b923213fc1bb7678967ccb2ede7a7cf40b1836b1a73");
+		chatColorGUI.addDefault(path + "commands", Arrays.asList("p: chatcolor &7"));
+		chatColorGUI.addDefault(path + "x", 5);
+		chatColorGUI.addDefault(path + "y", 3);
+		path = "icons.dark-gray.";
+		chatColorGUI.addDefault(path + "display-names.english", "&8&lDark gray &f(&&f8)");
+		chatColorGUI.addDefault(path + "display-names.italian", "&8&lGrigio scuro &f(&&f8)");
+		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to dark gray."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su grigio scuro."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			chatColorGUI.addDefault(path + "damage", 3);
+		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
+		chatColorGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/7af6fab767ca4d7df6217b895b667bcacc524d407068619f819a070f3f629ce0");
+		chatColorGUI.addDefault(path + "commands", Arrays.asList("p: chatcolor &8"));
+		chatColorGUI.addDefault(path + "x", 6);
+		chatColorGUI.addDefault(path + "y", 3);
+		path = "icons.black.";
+		chatColorGUI.addDefault(path + "display-names.english", "&0&lBlack &f(&&f0)");
+		chatColorGUI.addDefault(path + "display-names.italian", "&0&lNero &f(&&f0)");
+		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to black."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su nero."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			chatColorGUI.addDefault(path + "damage", 3);
+		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
+		chatColorGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/974fe9cb80029d66345277aa560d41ef1030962b7f29abf23961d9eba84250a3");
+		chatColorGUI.addDefault(path + "commands", Arrays.asList("p: chatcolor &0"));
+		chatColorGUI.addDefault(path + "x", 7);
+		chatColorGUI.addDefault(path + "y", 3);
+		path = "icons.hexadecimal.";
+		chatColorGUI.addDefault(path + "display-names.english", "{random_color}&lHexadecimal &f(#xxxxxx)");
+		chatColorGUI.addDefault(path + "display-names.italian", "{random_color}&lEsadecimale &f(#xxxxxx)");
+		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your chat's", "&7color to a hexadecimal color.", "", "&7Requirement: &d&lVIP"));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il colore", "&7della tua chat su un colore esadecimale.", "", "&7Requisito: &d&lVIP"));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			chatColorGUI.addDefault(path + "damage", 3);
+		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
+		chatColorGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/529d8283fdb9456d5dccccb61ffa595450ac58e3d08237a70ca6782c0997253");
+		chatColorGUI.addDefault(path + "commands", Arrays.asList("p: chatcolor #"));
+		chatColorGUI.addDefault(path + "x", 8);
+		chatColorGUI.addDefault(path + "y", 3);
+		path = "icons.reset.";
+		chatColorGUI.addDefault(path + "display-names.english", "&c&lReset &f(&&fr)");
+		chatColorGUI.addDefault(path + "display-names.italian", "&c&lReset &f(&&fr)");
+		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to reset", "&7your chat's color."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per resettare", "&7il colore della tua chat."));
+		chatColorGUI.addDefault(path + "material", "BARRIER");
+		chatColorGUI.addDefault(path + "commands", Arrays.asList("p: chatcolor &r"));
+		chatColorGUI.addDefault(path + "x", 9);
+		chatColorGUI.addDefault(path + "y", 3);
+		
+		chatColorGUI.save();
 	}
 	
 	public void addBanlistGUIDefaults(boolean forceAdd) throws IOException {

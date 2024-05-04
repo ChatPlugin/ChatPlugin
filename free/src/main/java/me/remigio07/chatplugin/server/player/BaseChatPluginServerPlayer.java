@@ -15,10 +15,20 @@
 
 package me.remigio07.chatplugin.server.player;
 
+import java.awt.Color;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import me.remigio07.chatplugin.api.common.storage.DataContainer;
+import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
+import me.remigio07.chatplugin.api.common.storage.StorageManager;
+import me.remigio07.chatplugin.api.common.storage.database.DatabaseConnector;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
+import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
+import me.remigio07.chatplugin.api.common.util.manager.LogManager;
+import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.bossbar.PlayerBossbar;
 import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
 import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
@@ -52,6 +62,28 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 		bedrockPlayer = ServerPlayerManager.isBedrockPlayer(uuid);
 		loginTime = ServerPlayerManager.getPlayerLoginTime(uuid);
 		ignoredPlayers = PlayerIgnoreManager.getInstance().isEnabled() ? new ArrayList<>(PlayerIgnoreManager.getInstance().getIgnoredPlayers(this)) : Collections.emptyList();
+		
+		try {
+			Integer color = StorageManager.getInstance().getConnector().getPlayerData(PlayersDataType.CHAT_COLOR, this);
+			chatColor = color == null ? ChatColor.RESET : ChatColor.of(new Color(color, false));
+		} catch (SQLException e) {
+			try {
+				if (e.getMessage().contains("Column \"CHAT_COLOR\" not found") || e.getMessage().contains("(no such column: chat_color)"))
+					DatabaseConnector.getInstance().executeUpdate("ALTER TABLE " + DataContainer.PLAYERS.getDatabaseTableID() + " ADD `chat_color` INTEGER");
+				else LogManager.log("Unable to get chat color from database for player {0}: {1}", 2, name, e.getMessage());
+			} catch (SQLException e2) {
+				LogManager.log("Unable to alter database table {0} after version update: {1}", 2, DataContainer.PLAYERS.getDatabaseTableID(), e2.getMessage());
+			} chatColor = ChatColor.RESET;
+		}
+	}
+	
+	@Override
+	public void setChatColor(@NotNull ChatColor chatColor) {
+		try {
+			StorageManager.getInstance().getConnector().setPlayerData(PlayersDataType.CHAT_COLOR, this, (this.chatColor = chatColor) == ChatColor.RESET ? null : chatColor.getColor().getRGB());
+		} catch (SQLException | IOException e) {
+			LogManager.log("Unable to set chat color to storage for player {0}: {1}", 2, name, e.getMessage());
+		}
 	}
 	
 	public void setScoreboard(Scoreboard scoreboard) {

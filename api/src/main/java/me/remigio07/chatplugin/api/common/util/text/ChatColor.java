@@ -19,12 +19,16 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.spongepowered.api.text.TextElement;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyle;
+import org.spongepowered.api.text.format.TextStyles;
 
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
@@ -361,15 +365,10 @@ public class ChatColor {
 	 * @return Sponge-adapted chat color
 	 * @throws UnsupportedOperationException If !{@link Environment#isSponge()}
 	 */
-	public org.spongepowered.api.text.format.TextColor spongeValue() {
+	public org.spongepowered.api.text.TextElement spongeValue() {
 		if (Environment.isSponge())
-			try {
-				return (TextColor) TextColors.class.getField(isDefaultColor() ? name : RESET.name).get(null);
-			} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException e) {
-				e.printStackTrace();
-				return TextColors.RESET;
-			}
-		else throw new UnsupportedOperationException("Unable to adapt chat color to a Sponge's TextColor on a " + Environment.getCurrent().getName() + " environment");
+			return SpongeChatColor.adapt(this);
+		else throw new UnsupportedOperationException("Unable to adapt chat color to a Sponge's TextElement on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -395,10 +394,10 @@ public class ChatColor {
 	 * @return Velocity-adapted chat color
 	 * @throws UnsupportedOperationException If !{@link Environment#isVelocity()}
 	 */
-	public net.kyori.adventure.text.format.TextColor velocityValue() {
+	public net.kyori.adventure.text.format.TextFormat velocityValue() {
 		if (Environment.isVelocity())
-			return net.kyori.adventure.text.format.TextColor.color(color.getRed(), color.getGreen(), color.getBlue());
-		else throw new UnsupportedOperationException("Unable to adapt chat color to a Velocity's TextColor on a " + Environment.getCurrent().getName() + " environment");
+			return AdventureChatColor.adapt(this);
+		else throw new UnsupportedOperationException("Unable to adapt chat color to a Velocity's TextFormat on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -441,8 +440,11 @@ public class ChatColor {
 	/**
 	 * Gets this color's {@link Color} value.
 	 * 
+	 * <p>Will return <code>null</code> if {@link #isFormatCode()}.</p>
+	 * 
 	 * @return Color's value
 	 */
+	@Nullable(why = "Color may be a format code")
 	public Color getColor() {
 		return color;
 	}
@@ -453,7 +455,7 @@ public class ChatColor {
 	 * @return Whether this is a default color
 	 */
 	public boolean isDefaultColor() {
-		return ordinal() != -1; // lol, check ordinal()'s jd
+		return ordinal() != -1;
 	}
 	
 	/**
@@ -468,6 +470,8 @@ public class ChatColor {
 	/**
 	 * Gets a chat color from given Java color.
 	 * 
+	 * <p>May return one of the 16 default colors.</p>
+	 * 
 	 * @param color Color to transform
 	 * @return Chat color equivalent
 	 */
@@ -477,6 +481,8 @@ public class ChatColor {
 	
 	/**
 	 * Gets a chat color from given hex color code.
+	 * 
+	 * <p>May return one of the 16 default colors.</p>
 	 * 
 	 * @param hex Color's hex representation, with or without '#'
 	 * @return Chat color equivalent
@@ -488,11 +494,15 @@ public class ChatColor {
 		Color.decode(color = hex.startsWith("#") ? hex : ("#" + hex)); // check format is valid
 		
 		int rgb = Integer.parseInt(color.substring(1), 16);
+		
+		for (ChatColor defaultColor : VALUES)
+			if (defaultColor.getColor() != null && defaultColor.getColor().getRGB() == rgb)
+				return defaultColor;
 		StringBuilder sb = new StringBuilder(SECTION_SIGN + "x");
 		
 		for (char x : color.substring(1).toCharArray())
 			sb.append(SECTION_SIGN).append(x);
-		return new ChatColor(color, sb.toString(), rgb);
+		return new ChatColor(color.toUpperCase(), sb.toString().toLowerCase(), rgb);
 	}
 	
 	/**
@@ -645,6 +655,17 @@ public class ChatColor {
 	}
 	
 	/**
+	 * Gets a random color, format codes not included.
+	 * 
+	 * <p>Hex colors will be returned on 1.16+ environments.</p>
+	 * 
+	 * @return Random color
+	 */
+	public static ChatColor getRandomColor() {
+		return VersionUtils.getVersion().isAtLeast(Version.V1_16) ? of(String.format("%06x", ThreadLocalRandom.current().nextInt(16777216))) : VALUES[ThreadLocalRandom.current().nextInt(16)];
+	}
+	
+	/**
 	 * Gets a default chat color by its code.
 	 * 
 	 * <p>Will return <code>null</code> if the code is invalid.</p>
@@ -680,6 +701,31 @@ public class ChatColor {
 	 */
 	public static ChatColor[] values() {
 		return VALUES;
+	}
+	
+	private static class SpongeChatColor {
+		
+		public static TextElement adapt(ChatColor chatColor) {
+			try {
+				return (TextColor) TextColors.class.getField(chatColor.isDefaultColor() ? chatColor.name : RESET.name).get(null);
+			} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException e) {
+				try {
+					return (TextStyle) TextStyles.class.getField(chatColor.name).get(null);
+				} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException e2) {
+					e.printStackTrace();
+					return TextColors.RESET;
+				}
+			}
+		}
+		
+	}
+	
+	private static class AdventureChatColor {
+		
+		public static net.kyori.adventure.text.format.TextFormat adapt(ChatColor chatColor) {
+			return chatColor.isFormatCode() ? net.kyori.adventure.text.format.TextDecoration.NAMES.value(chatColor == UNDERLINE ? "UNDERLINED" : chatColor.name) : net.kyori.adventure.text.format.TextColor.color(chatColor.color.getRed(), chatColor.color.getGreen(), chatColor.color.getBlue());
+		}
+		
 	}
 	
 }

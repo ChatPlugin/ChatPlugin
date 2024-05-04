@@ -50,6 +50,7 @@ commands:
         &f&l/ping &8- &eMostra la latenza tua o di un altro giocatore in ms.
         &f&l/rankinfo &8- &eVisualizza informazioni sul rango di un giocatore.
         &f&l/playerlist &8- &eVisualizza la lista dei giocatori online.
+        &f&l/chatcolor &8- &eCambia il colore predefinito della tua chat.
       admin: |-
         {pfx} &aAiuto per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/staffchat &8- &eStaff chat cross-server molto utile.
@@ -76,6 +77,7 @@ commands:
         &f&l/ping &8- &eMostra la latenza tua o di un altro giocatore in ms.
         &f&l/rankinfo &8- &eVisualizza informazioni sul rango di un giocatore.
         &f&l/playerlist &8- &eVisualizza la lista dei giocatori online.
+        &f&l/chatcolor &8- &eCambia il colore predefinito della tua chat.
         &f&l/bossbar &8- &eAttiva/disattiva la visibilità della bossbar.
         &f&l/scoreboard &8- &eAttiva/disattiva la visibilità della scoreboard.
       admin: |-
@@ -172,6 +174,16 @@ commands:
     name-format:
       vanished: '&o'
       not-vanished: '&f'
+  chatcolor:
+    set:
+      self: '{pfx} &aColore predefinito della chat impostato su &r{0}&a.'
+      other: '{pfx} &aColore predefinito della chat di &f{0} &aimpostato su &r{1}&a.'
+    reset:
+      self: '{pfx} &aColore predefinito della chat resettato.'
+      other: '{pfx} &aColore predefinito della chat di &f{0} &aresettato.'
+    hex-usage: '{pfx} &ePer impostare un colore esadecimale, digita &f/chatcolor #&r{0}&e. Questo codice è solo un esempio: puoi usare qualsiasi colore.'
+    invalid-color: '{pfx} &r{0} &cnon è un colore valido.'
+    no-permission: '{pfx} &cNon hai il permesso per utilizzare quel colore.'
   staff-chat:
     enabled: '{pfx} &aModalità chat Staff abilitata.'
     disabled: '{pfx} &aModalità chat Staff disabilitata.'
@@ -453,13 +465,13 @@ ban:
   banned-ip:
     other: '{pfx} &f{ip_address} &cè stato bannato (ID: &f#{id}&c, tipo: &f{type}&c) per &f{duration} &cda &f{staff_member}&c: &f{reason}&c.'
   updated:
-    other: '{pfx} Il ban attivo di &f{player}&c (ID: &f#{id}&c, tipo: &f{type}&c) è stato aggiornato da &f{staff_member}&c. Durata: &f{duration}&c, motivo: &f{reason}&c.'
+    other: '{pfx} &cIl ban attivo di &f{player}&c (ID: &f#{id}&c, tipo: &f{type}&c) è stato aggiornato da &f{staff_member}&c. Durata: &f{duration}&c, motivo: &f{reason}&c.'
   updated-ip:
-    other: '{pfx} Il ban attivo dell''IP &f{ip_address}&c (ID: &f#{id}&c, tipo: &f{type}&c) è stato aggiornato da &f{staff_member}&c. Durata: &f{duration}&c, motivo: &f{reason}&c.'
+    other: '{pfx} &cIl ban attivo dell''IP &f{ip_address}&c (ID: &f#{id}&c, tipo: &f{type}&c) è stato aggiornato da &f{staff_member}&c. Durata: &f{duration}&c, motivo: &f{reason}&c.'
   expired:
-    other: '{pfx} Il ban di &f{player}&e (ID: &f#{id}&e) è appena scaduto.'
+    other: '{pfx} &cIl ban di &f{player}&e (ID: &f#{id}&e) è appena scaduto.'
   expired-ip:
-    other: '{pfx} Il ban dell''IP &f{ip_address}&e (ID: &f#{id}&e) è appena scaduto.'
+    other: '{pfx} &cIl ban dell''IP &f{ip_address}&e (ID: &f#{id}&e) è appena scaduto.'
   unbanned:
     other: '{pfx} &f{player} &esono stati sbannati (ID: &f#{id}&e) da &f{who_unbanned}&e.'
   unbanned-ip:

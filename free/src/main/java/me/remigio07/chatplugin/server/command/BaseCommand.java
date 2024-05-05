@@ -126,9 +126,9 @@ public abstract class BaseCommand {
 		sender.sendMessage(language.getMessage("misc.wrong-syntax", usage));
 	}
 	
-	protected static boolean reportOnlyPlayers(CommandSenderAdapter sender, Language language) {
+	protected static boolean reportOnlyPlayers(CommandSenderAdapter sender) {
 		if (!sender.isPlayer()) {
-			sender.sendMessage(language.getMessage("misc.only-players"));
+			sender.sendMessage(Language.getMainLanguage().getMessage("misc.only-players"));
 			return false;
 		} return true;
 	}

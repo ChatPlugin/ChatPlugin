@@ -40,7 +40,7 @@ public class StaffChatCommand extends BaseCommand {
 			sender.sendMessage(language.getMessage("misc.disabled-feature"));
 			return;
 		} if (args.length == 0) {
-			if (reportOnlyPlayers(sender, language)) {
+			if (reportOnlyPlayers(sender)) {
 				if (StaffChatManager.getInstance().isUsingStaffChat(sender.getUUID())) {
 					sender.sendMessage(language.getMessage("commands.staff-chat.disabled"));
 					StaffChatManager.getInstance().removePlayer(sender.getUUID());

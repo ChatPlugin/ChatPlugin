@@ -49,7 +49,7 @@ public class VanishCommand extends BaseCommand {
 		} Map<String, List<ChatPluginServerPlayer>> vanished = VanishManager.getInstance().getVanishedMap();
 		
 		if (args.length == 0) {
-			if (reportOnlyPlayers(sender, language)) {
+			if (reportOnlyPlayers(sender)) {
 				ChatPluginServerPlayer player = sender.toServerPlayer();
 				String str, world = player.getWorld();
 				

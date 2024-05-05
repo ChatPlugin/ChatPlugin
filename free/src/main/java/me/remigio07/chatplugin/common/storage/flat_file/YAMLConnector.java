@@ -243,8 +243,8 @@ public class YAMLConnector extends FlatFileConnector {
 		
 		for (String id : players.getKeys()) {
 			if (Utils.isPositiveInteger(id) && uuid.equals(players.getString(id + ".player-uuid"))) {
-				Object data = type == PlayersDataType.ID ? Integer.valueOf(id) : players.getMappings().get(id + "." + type.getName(), type.getType() == String.class ? null : 0);
-				return (T) (type.getType() == long.class && data instanceof Integer ? Long.valueOf((int) data) : data);
+				Object data = type == PlayersDataType.ID ? Integer.valueOf(id) : players.getMappings().get(id + "." + type.getName(), null);
+				return data == null ? null : (T) (type.getType() == long.class && data instanceof Integer ? Long.valueOf((int) data) : data);
 			}
 		} return null;
 	}
@@ -256,8 +256,8 @@ public class YAMLConnector extends FlatFileConnector {
 		
 		for (int id : players.getKeys().stream().filter(Utils::isPositiveInteger).map(Integer::valueOf).collect(Collectors.toList())) {
 			if (id == playerID) {
-				Object data = type == PlayersDataType.ID ? Integer.valueOf(id) : players.getMappings().get(id + "." + type.getName(), type.getType() == String.class ? null : 0);
-				return (T) (type.getType() == long.class && data instanceof Integer ? Long.valueOf((int) data) : data);
+				Object data = type == PlayersDataType.ID ? Integer.valueOf(id) : players.getMappings().get(id + "." + type.getName(), null);
+				return data == null ? null : (T) (type.getType() == long.class && data instanceof Integer ? Long.valueOf((int) data) : data);
 			}
 		} return null;
 	}
@@ -344,7 +344,14 @@ public class YAMLConnector extends FlatFileConnector {
 				players.set(id + ".time-played", player.toAdapter().bukkitValue().getStatistic(Statistic.valueOf(VersionUtils.getVersion().getProtocol() < 341 ? "PLAY_ONE_TICK" : "PLAY_ONE_MINUTE")) * 50);
 			else if (Environment.isSponge())
 				players.set(id + ".time-played", player.toAdapter().spongeValue().getStatisticData().get(Keys.STATISTICS).get().get(Statistics.TIME_PLAYED) * 50);
-		} players.set("current-id", id);
+		} else players.set(id + ".time-played", 0L);
+		
+		players.set(id + ".messages-sent", 0);
+		players.set(id + ".bans", (short) 0);
+		players.set(id + ".warnings", (short) 0);
+		players.set(id + ".kicks", (short) 0);
+		players.set(id + ".mutes", (short) 0);
+		players.set("current-id", id);
 		players.save();
 	}
 	
@@ -358,7 +365,7 @@ public class YAMLConnector extends FlatFileConnector {
 				int old = 0;
 				
 				for (String id : new ArrayList<>(players.getKeys())) {
-					if (Utils.isPositiveInteger(id) && players.getLong(id + ".last-logout") < System.currentTimeMillis() - StorageManager.getInstance().getPlayersAutoCleanerPeriod()) {
+					if (Utils.isPositiveInteger(id) && players.contains(id + ".last-logout") && players.getLong(id + ".last-logout") < System.currentTimeMillis() - StorageManager.getInstance().getPlayersAutoCleanerPeriod()) {
 						playersMappings.remove(id);
 						ipAddressesMappings.remove(id);
 						old++;

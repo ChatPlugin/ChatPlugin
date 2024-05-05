@@ -247,8 +247,8 @@ public class JSONConnector extends FlatFileConnector {
 		
 		for (String id : players.keySet()) {
 			if (Utils.isPositiveInteger(id) && uuid.equals(((JsonObject) players.get(id)).get("playerUUID"))) {
-				Object data = type == PlayersDataType.ID ? Integer.valueOf(id) : ((JsonObject) players.get(id)).getOrDefault(adaptPosition(type.getName()), type.getType() == String.class ? null : BigDecimal.ZERO);
-				return (T) (data instanceof BigDecimal ? adaptNumber(type, (BigDecimal) data) : data);
+				Object data = type == PlayersDataType.ID ? Integer.valueOf(id) : ((JsonObject) players.get(id)).getOrDefault(adaptPosition(type.getName()), null);
+				return data == null ? null : (T) (data instanceof BigDecimal ? adaptNumber(type, (BigDecimal) data) : data);
 			}
 		} return null;
 	}
@@ -260,8 +260,8 @@ public class JSONConnector extends FlatFileConnector {
 		
 		for (int id : players.keySet().stream().filter(Utils::isPositiveInteger).map(Integer::valueOf).collect(Collectors.toList())) {
 			if (id == playerID) {
-				Object data = type == PlayersDataType.ID ? Integer.valueOf(id) : ((JsonObject) players.get(String.valueOf(id))).getOrDefault(adaptPosition(type.getName()), type.getType() == String.class ? null : BigDecimal.ZERO);
-				return (T) (data instanceof BigDecimal ? adaptNumber(type, (BigDecimal) data) : data);
+				Object data = type == PlayersDataType.ID ? Integer.valueOf(id) : ((JsonObject) players.get(String.valueOf(id))).getOrDefault(adaptPosition(type.getName()), null);
+				return data == null ? null : (T) (data instanceof BigDecimal ? adaptNumber(type, (BigDecimal) data) : data);
 			}
 		} return null;
 	}
@@ -407,7 +407,14 @@ public class JSONConnector extends FlatFileConnector {
 				map.put("timePlayed", new BigDecimal(player.toAdapter().bukkitValue().getStatistic(Statistic.valueOf(VersionUtils.getVersion().getProtocol() < 341 ? "PLAY_ONE_TICK" : "PLAY_ONE_MINUTE")) * 50));
 			else if (Environment.isSponge())
 				map.put("timePlayed", new BigDecimal(player.toAdapter().spongeValue().getStatisticData().get(Keys.STATISTICS).get().get(Statistics.TIME_PLAYED) * 50));
-		} players.put(String.valueOf(id), map);
+		} else map.put("timePlayed", 0L);
+		
+		map.put("messagesSent", 0);
+		map.put("bans", (short) 0);
+		map.put("warnings", (short) 0);
+		map.put("kicks", (short) 0);
+		map.put("mutes", (short) 0);
+		players.put(String.valueOf(id), map);
 		players.put("currentID", new BigDecimal(id));
 		save(DataContainer.PLAYERS);
 	}
@@ -421,7 +428,7 @@ public class JSONConnector extends FlatFileConnector {
 				int old = 0;
 				
 				for (String id : new ArrayList<>(players.keySet())) {
-					if (Utils.isPositiveInteger(id) && ((BigDecimal) ((JsonObject) players.get(id)).getOrDefault("lastLogout", 0L)).longValue() < System.currentTimeMillis() - StorageManager.getInstance().getPlayersAutoCleanerPeriod()) {
+					if (Utils.isPositiveInteger(id) && ((JsonObject) players.get(id)).containsKey("lastLogout") && ((BigDecimal) ((JsonObject) players.get(id)).get("lastLogout")).longValue() < System.currentTimeMillis() - StorageManager.getInstance().getPlayersAutoCleanerPeriod()) {
 						players.remove(id);
 						ipAddresses.remove(id);
 						old++;
@@ -444,7 +451,7 @@ public class JSONConnector extends FlatFileConnector {
 	@Override
 	public String getEngineVersion() {
 		String url = Library.JSON_SIMPLE.getURL().toString();
-		return url.substring(url.indexOf("simple-") + 8, url.indexOf(".jar"));
+		return url.substring(url.indexOf("simple-") + 7, url.indexOf(".jar"));
 	}
 	
 }

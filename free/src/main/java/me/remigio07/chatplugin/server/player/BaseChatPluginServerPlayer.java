@@ -65,7 +65,7 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 		
 		try {
 			Integer color = StorageManager.getInstance().getConnector().getPlayerData(PlayersDataType.CHAT_COLOR, this);
-			chatColor = color == null ? ChatColor.RESET : ChatColor.of(new Color(color, false));
+			chatColor = color == null ? ChatColor.RESET : ChatColor.of(new Color(color, true));
 		} catch (SQLException e) {
 			try {
 				if (e.getMessage().contains("Column \"CHAT_COLOR\" not found") || e.getMessage().contains("(no such column: chat_color)"))
@@ -80,7 +80,7 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 	@Override
 	public void setChatColor(@NotNull ChatColor chatColor) {
 		try {
-			StorageManager.getInstance().getConnector().setPlayerData(PlayersDataType.CHAT_COLOR, this, (this.chatColor = chatColor) == ChatColor.RESET ? null : chatColor.getColor().getRGB());
+			StorageManager.getInstance().getConnector().setPlayerData(PlayersDataType.CHAT_COLOR, this, (this.chatColor = chatColor) == ChatColor.RESET ? null : chatColor.getColor().getRGB() & 0xFFFFFF);
 		} catch (SQLException | IOException e) {
 			LogManager.log("Unable to set chat color to storage for player {0}: {1}", 2, name, e.getMessage());
 		}

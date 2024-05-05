@@ -442,6 +442,8 @@ public class ChatColor {
 	 * 
 	 * <p>Will return <code>null</code> if {@link #isFormatCode()}.</p>
 	 * 
+	 * <p><strong>Note:</strong> returned color has an alpha value of 255.</p>
+	 * 
 	 * @return Color's value
 	 */
 	@Nullable(why = "Color may be a format code")
@@ -491,9 +493,9 @@ public class ChatColor {
 	public static ChatColor of(@NotNull String hex) {
 		String color;
 		
-		Color.decode(color = hex.startsWith("#") ? hex : ("#" + hex)); // check format is valid
+		Color.decode(color = hex.startsWith("#") ? hex : ("#" + hex));
 		
-		int rgb = Integer.parseInt(color.substring(1), 16);
+		int rgb = Integer.parseInt(color.substring(1), 16) | 0xFF000000;
 		
 		for (ChatColor defaultColor : VALUES)
 			if (defaultColor.getColor() != null && defaultColor.getColor().getRGB() == rgb)

@@ -169,7 +169,7 @@ public class SQLiteConnector extends DatabaseConnector {
 					+ "`language` TEXT, "
 					+ "`ignored_players` TEXT, "
 					+ "`chat_color` INTEGER, "
-					+ "`last_logout` INTEGER DEFAULT 0, "
+					+ "`last_logout` INTEGER, "
 					+ "`time_played` INTEGER DEFAULT 0, "
 					+ "`messages_sent` INTEGER DEFAULT 0, "
 					+ "`bans` INTEGER DEFAULT 0, "

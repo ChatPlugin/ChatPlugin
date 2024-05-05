@@ -198,6 +198,7 @@ commands:
   lastseen:
     online: '{pfx} &f{0} &esono stati online per &f{1}&e.'
     offline: '{pfx} &f{0} &esono stati visti l''ultima volta &f{1} &efa; indirizzo IP: &f{2}&e.'
+    never-joined: '{pfx} &f{0} &enon sono mai entrati nel server.'
   clearchat: '{pfx} &aLa chat è stata ripulita.'
   muteall:
     muted: '{pfx} &eLa chat è stata mutata globalmente da un membro dello Staff.'

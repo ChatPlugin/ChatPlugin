@@ -56,9 +56,13 @@ public class LastSeenCommand extends BaseCommand {
 						if (offlinePlayer.getUUID().equals(Utils.NIL_UUID)) {
 							sender.sendMessage(language.getMessage("misc.inexistent-player", args[0]));
 							return;
-						} if (StorageConnector.getInstance().isPlayerStored(offlinePlayer))
-							sender.sendMessage(language.getMessage("commands.lastseen.offline", offlinePlayer.getName(), Utils.formatTime(System.currentTimeMillis() - StorageConnector.getInstance().getPlayerData(PlayersDataType.LAST_LOGOUT, offlinePlayer).longValue(), language, false, false), StorageConnector.getInstance().getPlayerData(PlayersDataType.PLAYER_IP, offlinePlayer)));
-						else sender.sendMessage(language.getMessage("misc.player-not-stored", args[0]));
+						} if (StorageConnector.getInstance().isPlayerStored(offlinePlayer)) {
+							Long lastLogout = StorageConnector.getInstance().getPlayerData(PlayersDataType.LAST_LOGOUT, offlinePlayer);
+							
+							if (lastLogout == null)
+								sender.sendMessage(language.getMessage("commands.lastseen.never-joined", offlinePlayer.getName()));
+							else sender.sendMessage(language.getMessage("commands.lastseen.offline", offlinePlayer.getName(), Utils.formatTime(System.currentTimeMillis() - lastLogout, language, false, false), StorageConnector.getInstance().getPlayerData(PlayersDataType.PLAYER_IP, offlinePlayer)));
+						} else sender.sendMessage(language.getMessage("misc.player-not-stored", args[0]));
 					} catch (IllegalArgumentException e) {
 						sender.sendMessage(language.getMessage("misc.invalid-player-name"));
 					} catch (IOException e) {

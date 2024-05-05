@@ -170,7 +170,7 @@ public class H2Connector extends DatabaseConnector {
 					+ "`language` VARCHAR(32), "
 					+ "`ignored_players` VARCHAR(255), "
 					+ "`chat_color` INTEGER, "
-					+ "`last_logout` BIGINT DEFAULT 0, "
+					+ "`last_logout` BIGINT, "
 					+ "`time_played` BIGINT DEFAULT 0, "
 					+ "`messages_sent` MEDIUMINT DEFAULT 0, "
 					+ "`bans` SMALLINT DEFAULT 0, "

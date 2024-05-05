@@ -352,6 +352,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.iplookup", "{pfx} &f{ip_address}&a's lookup:\n&eISP: &f{isp}\n&eCountry: &f{country}, {continent}\n&eSubdivision(s): &f{subdivisions}\n&eCity: &f{city} (postal code: {postal_code})\n&eCoords: &f{latitude}° {longitude}°\n&eAccuracy radius: &f~{accuracy_radius_km} km");
 		messages.addDefault("commands.lastseen.online", "{pfx} &f{0} &ehas been online for &f{1}&e.");
 		messages.addDefault("commands.lastseen.offline", "{pfx} &f{0} &ewas last seen &f{1} &eago; IP address: &f{2}&e.");
+		messages.addDefault("commands.lastseen.never-joined", "{pfx} &f{0} &ehas never joined the server.");
 		messages.addDefault("commands.clearchat", "{pfx} &aChat has been cleared.");
 		messages.addDefault("commands.muteall.muted", "{pfx} &eThe chat has been globally muted by a Staff member.");
 		messages.addDefault("commands.muteall.unmuted", "{pfx} &aThe chat has been globally unmuted.");

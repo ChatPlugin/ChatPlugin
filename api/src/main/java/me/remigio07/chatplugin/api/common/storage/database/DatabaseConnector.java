@@ -220,7 +220,7 @@ public abstract class DatabaseConnector extends StorageConnector {
 				int old = 0;
 				
 				try {
-					for (Number id : getColumnValues("SELECT id FROM " + DataContainer.PLAYERS.getDatabaseTableID() + " WHERE last_logout < ?", "id", Number.class, System.currentTimeMillis() - StorageManager.getInstance().getPlayersAutoCleanerPeriod())) {
+					for (Number id : getColumnValues("SELECT id FROM " + DataContainer.PLAYERS.getDatabaseTableID() + " WHERE last_logout IS NOT NULL AND last_logout < ?", "id", Number.class, System.currentTimeMillis() - StorageManager.getInstance().getPlayersAutoCleanerPeriod())) {
 						executeUpdate("DELETE FROM " + DataContainer.PLAYERS.getDatabaseTableID() + " WHERE id = ?", id.intValue());
 						executeUpdate("DELETE FROM " + DataContainer.IP_ADDRESSES.getDatabaseTableID() + " WHERE id = ?", id.intValue());
 						old++;

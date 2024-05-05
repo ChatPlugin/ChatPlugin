@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandException;
-import org.spongepowered.api.command.CommandManager;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Text;
@@ -113,6 +112,8 @@ public class ChatPluginSponge extends ChatPlugin {
 		try {
 			LogManager.log("Reloading ChatPlugin...", 0);
 			managers.reloadManagers();
+			SpongeCommandsHandler.unregisterCommands();
+			SpongeCommandsHandler.registerCommands();
 			LogManager.log("Plugin reloaded successfully in {0} ms.", 0, lastReloadTime = (int) (System.currentTimeMillis() - ms));
 			new ChatPluginReloadEvent(lastReloadTime).call();
 			return lastReloadTime;
@@ -135,13 +136,12 @@ public class ChatPluginSponge extends ChatPlugin {
 			return 0;
 		try {
 			long ms = System.currentTimeMillis();
-			CommandManager manager = Sponge.getCommandManager();
 			loaded = false;
 			
 			LogManager.log("Unloading ChatPlugin...", 0);
 			new ChatPluginUnloadEvent().call();
 			// Sponge's crash-proof stuff
-			manager.getOwnedBy(SpongeBootstrapper.getInstance()).forEach(mapping -> manager.removeMapping(mapping));
+			SpongeCommandsHandler.unregisterCommands();
 			Sponge.getEventManager().unregisterPluginListeners(SpongeBootstrapper.getInstance());
 			// ChatPlugin's stuff which might crash
 			ChatPluginSpongePlayer.closeAudiences();

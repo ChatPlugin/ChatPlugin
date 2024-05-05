@@ -28,14 +28,22 @@ public class SpongeCommandsHandler extends CommandsHandler {
 		long ms = System.currentTimeMillis();
 		CommandManager manager = Sponge.getCommandManager();
 		
-		init();
+		registerCommands0();
 		
 		for (String command : commands.keySet()) {
 			BaseCommand[] subcommands = commands.get(command);
 			BaseCommand mainCommand = subcommands[subcommands.length - 1];
 			
+			manager.getAll(command).forEach(Sponge.getCommandManager()::removeMapping);
 			manager.register(SpongeBootstrapper.getInstance(), new SpongeCommandAdapter(mainCommand), mainCommand.getMainArgs());
 		} printTotalLoaded(ms);
+	}
+	
+	public static void unregisterCommands() {
+		Sponge.getCommandManager().getOwnedBy(SpongeBootstrapper.getInstance()).forEach(Sponge.getCommandManager()::removeMapping);
+		commands.clear();
+		
+		total = 0;
 	}
 	
 }

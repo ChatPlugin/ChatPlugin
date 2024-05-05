@@ -20,7 +20,13 @@ import java.util.List;
 import java.util.Map;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
+import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
+import me.remigio07.chatplugin.api.server.ad.AdManager;
+import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
+import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
+import me.remigio07.chatplugin.api.server.chat.RangedChatManager;
+import me.remigio07.chatplugin.api.server.chat.StaffChatManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.command.admin.ClearChatCommand;
@@ -34,6 +40,7 @@ import me.remigio07.chatplugin.server.command.misc.AdCommand;
 import me.remigio07.chatplugin.server.command.misc.BroadcastCommand;
 import me.remigio07.chatplugin.server.command.misc.BroadcastRawCommand;
 import me.remigio07.chatplugin.server.command.misc.TPSCommand;
+import me.remigio07.chatplugin.server.command.user.ChatColorCommand;
 import me.remigio07.chatplugin.server.command.user.IgnoreCommand;
 import me.remigio07.chatplugin.server.command.user.LanguageCommand;
 import me.remigio07.chatplugin.server.command.user.PingCommand;
@@ -48,9 +55,9 @@ public abstract class CommandsHandler {
 	protected static Map<String, BaseCommand[]> commands = new HashMap<String, BaseCommand[]>();
 	protected static int total;
 	
-	protected static void init() {
+	protected static void registerCommands0() {
 		// main
-		put("chatplugin",
+		put(
 				new ChatPluginCommand.Debug(),
 				new ChatPluginCommand.Help(),
 				new ChatPluginCommand.Info(),
@@ -60,44 +67,59 @@ public abstract class CommandsHandler {
 				new ChatPluginCommand.Version(),
 				new ChatPluginCommand()
 				);
+		
 		// user
 		if (!ChatPlugin.getInstance().isPremium())
-			put("language", new LanguageCommand());
-		put("whisper", new WhisperCommand());
-		put("reply", new ReplyCommand());
-		put("ignore",
-				new IgnoreCommand.Add(),
-				new IgnoreCommand.Clear(),
-				new IgnoreCommand.List(),
-				new IgnoreCommand.Remove(),
-				new IgnoreCommand()
-				);
-		put("ping", new PingCommand());
-		put("rankinfo", new RankInfoCommand());
-		put("playerlist", new PlayerListCommand());
+			put(new LanguageCommand());
+		if (PrivateMessagesManager.getInstance().isEnabled()) {
+			put(new WhisperCommand());
+			put(new ReplyCommand());
+		} if (PlayerIgnoreManager.getInstance().isEnabled())
+			put(
+					new IgnoreCommand.Add(),
+					new IgnoreCommand.Clear(),
+					new IgnoreCommand.List(),
+					new IgnoreCommand.Remove(),
+					new IgnoreCommand()
+					);
+		put(new PingCommand());
+		put(new RankInfoCommand());
+		put(new PlayerListCommand());
+		
+		if (!ChatPlugin.getInstance().isPremium())
+			put(new ChatColorCommand());
+		
 		// admin
-		put("staffchat", new StaffChatCommand());
-		put("socialspy", new SocialspyCommand());
-		put("rangedchatspy", new RangedChatSpyCommand());
-		put("iplookup", new IPLookupCommand());
-		put("lastseen", new LastSeenCommand());
-		put("clearchat", new ClearChatCommand());
-		put("muteall", new MuteAllCommand());
+		if (StaffChatManager.getInstance().isEnabled())
+			put(new StaffChatCommand());
+		if (PrivateMessagesManager.getInstance().isEnabled())
+			put(new SocialspyCommand());
+		if (RangedChatManager.getInstance().isEnabled())
+			put(new RangedChatSpyCommand());
+		if (IPLookupManager.getInstance().isEnabled())
+			put(new IPLookupCommand());
+		put(new LastSeenCommand());
+		put(new ClearChatCommand());
+		put(new MuteAllCommand());
+		
 		// vanish
-		put("vanish", new VanishCommand());
+		put(new VanishCommand());
+		
 		// misc
-		put("tps", new TPSCommand());
-		put("ad",
-				new AdCommand.List(),
-				new AdCommand.Send(),
-				new AdCommand()
-				);
-		put("broadcast", new BroadcastCommand());
-		put("broadcastraw", new BroadcastRawCommand());
+		put(new TPSCommand());
+		
+		if (AdManager.getInstance().isEnabled())
+			put(
+					new AdCommand.List(),
+					new AdCommand.Send(),
+					new AdCommand()
+					);
+		put(new BroadcastCommand());
+		put(new BroadcastRawCommand());
 	}
 	
-	private static void put(String name, BaseCommand... commands) {
-		CommandsHandler.commands.put(name, commands);
+	private static void put(BaseCommand... commands) {
+		CommandsHandler.commands.put(commands[0].name, commands);
 		
 		total += commands.length;
 	}

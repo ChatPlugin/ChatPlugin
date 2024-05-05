@@ -78,7 +78,7 @@ public class ChatPluginBukkit extends ChatPlugin {
 			Utils.initUtils();
 			
 			if (VersionUtils.getVersion().isPreNettyRewrite())
-				LogManager.log("This server is running a pre Netty rewrite Minecraft version. Note that this software is {0} old. Even though it is still supported, fixing any bugs is not a priority and a lot of features are not available.", 1, Utils.formatTime(System.currentTimeMillis() - VersionUtils.getVersion().getReleaseDate()));
+				LogManager.log("This server is running a pre-Netty rewrite Minecraft version. Note that this software is {0} old. Even though it is still supported, fixing any bugs is not a priority and a lot of features are not available.", 1, Utils.formatTime(System.currentTimeMillis() - VersionUtils.getVersion().getReleaseDate()));
 			else if (VersionUtils.getVersion().isOlderThan(Version.V1_9))
 				LogManager.log("This server is running an old Minecraft version. Note that this software is {0} old. Even though it is still supported, fixing any bugs is not a priority. It's recommended to upgrade to a newer version.", 1, Utils.formatTime(System.currentTimeMillis() - VersionUtils.getVersion().getReleaseDate()));
 			managers.loadManagers();
@@ -115,6 +115,8 @@ public class ChatPluginBukkit extends ChatPlugin {
 		try {
 			LogManager.log("Reloading ChatPlugin...", 0);
 			managers.reloadManagers();
+			BukkitCommandsHandler.unregisterCommands(false);
+			BukkitCommandsHandler.registerCommands();
 			LogManager.log("Plugin reloaded successfully in {0} ms.", 0, lastReloadTime = (int) (System.currentTimeMillis() - ms));
 			new ChatPluginReloadEvent(lastReloadTime).call();
 			return lastReloadTime;
@@ -165,12 +167,8 @@ public class ChatPluginBukkit extends ChatPlugin {
 			LogManager.log("Unloading ChatPlugin{0}...", 0, reload ? " (server reload)" : "");
 			new ChatPluginUnloadEvent().call();
 			// Bukkit's crash-proof stuff
-			for (String command : BukkitCommandsHandler.getCommands().keySet()) {
-				PluginCommand bukkitCommand = plugin.getCommand(command);
-				
-				bukkitCommand.setExecutor(null);
-				bukkitCommand.setTabCompleter(null);
-			} HandlerList.unregisterAll(plugin);
+			BukkitCommandsHandler.unregisterCommands(true);
+			HandlerList.unregisterAll(plugin);
 			// ChatPlugin's stuff which might crash
 			ChatPluginBukkitPlayer.closeAudiences();
 			managers.unloadManagers();

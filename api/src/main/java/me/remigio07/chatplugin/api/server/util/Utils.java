@@ -42,7 +42,7 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 	 * @return Worlds' names
 	 */
 	public static List<String> getWorlds() {
-		return (Environment.isBukkit() ? Bukkit.getWorlds().stream().map(org.bukkit.World::getName) : Sponge.getServer().getWorlds().stream().map(org.spongepowered.api.world.World::getName)).collect(Collectors.toList());
+		return (Environment.isBukkit() ? Bukkit.getWorlds().stream().map(world -> world.getName()) : Sponge.getServer().getWorlds().stream().map(org.spongepowered.api.world.World::getName)).collect(Collectors.toList());
 	}
 	
 	/**

@@ -34,6 +34,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
+import me.remigio07.chatplugin.api.common.util.VersionUtils;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.server.language.Language;
@@ -90,7 +92,8 @@ public class BukkitCommandsHandler extends CommandsHandler implements CommandExe
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				LogManager.log("Unable to register the /{0} command: {1}", 2, command, e.getMessage());
 			}
-		} BukkitReflection.invokeMethod("CraftServer", "syncCommands", Bukkit.getServer());
+		} if (VersionUtils.getVersion().isAtLeast(Version.V1_13))
+			BukkitReflection.invokeMethod("CraftServer", "syncCommands", Bukkit.getServer());
 		printTotalLoaded(ms);
 	}
 	

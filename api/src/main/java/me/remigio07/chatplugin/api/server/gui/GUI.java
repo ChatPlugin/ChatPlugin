@@ -146,7 +146,8 @@ public abstract class GUI {
 	/**
 	 * Sets this GUI's string placeholders' translator function.
 	 * 
-	 * <p>You can specify <code>null</code> to remove the placeholders' translator.</p>
+	 * <p>You can specify <code>null</code> to remove the placeholders' translator.
+	 * Do <strong>not</strong> specify functions that perform color translation.</p>
 	 * 
 	 * <p>The required value (a <code>String</code>) is set to
 	 * {@link TriFunction#apply(Object, Object, Object)}'s result every time
@@ -180,13 +181,13 @@ public abstract class GUI {
 	
 	/**
 	 * Sets a string placeholders' translator that simply returns
-	 * {@link PlaceholderManager#translateServerPlaceholders(String, Language)}
-	 * as its function's result.
+	 * {@link PlaceholderManager#translateServerPlaceholders(String, Language, boolean)}
+	 * (specifying <code>false</code> as the third argument) as its function's result.
 	 * 
 	 * @return This GUI
 	 */
 	public GUI setServerStringPlaceholdersTranslator() {
-		stringPlaceholdersTranslator = (t, u, v) -> PlaceholderManager.getInstance().translateServerPlaceholders(u, v);
+		stringPlaceholdersTranslator = (t, u, v) -> PlaceholderManager.getInstance().translateServerPlaceholders(u, v, false);
 		return this;
 	}
 	
@@ -225,7 +226,8 @@ public abstract class GUI {
 	/**
 	 * Sets this GUI's string list placeholders' translator function.
 	 * 
-	 * <p>You can specify <code>null</code> to remove the placeholders' translator.</p>
+	 * <p>You can specify <code>null</code> to remove the placeholders' translator.
+	 * Do <strong>not</strong> specify functions that perform color translation.</p>
 	 * 
 	 * <p>The required value (a <code>List&lt;String&gt;</code>) is set to
 	 * {@link TriFunction#apply(Object, Object, Object)}'s result every time

@@ -527,8 +527,8 @@ public class Icon {
 	
 	/**
 	 * Generates an item stack for the specified language using this icon's values and
-	 * translating placeholders using {@link #formatPlaceholders(String, GUI, Language)}
-	 * and {@link #formatPlaceholders(List, GUI, Language)}.
+	 * translating placeholders using {@link #formatPlaceholders(String, GUI, Language, boolean)} and
+	 * {@link #formatPlaceholders(List, GUI, Language, boolean)} translating colors when necessary.
 	 * 
 	 * <p>This method takes no time to execute but it does not consider {@link #getSkullOwner()}.
 	 * To change a player head icon skull's owner use {@link #updateSkullOwner(ItemStackAdapter, GUI, Language)}.</p>
@@ -544,17 +544,17 @@ public class Icon {
 		
 		if (this.amount.value() == null)
 			try {
-				amount = Short.valueOf(formatPlaceholders(this.amount.placeholder(), gui, language));
+				amount = Short.valueOf(formatPlaceholders(this.amount.placeholder(), gui, language, false));
 			} catch (NumberFormatException e) {
 				amount = 1;
 			}
 		else amount = this.amount.value();
 		
 		ItemStackAdapter itemStack = new ItemStackAdapter(material, amount, damage)
-				.setDisplayName(displayNames.get(language) == null ? null : formatPlaceholders(displayNames.get(language), gui, language))
-				.setLore(lores.get(language) == null ? null : formatPlaceholders(lores.get(language), gui, language))
+				.setDisplayName(displayNames.get(language) == null ? null : formatPlaceholders(displayNames.get(language), gui, language, true))
+				.setLore(lores.get(language) == null ? null : formatPlaceholders(lores.get(language), gui, language, true))
 				.setLeatherArmorColor(leatherArmorColor)
-				.setSkullTextureURL(skullTextureURL == null ? null : formatPlaceholders(skullTextureURL, gui, language))
+				.setSkullTextureURL(skullTextureURL == null ? null : formatPlaceholders(skullTextureURL, gui, language, false))
 				.addItemFlags(itemFlags.toArray(new ItemFlagAdapter[0]));
 		
 		if (glowing)
@@ -588,7 +588,7 @@ public class Icon {
 		CompletableFuture<ItemStackAdapter> future = new CompletableFuture<>();
 		
 		try {
-			itemStack.setSkullOwner(skullOwner == null ? null : formatPlaceholders(skullOwner, gui, language)).thenAccept(newItemStack -> future.complete(newItemStack));
+			itemStack.setSkullOwner(skullOwner == null ? null : formatPlaceholders(skullOwner, gui, language, false)).thenAccept(newItemStack -> future.complete(newItemStack));
 		} catch (IllegalArgumentException e) {
 			future.complete(itemStack);
 		} return future;
@@ -601,10 +601,12 @@ public class Icon {
 	 * @param input Input containing placeholders
 	 * @param gui GUI containing this icon
 	 * @param language Language used to translate the placeholders
+	 * @param translateColors Whether to {@link ChatColor#translate(String)} the output
 	 * @return Translated placeholders
 	 */
-	public String formatPlaceholders(String input, GUI gui, Language language) {
-		return gui.getStringPlaceholdersTranslator() == null ? ChatColor.translate(input) : gui.getStringPlaceholdersTranslator().apply(this, input, language);
+	public String formatPlaceholders(String input, GUI gui, Language language, boolean translateColors) {
+		return translateColors ? ChatColor.translate(gui.getStringPlaceholdersTranslator() == null ? input : gui.getStringPlaceholdersTranslator().apply(this, input, language))
+				: gui.getStringPlaceholdersTranslator() == null ? input : gui.getStringPlaceholdersTranslator().apply(this, input, language);
 	}
 	
 	/**
@@ -614,10 +616,12 @@ public class Icon {
 	 * @param input Input containing placeholders
 	 * @param gui GUI containing this icon
 	 * @param language Language used to translate the placeholders
+	 * @param translateColors Whether to {@link ChatColor#translate(String)} the output
 	 * @return Translated placeholders
 	 */
-	public List<String> formatPlaceholders(List<String> input, GUI gui, Language language) {
-		return gui.getStringListPlaceholdersTranslator() == null ? input.stream().map(str -> formatPlaceholders(str, gui, language)).collect(Collectors.toList()) : gui.getStringListPlaceholdersTranslator().apply(this, input, language);
+	public List<String> formatPlaceholders(List<String> input, GUI gui, Language language, boolean translateColors) {
+		return gui.getStringListPlaceholdersTranslator() == null ? input.stream().map(str -> formatPlaceholders(str, gui, language, translateColors)).collect(Collectors.toList())
+				: translateColors ? ChatColor.translate(gui.getStringListPlaceholdersTranslator().apply(this, input, language)) : gui.getStringListPlaceholdersTranslator().apply(this, input, language);
 	}
 	
 	/**

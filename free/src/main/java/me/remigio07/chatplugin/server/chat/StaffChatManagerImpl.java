@@ -77,7 +77,9 @@ public class StaffChatManagerImpl extends StaffChatManager {
 					ChatColor.translate(PlaceholderManager.getInstance().translatePlaceholders(
 							playerChatFormat,
 							player,
-							placeholderTypes
+							player.getLanguage(),
+							placeholderTypes,
+							false
 							) + message)
 					));
 			ProxyManager.getInstance().sendPluginMessage(Packets.Messages.plainPlayerMessage(
@@ -88,30 +90,31 @@ public class StaffChatManagerImpl extends StaffChatManager {
 					ChatColor.translate(PlaceholderManager.getInstance().translatePlaceholders(
 							playerTerminalFormat,
 							player,
-							placeholderTypes
+							player.getLanguage(),
+							placeholderTypes,
+							false
 							) + message)
 					));
 		} else {
 			for (ChatPluginPlayer other : PlayerManager.getInstance().getPlayers().values())
-				other.sendMessage(
-						ChatColor.translate(
-								PlaceholderManager.getInstance().translatePlaceholders(
-										playerChatFormat,
-										player,
-										placeholderTypes
-										) + message
-								)
-						);
-			ChatPlugin.getInstance().sendConsoleMessage(
-					ChatColor.translate(
-							PlaceholderManager.getInstance().translatePlaceholders(
-									playerTerminalFormat,
-									player,
-									placeholderTypes
-									) + message
-							),
-					false
-					);
+				other.sendMessage(ChatColor.translate(
+						PlaceholderManager.getInstance().translatePlaceholders(
+								playerChatFormat,
+								player,
+								player.getLanguage(),
+								placeholderTypes,
+								false
+								) + message
+						));
+			ChatPlugin.getInstance().sendConsoleMessage(ChatColor.translate(
+					PlaceholderManager.getInstance().translatePlaceholders(
+							playerTerminalFormat,
+							player,
+							player.getLanguage(),
+							placeholderTypes,
+							false
+							) + message
+					), false);
 		}
 	}
 	
@@ -133,7 +136,8 @@ public class StaffChatManagerImpl extends StaffChatManager {
 					false,
 					ChatColor.translate(PlaceholderManager.getInstance().translateServerPlaceholders(
 							consoleChatFormat,
-							Language.getMainLanguage()
+							Language.getMainLanguage(),
+							false
 							) + message)
 					));
 			ProxyManager.getInstance().sendPluginMessage(Packets.Messages.plainPlayerMessage(
@@ -143,28 +147,26 @@ public class StaffChatManagerImpl extends StaffChatManager {
 					false,
 					ChatColor.translate(PlaceholderManager.getInstance().translateServerPlaceholders(
 							consoleTerminalFormat,
-							Language.getMainLanguage()
+							Language.getMainLanguage(),
+							false
 							) + message)
 					));
 		} else {
 			for (ChatPluginPlayer player : PlayerManager.getInstance().getPlayers().values())
-				player.sendMessage(
-						ChatColor.translate(
-								PlaceholderManager.getInstance().translateServerPlaceholders(
-										consoleChatFormat,
-										Language.getMainLanguage()
-										) + message
-								)
-						);
-			ChatPlugin.getInstance().sendConsoleMessage(
-					ChatColor.translate(
-							PlaceholderManager.getInstance().translateServerPlaceholders(
-									consoleTerminalFormat,
-									Language.getMainLanguage()
-									) + message
-							),
-					false
-					);
+				player.sendMessage(ChatColor.translate(
+						PlaceholderManager.getInstance().translateServerPlaceholders(
+								consoleChatFormat,
+								Language.getMainLanguage(),
+								false
+								) + message
+						));
+			ChatPlugin.getInstance().sendConsoleMessage(ChatColor.translate(
+					PlaceholderManager.getInstance().translateServerPlaceholders(
+							consoleTerminalFormat,
+							Language.getMainLanguage(),
+							false
+							) + message
+					), false);
 		}
 	}
 	

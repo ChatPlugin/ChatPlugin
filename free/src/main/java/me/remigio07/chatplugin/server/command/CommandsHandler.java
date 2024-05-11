@@ -54,8 +54,16 @@ public abstract class CommandsHandler {
 	
 	protected static Map<String, BaseCommand[]> commands = new HashMap<String, BaseCommand[]>();
 	protected static int total;
+	protected static long ms;
 	
 	protected static void registerCommands0() {
+		if (ms == 0) {
+			ms = System.currentTimeMillis();
+			total = 0;
+			
+			commands.clear();
+		}
+		
 		// main
 		put(
 				new ChatPluginCommand.Debug(),
@@ -124,7 +132,7 @@ public abstract class CommandsHandler {
 		total += commands.length;
 	}
 	
-	protected static void printTotalLoaded(long ms) {
+	protected static void printTotalLoaded() {
 		LogManager.log("Loaded {0} commands in {1} ms.", 4, total, System.currentTimeMillis() - ms);
 	}
 	
@@ -150,6 +158,14 @@ public abstract class CommandsHandler {
 	
 	public static void setTotal(int total) {
 		CommandsHandler.total = total;
+	}
+	
+	public static long getMs() {
+		return ms;
+	}
+	
+	public static void setMs(long ms) {
+		CommandsHandler.ms = ms;
 	}
 	
 }

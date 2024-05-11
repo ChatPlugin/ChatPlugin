@@ -50,6 +50,7 @@ import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.bootstrap.SpongeBootstrapper;
 import me.remigio07.chatplugin.common.util.manager.SLF4JLogManager;
 import me.remigio07.chatplugin.server.command.BaseCommand;
+import me.remigio07.chatplugin.server.sponge.manager.SpongeEventManager;
 import me.remigio07.chatplugin.server.storage.configuration.ServerConfigurationManager;
 import me.remigio07.chatplugin.server.util.bstats.ServerMetrics;
 import me.remigio07.chatplugin.server.util.manager.ChatPluginServerManagers;
@@ -142,9 +143,8 @@ public class ChatPluginSponge extends ChatPlugin {
 			new ChatPluginUnloadEvent().call();
 			// Sponge's crash-proof stuff
 			SpongeCommandsHandler.unregisterCommands();
-			Sponge.getEventManager().unregisterPluginListeners(SpongeBootstrapper.getInstance());
+			Sponge.getEventManager().unregisterListeners(((SpongeEventManager) SpongeEventManager.getInstance()).getListener());
 			// ChatPlugin's stuff which might crash
-			ChatPluginSpongePlayer.closeAudiences();
 			managers.unloadManagers();
 			LogManager.log("Plugin unloaded successfully in {0} ms.", 3, ms = System.currentTimeMillis() - ms);
 			return (int) ms;
@@ -212,8 +212,8 @@ public class ChatPluginSponge extends ChatPlugin {
 								int startupTime = load((Logger) logger, dataFolder.toPath());
 								
 								if (startupTime == -1)
-									sender.sendMessage(Utils.serializeSpongeText("&cFailed to load. Check the console for the error message.", true));
-								else sender.sendMessage(Utils.serializeSpongeText("&aChatPlugin has been loaded successfully in &f" + startupTime + " ms&a. You should anyway restart as soon as possible.", true));
+									sendConsoleMessage("&cFailed to load. Check above for the error message.", false);
+								else sendConsoleMessage("&aChatPlugin has been loaded successfully in &f" + startupTime + " ms&a. You should anyway restart as soon as possible.", false);
 							} else sender.sendMessage(Utils.serializeSpongeText("&cYou do not have the permission to execute this command.", true));
 						} else sender.sendMessage(Utils.serializeSpongeText("&cThe syntax is wrong. Usage: &f/chatplugin recover&c.", true));
 						return CommandResult.success();
@@ -249,7 +249,7 @@ public class ChatPluginSponge extends ChatPlugin {
 					}
 					
 				}, mainCommand.getMainArgs());
-			else Sponge.getCommandManager().register(command, callable, mainCommand.getMainArgs());
+			else Sponge.getCommandManager().register(SpongeBootstrapper.getInstance(), callable, mainCommand.getMainArgs());
 		} try {
 			TaskManager.getInstance().unload();
 			StorageConnector.getInstance().unload();

@@ -80,7 +80,7 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 		rank = RankManager.getInstance().calculateRank(this);
 		version = version == null ? IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(toAdapter()) : VersionUtils.getVersion() : version;
 		craftPlayer = BukkitReflection.getLoadedClass("CraftPlayer").cast(player);
-		playerConnection = BukkitReflection.getFieldValue("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", craftPlayer), "playerConnection", VersionUtils.getVersion().isAtLeast(Version.V1_20) ? "c" : "b");
+		playerConnection = BukkitReflection.getFieldValue("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", craftPlayer), "playerConnection", "connection", VersionUtils.getVersion().isAtLeast(Version.V1_20) ? "c" : "b");
 		StorageConnector storage = StorageConnector.getInstance();
 		
 		try {
@@ -307,11 +307,6 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
 	public void setLastLocale(Locale lastLocale) {
 		this.lastLocale = lastLocale;
-	}
-	
-	public static void closeAudiences() {
-		if (audiences != null)
-			audiences.close();
 	}
 	
 }

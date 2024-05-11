@@ -288,9 +288,4 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 		return player.getLocale();
 	}
 	
-	public static void closeAudiences() {
-		if (audiences != null)
-			audiences.close();
-	}
-	
 }

@@ -49,7 +49,7 @@ import me.remigio07.chatplugin.server.command.PlayerCommand;
 public class BukkitCommandsHandler extends CommandsHandler implements CommandExecutor, TabCompleter {
 	
 	public static final BukkitCommandsHandler HANDLER = new BukkitCommandsHandler();
-	private static Constructor<PluginCommand> pluginCommandconstructor;
+	private static Constructor<PluginCommand> pluginCommandConstructor;
 	private static CommandMap commandMap;
 	private static Map<String, Command> knownCommands;
 	
@@ -60,11 +60,11 @@ public class BukkitCommandsHandler extends CommandsHandler implements CommandExe
 	@SuppressWarnings({ "all", "unchecked" })
 	private static void init() {
 		try {
-			pluginCommandconstructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
+			pluginCommandConstructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
 			Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 			Field knownCommandsField = SimpleCommandMap.class.getDeclaredField("knownCommands");
 			
-			pluginCommandconstructor.setAccessible(true);
+			pluginCommandConstructor.setAccessible(true);
 			commandMapField.setAccessible(true);
 			knownCommandsField.setAccessible(true);
 			
@@ -76,25 +76,32 @@ public class BukkitCommandsHandler extends CommandsHandler implements CommandExe
 	}
 	
 	public static void registerCommands() {
-		long ms = System.currentTimeMillis();
-		
 		registerCommands0();
+		unregisterCommands(false);
 		
 		for (String command : commands.keySet()) {
-			try {
-				BaseCommand[] subcommands = commands.get(command);
-				List<String> aliases = subcommands[subcommands.length - 1].getMainArgs();
-				PluginCommand bukkitCommand = (PluginCommand) pluginCommandconstructor.newInstance(command, BukkitBootstrapper.getInstance()).setAliases(aliases.subList(1, aliases.size()));
-				
-				commandMap.register("chatplugin", bukkitCommand);
+			PluginCommand bukkitCommand = registerCommand(command);
+			
+			if (bukkitCommand != null) {
 				bukkitCommand.setExecutor(HANDLER);
 				bukkitCommand.setTabCompleter(HANDLER);
-			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				LogManager.log("Unable to register the /{0} command: {1}", 2, command, e.getMessage());
 			}
-		} if (VersionUtils.getVersion().isAtLeast(Version.V1_13))
-			BukkitReflection.invokeMethod("CraftServer", "syncCommands", Bukkit.getServer());
-		printTotalLoaded(ms);
+		} syncCommands();
+		printTotalLoaded();
+	}
+	
+	public static PluginCommand registerCommand(String command) {
+		try {
+			BaseCommand[] subcommands = commands.get(command);
+			List<String> aliases = subcommands[subcommands.length - 1].getMainArgs();
+			PluginCommand bukkitCommand = (PluginCommand) pluginCommandConstructor.newInstance(command, BukkitBootstrapper.getInstance()).setAliases(aliases.subList(1, aliases.size()));
+			
+			commandMap.register("chatplugin", bukkitCommand);
+			return bukkitCommand;
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			LogManager.log("Unable to register the /{0} command: {1}", 2, command, e.getMessage());
+			return null;
+		}
 	}
 	
 	public static void unregisterCommands(boolean sync) {
@@ -106,10 +113,12 @@ public class BukkitCommandsHandler extends CommandsHandler implements CommandExe
 				knownCommands.remove("chatplugin:" + alias);
 			}
 		} if (sync)
+			syncCommands();
+	}
+	
+	public static void syncCommands() {
+		if (VersionUtils.getVersion().isAtLeast(Version.V1_13))
 			BukkitReflection.invokeMethod("CraftServer", "syncCommands", Bukkit.getServer());
-		commands.clear();
-		
-		total = 0;
 	}
 	
 	@Override

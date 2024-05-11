@@ -25,7 +25,6 @@ import me.remigio07.chatplugin.server.command.CommandsHandler;
 public class SpongeCommandsHandler extends CommandsHandler {
 	
 	public static void registerCommands() {
-		long ms = System.currentTimeMillis();
 		CommandManager manager = Sponge.getCommandManager();
 		
 		registerCommands0();
@@ -36,14 +35,11 @@ public class SpongeCommandsHandler extends CommandsHandler {
 			
 			manager.getAll(command).forEach(Sponge.getCommandManager()::removeMapping);
 			manager.register(SpongeBootstrapper.getInstance(), new SpongeCommandAdapter(mainCommand), mainCommand.getMainArgs());
-		} printTotalLoaded(ms);
+		} printTotalLoaded();
 	}
 	
 	public static void unregisterCommands() {
 		Sponge.getCommandManager().getOwnedBy(SpongeBootstrapper.getInstance()).forEach(Sponge.getCommandManager()::removeMapping);
-		commands.clear();
-		
-		total = 0;
 	}
 	
 }

@@ -51,6 +51,7 @@ import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.common.util.manager.JavaLogManager;
+import me.remigio07.chatplugin.server.bukkit.manager.BukkitEventManager;
 import me.remigio07.chatplugin.server.storage.configuration.ServerConfigurationManager;
 import me.remigio07.chatplugin.server.util.bstats.ServerMetrics;
 import me.remigio07.chatplugin.server.util.manager.ChatPluginServerManagers;
@@ -115,7 +116,6 @@ public class ChatPluginBukkit extends ChatPlugin {
 		try {
 			LogManager.log("Reloading ChatPlugin...", 0);
 			managers.reloadManagers();
-			BukkitCommandsHandler.unregisterCommands(false);
 			BukkitCommandsHandler.registerCommands();
 			LogManager.log("Plugin reloaded successfully in {0} ms.", 0, lastReloadTime = (int) (System.currentTimeMillis() - ms));
 			new ChatPluginReloadEvent(lastReloadTime).call();
@@ -139,7 +139,6 @@ public class ChatPluginBukkit extends ChatPlugin {
 			return 0;
 		try {
 			long ms = System.currentTimeMillis();
-			BukkitBootstrapper plugin = BukkitBootstrapper.getInstance();
 			boolean reload = !(boolean) BukkitReflection.getFieldValue("MinecraftServer", BukkitReflection.invokeMethod("MinecraftServer", "getServer", null), "hasStopped");
 			loaded = false;
 			
@@ -168,9 +167,8 @@ public class ChatPluginBukkit extends ChatPlugin {
 			new ChatPluginUnloadEvent().call();
 			// Bukkit's crash-proof stuff
 			BukkitCommandsHandler.unregisterCommands(true);
-			HandlerList.unregisterAll(plugin);
+			HandlerList.unregisterAll(((BukkitEventManager) BukkitEventManager.getInstance()).getListener());
 			// ChatPlugin's stuff which might crash
-			ChatPluginBukkitPlayer.closeAudiences();
 			managers.unloadManagers();
 			LogManager.log("Plugin unloaded successfully in {0} ms.", 3, ms = System.currentTimeMillis() - ms);
 			return (int) ms;
@@ -195,7 +193,7 @@ public class ChatPluginBukkit extends ChatPlugin {
 		};
 		
 		for (String command : BukkitCommandsHandler.getCommands().keySet()) {
-			PluginCommand bukkitCommand = BukkitBootstrapper.getInstance().getCommand(command);
+			PluginCommand bukkitCommand = BukkitCommandsHandler.registerCommand(command);
 			
 			if (command.equals("chatplugin")) {
 				bukkitCommand.setExecutor(new CommandExecutor() {
@@ -210,8 +208,8 @@ public class ChatPluginBukkit extends ChatPlugin {
 								int startupTime = load((Logger) logger, dataFolder);
 								
 								if (startupTime == -1)
-									sender.sendMessage("\u00A7cFailed to load. Check the console for the error message.");
-								else sender.sendMessage("\u00A7aChatPlugin has been loaded successfully in \u00A7f" + startupTime + " ms\u00A7a. You should anyway restart as soon as possible.");
+									sendConsoleMessage("\u00A7cFailed to load. Check above for the error message.", false);
+								else sendConsoleMessage("\u00A7aChatPlugin has been loaded successfully in \u00A7f" + startupTime + " ms\u00A7a. You should anyway restart as soon as possible.", false);
 							} else sender.sendMessage("\u00A7cYou do not have the permission to execute this command.");
 						} else sender.sendMessage("\u00A7cThe syntax is wrong. Usage: \u00A7f/chatplugin recover\u00A7c.");
 						return true;
@@ -232,7 +230,9 @@ public class ChatPluginBukkit extends ChatPlugin {
 				bukkitCommand.setExecutor(executor);
 				bukkitCommand.setTabCompleter(null);
 			}
-		} try {
+		} BukkitCommandsHandler.syncCommands();
+		
+		try {
 			TaskManager.getInstance().unload();
 			StorageConnector.getInstance().unload();
 			LogManager.log("Recovery performed successfully. You can try to load ChatPlugin using /chatplugin recover, but don't get your hopes up: it may be necessary to restart the server.", 0);

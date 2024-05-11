@@ -282,13 +282,13 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("misc.reload.start", "{pfx} &aChatPlugin is reloading...");
 		messages.addDefault("misc.reload.end", "{pfx} &aChatPlugin has been reloaded. Took &f{0} ms &ato complete.");
 		messages.addDefault("misc.player-not-found", "{pfx} &f{0} &cis not online. Recheck the typing.");
+		messages.addDefault("misc.player-not-stored", "{pfx} &f{0} &cis not contained in the storage.");
 		messages.addDefault("misc.cooldown-active", "{pfx} &cA cooldown is currently active, try later.");		
 		messages.addDefault("misc.wrong-args", "{pfx} &cThe arguments are wrong. Try &f/chatplugin help&c.");
 		messages.addDefault("misc.wrong-syntax", "{pfx} &cThe syntax is wrong. Usage: &f{0}&c.");
 		messages.addDefault("misc.invalid-number", "{pfx} &f{0} &cis not a valid number.");
 		messages.addDefault("misc.invalid-rank", "{pfx} &f{0} &cis not a valid rank.");
 		messages.addDefault("misc.reason-required", "{pfx} &cYou have to specify a reason.");
-		messages.addDefault("misc.player-not-stored", "{pfx} &f{0} &cis not stored in the database.");
 		messages.addDefault("misc.debug.enabled", "{pfx} &aDebug mode enabled.");
 		messages.addDefault("misc.debug.disabled", "{pfx} &aDebug mode disabled.");
 		messages.addDefault("misc.debug.file.start", "{pfx} &aDebugging data and settings...");
@@ -301,7 +301,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("misc.disabled-feature", "{pfx} &cThat feature is not enabled.");
 		messages.addDefault("misc.inexistent-id", "{pfx} &cThat ID does not exist.");
 		messages.addDefault("misc.inexistent-player", "{pfx} &f{0} &cis not a premium player's name.");
-		messages.addDefault("misc.cannot-fetch", "{pfx} &cUnable to reach &fhttps://api.mojang.com &cto fetch &f{0}&c's UUID: &f{1}&c.");
+		messages.addDefault("misc.cannot-fetch", "{pfx} &cUnable to reach the API to fetch &f{0}&c's UUID: &f{1}&c.");
 		messages.addDefault("misc.suggest-version", "{pfx} &eUse Minecraft version &f{suggested_version} &eor higher to enjoy the best experience on the server.");
 		messages.addDefault("misc.already-connected", "{pfx} &cYou are already connected to this server.");
 		messages.addDefault("misc.invalid-player-name", "{pfx} &cInvalid player name.");

@@ -15,11 +15,17 @@
 
 package me.remigio07.chatplugin.server.sponge.manager;
 
+import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.server.f3servername.F3ServerName;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.server.f3servername.BaseF3ServerNameManager;
 
 public class SpongeF3ServerNameManager extends BaseF3ServerNameManager {
+	
+	@Override
+	public void load() throws ChatPluginManagerException {
+		// not supported yet
+	}
 	
 	@Override
 	public void run() {

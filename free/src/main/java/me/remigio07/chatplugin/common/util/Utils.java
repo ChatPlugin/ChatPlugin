@@ -67,6 +67,7 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 			Library.ADVENTURE_TEXT_SERIALIZER_LEGACY,
 			Library.EXAMINATION_API,
 			Library.EXAMINATION_STRING,
+			Library.OPTION,
 			Library.GSON,
 			Library.JETBRAINS_ANNOTATIONS
 	};
@@ -76,18 +77,16 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 		try {
 			for (Library library : RELOCATION_LIBS)
 				LibrariesUtils.load(library);
-			if (!Environment.isVelocity())
+			if (!Environment.isProxy()) {
 				for (Library library : ADVENTURE_LIBS)
 					LibrariesUtils.load(library);
-			if (Environment.isBukkit()) {
-				LibrariesUtils.load(Library.ADVENTURE_PLATFORM_BUKKIT);
-				LibrariesUtils.load(Library.ADVENTURE_PLATFORM_BUNGEECORD);
-				LibrariesUtils.load(Library.ADVENTURE_PLATFORM_VIAVERSION);
-			} else if (Environment.isSponge())
-				LibrariesUtils.load(Library.ADVENTURE_PLATFORM_SPONGEAPI);
-			else if (Environment.isBungeeCord())
-				LibrariesUtils.load(Library.ADVENTURE_PLATFORM_BUNGEECORD);
-			LibrariesUtils.load(Library.JSON_SIMPLE);
+				if (Environment.isBukkit()) {
+					LibrariesUtils.load(Library.ADVENTURE_PLATFORM_BUKKIT);
+					LibrariesUtils.load(Library.ADVENTURE_PLATFORM_BUNGEECORD);
+					LibrariesUtils.load(Library.ADVENTURE_PLATFORM_VIAVERSION);
+				} else if (Environment.isSponge())
+					LibrariesUtils.load(Library.ADVENTURE_PLATFORM_SPONGEAPI);
+			} LibrariesUtils.load(Library.JSON_SIMPLE);
 		} catch (LibraryException e) {
 			throw new ChatPluginManagerException("libraries utils", e.getMessage());
 		} UUIDFetcherImpl.setInstance(new UUIDFetcherImpl());

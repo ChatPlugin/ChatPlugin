@@ -53,6 +53,10 @@ task assembleFinalJar(type: Jar) {
 	exclude 'me/remigio07/chatplugin/ChatPluginImpl.class'
 	exclude 'me/remigio07/chatplugin/ChatPluginImpl$1.class'
 	
+	manifest {
+		attributes(["paperweight-mappings-namespace": "mojang"])
+	}
+	
 	from project(':api').sourceSets.main.output
 	from shadowJar.archiveFile
 }
@@ -60,7 +64,6 @@ task assembleFinalJar(type: Jar) {
 jar {
 	archiveFileName = 'ChatPlugin-ORIGINAL.jar'
 	from sourceSets.main.output
-	
 	finalizedBy assembleFinalJar
 }
 

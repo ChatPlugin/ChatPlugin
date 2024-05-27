@@ -27,6 +27,7 @@ import java.util.Map;
 
 import com.google.common.primitives.Primitives;
 
+import me.remigio07.chatplugin.api.common.util.Utils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
@@ -41,7 +42,7 @@ public class BukkitReflection {
 	public static void initReflection() throws ChatPluginManagerException {
 		boolean atLeast1_17 = VersionUtils.getVersion().isAtLeast(Version.V1_17);
 		Class<?> clazz;
-		cbPath = "org.bukkit.craftbukkit." + VersionUtils.getNMSVersion() + ".";
+		cbPath = "org.bukkit.craftbukkit." + (VersionUtils.getNMSVersion().equals(Utils.NOT_APPLICABLE) ? "" : VersionUtils.getNMSVersion() + ".");
 		nmsPath = "net.minecraft.server." + (atLeast1_17 ? "" : VersionUtils.getNMSVersion() + ".");
 		
 		try {
@@ -65,10 +66,84 @@ public class BukkitReflection {
 			classes.put("MinecraftServer", clazz);
 			putMethod(clazz, "getServer", "");
 			
-			if (VersionUtils.getVersion().isAtLeast(Version.V1_19)) {
+			// Packet
+			clazz = atLeast1_17 ? getNMNClass("protocol.Packet") : getNMSClass("Packet");
+			classes.put("Packet", clazz);
+			
+			if (VersionUtils.getNMSVersion().equals(Utils.NOT_APPLICABLE)) {
+				// EntityPlayer
+				clazz = getNMSClass("level.ServerPlayer");
+				classes.put("EntityPlayer", clazz);
+					
+					// PlayerConnection
+					clazz = getNMSClass("network.ServerPlayerConnection");
+					classes.put("PlayerConnection", clazz);
+					putMethod(clazz, "sendPacket", Arrays.asList(classes.get("Packet")), "send", "a");
+			} else {
+				// EntityPlayer
+				clazz = getNMSClass((atLeast1_17 ? "level." : "") + "EntityPlayer");
+				classes.put("EntityPlayer", clazz);
+					
+					// PlayerConnection
+					clazz = getNMSClass((atLeast1_17 ? "network." : "") + "PlayerConnection");
+					classes.put("PlayerConnection", clazz);
+					putMethod(clazz, "sendPacket", Arrays.asList(classes.get("Packet")), "a");
+				
+				if (VersionUtils.getVersion().isOlderThan(Version.V1_20)) {
+					// IChatBaseComponent
+					clazz = atLeast1_17 ? getNMNClass("chat.IChatBaseComponent") : getNMSClass("IChatBaseComponent");
+					classes.put("IChatBaseComponent", clazz);
+					
+					if (VersionUtils.getVersion().getProtocol() < 341)
+						putMethod(clazz, "getText", "");
+					else putMethod(clazz, "getString", "");
+					
+						// ChatSerializer
+						clazz = atLeast1_17 ? getNMNClass("chat.IChatBaseComponent$ChatSerializer") : getNMSClass("IChatBaseComponent$ChatSerializer");
+						classes.put("ChatSerializer", clazz);
+						putMethod(clazz, "a", Arrays.asList(String.class));
+					
+					// PacketPlayOutOpenWindow
+					clazz = atLeast1_17 ? Class.forName("net.minecraft.network.protocol.game.PacketPlayOutOpenWindow") : getNMSClass("PacketPlayOutOpenWindow");
+					classes.put("PacketPlayOutOpenWindow", clazz);
+					
+					if (VersionUtils.getVersion().isAtLeast(Version.V1_14)) {
+						// Containers
+						clazz = atLeast1_17 ? Class.forName("net.minecraft.world.inventory.Containers") : getNMSClass("Containers");
+						classes.put("Containers", clazz);
+					}
+					
+					// Container
+					clazz = atLeast1_17 ? Class.forName("net.minecraft.world.inventory.Container") : getNMSClass("Container");
+					classes.put("Container", clazz);
+					
+					// CraftHumanEntity
+					clazz = getCBClass("entity.CraftHumanEntity");
+					classes.put("CraftHumanEntity", clazz);
+					putMethod(clazz, "getHandle", "");
+					
+					// EntityHuman
+					clazz = atLeast1_17 ? Class.forName("net.minecraft.world.entity.player.EntityHuman") : getNMSClass("EntityHuman");
+					classes.put("EntityHuman", clazz);
+				}
+			} if (VersionUtils.getVersion().isAtLeast(Version.V1_19)) {
 				// ClientboundSystemChatPacket - > 1.18.2
 				clazz = getNMNClass("protocol.game.ClientboundSystemChatPacket");
 				classes.put("ClientboundSystemChatPacket", clazz);
+				
+				if (VersionUtils.getVersion().isAtLeast(Version.V1_20_5)) {
+					// ClientboundCustomPayloadPacket
+					clazz = getNMNClass("protocol.common.ClientboundCustomPayloadPacket");
+					classes.put("ClientboundCustomPayloadPacket", clazz);
+					
+					// CustomPacketPayload
+					clazz = getNMNClass("protocol.common.custom.CustomPacketPayload");
+					classes.put("CustomPacketPayload", clazz);
+					
+					// BrandPayload
+					clazz = getNMNClass("protocol.common.custom.BrandPayload");
+					classes.put("BrandPayload", clazz);
+				}
 			} else {
 				// ChatComponentText - < 1.19
 				clazz = atLeast1_17 ? getNMNClass("chat.ChatComponentText") : getNMSClass("ChatComponentText");
@@ -77,85 +152,27 @@ public class BukkitReflection {
 				// PacketPlayOutChat
 				clazz = atLeast1_17 ? getNMNClass("protocol.game.PacketPlayOutChat") : getNMSClass("PacketPlayOutChat");
 				classes.put("PacketPlayOutChat", clazz);
-			}
-			
-			if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
+			} if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 				// PacketPlayOutPlayerListHeaderFooter
 				clazz = atLeast1_17 ? getNMNClass("protocol.game.PacketPlayOutPlayerListHeaderFooter") : getNMSClass("PacketPlayOutPlayerListHeaderFooter");
 				classes.put("PacketPlayOutPlayerListHeaderFooter", clazz);
-			}
+			} else {
+				// CraftServer
+				clazz = getCBClass("CraftServer");
+				classes.put("CraftServer", clazz);
+				putMethod(clazz, "syncCommands", "");
+			} if (VersionUtils.getVersion().isAtLeast(Version.V1_9))
+				return;
 			
-			// IChatBaseComponent
-			clazz = atLeast1_17 ? getNMNClass("chat.IChatBaseComponent") : getNMSClass("IChatBaseComponent");
-			classes.put("IChatBaseComponent", clazz);
-			if (VersionUtils.getVersion().getProtocol() < 341)
-				putMethod(clazz, "getText", "");
-			else putMethod(clazz, "getString", "");
+			// Scoreboard
+			clazz = getNMSClass("Scoreboard");
+			classes.put("Scoreboard", clazz);
+			putMethod(clazz, "addPlayerToTeam", Arrays.asList(String.class, String.class));
 			
-				// ChatSerializer
-				clazz = atLeast1_17 ? getNMNClass("chat.IChatBaseComponent$ChatSerializer") : getNMSClass("IChatBaseComponent$ChatSerializer");
-				classes.put("ChatSerializer", clazz);
-				putMethod(clazz, "a", Arrays.asList(String.class));
-			
-			// Packet
-			clazz = atLeast1_17 ? getNMNClass("protocol.Packet") : getNMSClass("Packet");
-			classes.put("Packet", clazz);
-			
-			// EntityPlayer
-			clazz = getNMSClass((atLeast1_17 ? "level." : "") + "EntityPlayer");
-			classes.put("EntityPlayer", clazz);
-				
-				// PlayerConnection
-				clazz = getNMSClass((atLeast1_17 ? "network." : "") + "PlayerConnection");
-				classes.put("PlayerConnection", clazz);
-				putMethod(clazz, "sendPacket", Arrays.asList(classes.get("Packet")), "a");
-			
-			// PacketPlayOutOpenWindow
-			clazz = atLeast1_17 ? Class.forName("net.minecraft.network.protocol.game.PacketPlayOutOpenWindow") : getNMSClass("PacketPlayOutOpenWindow");
-			classes.put("PacketPlayOutOpenWindow", clazz);
-			
-			if (VersionUtils.getVersion().isAtLeast(Version.V1_14)) {
-				// Containers
-				clazz = atLeast1_17 ? Class.forName("net.minecraft.world.inventory.Containers") : getNMSClass("Containers");
-				classes.put("Containers", clazz);
-			}
-			
-			// Container
-			clazz = atLeast1_17 ? Class.forName("net.minecraft.world.inventory.Container") : getNMSClass("Container");
-			classes.put("Container", clazz);
-			
-			// CraftHumanEntity
-			clazz = getCBClass("entity.CraftHumanEntity");
-			classes.put("CraftHumanEntity", clazz);
+			// CraftScoreboard
+			clazz = getCBClass("scoreboard.CraftScoreboard");
+			classes.put("CraftScoreboard", clazz);
 			putMethod(clazz, "getHandle", "");
-			
-			// EntityHuman
-			clazz = atLeast1_17 ? Class.forName("net.minecraft.world.entity.player.EntityHuman") : getNMSClass("EntityHuman");
-			classes.put("EntityHuman", clazz);
-			
-			if (VersionUtils.getVersion().getProtocol() > 316) {
-				// ChatMessageType
-				clazz = atLeast1_17 ? getNMNClass("chat.ChatMessageType") : getNMSClass("ChatMessageType");
-				classes.put("ChatMessageType", clazz);
-			} if (VersionUtils.getVersion().isOlderThan(Version.V1_9)) {
-				// PacketPlayOutTitle
-				clazz = getNMSClass("PacketPlayOutTitle");
-				classes.put("PacketPlayOutTitle", clazz);
-				
-					// EnumTitleAction
-					clazz = getNMSClass("PacketPlayOutTitle$EnumTitleAction");
-					classes.put("EnumTitleAction", clazz);
-				
-				// Scoreboard
-				clazz = getNMSClass("Scoreboard");
-				classes.put("Scoreboard", clazz);
-				putMethod(clazz, "addPlayerToTeam", Arrays.asList(String.class, String.class));
-				
-				// CraftScoreboard
-				clazz = getCBClass("scoreboard.CraftScoreboard");
-				classes.put("CraftScoreboard", clazz);
-				putMethod(clazz, "getHandle", "");
-			} else return;
 			
 			// PacketPlayOutSpawnEntityLiving
 			clazz = atLeast1_17 ? getNMNClass("protocol.game.PacketPlayOutSpawnEntityLiving") : getNMSClass("PacketPlayOutSpawnEntityLiving");

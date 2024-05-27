@@ -35,7 +35,7 @@ import me.remigio07.chatplugin.bootstrap.VelocityBootstrapper;
 public class VersionUtils {
 	
 	private static Version version;
-	private static String implementationVersion, implementationName, nmsVersion = "N/A";
+	private static String implementationVersion, implementationName, nmsVersion = Utils.NOT_APPLICABLE;
 	
 	/**
 	 * Initializes this class.
@@ -47,9 +47,11 @@ public class VersionUtils {
 		switch (Environment.getCurrent()) {
 		case BUKKIT:
 			version = Version.getVersion(Bukkit.getBukkitVersion().substring(0, Bukkit.getBukkitVersion().indexOf('-')));
-			nmsVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 			implementationVersion = Bukkit.getVersion();
-			implementationName = isPaper() ? "Paper" : isSpigot() ? "Spigot" : "Bukkit";
+			implementationName = isArclight() ? "Arclight" : isPaper() ? "Paper" : isSpigot() ? "Spigot" : "Bukkit";
+			
+			if (!isPaper() || version.isOlderThan(Version.V1_20_5))
+				nmsVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 			break;
 		case SPONGE:
 			version = Version.getVersion(Sponge.getPlatform().getMinecraftVersion().getName());
@@ -57,8 +59,7 @@ public class VersionUtils {
 			implementationName = "Sponge";
 			break;
 		case BUNGEECORD:
-			String str = ((String) Utils.invokeBungeeCordMethod("getVersion", null)).substring(15).replace(':', '-');
-			version = Version.getVersion(str.substring(str.indexOf('-') + 1, str.indexOf('-', str.indexOf('.'))));
+			version = Version.getVersion((int) Utils.invokeBungeeCordMethod("getProtocolVersion", null), false);
 			implementationVersion = (String) Utils.invokeBungeeCordMethod("getVersion", null);
 			implementationName = isFlameCord() ? "FlameCord" : isWaterfall() ? "Waterfall" : "BungeeCord";
 			break;
@@ -83,7 +84,8 @@ public class VersionUtils {
 	/**
 	 * Gets the current environment's NMS version.
 	 * 
-	 * <p>It only applies to Bukkit environments.</p>
+	 * <p>Will return "N/A" on non-Bukkit environments
+	 * and on Paper starting from 1.20.5.</p>
 	 * 
 	 * @return Environment's NMS version
 	 */
@@ -131,6 +133,20 @@ public class VersionUtils {
 	public static boolean isPaper() {
 		try {
 			Class.forName((version.isAtLeast(Version.V1_9) ? "com.destroystokyo.paper" : "org.github.paperspigot") + ".ServerSchedulerReportingWrapper");
+			return true;
+		} catch (ClassNotFoundException e) {
+			return false;
+		}
+	}
+	
+	/**
+	 * Checks if this is an Arclight environment.
+	 * 
+	 * @return Whether Arclight is running
+	 */
+	public static boolean isArclight() {
+		try {
+			Class.forName("io.izzel.arclight.server.Launcher");
 			return true;
 		} catch (ClassNotFoundException e) {
 			return false;
@@ -896,7 +912,23 @@ public class VersionUtils {
 		 * <p><strong>Protocol version number:</strong> 765
 		 * <br><strong>Release date:</strong> December 7, 2023</p>
 		 */
-		V1_20_4(765, 1701903600000L, "1.20.3/4");
+		V1_20_4(765, 1701903600000L, "1.20.3/4"),
+		
+		/**
+		 * Version 1.20.5.
+		 * 
+		 * <p><strong>Protocol version number:</strong> 766
+		 * <br><strong>Release date:</strong> April 23, 2024</p>
+		 */
+		V1_20_5(766, 1713823200000L, "1.20.5/6"),
+		
+		/**
+		 * Version 1.20.6.
+		 * 
+		 * <p><strong>Protocol version number:</strong> 766
+		 * <br><strong>Release date:</strong> April 29, 2024</p>
+		 */
+		V1_20_6(766, 1714341600000L, "1.20.5/6");
 		
 		private int protocol;
 		private long releaseDate;

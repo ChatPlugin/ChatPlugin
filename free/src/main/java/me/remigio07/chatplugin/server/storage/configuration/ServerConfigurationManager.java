@@ -153,6 +153,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("settings.anticheat-integration.violations-expiration-timeout", "1m");
 		config.addDefault("settings.storage-placeholders-update-timeout", "1m");
 		config.addDefault("settings.enabled-worlds", Arrays.asList(Environment.isBukkit() ? Bukkit.getWorlds().get(0).getName() : Sponge.getServer().getWorlds().iterator().next().getName()));
+		config.addDefault("settings.chat-event-priority", Environment.isBukkit() ? "HIGH" : "LATE");
 		config.addDefault("settings.displayed-memory.unit", "MEGABYTE");
 		config.addDefault("settings.displayed-memory.decimals", 0);
 		config.addDefault("settings.balance-placeholder.decimals", 2);

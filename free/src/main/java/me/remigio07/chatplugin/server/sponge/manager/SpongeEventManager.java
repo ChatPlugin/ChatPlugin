@@ -15,6 +15,8 @@
 
 package me.remigio07.chatplugin.server.sponge.manager;
 
+import java.util.Arrays;
+
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Event;
@@ -32,9 +34,11 @@ import org.spongepowered.api.event.network.ClientConnectionEvent.Join;
 import me.remigio07.chatplugin.api.common.event.EventManager;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
+import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
+import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.bossbar.BossbarManager;
 import me.remigio07.chatplugin.api.server.chat.ChatManager;
@@ -70,8 +74,18 @@ public class SpongeEventManager extends EventManager {
 		long ms = System.currentTimeMillis();
 		SpongeBootstrapper instance = SpongeBootstrapper.getInstance();
 		org.spongepowered.api.event.EventManager manager = Sponge.getEventManager();
+		Order chatEventOrder;
 		
-		manager.registerListener(instance, MessageChannelEvent.Chat.class, Order.EARLY, listener);
+		try {
+			chatEventOrder = Order.valueOf(ConfigurationType.CONFIG.get().getString("settings.chat-event-priority").toUpperCase());
+			
+			if (Arrays.asList(Order.PRE, Order.AFTER_PRE, Order.BEFORE_POST, Order.POST).contains(chatEventOrder))
+				throw new IllegalArgumentException();
+		} catch (IllegalArgumentException e) {
+			LogManager.log("Invalid event priority ({0}) set at \"settings.chat-event-priority\" in config.yml: only FIRST, EARLY, DEFAULT, LATE and LAST are allowed; setting to default value of LATE.", 2, ConfigurationType.CONFIG.get().getString("settings.chat-event-priority"));
+			
+			chatEventOrder = Order.LATE;
+		} manager.registerListener(instance, MessageChannelEvent.Chat.class, chatEventOrder, listener);
 		manager.registerListener(instance, ClientConnectionEvent.Join.class, Order.EARLY, listener);
 		manager.registerListener(instance, ClientConnectionEvent.Disconnect.class, Order.EARLY, listener);
 		manager.registerListener(instance, PlayerChangeClientSettingsEvent.class, Order.POST, listener);

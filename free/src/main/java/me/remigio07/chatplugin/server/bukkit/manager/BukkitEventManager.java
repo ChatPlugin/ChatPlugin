@@ -74,8 +74,18 @@ public class BukkitEventManager extends EventManager {
 		long ms = System.currentTimeMillis();
 		BukkitBootstrapper instance = BukkitBootstrapper.getInstance();
 		PluginManager manager = instance.getServer().getPluginManager();
+		EventPriority chatEventPriority;
 		
-		manager.registerEvent(AsyncPlayerChatEvent.class, listener, EventPriority.LOW, listener, instance);
+		try {
+			chatEventPriority = EventPriority.valueOf(ConfigurationType.CONFIG.get().getString("settings.chat-event-priority").toUpperCase());
+			
+			if (chatEventPriority == EventPriority.MONITOR)
+				throw new IllegalArgumentException();
+		} catch (IllegalArgumentException e) {
+			LogManager.log("Invalid event priority ({0}) set at \"settings.chat-event-priority\" in config.yml: only LOWEST, LOW, NORMAL, HIGH and HIGHEST are allowed; setting to default value of HIGH.", 2, ConfigurationType.CONFIG.get().getString("settings.chat-event-priority"));
+			
+			chatEventPriority = EventPriority.HIGH;
+		} manager.registerEvent(AsyncPlayerChatEvent.class, listener, chatEventPriority, listener, instance);
 		manager.registerEvent(PlayerJoinEvent.class, listener, EventPriority.LOW, listener, instance);
 		manager.registerEvent(PlayerQuitEvent.class, listener, EventPriority.LOW, listener, instance);
 		manager.registerEvent(PlayerCommandPreprocessEvent.class, listener, EventPriority.NORMAL, listener, instance);
@@ -83,7 +93,6 @@ public class BukkitEventManager extends EventManager {
 		
 		if (VersionUtils.getVersion().isAtLeast(Version.V1_12))
 			manager.registerEvent(PlayerLocaleChangeEvent.class, listener, EventPriority.MONITOR, listener, instance);
-		
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}

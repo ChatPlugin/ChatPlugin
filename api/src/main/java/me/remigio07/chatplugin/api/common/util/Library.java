@@ -54,32 +54,32 @@ public enum Library {
 	/**
 	 * Represents the <a href="https://docs.advntr.dev">Adventure Platform API</a> library.
 	 */
-	ADVENTURE_PLATFORM_API("Adventure Platform", "net.kyori.adventure.platform.AudienceProvider", Relocation.KYORI_RELOCATION, "https://s01.oss.sonatype.org/content/repositories/snapshots/net/kyori/adventure-platform-api/4.3.3-SNAPSHOT/adventure-platform-api-4.3.3-20240507.021326-6.jar", "adventure-platform-api.jar"),
+	ADVENTURE_PLATFORM_API("Adventure Platform", "net.kyori.adventure.platform.AudienceProvider", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-api/4.3.3/adventure-platform-api-4.3.3.jar", "adventure-platform-api.jar"),
 	
 	/**
 	 * Represents the <a href="https://docs.advntr.dev">Adventure Platform Bukkit</a> library.
 	 */
-	ADVENTURE_PLATFORM_BUKKIT("Adventure Platform Bukkit", "net.kyori.adventure.platform.bukkit.BukkitAudiences", Relocation.KYORI_RELOCATION, "https://s01.oss.sonatype.org/content/repositories/snapshots/net/kyori/adventure-platform-bukkit/4.3.3-SNAPSHOT/adventure-platform-bukkit-4.3.3-20240507.021326-6.jar", "adventure-platform-bukkit.jar"),
+	ADVENTURE_PLATFORM_BUKKIT("Adventure Platform Bukkit", "net.kyori.adventure.platform.bukkit.BukkitAudiences", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-bukkit/4.3.3/adventure-platform-bukkit-4.3.3.jar", "adventure-platform-bukkit.jar"),
 	
 	/**
 	 * Represents the <a href="https://docs.advntr.dev">Adventure Platform BungeeCord</a> library.
 	 */
-	ADVENTURE_PLATFORM_BUNGEECORD("Adventure Platform BungeeCord", "net.kyori.adventure.platform.bungeecord.BungeeAudiences", Relocation.KYORI_RELOCATION, "https://s01.oss.sonatype.org/content/repositories/snapshots/net/kyori/adventure-platform-bungeecord/4.3.3-SNAPSHOT/adventure-platform-bungeecord-4.3.3-20240507.021326-6.jar", "adventure-platform-bungeecord.jar"),
+	ADVENTURE_PLATFORM_BUNGEECORD("Adventure Platform BungeeCord", "net.kyori.adventure.platform.bungeecord.BungeeAudiences", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-bungeecord/4.3.3/adventure-platform-bungeecord-4.3.3.jar", "adventure-platform-bungeecord.jar"),
 	
 	/**
 	 * Represents the <a href="https://docs.advntr.dev">Adventure Platform Facet</a> library.
 	 */
-	ADVENTURE_PLATFORM_FACET("Adventure Platform Facet", "net.kyori.adventure.platform.facet.Facet", Relocation.KYORI_RELOCATION, "https://s01.oss.sonatype.org/content/repositories/snapshots/net/kyori/adventure-platform-facet/4.3.3-SNAPSHOT/adventure-platform-facet-4.3.3-20240507.021326-6.jar", "adventure-platform-facet.jar"),
+	ADVENTURE_PLATFORM_FACET("Adventure Platform Facet", "net.kyori.adventure.platform.facet.Facet", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-facet/4.3.3/adventure-platform-facet-4.3.3.jar", "adventure-platform-facet.jar"),
 	
 	/**
 	 * Represents the <a href="https://docs.advntr.dev">Adventure Platform SpongeAPI</a> library.
 	 */
-	ADVENTURE_PLATFORM_SPONGEAPI("Adventure Platform SpongeAPI", "net.kyori.adventure.platform.spongeapi.SpongeAudiences", Relocation.KYORI_RELOCATION, "https://s01.oss.sonatype.org/content/repositories/snapshots/net/kyori/adventure-platform-spongeapi/4.3.3-SNAPSHOT/adventure-platform-spongeapi-4.3.3-20240507.021326-6.jar", "adventure-platform-spongeapi.jar"),
+	ADVENTURE_PLATFORM_SPONGEAPI("Adventure Platform SpongeAPI", "net.kyori.adventure.platform.spongeapi.SpongeAudiences", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-spongeapi/4.3.3/adventure-platform-spongeapi-4.3.3.jar", "adventure-platform-spongeapi.jar"),
 	
 	/**
 	 * Represents the <a href="https://docs.advntr.dev">Adventure Platform Viaversion</a> library.
 	 */
-	ADVENTURE_PLATFORM_VIAVERSION("Adventure Platform Viaversion", "net.kyori.adventure.platform.viaversion.ViaFacet", Relocation.KYORI_RELOCATION, "https://s01.oss.sonatype.org/content/repositories/snapshots/net/kyori/adventure-platform-viaversion/4.3.3-SNAPSHOT/adventure-platform-viaversion-4.3.3-20240507.021326-6.jar", "adventure-platform-viaversion.jar"),
+	ADVENTURE_PLATFORM_VIAVERSION("Adventure Platform Viaversion", "net.kyori.adventure.platform.viaversion.ViaFacet", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-viaversion/4.3.3/adventure-platform-viaversion-4.3.3.jar", "adventure-platform-viaversion.jar"),
 	
 	/**
 	 * Represents the <a href="https://docs.advntr.dev">Adventure Text Serializer Gson</a> library.
@@ -159,12 +159,12 @@ public enum Library {
 	/**
 	 * Represents the <a href="https://github.com/KyoriPowered/examination">Examination API</a> library.
 	 */
-	EXAMINATION_API("Examination API", "net.kyori.examination.Examinable", Relocation.KYORI_RELOCATION, "https://s01.oss.sonatype.org/content/repositories/snapshots/net/kyori/examination-api/1.3.1-SNAPSHOT/examination-api-1.3.1-20240403.053703-40.jar", "examination-api.jar"),
+	EXAMINATION_API("Examination API", "net.kyori.examination.Examinable", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/examination-api/1.3.0/examination-api-1.3.0.jar", "examination-api.jar"),
 	
 	/**
 	 * Represents the <a href="https://github.com/KyoriPowered/examination">Examination String</a> library.
 	 */
-	EXAMINATION_STRING("Examination String", "net.kyori.examination.string.Strings", Relocation.KYORI_RELOCATION, "https://s01.oss.sonatype.org/content/repositories/snapshots/net/kyori/examination-string/1.3.1-SNAPSHOT/examination-string-1.3.1-20240403.053703-40.jar", "examination-string.jar"),
+	EXAMINATION_STRING("Examination String", "net.kyori.examination.string.Strings", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/examination-string/1.3.0/examination-string-1.3.0.jar", "examination-string.jar"),
 	
 	/**
 	 * Represents the <a href="https://mvnrepository.com/artifact/com.google.guava/failureaccess">Failure Access</a> library.
@@ -299,7 +299,7 @@ public enum Library {
 	/**
 	 * Represents the <a href="https://github.com/KyoriPowered/option">Option</a> library.
 	 */
-	OPTION("Option", "net.kyori.option.Option", Relocation.KYORI_RELOCATION, "https://s01.oss.sonatype.org/content/repositories/snapshots/net/kyori/option/1.0.1-SNAPSHOT/option-1.0.1-20240403.053407-4.jar", "option.jar"),
+	OPTION("Option", "net.kyori.option.Option", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/option/1.0.0/option-1.0.0.jar", "option.jar"),
 	
 	/**
 	 * Represents the <a href="https://www.slf4j.org/">SLF4J API</a> library.

@@ -261,7 +261,7 @@ public class ChatPluginBukkit extends ChatPlugin {
 		console.sendMessage( "   \u00A7c__  \u00A7f__   ");
 		console.sendMessage( "  \u00A7c/   \u00A7f|__)  \u00A7aRunning \u00A7cChat\u00A7fPlugin \u00A72Free \u00A7aversion \u00A7f" + VERSION + " \u00A7aon \u00A7f" + VersionUtils.getImplementationName());
 		console.sendMessage("  \u00A7c\\__ \u00A7f|     \u00A78Detected server version: " + VersionUtils.getVersion().getName() + " (protocol: " + VersionUtils.getVersion().getProtocol() + ")");
-		console.sendMessage("");
+		console.sendMessage(" ");
 	}
 	
 	@Override

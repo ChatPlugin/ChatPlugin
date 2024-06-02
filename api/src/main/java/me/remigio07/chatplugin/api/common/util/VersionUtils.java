@@ -48,7 +48,7 @@ public class VersionUtils {
 		case BUKKIT:
 			version = Version.getVersion(Bukkit.getBukkitVersion().substring(0, Bukkit.getBukkitVersion().indexOf('-')));
 			implementationVersion = Bukkit.getVersion();
-			implementationName = isArclight() ? "Arclight" : isPaper() ? "Paper" : isSpigot() ? "Spigot" : "Bukkit";
+			implementationName = isArclight() ? "Arclight" : isPurpur() ? "Purpur" : isPaper() ? "Paper" : isSpigot() ? "Spigot" : "Bukkit";
 			
 			if (!isPaper() || version.isOlderThan(Version.V1_20_5))
 				nmsVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
@@ -133,6 +133,20 @@ public class VersionUtils {
 	public static boolean isPaper() {
 		try {
 			Class.forName((version.isAtLeast(Version.V1_9) ? "com.destroystokyo.paper" : "org.github.paperspigot") + ".ServerSchedulerReportingWrapper");
+			return true;
+		} catch (ClassNotFoundException e) {
+			return false;
+		}
+	}
+	
+	/**
+	 * Checks if this is a Purpur environment.
+	 * 
+	 * @return Whether Purpur is running
+	 */
+	public static boolean isPurpur() {
+		try {
+			Class.forName("org.purpurmc.purpur.PurpurConfig");
 			return true;
 		} catch (ClassNotFoundException e) {
 			return false;

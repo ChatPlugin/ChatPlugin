@@ -130,12 +130,12 @@ public abstract class F3ServerNameManager extends TimerTask implements ChatPlugi
 	 * 
 	 * <p>Will return <code>null</code> if the F3 server name is not loaded.</p>
 	 * 
-	 * @param id F3 server name's ID
+	 * @param id F3 server name's ID, case insensitive
 	 * @return Loaded F3 server name
 	 */
 	@Nullable(why = "Specified F3 server name may not be loaded")
 	public F3ServerName getF3ServerName(String id) {
-		return f3ServerNames.stream().filter(f3ServerName -> f3ServerName.getID().equals(id)).findAny().orElse(null);
+		return f3ServerNames.stream().filter(f3ServerName -> f3ServerName.getID().equalsIgnoreCase(id)).findAny().orElse(null);
 	}
 	
 	/**

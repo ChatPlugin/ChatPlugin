@@ -100,12 +100,12 @@ public abstract class GUIManager implements ChatPluginManager {
 	 * 
 	 * <p>Will return <code>null</code> if the GUI is not loaded.</p>
 	 * 
-	 * @param id GUI's ID
+	 * @param id GUI's ID, case insensitive
 	 * @return Loaded GUI
 	 */
 	@Nullable(why = "Specified GUI may not be loaded")
 	public GUI getGUI(String id) {
-		return guis.stream().filter(gui -> gui.getID().equals(id)).findAny().orElse(null);
+		return guis.stream().filter(gui -> gui.getID().equalsIgnoreCase(id)).findAny().orElse(null);
 	}
 	
 	/**
@@ -114,10 +114,10 @@ public abstract class GUIManager implements ChatPluginManager {
 	 * <p><strong>Note:</strong> the GUI will be removed on {@link #unload()}.</p>
 	 * 
 	 * @param gui GUI to add
-	 * @throws IllegalArgumentException If {@link GUI#getID()} is already in use by another GUI in {@link #getGUIs()}
+	 * @throws IllegalArgumentException If {@link GUI#getID()} is already in use, case insensitive
 	 */
 	public void addGUI(GUI gui) {
-		if (guis.stream().anyMatch(other -> other.getID().equals(gui.getID())))
+		if (guis.stream().anyMatch(other -> other.getID().equalsIgnoreCase(gui.getID())))
 			throw new IllegalArgumentException("Specified ID (" + gui.getID() + ") is already in use");
 		else guis.add(gui);
 	}

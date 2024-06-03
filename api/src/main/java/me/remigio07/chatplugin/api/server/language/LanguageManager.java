@@ -81,12 +81,12 @@ public abstract class LanguageManager implements ChatPluginManager {
 	 * 
 	 * <p>Will return <code>null</code> if the language is not loaded.</p>
 	 * 
-	 * @param id Language's ID
+	 * @param id Language's ID, case insensitive
 	 * @return Loaded language
 	 */
 	@Nullable(why = "Specified language may not be loaded")
 	public Language getLanguage(String id) {
-		return languages.stream().filter(language -> language.getID().equals(id)).findAny().orElse(null);
+		return languages.stream().filter(language -> language.getID().equalsIgnoreCase(id)).findAny().orElse(null);
 	}
 	
 	/**

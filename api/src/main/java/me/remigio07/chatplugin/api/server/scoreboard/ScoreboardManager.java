@@ -85,10 +85,10 @@ public abstract class ScoreboardManager implements ChatPluginManager {
 	 * <p><strong>Note:</strong> the scoreboard will be removed on {@link #unload()}.</p>
 	 * 
 	 * @param scoreboard Scoreboard to add
-	 * @throws IllegalArgumentException If {@link Scoreboard#getID()} is already in use
+	 * @throws IllegalArgumentException If {@link Scoreboard#getID()} is already in use, case insensitive
 	 */
 	public void addScoreboard(Scoreboard scoreboard) {
-		if (scoreboards.stream().anyMatch(other -> other.getID().equals(scoreboard.getID())))
+		if (scoreboards.stream().anyMatch(other -> other.getID().equalsIgnoreCase(scoreboard.getID())))
 			throw new IllegalArgumentException("Specified ID (" + scoreboard.getID() + ") is already in use");
 		else scoreboards.add(scoreboard);
 	}
@@ -98,12 +98,12 @@ public abstract class ScoreboardManager implements ChatPluginManager {
 	 * 
 	 * <p>Will return <code>null</code> if the scoreboard is not loaded.</p>
 	 * 
-	 * @param id Scoreboard's ID
+	 * @param id Scoreboard's ID, case insensitive
 	 * @return Loaded scoreboard
 	 */
 	@Nullable(why = "Specified scoreboard may not be loaded")
 	public Scoreboard getScoreboard(String id) {
-		return scoreboards.stream().filter(scoreboard -> scoreboard.getID().equals(id)).findAny().orElse(null);
+		return scoreboards.stream().filter(scoreboard -> scoreboard.getID().equalsIgnoreCase(id)).findAny().orElse(null);
 	}
 	
 	/**

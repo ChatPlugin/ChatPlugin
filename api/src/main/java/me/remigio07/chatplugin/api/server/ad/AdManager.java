@@ -163,12 +163,12 @@ public abstract class AdManager extends TimerTask implements ChatPluginManager {
 	 * 
 	 * <p>Will return <code>null</code> if the ad is not loaded.</p>
 	 * 
-	 * @param id Ad's ID
+	 * @param id Ad's ID, case insensitive
 	 * @return Loaded ad
 	 */
 	@Nullable(why = "Specified ad may not be loaded")
 	public Ad getAd(String id) {
-		return ads.stream().filter(ad -> ad.getID().equals(id)).findAny().orElse(null);
+		return ads.stream().filter(ad -> ad.getID().equalsIgnoreCase(id)).findAny().orElse(null);
 	}
 	
 	/**

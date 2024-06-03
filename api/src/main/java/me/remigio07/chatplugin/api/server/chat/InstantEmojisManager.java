@@ -15,15 +15,15 @@
 
 package me.remigio07.chatplugin.api.server.chat;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 
 /**
- * Manager that handles instant emojis in the chat.
+ * Manager that handles {@link InstantEmoji}s.
  * 
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Chat#instant-emojis">ChatPlugin wiki/Modules/Chat/Instant emojis</a>
  */
@@ -31,7 +31,7 @@ public abstract class InstantEmojisManager implements ChatPluginManager {
 	
 	protected static InstantEmojisManager instance;
 	protected boolean enabled;
-	protected Map<String, Character> emojis = new HashMap<>();
+	protected List<InstantEmoji> instantEmojis = new ArrayList<>();
 	protected long loadTime;
 	
 	/**
@@ -45,27 +45,27 @@ public abstract class InstantEmojisManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the map of loaded emojis.
+	 * Gets the list of loaded instant emojis.
 	 * 
-	 * <p>You may modify the returned map.</p>
+	 * <p>You may modify the returned list.</p>
 	 * 
-	 * @return Loaded emojis' map
+	 * @return Loaded instant emojis' list
 	 */
-	public Map<String, Character> getEmojis() {
-		return emojis;
+	public List<InstantEmoji> getInstantEmojis() {
+		return instantEmojis;
 	}
 	
 	/**
-	 * Gets an emoji from {@link #getEmojis()} by its ID.
+	 * Gets an instant emoji from {@link #getInstantEmojis()} by its ID.
 	 * 
-	 * <p>Will return <code>null</code> if the emoji is not loaded.</p>
+	 * <p>Will return <code>null</code> if the instant emoji is not loaded.</p>
 	 * 
-	 * @param id Emoji's ID
-	 * @return Loaded emoji
+	 * @param id Instant emoji's ID, case insensitive
+	 * @return Loaded instant emoji
 	 */
-	@Nullable(why = "Specified emoji may not be loaded")
-	public char getEmoji(String id) {
-		return emojis.get(id);
+	@Nullable(why = "Specified instant emoji may not be loaded")
+	public InstantEmoji getInstantEmoji(String id) {
+		return instantEmojis.stream().filter(instantEmoji -> instantEmoji.getID().equalsIgnoreCase(id)).findAny().orElse(null);
 	}
 	
 	/**
@@ -84,5 +84,46 @@ public abstract class InstantEmojisManager implements ChatPluginManager {
 	 * @return Translated message
 	 */
 	public abstract String format(String input);
+	
+	/**
+	 * Represents an instant emoji handled by the {@link InstantEmojisManager}.
+	 * 
+	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Chat#instant-emojis">ChatPlugin wiki/Modules/Chat/Instant emojis</a>
+	 */
+	public static class InstantEmoji {
+		
+		private String id;
+		private char character;
+		
+		/**
+		 * Constructs a new instant emoji.
+		 * 
+		 * @param id Instant emoji's ID
+		 * @param character Instant emoji's character
+		 */
+		public InstantEmoji(String id, char character) {
+			this.id = id;
+			this.character = character;
+		}
+		
+		/**
+		 * Gets this emoji's ID.
+		 * 
+		 * @return Emoji's ID
+		 */
+		public String getID() {
+			return id;
+		}
+		
+		/**
+		 * Gets this emoji's character.
+		 * 
+		 * @return Emoji's character
+		 */
+		public char getCharacter() {
+			return character;
+		}
+		
+	}
 	
 }

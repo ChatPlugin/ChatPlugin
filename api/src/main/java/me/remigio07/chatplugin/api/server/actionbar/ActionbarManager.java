@@ -147,12 +147,12 @@ public abstract class ActionbarManager extends TimerTask implements ChatPluginMa
 	 * 
 	 * <p>Will return <code>null</code> if the actionbar is not loaded.</p>
 	 * 
-	 * @param id Actionbar's ID
+	 * @param id Actionbar's ID, case insensitive
 	 * @return Loaded actionbar
 	 */
 	@Nullable(why = "Specified actionbar may not be loaded")
 	public Actionbar getActionbar(String id) {
-		return actionbars.stream().filter(actionbar -> actionbar.getID().equals(id)).findAny().orElse(null);
+		return actionbars.stream().filter(actionbar -> actionbar.getID().equalsIgnoreCase(id)).findAny().orElse(null);
 	}
 	
 	/**

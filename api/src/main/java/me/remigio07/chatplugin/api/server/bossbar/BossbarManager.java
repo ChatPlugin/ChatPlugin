@@ -234,12 +234,12 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	 * 
 	 * <p>Will return <code>null</code> if the bossbar is not loaded.</p>
 	 * 
-	 * @param id Bossbar's ID
+	 * @param id Bossbar's ID, case insensitive
 	 * @return Loaded bossbar
 	 */
 	@Nullable(why = "Specified bossbar may not be loaded")
 	public Bossbar getBossbar(String id) {
-		return bossbars.stream().filter(bossbar -> bossbar.getID().equals(id)).findAny().orElse(null);
+		return bossbars.stream().filter(bossbar -> bossbar.getID().equalsIgnoreCase(id)).findAny().orElse(null);
 	}
 	
 	/**

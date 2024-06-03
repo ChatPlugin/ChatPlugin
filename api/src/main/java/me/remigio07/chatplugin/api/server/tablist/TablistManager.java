@@ -124,12 +124,12 @@ public abstract class TablistManager extends TimerTask implements ChatPluginMana
 	 * 
 	 * <p>Will return <code>null</code> if the tablist is not loaded.</p>
 	 * 
-	 * @param id Tablist's ID
+	 * @param id Tablist's ID, case insensitive
 	 * @return Loaded tablist
 	 */
 	@Nullable(why = "Specified tablist may not be loaded")
 	public Tablist getTablist(String id) {
-		return tablists.stream().filter(tablist -> tablist.getID().equals(id)).findAny().orElse(null);
+		return tablists.stream().filter(tablist -> tablist.getID().equalsIgnoreCase(id)).findAny().orElse(null);
 	}
 	
 	/**

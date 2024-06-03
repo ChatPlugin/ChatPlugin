@@ -115,12 +115,12 @@ public abstract class RankManager implements ChatPluginManager {
 	 * 
 	 * <p>Will return <code>null</code> if the rank is not loaded.</p>
 	 * 
-	 * @param id Language's ID
+	 * @param id Language's ID, case insensitive
 	 * @return Loaded language
 	 */
 	@Nullable(why = "Specified rank may not be loaded")
 	public Rank getRank(String id) {
-		return ranks.stream().filter(rank -> rank.getID().equals(id)).findAny().orElse(null);
+		return ranks.stream().filter(rank -> rank.getID().equalsIgnoreCase(id)).findAny().orElse(null);
 	}
 	
 	/**

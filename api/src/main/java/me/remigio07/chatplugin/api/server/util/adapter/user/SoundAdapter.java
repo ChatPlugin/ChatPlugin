@@ -79,6 +79,7 @@ public class SoundAdapter {
 	 * @return Bukkit-adapted sound
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBukkit()}
 	 */
+	@Nullable(why = "Sound's ID may be invalid")
 	public Sound bukkitValue() {
 		if (Environment.isBukkit())
 			try {
@@ -94,11 +95,11 @@ public class SoundAdapter {
 	 * 
 	 * <p>Will return <code>null</code> if {@link #getID()} is not a valid sound.</p>
 	 * 
-	 * @param warnIfInvalid Whether to send a warning message if sound is invalid
+	 * @param warnIfInvalid Whether to send a warning message if the sound is invalid
 	 * @return Sponge-adapted sound
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isSponge()}
 	 */
-	@Nullable(why = "There may be no sound types associated with the specified ID")
+	@Nullable(why = "Sound's ID may be invalid")
 	public SoundType spongeValue(boolean warnIfInvalid) {
 		if (Environment.isSponge())
 			try {

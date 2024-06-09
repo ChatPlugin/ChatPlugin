@@ -150,7 +150,11 @@ public class ChatManagerImpl extends ChatManager {
 			else message = FormattedChatManager.getInstance().translate(message, urls, true);
 		}
 		
-		// 7. player-ping
+		// 7. blank-message
+		if (reason == null && ChatColor.stripColor(message).replaceAll("\\s", "").isEmpty())
+			reason = DenyChatReason.BLANK_MESSAGE;
+		
+		// 8. player-ping
 		if (reason == null && PlayerPingManager.getInstance().isEnabled() && !PlayerPingManager.getInstance().getPingedPlayers(player, message).isEmpty() && player.hasPermission("chatplugin.player-ping"))
 			message = PlayerPingManager.getInstance().performPing(player, message);
 		
@@ -175,15 +179,14 @@ public class ChatManagerImpl extends ChatManager {
 				break;
 			default:
 				break;
-			} if (reason != DenyChatReason.MUTEALL && reason != DenyChatReason.VANISH) {
+			} if (reason != DenyChatReason.MUTEALL && reason != DenyChatReason.VANISH && reason != DenyChatReason.BLANK_MESSAGE) {
 				for (ChatPluginServerPlayer staff : ServerPlayerManager.getInstance().getPlayers().values())
 					if (staff.hasPermission("chatplugin.deny-chat-notify"))
 						staff.sendTranslatedMessage("chat.deny-chat-notify", player.getName(), reason.name(), message);
+				if (ChatLogManager.getInstance().isEnabled())
+					ChatLogManager.getInstance().logPublicMessage(player, message, global, reason);
 				ChatPlugin.getInstance().sendConsoleMessage(ChatColor.translate(Language.getMainLanguage().getMessage("chat.deny-chat-notify", player.getName(), reason.name(), message)), false);
 			} player.sendMessage(denyMessage);
-			
-			if (ChatLogManager.getInstance().isEnabled())
-				ChatLogManager.getInstance().logPublicMessage(player, message, global, reason);
 			return;
 		} AllowChatEvent allowChatEvent = new AllowChatEvent(player, message, global);
 		

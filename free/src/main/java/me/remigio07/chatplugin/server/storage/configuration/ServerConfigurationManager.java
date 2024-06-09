@@ -418,6 +418,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("chat.antispam.no-ip", "{pfx} &cYour message contains a disallowed IP address.");
 		messages.addDefault("chat.deny-chat-notify", "{pfx} &f{0} &cwas prevented (reason: &f{1}&c) from sending:\n&f{2}");
 		messages.addDefault("chat.no-format", "{pfx} &cYou cannot write formatted messages. Buy a &fVIP package &cto bypass this restriction.");
+		messages.addDefault("chat.no-blank-messages", "{pfx} &cYou cannot send blank messages.");
 		messages.addDefault("chat.pinged", "{pfx} &eYou got pinged by &f{0}&e.");
 		
 		messages.addDefault("chat.log.searching", "{pfx} &eSearching for logged messages...");
@@ -731,6 +732,11 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.private-messages.sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "ENTITY_EXPERIENCE_ORB_PICKUP" : "ORB_PICKUP");
 		chat.addDefault("chat.private-messages.sound.volume", 1F);
 		chat.addDefault("chat.private-messages.sound.pitch", 1F);
+		chat.addDefault("chat.private-messages.advancements.enabled", VersionUtils.getVersion().isAtLeast(Version.V1_13));
+		chat.addDefault("chat.private-messages.advancements.format", "&8[&b\u270E&8] &f{sender} &e-> &fYou\n&7");
+		chat.addDefault("chat.private-messages.advancements.max-message-length", 19);
+		chat.addDefault("chat.private-messages.advancements.icon.material", Environment.isSponge() || VersionUtils.getVersion().isAtLeast(Version.V1_13) ? "WRITABLE_BOOK" : "BOOK_AND_QUILL");
+		chat.addDefault("chat.private-messages.advancements.icon.glowing", true);
 		chat.addDefault("chat.private-messages.bypass-antispam-checks", Arrays.asList("CAPS", "FLOOD", "SPAM", "SWEAR"));
 		chat.addDefault("chat.private-messages.socialspy-on-join-enabled", true);
 		
@@ -2238,7 +2244,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		violationsIcons.addDefault(path + "velocity.name", "Velocity hacks");
 		violationsIcons.addDefault(path + "velocity.material", Environment.isBukkit() ? isAtLeastV1_13 ? "FIREWORK_ROCKET" : "FIREWORK" : "FIREWORKS");
 		violationsIcons.addDefault(path + "chat.name", "Spamming");
-		violationsIcons.addDefault(path + "chat.material", Environment.isSponge() || isAtLeastV1_9 ? "WRITABLE_BOOK" : "BOOK_AND_QUILL");
+		violationsIcons.addDefault(path + "chat.material", Environment.isSponge() || isAtLeastV1_13 ? "WRITABLE_BOOK" : "BOOK_AND_QUILL");
 		violationsIcons.addDefault(path + "interact.name", "Interact hacks");
 		violationsIcons.addDefault(path + "interact.material", Environment.isSponge() || isAtLeastV1_13 ? "CRAFTING_TABLE" : "WORKBENCH");
 		violationsIcons.addDefault(path + "phase.name", "Phase");
@@ -2372,7 +2378,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		violationsIcons.addDefault(path + "autosteal.name", "Auto steal");
 		violationsIcons.addDefault(path + "autosteal.material", "CHEST");
 		violationsIcons.addDefault(path + "chat.name", "Spamming");
-		violationsIcons.addDefault(path + "chat.material", Environment.isSponge() || isAtLeastV1_9 ? "WRITABLE_BOOK" : "BOOK_AND_QUILL");
+		violationsIcons.addDefault(path + "chat.material", Environment.isSponge() || isAtLeastV1_13 ? "WRITABLE_BOOK" : "BOOK_AND_QUILL");
 		violationsIcons.addDefault(path + "critical.name", "Critical");
 		violationsIcons.addDefault(path + "critical.material", "IRON_SWORD");
 		violationsIcons.addDefault(path + "elytrafly.name", "Elytra hacks");

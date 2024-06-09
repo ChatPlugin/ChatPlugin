@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.util.VersionUtils;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
@@ -40,9 +42,10 @@ import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.util.URLValidator;
+import me.remigio07.chatplugin.api.server.util.adapter.block.MaterialAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
-import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
+import me.remigio07.chatplugin.server.util.Utils;
 
 public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 	
@@ -62,24 +65,41 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 		socialspyTerminalFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.format.socialspy.terminal");
 		soundEnabled = ConfigurationType.CHAT.get().getBoolean("chat.private-messages.sound.enabled");
 		sound = new SoundAdapter(ConfigurationType.CHAT.get(), "chat.private-messages.sound");
-		socialspyOnJoinEnabled = ConfigurationType.CHAT.get().getBoolean("chat.private-messages.socialspy-on-join-enabled");
+		advancementsEnabled = ConfigurationType.CHAT.get().getBoolean("chat.private-messages.advancements.enabled");
+		advancementsFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.advancements.format");
+		advancementsMaxMessageLength = ConfigurationType.CHAT.get().getInt("chat.private-messages.advancements.max-message-length");
+		
+		if (advancementsEnabled && VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
+			LogManager.log("You have enabled advancements for private messages at \"chat.private-messages.advancements.enabled\" in chat.yml, but this feature only works on 1.13+ servers; disabling it.", 2);
+			
+			advancementsEnabled = false;
+		} try {
+			advancementsIconMaterial = new MaterialAdapter(ConfigurationType.CHAT.get().getString("chat.private-messages.advancements.icon.material").toUpperCase());
+		} catch (IllegalArgumentException e) {
+			LogManager.log("Invalid material (\"{0}\") set at \"chat.private-messages.advancements.icon.material\" in chat.yml; setting to default value of BARRIER.", 2, ConfigurationType.CHAT.get().getString("chat.private-messages.advancements.icon.material"));
+			
+			advancementsIconMaterial = new MaterialAdapter("BARRIER");
+		} advancementsIconGlowing = ConfigurationType.CHAT.get().getBoolean("chat.private-messages.advancements.icon.glowing");
 		bypassAntispamChecks = new ArrayList<>();
 		
 		for (DenyChatReason<?> check : ConfigurationType.CHAT.get().getStringList("chat.private-messages.bypass-antispam-checks").stream().map(DenyChatReason::valueOf).filter(Objects::nonNull).collect(Collectors.toList()))
 			if (check.getHandlerClass() == AntispamManager.class)
 				bypassAntispamChecks.add((DenyChatReason<AntispamManager>) check);
+		socialspyOnJoinEnabled = ConfigurationType.CHAT.get().getBoolean("chat.private-messages.socialspy-on-join-enabled");
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}
 	
 	@Override
 	public void unload() throws ChatPluginManagerException {
-		enabled = soundEnabled = socialspyOnJoinEnabled = false;
+		enabled = soundEnabled = socialspyOnJoinEnabled = advancementsEnabled = advancementsIconGlowing = false;
 		
 		bypassAntispamChecks.clear();
 		
-		sentChatFormat = sentTerminalFormat = receivedChatFormat = receivedTerminalFormat = socialspyChatFormat = socialspyTerminalFormat = null;
+		sentChatFormat = sentTerminalFormat = receivedChatFormat = receivedTerminalFormat = socialspyChatFormat = socialspyTerminalFormat = advancementsFormat = null;
 		sound = null;
+		advancementsMaxMessageLength = 0;
+		advancementsIconMaterial = null;
 	}
 	
 	@Override
@@ -118,9 +138,13 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 			}
 		}
 		
+		// 3. blank-message
+		if (reason == null && ChatColor.stripColor(privateMessage).replaceAll("\\s", "").isEmpty())
+			reason = DenyChatReason.BLANK_MESSAGE;
+		
 		// denied
 		if (reason != null) {
-			String denyMessage = reason.getMessage(sender.getLanguage());
+			String denyMessage = reason.getMessage(sender == null ? Language.getMainLanguage() : sender.getLanguage());
 			
 			new DenyPrivateMessageEvent(sender, recipient, privateMessage, reason).call();
 			
@@ -136,14 +160,16 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 				break;
 			default:
 				break;
-			} for (ChatPluginServerPlayer staff : ServerPlayerManager.getInstance().getPlayers().values())
-				if (staff.hasPermission("chatplugin.deny-chat-notify"))
-					staff.sendTranslatedMessage("chat.deny-chat-notify", sender.getName(), reason.name(), privateMessage);
-			ChatPlugin.getInstance().sendConsoleMessage(ChatColor.translate(Language.getMainLanguage().getMessage("chat.deny-chat-notify", sender.getName(), reason.name(), privateMessage)), false);
-			sender.sendMessage(denyMessage);
-			
-			if (ChatLogManager.getInstance().isEnabled() && recipient != null)
-				ChatLogManager.getInstance().logPrivateMessage(sender, recipient, privateMessage, reason);
+			} if (reason != DenyChatReason.BLANK_MESSAGE) {
+				for (ChatPluginServerPlayer staff : ServerPlayerManager.getInstance().getPlayers().values())
+					if (staff.hasPermission("chatplugin.deny-chat-notify"))
+						staff.sendTranslatedMessage("chat.deny-chat-notify", sender.getName(), reason.name(), privateMessage);
+				if (ChatLogManager.getInstance().isEnabled() && recipient != null)
+					ChatLogManager.getInstance().logPrivateMessage(sender, recipient, privateMessage, reason);
+				ChatPlugin.getInstance().sendConsoleMessage(Language.getMainLanguage().getMessage("chat.deny-chat-notify", sender.getName(), reason.name(), privateMessage), false);
+			} if (sender == null)
+				ChatPlugin.getInstance().sendConsoleMessage(denyMessage, false);
+			else sender.sendMessage(denyMessage);
 			return;
 		} AllowPrivateMessageEvent allowPrivateMessageEvent = new AllowPrivateMessageEvent(sender, recipient, privateMessage);
 		
@@ -154,32 +180,36 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 		if (sender != null) {
 			if (ChatLogManager.getInstance().isEnabled() && recipient != null)
 				ChatLogManager.getInstance().logPrivateMessage(sender, recipient, privateMessage, null);
-			sender.sendMessage(ChatColor.translate(formatPlaceholders(sentChatFormat, sender, recipient)) + privateMessage);
-		} else ChatPlugin.getInstance().sendConsoleMessage(ChatColor.translate(formatPlaceholders(sentTerminalFormat, sender, recipient)) + privateMessage, false);
+			sender.sendMessage(formatPlaceholders(sentChatFormat, sender, recipient) + privateMessage);
+		} else ChatPlugin.getInstance().sendConsoleMessage(formatPlaceholders(sentTerminalFormat, sender, recipient) + privateMessage, false);
 		
 		if (recipient != null) {
 			if (soundEnabled)
 				recipient.playSound(sound);
 			((BaseChatPluginServerPlayer) recipient).setLastCorrespondent(sender);
-			recipient.sendMessage(ChatColor.translate(formatPlaceholders(receivedChatFormat, sender, recipient)) + privateMessage);
+			recipient.sendMessage(formatPlaceholders(receivedChatFormat, sender, recipient) + privateMessage);
 			
 			if (sender != null && !sender.hasPermission("chatplugin.commands.socialspy") && !recipient.hasPermission("chatplugin.commands.socialspy")) {
 				for (ChatPluginServerPlayer staffMember : ServerPlayerManager.getInstance().getPlayers().values())
 					if (staffMember.hasSocialspyEnabled())
-						staffMember.sendMessage(ChatColor.translate(formatPlaceholders(socialspyChatFormat, sender, recipient)) + privateMessage);
-				ChatPlugin.getInstance().sendConsoleMessage(ChatColor.translate(formatPlaceholders(socialspyTerminalFormat, sender, recipient)) + privateMessage, false);
-			}
-		} else ChatPlugin.getInstance().sendConsoleMessage(ChatColor.translate(formatPlaceholders(receivedTerminalFormat, sender, recipient)) + privateMessage, false);
+						staffMember.sendMessage(formatPlaceholders(socialspyChatFormat, sender, recipient) + privateMessage);
+				ChatPlugin.getInstance().sendConsoleMessage(formatPlaceholders(socialspyTerminalFormat, sender, recipient) + privateMessage, false);
+			} if (advancementsEnabled)
+				Utils.displayAdvancement(recipient, formatPlaceholders(advancementsFormat, sender, recipient)
+						+ me.remigio07.chatplugin.common.util.Utils.abbreviate(privateMessage, privateMessage.toLowerCase().contains("\u00A7l") ? advancementsMaxMessageLength - 2 : advancementsMaxMessageLength, true),
+						advancementsIconMaterial, advancementsIconGlowing);
+		} else ChatPlugin.getInstance().sendConsoleMessage(formatPlaceholders(receivedTerminalFormat, sender, recipient) + privateMessage, false);
 		if (!ChatLogManager.getInstance().isEnabled() || ChatLogManager.getInstance().isPrintToLogFile())
-			LogManager.getInstance().writeToFile(ChatColor.stripColor(ChatColor.translate(formatPlaceholders(socialspyTerminalFormat, sender, recipient)) + privateMessage));
+			LogManager.getInstance().writeToFile(ChatColor.stripColor(formatPlaceholders(socialspyTerminalFormat, sender, recipient) + privateMessage));
 	}
 	
 	private static String formatPlaceholders(String input, ChatPluginServerPlayer sender, ChatPluginServerPlayer recipient) {
-		return input
+		return ChatColor.translate(input
 				.replace("{sender}", sender == null ? "Console" : sender.getName())
 				.replace("{sender_uuid}", (sender == null ? Utils.NIL_UUID : sender.getUUID()).toString())
 				.replace("{recipient}", recipient == null ? "Console" : recipient.getName())
-				.replace("{recipient_uuid}", (recipient == null ? Utils.NIL_UUID : recipient.getUUID()).toString());
+				.replace("{recipient_uuid}", (recipient == null ? Utils.NIL_UUID : recipient.getUUID()).toString())
+				);
 	}
 	
 }

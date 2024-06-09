@@ -38,6 +38,14 @@ import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 public class DenyChatReason<H extends DenyChatReasonHandler> {
 	
 	/**
+	 * The message {@link String#isEmpty()} after stripping colors and removing spaces.
+	 * 
+	 * <p><strong>Handler:</strong> {@link ChatManager}
+	 * <br><strong>Message path:</strong> "chat.no-blank-messages"</p>
+	 */
+	public static final DenyChatReason<ChatManager> BLANK_MESSAGE = new DenyChatReason<>("BLANK_MESSAGE", "chat.no-blank-messages", ChatManager.class);
+	
+	/**
 	 * The message {@link AntispamManager#exceedsMaxCapsLength(String)} and
 	 * {@link AntispamManager#exceedsMaxCapsPercentage(String)} and the sender does not
 	 * have the permission "chatplugin.antispam.caps" or "chatplugin.antispam.bypass".
@@ -48,7 +56,7 @@ public class DenyChatReason<H extends DenyChatReasonHandler> {
 	public static final DenyChatReason<AntispamManager> CAPS = new DenyChatReason<>("CAPS", "chat.antispam.no-caps", AntispamManager.class);
 	
 	/**
-	 * The list {@link AntispamManager#getFloodCache()} contains the sender and they do not
+	 * The {@link AntispamManager#getFloodCache()} list contains the sender and they do not
 	 * have the permission "chatplugin.antispam.flood" or "chatplugin.antispam.bypass".
 	 * 
 	 * <p><strong>Handler:</strong> {@link AntispamManager}
@@ -91,7 +99,7 @@ public class DenyChatReason<H extends DenyChatReasonHandler> {
 	public static final DenyChatReason<ChatManager> MUTEALL = new DenyChatReason<>("MUTEALL", "commands.muteall.muted", ChatManager.class);
 	
 	/**
-	 * The map {@link AntispamManager#getSpamCache()} contains the sender and they do not
+	 * The {@link AntispamManager#getSpamCache()} map contains the sender and they do not
 	 * have the permission "chatplugin.antispam.spam" or "chatplugin.antispam.bypass".
 	 * 
 	 * <p><strong>Handler:</strong> {@link AntispamManager}
@@ -124,7 +132,7 @@ public class DenyChatReason<H extends DenyChatReasonHandler> {
 	 * <br><strong>Message path:</strong> "vanish.no-chat"</p>
 	 */
 	public static final DenyChatReason<VanishManager> VANISH = new DenyChatReason<>("VANISH", "vanish.no-chat", VanishManager.class);
-	private static final DenyChatReason<?>[] VALUES = new DenyChatReason<?>[] { CAPS, FLOOD, FORMAT, IP_ADDRESS, MUTE, MUTEALL, SPAM, SWEAR, URL, VANISH };
+	private static final DenyChatReason<?>[] VALUES = new DenyChatReason<?>[] { BLANK_MESSAGE, CAPS, FLOOD, FORMAT, IP_ADDRESS, MUTE, MUTEALL, SPAM, SWEAR, URL, VANISH };
 	private String name, messagePath;
 	private Class<H> handlerClass;
 	

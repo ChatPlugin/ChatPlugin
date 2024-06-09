@@ -27,6 +27,7 @@ import me.remigio07.chatplugin.api.server.event.chat.AllowPrivateMessageEvent;
 import me.remigio07.chatplugin.api.server.event.chat.DenyPrivateMessageEvent;
 import me.remigio07.chatplugin.api.server.event.chat.PrePrivateMessageEvent;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.util.adapter.block.MaterialAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 
 /**
@@ -37,9 +38,11 @@ import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 public abstract class PrivateMessagesManager implements ChatPluginManager {
 	
 	protected static PrivateMessagesManager instance;
-	protected boolean enabled, soundEnabled, socialspyOnJoinEnabled;
-	protected String sentChatFormat, sentTerminalFormat, receivedChatFormat, receivedTerminalFormat, socialspyChatFormat, socialspyTerminalFormat;
+	protected boolean enabled, soundEnabled, socialspyOnJoinEnabled, advancementsEnabled, advancementsIconGlowing;
+	protected String sentChatFormat, sentTerminalFormat, receivedChatFormat, receivedTerminalFormat, socialspyChatFormat, socialspyTerminalFormat, advancementsFormat;
 	protected SoundAdapter sound;
+	protected int advancementsMaxMessageLength;
+	protected MaterialAdapter advancementsIconMaterial;
 	protected List<DenyChatReason<AntispamManager>> bypassAntispamChecks = Collections.emptyList();
 	protected long loadTime;
 	
@@ -74,6 +77,30 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	 */
 	public boolean isSocialspyOnJoinEnabled() {
 		return socialspyOnJoinEnabled;
+	}
+	
+	/**
+	 * Checks if private messages received by players
+	 * should also be displayed as custom advancements.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.private-messages.advancements.enabled" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Whether advancements are enabled
+	 */
+	public boolean areAdvancementsEnabled() {
+		return advancementsEnabled;
+	}
+	
+	/**
+	 * Checks if the glowing effect should be applied to
+	 * the icon of the advancement displayed to players.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.private-messages.advancements.icon.glowing" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Whether the advancements icon should have the glowing effect
+	 */
+	public boolean isAdvancementsIconGlowing() {
+		return advancementsIconGlowing;
 	}
 	
 	/**
@@ -149,6 +176,18 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	}
 	
 	/**
+	 * Gets the advancement format displayed to players when
+	 * they receive a private message from someone else.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.private-messages.advancements.format"</p>
+	 * 
+	 * @return Received messages' advancement format
+	 */
+	public String getAdvancementsFormat() {
+		return advancementsFormat;
+	}
+	
+	/**
 	 * Gets the sound that private messages will produce.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.private-messages.sound" in {@link ConfigurationType#CHAT}</p>
@@ -157,6 +196,41 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	 */
 	public SoundAdapter getSound() {
 		return sound;
+	}
+	
+	/**
+	 * Gets the max length of private messages displayed as custom advancements.
+	 * 
+	 * <p>Longer messages will be abbreviated by adding "..." at the end.</p>
+	 * 
+	 * <p><strong>Found at:</strong> "chat.private-messages.advancements.max-message-length" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Private messages' max length for advancements
+	 */
+	public int getAdvancementsMaxMessageLength() {
+		return advancementsMaxMessageLength;
+	}
+	
+	/**
+	 * Gets the material of the icon of the advancement displayed to
+	 * players when they receive a private message from someone else.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.private-messages.advancements.icon.material"</p>
+	 * 
+	 * @return Advancements' icon's material
+	 */
+	public MaterialAdapter getAdvancementsIconMaterial() {
+		return advancementsIconMaterial;
+	}
+	
+	/**
+	 * Gets the antispam's checks to bypass
+	 * when checking the private messages.
+	 * 
+	 * @return Private messages' antispam's checks
+	 */
+	public List<DenyChatReason<AntispamManager>> getBypassAntispamChecks() {
+		return bypassAntispamChecks;
 	}
 	
 	/**

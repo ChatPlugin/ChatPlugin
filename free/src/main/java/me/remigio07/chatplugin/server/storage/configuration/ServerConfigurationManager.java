@@ -82,9 +82,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			loadAll();
 			LogManager.getInstance().setDebug(ConfigurationType.CONFIG.get().getBoolean("settings.debug"));
 			
-			if ((lastVersionChange = VersionChange.getCurrentVersionChange(ConfigurationType.CONFIG.get(), "version", ChatPlugin.VERSION)) != VersionChange.NULL) {
+			if ((lastVersionChange = VersionChange.getVersionChange(ConfigurationType.CONFIG.get(), "version", ChatPlugin.VERSION)) != VersionChange.NULL) {
 				if (!lastVersionChange.isSupported())
-					throw new ChatPluginManagerException(this, "Downgrading ChatPlugin's version is not supported. If you wish to use an older version, please delete the plugin's folder and let it generate new configuration files. You can also edit settings.version in config.yml to bypass this check, but errors may occur and no support will be given if you ask for it.");
+					throw new ChatPluginManagerException(this, "downgrading ChatPlugin's version is not supported. If you wish to use an older version, please delete the plugin's folder and let it generate new configuration files. You can also edit settings.version in config.yml to bypass this check, but errors may occur and no support will be given if you ask for it");
 				addAllDefaults(true);
 			} else addAllDefaults(false);
 			

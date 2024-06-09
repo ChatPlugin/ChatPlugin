@@ -30,9 +30,11 @@ import javax.net.ssl.HttpsURLConnection;
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.Library;
+import me.remigio07.chatplugin.api.common.util.VersionChange;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
+import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.common.util.text.ComponentTranslatorImpl;
 
@@ -99,7 +101,7 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 				if (scanner.hasNext()) {
 					String latestVersion = scanner.next();
 					
-					if (!latestVersion.equals(ChatPlugin.VERSION))
+					if (!latestVersion.equals(ChatPlugin.VERSION) && VersionChange.getVersionChange(ChatPlugin.VERSION, latestVersion).isSupported())
 						LogManager.log("You are running an outdated version of ChatPlugin. It is recommended to update to the latest version ({0}) to avoid bugs and incompatibilities.", 1, latestVersion);
 				}
 			} catch (IOException e) {
@@ -168,10 +170,12 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 		return sb.toString();
 	}
 	
-	public static String abbreviate(String input, int length) {
-		if (input.length() <= length)
+	public static String abbreviate(String input, int length, boolean stripColor) {
+		String stripped = stripColor ? ChatColor.stripColor(input) : null;
+		
+		if ((stripColor ? stripped : input).length() <= length)
 			return input;
-		return input.substring(0, length - 3) + "...";
+		return input.substring(0, length + (stripColor ? input.length() - stripped.length() : 0) - 3) + "...";
 	}
 	
 	public static void debugPrint(List<String> list) {

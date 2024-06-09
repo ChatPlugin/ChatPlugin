@@ -97,7 +97,7 @@ public enum VersionChange {
 	 * @return Whether this is a minor version change
 	 */
 	public boolean isMinor() {
-		return index == 0 || index == 1;
+		return index == 1;
 	}
 	
 	/**
@@ -106,38 +106,55 @@ public enum VersionChange {
 	 * @return Whether this is a patch version change
 	 */
 	public boolean isPatch() {
-		return index != -1;
+		return index == 2;
 	}
 	
 	/**
-	 * Gets the current version change by checking the old version in the specified configuration.
+	 * Gets the version change by comparing
+	 * the specified version to another one.
 	 * 
 	 * <p>Will return {@link #NULL} if the two versions match.</p>
 	 * 
-	 * @param configuration Configuration to check
-	 * @param versionPath Version's path to check
-	 * @param currentVersion Current version
+	 * @param version Version to compare
+	 * @param newVersion New version to compare
 	 * @return Current version change
+	 * @throws ArrayIndexOutOfBoundsException If specified versions do not follow semantic versioning
+	 * @throws NumberFormatException If specified versions do not follow semantic versioning
 	 */
-	@NotNull
-	public static VersionChange getCurrentVersionChange(Configuration configuration, String versionPath, String currentVersion) {
-		String oldVersion = configuration.getString(versionPath, "0.0.1");
-		
-		if (!oldVersion.equals(currentVersion)) {
-			String[] oldNumbers = oldVersion.split("\\.");
-			String[] newNumbers = currentVersion.split("\\.");
+	public static VersionChange getVersionChange(String version, String newVersion) {
+		if (!version.equals(newVersion)) {
+			String[] numbers = version.split("\\.");
+			String[] newNumbers = newVersion.split("\\.");
 			
 			for (int i = 0; i < 3; i++)
-				if (oldNumbers[i] != newNumbers[i])
-					return getVersionChange(i, Integer.valueOf(newNumbers[i]) > Integer.valueOf(oldNumbers[i]));
+				if (!numbers[i].equals(newNumbers[i]))
+					return getVersionChange(i, Integer.valueOf(newNumbers[i]) > Integer.valueOf(numbers[i]));
 		} return NULL;
 	}
 	
 	private static VersionChange getVersionChange(int index, boolean upgrade) {
 		for (VersionChange versionChange : values())
-			if (index == versionChange.getIndex() && ((upgrade && versionChange.name().contains("UPGRADE")) || !upgrade))
+			if (index == versionChange.getIndex() && (upgrade ? versionChange.isSupported() : !versionChange.isSupported()))
 				return versionChange;
 		return NULL;
+	}
+	
+	/**
+	 * Gets the version change by comparing the version
+	 * in the specified configuration to another one.
+	 * 
+	 * <p>Will return {@link #NULL} if the two versions match.</p>
+	 * 
+	 * @param configuration Configuration to check
+	 * @param path Path containing the version to compare
+	 * @param newVersion New version to compare
+	 * @return Current version change
+	 * @throws ArrayIndexOutOfBoundsException If specified versions do not follow semantic versioning
+	 * @throws NumberFormatException If specified versions do not follow semantic versioning
+	 */
+	@NotNull
+	public static VersionChange getVersionChange(Configuration configuration, String path, String newVersion) {
+		return getVersionChange(configuration.getString(path, "0.0.1"), newVersion);
 	}
 	
 }

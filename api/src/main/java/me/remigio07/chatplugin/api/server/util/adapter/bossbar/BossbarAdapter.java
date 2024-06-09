@@ -236,7 +236,7 @@ public class BossbarAdapter {
 		if (Environment.isBukkit()) {
 			bukkitValue().getPlayers().forEach(player -> bukkitValue().removePlayer(player));
 			
-			if (VersionUtils.getVersion().isAtLeast(Version.V1_13))
+			if (VersionUtils.getVersion().isAtLeast(Version.V1_13_2))
 				BukkitBossbar.remove(id);
 		} else spongeValue().getPlayers().forEach(player -> spongeValue().removePlayer(player));
 	}
@@ -244,7 +244,7 @@ public class BossbarAdapter {
 	private static class BukkitBossbar {
 		
 		public static BossBar get(String id) {
-			return VersionUtils.getVersion().isAtLeast(Version.V1_13)
+			return VersionUtils.getVersion().isAtLeast(Version.V1_13_2)
 					? Bukkit.createBossBar(new NamespacedKey(BukkitBootstrapper.getInstance(), id), "", BarColor.PINK, BarStyle.SOLID)
 					: Bukkit.createBossBar("", BarColor.PINK, BarStyle.SOLID);
 		}

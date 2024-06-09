@@ -240,7 +240,10 @@ public class BukkitReflection {
 		
 		for (String otherAttempt : otherAttempts) {
 			try {
-				map.put(method, clazz.getMethod(otherAttempt, parameters.toArray(new Class<?>[0])));
+				Method declaredMethod = clazz.getDeclaredMethod(otherAttempt, parameters.toArray(new Class<?>[0]));
+				
+				declaredMethod.setAccessible(true);
+				map.put(method, declaredMethod);
 				break;
 			} catch (NoSuchMethodException e) {
 				

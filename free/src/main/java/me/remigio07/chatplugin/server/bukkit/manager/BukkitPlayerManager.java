@@ -177,7 +177,7 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 		if (CustomSuffixManager.getInstance().isEnabled()) {
 			Objective customSuffix = scoreboard.registerNewObjective("tablist_suffix", CustomSuffixManager.getInstance().getRenderType() == RenderType.HEARTS ? "health" : "dummy");
 			
-			if (VersionUtils.getVersion().isAtLeast(Version.V1_13))
+			if (VersionUtils.getVersion().isAtLeast(Version.V1_13_2))
 				customSuffix.setRenderType(CustomSuffixManager.getInstance().getRenderType().bukkitValue());
 			customSuffix.setDisplaySlot(DisplaySlot.PLAYER_LIST);
 		} for (int i = 0; i < 15; i++)

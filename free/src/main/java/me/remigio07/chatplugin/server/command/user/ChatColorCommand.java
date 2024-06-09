@@ -63,7 +63,7 @@ public class ChatColorCommand extends BaseCommand {
 						} else player.sendTranslatedMessage("commands.chatcolor.invalid-color", unformatColorString(args[0]));
 					} else sender.sendMessage(language.getMessage("misc.disabled-world"));
 				} else sender.sendMessage(language.getMessage("commands.chatcolor.hex-usage", String.format("%06x", ThreadLocalRandom.current().nextInt(16777216)).toUpperCase()));
-			}
+			} else sender.sendMessage(language.getMessage("commands.chatcolor.hex-usage", String.format("%06x", ThreadLocalRandom.current().nextInt(16777216)).toUpperCase()));
 		} else if (args.length == 2) {
 			if (sender.hasPermission(getPermission() + ".others")) {
 				if (PlayerAdapter.getPlayer(args[1], false) != null) {
@@ -89,7 +89,7 @@ public class ChatColorCommand extends BaseCommand {
 	private ChatColor getColor(String arg) {
 		if (arg.length() == 2 && arg.charAt(0) == '&' && ChatColor.isColorCode(arg.charAt(1)))
 			return ChatColor.getByChar(arg.charAt(1));
-		if (arg.length() == 7 && VersionUtils.getVersion().isAtLeast(Version.V1_16))
+		if (arg.length() == 7)
 			try {
 				return ChatColor.of(arg);
 			} catch (NumberFormatException e) {

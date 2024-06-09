@@ -311,6 +311,8 @@ public class ChatColor {
 	 * 
 	 * <p>Will return {@link #SECTION_SIGN}<code> + </code>{@link #getCode()} if {@link #isDefaultColor()} and a
 	 * hex string (example: "&sect;x&sect;f&sect;f&sect;5&sect;5&sect;f&sect;f", but translated) otherwise.</p>
+	 * 
+	 * @see #getClosestDefaultColor() Pre-1.16 method to safely convert to default colors
 	 */
 	@Override
 	public String toString() {
@@ -463,10 +465,50 @@ public class ChatColor {
 	/**
 	 * Checks if this is a format code.
 	 * 
-	 * @return Whether this is a format code.
+	 * @return Whether this is a format code
 	 */
 	public boolean isFormatCode() {
 		return isDefaultColor() && FORMAT_CODES.contains(String.valueOf(code));
+	}
+	
+	/**
+	 * Gets the default color closest to this color.
+	 * 
+	 * <p>Will return <code>this</code> if <code>{@link #isDefaultColor()} || {@link #isFormatCode()}</code>.</p>
+	 * 
+	 * <p><strong>Note:</strong> this method uses the same algorithm of ViaVersion.</p>
+	 * 
+	 * @return Closest default color
+	 */
+	public ChatColor getClosestDefaultColor() {
+		if (isDefaultColor() || isFormatCode())
+			return this;
+		ChatColor closest = null;
+		int smallestDiff = 0;
+		int r = (color.getRGB() >> 16) & 0xFF;
+		int g = (color.getRGB() >> 8) & 0xFF;
+		int b = color.getRGB() & 0xFF;
+		
+		for (ChatColor defaultColor : VALUES) {
+			if (defaultColor.getColor() != null) {
+				int rgb = defaultColor.getColor().getRGB();
+				
+				if (rgb == color.getRGB())
+					return defaultColor;
+				int rAverage = (((rgb >> 16) & 0xFF) + r) / 2;
+				int rDiff = ((rgb >> 16) & 0xFF) - r;
+				int gDiff = ((rgb >> 8) & 0xFF) - g;
+				int bDiff = (rgb & 0xFF) - b;
+				int diff = ((2 + (rAverage >> 8)) * rDiff * rDiff)
+						+ (4 * gDiff * gDiff)
+						+ ((2 + ((255 - rAverage) >> 8)) * bDiff * bDiff);
+				
+				if (closest == null || diff < smallestDiff) {
+					closest = defaultColor;
+					smallestDiff = diff;
+				}
+			}
+		} return closest;
 	}
 	
 	/**

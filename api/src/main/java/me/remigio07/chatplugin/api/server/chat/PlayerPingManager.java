@@ -15,11 +15,16 @@
 
 package me.remigio07.chatplugin.api.server.chat;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
+import me.remigio07.chatplugin.api.server.event.chat.PlayerPingEvent;
+import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 
@@ -31,9 +36,12 @@ import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 public abstract class PlayerPingManager implements ChatPluginManager {
 	
 	protected static PlayerPingManager instance;
-	protected boolean enabled, atSignRequired, soundEnabled;
+	protected boolean enabled, atSignRequired, soundEnabled, titlesEnabled;
 	protected String color;
 	protected SoundAdapter sound;
+	protected long titlesFadeIn, titlesStay, titlesFadeOut;
+	protected Map<Language, String> titles = new HashMap<>();
+	protected Map<Language, String> subtitles = new HashMap<>();
 	protected long loadTime;
 	
 	/**
@@ -70,6 +78,17 @@ public abstract class PlayerPingManager implements ChatPluginManager {
 	}
 	
 	/**
+	 * Checks if a title should be displayed to players when pinged.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.player-ping.titles.enabled" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Whether a title should be displayed to players when pinged
+	 */
+	public boolean areTitlesEnabled() {
+		return titlesEnabled;
+	}
+	
+	/**
 	 * Gets the color pings in chat will have.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.player-ping.color" in {@link ConfigurationType#CHAT}</p>
@@ -92,6 +111,102 @@ public abstract class PlayerPingManager implements ChatPluginManager {
 	}
 	
 	/**
+	 * Gets the time for the titles
+	 * to fade in, in milliseconds.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.player-ping.titles.fade-in-ms" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Titles' time to fade in
+	 */
+	public long getTitlesFadeIn() {
+		return titlesFadeIn;
+	}
+	
+	/**
+	 * Gets the time for the titles
+	 * to stay, in milliseconds.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.player-ping.titles.stay-ms" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Titles' time to stay
+	 */
+	public long getTitlesStay() {
+		return titlesStay;
+	}
+	
+	/**
+	 * Gets the time for the titles
+	 * to fade out, in milliseconds.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.player-ping.titles.fade-out-ms" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Titles' time to fade out
+	 */
+	public long getTitlesFadeOut() {
+		return titlesFadeOut;
+	}
+	
+	/**
+	 * Gets the map of loaded titles.
+	 * 
+	 * <p>You may modify the returned map, but it cannot point to a
+	 * <code>null</code> value for {@link Language#getMainLanguage()}.</p>
+	 * 
+	 * <p><strong>Found at:</strong> "chat.player-ping.titles.titles" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Loaded titles' map
+	 */
+	public Map<Language, String> getTitles() {
+		return titles;
+	}
+	
+	/**
+	 * Gets the title for the specified language.
+	 * 
+	 * <p>Specify <code>true</code> as <code>avoidNull</code> to fall back to
+	 * {@link Language#getMainLanguage()}'s title if no title is present for the specified language.
+	 * Will return <code>null</code> if {@link #getTitles()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.</p>
+	 * 
+	 * @param language Language used to translate the title
+	 * @param avoidNull Whether to avoid returning <code>null</code>
+	 * @return Loaded title
+	 */
+	@Nullable(why = "No title may be present for the specified language")
+	public String getTitle(Language language, boolean avoidNull) {
+		return titles.get(language) == null ? avoidNull ? titles.get(Language.getMainLanguage()) : null : titles.get(language);
+	}
+	
+	/**
+	 * Gets the map of loaded subtitles.
+	 * 
+	 * <p>You may modify the returned map, but it cannot point to a
+	 * <code>null</code> value for {@link Language#getMainLanguage()}.</p>
+	 * 
+	 * <p><strong>Found at:</strong> "chat.player-ping.titles.subtitles" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Loaded subtitles' map
+	 */
+	public Map<Language, String> getSubtitles() {
+		return subtitles;
+	}
+	
+	/**
+	 * Gets the subtitle for the specified language.
+	 * 
+	 * <p>Specify <code>true</code> as <code>avoidNull</code> to fall back to
+	 * {@link Language#getMainLanguage()}'s subtitle if no subtitle is present for the specified language.
+	 * Will return <code>null</code> if {@link #getSubtitles()}<code>.get(language) == null &amp;&amp; !avoidNull</code>.</p>
+	 * 
+	 * @param language Language used to translate the subtitle
+	 * @param avoidNull Whether to avoid returning <code>null</code>
+	 * @return Loaded subtitle
+	 */
+	@Nullable(why = "No subtitle may be present for the specified language")
+	public String getSubtitle(Language language, boolean avoidNull) {
+		return subtitles.get(language) == null ? avoidNull ? subtitles.get(Language.getMainLanguage()) : null : subtitles.get(language);
+	}
+	
+	/**
 	 * Gets this manager's instance.
 	 * 
 	 * @return Manager's instance
@@ -104,26 +219,37 @@ public abstract class PlayerPingManager implements ChatPluginManager {
 	 * Pings every loaded player contained in <code>message</code> and
 	 * returns the message with their names colored using {@link #getColor()}.
 	 * 
-	 * <p>Will do nothing if the player does not have the permission "chatplugin.player-ping".</p>
+	 * <p>Specifying "@everyone" will result in all players being pinged.</p>
+	 * 
+	 * <p>Will do nothing if the player does not have the permission "chatplugin.player-ping"
+	 * or "chatplugin.player-ping.everyone" if they have tried to ping everyone.</p>
 	 * 
 	 * <p>This method will consider that some players may be ignored
 	 * by other players and that some players may be vanished.</p>
 	 * 
 	 * @param player Player involved
 	 * @param message Message involved
+	 * @param globalChat Whether the message has been sent to the global chat
 	 * @return Message adjusted with color
+	 * @see PlayerPingEvent
 	 * @see PlayerIgnoreManager#getIgnoredPlayers(OfflinePlayer)
 	 */
-	public abstract String performPing(ChatPluginServerPlayer player, String message);
+	public abstract String performPing(ChatPluginServerPlayer player, String message, boolean globalChat);
 	
 	/**
 	 * Gets the list of every loaded player contained in <code>message</code>.
 	 * 
+	 * <p>Specifying "@everyone" will result in all players being pinged.</p>
+	 * 
+	 * <p>Will return an empty list if the player does not have the permission "chatplugin.player-ping"
+	 * or "chatplugin.player-ping.everyone" if they have tried to ping everyone.</p>
+	 * 
 	 * @param player Player involved
 	 * @param message Message involved
+	 * @param globalChat Whether the message has been sent to the global chat
 	 * @return Pinged players' list
 	 */
-	public abstract List<ChatPluginServerPlayer> getPingedPlayers(ChatPluginServerPlayer player, String message);
+	public abstract List<ChatPluginServerPlayer> getPingedPlayers(ChatPluginServerPlayer player, String message, boolean globalChat);
 	
 	/**
 	 * Plays {@link #getSound()} to the specified player.

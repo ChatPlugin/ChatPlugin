@@ -720,6 +720,14 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.player-ping.sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "ENTITY_EXPERIENCE_ORB_PICKUP" : "ORB_PICKUP");
 		chat.addDefault("chat.player-ping.sound.volume", 1F);
 		chat.addDefault("chat.player-ping.sound.pitch", 1F);
+		chat.addDefault("chat.player-ping.titles.enabled", true);
+		chat.addDefault("chat.player-ping.titles.fade-in-ms", 500L);
+		chat.addDefault("chat.player-ping.titles.stay-ms", 3500L);
+		chat.addDefault("chat.player-ping.titles.fade-out-ms", 1000L);
+		chat.addDefault("chat.player-ping.titles.titles.english", "&b@{player}");
+		chat.addDefault("chat.player-ping.titles.titles.italian", "&b@{player}");
+		chat.addDefault("chat.player-ping.titles.subtitles.english", "&ehas pinged you in the chat");
+		chat.addDefault("chat.player-ping.titles.subtitles.italian", "&eti ha menzionato in chat");
 		
 		chat.addDefault("chat.private-messages.enabled", true);
 		chat.addDefault("chat.private-messages.format.sent.chat", "&7«&8[&b\u270E&8] &fYou &e-> &f{recipient}&7» &f");

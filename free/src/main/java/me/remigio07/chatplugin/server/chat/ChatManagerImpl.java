@@ -155,8 +155,8 @@ public class ChatManagerImpl extends ChatManager {
 			reason = DenyChatReason.BLANK_MESSAGE;
 		
 		// 8. player-ping
-		if (reason == null && PlayerPingManager.getInstance().isEnabled() && !PlayerPingManager.getInstance().getPingedPlayers(player, message).isEmpty() && player.hasPermission("chatplugin.player-ping"))
-			message = PlayerPingManager.getInstance().performPing(player, message);
+		if (reason == null && PlayerPingManager.getInstance().isEnabled())
+			message = PlayerPingManager.getInstance().performPing(player, message, global);
 		
 		// denied
 		if (reason != null) {

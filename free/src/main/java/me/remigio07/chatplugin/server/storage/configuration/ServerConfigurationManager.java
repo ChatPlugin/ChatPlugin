@@ -801,7 +801,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		tablists.addDefault("tablists.settings.enabled", VersionUtils.getVersion().isAtLeast(Version.V1_8));
 		tablists.addDefault("tablists.settings.random-order", false);
-		tablists.addDefault("tablists.settings.sending-timeout-ms", 500);
+		tablists.addDefault("tablists.settings.sending-timeout-ms", 250);
 		tablists.addDefault("tablists.settings.placeholder-types", Arrays.asList("SERVER", "PLAYER", "INTEGRATIONS"));
 		tablists.addDefault("tablists.settings.custom-suffix.enabled", true);
 		tablists.addDefault("tablists.settings.custom-suffix.displayed-value", "{ping}");
@@ -809,14 +809,22 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		tablists.addDefault("tablists.settings.custom-suffix.placeholder-types", Arrays.asList("PLAYER"));
 		
 		if (fileMissing) {
-			tablists.addDefault("tablists.tl-0.headers.english", "&eWelcome to the server, &f{player}&e!\n&aBe respectful and have fun!");
-			tablists.addDefault("tablists.tl-0.headers.italian", "&eBenvenuti nel server, &f{player}&e!\n&aSiate rispettosi e divertitevi!");
-			tablists.addDefault("tablists.tl-0.footers.english", "&bRemember to vote us &feveryday&b!");
-			tablists.addDefault("tablists.tl-0.footers.italian", "&bRicorda di votarci &fogni giorno&b!");
-			tablists.addDefault("tablists.tl-1.headers.english", "&eWelcome to the server, &f{player}&e!\n&cBe respectful and have fun!");
-			tablists.addDefault("tablists.tl-1.headers.italian", "&eBenvenuti nel server, &f{player}&e!\n&cSiate rispettosi e divertitevi!");
-			tablists.addDefault("tablists.tl-1.footers.english", "&9Remember to vote us &feveryday&9!");
-			tablists.addDefault("tablists.tl-1.footers.italian", "&9Ricorda di votarci &fogni giorno&9!");
+			tablists.addDefault("tablists.tl-0.headers.english", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&c&lChat&f&lPlugin server\n&eremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&r");
+			tablists.addDefault("tablists.tl-0.headers.italian", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&f&lServer &c&lChat&f&lPlugin\n&eremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&r");
+			tablists.addDefault("tablists.tl-0.footers.english", "&r\n&7Ping: &r{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Time: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &r{tps_1_min_format}\n&r");
+			tablists.addDefault("tablists.tl-0.footers.italian", "&r\n&7Ping: &r{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Orario: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &r{tps_1_min_format}\n&r");
+			tablists.addDefault("tablists.tl-1.headers.english", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&c&lChat&f&lPlugin server\n&eremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&r");
+			tablists.addDefault("tablists.tl-1.headers.italian", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&f&lServer &c&lChat&f&lPlugin\n&eremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&r");
+			tablists.addDefault("tablists.tl-1.footers.english", "&r\n&7Ping: &r{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Time: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &r{tps_1_min_format}\n&r");
+			tablists.addDefault("tablists.tl-1.footers.italian", "&r\n&7Ping: &r{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Orario: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &r{tps_1_min_format}\n&r");
+			tablists.addDefault("tablists.tl-2.headers.english", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&c&lChat&f&lPlugin server\n&e&oremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&r");
+			tablists.addDefault("tablists.tl-2.headers.italian", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&f&lServer &c&lChat&f&lPlugin\n&e&oremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&r");
+			tablists.addDefault("tablists.tl-2.footers.english", "&r\n&7Ping: &r{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Time: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &r{tps_1_min_format}\n&r");
+			tablists.addDefault("tablists.tl-2.footers.italian", "&r\n&7Ping: &r{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Orario: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &r{tps_1_min_format}\n&r");
+			tablists.addDefault("tablists.tl-3.headers.english", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&c&lChat&f&lPlugin server\n&e&oremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&r");
+			tablists.addDefault("tablists.tl-3.headers.italian", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&f&lServer &c&lChat&f&lPlugin\n&e&oremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&r");
+			tablists.addDefault("tablists.tl-3.footers.english", "&r\n&7Ping: &r{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Time: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &r{tps_1_min_format}\n&r");
+			tablists.addDefault("tablists.tl-3.footers.italian", "&r\n&7Ping: &r{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Orario: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &r{tps_1_min_format}\n&r");
 		} tablists.save();
 	}
 	

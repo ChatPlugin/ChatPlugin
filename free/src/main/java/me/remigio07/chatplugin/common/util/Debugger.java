@@ -58,7 +58,7 @@ public class Debugger {
 		
 		sb.append("Environment: " + VersionUtils.getImplementationName() + " " + VersionUtils.getImplementationVersion() + "\n");
 		sb.append("Minecraft version: " + VersionUtils.getVersion().format() + " (protocol: " + VersionUtils.getVersion().getProtocol() + ")\n");
-		sb.append("ChatPlugin version: " + ChatPlugin.VERSION + "\n");
+		sb.append("ChatPlugin version: " + ChatPlugin.VERSION + " (" + (ChatPlugin.getInstance().isPremium() ? "Premium" : "Free") + ")\n");
 		sb.append("\n");
 		sb.append("OS: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + ", " + System.getProperty("os.arch") + "\n");
 		sb.append("Java version: " + System.getProperty("java.version") + "\n");

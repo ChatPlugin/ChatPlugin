@@ -32,6 +32,7 @@ public class GadgetsMenuIntegration extends ChatPluginBukkitIntegration<Cosmetic
 		super(IntegrationType.GADGETSMENU);
 		try {
 			Class.forName("com.yapzhenyie.GadgetsMenu.cosmetics.Category");
+			
 			integration = new GadgetsMenuPremiumIntegration();
 		} catch (ClassNotFoundException e) {
 			integration = new GadgetsMenuFreeIntegration();

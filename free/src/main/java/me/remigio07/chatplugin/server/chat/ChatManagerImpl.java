@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
+import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.punishment.mute.MuteManager;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
@@ -225,6 +226,9 @@ public class ChatManagerImpl extends ChatManager {
 		} catch (Exception e) {
 			LogManager.log("{0} occurred while incrementing messages sent stat for {1}: {2}", 2, e.getClass().getSimpleName(), player.getName(), e.getMessage());
 		} logMessage(ChatColor.translate(PlaceholderManager.getInstance().translatePlaceholders(consoleFormat, player, placeholderTypes)) + message);
+		
+		if (IntegrationType.DISCORDSRV.isEnabled())
+			IntegrationType.DISCORDSRV.get().handleChatEvent(player, message);
 	}
 	
 	private static void logMessage(String message) {

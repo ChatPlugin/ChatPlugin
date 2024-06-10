@@ -30,6 +30,7 @@ import me.remigio07.chatplugin.api.server.integration.cosmetics.CosmeticsIntegra
 import me.remigio07.chatplugin.api.server.integration.economy.EconomyIntegration;
 import me.remigio07.chatplugin.api.server.integration.placeholder.PlaceholderIntegration;
 import me.remigio07.chatplugin.api.server.integration.region.RegionIntegration;
+import me.remigio07.chatplugin.api.server.integration.social.SocialIntegration;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
@@ -47,6 +48,11 @@ public class IntegrationType<T extends ChatPluginIntegration> {
 	 * Represents the <a href="https://www.spigotmc.org/resources/combatlogx.31689/">CombatLogX</a> integration.
 	 */
 	public static final IntegrationType<CombatLogIntegration> COMBATLOGX = new IntegrationType<>("CombatLogX", "com.github.sirblobman.combatlogx.CombatPlugin", Arrays.asList(Environment.BUKKIT));
+	
+	/**
+	 * Represents the <a href="https://www.spigotmc.org/resources/discordsrv.18494/">DiscordSRV</a> integration.
+	 */
+	public static final IntegrationType<SocialIntegration> DISCORDSRV = new IntegrationType<>("DiscordSRV", "github.scarsz.discordsrv.DiscordSRV", Arrays.asList(Environment.BUKKIT));
 	
 	/**
 	 * Represents the <a href="https://essentialsx.net/">EssentialsX</a> integration.
@@ -125,7 +131,7 @@ public class IntegrationType<T extends ChatPluginIntegration> {
 	 * Represents the <a href="https://enginehub.org/worldguard">WorldGuard</a> integration.
 	 */
 	public static final IntegrationType<RegionIntegration> WORLDGUARD = new IntegrationType<>("WorldGuard", "com.sk89q.worldguard.WorldGuard", Arrays.asList(Environment.BUKKIT, Environment.SPONGE));
-	private static final IntegrationType<?>[] VALUES = new IntegrationType[] { COMBATLOGX, ESSENTIALSX, GADGETSMENU, GEYSERMC, LUCKPERMS, MATRIX, MVDWPLACEHOLDERAPI, NEGATIVITY, PLACEHOLDERAPI, PLAYERPARTICLES, PROTOCOLSUPPORT, ULTRACOSMETICS, VAULT, VIAVERSION, VULCAN, WORLDGUARD };
+	private static final IntegrationType<?>[] VALUES = new IntegrationType[] { COMBATLOGX, DISCORDSRV, ESSENTIALSX, GADGETSMENU, GEYSERMC, LUCKPERMS, MATRIX, MVDWPLACEHOLDERAPI, NEGATIVITY, PLACEHOLDERAPI, PLAYERPARTICLES, PROTOCOLSUPPORT, ULTRACOSMETICS, VAULT, VIAVERSION, VULCAN, WORLDGUARD };
 	private String plugin, clazz;
 	private List<Environment> supportedEnvironments;
 	

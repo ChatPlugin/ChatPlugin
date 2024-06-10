@@ -37,6 +37,7 @@ import me.remigio07.chatplugin.server.bukkit.integration.permission.LuckPermsInt
 import me.remigio07.chatplugin.server.bukkit.integration.placeholder.MVdWPlaceholderAPIIntegration;
 import me.remigio07.chatplugin.server.bukkit.integration.placeholder.PlaceholderAPIIntegration;
 import me.remigio07.chatplugin.server.bukkit.integration.region.WorldGuardIntegration;
+import me.remigio07.chatplugin.server.bukkit.integration.social.DiscordSRVIntegration;
 import me.remigio07.chatplugin.server.bukkit.integration.version.ProtocolSupportIntegration;
 import me.remigio07.chatplugin.server.bukkit.integration.version.ViaVersionIntegration;
 
@@ -50,6 +51,7 @@ public class BukkitIntegrationManager extends IntegrationManager {
 		List<String> hooked = new ArrayList<>();
 		
 		putIntegration(new CombatLogXIntegration());
+		putIntegration(new DiscordSRVIntegration());
 		putIntegration(new EssentialsXIntegration());
 		putIntegration(new GadgetsMenuIntegration());
 		putIntegration(new GeyserMCIntegration());

@@ -5,4 +5,4 @@ api-version: 1.13
 author: Remigio07
 website: https://remigio07.me/chatplugin
 description: 'A lightweight yet complete plugin which handles just too many features!'
-softdepend: [Essentials, ViaVersion, ProtocolSupport, Vault, PlaceholderAPI, MVdWPlaceholderAPI, CombatLogX, GadgetsMenu, PlayerParticles, Matrix, Vulcan, Negativity, WorldGuard, UltraCosmetics]
+softdepend: [Essentials, ViaVersion, ProtocolSupport, Vault, PlaceholderAPI, MVdWPlaceholderAPI, CombatLogX, GadgetsMenu, PlayerParticles, Matrix, Vulcan, Negativity, WorldGuard, UltraCosmetics, DiscordSRV]

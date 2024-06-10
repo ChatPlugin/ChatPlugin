@@ -9,6 +9,7 @@ repositories {
 	maven { url 'https://repo.essentialsx.net/releases/' }
 	maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
 	maven { url 'https://repo.rosewooddev.io/repository/public/' }
+	maven { url 'https://nexus.scarsz.me/content/groups/public/' }
 }
 
 ext.libsDir = project.projectDir.path + '/libs/'
@@ -38,6 +39,7 @@ dependencies {
 	compileOnly 'net.luckperms:api:5.4'
 	compileOnly 'me.clip:placeholderapi:2.11.3'
 	compileOnly 'dev.esophose:playerparticles:8.0'
+	compileOnly 'com.discordsrv:discordsrv:1.27.0'
 }
 
 task assembleFinalJar(type: Jar) {

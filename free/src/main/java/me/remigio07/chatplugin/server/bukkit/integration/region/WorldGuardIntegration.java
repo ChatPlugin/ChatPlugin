@@ -89,7 +89,6 @@ public class WorldGuardIntegration extends ChatPluginBukkitIntegration<RegionInt
 	
 	private String getRegionID(Location location) {
 		ProtectedRegion region = Iterables.getFirst(((RegionContainer) api).get(BukkitAdapter.adapt(location.getWorld())).getApplicableRegions(BlockVector3.at(location.getBlockX(), location.getBlockY(), location.getBlockZ())).getRegions(), null);
-		
 		return region == null ? null : region.getId();
 	}
 	

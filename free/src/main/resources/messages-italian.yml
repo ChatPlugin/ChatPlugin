@@ -169,8 +169,8 @@ commands:
       no-players-online: '{pfx} &eAttualmente non ci sono giocatori online.'
       rank-format: '{prefix}&e(&f{0}&e): &f[{1}]'
     rank:
-      message: '{pfx} &aAttualmente ci sono &f{0} &agiocatori online che appartengono al rango &f{1} &a: &f[{2}]&a.'
-      no-players-online: '{pfx} &eAttualmente non ci sono giocatori online appartenenti a quel rango.'
+      message: '{pfx} &aAttualmente ci sono &f{0} &agiocatori online che appartengono al rango &f{1}&a: &f[{2}]&a.'
+      no-players-online: '{pfx} &eAttualmente non ci sono giocatori online che appartengono a quel rango.'
     name-format:
       vanished: '&o'
       not-vanished: '&f'
@@ -365,7 +365,8 @@ chat:
     {pfx} &cA &f{0} &cè stato impedito (motivo: &f{1}&c) di inviare:
     &f{2}
   no-format: '{pfx} &cNon puoi scrivere messaggi formattati. Acquista un pacchetto &fVIP &cper aggirare questa restrizione.'
-  pinged: '{pfx} &eSiete stati pingati da &f{0}&e.'
+  no-blank-messages: '{pfx} &cNon puoi inviare messaggi vuoti.'
+  pinged: '{pfx} &eSiete stati menzionati da &f{0}&e.'
   log:
     searching: '{pfx} &eRicerca dei messaggi registrati...'
     found: '{pfx} &aSono stati trovati i seguenti messaggi:'

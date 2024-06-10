@@ -56,12 +56,14 @@ public class PlayerListCommand extends BaseCommand {
 				notVanishedColor = language.getMessage("commands.playerlist.name-format.not-vanished");
 				
 				sender.sendMessage(language.getMessage("commands.playerlist.all.message", hideVanished ? VanishManager.getInstance().getOnlineServer() : PlayerAdapter.getOnlinePlayers().size(), Utils.getMaxPlayers()));
+				RankManager.getInstance().getRanks().forEach(rank -> temp.put(rank, new ArrayList<>()));
 				
 				for (ChatPluginServerPlayer player : ServerPlayerManager.getInstance().getPlayers().values())
 					if (!hideVanished || !player.isVanished() || player.getUUID().equals(sender.getUUID()))
-						temp.put(player.getRank(), Utils.addAndGet(temp.getOrDefault(player.getRank(), new ArrayList<>()), Arrays.asList((player.isVanished() ? vanishedColor : notVanishedColor) + player.getName())));
+						temp.get(player.getRank()).add((player.isVanished() ? vanishedColor : notVanishedColor) + player.getName());
 				for (Entry<Rank, List<String>> rank : temp.entrySet())
-					sender.sendMessage(rank.getKey().formatPlaceholders(language.getMessage("commands.playerlist.all.rank-format", rank.getValue().size(), String.join(", " + notVanishedColor, rank.getValue().toArray(new String[0])) + "\u00A7r"), language));
+					if (!rank.getValue().isEmpty())
+						sender.sendMessage(rank.getKey().formatPlaceholders(language.getMessage("commands.playerlist.all.rank-format", rank.getValue().size(), String.join(", " + notVanishedColor, rank.getValue().toArray(new String[0])) + "\u00A7r"), language));
 			} else sender.sendMessage(language.getMessage("commands.playerlist.all.no-players-online"));
 		} else {
 			Rank rank = RankManager.getInstance().getRank(args[0]);

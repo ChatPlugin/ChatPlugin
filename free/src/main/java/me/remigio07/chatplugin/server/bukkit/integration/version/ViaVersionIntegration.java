@@ -19,7 +19,6 @@ import org.bukkit.entity.Player;
 
 import com.viaversion.viaversion.ViaVersionPlugin;
 import com.viaversion.viaversion.api.ViaAPI;
-import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
 
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.integration.version.VersionIntegration;
@@ -43,7 +42,7 @@ public class ViaVersionIntegration extends ChatPluginBukkitIntegration<VersionIn
 	@Override
 	public Version getVersion(PlayerAdapter player) {
 		Version version = ServerPlayerManager.getPlayerVersion(player.getUUID());
-		return version == null ? Version.getVersion(ProtocolVersion.getProtocol(((ViaAPI<Player>) api).getPlayerVersion(player.bukkitValue())).getName()) : version;
+		return version == null ? Version.getVersion(((ViaAPI<Player>) api).getPlayerVersion(player.bukkitValue()), false) : version;
 	}
 	
 }

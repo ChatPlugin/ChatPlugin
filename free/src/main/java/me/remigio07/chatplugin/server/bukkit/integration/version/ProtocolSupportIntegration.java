@@ -23,18 +23,19 @@ import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.integration.version.VersionIntegration;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
+import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.server.bukkit.integration.ChatPluginBukkitIntegration;
 
 public class ProtocolSupportIntegration extends ChatPluginBukkitIntegration<VersionIntegration> implements VersionIntegration {
 	
-	private Method getProtocolVersion = null, getName = null;
+	private Method getProtocolVersion = null, getId = null;
 	
 	public ProtocolSupportIntegration() {
 		super(IntegrationType.PROTOCOLSUPPORT);
 		
 		try {
 			getProtocolVersion = Class.forName("protocolsupport.api.ProtocolSupportAPI").getMethod("getProtocolVersion", Player.class);
-			getName = Class.forName("protocolsupport.api.ProtocolVersion").getMethod("getName");
+			getId = Class.forName("protocolsupport.api.ProtocolVersion").getMethod("getId");
 		} catch (NoSuchMethodException | ClassNotFoundException e) {
 			
 		}
@@ -42,8 +43,13 @@ public class ProtocolSupportIntegration extends ChatPluginBukkitIntegration<Vers
 	
 	@Override
 	public Version getVersion(PlayerAdapter player) {
+		Version version = ServerPlayerManager.getPlayerVersion(player.getUUID());
+		
+		if (version != null)
+			return version;
 		try {
-			return Version.getVersion((String) getName.invoke(getProtocolVersion.invoke(null, player.bukkitValue())));
+			Enum<?> ver = (Enum<?>) getProtocolVersion.invoke(null, player.bukkitValue());
+			return Version.getVersion((int) getId.invoke(ver), ver.ordinal() > 33);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Version.UNSUPPORTED;

@@ -53,7 +53,7 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 	public BaseChatPluginServerPlayer(PlayerAdapter player) {
 		super(player);
 		
-		if (ProxyManager.getInstance().isEnabled() && (version = ServerPlayerManager.getPlayerVersion(player.getUUID())) == null)
+		if ((version = ServerPlayerManager.getPlayerVersion(player.getUUID())) == null && ProxyManager.getInstance().isEnabled())
 			throw new IllegalStateException("Server has not received a PlayerJoin plugin message from the proxy");
 		if (PrivateMessagesManager.getInstance().isEnabled() && PrivateMessagesManager.getInstance().isSocialspyOnJoinEnabled() && player.hasPermission("chatplugin.commands.socialspy"))
 			socialspyEnabled = true;

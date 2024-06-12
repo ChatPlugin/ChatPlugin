@@ -31,7 +31,6 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
@@ -78,7 +77,7 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 		this.player = player;
 		audience = (audiences == null ? audiences = BukkitAudiences.create(BukkitBootstrapper.getInstance()) : audiences).player(player);
 		rank = RankManager.getInstance().calculateRank(this);
-		version = version == null ? IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(toAdapter()) : VersionUtils.getVersion() : version;
+		version = version == null ? VersionUtils.getVersion() : version;
 		craftPlayer = BukkitReflection.getLoadedClass("CraftPlayer").cast(player);
 		playerConnection = BukkitReflection.getFieldValue("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", craftPlayer), "playerConnection", "connection", VersionUtils.getVersion().isAtLeast(Version.V1_20) ? "c" : "b");
 		StorageConnector storage = StorageConnector.getInstance();

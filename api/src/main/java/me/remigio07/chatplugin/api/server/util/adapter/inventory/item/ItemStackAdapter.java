@@ -30,6 +30,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -516,6 +519,8 @@ public class ItemStackAdapter implements Cloneable {
 				} else if (itemMeta) {
 					ItemMeta meta = bukkitValue().getItemMeta();
 					
+					if (itemFlag == ItemFlagAdapter.HIDE_ATTRIBUTES && VersionUtils.getVersion().isAtLeast(Version.V1_20_5))
+						meta.addAttributeModifier(Attribute.GENERIC_ARMOR, new AttributeModifier("chatplugin", 0, Operation.ADD_NUMBER));
 					meta.addItemFlags(itemFlag.bukkitValue());
 					bukkitValue().setItemMeta(meta);
 				} this.itemFlags.add(itemFlag);

@@ -24,6 +24,8 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.value.mutable.Value;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
+import me.remigio07.chatplugin.api.common.util.VersionUtils;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.bootstrap.Environment;
@@ -35,6 +37,13 @@ import me.remigio07.chatplugin.bootstrap.Environment;
  * {@link #name()}, {@link #ordinal()}, {@link #valueOf(String)} and {@link #values()}.</p>
  */
 public class ItemFlagAdapter {
+	
+	/**
+	 * Hides trim upgrades applied to an armor.
+	 * 
+	 * <p><strong>Requires:</strong> 1.19.4</p>
+	 */
+	public static final ItemFlagAdapter HIDE_ARMOR_TRIM = new ItemFlagAdapter("HIDE_ARMOR_TRIM", new String[] { "HIDE_ARMOR_TRIM", "HIDE_MISCELLANEOUS" });
 	
 	/**
 	 * Hides enchantments applied to an item.
@@ -49,9 +58,7 @@ public class ItemFlagAdapter {
 	/**
 	 * Hides a leather armor's color information.
 	 * 
-	 * <p>Not available on Sponge yet: it is considered
-	 * equal to {@link #HIDE_MISCELLANEOUS} if
-	 * running on a Sponge environment.</p>
+	 * <p><strong>Requires:</strong> 1.16.2</p>
 	 */
 	public static final ItemFlagAdapter HIDE_DYE = new ItemFlagAdapter("HIDE_DYE", new String[] { "HIDE_DYE", "HIDE_MISCELLANEOUS" });
 	
@@ -71,10 +78,11 @@ public class ItemFlagAdapter {
 	public static final ItemFlagAdapter HIDE_CAN_BE_PLACED_ON = new ItemFlagAdapter("HIDE_CAN_BE_PLACED_ON", new String[] { "HIDE_PLACED_ON", "HIDE_CAN_PLACE" });
 	
 	/**
-	 * Hides an item's potion effects, book and firework information, map tooltips, patterns of banners and enchantments of enchanted books.
+	 * Hides an item's potion effects, book and firework information, map
+	 * tooltips, patterns of banners and enchantments of enchanted books.
 	 */
-	public static final ItemFlagAdapter HIDE_MISCELLANEOUS = new ItemFlagAdapter("HIDE_MISCELLANEOUS", new String[] { "HIDE_POTION_EFFECTS", "HIDE_MISCELLANEOUS" });
-	private static final ItemFlagAdapter[] VALUES = new ItemFlagAdapter[] { HIDE_ENCHANTMENTS, HIDE_ATTRIBUTES, HIDE_UNBREAKABLE, HIDE_CAN_DESTROY, HIDE_CAN_BE_PLACED_ON, HIDE_MISCELLANEOUS };
+	public static final ItemFlagAdapter HIDE_MISCELLANEOUS = new ItemFlagAdapter("HIDE_MISCELLANEOUS", new String[] { VersionUtils.getVersion().isAtLeast(Version.V1_20_5) ? "HIDE_ADDITIONAL_TOOLTIP" : "HIDE_POTION_EFFECTS", "HIDE_MISCELLANEOUS" });
+	private static final ItemFlagAdapter[] VALUES = new ItemFlagAdapter[] { HIDE_ARMOR_TRIM, HIDE_ENCHANTMENTS, HIDE_ATTRIBUTES, HIDE_DYE, HIDE_UNBREAKABLE, HIDE_CAN_DESTROY, HIDE_CAN_BE_PLACED_ON, HIDE_MISCELLANEOUS };
 	private String name;
 	private String[] ids;
 	
@@ -86,17 +94,27 @@ public class ItemFlagAdapter {
 	/**
 	 * Gets the item flag adapted for Bukkit environments.
 	 * 
+	 * <p>If the current version does not support this item flag, the
+	 * default value of {@link #HIDE_ATTRIBUTES} will be returned.</p>
+	 * 
 	 * @return Bukkit-adapted item flag
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBukkit()}
 	 */
 	public ItemFlag bukkitValue() {
 		if (Environment.isBukkit())
-			return ItemFlag.valueOf(ids[0]);
+			try {
+				return ItemFlag.valueOf(ids[0]);
+			} catch (IllegalArgumentException e) {
+				return ItemFlag.HIDE_ATTRIBUTES;
+			}
 		else throw new UnsupportedOperationException("Unable to adapt item flag to a Bukkit's ItemFlag on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
 	 * Gets the item flag adapted for Sponge environments.
+	 * 
+	 * <p>If the current version does not support this item flag, the
+	 * default value of {@link #HIDE_ATTRIBUTES} will be returned.</p>
 	 * 
 	 * @return Sponge-adapted item flag
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isSponge()}
@@ -159,6 +177,8 @@ public class ItemFlagAdapter {
 	@Nullable(why = "Instead of throwing IllegalArgumentException null is returned if the constant's name is invalid")
 	public static ItemFlagAdapter valueOf(String name) {
 		switch (name) {
+		case "HIDE_ARMOR_TRIM":
+			return HIDE_ARMOR_TRIM;
 		case "HIDE_ENCHANTMENTS":
 		case "HIDE_ENCHANTS":
 			return HIDE_ENCHANTMENTS;
@@ -175,6 +195,7 @@ public class ItemFlagAdapter {
 		case "HIDE_PLACED_ON":
 			return HIDE_CAN_BE_PLACED_ON;
 		case "HIDE_POTION_EFFECTS":
+		case "HIDE_ADDITIONAL_TOOLTIP":
 		case "HIDE_MISCELLANEOUS":
 			return HIDE_MISCELLANEOUS;
 		} return null;

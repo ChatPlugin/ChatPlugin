@@ -29,6 +29,9 @@ public interface EconomyIntegration extends ChatPluginIntegration {
 	/**
 	 * Gets an offline player's balance.
 	 * 
+	 * <p>Returns {@link Double#MIN_VALUE} if this integration
+	 * is not able to provide the player's balance.</p>
+	 * 
 	 * @param player Offline player to check
 	 * @return Player's balance
 	 */

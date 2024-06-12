@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.server.bukkit.integration.economy;
 
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.integration.permission.PermissionIntegration;
@@ -35,19 +36,24 @@ public class VaultIntegration extends ChatPluginBukkitIntegration<EconomyIntegra
 	
 	@Override
 	protected void loadAPI() {
-		api = Bukkit.getServicesManager().getRegistration(Economy.class).getProvider();
-		api2 = Bukkit.getServicesManager().getRegistration(Permission.class).getProvider();
+		RegisteredServiceProvider<Permission> permissionService = Bukkit.getServicesManager().getRegistration(Permission.class);
+		RegisteredServiceProvider<Economy> economyService = Bukkit.getServicesManager().getRegistration(Economy.class);
+		
+		if (permissionService != null)
+			api = permissionService.getProvider();
+		if (economyService != null)
+			api2 = economyService.getProvider();
 	}
 	
 	@SuppressWarnings("deprecation")
 	@Override
 	public double getBalance(OfflinePlayer player) {
-		return ((Economy) api).getBalance(player.getName());
+		return api2 == null ? Double.MIN_VALUE : ((Economy) api).getBalance(player.getName());
 	}
 	
 	@Override
 	public boolean hasPermission(OfflinePlayer player, String permission) {
-		return ((Permission) api2).playerHas(Bukkit.getWorlds().get(0).getName(), Bukkit.getOfflinePlayer(player.getUUID()), permission);
+		return ((Permission) api).playerHas(Bukkit.getWorlds().get(0).getName(), Bukkit.getOfflinePlayer(player.getUUID()), permission);
 	}
 	
 }

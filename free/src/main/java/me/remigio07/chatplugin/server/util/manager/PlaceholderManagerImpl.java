@@ -52,8 +52,6 @@ import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.integration.anticheat.AnticheatManager;
-import me.remigio07.chatplugin.api.server.integration.economy.EconomyIntegration;
-import me.remigio07.chatplugin.api.server.integration.placeholder.PlaceholderIntegration;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
@@ -403,17 +401,17 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 		
 		try {
 			if (output.contains("{balance}")) {
-				double balance = -1D;
+				double vaultBalance, balance = -1D;
 				
-				if (IntegrationType.VAULT.isEnabled())
-					balance = ((EconomyIntegration) IntegrationType.VAULT.get()).getBalance(player);
+				if (IntegrationType.VAULT.isEnabled() && (vaultBalance = IntegrationType.VAULT.get().getBalance(player)) != Double.MIN_VALUE)
+					balance = vaultBalance;
 				else if (IntegrationType.ESSENTIALSX.isEnabled())
-					balance = ((EconomyIntegration) IntegrationType.ESSENTIALSX.get()).getBalance(player);
+					balance = IntegrationType.ESSENTIALSX.get().getBalance(player);
 				output = output.replace("{balance}", Utils.formatBalance(balance, ConfigurationType.CONFIG.get().getInt("settings.balance-placeholder.decimals", 2)));
 			} if (IntegrationType.PLACEHOLDERAPI.isEnabled())
-				output = ((PlaceholderIntegration) IntegrationType.PLACEHOLDERAPI.get()).translatePlaceholders(output, player);
+				output = IntegrationType.PLACEHOLDERAPI.get().translatePlaceholders(output, player);
 			if (IntegrationType.MVDWPLACEHOLDERAPI.isEnabled())
-				output = ((PlaceholderIntegration) IntegrationType.MVDWPLACEHOLDERAPI.get()).translatePlaceholders(output, player);
+				output = IntegrationType.MVDWPLACEHOLDERAPI.get().translatePlaceholders(output, player);
 			return translateColors ? ChatColor.translate(output) : output;
 		} catch (NullPointerException e) {
 			return input;

@@ -335,7 +335,7 @@ public class OfflinePlayer {
 	public boolean hasPermission(String permission) {
 		return isOnline()
 				? toAdapter().hasPermission(permission)
-				: IntegrationType.VAULT.isEnabled()
+				: IntegrationType.VAULT.isEnabled() && IntegrationType.VAULT.get().getAPI() != null
 				? ((PermissionIntegration) IntegrationType.VAULT.get()).hasPermission(this, permission)
 				: IntegrationType.LUCKPERMS.isEnabled()
 				? IntegrationType.LUCKPERMS.get().hasPermission(this, permission)

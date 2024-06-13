@@ -34,6 +34,7 @@ import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.common.util.packet.Packets;
 import me.remigio07.chatplugin.api.server.event.f3servername.F3ServerNameSendEvent;
 import me.remigio07.chatplugin.api.server.f3servername.F3ServerName;
+import me.remigio07.chatplugin.api.server.f3servername.F3ServerNameManager;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
@@ -44,14 +45,13 @@ import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07.chatplugin.common.f3servername.F3ServerNamePacket;
 import me.remigio07.chatplugin.server.bukkit.BukkitReflection;
-import me.remigio07.chatplugin.server.f3servername.BaseF3ServerNameManager;
 
-public class BukkitF3ServerNameManager extends BaseF3ServerNameManager {
+public class BukkitF3ServerNameManager extends F3ServerNameManager {
 	
 	@Override
 	public void load() throws ChatPluginManagerException {
 		instance = this;
-		ms = System.currentTimeMillis();
+		long ms = System.currentTimeMillis();
 		
 		if (!ConfigurationType.F3_SERVER_NAMES.get().getBoolean("f3-server-names.settings.enabled") || !checkAvailability(true))
 			return;
@@ -90,6 +90,18 @@ public class BukkitF3ServerNameManager extends BaseF3ServerNameManager {
 		} timerTaskID = TaskManager.scheduleAsync(this, 0L, sendingTimeout);
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
+	}
+	
+	@Override
+	public void unload() throws ChatPluginManagerException {
+		enabled = randomOrder = false;
+		
+		TaskManager.cancelAsync(timerTaskID);
+		f3ServerNames.clear();
+		placeholderTypes.clear();
+		
+		sendingTimeout = 0;
+		timerTaskID = timerIndex = -1;
 	}
 	
 	@Override

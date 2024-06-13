@@ -15,26 +15,30 @@
 
 package me.remigio07.chatplugin.server.sponge.manager;
 
+import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.server.f3servername.F3ServerName;
+import me.remigio07.chatplugin.api.server.f3servername.F3ServerNameManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
-import me.remigio07.chatplugin.server.f3servername.BaseF3ServerNameManager;
 
-public class SpongeF3ServerNameManager extends BaseF3ServerNameManager {
+public class SpongeF3ServerNameManager extends F3ServerNameManager {
 	
 	@Override
 	public void load() throws ChatPluginManagerException {
-		// not supported yet
+		instance = this;
+		
+		if (ConfigurationType.F3_SERVER_NAMES.get().getBoolean("f3-server-names.settings.enabled"))
+			checkAvailability(true);
 	}
 	
 	@Override
 	public void run() {
-		// not supported yet
+		throw new UnsupportedOperationException("F3 server name is not available on Sponge");
 	}
 	
 	@Override
 	public void sendF3ServerName(F3ServerName f3ServerName, ChatPluginServerPlayer player) {
-		// not supported yet
+		throw new UnsupportedOperationException("F3 server name is not available on Sponge");
 	}
 	
 }

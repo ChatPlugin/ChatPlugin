@@ -69,9 +69,22 @@ public class Utils extends me.remigio07.chatplugin.api.server.util.Utils {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static void displayAdvancement(ChatPluginServerPlayer player, String text, MaterialAdapter material, boolean glowing) {
-		TaskManager.runSync(() -> {
+		TaskManager.runSync(() -> BukkitAdvancement.displayAdvancement(player, text, material, glowing), 0L);
+	}
+	
+	public static TextComponent deserializeLegacy(String text, boolean translate) {
+		return LegacyComponentSerializer.legacySection().deserialize(translate ? ChatColor.translate(text) : text);
+	}
+	
+	public static String serializeLegacy(TextComponent text) {
+		return LegacyComponentSerializer.legacySection().serialize(text);
+	}
+	
+	private static class BukkitAdvancement {
+		
+		@SuppressWarnings("deprecation")
+		public static void displayAdvancement(ChatPluginServerPlayer player, String text, MaterialAdapter material, boolean glowing) {
 			org.bukkit.UnsafeValues unsafe = Bukkit.getUnsafe();
 			NamespacedKey key = new NamespacedKey(BukkitBootstrapper.getInstance(), UUID.randomUUID().toString());
 			Advancement adv = unsafe.loadAdvancement(key, "{\"display\":{\"icon\":{\"" + (isAtLeastV1_20_5 ? "id" : "item") + "\":\"" + material.bukkitValue().getKey().getKey() + "\""
@@ -82,15 +95,8 @@ public class Utils extends me.remigio07.chatplugin.api.server.util.Utils {
 			
 			player.toAdapter().bukkitValue().getAdvancementProgress(adv).awardCriteria("impossible");
 			unsafe.removeAdvancement(key);
-		}, 0L);
-	}
-	
-	public static TextComponent deserializeLegacy(String text, boolean translate) {
-		return LegacyComponentSerializer.legacySection().deserialize(translate ? ChatColor.translate(text) : text);
-	}
-	
-	public static String serializeLegacy(TextComponent text) {
-		return LegacyComponentSerializer.legacySection().serialize(text);
+		}
+		
 	}
 	
 }

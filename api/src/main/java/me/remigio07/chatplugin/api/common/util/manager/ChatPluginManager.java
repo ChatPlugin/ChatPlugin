@@ -91,8 +91,16 @@ public interface ChatPluginManager {
 	 */
 	@ServerImplementationOnly(why = ServerImplementationOnly.GAME_FEATURE)
 	public default boolean checkAvailability(boolean warnIfUnavailable) {
-		GameFeature gameFeature = getClass().getAnnotation(GameFeature.class);
+		GameFeature gameFeature;
+		Class<?> clazz = getClass();
 		
+		do {
+			if ((gameFeature = clazz.getAnnotation(GameFeature.class)) != null)
+				break;
+		} while ((clazz = clazz.getSuperclass()) != null);
+		
+		if (gameFeature == null)
+			gameFeature = checkInterfaces(getClass());
 		if (Environment.isProxy() || gameFeature == null)
 			return true;
 		String str = null;
@@ -112,6 +120,17 @@ public interface ChatPluginManager {
 		} if (str != null && warnIfUnavailable)
 			LogManager.log(str + " run the " + gameFeature.name() + " module; disabling feature...", 1);
 		return str == null;
+	}
+	
+	static GameFeature checkInterfaces(Class<?> clazz) {
+		for (Class<?> clazz2 : clazz.getInterfaces()) {
+			GameFeature feature = clazz2.getAnnotation(GameFeature.class);
+			
+			if (feature != null)
+				return feature;
+			else if (clazz2.isInterface() && (feature = checkInterfaces(clazz2)) != null)
+				return feature;
+		} return null;
 	}
 	
 }

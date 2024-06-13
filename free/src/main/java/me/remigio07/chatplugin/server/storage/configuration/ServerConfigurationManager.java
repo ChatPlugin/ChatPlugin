@@ -730,18 +730,18 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.player-ping.titles.subtitles.italian", "&eti ha menzionato in chat");
 		
 		chat.addDefault("chat.private-messages.enabled", true);
-		chat.addDefault("chat.private-messages.format.sent.chat", "&7«&8[&b\u270E&8] &fYou &e-> &f{recipient}&7» &f");
+		chat.addDefault("chat.private-messages.format.sent.chat", "&7«&8[&b\u270E&8] &fYou &e\u27A1 &f{recipient}&7» &f");
 		chat.addDefault("chat.private-messages.format.sent.terminal", "&7<&8[&b&lPM&8] &fYou &e-> &f{recipient}&7> &f");
-		chat.addDefault("chat.private-messages.format.received.chat", "&7«&8[&b\u270E&8] &f{sender} &e-> &fYou&7» &f");
+		chat.addDefault("chat.private-messages.format.received.chat", "&7«&8[&b\u270E&8] &f{sender} &e\u27A1 &fYou&7» &f");
 		chat.addDefault("chat.private-messages.format.received.terminal", "&7<&8[&b&lPM&8] &f{sender} &e-> &fYou&7> &f");
-		chat.addDefault("chat.private-messages.format.socialspy.chat", "&7«&8[&4&lSS&8] &f{sender} &e-> &f{recipient}&7» &f");
+		chat.addDefault("chat.private-messages.format.socialspy.chat", "&7«&8[&4&lSS&8] &f{sender} &e\u27A1 &f{recipient}&7» &f");
 		chat.addDefault("chat.private-messages.format.socialspy.terminal", "&7<&8[&4&lSS&8] &f{sender} &e-> &f{recipient}&7> &f");
 		chat.addDefault("chat.private-messages.sound.enabled", true);
 		chat.addDefault("chat.private-messages.sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "ENTITY_EXPERIENCE_ORB_PICKUP" : "ORB_PICKUP");
 		chat.addDefault("chat.private-messages.sound.volume", 1F);
 		chat.addDefault("chat.private-messages.sound.pitch", 1F);
 		chat.addDefault("chat.private-messages.advancements.enabled", VersionUtils.getVersion().isAtLeast(Version.V1_13));
-		chat.addDefault("chat.private-messages.advancements.format", "&8[&b\u270E&8] &f{sender} &e-> &fYou\n&7");
+		chat.addDefault("chat.private-messages.advancements.format", "&8[&b\u270E&8] &f{sender} &e\u27A1 &fYou\n&7");
 		chat.addDefault("chat.private-messages.advancements.max-message-length", 19);
 		chat.addDefault("chat.private-messages.advancements.icon.material", Environment.isSponge() || VersionUtils.getVersion().isAtLeast(Version.V1_13) ? "WRITABLE_BOOK" : "BOOK_AND_QUILL");
 		chat.addDefault("chat.private-messages.advancements.icon.glowing", true);
@@ -1094,8 +1094,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		joinQuitModules.addDefault("join-quit-modules.switch-messages.settings.enabled", false);
 		joinQuitModules.addDefault("join-quit-modules.switch-messages.settings.placeholder-types", Arrays.asList("PLAYER"));
-		joinQuitModules.addDefault("join-quit-modules.switch-messages.user.english", Arrays.asList("&8[&e&l»&8] &r{prefix}{tag_name_color}{player}{suffix} &e-> &r{server}"));
-		joinQuitModules.addDefault("join-quit-modules.switch-messages.user.italian", Arrays.asList("&8[&e&l»&8] &r{prefix}{tag_name_color}{player}{suffix} &e-> &r{server}"));
+		joinQuitModules.addDefault("join-quit-modules.switch-messages.user.english", Arrays.asList("&8[&e&l»&8] &r{prefix}{tag_name_color}{player}{suffix} &e\u27A1 &r{server}"));
+		joinQuitModules.addDefault("join-quit-modules.switch-messages.user.italian", Arrays.asList("&8[&e&l»&8] &r{prefix}{tag_name_color}{player}{suffix} &e\u27A1 &r{server}"));
 		
 		joinQuitModules.addDefault("join-quit-modules.join-titles.settings.enabled", true);
 		joinQuitModules.addDefault("join-quit-modules.join-titles.settings.fade-in-ms", 500L);

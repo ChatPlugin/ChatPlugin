@@ -301,9 +301,9 @@ public class ChatPluginCommand extends BaseCommand {
 		@SuppressWarnings("deprecation")
 		@Override
 		public void execute(CommandSenderAdapter sender, me.remigio07.chatplugin.api.server.language.Language language, String[] args) {
-			LogManager logManager = LogManager.getInstance();
-			
 			if (args.length == 1) {
+				LogManager logManager = LogManager.getInstance();
+				
 				try {
 					if (logManager.isDebug()) {
 						logManager.setDebug(false);
@@ -324,6 +324,7 @@ public class ChatPluginCommand extends BaseCommand {
 					sender.sendMessage(language.getMessage("misc.debug.file.start"));
 					TaskManager.runAsync(() -> {
 						String file = Debugger.writeToFile();
+						
 						sender.sendMessage(language.getMessage(file.equals(Utils.NOT_APPLICABLE) ? "misc.debug.file.too-fast" : "misc.debug.file.end", file, System.currentTimeMillis() - ms));
 					}, 0L);
 					break;

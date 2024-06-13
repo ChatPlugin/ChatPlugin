@@ -23,12 +23,12 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
@@ -55,6 +55,7 @@ public class Debugger {
 		ChatPluginManagers managers = ChatPluginManagers.getInstance();
 		StringBuilder sb = new StringBuilder(HEADER);
 		Runtime runtime = Runtime.getRuntime();
+		List<PluginInfo> plugins = Utils.getPluginsInfo();
 		
 		sb.append("Environment: " + VersionUtils.getImplementationName() + " " + VersionUtils.getImplementationVersion() + "\n");
 		sb.append("Minecraft version: " + VersionUtils.getVersion().format() + " (protocol: " + VersionUtils.getVersion().getProtocol() + ")\n");
@@ -93,15 +94,15 @@ public class Debugger {
 		sb.append(TWO_SPACES + "amount: " + managers.getEnabledManagers().size() + "/" + managers.getManagers().size() + "\n");
 		sb.append(TWO_SPACES + "values:\n");
 		managers.getManagers().keySet().stream().filter(clazz -> managers.getManager(clazz).isEnabled()).forEach(clazz -> sb.append(FOUR_SPACES + clazz.getSimpleName().substring(0, clazz.getSimpleName().indexOf("Manager")) + ":\n" + getContent(clazz)));
+		sb.append("Plugins:\n");
+		sb.append(TWO_SPACES + "amount: " + plugins.size() + "\n");
+		sb.append(TWO_SPACES + "values:\n");
+		plugins.stream().forEach(plugin -> sb.append(FOUR_SPACES + plugin.getName() + (plugin.isEnabled() ? "" : "*") + getSpaces(SPACES - plugin.getName().length() - (plugin.isEnabled() ? 0 : 1)) + plugin.getVersion() + getSpaces(SPACES - plugin.getVersion().length()) + Utils.getStringFromList(plugin.getAuthors(), false, false) + "\n"));
 		return ChatColor.stripColor(sb.toString());
 	}
 	
-	// why not just return the stream using .collect(Collectors.toList())?
 	public static List<String> getEnabledManagersNames() {
-		List<String> names = new ArrayList<>();
-		
-		ChatPluginManagers.getInstance().getManagers().keySet().stream().filter(clazz -> ChatPluginManagers.getInstance().getManager(clazz).isEnabled()).forEach(clazz -> names.add(clazz.getSimpleName().substring(0, clazz.getSimpleName().indexOf("Manager"))));
-		return names;
+		return ChatPluginManagers.getInstance().getManagers().keySet().stream().filter(clazz -> ChatPluginManagers.getInstance().getManager(clazz).isEnabled()).map(clazz -> clazz.getSimpleName().substring(0, clazz.getSimpleName().indexOf("Manager"))).collect(Collectors.toList());
 	}
 	
 	public static String getContent(Class<? extends ChatPluginManager> clazz) {
@@ -170,7 +171,6 @@ public class Debugger {
 					continue;
 				} catch (IllegalArgumentException | IllegalAccessException e2) {
 					value = null;
-//					} fields.put(field.getName() + (value == null ? ":" + field.getGenericType().getTypeName() : ""), field.isAnnotationPresent(SensitiveData.class) ? "<hidden>" : value);
 				} fields.put(field.getName() + ":" + (field.getType().isPrimitive() ? "\u00A7c" + (field.getClass().equals(Integer.class) ? "int" : field.getClass().equals(Character.class) ? "char" : field.getType().getSimpleName().toLowerCase()) : field.getType().isEnum() ? "\u00A75" + field.getType().getSimpleName() : "\u00A79" + field.getType().getSimpleName()), field.isAnnotationPresent(SensitiveData.class) ? "<hidden>" : value);
 				
 				if (!accessible)
@@ -199,7 +199,7 @@ public class Debugger {
 		if (object instanceof Double)
 			return "\u00A7d" + String.valueOf(Utils.truncate((double) object, 2)) + "D";
 		if (object instanceof String)
-			return "\u00A73\"" + object + "\u00A73\"";
+			return "\u00A73\"" + ((String) object).replace("\n", "\\n") + "\u00A73\"";
 		if (object instanceof Enum)
 			return "\u00A7a" + ((Enum<?>) object).name();
 		if (object.getClass().isArray()) {
@@ -216,7 +216,7 @@ public class Debugger {
 	}
 	
 	public static String getSpaces(int amount) {
-		StringBuilder sb = new StringBuilder(amount);
+		StringBuilder sb = new StringBuilder(amount = amount < 0 ? 0 : amount);
 		
 		for (int i = 0; i < amount; i++)
 			sb.append(" ");

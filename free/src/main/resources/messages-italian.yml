@@ -684,17 +684,15 @@ placeholders:
   nobody: nessuno
   not-present: non presente
 proxy-messages:
-  no-permission: '{pfx} &cNon hai il permesso di eseguire questo comando.'
-  wrong-syntax: '{pfx} &cLa sintassi è errata. Utilizzo: &f{0}&c.'
   help: |-
-    {pfx} &aComandi per il &c&lChat&f&lPlugin &fv{0}&a di &9Remigio07&a:
-    &f&l/cpb status &8- &eMostra lo stato corrente del proxy.
-    &f&l/cpb debug &8- &eAttiva/disattiva la modalità debug/verbose.
-    &f&l/cpb reload &8- &eRicarica il sistema di ChatPlugin.
-    &f&l/cpb version &8- &eMostra la versione corrente del plugin.
-    &f&l/cpb info &8- &eMostra informazioni utili su questo plugin.
+    {pfx} &aComandi per &c&lChat&f&lPlugin &fv{0}&a di &9Remigio07&a:
+    &f&l/cpp status &8- &eMostra lo stato corrente del network.
+    &f&l/cpp debug &8- &eAttiva/disattiva la modalità debug/verbose.
+    &f&l/cpp reload &8- &eRicarica il sistema di ChatPlugin.
+    &f&l/cpp version &8- &eMostra la versione corrente del plugin.
+    &f&l/cpp info &8- &eMostra informazioni utili su questo plugin.
   status: |-
-    {pfx} &aStato attuale del proxy:
+    {pfx} &aStato attuale del network:
     &eVersione del proxy: &f{network_version} (protocollo: {network_protocol})
     &eVersione di ChatPlugin: &f{plugin_version}
     &eTempo di attività: &f{uptime}
@@ -704,15 +702,3 @@ proxy-messages:
     &eGiocatori abilitati: &f{enabled_players}x
     &eTempo di avvio: &f{startup_time} ms
     &eTempo dell'ultima ricarica: &f{last_reload_time} ms
-  debug:
-    enabled: '{pfx} &aModalità di debug abilitata.'
-    disabled: '{pfx} &aModalità di debug disabilitata.'
-  reload:
-    start: '{pfx} &aChatPlugin sta ricaricando...'
-    end: '{pfx} &aChatPlugin è stato ricaricato. Ci sono voluti &f{0} ms&a.'
-  version: '{pfx} &aIn esecuzione &c&lChat&f&lPlugin &6Premium &fv{0} &adi &9Remigio07 &asu &f{1} {2}&a.'
-  info: |-
-    {pfx} &aInformazioni su &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
-    &eSito web: &fhttps://remigio07.me/chatplugin
-    &eGitHub: &fhttps://github.com/ChatPlugin/ChatPlugin
-    &eDiscord: &fhttps://discord.gg/eSnAPhvMTG

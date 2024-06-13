@@ -20,12 +20,17 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import org.bukkit.Bukkit;
+import org.spongepowered.api.Sponge;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
@@ -36,7 +41,9 @@ import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.bootstrap.Environment;
+import me.remigio07.chatplugin.bootstrap.VelocityBootstrapper;
 import me.remigio07.chatplugin.common.util.text.ComponentTranslatorImpl;
+import net.md_5.bungee.api.ProxyServer;
 
 public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 	
@@ -188,6 +195,19 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 			System.out.println("empty string");
 			return;
 		} System.out.println("[" + sb.toString() + "]");
+	}
+	
+	public static List<PluginInfo> getPluginsInfo() {
+		switch (Environment.getCurrent()) {
+		case BUKKIT:
+			return Arrays.asList(Bukkit.getPluginManager().getPlugins()).stream().map(plugin -> new PluginInfo(plugin.getName(), plugin.getDescription().getVersion(), plugin.getDescription().getAuthors(), plugin.isEnabled())).collect(Collectors.toList());
+		case SPONGE:
+			return Sponge.getPluginManager().getPlugins().stream().map(plugin -> new PluginInfo(plugin.getId(), plugin.getVersion().orElse("unknown"), plugin.getAuthors(), true)).collect(Collectors.toList());
+		case BUNGEECORD:
+			return ProxyServer.getInstance().getPluginManager().getPlugins().stream().map(plugin -> new PluginInfo(plugin.getDescription().getName(), plugin.getDescription().getVersion(), Arrays.asList(plugin.getDescription().getAuthor()), true)).collect(Collectors.toList());
+		case VELOCITY:
+			return VelocityBootstrapper.getInstance().getProxy().getPluginManager().getPlugins().stream().map(plugin -> new PluginInfo(plugin.getDescription().getId(), plugin.getDescription().getVersion().orElse("unknown"), plugin.getDescription().getAuthors(), true)).collect(Collectors.toList());
+		} return null;
 	}
 	
 }

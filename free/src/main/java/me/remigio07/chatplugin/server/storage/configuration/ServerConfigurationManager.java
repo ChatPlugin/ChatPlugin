@@ -612,16 +612,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("placeholders.nobody", "nobody");
 		messages.addDefault("placeholders.not-present", "not present");
 		
-		messages.addDefault("proxy-messages.no-permission", "{pfx} &cYou do not have the permission to execute this command.");
-		messages.addDefault("proxy-messages.wrong-syntax", "{pfx} &cThe syntax is wrong. Usage: &f{0}&c.");
-		messages.addDefault("proxy-messages.help", "{pfx} &aCommands for &c&lChat&f&lPlugin &fv{0}&a by &9Remigio07&a:\n&f&l/cpb status &8- &eDisplay current network status.\n&f&l/cpb debug &8- &eToggle the debug/verbose mode.\n&f&l/cpb reload &8- &eReload the ChatPlugin system.\n&f&l/cpb version &8- &eDisplay current plugin version.\n&f&l/cpb info &8- &eShow useful info about this plugin.");
+		messages.addDefault("proxy-messages.help", "{pfx} &aCommands for &c&lChat&f&lPlugin &fv{0}&a by &9Remigio07&a:\n&f&l/cpp status &8- &eDisplay current network status.\n&f&l/cpp debug &8- &eToggle the debug/verbose mode.\n&f&l/cpp reload &8- &eReload the ChatPlugin system.\n&f&l/cpp version &8- &eDisplay current plugin version.\n&f&l/cpp info &8- &eShow useful info about this plugin.");
 		messages.addDefault("proxy-messages.status", "{pfx} &aCurrent network status:\n&eProxy version: &f{network_version} (protocol: {network_protocol})\n&eChatPlugin version: &f{plugin_version}\n&eUptime: &f{uptime}\n&eUsed memory: &f{used_memory}/{max_memory} MB\n&eAllocated memory: &f{total_memory} MB\n&eFree memory: &f{free_memory} MB\n&eEnabled players: &f{enabled_players}x\n&eStartup time: &f{startup_time} ms\n&eLast reload time: &f{last_reload_time} ms");
-		messages.addDefault("proxy-messages.debug.enabled", "{pfx} &aDebug mode enabled.");
-		messages.addDefault("proxy-messages.debug.disabled", "{pfx} &aDebug mode disabled.");
-		messages.addDefault("proxy-messages.reload.start", "{pfx} &aChatPlugin is reloading...");
-		messages.addDefault("proxy-messages.reload.end", "{pfx} &aChatPlugin has been reloaded. Took &f{0} ms &ato complete.");
-		messages.addDefault("proxy-messages.version", "{pfx} &aRunning &c&lChat&f&lPlugin &6Premium &fv{0} &aby &9Remigio07 &aon &f{1} {2}&a.");
-		messages.addDefault("proxy-messages.info", "{pfx} &aInfo about &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&eWebsite: &fhttps://remigio07.me/chatplugin\n&eGitHub: &fhttps://github.com/ChatPlugin/ChatPlugin\n&eDiscord: &fhttps://discord.gg/eSnAPhvMTG");
 		
 		messages.save();
 	}

@@ -303,9 +303,10 @@ public class Utils {
 			return Sponge.getServer().getMaxPlayers();
 		case BUNGEECORD:
 			try {
-				return (int) Class.forName("net.md-5.bungee.conf.Configuration").getMethod("getPlayerLimit").invoke(me.remigio07.chatplugin.api.proxy.util.Utils.invokeBungeeCordMethod("getConfig", null));
+				return (int) Class.forName("net.md_5.bungee.conf.Configuration").getMethod("getPlayerLimit").invoke(me.remigio07.chatplugin.api.proxy.util.Utils.invokeBungeeCordMethod("getConfig", null));
 			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
 				e.printStackTrace();
+				return -1;
 			}
 		case VELOCITY:
 			return VelocityBootstrapper.getInstance().getProxy().getConfiguration().getShowMaxPlayers();

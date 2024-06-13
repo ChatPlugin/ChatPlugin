@@ -33,7 +33,7 @@ public abstract class ChatPluginSpongeIntegration<T extends ChatPluginIntegratio
 		try {
 			Class.forName(type.getClazz());
 			
-			plugin = Sponge.getPluginManager().getPlugin(type.getPlugin()).get();
+			plugin = Sponge.getPluginManager().getPlugin(type.getPlugin().toLowerCase()).get();
 			enabled = true;
 			
 			loadAPI();

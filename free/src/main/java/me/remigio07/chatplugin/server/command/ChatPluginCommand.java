@@ -194,7 +194,7 @@ public class ChatPluginCommand extends BaseCommand {
 				me.remigio07.chatplugin.api.server.language.Language newLanguage = LanguageManager.getInstance().getLanguage(args[1]);
 				
 				if (newLanguage != null) {
-					if (!LanguageManagerImpl.isCommandCooldownActive(player) || player.hasPermission("chatplugin.commands.language.cooldown-bypass")) {
+					if (!LanguageManagerImpl.isCommandCooldownActive(player) || player.hasPermission(getPermission() + ".cooldown-bypass")) {
 						try {
 							LanguageManager.getInstance().setLanguage(player, newLanguage);
 							

@@ -200,15 +200,6 @@ public class OfflinePlayer {
 	}
 	
 	/**
-	 * Checks if an object is equal this offline player.
-	 * 
-	 * <p>An offline player is considered equal to another one if
-	 * they have the same UUID if running on online mode or if they
-	 * have the same name ignoring case if running on offline mode.</p>
-	 */
-	
-	
-	/**
 	 * Checks if another object is an instance of {@link OfflinePlayer} and if this
 	 * player's {@link #getUUID()} (if running on online mode) or {@link #getName()}
 	 * (if running on offline mode) value is equal to the other object's one.
@@ -323,11 +314,12 @@ public class OfflinePlayer {
 	/**
 	 * Checks if this player has the specified permission.
 	 * 
-	 * <p>Will always return <code>true</code> unless {@link #isOnline()} or a permission
-	 * integration ({@link IntegrationType#LUCKPERMS LuckPerms}, {@link IntegrationType#VAULT Vault})
-	 * is enabled: in those cases, it will be really checked.</p>
+	 * <p>Will always return <code>false</code> unless
+	 * {@link #isOnline()} or a {@link PermissionIntegration} is
+	 * enabled: in those cases, it will be actually checked.</p>
 	 * 
-	 * <p><strong>Note:</strong> this method might take some time to be executed: async calls are recommended.</p>
+	 * <p><strong>Note:</strong> this method might take some
+	 * time to be executed: async calls are recommended.</p>
 	 * 
 	 * @param permission Permission to check
 	 * @return Whether this player has the permission
@@ -339,7 +331,7 @@ public class OfflinePlayer {
 				? ((PermissionIntegration) IntegrationType.VAULT.get()).hasPermission(this, permission)
 				: IntegrationType.LUCKPERMS.isEnabled()
 				? IntegrationType.LUCKPERMS.get().hasPermission(this, permission)
-				: true;
+				: false;
 	}
 	
 	/**

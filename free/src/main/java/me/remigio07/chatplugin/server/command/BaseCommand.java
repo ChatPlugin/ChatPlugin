@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagers;
 import me.remigio07.chatplugin.api.server.ad.Ad;
@@ -85,6 +86,10 @@ public abstract class BaseCommand {
 		} if (args.contains("{players_excluding_self}")) {
 			args.remove("{players_excluding_self}");
 			args.addAll(getVisiblePlayers(sender).filter(player -> !player.equals(sender.getName())).collect(Collectors.toList()));
+		} if (args.contains("{ignored_players}")) {
+			if (sender.isLoaded())
+				args.addAll(sender.toServerPlayer().getIgnoredPlayers().stream().map(OfflinePlayer::getName).collect(Collectors.toList()));
+			args.remove("{ignored_players}");
 		} if (args.contains("{ips}")) {
 			args.remove("{ips}");
 			args.addAll(PlayerManager.getInstance().getPlayersIPs().stream().map(InetAddress::getHostAddress).collect(Collectors.toList()));

@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
 import me.remigio07.chatplugin.api.common.storage.StorageManager;
@@ -138,7 +139,7 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 		this.messagesSent = messagesSent;
 	}
 	
-	public void setLastCorrespondent(ChatPluginServerPlayer lastCorrespondent) {
+	public void setLastCorrespondent(OfflinePlayer lastCorrespondent) {
 		this.lastCorrespondent = lastCorrespondent;
 	}
 	

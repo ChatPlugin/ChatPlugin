@@ -18,7 +18,9 @@ package me.remigio07.chatplugin.api.server.chat;
 import java.util.Collections;
 import java.util.List;
 
+import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.server.chat.antispam.AntispamManager;
@@ -248,8 +250,8 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	 * <p>Specify <code>null</code> as either the sender
 	 * or the recipient to indicate the console.</p>
 	 * 
-	 * <p>This method will <strong>not</strong> consider that
-	 * some players may be ignored by other players.</p>
+	 * <p>This method will consider that some players
+	 * may be ignored by other players or vanished.</p>
 	 * 
 	 * @param sender Private message's sender
 	 * @param recipient Private message's recipient
@@ -261,7 +263,25 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	 */
 	public abstract void sendPrivateMessage(
 			@Nullable(why = "Null to represent the console") ChatPluginServerPlayer sender,
-			@Nullable(why = "Null to represent the console") ChatPluginServerPlayer recipient,
+			@Nullable(why = "Null to represent the console") OfflinePlayer recipient,
+			String privateMessage
+			);
+	
+	/**
+	 * Sends a reply to {@link ChatPluginServerPlayer#getLastCorrespondent()}.
+	 * 
+	 * <p>This method will consider that some players
+	 * may be ignored by other players or vanished.</p>
+	 * 
+	 * @param sender Private message's sender
+	 * @param privateMessage Private message to send.
+	 * @throws IllegalArgumentException If <code>{@link ChatPluginServerPlayer#getLastCorrespondent()} == null</code>
+	 * @see PrePrivateMessageEvent
+	 * @see AllowPrivateMessageEvent
+	 * @see DenyPrivateMessageEvent
+	 */
+	public abstract void sendReply(
+			@NotNull ChatPluginServerPlayer sender,
 			String privateMessage
 			);
 	

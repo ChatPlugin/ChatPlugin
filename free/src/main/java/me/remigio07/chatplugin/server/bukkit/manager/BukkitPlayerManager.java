@@ -46,7 +46,6 @@ import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.bossbar.BossbarManager;
-import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
 import me.remigio07.chatplugin.api.server.chat.StaffChatManager;
 import me.remigio07.chatplugin.api.server.event.player.ServerPlayerLoadEvent;
 import me.remigio07.chatplugin.api.server.event.player.ServerPlayerUnloadEvent;
@@ -69,7 +68,6 @@ import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.server.bukkit.BukkitReflection;
 import me.remigio07.chatplugin.server.bukkit.ChatPluginBukkitPlayer;
 import me.remigio07.chatplugin.server.join_quit.QuitMessageManagerImpl.QuitPacketImpl;
-import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import me.remigio07.chatplugin.server.util.manager.VanishManagerImpl;
 
 public class BukkitPlayerManager extends ServerPlayerManager {
@@ -250,10 +248,6 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 			TaskManager.getInstance().getAsyncTasks().get(BossbarManager.getInstance().getLoadingBossbarsTasks().remove(serverPlayer)).run();
 		if (StaffChatManager.getInstance().isEnabled())
 			StaffChatManager.getInstance().removePlayer(player);
-		if (PrivateMessagesManager.getInstance().isEnabled())
-			for (ChatPluginServerPlayer other : players.values())
-				if (serverPlayer.equals(other.getLastCorrespondent()))
-					((BaseChatPluginServerPlayer) other).setLastCorrespondent(null);
 		TablistManager.getInstance().sendTablist(Tablist.NULL_TABLIST, serverPlayer);
 		
 		if (scoreboard.getObjective("scoreboard") != null)

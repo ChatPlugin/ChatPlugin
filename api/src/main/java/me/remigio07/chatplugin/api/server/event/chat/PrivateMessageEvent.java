@@ -15,6 +15,7 @@
 
 package me.remigio07.chatplugin.api.server.event.chat;
 
+import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.event.player.ChatPluginServerPlayerEvent;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
@@ -24,10 +25,11 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
  */
 public abstract class PrivateMessageEvent implements ChatPluginServerPlayerEvent {
 	
-	protected ChatPluginServerPlayer player, recipient;
+	protected ChatPluginServerPlayer player;
+	protected OfflinePlayer recipient;
 	protected String privateMessage;
 	
-	protected PrivateMessageEvent(ChatPluginServerPlayer player, ChatPluginServerPlayer recipient, String privateMessage) {
+	protected PrivateMessageEvent(ChatPluginServerPlayer player, OfflinePlayer recipient, String privateMessage) {
 		this.player = player;
 		this.recipient = recipient;
 		this.privateMessage = privateMessage;
@@ -52,7 +54,7 @@ public abstract class PrivateMessageEvent implements ChatPluginServerPlayerEvent
 	 * @return Recipient involved
 	 */
 	@Nullable(why = "Null to represent the console")
-	public ChatPluginServerPlayer getRecipient() {
+	public OfflinePlayer getRecipient() {
 		return recipient;
 	}
 	

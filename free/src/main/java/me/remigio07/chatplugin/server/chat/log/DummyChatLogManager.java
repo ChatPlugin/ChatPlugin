@@ -57,7 +57,7 @@ public class DummyChatLogManager extends ChatLogManager {
 	@Override
 	public void logPrivateMessage(
 			@Nullable(why = "Null to represent the console") ChatPluginServerPlayer sender,
-			@Nullable(why = "Null to represent the console") ChatPluginServerPlayer recipient,
+			@Nullable(why = "Null to represent the console") OfflinePlayer recipient,
 			String privateMessage,
 			@Nullable(why = "Private message may not have been blocked") DenyChatReason<?> denyChatReason
 			) {

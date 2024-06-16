@@ -37,8 +37,11 @@ import me.remigio07.chatplugin.api.common.util.packet.type.SilentTeleportPacketT
 import me.remigio07.chatplugin.api.common.util.packet.type.ViolationPacketType;
 import me.remigio07.chatplugin.api.common.util.text.ComponentTranslator;
 import me.remigio07.chatplugin.api.common.util.text.ComponentTranslator.Component;
+import me.remigio07.chatplugin.api.proxy.util.socket.ClientHandler;
 import me.remigio07.chatplugin.api.server.integration.anticheat.AnticheatIntegration;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
+import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
+import me.remigio07.chatplugin.api.server.util.socket.Client;
 
 /**
  * Class used to create packets using {@link PacketSerializer}.
@@ -284,6 +287,46 @@ public class Packets {
 		}
 		
 		/**
+		 * Carries information about a private message.
+		 * 
+		 * @deprecated Internal use only.
+		 * @param server Destination server
+		 * @param targetServer Target server
+		 * @param senderUUID Sender's UUID
+		 * @param senderName Sender's name
+		 * @param recipientUUID Recipient's UUID
+		 * @param recipientName Recipient's name
+		 * @param canSeeVanished Whether the sender has {@link VanishManager#VANISH_PERMISSION}
+		 * @param allowSocialspy Whether socialspy notifications will be sent
+		 * @param privateMessage Private message to send
+		 * @return <code>PrivateMessage</code> packet
+		 */
+		@PacketScope(Scope.SERVER_TO_SERVER)
+		@Deprecated
+		public static PacketSerializer privateMessage(
+				@NotNull String server,
+				@NotNull String targetServer,
+				@NotNull UUID senderUUID,
+				@NotNull String senderName,
+				@NotNull UUID recipientUUID,
+				@NotNull String recipientName,
+				boolean canSeeVanished,
+				boolean allowSocialspy,
+				@NotNull String privateMessage
+				) {
+			return new PacketSerializer("PrivateMessage")
+					.writeUTF(server)
+					.writeUTF(targetServer)
+					.writeUUID(senderUUID)
+					.writeUTF(senderName)
+					.writeUUID(recipientUUID)
+					.writeUTF(recipientName)
+					.writeBoolean(canSeeVanished)
+					.writeBoolean(allowSocialspy)
+					.writeUTF(privateMessage);
+		}
+		
+		/**
 		 * Updates a player's F3 server name.
 		 * 
 		 * @param server Origin server
@@ -419,6 +462,7 @@ public class Packets {
 		 * Makes the target server send a switch
 		 * message for the specified player.
 		 * 
+		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param player Player's UUID
 		 * @param newServerID New server's ID
@@ -444,6 +488,7 @@ public class Packets {
 		 * Makes the target server send a quit
 		 * message for the specified player.
 		 * 
+		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param player Player's UUID
 		 * @return <code>PlayerQuit</code> packet
@@ -533,6 +578,7 @@ public class Packets {
 		/**
 		 * Responds to a {@link #ipLookupRequest(String, InetAddress, String)}.
 		 * 
+		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param ipAddress IP lookup's IP address
 		 * @param isp IP lookup' ISP
@@ -582,6 +628,7 @@ public class Packets {
 		/**
 		 * Responds to a {@link #motdRequest(String, InetAddress, int, boolean)}.
 		 * 
+		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param ipAddress MoTD's IP address
 		 * @param description MoTD's description
@@ -724,6 +771,7 @@ public class Packets {
 		/**
 		 * Makes the target server reload certain managers.
 		 * 
+		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param time Reload's time, in milliseconds
 		 * @return <code>ProxyPluginLoad</code> packet
@@ -743,6 +791,8 @@ public class Packets {
 	
 	/**
 	 * Contains packets used to synchronize punishments.
+	 * 
+	 * @deprecated Internal use only.
 	 */
 	@Deprecated
 	public static class Punishments {
@@ -750,6 +800,7 @@ public class Packets {
 		/**
 		 * Carries information about a player's ban.
 		 * 
+		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param id Ban's ID
 		 * @param playerUUID Banned player's UUID
@@ -798,6 +849,7 @@ public class Packets {
 		/**
 		 * Carries information about a player's unban.
 		 * 
+		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param whoUnbanned Who unbanned the player
 		 * @param unbanDate Unban's date
@@ -832,6 +884,7 @@ public class Packets {
 		/**
 		 * Carries information about a player's unban.
 		 * 
+		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param whoUnbanned Who unbanned the player
 		 * @param unbanDate Unban's date
@@ -857,6 +910,7 @@ public class Packets {
 		/**
 		 * Carries information about a banwave's entry.
 		 * 
+		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param playerUUID Entry's player's UUID
 		 * @param playerName Entry's player's name
@@ -902,6 +956,7 @@ public class Packets {
 		/**
 		 * Carries information about a banwave's entry's removal.
 		 * 
+		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param playerUUID Entry's player's UUID
 		 * @param playerName Entry's player's name
@@ -935,6 +990,7 @@ public class Packets {
 		/**
 		 * Makes the target server execute the banwave's start commands.
 		 * 
+		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param estimatedDuration Banwave's estimated duration
 		 * @param forwardProxyCommands Whether proxy's commands should be forwarded
@@ -959,6 +1015,7 @@ public class Packets {
 		/**
 		 * Makes the target server execute the banwave's end commands.
 		 * 
+		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param bannedPlayers Banned players' amount
 		 * @param forwardProxyCommands Whether proxy's commands should be forwarded
@@ -983,6 +1040,7 @@ public class Packets {
 		/**
 		 * Carries information about a player's warning.
 		 * 
+		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param id Warning's ID
 		 * @param playerUUID Warned player's UUID
@@ -1025,6 +1083,7 @@ public class Packets {
 		/**
 		 * Carries information about a player's unwarn.
 		 * 
+		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param id Warning's ID
 		 * @param whoUnwarned Who unwarned the player
@@ -1049,6 +1108,7 @@ public class Packets {
 		/**
 		 * Carries information about a player's last warning's removal.
 		 * 
+		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param playerUUID Warned player's UUID
 		 * @param playerName Warned player's name
@@ -1076,6 +1136,7 @@ public class Packets {
 		/**
 		 * Carries information about a player's warnings' clearing.
 		 * 
+		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param playerUUID Warned player's UUID
 		 * @param playerName Warned player's name
@@ -1103,6 +1164,7 @@ public class Packets {
 		/**
 		 * Carries information about a player's kick. 
 		 * 
+		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param id Kick's ID
 		 * @param playerUUID Kicked player's UUID
@@ -1148,6 +1210,7 @@ public class Packets {
 		/**
 		 * Carries information about a player's mute.
 		 * 
+		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param id Mute's ID
 		 * @param playerUUID Muted player's UUID
@@ -1190,6 +1253,7 @@ public class Packets {
 		/**
 		 * Carries information about a player's unmute.
 		 * 
+		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param whoUnmuted Who unmuted the player
 		 * @param unmuteDate Unmute's date
@@ -1218,6 +1282,7 @@ public class Packets {
 		/**
 		 * Carries information about a player's unmute.
 		 * 
+		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param whoUnmuted Who unmuted the player
 		 * @param unmuteDate Unmute's date
@@ -1244,6 +1309,8 @@ public class Packets {
 	
 	/**
 	 * Contains various misc packets.
+	 * 
+	 * @deprecated Internal use only.
 	 */
 	@Deprecated
 	public static class Misc {
@@ -1252,6 +1319,7 @@ public class Packets {
 		 * Carries information about a server's
 		 * online and vanished players' amount.
 		 * 
+		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param onlinePlayers Online players' amount
 		 * @param vanishedPlayers Vanished players' amount
@@ -1274,6 +1342,7 @@ public class Packets {
 		/**
 		 * Makes a client disconnect from the server.
 		 * 
+		 * @deprecated Use {@link Client#disconnect()} or {@link ClientHandler#disconnect(String)} instead.
 		 * @param reason Disconnection's reason
 		 * @return <code>ClientDisconnection</code> packet
 		 */

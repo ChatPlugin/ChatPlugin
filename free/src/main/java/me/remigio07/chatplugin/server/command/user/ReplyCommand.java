@@ -18,10 +18,8 @@ package me.remigio07.chatplugin.server.command.user;
 import java.util.Arrays;
 import java.util.List;
 
-import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
 import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
-import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.server.command.PlayerCommand;
 
 public class ReplyCommand extends PlayerCommand {
@@ -37,21 +35,15 @@ public class ReplyCommand extends PlayerCommand {
 	
 	@Override
 	public void execute(ChatPluginServerPlayer player, String[] args) {
-		if (PrivateMessagesManager.getInstance().isEnabled()) {
-			if (args.length != 0) {
-				ChatPluginServerPlayer lastCorrespondent = player.getLastCorrespondent();
-				
-				if (lastCorrespondent != null) {
-					if (!VanishManager.getInstance().isEnabled() || !player.isVanished() || player.hasPermission(VanishManager.VANISH_PERMISSION)) {
-						if (PlayerIgnoreManager.getInstance().isEnabled() && lastCorrespondent.getIgnoredPlayers().contains(player)) {
-							player.sendTranslatedMessage("commands.whisper.ignored", lastCorrespondent.getName());
-							return;
-						} PrivateMessagesManager.getInstance().sendPrivateMessage(player, lastCorrespondent, String.join(" ", args));
-						return;
-					}
-				} player.sendTranslatedMessage("commands.reply.not-found");
-			} else sendUsage(player);
-		} else player.sendTranslatedMessage("misc.disabled-feature");
+		if (PrivateMessagesManager.getInstance().isEnabled())
+			if (args.length != 0)
+				try {
+					PrivateMessagesManager.getInstance().sendReply(player, String.join(" ", args));
+				} catch (IllegalArgumentException e) {
+					player.sendTranslatedMessage("commands.reply.not-found");
+				}
+			else sendUsage(player);
+		else player.sendTranslatedMessage("misc.disabled-feature");
 	}
 	
 }

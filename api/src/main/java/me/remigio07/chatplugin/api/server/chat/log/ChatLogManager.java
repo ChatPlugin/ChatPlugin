@@ -138,7 +138,7 @@ public abstract class ChatLogManager implements ChatPluginManager {
 	 */
 	public abstract void logPrivateMessage(
 			@NotNull ChatPluginServerPlayer sender,
-			@NotNull ChatPluginServerPlayer recipient,
+			@NotNull OfflinePlayer recipient,
 			String privateMessage,
 			@Nullable(why = "Private message may not have been blocked") DenyChatReason<?> denyChatReason
 			);

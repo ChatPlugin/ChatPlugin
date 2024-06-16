@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.api.server.event.chat;
 
 import me.remigio07.chatplugin.api.common.event.CancellableEvent;
+import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
@@ -23,7 +24,8 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 /**
  * Represents an event called before a player's private message is sent.
  * 
- * @see PrivateMessagesManager#sendPrivateMessage(ChatPluginServerPlayer, ChatPluginServerPlayer, String)
+ * @see PrivateMessagesManager#sendPrivateMessage(ChatPluginServerPlayer, OfflinePlayer, String)
+ * @see PrivateMessagesManager#sendReply(ChatPluginServerPlayer, String)
  */
 public class AllowPrivateMessageEvent extends PrivateMessageEvent implements CancellableEvent {
 	
@@ -41,7 +43,7 @@ public class AllowPrivateMessageEvent extends PrivateMessageEvent implements Can
 	 */
 	public AllowPrivateMessageEvent(
 			@Nullable(why = "Null to represent the console") ChatPluginServerPlayer player,
-			@Nullable(why = "Null to represent the console") ChatPluginServerPlayer recipient,
+			@Nullable(why = "Null to represent the console") OfflinePlayer recipient,
 			String privateMessage
 			) {
 		super(player, recipient, privateMessage);

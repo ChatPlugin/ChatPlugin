@@ -64,7 +64,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	protected int ping, id, messagesSent;
 	protected short bans, anticheatBans, warnings, anticheatWarnings, kicks, anticheatKicks, mutes, anticheatMutes;
 	protected long loginTime;
-	protected ChatPluginServerPlayer lastCorrespondent;
+	protected OfflinePlayer lastCorrespondent;
 	protected List<OfflinePlayer> ignoredPlayers;
 	protected ChatColor chatColor;
 	
@@ -326,16 +326,17 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	/**
 	 * Gets the last player that has sent a private message to this player.
 	 * 
-	 * <p>Will return <code>null</code> if no private messages were sent to
-	 * this player since they have joined or if the correspondent was unloaded.</p>
+	 * <p>Will return <code>null</code> if no private messages were sent to this
+	 * player since they have joined or if the correspondent was unloaded.</p>
 	 * 
-	 * <p>Keep in mind that the returned player may be vanished and that <code>null</code>
-	 * does not represent the console: it is not possible to reply to it directly.</p>
+	 * <p><strong>Note:</strong> the returned player may be vanished or
+	 * in another server under the proxy and <code>null</code> does not
+	 * represent the console - it is not possible to reply to it directly.</p>
 	 * 
 	 * @return Player's last correspondent
 	 */
 	@Nullable(why = "There may not be a correspondent loaded")
-	public ChatPluginServerPlayer getLastCorrespondent() {
+	public OfflinePlayer getLastCorrespondent() {
 		return lastCorrespondent;
 	}
 	

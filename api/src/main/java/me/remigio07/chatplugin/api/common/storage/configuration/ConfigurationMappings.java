@@ -259,33 +259,6 @@ public class ConfigurationMappings {
 	}
 	
 	/**
-	 * Gets a char value.
-	 * 
-	 * <p>Will return <code>\u0000</code> if a <code>char</code> is not found at the specified path.</p>
-	 * 
-	 * @param path Path to check
-	 * @return Char value
-	 */
-	public char getChar(String path) {
-		return getChar(path, '\u0000');
-	}
-	
-	/**
-	 * Gets a char value.
-	 * 
-	 * <p>Will return <code>def</code> if a <code>char</code> is not found at the specified path.</p>
-	 * 
-	 * @param path Path to check
-	 * @param def Default value
-	 * @return Char value
-	 */
-	public char getChar(String path, char def) {
-		Object value = get(path, def);
-		
-		return value instanceof Character ? (char) value : def;
-	}
-	
-	/**
 	 * Gets a short value.
 	 * 
 	 * <p>Will return <code>0</code> if a <code>short</code> is not found at the specified path.</p>
@@ -509,21 +482,6 @@ public class ConfigurationMappings {
 	 */
 	@NotNull
 	public List<Byte> getByteList(String path) {
-		return getList(path, new ArrayList<>());
-	}
-	
-	/**
-	 * Gets a Character list value.
-	 * 
-	 * <p>Will return a new {@link ArrayList}
-	 * if a {@link List}<code>&lt;{@link Character}&gt;</code>
-	 * is not found at the specified path.</p>
-	 * 
-	 * @param path Path to check
-	 * @return Character list value
-	 */
-	@NotNull
-	public List<Character> getCharacterList(String path) {
 		return getList(path, new ArrayList<>());
 	}
 	

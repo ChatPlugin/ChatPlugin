@@ -308,27 +308,6 @@ public class Configuration {
 	}
 	
 	/**
-	 * Shortcut for {@link ConfigurationMappings#getChar(String)}.
-	 * 
-	 * @param path Path to check
-	 * @return Char value
-	 */
-	public char getChar(String path) {
-		return mappings.getChar(path, '\u0000');
-	}
-	
-	/**
-	 * Shortcut for {@link ConfigurationMappings#getChar(String, char)}.
-	 * 
-	 * @param path Path to check
-	 * @param def Default value
-	 * @return Char value
-	 */
-	public char getChar(String path, char def) {
-		return mappings.getChar(path, def);
-	}
-	
-	/**
 	 * Shortcut for {@link ConfigurationMappings#getShort(String)}.
 	 * 
 	 * @param path Path to check
@@ -504,17 +483,6 @@ public class Configuration {
 	@NotNull
 	public List<Byte> getByteList(String path) {
 		return mappings.getByteList(path);
-	}
-	
-	/**
-	 * Shortcut for {@link ConfigurationMappings#getCharacterList(String)}.
-	 * 
-	 * @param path Path to check
-	 * @return Char list value
-	 */
-	@NotNull
-	public List<Character> getCharacterList(String path) {
-		return mappings.getCharacterList(path);
 	}
 	
 	/**

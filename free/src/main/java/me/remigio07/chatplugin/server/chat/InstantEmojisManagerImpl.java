@@ -31,7 +31,7 @@ public class InstantEmojisManagerImpl extends InstantEmojisManager {
 			return;
 		for (String id : ConfigurationType.CHAT.get().getKeys("chat.instant-emojis.values"))
 			if (getInstantEmoji(id) == null)
-				instantEmojis.add(new InstantEmoji(id, ConfigurationType.CHAT.get().getString("chat.instant-emojis.values." + id).toCharArray()[0]));
+				instantEmojis.add(new InstantEmoji(id, ConfigurationType.CHAT.get().getString("chat.instant-emojis.values." + id)));
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}
@@ -49,7 +49,7 @@ public class InstantEmojisManagerImpl extends InstantEmojisManager {
 		
 		for (InstantEmoji instantEmoji : instantEmojis)
 			if (input.contains(":" + instantEmoji.getID() + ":"))
-				string = string.replace(":" + instantEmoji.getID() + ":", String.valueOf(instantEmoji.getCharacter()));
+				string = string.replace(":" + instantEmoji.getID() + ":", instantEmoji.getString());
 		return string;
 	}
 	

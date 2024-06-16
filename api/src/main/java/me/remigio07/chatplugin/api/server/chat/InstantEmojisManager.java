@@ -92,18 +92,17 @@ public abstract class InstantEmojisManager implements ChatPluginManager {
 	 */
 	public static class InstantEmoji {
 		
-		private String id;
-		private char character;
+		private String id, string;
 		
 		/**
 		 * Constructs a new instant emoji.
 		 * 
 		 * @param id Instant emoji's ID
-		 * @param character Instant emoji's character
+		 * @param string Instant emoji's string
 		 */
-		public InstantEmoji(String id, char character) {
+		public InstantEmoji(String id, String string) {
 			this.id = id;
-			this.character = character;
+			this.string = string;
 		}
 		
 		/**
@@ -116,12 +115,12 @@ public abstract class InstantEmojisManager implements ChatPluginManager {
 		}
 		
 		/**
-		 * Gets this emoji's character.
+		 * Gets this emoji's string.
 		 * 
-		 * @return Emoji's character
+		 * @return Emoji's string
 		 */
-		public char getCharacter() {
-			return character;
+		public String getString() {
+			return string;
 		}
 		
 	}

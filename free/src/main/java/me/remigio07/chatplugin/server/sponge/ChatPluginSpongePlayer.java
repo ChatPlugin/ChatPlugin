@@ -264,6 +264,11 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	}
 	
 	@Override
+	public String getDisplayName() {
+		 return Utils.deserializeSpongeText(player.getDisplayNameData().displayName().get());
+	}
+	
+	@Override
 	public String getWorld() {
 		return player.getWorld().getName();
 	}

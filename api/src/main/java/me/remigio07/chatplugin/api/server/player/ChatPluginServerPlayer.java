@@ -460,6 +460,16 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	public abstract void teleport(ChatPluginServerPlayer player);
 	
 	/**
+	 * Gets this player's display name.
+	 * 
+	 * <p>It can be changed by other plugins
+	 * and may include formatting codes.</p>
+	 * 
+	 * @return Player's display name
+	 */
+	public abstract String getDisplayName();
+	
+	/**
 	 * Gets this player's world's name.
 	 * 
 	 * @return Player's world's name

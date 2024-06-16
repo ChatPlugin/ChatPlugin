@@ -264,6 +264,11 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	}
 	
 	@Override
+	public String getDisplayName() {
+		return player.getDisplayName();
+	}
+	
+	@Override
 	public String getWorld() {
 		return player.getWorld().getName();
 	}

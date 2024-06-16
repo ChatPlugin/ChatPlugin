@@ -101,6 +101,7 @@ public class QuitMessageManagerImpl extends QuitMessageManager {
 		
 		public QuitPacketImpl(ChatPluginServerPlayer player) {
 			this.player = new OfflinePlayer(player.getUUID(), player.getName());
+			displayName = player.getDisplayName();
 			rank = player.getRank();
 			playerID = player.getID();
 			vanished = player.isVanished();
@@ -120,6 +121,7 @@ public class QuitMessageManagerImpl extends QuitMessageManager {
 				output = output
 						.replace("{player}", player.getName())
 						.replace("{uuid}", player.getUUID().toString())
+						.replace("{display_name}", displayName)
 						.replace("{player_id}", String.valueOf(playerID))
 						.replace("{rank_id}", rank.getID())
 						.replace("{rank_display_name}", rank.getDisplayName())

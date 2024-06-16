@@ -196,6 +196,8 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 			output = output.replace("{player}", player.getName());
 		if (output.contains("{uuid}"))
 			output = output.replace("{uuid}", player.getUUID().toString());
+		if (output.contains("{display_name}"))
+			output = output.replace("{display_name}", player.getDisplayName());
 		if (output.contains("{ip_address}"))
 			output = output.replace("{ip_address}", player.getIPAddress().getHostAddress());
 		if (output.contains("{health}"))

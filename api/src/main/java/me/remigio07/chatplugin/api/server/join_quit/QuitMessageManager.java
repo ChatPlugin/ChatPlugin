@@ -169,12 +169,13 @@ public abstract class QuitMessageManager implements ChatPluginManager {
 		 * Array containing all available placeholders that
 		 * can be translated with a packet's information.
 		 * 
-		 * <p><strong>Content:</strong> ["player", "uuid", "player_id", "rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description"]</p>
+		 * <p><strong>Content:</strong> ["player", "uuid", "display_name", "player_id", "rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description"]</p>
 		 * 
 		 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Join-quit#placeholders">ChatPlugin wiki/Modules/Join-quit/Quit messages/Placeholders</a>
 		 */
-		public static final String[] PLACEHOLDERS = new String[] { "player", "uuid", "player_id", "rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description" };
+		public static final String[] PLACEHOLDERS = new String[] { "player", "uuid", "display_name", "player_id", "rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description" };
 		protected OfflinePlayer player;
+		protected String displayName;
 		protected Rank rank;
 		protected int playerID;
 		protected boolean vanished;
@@ -186,6 +187,15 @@ public abstract class QuitMessageManager implements ChatPluginManager {
 		 */
 		public OfflinePlayer getPlayer() {
 			return player;
+		}
+		
+		/**
+		 * Gets {@link #getPlayer()}'s display name.
+		 * 
+		 * @return Player's display name
+		 */
+		public String getDisplayName() {
+			return displayName;
 		}
 		
 		/**

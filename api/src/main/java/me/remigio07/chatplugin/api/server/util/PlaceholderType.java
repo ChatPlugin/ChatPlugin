@@ -41,7 +41,7 @@ public enum PlaceholderType {
 	 * Represents player-related placeholders.
 	 */
 	PLAYER(new String[] {
-			"player", "uuid", "ip_address", "health", "max_health", "food", "level", "xp", "gamemode",
+			"player", "uuid", "display_name", "ip_address", "health", "max_health", "food", "level", "xp", "gamemode",
 			"ping", "ping_format", "language_id", "language_display_name", "locale", "version", "version_protocol", "last_login", "time_played",
 			"world", "online_world", "vanished_world",
 			"player_id", "player_bans", "player_warnings", "player_kicks", "player_mutes", "messages_sent", "player_anticheat_bans", "player_anticheat_warnings", "player_anticheat_kicks", "player_anticheat_mutes",

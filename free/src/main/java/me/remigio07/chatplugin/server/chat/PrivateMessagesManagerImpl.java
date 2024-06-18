@@ -119,14 +119,14 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 				ChatPluginServerPlayer recipientPlayer = recipient.toServerPlayer();
 				
 				if (recipientPlayer != null) {
-					if (performEvents(null, recipient, privateMessage)) {
+					if ((privateMessage = performEvents(null, recipient, privateMessage)) != null) {
 						sendMessageToSender(null, recipient, privateMessage);
 						sendMessageToRecipient(null, recipientPlayer, privateMessage);
 					}
 				} else ChatPlugin.getInstance().sendConsoleMessage(Language.getMainLanguage().getMessage("misc.disabled-world"), false);
 			} else ChatPlugin.getInstance().sendConsoleMessage(Language.getMainLanguage().getMessage("misc.player-not-found", recipient.getName()), false);
 		} else if (recipient == null) {
-			if (performEvents(sender, null, privateMessage)) {
+			if ((privateMessage = performEvents(sender, null, privateMessage)) != null) {
 				sendMessageToSender(sender, null, privateMessage);
 				sendMessageToRecipient(sender, null, privateMessage);
 			}
@@ -136,7 +136,7 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 			if (recipientPlayer != null) {
 				if (!recipientPlayer.isVanished() || sender.hasPermission(VanishManager.VANISH_PERMISSION)) {
 					if (!recipientPlayer.getIgnoredPlayers().contains(sender)) {
-						if (performEvents(sender, recipient, privateMessage)) {
+						if ((privateMessage = performEvents(sender, recipient, privateMessage)) != null) {
 							if (!ProxyManager.getInstance().isEnabled()) {
 								if (!sender.hasPermission("chatplugin.commands.socialspy") && !recipientPlayer.hasPermission("chatplugin.commands.socialspy"))
 									sendSocialspyNotifications(sender, recipientPlayer, privateMessage);
@@ -207,14 +207,14 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 		ChatPlugin.getInstance().sendConsoleMessage(formatPlaceholders(socialspyTerminalFormat, sender, recipient) + privateMessage, false);
 	}
 	
-	public boolean performEvents(ChatPluginServerPlayer sender, OfflinePlayer recipient, String privateMessage) {
+	public String performEvents(ChatPluginServerPlayer sender, OfflinePlayer recipient, String privateMessage) {
 		privateMessage = privateMessage.trim().replaceAll(" +", " ");
 		PrePrivateMessageEvent prePrivateMessageEvent = new PrePrivateMessageEvent(sender, recipient, privateMessage);
 		
 		prePrivateMessageEvent.call();
 		
 		if (prePrivateMessageEvent.isCancelled())
-			return false;
+			return null;
 		
 		// 0. instant emojis
 		if (InstantEmojisManager.getInstance().isEnabled())
@@ -270,20 +270,20 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 			} if (sender == null)
 				ChatPlugin.getInstance().sendConsoleMessage(denyMessage, false);
 			else sender.sendMessage(denyMessage);
-			return false;
+			return null;
 		} AllowPrivateMessageEvent allowPrivateMessageEvent = new AllowPrivateMessageEvent(sender, recipient, privateMessage);
 		
 		allowPrivateMessageEvent.call();
 		
 		if (allowPrivateMessageEvent.isCancelled())
-			return false;
+			return null;
 		if (ChatLogManager.getInstance().isEnabled()) {
 			if (sender != null && recipient != null)
 				ChatLogManager.getInstance().logPrivateMessage(sender, recipient, privateMessage, null);
 			if (!ChatLogManager.getInstance().isPrintToLogFile())
-				return true;
+				return privateMessage;
 		} LogManager.getInstance().writeToFile(ChatColor.stripColor(formatPlaceholders(socialspyTerminalFormat, sender, recipient) + privateMessage));
-		return true;
+		return privateMessage;
 	}
 	
 	@Override

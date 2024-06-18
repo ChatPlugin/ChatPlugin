@@ -124,7 +124,7 @@ public class BukkitEventManager extends EventManager {
 		Player player = event.getPlayer();
 		ChatPluginServerPlayer serverPlayer = ServerPlayerManager.getInstance().getPlayer(player.getUniqueId());
 		
-		if (event.isCancelled() || serverPlayer == null || (IntegrationType.GADGETSMENU.isEnabled() && ((GadgetsMenuIntegration) IntegrationType.GADGETSMENU.get()).isRenamingPet(serverPlayer)))
+		if (event.isCancelled() || serverPlayer == null || !ChatManager.getInstance().isEnabled() || (IntegrationType.GADGETSMENU.isEnabled() && ((GadgetsMenuIntegration) IntegrationType.GADGETSMENU.get()).isRenamingPet(serverPlayer)))
 			return;
 		ChatManager.getInstance().handleChatEvent(serverPlayer, event.getMessage());
 		applyScoreboard(ScoreboardEvent.CHAT, player);
@@ -256,7 +256,7 @@ public class BukkitEventManager extends EventManager {
 		return listener;
 	}
 	
-	private static class BukkitListener implements EventExecutor, Listener {
+	public static class BukkitListener implements EventExecutor, Listener {
 		
 		@Override
 		public void execute(Listener listener, Event event) throws EventException {

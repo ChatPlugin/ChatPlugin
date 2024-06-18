@@ -250,7 +250,7 @@ public class SpongeEventManager extends EventManager {
 		return listener;
 	}
 	
-	private static class SpongeListener implements EventListener<Event> {
+	public static class SpongeListener implements EventListener<Event> {
 		
 		@Override
 		public void handle(Event event) throws Exception {

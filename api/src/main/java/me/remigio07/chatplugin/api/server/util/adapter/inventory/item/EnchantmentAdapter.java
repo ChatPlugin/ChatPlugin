@@ -54,9 +54,19 @@ public class EnchantmentAdapter {
 	public static final EnchantmentAdapter BLAST_PROTECTION = new EnchantmentAdapter("BLAST_PROTECTION", new String[] { "blast_protection", "blast_protect", "blast_prot", "explosions_protection", "explosions_protect", "explosions_prot", "explosions", "explode", "expl", "PROTECTION_EXPLOSIONS" });
 	
 	/**
+	 * Reduces armor effectiveness against maces.
+	 */
+	public static final EnchantmentAdapter BREACH = new EnchantmentAdapter("BREACH", new String[] { "BREACH" });
+	
+	/**
 	 * Strikes lightning when a mob is hit with a trident if conditions are stormy.
 	 */
 	public static final EnchantmentAdapter CHANNELING = new EnchantmentAdapter("CHANNELING", new String[] { "CHANNELING" });
+	
+	/**
+	 * Increases fall damage of maces.
+	 */
+	public static final EnchantmentAdapter DENSITY = new EnchantmentAdapter("DENSITY", new String[] { "DENSITY" });
 	
 	/**
 	 * Increases walking speed while in water.
@@ -227,7 +237,12 @@ public class EnchantmentAdapter {
 	 * Item disappears instead of dropping.
 	 */
 	public static final EnchantmentAdapter VANISHING_CURSE = new EnchantmentAdapter("VANISHING_CURSE", new String[] { "vanishing", "vanish_curse", "VANISHING_CURSE" });
-	private static final EnchantmentAdapter[] VALUES = new EnchantmentAdapter[] { AQUA_AFFINITY, BANE_OF_ARTHROPODS, BINDING_CURSE, BLAST_PROTECTION, CHANNELING, DEPTH_STRIDER, EFFICIENCY, FEATHER_FALLING, FIRE_ASPECT, FIRE_PROTECTION, FLAME, FORTUNE, FROST_WALKER, IMPALING, INFINITY, KNOCKBACK, LOOTING, LOYALTY, LUCK_OF_THE_SEA, LURE, MENDING, MULTISHOT, PIERCING, POWER, PROJECTILE_PROTECTION, PROTECTION, PUNCH, QUICK_CHARGE, RESPIRATION, RIPTIDE, SHARPNESS, SILK_TOUCH, SMITE, SOUL_SPEED, SWEEPING_EDGE, SWIFT_SNEAK, THORNS, UNBREAKING, VANISHING_CURSE };
+	
+	/**
+	 * Emits wind burst upon hitting enemy.
+	 */
+	public static final EnchantmentAdapter WIND_BURST = new EnchantmentAdapter("WIND_BURST", new String[] { "wind", "WIND_BURST" });
+	private static final EnchantmentAdapter[] VALUES = new EnchantmentAdapter[] { AQUA_AFFINITY, BANE_OF_ARTHROPODS, BINDING_CURSE, BLAST_PROTECTION, BREACH, CHANNELING, DENSITY,DEPTH_STRIDER, EFFICIENCY, FEATHER_FALLING, FIRE_ASPECT, FIRE_PROTECTION, FLAME, FORTUNE, FROST_WALKER, IMPALING, INFINITY, KNOCKBACK, LOOTING, LOYALTY, LUCK_OF_THE_SEA, LURE, MENDING, MULTISHOT, PIERCING, POWER, PROJECTILE_PROTECTION, PROTECTION, PUNCH, QUICK_CHARGE, RESPIRATION, RIPTIDE, SHARPNESS, SILK_TOUCH, SMITE, SOUL_SPEED, SWEEPING_EDGE, SWIFT_SNEAK, THORNS, UNBREAKING, VANISHING_CURSE, WIND_BURST };
 	private String name;
 	private String[] aliases;
 	
@@ -239,18 +254,25 @@ public class EnchantmentAdapter {
 	/**
 	 * Gets the enchantment adapted for Bukkit environments.
 	 * 
+	 * <p>If the current version does not support this enchantment,
+	 * the default value of {@link #UNBREAKING} will be returned.</p>
+	 * 
 	 * @return Bukkit-adapted enchantment
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBukkit()}
 	 */
 	@SuppressWarnings("deprecation")
 	public Enchantment bukkitValue() {
-		if (Environment.isBukkit())
-			return Enchantment.getByName(aliases[aliases.length - 1].toUpperCase());
-		else throw new UnsupportedOperationException("Unable to adapt enchantment to a Bukkit's Enchantment on a " + Environment.getCurrent().getName() + " environment");
+		if (Environment.isBukkit()) {
+			Enchantment enchantment = Enchantment.getByName(aliases[aliases.length - 1].toUpperCase());
+			return enchantment == null ? Enchantment.UNBREAKING : enchantment;
+		} else throw new UnsupportedOperationException("Unable to adapt enchantment to a Bukkit's Enchantment on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
 	 * Gets the enchantment adapted for Sponge environments.
+	 * 
+	 * <p>If the current version does not support this enchantment,
+	 * the default value of {@link #UNBREAKING} will be returned.</p>
 	 * 
 	 * @return Sponge-adapted enchantment
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isSponge()}
@@ -260,7 +282,7 @@ public class EnchantmentAdapter {
 			try {
 				return (EnchantmentType) EnchantmentTypes.class.getField(name()).get(null);
 			} catch (NullPointerException | IllegalArgumentException | IllegalAccessException | NoSuchFieldException e) {
-				return null;
+				return EnchantmentTypes.UNBREAKING;
 			}
 		else throw new UnsupportedOperationException("Unable to adapt enchantment to a Sponge's EnchantmentType on a " + Environment.getCurrent().getName() + " environment");
 	}

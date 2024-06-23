@@ -92,15 +92,13 @@ public class SpongeReflection {
 	
 	public static void putMethod(Class<?> clazz, String method, List<Class<?>> parameters, String... otherAttempts) throws NoSuchMethodException {
 		Map<String, Method> map = methods.getOrDefault(clazz, new HashMap<>());
-		List<String> temp = new ArrayList<>(Arrays.asList(otherAttempts));
+		List<String> attempts = new ArrayList<>(Arrays.asList(otherAttempts == null ? new String[0] : otherAttempts));
 		
-		temp.add(0, method);
+		attempts.add(0, method);
 		
-		otherAttempts = temp.toArray(new String[0]);
-		
-		for (String otherAttempt : otherAttempts) {
+		for (String attempt : attempts) {
 			try {
-				map.put(method, clazz.getMethod(otherAttempt, parameters.toArray(new Class<?>[0])));
+				map.put(method, clazz.getMethod(attempt, parameters.toArray(new Class<?>[0])));
 				break;
 			} catch (NoSuchMethodException e) {
 				

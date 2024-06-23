@@ -50,6 +50,7 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 	 * @param input Input text
 	 * @return BungeeCord-compatible text
 	 */
+	@SuppressWarnings("deprecation")
 	public static TextComponent serializeBungeeCordText(String input) {
 		TextComponent bungeeCordComponent = new TextComponent("\u00A7r");
 		

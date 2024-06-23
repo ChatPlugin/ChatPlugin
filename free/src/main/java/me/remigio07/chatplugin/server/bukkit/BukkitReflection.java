@@ -49,12 +49,12 @@ public class BukkitReflection {
 			// CraftPlayer
 			clazz = getCBClass("entity.CraftPlayer");
 			classes.put("CraftPlayer", clazz);
-			putMethod(clazz, "getHandle", "");
+			putMethod(clazz, "getHandle");
 			
 			// CraftWorld - < 1.9
 			clazz = getCBClass("CraftWorld");
 			classes.put("CraftWorld", clazz);
-			putMethod(clazz, "getHandle", "");
+			putMethod(clazz, "getHandle");
 			
 			// CraftChatMessage
 			clazz = getCBClass("util.CraftChatMessage");
@@ -64,11 +64,22 @@ public class BukkitReflection {
 			// MinecraftServer
 			clazz = getNMSClass("MinecraftServer");
 			classes.put("MinecraftServer", clazz);
-			putMethod(clazz, "getServer", "");
+			putMethod(clazz, "getServer");
 			
 			// Packet
 			clazz = atLeast1_17 ? getNMNClass("protocol.Packet") : getNMSClass("Packet");
 			classes.put("Packet", clazz);
+			
+			// InventoryView - abstract class until 1.20.6, became interface in 1.21
+			clazz = Class.forName("org.bukkit.inventory.InventoryView");
+			classes.put("InventoryView", clazz);
+			putMethod(clazz, "setTitle", Arrays.asList(String.class));
+			putMethod(clazz, "getTopInventory");
+			
+			// HumanEntity - we need this, too
+			clazz = Class.forName("org.bukkit.entity.HumanEntity");
+			classes.put("HumanEntity", clazz);
+			putMethod(clazz, "getOpenInventory");
 			
 			if (VersionUtils.getNMSVersion().equals(Utils.NOT_APPLICABLE)) {
 				// EntityPlayer
@@ -95,8 +106,8 @@ public class BukkitReflection {
 					classes.put("IChatBaseComponent", clazz);
 					
 					if (VersionUtils.getVersion().getProtocol() < 341)
-						putMethod(clazz, "getText", "");
-					else putMethod(clazz, "getString", "");
+						putMethod(clazz, "getText");
+					else putMethod(clazz, "getString");
 					
 						// ChatSerializer
 						clazz = atLeast1_17 ? getNMNClass("chat.IChatBaseComponent$ChatSerializer") : getNMSClass("IChatBaseComponent$ChatSerializer");
@@ -120,7 +131,7 @@ public class BukkitReflection {
 					// CraftHumanEntity
 					clazz = getCBClass("entity.CraftHumanEntity");
 					classes.put("CraftHumanEntity", clazz);
-					putMethod(clazz, "getHandle", "");
+					putMethod(clazz, "getHandle");
 					
 					// EntityHuman
 					clazz = atLeast1_17 ? Class.forName("net.minecraft.world.entity.player.EntityHuman") : getNMSClass("EntityHuman");
@@ -160,7 +171,7 @@ public class BukkitReflection {
 				// CraftServer
 				clazz = getCBClass("CraftServer");
 				classes.put("CraftServer", clazz);
-				putMethod(clazz, "syncCommands", "");
+				putMethod(clazz, "syncCommands");
 			} if (VersionUtils.getVersion().isAtLeast(Version.V1_9))
 				return;
 			
@@ -172,7 +183,7 @@ public class BukkitReflection {
 			// CraftScoreboard
 			clazz = getCBClass("scoreboard.CraftScoreboard");
 			classes.put("CraftScoreboard", clazz);
-			putMethod(clazz, "getHandle", "");
+			putMethod(clazz, "getHandle");
 			
 			// PacketPlayOutSpawnEntityLiving
 			clazz = atLeast1_17 ? getNMNClass("protocol.game.PacketPlayOutSpawnEntityLiving") : getNMSClass("PacketPlayOutSpawnEntityLiving");
@@ -232,15 +243,13 @@ public class BukkitReflection {
 	
 	public static void putMethod(Class<?> clazz, String method, List<Class<?>> parameters, String... otherAttempts) throws NoSuchMethodException {
 		Map<String, Method> map = methods.getOrDefault(clazz, new HashMap<>());
-		List<String> temp = new ArrayList<>(Arrays.asList(otherAttempts));
+		List<String> attempts = new ArrayList<>(Arrays.asList(otherAttempts == null ? new String[0] : otherAttempts));
 		
-		temp.add(0, method);
+		attempts.add(0, method);
 		
-		otherAttempts = temp.toArray(new String[0]);
-		
-		for (String otherAttempt : otherAttempts) {
+		for (String attempt : attempts) {
 			try {
-				Method declaredMethod = clazz.getDeclaredMethod(otherAttempt, parameters.toArray(new Class<?>[0]));
+				Method declaredMethod = clazz.getDeclaredMethod(attempt, parameters.toArray(new Class<?>[0]));
 				
 				declaredMethod.setAccessible(true);
 				map.put(method, declaredMethod);

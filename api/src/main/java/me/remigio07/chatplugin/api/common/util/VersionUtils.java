@@ -43,6 +43,7 @@ public class VersionUtils {
 	 * @deprecated Internal use only.
 	 * @throws ChatPluginManagerException If something goes wrong.
 	 */
+	@Deprecated
 	public static void initVersionUtils() throws ChatPluginManagerException {
 		switch (Environment.getCurrent()) {
 		case BUKKIT:
@@ -50,7 +51,7 @@ public class VersionUtils {
 			implementationVersion = Bukkit.getVersion();
 			implementationName = isArclight() ? "Arclight" : isPurpur() ? "Purpur" : isPaper() ? "Paper" : isSpigot() ? "Spigot" : "Bukkit";
 			
-			if (!isPaper() || version.isOlderThan(Version.V1_20_5))
+			if (!isPaper() || version.isOlderThan(Version.V1_20_5) && version != Version.UNSUPPORTED)
 				nmsVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 			break;
 		case SPONGE:
@@ -942,7 +943,15 @@ public class VersionUtils {
 		 * <p><strong>Protocol version number:</strong> 766
 		 * <br><strong>Release date:</strong> April 29, 2024</p>
 		 */
-		V1_20_6(766, 1714341600000L, "1.20.5/6");
+		V1_20_6(766, 1714341600000L, "1.20.5/6"),
+		
+		/**
+		 * Version 1.21.
+		 * 
+		 * <p><strong>Protocol version number:</strong> 767
+		 * <br><strong>Release date:</strong> June 13, 2024</p>
+		 */
+		V1_21(767, 1718229600000L);
 		
 		private int protocol;
 		private long releaseDate;

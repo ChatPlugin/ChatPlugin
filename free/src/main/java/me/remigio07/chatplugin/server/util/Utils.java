@@ -60,7 +60,7 @@ public class Utils extends me.remigio07.chatplugin.api.server.util.Utils {
 				
 				viewer.sendPacket(packet);
 				viewer.toAdapter().bukkitValue().updateInventory();
-			} else viewer.toAdapter().bukkitValue().getOpenInventory().setTitle(title);
+			} else BukkitReflection.invokeMethod("InventoryView", "setTitle", BukkitReflection.invokeMethod("HumanEntity", "getOpenInventory", viewer.toAdapter().bukkitValue()), title);
 		} else {
 			Object container = viewer.toAdapter().spongeValue().getOpenInventory().get();
 			

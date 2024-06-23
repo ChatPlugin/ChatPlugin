@@ -117,32 +117,29 @@ public class ChatManagerImpl extends ChatManager {
 		if (preChatEvent.isCancelled())
 			return;
 		
-		// 1. instant-emojis
-		if (InstantEmojisManager.getInstance().isEnabled())
-			message = InstantEmojisManager.getInstance().format(message);
-		
-		// 2. staff-chat
+		// 1. staff-chat
 		if (StaffChatManager.getInstance().isEnabled() && player.hasPermission("chatplugin.commands.staffchat") && StaffChatManager.getInstance().isUsingStaffChat(player.getUUID())) {
 			StaffChatManager.getInstance().sendPlayerMessage(player, message);
 			return;
 		} DenyChatReason<?> reason = null;
 		List<String> urls = URLValidator.getURLs(message);
 		
-		// 3. vanish
+		// 2. vanish
 		if (player.isVanished())
 			reason = DenyChatReason.VANISH;
 		
-		// 4. mute
-		if (chatMuted && !player.hasPermission("chatplugin.commands.muteall"))
-			reason = DenyChatReason.MUTEALL;
-		else if (MuteManager.getInstance().isEnabled() && MuteManager.getInstance().isMuted(player, ProxyManager.getInstance().getServerID()))
-			reason = DenyChatReason.MUTE;
+		// 3. mute
+		if (reason == null)
+			if (chatMuted && !player.hasPermission("chatplugin.commands.muteall"))
+				reason = DenyChatReason.MUTEALL;
+			else if (MuteManager.getInstance().isEnabled() && MuteManager.getInstance().isMuted(player, ProxyManager.getInstance().getServerID()))
+				reason = DenyChatReason.MUTE;
 		
-		// 5. antispam
+		// 4. antispam
 		if (reason == null && AntispamManager.getInstance().isEnabled())
 			reason = AntispamManager.getInstance().getDenyChatReason(player, message, Collections.emptyList());
 		
-		// 6. formatted-chat
+		// 5. formatted-chat
 		if (reason == null && FormattedChatManager.getInstance().isEnabled() && FormattedChatManager.getInstance().containsFormattedText(message, urls, true)) {
 			if (!player.hasPermission("chatplugin.formatted-chat"))
 				if (!FormattedChatManager.getInstance().isSendAnyway())
@@ -151,9 +148,13 @@ public class ChatManagerImpl extends ChatManager {
 			else message = FormattedChatManager.getInstance().translate(message, urls, true);
 		}
 		
-		// 7. blank-message
+		// 6. blank-message
 		if (reason == null && ChatColor.stripColor(message).replaceAll("\\s", "").isEmpty())
 			reason = DenyChatReason.BLANK_MESSAGE;
+		
+		// 7. instant-emojis
+		if (reason == null && InstantEmojisManager.getInstance().isEnabled())
+			message = InstantEmojisManager.getInstance().translateInstantEmojis(player, message, global);
 		
 		// 8. player-ping
 		if (reason == null && PlayerPingManager.getInstance().isEnabled())

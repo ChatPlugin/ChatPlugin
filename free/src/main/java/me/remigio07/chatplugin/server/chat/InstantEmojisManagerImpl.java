@@ -17,8 +17,12 @@ package me.remigio07.chatplugin.server.chat;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
+import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.chat.ChatManager;
 import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager;
+import me.remigio07.chatplugin.api.server.chat.RangedChatManager;
+import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 
 public class InstantEmojisManagerImpl extends InstantEmojisManager {
 	
@@ -44,13 +48,15 @@ public class InstantEmojisManagerImpl extends InstantEmojisManager {
 	}
 	
 	@Override
-	public String format(String input) {
-		String string = input;
+	public String translateInstantEmojis(ChatPluginServerPlayer player, String message, boolean globalChat) {
+		String str = PlaceholderManager.getInstance().translatePlaceholders(RangedChatManager.getInstance().isEnabled() && globalChat ? RangedChatManager.getInstance().getGlobalModeFormat() : ChatManager.getInstance().getFormat(), player, ChatManager.getInstance().getPlaceholderTypes());
 		
-		for (InstantEmoji instantEmoji : instantEmojis)
-			if (input.contains(":" + instantEmoji.getID() + ":"))
-				string = string.replace(":" + instantEmoji.getID() + ":", instantEmoji.getString());
-		return string;
+		for (InstantEmoji instantEmoji : instantEmojis) {
+			int index = 0;
+			
+			while ((index = message.indexOf(instantEmoji.getID(), index)) != -1)
+				message = message.replaceFirst(instantEmoji.getLiteralPattern(), instantEmoji.getString() + ChatColor.getLastColors(str + message.substring(0, index)));
+		} return message;
 	}
 	
 }

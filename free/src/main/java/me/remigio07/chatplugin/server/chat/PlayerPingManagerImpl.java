@@ -98,14 +98,13 @@ public class PlayerPingManagerImpl extends PlayerPingManager {
 	public String performPing(ChatPluginServerPlayer player, String message, boolean globalChat) {
 		if (enabled) {
 			List<ChatPluginServerPlayer> pingedPlayers = getPingedPlayers(player, message, globalChat);
+			String str = PlaceholderManager.getInstance().translatePlaceholders(RangedChatManager.getInstance().isEnabled() && globalChat ? RangedChatManager.getInstance().getGlobalModeFormat() : ChatManager.getInstance().getFormat(), player, ChatManager.getInstance().getPlaceholderTypes());
 			
-			if (!pingedPlayers.isEmpty()) {
-				String str = PlaceholderManager.getInstance().translatePlaceholders(RangedChatManager.getInstance().isEnabled() && globalChat ? RangedChatManager.getInstance().getGlobalModeFormat() : ChatManager.getInstance().getFormat(), player, ChatManager.getInstance().getPlaceholderTypes());
-				
-				if (Arrays.asList(message.split(" ")).contains("@everyone") && player.hasPermission("chatplugin.player-ping.everyone")) {
-					String[] array = message.split("\\s*@everyone\\s*", 2);
-					message = message.replaceFirst("\\s*@everyone\\s*", (array[0].isEmpty() ? "" : " ") + ChatColor.translate(color) + "@everyone" + (array[1].isEmpty() ? "" : (" " + ChatColor.getLastColors(str + array[0]))));
-				} for (ChatPluginServerPlayer pinged : pingedPlayers) {
+			if (Arrays.asList(message.split(" ")).contains("@everyone") && player.hasPermission("chatplugin.player-ping.everyone")) {
+				String[] array = message.split("\\s*@everyone\\s*", 2);
+				message = message.replaceFirst("\\s*@everyone\\s*", (array[0].isEmpty() ? "" : " ") + ChatColor.translate(color) + "@everyone" + (array[1].isEmpty() ? "" : (" " + ChatColor.getLastColors(str + array[0]))));
+			} if (!pingedPlayers.isEmpty())
+				for (ChatPluginServerPlayer pinged : pingedPlayers)
 					if (!pinged.isVanished()) {
 						String regex = "\\s*" + (atSignRequired ? "@" : "") + pinged.getName() + "\\s*";
 						String[] array = message.split(regex, 2);
@@ -125,8 +124,6 @@ public class PlayerPingManagerImpl extends PlayerPingManager {
 							playPingSound(pinged);
 						}
 					}
-				}
-			}
 		} return message;
 	}
 	

@@ -17,10 +17,13 @@ package me.remigio07.chatplugin.api.server.chat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
+import me.remigio07.chatplugin.api.common.util.text.ChatColor;
+import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
  * Manager that handles {@link InstantEmoji}s.
@@ -80,10 +83,12 @@ public abstract class InstantEmojisManager implements ChatPluginManager {
 	/**
 	 * Formats a message translating all the instant emojis loaded.
 	 * 
-	 * @param input Input String
+	 * @param player Player involved
+	 * @param message Message involved
+	 * @param globalChat Whether the message has been sent to the global chat
 	 * @return Translated message
 	 */
-	public abstract String format(String input);
+	public abstract String translateInstantEmojis(ChatPluginServerPlayer player, String message, boolean globalChat);
 	
 	/**
 	 * Represents an instant emoji handled by the {@link InstantEmojisManager}.
@@ -92,7 +97,7 @@ public abstract class InstantEmojisManager implements ChatPluginManager {
 	 */
 	public static class InstantEmoji {
 		
-		private String id, string;
+		private String id, string, literalPattern;
 		
 		/**
 		 * Constructs a new instant emoji.
@@ -102,7 +107,8 @@ public abstract class InstantEmojisManager implements ChatPluginManager {
 		 */
 		public InstantEmoji(String id, String string) {
 			this.id = id;
-			this.string = string;
+			this.string = ChatColor.translate(string);
+			literalPattern = Pattern.quote(id);
 		}
 		
 		/**
@@ -115,12 +121,23 @@ public abstract class InstantEmojisManager implements ChatPluginManager {
 		}
 		
 		/**
-		 * Gets this emoji's string.
+		 * Gets this emoji's string, may
+		 * contain translated colors.
 		 * 
 		 * @return Emoji's string
 		 */
 		public String getString() {
 			return string;
+		}
+		
+		/**
+		 * Gets this emoji's literal pattern
+		 * used with regular expressions.
+		 * 
+		 * @return Emoji's literal pattern
+		 */
+		public String getLiteralPattern() {
+			return literalPattern;
 		}
 		
 	}

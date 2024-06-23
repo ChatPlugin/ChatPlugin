@@ -33,7 +33,6 @@ import me.remigio07.chatplugin.api.common.util.packet.Packets;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.chat.ChatManager;
 import me.remigio07.chatplugin.api.server.chat.FormattedChatManager;
-import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager;
 import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
 import me.remigio07.chatplugin.api.server.chat.antispam.AntispamManager;
 import me.remigio07.chatplugin.api.server.chat.antispam.DenyChatReason;
@@ -215,17 +214,13 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 		
 		if (prePrivateMessageEvent.isCancelled())
 			return null;
-		
-		// 0. instant emojis
-		if (InstantEmojisManager.getInstance().isEnabled())
-			privateMessage = InstantEmojisManager.getInstance().format(privateMessage);
 		DenyChatReason<?> reason = null;
 		
-		// 1. antispam
+		// 0. antispam
 		if (sender != null && AntispamManager.getInstance().isEnabled())
 			reason = AntispamManager.getInstance().getDenyChatReason(sender, privateMessage, bypassAntispamChecks);
 		
-		// 2. formatted-chat
+		// 1. formatted-chat
 		if (reason == null && FormattedChatManager.getInstance().isEnabled()) {
 			List<String> urls = URLValidator.getURLs(privateMessage);
 			
@@ -238,7 +233,7 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 			}
 		}
 		
-		// 3. blank-message
+		// 2. blank-message
 		if (reason == null && ChatColor.stripColor(privateMessage).replaceAll("\\s", "").isEmpty())
 			reason = DenyChatReason.BLANK_MESSAGE;
 		

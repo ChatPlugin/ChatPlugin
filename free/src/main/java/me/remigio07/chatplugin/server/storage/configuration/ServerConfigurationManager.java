@@ -742,7 +742,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		chat.addDefault("chat.player-ignore.enabled", true);
 		
-		chat.addDefault("chat.hover-info.enabled", Environment.isBukkit() ? VersionUtils.isSpigot() && VersionUtils.getVersion().isAtLeast(Version.V1_7_2) : VersionUtils.getVersion().isAtLeast(Version.V1_8));
+		chat.addDefault("chat.hover-info.enabled", ChatPlugin.getInstance().isPremium());
 		chat.addDefault("chat.hover-info.rank.enabled", true);
 		chat.addDefault("chat.hover-info.player.enabled", true);
 		chat.addDefault("chat.hover-info.player.click.action", "SUGGEST_TEXT");
@@ -759,21 +759,35 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.instant-emojis.enabled", true);
 		
 		if (fileMissing) {
-			chat.addDefault("chat.instant-emojis.values.copyright", "\u00A9");
-			chat.addDefault("chat.instant-emojis.values.registered", "\u00AE");
-			chat.addDefault("chat.instant-emojis.values.trademark", "\u2122");
-			chat.addDefault("chat.instant-emojis.values.alpha", "\u03B1");
-			chat.addDefault("chat.instant-emojis.values.beta", "\u03B2");
-			chat.addDefault("chat.instant-emojis.values.gamma", "\u03B3");
-			chat.addDefault("chat.instant-emojis.values.euro", "\u20AC");
-			chat.addDefault("chat.instant-emojis.values.pound", "\u00A3");
-			chat.addDefault("chat.instant-emojis.values.yen", "\u00A5");
-			chat.addDefault("chat.instant-emojis.values.infinity", "\u221E");
-			chat.addDefault("chat.instant-emojis.values.pi", "\u03C0");
-			chat.addDefault("chat.instant-emojis.values.degree", "\u00B0");
-			chat.addDefault("chat.instant-emojis.values.plus-minus", "\u00B1");
-			chat.addDefault("chat.instant-emojis.values.division", "\u00F7");
-			chat.addDefault("chat.instant-emojis.values.caret", "\u005E");
+			chat.addDefault("chat.instant-emojis.values.:)", "&e\u263A");
+			chat.addDefault("chat.instant-emojis.values.:smile:", "&e\uD83D\uDE03");
+			chat.addDefault("chat.instant-emojis.values.:slight_smile:", "&e\uD83D\uDE42");
+			chat.addDefault("chat.instant-emojis.values.:grin:", "&e\uD83D\uDE01");
+			chat.addDefault("chat.instant-emojis.values.:grinning:", "&e\uD83D\uDE00");
+			chat.addDefault("chat.instant-emojis.values.:sunglasses:", "&e\uD83D\uDE0E");
+			chat.addDefault("chat.instant-emojis.values.:weary:", "&e\uD83D\uDE29");
+			chat.addDefault("chat.instant-emojis.values.:tired:", "&e\uD83D\uDE2B");
+			chat.addDefault("chat.instant-emojis.values.:money:", "&a\uD83E\uDD11");
+			chat.addDefault("chat.instant-emojis.values.:nerd:", "&e\uD83E\uDD13");
+			chat.addDefault("chat.instant-emojis.values.:skull:", "&f\u2620");
+			chat.addDefault("chat.instant-emojis.values.:alien:", "&a\uD83D\uDC7D");
+			chat.addDefault("chat.instant-emojis.values.:thumbs_up:", "&e\uD83D\uDC4D");
+			chat.addDefault("chat.instant-emojis.values.:thumbs_down:", "&e\uD83D\uDC4E");
+			chat.addDefault("chat.instant-emojis.values.:heart:", "&c\u2665");
+			chat.addDefault("chat.instant-emojis.values.:note:", "&9\uD83C\uDFB5");
+			chat.addDefault("chat.instant-emojis.values.:pizza:", "&6\uD83C\uDF55");
+			chat.addDefault("chat.instant-emojis.values.:copyright:", "\u00A9");
+			chat.addDefault("chat.instant-emojis.values.:trademark:", "\u2122");
+			chat.addDefault("chat.instant-emojis.values.:tm:", "\u2122");
+			chat.addDefault("chat.instant-emojis.values.:alpha:", "\u03B1");
+			chat.addDefault("chat.instant-emojis.values.:beta:", "\u03B2");
+			chat.addDefault("chat.instant-emojis.values.:gamma:", "\u03B3");
+			chat.addDefault("chat.instant-emojis.values.:euro:", "\u20AC");
+			chat.addDefault("chat.instant-emojis.values.:pound:", "\u00A3");
+			chat.addDefault("chat.instant-emojis.values.:yen:", "\u00A5");
+			chat.addDefault("chat.instant-emojis.values.:infinity:", "\u221E");
+			chat.addDefault("chat.instant-emojis.values.:pi:", "\u03C0");
+			chat.addDefault("chat.instant-emojis.values.:degree:", "\u00B0");
 		}
 		
 		chat.addDefault("chat.staff-chat.enabled", true);

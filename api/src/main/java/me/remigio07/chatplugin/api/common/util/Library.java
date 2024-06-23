@@ -16,6 +16,8 @@
 package me.remigio07.chatplugin.api.common.util;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -412,8 +414,8 @@ public enum Library {
 	 */
 	public URL getURL() {
 		try {
-			return new URL(url);
-		} catch (MalformedURLException e) {
+			return new URI(url).toURL();
+		} catch (URISyntaxException | MalformedURLException e) {
 			e.printStackTrace();
 			return null;
 		}

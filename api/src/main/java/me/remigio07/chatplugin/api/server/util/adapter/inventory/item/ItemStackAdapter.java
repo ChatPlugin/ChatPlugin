@@ -18,6 +18,7 @@ package me.remigio07.chatplugin.api.server.util.adapter.inventory.item;
 import java.awt.Color;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -511,6 +512,7 @@ public class ItemStackAdapter implements Cloneable {
 	 * @param itemFlags Item flags to add
 	 * @return This item stack
 	 */
+	@SuppressWarnings("deprecation")
 	public ItemStackAdapter addItemFlags(ItemFlagAdapter... itemFlags) {
 		for (ItemFlagAdapter itemFlag : itemFlags) {
 			if (!this.itemFlags.contains(itemFlag)) {
@@ -722,7 +724,7 @@ public class ItemStackAdapter implements Cloneable {
 					PlayerTextures textures = profile.getTextures();
 					
 					try {
-						textures.setSkin(new URL(skullTextureURL));
+						textures.setSkin(new URI(skullTextureURL).toURL());
 						profile.setTextures(textures);
 						((SkullMeta) meta).setOwnerProfile(profile);
 						bukkitValue().setItemMeta(meta);

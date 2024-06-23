@@ -293,7 +293,7 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 		String str = VersionUtils.getVersion().getProtocol() >= 341 ? player.getLocale() : (String) BukkitReflection.getFieldValue("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", craftPlayer), "locale");
 		
 		if (str.contains("_")) {
-			Locale locale = new Locale(str.substring(0, str.indexOf('_')), str.substring(str.indexOf('_') + 1));
+			Locale locale = new Locale.Builder().setLanguage(str.substring(0, str.indexOf('_'))).setRegion(str.substring(str.indexOf('_') + 1)).build();
 			
 			for (Locale other : Locale.getAvailableLocales())
 				if (other.equals(locale));

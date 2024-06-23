@@ -40,8 +40,7 @@ subprojects {
 	}
 	
 	compileJava {
-		options.compilerArgs.add '-Xlint:deprecation'
-		options.compilerArgs.add '-Xlint:unchecked'
+		options.compilerArgs.add '-Xlint:-options,deprecation,-missing-explicit-ctor'
 		options.encoding = 'UTF-8'
 	}
 	

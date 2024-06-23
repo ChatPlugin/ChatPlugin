@@ -18,7 +18,8 @@ package me.remigio07.chatplugin.common.util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Base64;
@@ -28,7 +29,6 @@ import java.util.UUID;
 import javax.net.ssl.HttpsURLConnection;
 
 import com.github.cliftonlabs.json_simple.JsonArray;
-import com.github.cliftonlabs.json_simple.JsonException;
 import com.github.cliftonlabs.json_simple.JsonObject;
 import com.github.cliftonlabs.json_simple.Jsoner;
 import com.google.common.primitives.UnsignedLongs;
@@ -40,8 +40,8 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 public class UUIDFetcherImpl extends UUIDFetcher {
 	
 	@Override
-	public Entry<Integer, String> readURL(String url) throws IOException {
-		HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
+	public Entry<Integer, String> readURL(String url) throws URISyntaxException, IOException {
+		HttpsURLConnection connection = (HttpsURLConnection) new URI(url).toURL().openConnection();
 		
 		connection.setRequestProperty("Content-Type", "application/json");
 		connection.setRequestProperty("User-Agent", "Mozilla/5.0 +https://remigio07.me/chatplugin ChatPlugin/" + ChatPlugin.VERSION);
@@ -95,7 +95,7 @@ public class UUIDFetcherImpl extends UUIDFetcher {
 			default:
 				break;
 			} return Utils.NIL_UUID;
-		} catch (JsonException e) {
+		} catch (Exception e) {
 			throw new IOException(e);
 		}
 	}
@@ -131,7 +131,7 @@ public class UUIDFetcherImpl extends UUIDFetcher {
 			default:
 				break;
 			} return null;
-		} catch (JsonException e) {
+		} catch (Exception e) {
 			throw new IOException(e);
 		}
 	}
@@ -163,7 +163,7 @@ public class UUIDFetcherImpl extends UUIDFetcher {
 			default:
 				break;
 			} return null;
-		} catch (JsonException e) {
+		} catch (Exception e) {
 			throw new IOException(e);
 		}
 	}
@@ -202,7 +202,7 @@ public class UUIDFetcherImpl extends UUIDFetcher {
 			default:
 				break;
 			} return null;
-		} catch (JsonException e) {
+		} catch (Exception e) {
 			throw new IOException(e);
 		}
 	}

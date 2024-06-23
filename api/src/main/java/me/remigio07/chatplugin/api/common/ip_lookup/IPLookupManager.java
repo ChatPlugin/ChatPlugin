@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.common.ip_lookup;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -262,8 +263,9 @@ public abstract class IPLookupManager implements ChatPluginManager {
 	 * 
 	 * @param url The URL to check
 	 * @return The URL's content (should be a JSON string)
+	 * @throws URISyntaxException If the URL is invalid
 	 * @throws IOException If something goes wrong
 	 */
-	public abstract String readURL(String url) throws IOException;
+	public abstract String readURL(String url) throws URISyntaxException, IOException;
 	
 }

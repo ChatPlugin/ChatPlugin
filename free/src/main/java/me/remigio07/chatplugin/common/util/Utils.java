@@ -18,6 +18,7 @@ package me.remigio07.chatplugin.common.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -104,14 +105,14 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 	
 	public static void startUpdateChecker() {
 		TaskManager.scheduleAsync(() -> {
-			try (Scanner scanner = new Scanner(new URL("https://api.spigotmc.org/legacy/update.php?resource=115169/~").openStream())) {
+			try (Scanner scanner = new Scanner(new URI("https://api.spigotmc.org/legacy/update.php?resource=115169/~").toURL().openStream())) {
 				if (scanner.hasNext()) {
 					String latestVersion = scanner.next();
 					
 					if (!latestVersion.equals(ChatPlugin.VERSION) && VersionChange.getVersionChange(ChatPlugin.VERSION, latestVersion).isSupported())
 						LogManager.log("You are running an outdated version of ChatPlugin. It is recommended to update to the latest version ({0}) to avoid bugs and incompatibilities.", 1, latestVersion);
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				LogManager.log("Unable to check for updates using SpigotMC's API: {0}", 2, e.getMessage());
 			}
 		}, 0L, 7200000L);

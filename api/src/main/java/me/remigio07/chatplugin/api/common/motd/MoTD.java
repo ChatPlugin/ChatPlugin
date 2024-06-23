@@ -17,6 +17,8 @@ package me.remigio07.chatplugin.api.common.motd;
 
 import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import me.remigio07.chatplugin.api.common.util.Utils;
@@ -275,14 +277,14 @@ public class MoTD {
 						deserializer.readUTF(),
 						deserializer.readUTF(),
 						deserializer.readUTF(),
-						new URL(deserializer.readUTF()),
+						new URI(deserializer.readUTF()).toURL(),
 						deserializer.readBoolean(),
 						deserializer.readBoolean(),
 						deserializer.readBoolean(),
 						new ValueContainer<>(Utils.isInteger(tmp = deserializer.readUTF()) ? Integer.valueOf(tmp) : tmp),
 						new ValueContainer<>(Utils.isInteger(tmp = deserializer.readUTF()) ? Integer.valueOf(tmp) : tmp)
 						);
-			} catch (MalformedURLException e) {
+			} catch (URISyntaxException | MalformedURLException e) {
 				
 			}
 		} return null;

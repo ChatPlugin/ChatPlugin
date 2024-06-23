@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.api.common.util;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Map.Entry;
 import java.util.UUID;
 
@@ -36,9 +37,10 @@ public abstract class UUIDFetcher {
 	 * 
 	 * @param url URL to read
 	 * @return URL's response code and content
+	 * @throws URISyntaxException If the URL is invalid
 	 * @throws IOException If a connection error occurrs
 	 */
-	public abstract Entry<Integer, String> readURL(String url) throws IOException;
+	public abstract Entry<Integer, String> readURL(String url) throws URISyntaxException, IOException;
 	
 	/**
 	 * Calls {@link #getOnlineUUID(String)} or {@link #getOfflineUUID(String)}

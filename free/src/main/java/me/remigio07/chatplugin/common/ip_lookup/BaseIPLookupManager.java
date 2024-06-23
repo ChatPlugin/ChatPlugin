@@ -19,7 +19,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.concurrent.CompletableFuture;
@@ -138,8 +139,8 @@ public abstract class BaseIPLookupManager extends IPLookupManager {
 	}
 	
 	@Override
-	public String readURL(String url) throws IOException {
-		HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
+	public String readURL(String url) throws URISyntaxException, IOException {
+		HttpsURLConnection connection = (HttpsURLConnection) new URI(url).toURL().openConnection();
 		
 		connection.setRequestProperty("Authorization", "Basic " + base64AuthString);
 		connection.setRequestProperty("User-Agent", "Mozilla/5.0 +https://remigio07.me/chatplugin ChatPlugin/" + ChatPlugin.VERSION);

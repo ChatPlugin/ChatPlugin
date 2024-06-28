@@ -52,7 +52,11 @@ public class LanguageManagerImpl extends LanguageManager {
 		File customMessagesFolder = new File(ChatPlugin.getInstance().getDataFolder(), "custom-messages");
 		File messagesItalian = new File(customMessagesFolder, "messages-italian.yml");
 		
-		customMessagesFolder.mkdirs();
+		if (commandCooldown == -1) {
+			commandCooldown = 300000L;
+			
+			LogManager.log("Invalid timestamp (\"{0}\") specified at \"languages.command.cooldown\" in config.yml; setting to default value of 5 minutes.", 2, ConfigurationType.CONFIG.get().getString("languages.command.cooldown"));
+		} customMessagesFolder.mkdirs();
 		
 		if (!messagesItalian.exists())
 			try {
@@ -104,6 +108,7 @@ public class LanguageManagerImpl extends LanguageManager {
 		
 		detector = null;
 		mainLanguage = null;
+		commandCooldown = 0;
 	}
 	
 	@Override

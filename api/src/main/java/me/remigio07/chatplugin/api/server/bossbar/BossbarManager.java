@@ -72,7 +72,7 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	 */
 	public static final String TITLE_TOO_LONG = "\u00A7cTitle exceeds \u00A7f64 \u00A7cchars";
 	protected static BossbarManager instance;
-	protected boolean enabled, abbreviateTooLongTitles, randomOrder, loadingBossbarEnabled;
+	protected boolean enabled, abbreviateLongTitles, randomOrder, loadingBossbarEnabled;
 	protected double reflectionWitherTeleportationDistance;
 	protected long reflectionWitherTeleportationTimeout, sendingTimeout, loadingBossbarSendingTimeout, timerTaskID = -1, reflectionTimerTaskID = -1, lastRunTime = -1;
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
@@ -109,12 +109,12 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	 * adding "..." at the end when they are too long to
 	 * be displayed instead of {@link #TITLE_TOO_LONG}.
 	 * 
-	 * <p><strong>Found at:</strong> "bossbars.settings.abbreviate-too-long-titles" in {@link ConfigurationType#BOSSBARS}</p>
+	 * <p><strong>Found at:</strong> "bossbars.settings.abbreviate-long-titles" in {@link ConfigurationType#BOSSBARS}</p>
 	 * 
-	 * @return Whether to abbreviate too long titles
+	 * @return Whether to abbreviate long titles
 	 */
-	public boolean isAbbreviateTooLongTitles() {
-		return abbreviateTooLongTitles;
+	public boolean shouldAbbreviateLongTitles() {
+		return abbreviateLongTitles;
 	}
 	
 	/**

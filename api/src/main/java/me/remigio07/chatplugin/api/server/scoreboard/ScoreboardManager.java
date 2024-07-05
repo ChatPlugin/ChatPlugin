@@ -139,7 +139,7 @@ public abstract class ScoreboardManager implements ChatPluginManager {
 	 * Creates a new scoreboard builder.
 	 * 
 	 * @param id Scoreboard's ID
-	 * @param abbreviateTooLongText Whether to abbreviate too long text ({@link Scoreboard#isAbbreviateTooLongText()})
+	 * @param abbreviateLongText Whether to abbreviate long text ({@link Scoreboard#shouldAbbreviateLongText()})
 	 * @param displayOnlyOneNumberEnabled Whether to display only one number ({@link Scoreboard#isDisplayOnlyOneNumberEnabled()})
 	 * @param displayOnlyOneNumberValue Number displayed in the scoreboard ({@link Scoreboard#getDisplayOnlyOneNumberValue()})
 	 * @param placeholderTypes Placeholders used to translate titles and lines ({@link Scoreboard#getPlaceholderTypes()})
@@ -148,7 +148,7 @@ public abstract class ScoreboardManager implements ChatPluginManager {
 	 */
 	public abstract Scoreboard.Builder createScoreboardBuilder(
 			String id,
-			boolean abbreviateTooLongText,
+			boolean abbreviateLongText,
 			boolean displayOnlyOneNumberEnabled,
 			int displayOnlyOneNumberValue,
 			List<PlaceholderType> placeholderTypes

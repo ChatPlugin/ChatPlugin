@@ -46,7 +46,7 @@ public abstract class Scoreboard {
 	protected Configuration configuration;
 	protected ScoreboardTitles titles;
 	protected ScoreboardLines lines;
-	protected boolean abbreviateTooLongText, displayOnlyOneNumberEnabled;
+	protected boolean abbreviateLongText, displayOnlyOneNumberEnabled;
 	protected int displayOnlyOneNumberValue;
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
 	protected List<ChatPluginServerPlayer> players = new CopyOnWriteArrayList<>();
@@ -115,12 +115,12 @@ public abstract class Scoreboard {
 	 * of {@link ScoreboardTitles#TITLE_TOO_LONG}
 	 * or {@link ScoreboardLines#LINE_TOO_LONG}.
 	 * 
-	 * <p><strong>Found at:</strong> "settings.abbreviate-too-long-text" in {@link #getConfiguration()}</p>
+	 * <p><strong>Found at:</strong> "settings.abbreviate-long-text" in {@link #getConfiguration()}</p>
 	 * 
-	 * @return Whether to abbreviate too long text
+	 * @return Whether to abbreviate long text
 	 */
-	public boolean isAbbreviateTooLongText() {
-		return abbreviateTooLongText;
+	public boolean shouldAbbreviateLongText() {
+		return abbreviateLongText;
 	}
 	
 	/**

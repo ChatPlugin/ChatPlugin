@@ -852,7 +852,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			return;
 		
 		defaultScoreboard.addDefault("settings.enabled", VersionUtils.getVersion().isAtLeast(Environment.isBukkit() ? Version.V1_5 : Version.V1_8));
-		defaultScoreboard.addDefault("settings.abbreviate-too-long-text", true);
+		defaultScoreboard.addDefault("settings.abbreviate-long-text", true);
 		defaultScoreboard.addDefault("settings.display-only-one-number.enabled", true);
 		defaultScoreboard.addDefault("settings.display-only-one-number.value", 0);
 		defaultScoreboard.addDefault("settings.placeholder-types", Arrays.asList("PLAYER", "SERVER", "INTEGRATIONS"));
@@ -913,7 +913,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		bossbars.addDefault("bossbars.settings.enabled", VersionUtils.getVersion().isAtLeast(Version.V1_9));
 		bossbars.addDefault("bossbars.settings.random-order", false);
-		bossbars.addDefault("bossbars.settings.abbreviate-too-long-titles", true);
+		bossbars.addDefault("bossbars.settings.abbreviate-long-titles", true);
 		bossbars.addDefault("bossbars.settings.reflection-wither-teleportation.distance", 42.0D);
 		bossbars.addDefault("bossbars.settings.reflection-wither-teleportation.timeout-ms", 250);
 		bossbars.addDefault("bossbars.settings.sending-timeout-ms", 10000);

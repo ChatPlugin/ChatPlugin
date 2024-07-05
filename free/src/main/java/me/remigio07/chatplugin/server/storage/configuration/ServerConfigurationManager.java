@@ -660,8 +660,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			ranks.addDefault("ranks.staff.chat-color", "&f");
 			ranks.addDefault("ranks.staff.descriptions.english", "&aRank: &b&lStaff\n&aType: &fadmin.");
 			ranks.addDefault("ranks.staff.descriptions.italian", "&aRank: &b&lStaff\n&aTipo: &famministr.");
-			ranks.addDefault("ranks.staff.max-punishment-duration.ban", "14d");
-			ranks.addDefault("ranks.staff.max-punishment-duration.mute", "14d");
+			ranks.addDefault("ranks.staff.max-punishment-durations.ban", "14d");
+			ranks.addDefault("ranks.staff.max-punishment-durations.mute", "14d");
 		} ranks.save();
 	}
 	

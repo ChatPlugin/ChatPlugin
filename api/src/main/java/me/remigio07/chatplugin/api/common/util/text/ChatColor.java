@@ -275,11 +275,11 @@ public class ChatColor {
 	public static final Pattern STRIP_COLOR = Pattern.compile("(?i)" + SECTION_SIGN + "[0-9A-FK-ORX]");
 	
 	/**
-	 * Pattern used to identify hex colors.
+	 * Patterns used to identify hex colors.
 	 * 
-	 * <p><strong>Regex:</strong> "#([A-Fa-f0-9]){6}"</p>
+	 * <p><strong>Contents:</strong> ["&amp;#([A-Fa-f0-9]){6}", "#([A-Fa-f0-9]){6}"]</p>
 	 */
-	public static final Pattern HEX_COLORS = Pattern.compile("#([A-Fa-f0-9]){6}");
+	public static final Pattern[] HEX_COLORS = new Pattern[] { Pattern.compile("&#([A-Fa-f0-9]){6}"), Pattern.compile("#([A-Fa-f0-9]){6}") };
 	private static final Pattern TRANSLATED_HEX_COLORS = Pattern.compile("(?i)§X(§[A-F0-9]){6}");
 	private static final ChatColor[] VALUES = new ChatColor[] { BLACK, DARK_BLUE, DARK_GREEN, DARK_AQUA, DARK_RED, DARK_PURPLE, GOLD, GRAY, DARK_GRAY, BLUE, GREEN, AQUA, RED, LIGHT_PURPLE, YELLOW, WHITE, OBFUSCATED, BOLD, STRIKETHROUGH, UNDERLINE, ITALIC, RESET };
 	private String name, toString;
@@ -309,8 +309,8 @@ public class ChatColor {
 	/**
 	 * Gets the string representation of this color.
 	 * 
-	 * <p>Will return {@link #SECTION_SIGN}<code> + </code>{@link #getCode()} if {@link #isDefaultColor()} and a
-	 * hex string (example: "&sect;x&sect;f&sect;f&sect;5&sect;5&sect;f&sect;f", but translated) otherwise.</p>
+	 * <p>Will return {@link #SECTION_SIGN}<code> + </code>{@link #getCode()} if {@link #isDefaultColor()} and
+	 * a hex string (example: "&sect;x&sect;f&sect;f&sect;5&sect;5&sect;f&sect;f" - translated) otherwise.</p>
 	 * 
 	 * @see #getClosestDefaultColor() Pre-1.16 method to safely convert to default colors
 	 */
@@ -562,7 +562,7 @@ public class ChatColor {
 	
 	/**
 	 * Translates given string applying default
-	 * ("&amp;x") and hex ("#xxxxxx") color codes.
+	 * ("&amp;x") and hex ("&amp;#xxxxxx", "#xxxxxx") color codes.
 	 * 
 	 * @param string String to translate
 	 * @param retainNewLines Whether to retain new lines or to replace them with spaces
@@ -572,10 +572,12 @@ public class ChatColor {
 		String message = string;
 		
 		if (VersionUtils.getVersion().isAtLeast(Version.V1_16)) {
-			Matcher matcher = HEX_COLORS.matcher(message);
-			
-			while (matcher.find())
-				matcher = HEX_COLORS.matcher(message = message.substring(0, matcher.start()) + of(matcher.group().substring(1, matcher.group().length())) + message.substring(matcher.end()));
+			for (Pattern pattern : HEX_COLORS) {
+				Matcher matcher = pattern.matcher(message);
+				
+				while (matcher.find())
+					matcher = pattern.matcher(message = message.substring(0, matcher.start()) + of(matcher.group().substring(1, matcher.group().length())) + message.substring(matcher.end()));
+			}
 		} char[] array = message.toCharArray();
 		
 		for (int i = 0; i < array.length - 1; i++) {

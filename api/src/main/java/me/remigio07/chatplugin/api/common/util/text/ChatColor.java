@@ -440,7 +440,7 @@ public class ChatColor {
 	}
 	
 	/**
-	 * Gets this color's {@link Color} value.
+	 * Gets this color's {@link java.awt.Color} value.
 	 * 
 	 * <p>Will return <code>null</code> if {@link #isFormatCode()}.</p>
 	 * 
@@ -512,7 +512,7 @@ public class ChatColor {
 	}
 	
 	/**
-	 * Gets a chat color from given Java color.
+	 * Gets a chat color from given {@link java.awt.Color}.
 	 * 
 	 * <p>May return one of the 16 default colors.</p>
 	 * 
@@ -528,25 +528,29 @@ public class ChatColor {
 	 * 
 	 * <p>May return one of the 16 default colors.</p>
 	 * 
+	 * <p>The following formats are supported: "#xxxxxx", "xxxxxx".</p>
+	 * 
 	 * @param hex Color's hex representation, with or without '#'
 	 * @return Chat color equivalent
 	 * @throws NumberFormatException If the specified string's format is invalid
 	 */
 	public static ChatColor of(@NotNull String hex) {
-		String color;
+		hex = hex.startsWith("#") ? hex : ("#" + hex);
 		
-		Color.decode(color = hex.startsWith("#") ? hex : ("#" + hex));
+		if (hex.length() != 7)
+			throw new NumberFormatException("Specified string's format is invalid");
+		Color.decode(hex);
 		
-		int rgb = Integer.parseInt(color.substring(1), 16) | 0xFF000000;
+		int rgb = Integer.parseInt(hex.substring(1), 16) | 0xFF000000;
 		
 		for (ChatColor defaultColor : VALUES)
 			if (defaultColor.getColor() != null && defaultColor.getColor().getRGB() == rgb)
 				return defaultColor;
 		StringBuilder sb = new StringBuilder(SECTION_SIGN + "x");
 		
-		for (char x : color.substring(1).toCharArray())
+		for (char x : hex.substring(1).toCharArray())
 			sb.append(SECTION_SIGN).append(x);
-		return new ChatColor(color.toUpperCase(), sb.toString().toLowerCase(), rgb);
+		return new ChatColor(hex.toUpperCase(), sb.toString().toLowerCase(), rgb);
 	}
 	
 	/**

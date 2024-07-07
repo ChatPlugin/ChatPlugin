@@ -41,7 +41,7 @@ public class ItemFlagAdapter {
 	/**
 	 * Hides trim upgrades applied to an armor.
 	 * 
-	 * <p><strong>Requires:</strong> 1.19.4</p>
+	 * <p><strong>Requires:</strong> 1.19.4+</p>
 	 */
 	public static final ItemFlagAdapter HIDE_ARMOR_TRIM = new ItemFlagAdapter("HIDE_ARMOR_TRIM", new String[] { "HIDE_ARMOR_TRIM", "HIDE_MISCELLANEOUS" });
 	
@@ -58,7 +58,7 @@ public class ItemFlagAdapter {
 	/**
 	 * Hides a leather armor's color information.
 	 * 
-	 * <p><strong>Requires:</strong> 1.16.2</p>
+	 * <p><strong>Requires:</strong> 1.16.2+</p>
 	 */
 	public static final ItemFlagAdapter HIDE_DYE = new ItemFlagAdapter("HIDE_DYE", new String[] { "HIDE_DYE", "HIDE_MISCELLANEOUS" });
 	

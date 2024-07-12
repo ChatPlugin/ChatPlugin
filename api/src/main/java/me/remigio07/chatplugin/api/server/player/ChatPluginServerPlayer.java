@@ -512,6 +512,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	 * their rank's {@link Rank#getChatColor()} when they type in chat.</p>
 	 * 
 	 * @param chatColor Player's chat's color
+	 * @throws IllegalArgumentException If {@link ChatColor#isFormatCode()}
 	 */
 	public abstract void setChatColor(@NotNull ChatColor chatColor);
 	

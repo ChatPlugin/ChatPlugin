@@ -80,6 +80,8 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 	
 	@Override
 	public void setChatColor(@NotNull ChatColor chatColor) {
+		if (chatColor.isFormatCode())
+			throw new IllegalArgumentException("Unable to set chat color to a format code");
 		try {
 			StorageManager.getInstance().getConnector().setPlayerData(PlayersDataType.CHAT_COLOR, this, (this.chatColor = chatColor) == ChatColor.RESET ? null : chatColor.getColor().getRGB() & 0xFFFFFF);
 		} catch (SQLException | IOException e) {

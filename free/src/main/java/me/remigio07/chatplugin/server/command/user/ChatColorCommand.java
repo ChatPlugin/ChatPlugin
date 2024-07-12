@@ -19,8 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import me.remigio07.chatplugin.api.common.util.VersionUtils;
-import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.language.Language;
@@ -33,7 +31,10 @@ public class ChatColorCommand extends BaseCommand {
 	
 	public ChatColorCommand() {
 		super("/chatcolor <color> [player]");
-		tabCompletionArgs.put(0, Arrays.asList(VersionUtils.getVersion().isAtLeast(Version.V1_16) ? "#DDD605" : "", "&0", "&1", "&2", "&3", "&4", "&5", "&6", "&7", "&8", "&9", "&a", "&b", "&c", "&d", "&e", "&f", "&r"));
+		tabCompletionArgs.put(0, Arrays.asList(
+				"#DDD605", "&0", "&1", "&2", "&3", "&4", "&5", "&6", "&7", "&8", "&9", "&a", "&b", "&c", "&d", "&e", "&f", "&r",
+				"black", "dark_blue", "dark_green", "dark_aqua", "dark_red", "dark_purple", "gold", "gray", "dark_gray", "blue", "green", "aqua", "red", "light_purple", "yellow", "white", "reset"
+				));
 		tabCompletionArgs.put(1, players);
 	}
 	
@@ -95,7 +96,7 @@ public class ChatColorCommand extends BaseCommand {
 			} catch (NumberFormatException e) {
 				
 			}
-		return null;
+		return ChatColor.valueOf(arg.toUpperCase());
 	}
 	
 	private String unformatColorString(String string) {

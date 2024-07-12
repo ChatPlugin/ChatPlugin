@@ -273,7 +273,7 @@ commands:
     {pfx} &aInformazioni e dati su &f{player}&a:
     &eID giocatore: &f#{player_id}
     &eUUID: &f{uuid}
-    &eVersione: &f{version} (protocollo: {version_protocol})
+    &eVersione: &f{client_edition} Edition {version} (protocollo: {version_protocol})
     &eIndirizzo IP: &f{ip_address}
     &eISP: &f{isp}
     &ePosizione: &f{subdivisions}

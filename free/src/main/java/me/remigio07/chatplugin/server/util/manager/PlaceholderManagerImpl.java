@@ -226,6 +226,8 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 			output = output.replace("{version}", player.getVersion().format());
 		if (output.contains("{version_protocol}"))
 			output = output.replace("{version_protocol}", String.valueOf(player.getVersion().getProtocol()));
+		if (output.contains("{client_edition}"))
+			output = output.replace("{client_edition}", player.isBedrockPlayer() ? "Bedrock" : "Java");
 		if (output.contains("{last_login}"))
 			output = output.replace("{last_login}", Utils.formatTime(System.currentTimeMillis() - player.getLoginTime(), language, false, true));
 		if (output.contains("{time_played}"))

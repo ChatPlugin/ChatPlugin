@@ -46,8 +46,8 @@ public abstract class Scoreboard {
 	protected Configuration configuration;
 	protected ScoreboardTitles titles;
 	protected ScoreboardLines lines;
-	protected boolean abbreviateLongText, displayOnlyOneNumberEnabled;
-	protected int displayOnlyOneNumberValue;
+	protected ScoreboardNumbers numbers;
+	protected boolean abbreviateLongText;
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
 	protected List<ChatPluginServerPlayer> players = new CopyOnWriteArrayList<>();
 	
@@ -81,11 +81,11 @@ public abstract class Scoreboard {
 	 * Gets the configuration associated with this scoreboard.
 	 * 
 	 * <p>Will return <code>null</code> if this scoreboard was created using
-	 * {@link ScoreboardManager#createScoreboardBuilder(String, boolean, boolean, int, List)}.</p>
+	 * {@link ScoreboardManager#createScoreboardBuilder(String, boolean, List)}.</p>
 	 * 
 	 * @return Associated configuration
 	 */
-	@Nullable(why = "Will return null if this scoreboard was created using ScoreboardManager#createScoreboardBuilder(String, boolean, int, List)")
+	@Nullable(why = "Will return null if this scoreboard was created using ScoreboardManager#createScoreboardBuilder(String, boolean, List)")
 	public Configuration getConfiguration() {
 		return configuration;
 	}
@@ -109,6 +109,15 @@ public abstract class Scoreboard {
 	}
 	
 	/**
+	 * Gets this scoreboard's numbers.
+	 * 
+	 * @return Scoreboard's numbers
+	 */
+	public ScoreboardNumbers getNumbers() {
+		return numbers;
+	}
+	
+	/**
 	 * Checks if text (scoreboards' lines and titles)
 	 * should be abbreviated by adding "..." at the
 	 * end when it is too long to be displayed instead
@@ -121,31 +130,6 @@ public abstract class Scoreboard {
 	 */
 	public boolean shouldAbbreviateLongText() {
 		return abbreviateLongText;
-	}
-	
-	/**
-	 * Checks if only {@link #getDisplayOnlyOneNumberValue()} should be displayed
-	 * as a red number in the right side of the scoreboard instead of values 0 - 15.
-	 * 
-	 * <p><strong>Found at:</strong> "settings.display-only-one-number.enabled" in {@link #getConfiguration()}</p>
-	 * 
-	 * @return Whether to display only one number
-	 */
-	public boolean isDisplayOnlyOneNumberEnabled() {
-		return displayOnlyOneNumberEnabled;
-	}
-	
-	/**
-	 * Gets the red number displayed in the right side of the scoreboard.
-	 * 
-	 * <p>Will work when {@link #isDisplayOnlyOneNumberEnabled()}.</p>
-	 * 
-	 * <p><strong>Found at:</strong> "settings.display-only-one-number.value" in {@link #getConfiguration()}</p>
-	 * 
-	 * @return Number displayed in the scoreboard
-	 */
-	public int getDisplayOnlyOneNumberValue() {
-		return displayOnlyOneNumberValue;
 	}
 	
 	/**
@@ -191,7 +175,7 @@ public abstract class Scoreboard {
 	
 	/**
 	 * Represents the builder used to create {@link Scoreboard}s using
-	 * {@link ScoreboardManager#createScoreboardBuilder(String, boolean, boolean, int, List)}.
+	 * {@link ScoreboardManager#createScoreboardBuilder(String, boolean, List)}.
 	 */
 	public static abstract class Builder {
 		
@@ -220,6 +204,27 @@ public abstract class Scoreboard {
 		public abstract Builder setLine(Map<Language, List<String>> values, int lineIndex, boolean randomOrder, long sendingTimeout);
 		
 		/**
+		 * Sets this builder's numbers.
+		 * 
+		 * @param displayMode Numbers' display mode
+		 * @param customTextValue Numbers' custom text's value
+		 * @param customTextColorsCycleTimeout Time between color cycles
+		 * @param customTextColorsInterpolations Interpolations between provided colors
+		 * @param customTextColorsGradient Colors to cycle through
+		 * @return This builder
+		 * @throws UnsupportedOperationException If <code>!</code>{@link NumbersDisplayMode#isSupported()}
+		 * @throws IllegalArgumentException If <code>customTextColorsCycleTimeout &lt; 1 ||
+		 * customTextColorsInterpolations &lt; 0 || customTextColorsGradient.isEmpty()</code>
+		 */
+		public abstract Builder setNumbers(
+				NumbersDisplayMode displayMode,
+				String customTextValue,
+				long customTextColorsCycleTimeout,
+				int customTextColorsInterpolations,
+				List<ChatColor> customTextColorsGradient
+				);
+		
+		/**
 		 * Builds the scoreboard.
 		 * 
 		 * @return New scoreboard
@@ -227,6 +232,7 @@ public abstract class Scoreboard {
 		 * 	<ul>
 		 * 		<li>{@link #setTitles(Map, boolean, long)}</li>
 		 * 		<li>{@link #setLine(Map, int, boolean, long)}</li>
+		 * 		<li>{@link #setNumbers(NumbersDisplayMode, String, long, int, List)}</li>
 		 * 	</ul>
 		 */
 		public abstract Scoreboard build();

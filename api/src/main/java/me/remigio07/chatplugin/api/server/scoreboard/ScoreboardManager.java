@@ -140,8 +140,6 @@ public abstract class ScoreboardManager implements ChatPluginManager {
 	 * 
 	 * @param id Scoreboard's ID
 	 * @param abbreviateLongText Whether to abbreviate long text ({@link Scoreboard#shouldAbbreviateLongText()})
-	 * @param displayOnlyOneNumberEnabled Whether to display only one number ({@link Scoreboard#isDisplayOnlyOneNumberEnabled()})
-	 * @param displayOnlyOneNumberValue Number displayed in the scoreboard ({@link Scoreboard#getDisplayOnlyOneNumberValue()})
 	 * @param placeholderTypes Placeholders used to translate titles and lines ({@link Scoreboard#getPlaceholderTypes()})
 	 * @return New scoreboard builder
 	 * @throws IllegalArgumentException If specified ID <code>!</code>{@link #isValidScoreboardID(String)}
@@ -149,8 +147,6 @@ public abstract class ScoreboardManager implements ChatPluginManager {
 	public abstract Scoreboard.Builder createScoreboardBuilder(
 			String id,
 			boolean abbreviateLongText,
-			boolean displayOnlyOneNumberEnabled,
-			int displayOnlyOneNumberValue,
 			List<PlaceholderType> placeholderTypes
 			);
 	
@@ -162,10 +158,20 @@ public abstract class ScoreboardManager implements ChatPluginManager {
 	 * 
 	 * @param configuration Configuration to read
 	 * @return New scoreboard
-	 * @throws IllegalArgumentException If scoreboard's ID <code>!</code>{@link #isValidScoreboardID(String)}
-	 * or translations for {@link Language#getMainLanguage()} are not present or no lines have been specified
+	 * @throws IllegalArgumentException If at least one of the following is true:
+	 * 	<ul>
+	 * 		<li>scoreboard's ID <code>!</code>{@link #isValidScoreboardID(String)}</li>
+	 * 		<li>translations for {@link Language#getMainLanguage()} are not present</li>
+	 * 		<li>no valid lines have been specified at the "lines" section</li>
+	 * 		<li>the {@link NumbersDisplayMode} at "settings.numbers.display-mode" is invalid</li>
+	 * 		<li>"settings.numbers.custom-text.colors.cycle-timeout" is not positive or invalid</li>
+	 * 		<li>"settings.numbers.custom-text.colors.interpolations" is negative</li>
+	 * 		<li>the list at "settings.numbers.custom-text.colors.gradient" is empty</li>
+	 * 	</ul>
 	 * @throws IndexOutOfBoundsException If line indexes outside of range 0 - 14 are specified
+	 * @throws UnsupportedOperationException If <code>!</code>{@link NumbersDisplayMode#isSupported()}
+	 * @throws NumberFormatException If colors of the gradient use an invalid format
 	 */
-	public abstract Scoreboard createScoreboard(Configuration configuration);
+	public abstract Scoreboard createScoreboard(Configuration configuration); // TODO: add documentation for config's format
 	
 }

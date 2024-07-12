@@ -853,13 +853,17 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		defaultScoreboard.addDefault("settings.enabled", VersionUtils.getVersion().isAtLeast(Environment.isBukkit() ? Version.V1_5 : Version.V1_8));
 		defaultScoreboard.addDefault("settings.abbreviate-long-text", true);
-		defaultScoreboard.addDefault("settings.display-only-one-number.enabled", true);
-		defaultScoreboard.addDefault("settings.display-only-one-number.value", 0);
+		defaultScoreboard.addDefault("settings.numbers.display-mode", VersionUtils.getVersion().isAtLeast(Version.V1_20_3) ? "CUSTOM_TEXT" : "ONLY_ZEROS");
+		defaultScoreboard.addDefault("settings.numbers.custom-text.value", "\u2503");
+		defaultScoreboard.addDefault("settings.numbers.custom-text.colors.cycle-timeout", "30s");
+		defaultScoreboard.addDefault("settings.numbers.custom-text.colors.interpolations", 15);
+		defaultScoreboard.addDefault("settings.numbers.custom-text.colors.gradient", Arrays.asList("#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#007FFF", "#0000FF", "#7F00FF"));
 		defaultScoreboard.addDefault("settings.placeholder-types", Arrays.asList("PLAYER", "SERVER", "INTEGRATIONS"));
 		defaultScoreboard.addDefault("titles.values.english", Arrays.asList("&a&lScoreboard", "&c&lScoreboard"));
 		defaultScoreboard.addDefault("titles.values.italian", Arrays.asList("&a&lScoreboard", "&c&lScoreboard"));
 		defaultScoreboard.addDefault("titles.random-order", false);
 		defaultScoreboard.addDefault("titles.sending-timeout-ms", 500);
+		
 		//0 -----
 		//1 
 		//2 name

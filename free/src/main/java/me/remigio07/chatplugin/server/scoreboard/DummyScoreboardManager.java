@@ -31,7 +31,7 @@ public class DummyScoreboardManager extends ScoreboardManager {
 	}
 	
 	@Override
-	public Scoreboard.Builder createScoreboardBuilder(String id, boolean abbreviateTooLongText, boolean displayOnlyOneNumberEnabled, int displayOnlyOneNumberValue, List<PlaceholderType> placeholderTypes) {
+	public Scoreboard.Builder createScoreboardBuilder(String id, boolean abbreviateTooLongText, List<PlaceholderType> placeholderTypes) {
 		return null;
 	}
 	

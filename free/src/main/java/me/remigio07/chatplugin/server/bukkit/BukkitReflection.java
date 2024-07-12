@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import com.google.common.primitives.Primitives;
 
@@ -142,18 +143,48 @@ public class BukkitReflection {
 				clazz = getNMNClass("protocol.game.ClientboundSystemChatPacket");
 				classes.put("ClientboundSystemChatPacket", clazz);
 				
-				if (VersionUtils.getVersion().isAtLeast(Version.V1_20_5)) {
-					// ClientboundCustomPayloadPacket
-					clazz = getNMNClass("protocol.common.ClientboundCustomPayloadPacket");
-					classes.put("ClientboundCustomPayloadPacket", clazz);
-					
-					// CustomPacketPayload
-					clazz = getNMNClass("protocol.common.custom.CustomPacketPayload");
-					classes.put("CustomPacketPayload", clazz);
-					
-					// BrandPayload
-					clazz = getNMNClass("protocol.common.custom.BrandPayload");
-					classes.put("BrandPayload", clazz);
+				if (VersionUtils.getVersion().isAtLeast(Version.V1_20_3)) {
+					if (!VersionUtils.isPaper()) {
+						// ScoreboardObjective
+						clazz = Class.forName("net.minecraft.world.scores.ScoreboardObjective");
+						classes.put("ScoreboardObjective", clazz);
+						putMethod(clazz, "setNumberFormat", Arrays.asList(getNMNClass("chat.numbers.NumberFormat")), "b");
+						
+						// HolderLookup$Provider
+						clazz = Class.forName("net.minecraft.core.HolderLookup$a");
+						classes.put("Provider", clazz);
+						putMethod(clazz, "create", Arrays.asList(Stream.class), "of", "a");
+						
+						// IChatBaseComponent
+						clazz = getNMNClass("chat.IChatBaseComponent");
+						classes.put("IChatBaseComponent", clazz);
+						
+							// ChatSerializer
+							clazz = getNMNClass("chat.IChatBaseComponent$ChatSerializer");
+							classes.put("ChatSerializer", clazz);
+							putMethod(clazz, "fromJson", Arrays.asList(String.class, classes.get("Provider")), "a");
+						
+						// FixedFormat
+						clazz = getNMNClass("chat.numbers.FixedFormat");
+						classes.put("FixedFormat", clazz);
+						
+						// CraftObjective
+						clazz = getCBClass("scoreboard.CraftObjective");
+						classes.put("CraftObjective", clazz);
+						putMethod(clazz, "getHandle");
+					} if (VersionUtils.getVersion().isAtLeast(Version.V1_20_5)) {
+						// ClientboundCustomPayloadPacket
+						clazz = getNMNClass("protocol.common.ClientboundCustomPayloadPacket");
+						classes.put("ClientboundCustomPayloadPacket", clazz);
+						
+						// CustomPacketPayload
+						clazz = getNMNClass("protocol.common.custom.CustomPacketPayload");
+						classes.put("CustomPacketPayload", clazz);
+						
+						// BrandPayload
+						clazz = getNMNClass("protocol.common.custom.BrandPayload");
+						classes.put("BrandPayload", clazz);
+					}
 				}
 			} else {
 				// ChatComponentText - < 1.19

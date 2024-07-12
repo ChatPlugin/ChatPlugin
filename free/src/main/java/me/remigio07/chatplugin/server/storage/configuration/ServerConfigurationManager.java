@@ -739,6 +739,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.private-messages.advancements.icon.glowing", true);
 		chat.addDefault("chat.private-messages.bypass-antispam-checks", Arrays.asList("CAPS", "FLOOD", "SPAM", "SWEAR"));
 		chat.addDefault("chat.private-messages.socialspy-on-join-enabled", true);
+		chat.addDefault("chat.private-messages.muted-players-blocked", false);
 		
 		chat.addDefault("chat.player-ignore.enabled", true);
 		

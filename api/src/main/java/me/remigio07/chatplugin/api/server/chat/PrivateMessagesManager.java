@@ -40,7 +40,7 @@ import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 public abstract class PrivateMessagesManager implements ChatPluginManager {
 	
 	protected static PrivateMessagesManager instance;
-	protected boolean enabled, soundEnabled, socialspyOnJoinEnabled, advancementsEnabled, advancementsIconGlowing;
+	protected boolean enabled, soundEnabled, socialspyOnJoinEnabled, mutedPlayersBlocked, advancementsEnabled, advancementsIconGlowing;
 	protected String sentChatFormat, sentTerminalFormat, receivedChatFormat, receivedTerminalFormat, socialspyChatFormat, socialspyTerminalFormat, advancementsFormat;
 	protected SoundAdapter sound;
 	protected int advancementsMaxMessageLength;
@@ -79,6 +79,17 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	 */
 	public boolean isSocialspyOnJoinEnabled() {
 		return socialspyOnJoinEnabled;
+	}
+	
+	/**
+	 * Checks if muted players should be able to send private messages.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.private-messages.muted-players-blocked" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Whether muted players can send private messages
+	 */
+	public boolean areMutedPlayersBlocked() {
+		return mutedPlayersBlocked;
 	}
 	
 	/**
@@ -250,8 +261,8 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	 * <p>Specify <code>null</code> as either the sender
 	 * or the recipient to indicate the console.</p>
 	 * 
-	 * <p>This method will consider that some players
-	 * may be ignored by other players or vanished.</p>
+	 * <p>This method will consider that some players may
+	 * be ignored by other players, vanished or muted.</p>
 	 * 
 	 * @param sender Private message's sender
 	 * @param recipient Private message's recipient
@@ -270,8 +281,8 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	/**
 	 * Sends a reply to {@link ChatPluginServerPlayer#getLastCorrespondent()}.
 	 * 
-	 * <p>This method will consider that some players
-	 * may be ignored by other players or vanished.</p>
+	 * <p>This method will consider that some players may
+	 * be ignored by other players, vanished or muted.</p>
 	 * 
 	 * @param sender Private message's sender
 	 * @param privateMessage Private message to send.

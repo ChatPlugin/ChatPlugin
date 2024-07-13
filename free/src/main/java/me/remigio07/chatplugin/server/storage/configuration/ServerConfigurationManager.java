@@ -702,7 +702,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.antispam.max-caps-percent", 50);
 		chat.addDefault("chat.antispam.seconds-between-msg", 2);
 		chat.addDefault("chat.antispam.seconds-between-same-msg", 10);
-		chat.addDefault("chat.antispam.words-blacklist", Arrays.asList(" arse", " ass ", "asshole", "bastard", "bitch", "blowjob", "bollock", "cocksucker", " crap", " cum", "dick", "faggot", "fuck", "handjob", "nigga", "nigger", "pussy", " shit", "slut", "twat", "whore", "arrap", "bocchin", " caca", "caga", " cazz", "coglion", "cojon", "ditalin", "figa", "fotter", "fottut", "froci", "merd", "mignott", "minchi", "puttan", "pompin", "ricchion", "sborra", "stronz", "troia", "troie", "zoccola", "zoccole"));
+		chat.addDefault("chat.antispam.words-blacklist", Arrays.asList(
+				" arse", " ass ", "asshole", "bastard", "bitch", "blowjob", "bollock", "bullshit", "cocksucker", " crap", " cum", "dick", "faggot", "fuck", "gtfo", "handjob", "kys", "nigga", "nigger", "pussy", " shit", "slut", "twat", "whore",
+				"arrap", "bocchin", " caca", "caga", " cazz", "checc", "coglion", "cojon", "ditalin", "figa", "fotter", "fottut", "froci", "merd", "mignott", "minchi", "negr", "puttan", "pompin", "ricchion", "sborr", "stronz", "troia", " troie ", "zoccola", "zoccole"
+				));
 		chat.addDefault("chat.antispam.messages-whitelist", Arrays.asList("hello", "hey", "ok", "ciao"));
 		
 		chat.addDefault("chat.player-ping.enabled", true);

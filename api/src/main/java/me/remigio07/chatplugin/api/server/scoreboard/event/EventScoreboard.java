@@ -15,6 +15,8 @@
 
 package me.remigio07.chatplugin.api.server.scoreboard.event;
 
+import java.util.Map;
+
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
 
@@ -62,5 +64,14 @@ public interface EventScoreboard {
 	 * @return On screen time
 	 */
 	public long getOnScreenTime();
+	
+	/**
+	 * Gets the scoreboards that players had before triggering {@link #getEvent()}.
+	 * 
+	 * <p>The map contains <code>null</code> values for players who had no active scoreboards.</p>
+	 * 
+	 * @return Players' last scoreboards
+	 */
+	public Map<ChatPluginServerPlayer, Scoreboard> getLastScoreboards();
 	
 }

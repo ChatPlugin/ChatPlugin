@@ -26,14 +26,18 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
 
 import com.github.sirblobman.combatlogx.api.event.PlayerPreTagEvent;
+import com.github.sirblobman.combatlogx.api.event.PlayerUntagEvent;
 
 import me.remigio07.chatplugin.api.common.event.EventManager;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
-import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.server.integration.combatlog.CombatLogIntegration;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
+import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
+import me.remigio07.chatplugin.api.server.scoreboard.ScoreboardManager;
+import me.remigio07.chatplugin.api.server.scoreboard.event.EventScoreboard;
 import me.remigio07.chatplugin.api.server.scoreboard.event.ScoreboardEvent;
+import me.remigio07.chatplugin.api.server.util.adapter.entity.LivingEntityAdapter;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07.chatplugin.server.bukkit.integration.ChatPluginBukkitIntegration;
 import me.remigio07.chatplugin.server.bukkit.manager.BukkitEventManager;
@@ -59,8 +63,28 @@ public class CombatLogXIntegration extends ChatPluginBukkitIntegration<CombatLog
 				if (player != null && player.isVanished())
 					playerPreTagEvent.setCancelled(true);
 				else if (playerPreTagEvent.getEnemy() instanceof Player)
-					((BukkitEventManager) EventManager.getInstance()).applyScoreboard(ScoreboardEvent.COMBAT_TAG, playerPreTagEvent.getPlayer(), new PlayerAdapter(playerPreTagEvent.getEnemy()));
+					((BukkitEventManager) EventManager.getInstance()).applyScoreboard(ScoreboardEvent.COMBAT_TAG, playerPreTagEvent.getPlayer(), new LivingEntityAdapter(playerPreTagEvent.getEnemy()));
 			}
+		}, BukkitBootstrapper.getInstance());
+		Bukkit.getPluginManager().registerEvent(PlayerUntagEvent.class, ((BukkitEventManager) EventManager.getInstance()).getListener(), EventPriority.NORMAL, new EventExecutor() {
+			
+			@Override
+			public void execute(Listener listener, Event event) throws EventException {
+				PlayerUntagEvent playerUntagEvent = (PlayerUntagEvent) event;
+				ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(playerUntagEvent.getPlayer().getUniqueId());
+				
+				if (player != null) {
+					Scoreboard scoreboard = ScoreboardManager.getInstance().getScoreboard("combat-tag-event");
+					
+					if (scoreboard != null && scoreboard.getPlayers().contains(player)) {
+						scoreboard.removePlayer(player);
+						
+						if ((scoreboard = ((EventScoreboard) scoreboard).getLastScoreboards().get(player)) != null)
+							scoreboard.addPlayer(player);
+					}
+				}
+			}
+			
 		}, BukkitBootstrapper.getInstance());
 	}
 	

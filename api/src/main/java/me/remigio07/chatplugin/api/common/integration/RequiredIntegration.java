@@ -28,10 +28,10 @@ import java.lang.annotation.Target;
 public @interface RequiredIntegration {
 	
 	/**
-	 * Gets this integration's required class' type.
+	 * Gets the class of the required integration.
 	 * 
-	 * @return Required class' type
+	 * @return Required integration's class
 	 */
-	public Class<?> type();
+	public Class<? extends ChatPluginIntegration> value();
 	
 }

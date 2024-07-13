@@ -15,6 +15,8 @@
 
 package me.remigio07.chatplugin.api.server.util.adapter.entity;
 
+import java.util.UUID;
+
 import org.bukkit.attribute.Attribute;
 import org.spongepowered.api.data.key.Keys;
 
@@ -77,6 +79,15 @@ public class LivingEntityAdapter {
 	@NotNull
 	public String getName() {
 		return Environment.isBukkit() ? bukkitValue().getName() : Utils.deserializeSpongeText(spongeValue().getOrElse(Keys.DISPLAY_NAME, Utils.serializeSpongeText(spongeValue().getType().getName(), false)));
+	}
+	
+	/**
+	 * Gets this living entity's UUID.
+	 * 
+	 * @return Living entity's UUID
+	 */
+	public UUID getUUID() {
+		return Environment.isBukkit() ? bukkitValue().getUniqueId() : spongeValue().getUniqueId();
 	}
 	
 	/**

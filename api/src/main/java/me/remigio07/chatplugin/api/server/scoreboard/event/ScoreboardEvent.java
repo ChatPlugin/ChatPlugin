@@ -42,15 +42,15 @@ public enum ScoreboardEvent {
 	/**
 	 * Event triggered when a player attacks an entity.
 	 */
-	@EventArguments(types = { LivingEntityAdapter.class, double.class }, descriptions = { "Related entity", "Damage dealt" })
-	ENTITY_ATTACK("entity_name", "entity_health", "entity_max_health", "damage"),
+	@EventArguments(types = { LivingEntityAdapter.class, double.class }, descriptions = { "Damaged entity", "Damage dealt" })
+	ENTITY_ATTACK("entity_name", "entity_health", "entity_max_health", "damage", "damage_format"),
 	
 	/**
 	 * Event triggered when a player tags another player.
 	 */
-	@RequiredIntegration(type = CombatLogIntegration.class)
-	@EventArguments(types = { LivingEntityAdapter.class, double.class }, descriptions = { "Related opponent", "Damage dealt" } )
-	COMBAT_TAG("opponent_name", "opponent_health", "opponent_max_health", "damage"),
+	@RequiredIntegration(CombatLogIntegration.class)
+	@EventArguments(types = LivingEntityAdapter.class, descriptions = "Damaged opponent")
+	COMBAT_TAG("opponent_name", "opponent_health", "opponent_max_health", "damage", "damage_format"),
 	
 	/**
 	 * Event triggered when a player places a block.
@@ -125,7 +125,7 @@ public enum ScoreboardEvent {
 	/**
 	 * Event triggered when a player enters a region.
 	 */
-	@RequiredIntegration(type = RegionIntegration.class)
+	@RequiredIntegration(RegionIntegration.class)
 	@EventArguments(types = String.class, descriptions = "New region's ID")
 	REGION_ENTER(
 			"region_enter_event_region_description_0", "region_enter_event_region_description_1", "region_enter_event_region_description_2", "region_enter_event_region_description_3",
@@ -137,7 +137,7 @@ public enum ScoreboardEvent {
 	/**
 	 * Event triggered when a player leaves a region.
 	 */
-	@RequiredIntegration(type = RegionIntegration.class)
+	@RequiredIntegration(RegionIntegration.class)
 	@EventArguments(types = String.class, descriptions = "Old region's ID")
 	REGION_LEAVE(
 			"region_leave_event_old_region_name", "region_leave_event_old_region_name_capitalized", "region_leave_event_old_region_owner",

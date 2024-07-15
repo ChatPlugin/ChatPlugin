@@ -79,7 +79,7 @@ public class ConfigurationMappings {
 	@SuppressWarnings("unchecked")
 	@Nullable(why = "Default value may be null")
 	public <T> T get(String path, @Nullable(why = "Default value may be null") T def) {
-		ConfigurationMappings section = getSectionFor(path);
+		ConfigurationMappings section = getSectionFor(path, false);
 		
 		if (section == null)
 			return def;
@@ -121,7 +121,7 @@ public class ConfigurationMappings {
 		return (ConfigurationMappings) get(path, null);
 	}
 	
-	private ConfigurationMappings getSectionFor(String path) {
+	private ConfigurationMappings getSectionFor(String path, boolean put) {
 		int index = path.indexOf('.');
 		
 		if (index == -1)
@@ -131,10 +131,10 @@ public class ConfigurationMappings {
 		
 		if (section == null) {
 			section = new ConfigurationMappings();
-			mappings.put(root, section);
-		} if (section instanceof ConfigurationMappings)
-			return (ConfigurationMappings) section;
-		return null;
+			
+			if (put)
+				mappings.put(root, section);
+		} return (ConfigurationMappings) section;
 	}
 	
 	/**
@@ -193,7 +193,7 @@ public class ConfigurationMappings {
 	public void set(String path, @Nullable(why = "Mapping is removed when value is null") Object value) {
 		if (value instanceof Map)
 			value = new ConfigurationMappings((Map<String, Object>) value);
-		ConfigurationMappings section = getSectionFor(path);
+		ConfigurationMappings section = getSectionFor(path, true);
 		
 		if (section != null) {
 			if (section == this) {

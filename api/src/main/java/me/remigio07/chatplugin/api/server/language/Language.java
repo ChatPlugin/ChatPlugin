@@ -98,7 +98,7 @@ public abstract class Language {
 	 * @return Translated message
 	 */
 	public String getMessage(String path, Object... args) {
-		return ChatColor.translate(Utils.numericPlaceholders(configuration.getString(path, ConfigurationType.MESSAGES.get().getString(path)), args).replace("{pfx}", configuration.getString("misc.prefix", ConfigurationType.MESSAGES.get().getString("misc.prefix"))));
+		return ChatColor.translate(Utils.numericPlaceholders(configuration.getString(path, ConfigurationType.MESSAGES.get().getString(path)).replace("{pfx}", configuration.getString("misc.prefix", ConfigurationType.MESSAGES.get().getString("misc.prefix"))), args));
 	}
 	
 	/**

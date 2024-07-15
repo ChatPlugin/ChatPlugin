@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import me.remigio07.chatplugin.api.common.util.VersionUtils;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.language.Language;
@@ -59,9 +61,9 @@ public class ChatColorCommand extends BaseCommand {
 								
 								if (color == ChatColor.RESET)
 									player.sendTranslatedMessage("commands.chatcolor.reset.self");
-								else player.sendTranslatedMessage("commands.chatcolor.set.self", unformatColorString(color.isDefaultColor() ? args[0].toLowerCase() : color.name()));
+								else player.sendTranslatedMessage("commands.chatcolor.set.self", unformatColorString(color.isDefaultColor() ? "&" + color.getCode() : color.name(), (VersionUtils.getVersion().isAtLeast(Version.V1_16) ? color : color.getClosestDefaultColor()).toString()));
 							} else player.sendTranslatedMessage("commands.chatcolor.no-permission");
-						} else player.sendTranslatedMessage("commands.chatcolor.invalid-color", unformatColorString(args[0]));
+						} else player.sendTranslatedMessage("commands.chatcolor.invalid-color", unformatColorString(args[0], "&r"));
 					} else sender.sendMessage(language.getMessage("misc.disabled-world"));
 				} else sender.sendMessage(language.getMessage("commands.chatcolor.hex-usage", String.format("%06x", ThreadLocalRandom.current().nextInt(16777216)).toUpperCase()));
 			} else sender.sendMessage(language.getMessage("commands.chatcolor.hex-usage", String.format("%06x", ThreadLocalRandom.current().nextInt(16777216)).toUpperCase()));
@@ -79,15 +81,15 @@ public class ChatColorCommand extends BaseCommand {
 							
 							if (color == ChatColor.RESET)
 								sender.sendMessage(language.getMessage("commands.chatcolor.reset.other", player.getName()));
-							else sender.sendMessage(language.getMessage("commands.chatcolor.set.other", player.getName(), unformatColorString(color.isDefaultColor() ? args[0].toLowerCase() : color.name())));
-						} else sender.sendMessage(language.getMessage("commands.chatcolor.invalid-color", unformatColorString(args[0])));
+							else sender.sendMessage(language.getMessage("commands.chatcolor.set.other", player.getName(), unformatColorString(color.isDefaultColor() ? "&" + color.getCode() : color.name(), (VersionUtils.getVersion().isAtLeast(Version.V1_16) ? color : color.getClosestDefaultColor()).toString())));
+						} else sender.sendMessage(language.getMessage("commands.chatcolor.invalid-color", unformatColorString(args[0], "&r")));
 					} else sender.sendMessage(language.getMessage("misc.disabled-world"));
 				} else sender.sendMessage(language.getMessage("misc.player-not-found", args[1]));
 			} else sender.sendMessage(language.getMessage("misc.no-permission"));
 		} else sendUsage(sender, language);
 	}
 	
-	private ChatColor getColor(String arg) {
+	public static ChatColor getColor(String arg) {
 		if (arg.length() == 2 && arg.charAt(0) == '&' && ChatColor.isColorCode(arg.charAt(1)))
 			return ChatColor.getByChar(arg.charAt(1));
 		if (arg.length() == 7)
@@ -99,8 +101,8 @@ public class ChatColorCommand extends BaseCommand {
 		return ChatColor.valueOf(arg.toUpperCase());
 	}
 	
-	private String unformatColorString(String string) {
-		return string.replaceAll(".", "$0&r");
+	public static String unformatColorString(String string, String replacement) {
+		return string.replaceAll(".", replacement + "$0");
 	}
 	
 }

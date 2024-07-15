@@ -36,6 +36,7 @@ import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.packet.type.MessagePacketType;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.bossbar.PlayerBossbar;
+import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager;
 import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.rank.Rank;
@@ -66,7 +67,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	protected long loginTime;
 	protected OfflinePlayer lastCorrespondent;
 	protected List<OfflinePlayer> ignoredPlayers;
-	protected ChatColor chatColor;
+	protected ChatColor chatColor, emojisTone;
 	
 	protected ChatPluginServerPlayer(PlayerAdapter player) {
 		super(player);
@@ -363,6 +364,22 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	}
 	
 	/**
+	 * Gets this player's emojis' tone.
+	 * 
+	 * <p>Will return {@link ChatColor#RESET} if
+	 * no emojis' tone is set for this player.</p>
+	 * 
+	 * <p>If that is the case, you may want to use the
+	 * {@linkplain InstantEmojisManager#getDefaultTone() default tone} instead.</p>
+	 * 
+	 * @return Player's emojis' tone
+	 */
+	@NotNull
+	public ChatColor getEmojisTone() {
+		return emojisTone;
+	}
+	
+	/**
 	 * Sends a {@link MessagePacketType#NUMERIC_PLACEHOLDERS} message to this player.
 	 * 
 	 * @param path Message's path
@@ -515,5 +532,16 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	 * @throws IllegalArgumentException If {@link ChatColor#isFormatCode()}
 	 */
 	public abstract void setChatColor(@NotNull ChatColor chatColor);
+	
+	/**
+	 * Sets this player's emojis' tone.
+	 * 
+	 * <p>Specify {@link ChatColor#RESET} to reset it and make it appear as
+	 * the {@linkplain InstantEmojisManager#getDefaultTone() default tone}.</p>
+	 * 
+	 * @param emojisTone Player's emojis' tone
+	 * @throws IllegalArgumentException If {@link ChatColor#isFormatCode()}
+	 */
+	public abstract void setEmojisTone(@NotNull ChatColor emojisTone);
 	
 }

@@ -64,6 +64,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 				putConfiguration(new Configuration(ConfigurationType.MAIN_GUI));
 				putConfiguration(new Configuration(ConfigurationType.LANGUAGES_GUI));
 				putConfiguration(new Configuration(ConfigurationType.CHAT_COLOR_GUI));
+				putConfiguration(new Configuration(ConfigurationType.EMOJIS_TONE_GUI));
 				putConfiguration(new Configuration(ConfigurationType.BANLIST_GUI));
 				putConfiguration(new Configuration(ConfigurationType.WARNLIST_GUI));
 				putConfiguration(new Configuration(ConfigurationType.MUTELIST_GUI));
@@ -116,6 +117,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			addMainGUIDefaults(forceAdd);
 			addLanguagesGUIDefaults(forceAdd);
 			addChatColorGUIDefaults(forceAdd);
+			addEmojisToneGUIDefaults(forceAdd);
 			addBanlistGUIDefaults(forceAdd);
 			addWarnlistGUIDefaults(forceAdd);
 			addMutelistGUIDefaults(forceAdd);
@@ -345,8 +347,14 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.chatcolor.reset.self", "{pfx} &aChat's default color reset.");
 		messages.addDefault("commands.chatcolor.reset.other", "{pfx} &f{0}&a's chat's default color reset.");
 		messages.addDefault("commands.chatcolor.hex-usage", "{pfx} &eTo set a hexadecimal color, type &f/chatcolor #&r{0}&e. This code is just an example: you can use any color.");
-		messages.addDefault("commands.chatcolor.invalid-color", "{pfx} &r{0} &cis not a valid color.");
+		messages.addDefault("commands.chatcolor.invalid-color", "{pfx} &f{0} &cis not a valid color.");
 		messages.addDefault("commands.chatcolor.no-permission", "{pfx} &cYou do not have the permission to use that color.");
+		
+		messages.addDefault("commands.emojistone.set.self", "{pfx} &aEmojis' default tone set to tone &f#{0} &a(&r{1}&a).");
+		messages.addDefault("commands.emojistone.set.other", "{pfx} &f{0}&a's emojis' tones set to tone &f#{1} &a(&r{2})&a.");
+		messages.addDefault("commands.emojistone.reset.self", "{pfx} &aEmojis' default tone reset.");
+		messages.addDefault("commands.emojistone.reset.other", "{pfx} &f{0}&a's emojis' default tone reset.");
+		messages.addDefault("commands.emojistone.invalid-tone", "{pfx} &f{0} &cis not a valid tone.");
 		
 		messages.addDefault("commands.staff-chat.enabled", "{pfx} &aStaff chat mode enabled.");
 		messages.addDefault("commands.staff-chat.disabled", "{pfx} &aStaff chat mode disabled.");
@@ -761,23 +769,24 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.hover-info.url.hovers.italian", "&9[Clicca qui per aprire l'URL]");
 		
 		chat.addDefault("chat.instant-emojis.enabled", true);
+		chat.addDefault("chat.instant-emojis.tones", Arrays.asList("#FFFF55", "#F9E0C1", "#E3C29C", "#C6956C", "#A06940", "#5C473C"));
 		
 		if (fileMissing) {
-			chat.addDefault("chat.instant-emojis.values.:)", "&e\u263A");
-			chat.addDefault("chat.instant-emojis.values.:smile:", "&e\uD83D\uDE03");
-			chat.addDefault("chat.instant-emojis.values.:slight_smile:", "&e\uD83D\uDE42");
-			chat.addDefault("chat.instant-emojis.values.:grin:", "&e\uD83D\uDE01");
-			chat.addDefault("chat.instant-emojis.values.:grinning:", "&e\uD83D\uDE00");
-			chat.addDefault("chat.instant-emojis.values.:sunglasses:", "&e\uD83D\uDE0E");
-			chat.addDefault("chat.instant-emojis.values.:weary:", "&e\uD83D\uDE29");
-			chat.addDefault("chat.instant-emojis.values.:tired:", "&e\uD83D\uDE2B");
+			chat.addDefault("chat.instant-emojis.values.:)", "{emojis_tone}\u263A");
+			chat.addDefault("chat.instant-emojis.values.:smile:", "{emojis_tone}\uD83D\uDE03");
+			chat.addDefault("chat.instant-emojis.values.:slight_smile:", "{emojis_tone}\uD83D\uDE42");
+			chat.addDefault("chat.instant-emojis.values.:grin:", "{emojis_tone}\uD83D\uDE01");
+			chat.addDefault("chat.instant-emojis.values.:grinning:", "{emojis_tone}\uD83D\uDE00");
+			chat.addDefault("chat.instant-emojis.values.:sunglasses:", "{emojis_tone}\uD83D\uDE0E");
+			chat.addDefault("chat.instant-emojis.values.:weary:", "{emojis_tone}\uD83D\uDE29");
+			chat.addDefault("chat.instant-emojis.values.:tired:", "{emojis_tone}\uD83D\uDE2B");
 			chat.addDefault("chat.instant-emojis.values.:money:", "&a\uD83E\uDD11");
-			chat.addDefault("chat.instant-emojis.values.:nerd:", "&e\uD83E\uDD13");
+			chat.addDefault("chat.instant-emojis.values.:nerd:", "{emojis_tone}\uD83E\uDD13");
 			chat.addDefault("chat.instant-emojis.values.:skull:", "&f\u2620");
 			chat.addDefault("chat.instant-emojis.values.:alien:", "&a\uD83D\uDC7D");
-			chat.addDefault("chat.instant-emojis.values.:thumbs_up:", "&e\uD83D\uDC4D");
-			chat.addDefault("chat.instant-emojis.values.:thumbs_down:", "&e\uD83D\uDC4E");
-			chat.addDefault("chat.instant-emojis.values.:heart:", "&c\u2665");
+			chat.addDefault("chat.instant-emojis.values.:thumbs_up:", "{emojis_tone}\uD83D\uDC4D");
+			chat.addDefault("chat.instant-emojis.values.:thumbs_down:", "{emojis_tone}\uD83D\uDC4E");
+			chat.addDefault("chat.instant-emojis.values.:heart:", "&c\u2764");
 			chat.addDefault("chat.instant-emojis.values.:note:", "&9\uD83C\uDFB5");
 			chat.addDefault("chat.instant-emojis.values.:pizza:", "&6\uD83C\uDF55");
 			chat.addDefault("chat.instant-emojis.values.:copyright:", "\u00A9");
@@ -1326,8 +1335,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault("settings.click-sound.volume", 1F);
 		chatColorGUI.addDefault("settings.click-sound.pitch", 1F);
 		path = "icons.info.";
-		chatColorGUI.addDefault(path + "display-names.english", "&f&lChat color");
-		chatColorGUI.addDefault(path + "display-names.italian", "&f&lColore chat");
+		chatColorGUI.addDefault(path + "display-names.english", "{random_color}&lChat color");
+		chatColorGUI.addDefault(path + "display-names.italian", "{random_color}&lColore chat");
 		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7This GUI allows you to change", "&7your chat's default color."));
 		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Questa GUI ti consente di cambiare", "&7il colore predefinito della tua chat."));
 		chatColorGUI.addDefault(path + "material", "PAPER");
@@ -1583,6 +1592,122 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault(path + "y", 3);
 		
 		chatColorGUI.save();
+	}
+	
+	public void addEmojisToneGUIDefaults(boolean forceAdd) throws IOException {
+		Configuration emojisToneGUI = configurations.get(ConfigurationType.EMOJIS_TONE_GUI);
+		
+		if (!emojisToneGUI.getFile().exists())
+			emojisToneGUI.createFile();
+		else if (!forceAdd)
+			return;
+		
+		emojisToneGUI.addDefault("settings.rows", 3);
+		emojisToneGUI.addDefault("settings.titles.english", "&e&lEmojis' tone");
+		emojisToneGUI.addDefault("settings.titles.italian", "&e&lTono delle emojis");
+		emojisToneGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &e&lEmojis' tone &aGUI.");
+		emojisToneGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &e&lTono delle emojis &ain corso.");
+		emojisToneGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
+		emojisToneGUI.addDefault("settings.open-actions.play-sound.volume", 1F);
+		emojisToneGUI.addDefault("settings.open-actions.play-sound.pitch", 1F);
+		emojisToneGUI.addDefault("settings.click-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : Environment.isBukkit() ? "CLICK" : "GUI_BUTTON");
+		emojisToneGUI.addDefault("settings.click-sound.volume", 1F);
+		emojisToneGUI.addDefault("settings.click-sound.pitch", 1F);
+		path = "icons.info.";
+		emojisToneGUI.addDefault(path + "display-names.english", "&e&lEmojis' tone");
+		emojisToneGUI.addDefault(path + "display-names.italian", "&e&lTono delle emojis");
+		emojisToneGUI.addDefault(path + "lores.english", Arrays.asList("&7This GUI allows you to change", "&7your emojis' default tone."));
+		emojisToneGUI.addDefault(path + "lores.italian", Arrays.asList("&7Questa GUI ti consente di cambiare", "&7il colore predefinito delle tue emojis."));
+		emojisToneGUI.addDefault(path + "material", "PAPER");
+		emojisToneGUI.addDefault(path + "keep-open", true);
+		emojisToneGUI.addDefault(path + "x", 5);
+		emojisToneGUI.addDefault(path + "y", 1);
+		path = "icons.default-tone.";
+		emojisToneGUI.addDefault(path + "display-names.english", "&e&lDefault tone &f(&&fe)");
+		emojisToneGUI.addDefault(path + "display-names.italian", "&e&lTono predefinito &f(&&fe)");
+		emojisToneGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to reset", "&7your emojis' tone."));
+		emojisToneGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per", "&7resettare il tono delle tue emojis."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			emojisToneGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			emojisToneGUI.addDefault(path + "damage", 3);
+		} else emojisToneGUI.addDefault(path + "material", "PLAYER_HEAD");
+		emojisToneGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/e10cbeeff6184a4081d0a5462e2751793e65c68a4c6119629bf3aa3d1dff3a57");
+		emojisToneGUI.addDefault(path + "commands", Arrays.asList("p: emojistone reset"));
+		emojisToneGUI.addDefault(path + "x", 2);
+		emojisToneGUI.addDefault(path + "y", 2);
+		path = "icons.tone-1.";
+		emojisToneGUI.addDefault(path + "display-names.english", "#F9E0C1&lTone #F9E0C1#&l1 &f(#&fF9E0C1)");
+		emojisToneGUI.addDefault(path + "display-names.italian", "#F9E0C1&lTono #F9E0C1#&l1 &f(#&fF9E0C1)");
+		emojisToneGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7emojis' tone to tone #1."));
+		emojisToneGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare", "&7il tono delle tue emojis sul tono #1."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			emojisToneGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			emojisToneGUI.addDefault(path + "damage", 3);
+		} else emojisToneGUI.addDefault(path + "material", "PLAYER_HEAD");
+		emojisToneGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/f7e8e73cf7c1e43266d57efbd7e2707ec6c365d2984481d5783a1fda19281c50");
+		emojisToneGUI.addDefault(path + "commands", Arrays.asList("p: emojistone 1"));
+		emojisToneGUI.addDefault(path + "x", 4);
+		emojisToneGUI.addDefault(path + "y", 2);
+		path = "icons.tone-2.";
+		emojisToneGUI.addDefault(path + "display-names.english", "#E3C29C&lTone #E3C29C#&l2 &f(#&fE3C29C)");
+		emojisToneGUI.addDefault(path + "display-names.italian", "#E3C29C&lTono #E3C29C#&l2 &f(#&fE3C29C)");
+		emojisToneGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7emojis' tone to tone #2."));
+		emojisToneGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare", "&7il tono delle tue emojis sul tono #2."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			emojisToneGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			emojisToneGUI.addDefault(path + "damage", 3);
+		} else emojisToneGUI.addDefault(path + "material", "PLAYER_HEAD");
+		emojisToneGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/bcdb9ba0a6b28fe09bb8ddd9c4ea456d6a681dad2b6cc8c3755ddcef376aa9dd");
+		emojisToneGUI.addDefault(path + "commands", Arrays.asList("p: emojistone 2"));
+		emojisToneGUI.addDefault(path + "x", 5);
+		emojisToneGUI.addDefault(path + "y", 2);
+		path = "icons.tone-3.";
+		emojisToneGUI.addDefault(path + "display-names.english", "#C6956C&lTone #C6956C#&l3 &f(#&fC6956C)");
+		emojisToneGUI.addDefault(path + "display-names.italian", "#C6956C&lTono #C6956C#&l3 &f(#&fC6956C)");
+		emojisToneGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7emojis' tone to tone #3."));
+		emojisToneGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare", "&7il tono delle tue emojis sul tono #3."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			emojisToneGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			emojisToneGUI.addDefault(path + "damage", 3);
+		} else emojisToneGUI.addDefault(path + "material", "PLAYER_HEAD");
+		emojisToneGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/37d6ee1db4f10390d212c6e3e4df460373a2f2f695c56b0f08fccd214f79afa5");
+		emojisToneGUI.addDefault(path + "commands", Arrays.asList("p: emojistone 3"));
+		emojisToneGUI.addDefault(path + "x", 6);
+		emojisToneGUI.addDefault(path + "y", 2);
+		path = "icons.tone-4.";
+		emojisToneGUI.addDefault(path + "display-names.english", "#A06940&lTone #A06940#&l4 &f(#&fA06940)");
+		emojisToneGUI.addDefault(path + "display-names.italian", "#A06940&lTono #A06940#&l4 &f(#&fA06940)");
+		emojisToneGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7emojis' tone to tone #4."));
+		emojisToneGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare", "&7il tono delle tue emojis sul tono #4."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			emojisToneGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			emojisToneGUI.addDefault(path + "damage", 3);
+		} else emojisToneGUI.addDefault(path + "material", "PLAYER_HEAD");
+		emojisToneGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/d377f789e0a27af978c7cc47ab103b3f67cf0a265e02d6db2ce10b9f49a91ed7");
+		emojisToneGUI.addDefault(path + "commands", Arrays.asList("p: emojistone 4"));
+		emojisToneGUI.addDefault(path + "x", 7);
+		emojisToneGUI.addDefault(path + "y", 2);
+		path = "icons.tone-5.";
+		emojisToneGUI.addDefault(path + "display-names.english", "#5C473C&lTone #5C473C#&l5 &f(#&f5C473C)");
+		emojisToneGUI.addDefault(path + "display-names.italian", "#5C473C&lTono #5C473C#&l5 &f(#&f5C473C)");
+		emojisToneGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7emojis' tone to tone #5."));
+		emojisToneGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare", "&7il tono delle tue emojis sul tono #5."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			emojisToneGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			emojisToneGUI.addDefault(path + "damage", 3);
+		} else emojisToneGUI.addDefault(path + "material", "PLAYER_HEAD");
+		emojisToneGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/a31764a2204938f97ac9a52fc9e1dd93898f10cbb1985957fa3999e38b0855a5");
+		emojisToneGUI.addDefault(path + "commands", Arrays.asList("p: emojistone 5"));
+		emojisToneGUI.addDefault(path + "x", 8);
+		emojisToneGUI.addDefault(path + "y", 2);
+		
+		emojisToneGUI.save();
 	}
 	
 	public void addBanlistGUIDefaults(boolean forceAdd) throws IOException {

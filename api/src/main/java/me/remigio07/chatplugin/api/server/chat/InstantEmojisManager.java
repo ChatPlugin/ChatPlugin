@@ -35,6 +35,7 @@ public abstract class InstantEmojisManager implements ChatPluginManager {
 	protected static InstantEmojisManager instance;
 	protected boolean enabled;
 	protected List<InstantEmoji> instantEmojis = new ArrayList<>();
+	protected List<ChatColor> tones = new ArrayList<>();
 	protected long loadTime;
 	
 	/**
@@ -51,6 +52,8 @@ public abstract class InstantEmojisManager implements ChatPluginManager {
 	 * Gets the list of loaded instant emojis.
 	 * 
 	 * <p>You may modify the returned list.</p>
+	 * 
+	 * <p><strong>Found at:</strong> "chat.instant-emojis.values" in {@link ConfigurationType#CHAT}</p>
 	 * 
 	 * @return Loaded instant emojis' list
 	 */
@@ -69,6 +72,31 @@ public abstract class InstantEmojisManager implements ChatPluginManager {
 	@Nullable(why = "Specified instant emoji may not be loaded")
 	public InstantEmoji getInstantEmoji(String id) {
 		return instantEmojis.stream().filter(instantEmoji -> instantEmoji.getID().equalsIgnoreCase(id)).findAny().orElse(null);
+	}
+	
+	/**
+	 * Gets the list of loaded instant emojis' tones.
+	 * 
+	 * <p>Do <strong>not</strong> modify the returned list.</p>
+	 * 
+	 * <p><strong>Found at:</strong> "chat.instant-emojis.tones" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Loaded instant emojis' tones' list
+	 * @see ChatPluginServerPlayer#setEmojisTone(ChatColor)
+	 */
+	public List<ChatColor> getTones() {
+		return tones;
+	}
+	
+	/**
+	 * Gets the default instant emojis' tone.
+	 * 
+	 * <p>Returns the first element of {@link #getTones()}.</p>
+	 * 
+	 * @return Default instant emojis' tone
+	 */
+	public ChatColor getDefaultTone() {
+		return tones.isEmpty() ? null : tones.get(0);
 	}
 	
 	/**

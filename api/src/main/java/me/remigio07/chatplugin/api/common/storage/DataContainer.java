@@ -52,7 +52,7 @@ public enum DataContainer {
 	/**
 	 * Represents the players' data.
 	 */
-	PLAYERS("id", "player_uuid", "player_name", "player_ip", "language", "ignored_players", "chat_color", "last_logout", "time_played", "messages_sent", "bans", "warnings", "kicks", "mutes"),
+	PLAYERS("id", "player_uuid", "player_name", "player_ip", "language", "ignored_players", "chat_color", "emojis_tone", "last_logout", "time_played", "messages_sent", "bans", "warnings", "kicks", "mutes"),
 	
 	/**
 	 * Represents the public messages' data.

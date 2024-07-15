@@ -187,6 +187,16 @@ public enum ConfigurationType {
 	CHAT_COLOR_GUI,
 	
 	/**
+	 * Emojis' tone GUI's configuration file.
+	 * 
+	 * <p><strong>Path:</strong> ChatPlugin/guis/emojis-tone.yml</p>
+	 * 
+	 * @see GUIManager
+	 * @see ChatPluginServerPlayer#getEmojisTone()
+	 */
+	EMOJIS_TONE_GUI,
+	
+	/**
 	 * Banlist GUI's configuration file.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/guis/banlist.yml</p>

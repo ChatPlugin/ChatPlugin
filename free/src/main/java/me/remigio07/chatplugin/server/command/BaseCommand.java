@@ -23,13 +23,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagers;
+import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.ad.Ad;
 import me.remigio07.chatplugin.api.server.ad.AdManager;
+import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager;
 import me.remigio07.chatplugin.api.server.gui.GUI;
 import me.remigio07.chatplugin.api.server.gui.GUIManager;
 import me.remigio07.chatplugin.api.server.language.Language;
@@ -114,6 +117,12 @@ public abstract class BaseCommand {
 		} if (args.contains("{languages}")) {
 			args.remove("{languages}");
 			args.addAll(LanguageManager.getInstance().getLanguages().stream().map(Language::getID).collect(Collectors.toList()));
+		} if (args.contains("{emojis_tones}")) {
+			args.remove("{emojis_tones}");
+			args.addAll(InstantEmojisManager.getInstance().isEnabled() ? Stream.concat(Stream.of("reset"), Stream.concat(
+					IntStream.rangeClosed(1, InstantEmojisManager.getInstance().getTones().size() - 1).mapToObj(Integer::toString),
+					InstantEmojisManager.getInstance().getTones().stream().filter(tone -> !tone.equals(InstantEmojisManager.getInstance().getDefaultTone())).map(ChatColor::name)
+					)).collect(Collectors.toList()) : Collections.emptyList());
 		} if (startsWith.isEmpty())
 			return args;
 		for (String str : new ArrayList<>(args))

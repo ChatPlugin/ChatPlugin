@@ -17,22 +17,29 @@ package me.remigio07.chatplugin.api.common.storage;
 
 import java.util.UUID;
 
+import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.util.Utils;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
+import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
 import me.remigio07.chatplugin.api.server.language.Language;
+import me.remigio07.chatplugin.api.server.language.LanguageManager;
+import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
- * Represents the data types of {@link DataContainer#PLAYERS}.
+ * Represents the data types of {@link DataContainer#PLAYERS} used to store information.
  * 
  * <p>This class is a pseudo-{@link Enum}. It contains the following methods:
  * {@link #name()}, {@link #ordinal()}, {@link #valueOf(String)} and {@link #values()}.</p>
  * 
  * @param <T> Data's type
+ * @see StorageConnector#getPlayerData(PlayersDataType, OfflinePlayer)
  */
 public class PlayersDataType<T> {
 	
 	/**
 	 * Player's ID.
+	 * 
+	 * @see ChatPluginServerPlayer#getID()
 	 */
 	public static final PlayersDataType<Integer> ID = new PlayersDataType<>("ID", int.class);
 	
@@ -41,11 +48,15 @@ public class PlayersDataType<T> {
 	 * 
 	 * <p>It is a {@link String} which uses the format
 	 * supported by {@link UUID#fromString(String)}.</p>
+	 * 
+	 * @see OfflinePlayer#getUUID()
 	 */
 	public static final PlayersDataType<String> PLAYER_UUID = new PlayersDataType<>("PLAYER_UUID", String.class);
 	
 	/**
 	 * Player's name.
+	 * 
+	 * @see OfflinePlayer#getName()
 	 */
 	public static final PlayersDataType<String> PLAYER_NAME = new PlayersDataType<>("PLAYER_NAME", String.class);
 	
@@ -54,6 +65,8 @@ public class PlayersDataType<T> {
 	 * 
 	 * <p>It is a {@link String} which uses the format
 	 * supported by {@link Utils#getInetAddress(String)}.</p>
+	 * 
+	 * @see OfflinePlayer#getIPAddress()
 	 */
 	public static final PlayersDataType<String> PLAYER_IP = new PlayersDataType<>("PLAYER_IP", String.class);
 	
@@ -61,6 +74,9 @@ public class PlayersDataType<T> {
 	 * Player's language's ID.
 	 * 
 	 * <p>It is a {@link String} which represents a {@link Language#getID()}.</p>
+	 * 
+	 * @see LanguageManager#getLanguage(OfflinePlayer)
+	 * @see ChatPluginServerPlayer#getLanguage()
 	 */
 	public static final PlayersDataType<String> LANGUAGE = new PlayersDataType<>("LANGUAGE", String.class);
 	
@@ -69,6 +85,9 @@ public class PlayersDataType<T> {
 	 * 
 	 * <p>It is a {@link String} which represents a list of player IDs.
 	 * Its format can be read using {@link Utils#getListFromString(String)}.</p>
+	 * 
+	 * @see PlayerIgnoreManager#getIgnoredPlayers(OfflinePlayer)
+	 * @see ChatPluginServerPlayer#getIgnoredPlayers()
 	 */
 	public static final PlayersDataType<String> IGNORED_PLAYERS = new PlayersDataType<>("IGNORED_PLAYERS", String.class);
 	
@@ -76,8 +95,19 @@ public class PlayersDataType<T> {
 	 * Player's chat's color.
 	 * 
 	 * <p>It is an {@link Integer} which represents a RGB color.</p>
+	 * 
+	 * @see ChatPluginServerPlayer#getChatColor()
 	 */
 	public static final PlayersDataType<Integer> CHAT_COLOR = new PlayersDataType<>("CHAT_COLOR", int.class);
+	
+	/**
+	 * Player's emojis' tone.
+	 * 
+	 * <p>It is an {@link Integer} which represents a RGB color.</p>
+	 * 
+	 * @see ChatPluginServerPlayer#getEmojisTone()
+	 */
+	public static final PlayersDataType<Integer> EMOJIS_TONE = new PlayersDataType<>("EMOJIS_TONE", int.class);
 	
 	/**
 	 * Player's last logout time, in milliseconds.
@@ -91,29 +121,39 @@ public class PlayersDataType<T> {
 	
 	/**
 	 * Player's messages sent amount.
+	 * 
+	 * @see ChatPluginServerPlayer#getMessagesSent()
 	 */
 	public static final PlayersDataType<Integer> MESSAGES_SENT = new PlayersDataType<>("MESSAGES_SENT", int.class);
 	
 	/**
 	 * Player's bans' amount.
+	 * 
+	 * @see ChatPluginServerPlayer#getBans()
 	 */
 	public static final PlayersDataType<Short> BANS = new PlayersDataType<>("BANS", short.class);
 	
 	/**
 	 * Player's warnings' amount.
+	 * 
+	 * @see ChatPluginServerPlayer#getWarnings()
 	 */
 	public static final PlayersDataType<Short> WARNINGS = new PlayersDataType<>("WARNINGS", short.class);
 	
 	/**
 	 * Player's kicks' amount.
+	 * 
+	 * @see ChatPluginServerPlayer#getKicks()
 	 */
 	public static final PlayersDataType<Short> KICKS = new PlayersDataType<>("KICKS", short.class);
 	
 	/**
 	 * Player's mutes' amount.
+	 * 
+	 * @see ChatPluginServerPlayer#getMutes()
 	 */
 	public static final PlayersDataType<Short> MUTES = new PlayersDataType<>("MUTES", short.class);
-	private static final PlayersDataType<?>[] VALUES = new PlayersDataType[] { ID, PLAYER_UUID, PLAYER_NAME, PLAYER_IP, LANGUAGE, IGNORED_PLAYERS, CHAT_COLOR, LAST_LOGOUT, TIME_PLAYED, MESSAGES_SENT, BANS, WARNINGS, KICKS, MUTES };
+	private static final PlayersDataType<?>[] VALUES = new PlayersDataType[] { ID, PLAYER_UUID, PLAYER_NAME, PLAYER_IP, LANGUAGE, IGNORED_PLAYERS, CHAT_COLOR, EMOJIS_TONE, LAST_LOGOUT, TIME_PLAYED, MESSAGES_SENT, BANS, WARNINGS, KICKS, MUTES };
 	private String name;
 	private Class<T> type;
 	

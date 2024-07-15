@@ -51,6 +51,7 @@ import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagers;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
+import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager;
 import me.remigio07.chatplugin.api.server.integration.anticheat.AnticheatManager;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
@@ -232,7 +233,10 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 			output = output.replace("{last_login}", Utils.formatTime(System.currentTimeMillis() - player.getLoginTime(), language, false, true));
 		if (output.contains("{time_played}"))
 			output = output.replace("{time_played}", Utils.formatTime((Environment.isBukkit() ? player.toAdapter().bukkitValue().getStatistic(Statistic.valueOf(VersionUtils.getVersion().getProtocol() < 341 ? "PLAY_ONE_TICK" : "PLAY_ONE_MINUTE")) : player.toAdapter().spongeValue().getStatisticData().get(Keys.STATISTICS).get().get(Statistics.TIME_PLAYED)) / 20 * 1000, language, false, true)); // Sponge v4.2
-		if (output.contains("{world}"))
+		if (output.contains("{emojis_tone}") && InstantEmojisManager.getInstance().isEnabled()) {
+			ChatColor tone = player.getEmojisTone() == ChatColor.RESET ? InstantEmojisManager.getInstance().getDefaultTone() : player.getEmojisTone();
+			output = output.replace("{emojis_tone}", (VersionUtils.getVersion().isAtLeast(Version.V1_16) ? tone : tone.getClosestDefaultColor()).toString());
+		} if (output.contains("{world}"))
 			output = output.replace("{world}", player.getWorld());
 		if (output.contains("{online_world}"))
 			output = output.replace("{online_world}", String.valueOf(VanishManager.getInstance().getOnlineWorld(player.getWorld())));

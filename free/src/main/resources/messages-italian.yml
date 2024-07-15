@@ -184,6 +184,14 @@ commands:
     hex-usage: '{pfx} &ePer impostare un colore esadecimale, digita &f/chatcolor #&r{0}&e. Questo codice è solo un esempio: puoi usare qualsiasi colore.'
     invalid-color: '{pfx} &r{0} &cnon è un colore valido.'
     no-permission: '{pfx} &cNon hai il permesso per utilizzare quel colore.'
+  emojistone:
+    set:
+      self: '{pfx} &aTono predefinito delle emojis impostato sul tono &f#{0} &a(&r{1}&a).'
+      other: '{pfx} &aTono predefinito delle emojis di &f{0} &aimpostato sul tono &f#{1} &a(&r{2}&a).'
+    reset:
+      self: '{pfx} &aTono predefinito delle emojis resettato.'
+      other: '{pfx} &aTono predefinito delle emojis di &f{0} &aresettato.'
+    invalid-tone: '{pfx} &r{0} &cnon è un tono valido.'
   staff-chat:
     enabled: '{pfx} &aModalità chat Staff abilitata.'
     disabled: '{pfx} &aModalità chat Staff disabilitata.'

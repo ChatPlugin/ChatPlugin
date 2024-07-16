@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'me.remigio07.chatplugin'
-version '1.9.7'
+version '1.9.8'
 jar.enabled = false
 
 subprojects {

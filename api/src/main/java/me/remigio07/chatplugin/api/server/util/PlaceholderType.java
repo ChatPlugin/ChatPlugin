@@ -46,7 +46,7 @@ public enum PlaceholderType {
 			"world", "online_world", "vanished_world",
 			"player_id", "player_bans", "player_warnings", "player_kicks", "player_mutes", "messages_sent", "player_anticheat_bans", "player_anticheat_warnings", "player_anticheat_kicks", "player_anticheat_mutes",
 			"x", "y", "z", "yaw", "pitch",
-			"rank", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_color", "chat_color", "rank_description",
+			"rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description",
 			"isp", "continent", "country", "subdivisions", "city", "country_code", "postal_code", "latitude", "longitude", "accuracy_radius_km", "accuracy_radius_mi", "accuracy_radius_nm"
 			}),
 	
@@ -56,7 +56,7 @@ public enum PlaceholderType {
 	SERVER(new String[] {
 			"online", "online_total", "max_players", "vanished",
 			"date_full", "date_day", "date_hour",
-			"enabled_worlds", "enabled_players", "enabled_managers", "startup_time", "last_reload_time", "uptime",
+			"enabled_worlds", "enabled_players", "enabled_managers", "startup_time", "last_reload_time", "uptime", "random_color",
 			"plugin_version", "server_version", "server_version_protocol", "server_nms_version", "server_java_version",
 			"server_id", "server_display_name", "main_language_id", "main_language_display_name",
 			"total_players", "total_bans", "total_warnings", "total_kicks", "total_mutes", "total_staff_bans", "total_staff_warnings", "total_staff_kicks", "total_staff_mutes", "total_anticheat_bans", "total_anticheat_warnings", "total_anticheat_kicks", "total_anticheat_mutes",
@@ -69,7 +69,7 @@ public enum PlaceholderType {
 	/**
 	 * Represents integrations' placeholders (includes also PlaceholderAPI's and MVdWPlaceholderAPI's).
 	 */
-	INTEGRATIONS(new String[] { "balance" });
+	INTEGRATIONS(new String[] { "version", "version_protocol", "balance" });
 	
 	private String[] placeholders;
 	

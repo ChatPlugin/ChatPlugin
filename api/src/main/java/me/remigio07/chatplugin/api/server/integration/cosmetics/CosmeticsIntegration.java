@@ -19,11 +19,10 @@ import java.util.List;
 
 import me.remigio07.chatplugin.api.common.integration.ChatPluginIntegration;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
-import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
- * Represents a {@link ChatPluginIntegration} able to check an {@link OfflinePlayer}'s permissions.
+ * Represents a {@link ChatPluginIntegration} able to remove a {@link ChatPluginServerPlayer}'s active cosmetics.
  * 
  * <p><strong>Types:</strong> [{@link IntegrationType#GADGETSMENU}, {@link IntegrationType#PLAYERPARTICLES}, {@link IntegrationType#ULTRACOSMETICS}]</p>
  */

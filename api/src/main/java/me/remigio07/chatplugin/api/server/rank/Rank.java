@@ -226,7 +226,7 @@ public abstract class Rank {
 				.replace("{tag_suffix}", tag.getSuffix())
 				.replace("{tag_name_color}", tag.getNameColor().isEmpty() ? "&r" : tag.getNameColor())
 				.replace("{chat_color}", chatColor.isEmpty() ? "&r" : chatColor)
-				.replace("{rank_description}", descriptions.get(language))
+				.replace("{rank_description}", getDescription(language, true))
 				);
 	}
 	

@@ -528,7 +528,7 @@ public class ChatColor {
 	 * 
 	 * <p>May return one of the 16 default colors.</p>
 	 * 
-	 * <p>The following formats are supported: "#xxxxxx", "xxxxxx".</p>
+	 * <p>The following formats are supported: "#rrggbb", "rrggbb".</p>
 	 * 
 	 * @param hex Color's hex representation, with or without '#'
 	 * @return Chat color equivalent
@@ -565,8 +565,8 @@ public class ChatColor {
 	}
 	
 	/**
-	 * Translates given string applying default
-	 * ("&amp;x") and hex ("&amp;#xxxxxx", "#xxxxxx") color codes.
+	 * Translates given string applying default ("&amp;x")
+	 * and hex ("&amp;#rrggbb", "#rrggbb") color codes.
 	 * 
 	 * @param string String to translate
 	 * @param retainNewLines Whether to retain new lines or to replace them with spaces

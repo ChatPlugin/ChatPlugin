@@ -43,7 +43,7 @@ public class InstantEmojisManagerImpl extends InstantEmojisManager {
 			try {
 				tones.add(ChatColor.of(tone));
 			} catch (NumberFormatException e) {
-				LogManager.log("Invalid tone \"{0}\" set at \"chat.instant-emojis.tones\" in chat.yml: use the #xxxxxx format instead.", 2);
+				LogManager.log("Invalid tone \"{0}\" set at \"chat.instant-emojis.tones\" in chat.yml: use the #rrggbb format instead.", 2);
 			}
 		if (tones.isEmpty()) {
 			LogManager.log("Tones list at \"chat.instant-emojis.tones\" in chat.yml is empty; using only default value of #FFFF55.", 2);

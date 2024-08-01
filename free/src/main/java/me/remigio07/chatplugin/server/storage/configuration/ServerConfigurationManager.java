@@ -176,9 +176,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("storage.database.password", "");
 		config.addDefault("storage.database.name", "minecraft");
 		config.addDefault("storage.database.table-prefix", "chatplugin_");
+		config.addDefault("storage.database.file-name", "chatplugin-h2");
 		config.addDefault("storage.database.use-ssl", false);
 		config.addDefault("storage.database.use-server-mode", false);
-		config.addDefault("storage.database.file-name", "chatplugin-h2");
 		
 		config.addDefault("languages.main-language-id", "english");
 		config.addDefault("languages.detector.enabled", false);
@@ -286,7 +286,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("misc.reload.end", "{pfx} &aChatPlugin has been reloaded. Took &f{0} ms &ato complete.");
 		messages.addDefault("misc.player-not-found", "{pfx} &f{0} &cis not online. Recheck the typing.");
 		messages.addDefault("misc.player-not-stored", "{pfx} &f{0} &cis not contained in the storage.");
-		messages.addDefault("misc.cooldown-active", "{pfx} &cA cooldown is currently active, try later.");		
+		messages.addDefault("misc.cooldown-active", "{pfx} &cA cooldown is currently active, try later.");
 		messages.addDefault("misc.wrong-args", "{pfx} &cThe arguments are wrong. Try &f/chatplugin help&c.");
 		messages.addDefault("misc.wrong-syntax", "{pfx} &cThe syntax is wrong. Usage: &f{0}&c.");
 		messages.addDefault("misc.invalid-number", "{pfx} &f{0} &cis not a valid number.");
@@ -313,12 +313,12 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("misc.invalid-ip-address", "{pfx} &f{0} &cis not a valid IP address.");
 		messages.addDefault("misc.database-error", "{pfx} &f{0} &coccurred while trying to access the database: &f{1}&c.");
 		
-		messages.addDefault("commands.help.free.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/whisper &8- &eSend a private message to another player.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.\n&f&l/chatcolor &8- &eChange your chat's default color.");
+		messages.addDefault("commands.help.free.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/whisper &8- &eSend a private message to another player.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.\n&f&l/chatcolor &8- &eChange your chat's default color.\n&f&l/emojistone &8- &eChange your emojis' default tone.");
 		messages.addDefault("commands.help.free.admin", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/staffchat &8- &eVery handy cross-server Staff chat.\n&f&l/socialspy &8- &eSpy other players' private messages.\n&f&l/rangedchatspy &8- &eSpy other players' local messages.\n&f&l/iplookup &8- &ePerform a lookup of an IP address.\n&f&l/lastseen &8- &eCheck when a player was last seen.\n&f&l/clearchat &8- &eClear chat to hide last messages.\n&f&l/muteall &8- &eToggle chat for non Staff members.");
 		messages.addDefault("commands.help.free.vanish", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/vanish &8- &eBecome invisible to non Staff members.");
 		messages.addDefault("commands.help.free.misc", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/tps &8- &eDisplay the server's current ticks per second.\n&f&l/ad &8- &eSend a loaded ad to one or more online players.\n&f&l/broadcast &8- &eSend a message to every online player.\n&f&l/broadcastraw &8- &eLike /broadcast, but without the prefix.");
 		
-		messages.addDefault("commands.help.premium.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/whisper &8- &eSend a private message to another player.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.\n&f&l/chatcolor &8- &eChange your chat's default color.\n&f&l/bossbar &8- &eToggle the bossbar's visibility.\n&f&l/scoreboard &8- &eToggle the scoreboard's visibility.");
+		messages.addDefault("commands.help.premium.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/whisper &8- &eSend a private message to another player.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.\n&f&l/chatcolor &8- &eChange your chat's default color.\n&f&l/emojistone &8- &eChange your emojis' default tone.\n&f&l/bossbar &8- &eToggle the bossbar's visibility.\n&f&l/scoreboard &8- &eToggle the scoreboard's visibility.");
 		messages.addDefault("commands.help.premium.admin", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/staffchat &8- &eVery handy cross-server Staff chat.\n&f&l/socialspy &8- &eSpy other players' private messages.\n&f&l/rangedchatspy &8- &eSpy other players' local messages.\n&f&l/iplookup &8- &ePerform a lookup of an IP address.\n&f&l/lastseen &8- &eCheck when a player was last seen.\n&f&l/clearchat &8- &eClear chat to hide last messages.\n&f&l/muteall &8- &eToggle chat for non Staff members.\n&f&l/chatlog &8- &eLook up messages containing certain text.\n&f&l/accountcheck &8- &eCheck a player's alt accounts.");
 		messages.addDefault("commands.help.premium.punishments", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/ban &8- &eBan a player (/tempban also available).\n&f&l/unban &8- &eUnban a previously banned player.\n&f&l/warning &8- &eWarn a player for a certain time.\n&f&l/removelastwarning &8- &eRemove a player's last warning.\n&f&l/clearwarnings &8- &eClear a player's active warnings.\n&f&l/kick &8- &eDisconnect a player from the server.\n&f&l/fakekick &8- &eKick using a random error as reason.\n&f&l/mute &8- &eMake a player unable to use the chat.\n&f&l/unmute &8- &eUnmute a previously muted player.");
 		messages.addDefault("commands.help.premium.guis", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/cp status &8- &eDisplay the server's current status\n&f&l/banlist &8- &eDisplay the active bans list.\n&f&l/warnlist &8- &eDisplay the active warnings list.\n&f&l/mutelist &8- &eDisplay the active mutes list.\n&f&l/violations &8- &eDisplay last players' violations.\n&f&l/playerinfo &8- &eShow detailed info about a player.\n&f&l/playerpunishments &8- &eShow a player's punishments list.\n&f&l/playerviolations &8- &eShow a player's last violations.");
@@ -1324,8 +1324,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			return;
 		
 		chatColorGUI.addDefault("settings.rows", 4);
-		chatColorGUI.addDefault("settings.titles.english", "{random_color}&lChat color");
-		chatColorGUI.addDefault("settings.titles.italian", "{random_color}&lColore chat");
+		chatColorGUI.addDefault("settings.titles.english", "&f&lChat color");
+		chatColorGUI.addDefault("settings.titles.italian", "&f&lColore chat");
 		chatColorGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &f&lChat color &aGUI.");
 		chatColorGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &f&lColore chat &ain corso.");
 		chatColorGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
@@ -1335,8 +1335,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault("settings.click-sound.volume", 1F);
 		chatColorGUI.addDefault("settings.click-sound.pitch", 1F);
 		path = "icons.info.";
-		chatColorGUI.addDefault(path + "display-names.english", "{random_color}&lChat color");
-		chatColorGUI.addDefault(path + "display-names.italian", "{random_color}&lColore chat");
+		chatColorGUI.addDefault(path + "display-names.english", "&f&lChat color");
+		chatColorGUI.addDefault(path + "display-names.italian", "&f&lColore chat");
 		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7This GUI allows you to change", "&7your chat's default color."));
 		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Questa GUI ti consente di cambiare", "&7il colore predefinito della tua chat."));
 		chatColorGUI.addDefault(path + "material", "PAPER");
@@ -1568,8 +1568,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault(path + "x", 7);
 		chatColorGUI.addDefault(path + "y", 3);
 		path = "icons.hexadecimal.";
-		chatColorGUI.addDefault(path + "display-names.english", "{random_color}&lHexadecimal &f(#xxxxxx)");
-		chatColorGUI.addDefault(path + "display-names.italian", "{random_color}&lEsadecimale &f(#xxxxxx)");
+		chatColorGUI.addDefault(path + "display-names.english", "{random_color}&lHexadecimal &f(#rrggbb)");
+		chatColorGUI.addDefault(path + "display-names.italian", "{random_color}&lEsadecimale &f(#rrggbb)");
 		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your chat's", "&7color to a hexadecimal color.", "", "&7Requirement: &d&lVIP"));
 		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il colore", "&7della tua chat su un colore esadecimale.", "", "&7Requisito: &d&lVIP"));
 		

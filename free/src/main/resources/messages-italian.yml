@@ -51,6 +51,7 @@ commands:
         &f&l/rankinfo &8- &eVisualizza informazioni sul rango di un giocatore.
         &f&l/playerlist &8- &eVisualizza la lista dei giocatori online.
         &f&l/chatcolor &8- &eCambia il colore predefinito della tua chat.
+        &f&l/emojistone &8- &eCambia il tono predefinito delle tue emojis.
       admin: |-
         {pfx} &aAiuto per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/staffchat &8- &eStaff chat cross-server molto utile.
@@ -78,6 +79,7 @@ commands:
         &f&l/rankinfo &8- &eVisualizza informazioni sul rango di un giocatore.
         &f&l/playerlist &8- &eVisualizza la lista dei giocatori online.
         &f&l/chatcolor &8- &eCambia il colore predefinito della tua chat.
+        &f&l/emojistone &8- &eCambia il tono predefinito delle tue emojis.
         &f&l/bossbar &8- &eAttiva/disattiva la visibilità della bossbar.
         &f&l/scoreboard &8- &eAttiva/disattiva la visibilità della scoreboard.
       admin: |-

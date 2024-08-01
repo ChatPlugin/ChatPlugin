@@ -147,6 +147,9 @@ public class ItemStackAdapter implements Cloneable {
 		if (itemStack.hasItemMeta()) {
 			itemStack.getItemMeta().getItemFlags().forEach(itemFlag -> itemFlags.add(ItemFlagAdapter.valueOf(itemFlag.name())));
 			itemStack.getItemMeta().getEnchants().forEach((enchantment, level) -> enchantments.put(EnchantmentAdapter.valueOf(enchantment.getName()), level));
+			
+			if (isPlayerHead())
+				skullOwner = ((SkullMeta) itemStack.getItemMeta()).getOwner();
 		} else itemMeta = false;
 	}
 	
@@ -158,13 +161,15 @@ public class ItemStackAdapter implements Cloneable {
 	 */
 	public ItemStackAdapter(org.spongepowered.api.item.inventory.ItemStack itemStack) {
 		this.itemStack = itemStack;
-		type = new MaterialAdapter(itemStack.getType().getId());
+		type = new MaterialAdapter(itemStack.getType().getId().substring(10));
 		
 		for (ItemFlagAdapter itemFlag : ItemFlagAdapter.values())
 			if (itemStack.getOrElse(itemFlag.spongeValue(), false))
 				itemFlags.add(itemFlag);
 		if (!itemStack.getOrCreate(EnchantmentData.class).get().enchantments().isEmpty())
-			itemStack.get(EnchantmentData.class).get().enchantments().get().forEach(enchantment -> enchantments.put(EnchantmentAdapter.valueOf(enchantment.getType().getId()), enchantment.getLevel()));
+			itemStack.get(EnchantmentData.class).get().enchantments().get().forEach(enchantment -> enchantments.put(EnchantmentAdapter.valueOf(enchantment.getType().getId().substring(10)), enchantment.getLevel()));
+		if (isPlayerHead())
+			spongeValue().get(RepresentedPlayerData.class).ifPresent(player -> player.owner().get().getName().ifPresent(name -> skullOwner = name));
 	}
 	
 	@Override
@@ -225,22 +230,6 @@ public class ItemStackAdapter implements Cloneable {
 	 */
 	public MaterialAdapter getType() {
 		return type;
-	}
-	
-	/**
-	 * Sets this item stack's type.
-	 * 
-	 * @param type Item stack's type
-	 * @return This item stack
-	 */
-	public ItemStackAdapter setType(MaterialAdapter type) {
-		if (!type.equals(this.type)) {
-			this.type = type;
-			
-			if (Environment.isBukkit())
-				bukkitValue().setType(type.bukkitValue());
-			else itemStack = clone();
-		} return this;
 	}
 	
 	/**
@@ -345,7 +334,7 @@ public class ItemStackAdapter implements Cloneable {
 	}
 	
 	/**
-	 * Adds an enchantment to this item.
+	 * Adds an enchantment to this item stack.
 	 * 
 	 * @param enchantment Enchantment to add
 	 * @param level Enchantment's level
@@ -355,11 +344,23 @@ public class ItemStackAdapter implements Cloneable {
 		if (Environment.isBukkit())
 			bukkitValue().addUnsafeEnchantment(enchantment.bukkitValue(), level);
 		else SpongeItemStack.enchant(spongeValue(), enchantment.spongeValue(), level);
+		enchantments.put(enchantment, level);
 		return this;
 	}
 	
 	/**
-	 * Removes an enchantment from this item.
+	 * Adds enchantments to this item stack.
+	 * 
+	 * @param enchantments Enchantments to add
+	 * @return This item stack
+	 */
+	public ItemStackAdapter enchant(Map<EnchantmentAdapter, Integer> enchantments) {
+		enchantments.forEach((enchantment, level) -> enchant(enchantment, level));
+		return this;
+	}
+	
+	/**
+	 * Removes an enchantment from this item stack.
 	 * 
 	 * @param enchantment Enchantment to remove
 	 * @return This item stack
@@ -368,11 +369,22 @@ public class ItemStackAdapter implements Cloneable {
 		if (Environment.isBukkit())
 			bukkitValue().removeEnchantment(enchantment.bukkitValue());
 		else SpongeItemStack.disenchant(spongeValue(), enchantment.spongeValue());
+		enchantments.remove(enchantment);
 		return this;
 	}
 	
 	/**
-	 * Checks if this item has any enchantments.
+	 * Removes all enchantments from this item stack.
+	 * 
+	 * @return This item stack
+	 */
+	public ItemStackAdapter disenchant() {
+		new ArrayList<>(enchantments.keySet()).forEach(enchantment -> disenchant(enchantment));
+		return this;
+	}
+	
+	/**
+	 * Checks if this item stack has any enchantments.
 	 * 
 	 * @return Whether this item is enchanted
 	 */
@@ -786,6 +798,32 @@ public class ItemStackAdapter implements Cloneable {
 				bukkitValue().setItemMeta(meta);
 			} else SpongeItemStack.setLeatherArmorColor(spongeValue(), leatherArmorColor);
 		} return this;
+	}
+	
+	/**
+	 * Imports all supported data from another item stack.
+	 * 
+	 * @param other Other item stack
+	 * @return This item stack
+	 */
+	public ItemStackAdapter importData(ItemStackAdapter other) {
+		setAmount(other.getAmount());
+		setDamage(other.getDamage());
+		disenchant();
+		enchant(other.getEnchantments());
+		setDisplayName(other.getDisplayName());
+		setLore(other.getLore());
+		removeItemFlags(ItemFlagAdapter.values());
+		addItemFlags(other.getItemFlags().toArray(new ItemFlagAdapter[0]));
+		
+		if (other.getSkullOwner() != null) {
+			if (!getSkullOwner().equals(other.getSkullOwner()))
+				setSkullOwner(other.getSkullOwner());
+		} else if (other.getSkullTextureURL() != null) {
+			if (!getSkullTextureURL().equals(other.getSkullTextureURL()))
+				setSkullTextureURL(other.getSkullTextureURL());
+		} setLeatherArmorColor(other.getLeatherArmorColor());
+		return this;
 	}
 	
 	private static class SpongeItemStack {

@@ -55,7 +55,7 @@ import me.remigio07.chatplugin.api.server.tablist.Tablist;
 import me.remigio07.chatplugin.api.server.tablist.TablistManager;
 import me.remigio07.chatplugin.api.server.tablist.custom_suffix.CustomSuffixManager;
 import me.remigio07.chatplugin.api.server.tablist.custom_suffix.RenderType;
-import me.remigio07.chatplugin.api.server.util.Utils;
+import me.remigio07.chatplugin.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.adapter.scoreboard.ObjectiveAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.server.join_quit.QuitMessageManagerImpl.QuitPacketImpl;
@@ -181,6 +181,7 @@ public class SpongePlayerManager extends ServerPlayerManager {
 		scoreboard.getScores().forEach(score -> scoreboard.removeScores(score.getName()));
 		new ArrayList<>(GUIManager.getInstance().getGUIs()).stream().filter(PerPlayerGUI.class::isInstance).map(PerPlayerGUI.class::cast).forEach(PerPlayerGUI::unload);
 		QuitMessageManager.getInstance().getFakeQuits().remove(player);
+		Utils.spongeTitles.remove(player);
 		
 		try {
 			StorageConnector.getInstance().setPlayerData(PlayersDataType.LAST_LOGOUT, serverPlayer, System.currentTimeMillis());

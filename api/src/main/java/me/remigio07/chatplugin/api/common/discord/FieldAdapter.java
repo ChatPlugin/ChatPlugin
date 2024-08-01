@@ -146,22 +146,22 @@ public class FieldAdapter {
 		 * <p>Example of valid configuration section:
 		 * 
 		 * <pre>
-		 *messages:
-		 *  main:
-		 *    info:
-		 *      title:
-		 *        text: 'Embed''s title''s text'
-		 *        url: 'https://example.com'
-		 *      description: 'Short description under the title'
-		 *      fields:
-		 *        '0': # field's ID
-		 *          title: 'Random title'
-		 *          text: 'Field''s content'
-		 *          inline: true
-		 *        '1':
-		 *          title: 'Second field'
-		 *          text: 'Both fields are aligned'
-		 *          inline: true
+		 * messages:
+		 *   main:
+		 *     info:
+		 *       title:
+		 *         text: 'Embed''s title''s text'
+		 *         url: 'https://example.com'
+		 *       description: 'Short description under the title'
+		 *       fields:
+		 *         '0': # field's ID
+		 *           title: 'Random title'
+		 *           text: 'Field''s content'
+		 *           inline: true
+		 *         '1':
+		 *           title: 'Second field'
+		 *           text: 'Both fields are aligned'
+		 *           inline: true
 		 * </pre>
 		 * 
 		 * In this case, <code>path</code> is "messages.main.info".
@@ -178,25 +178,25 @@ public class FieldAdapter {
 		 * <p>Example of valid string:
 		 * 
 		 * <pre>
-		 *{
-		 *  "title": {
-		 *    "text": "Embed's title's text",
-		 *    "url": "https://example.com"
-		 *  },
-		 *  "description": "Short description under the title",
-		 *  "fields": {
-		 *    "0": {
-		 *      "title": "Random title",
-		 *      "text": "Field's content",
-		 *      "inline": true
-		 *    },
-		 *    "1": {
-		 *      "title": "Second field",
-		 *      "text": "Both fields are aligned",
-		 *      "inline": true
-		 *    }
-		 *  }
-		 *}
+		 * {
+		 *   "title": {
+		 *     "text": "Embed's title's text",
+		 *     "url": "https://example.com"
+		 *   },
+		 *   "description": "Short description under the title",
+		 *   "fields": {
+		 *     "0": {
+		 *       "title": "Random title",
+		 *       "text": "Field's content",
+		 *       "inline": true
+		 *     },
+		 *     "1": {
+		 *       "title": "Second field",
+		 *       "text": "Both fields are aligned",
+		 *       "inline": true
+		 *     }
+		 *   }
+		 * }
 		 * </pre>
 		 * 
 		 * @param json String to parse

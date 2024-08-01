@@ -1047,7 +1047,7 @@ public class DiscordMessages {
 	}
 	
 	private static List<FieldAdapter> getFields(String path) {
-		return FieldAdapter.Parser.getInstance().fromYAML(ConfigurationType.DISCORD_INTEGRATION.get(), path);
+		return FieldAdapter.Parser.getInstance().fromYAML(ConfigurationType.DISCORD_INTEGRATION.get(), path.substring(0, path.length() - 1));
 	}
 	
 	private static String formatTime(long totalMilliseconds, boolean everInsteadOfNever, boolean useZeroSecondsInstead) {

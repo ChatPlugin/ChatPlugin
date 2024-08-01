@@ -72,7 +72,7 @@ public class SpongeCommandAdapter implements CommandCallable {
 				} if (command.getPermission() != null && !sender.hasPermission(command.getPermission())) {
 					sender.sendMessage(Utils.serializeSpongeText(language.getMessage("misc.no-permission"), false));
 					return CommandResult.success();
-				} LogManager.log(sender.getName() + " issued command: /" + text, 3);
+				} LogManager.log(sender.getName() + " issued command: /" + command.getName() + " " + text, 3);
 				command.execute(senderAdapter, language, args);
 				return CommandResult.success();
 			}

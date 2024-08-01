@@ -56,7 +56,7 @@ public abstract class LogManager implements ChatPluginManager {
 				file.createNewFile();
 				
 				if (freshInstallation)
-					logMessage("Fresh installation? Welcome! Generating default files for you. Follow this guide for proper installation: https://remigio07.me/chatplugin/wiki/getting-started/Installation-({0})", LogLevel.WARNING, ChatPlugin.getInstance().isPremium() ? "premium" : "free");
+					logMessage("Fresh installation? Welcome! Generating default files for you. Follow this guide for proper installation: https://remigio07.me/chatplugin/wiki/getting-started/Installation", LogLevel.WARNING);
 			} catch (IOException e) {
 				throw new ChatPluginManagerException(this, e);
 			}

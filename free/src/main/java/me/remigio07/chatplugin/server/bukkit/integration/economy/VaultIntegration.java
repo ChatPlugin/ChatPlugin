@@ -48,7 +48,7 @@ public class VaultIntegration extends ChatPluginBukkitIntegration<EconomyIntegra
 	@SuppressWarnings("deprecation")
 	@Override
 	public double getBalance(OfflinePlayer player) {
-		return api2 == null ? Double.MIN_VALUE : ((Economy) api).getBalance(player.getName());
+		return api2 == null ? Double.MIN_VALUE : ((Economy) api2).getBalance(player.getName());
 	}
 	
 	@Override

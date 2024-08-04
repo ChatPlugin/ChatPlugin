@@ -37,7 +37,7 @@ public abstract class ChatPluginSpongeIntegration<T extends ChatPluginIntegratio
 			enabled = true;
 			
 			loadAPI();
-		} catch (ClassNotFoundException | NoClassDefFoundError e) {
+		} catch (Throwable t) {
 			
 		}
 	}

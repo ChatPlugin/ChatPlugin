@@ -35,7 +35,7 @@ public abstract class ChatPluginBukkitIntegration<T extends ChatPluginIntegratio
 			enabled = true;
 			
 			loadAPI();
-		} catch (ClassNotFoundException e) {
+		} catch (Throwable t) {
 			
 		}
 	}

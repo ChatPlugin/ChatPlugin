@@ -56,7 +56,7 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 public class JSONConnector extends FlatFileConnector {
 	
 	public static final List<String> UPPER_CASE_POSITIONS = Arrays.asList("id", "uuid", "ip");
-	private Map<DataContainer, JsonObject> jsons = new HashMap<>();
+	protected Map<DataContainer, JsonObject> jsons = new HashMap<>();
 	
 	@Override
 	public void load() throws ChatPluginManagerException {
@@ -82,7 +82,7 @@ public class JSONConnector extends FlatFileConnector {
 		jsons.clear();
 	}
 	
-	private void save(DataContainer container) throws IOException {
+	protected void save(DataContainer container) throws IOException {
 		try (FileWriter writer = new FileWriter(container.getFlatFile())) {
 			writer.write(Jsoner.prettyPrint(jsons.get(container).toJson()) + "\n");
 		}
@@ -228,6 +228,10 @@ public class JSONConnector extends FlatFileConnector {
 			throw new IllegalArgumentException("Unable to get next ID in container " + container.getName() + " since that container does not have IDs");
 		if (container == DataContainer.IP_ADDRESSES)
 			container = DataContainer.PLAYERS;
+		return getNextID0(container);
+	}
+	
+	protected int getNextID0(DataContainer container) {
 		return ((BigDecimal) jsons.get(container).getOrDefault("currentID", BigDecimal.ZERO)).intValue() + 1;
 	}
 	
@@ -239,41 +243,25 @@ public class JSONConnector extends FlatFileConnector {
 		save(container);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public <T> @Nullable(why = "Stored data may be SQL NULL") T getPlayerData(PlayersDataType<T> type, OfflinePlayer player) {
 		JsonObject players = jsons.get(DataContainer.PLAYERS);
 		String uuid = player.getUUID().toString();
 		
-		for (String id : players.keySet()) {
-			if (Utils.isPositiveInteger(id) && uuid.equals(((JsonObject) players.get(id)).get("playerUUID"))) {
-				Object data = type == PlayersDataType.ID ? Integer.valueOf(id) : ((JsonObject) players.get(id)).getOrDefault(adaptPosition(type.getName()), null);
-				return data == null ? null : (T) (data instanceof BigDecimal ? adaptNumber(type, (BigDecimal) data) : data);
-			}
-		} return null;
+		for (String id : players.keySet())
+			if (Utils.isPositiveInteger(id) && uuid.equals(((JsonObject) players.get(id)).get("playerUUID")))
+				convertNumber(type == PlayersDataType.ID ? Integer.valueOf(id) : ((JsonObject) players.get(id)).getOrDefault(adaptPosition(type.getName()), null), type);
+		return null;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public <T> @Nullable(why = "Stored data may be SQL NULL") T getPlayerData(PlayersDataType<T> type, int playerID) {
 		JsonObject players = jsons.get(DataContainer.PLAYERS);
 		
-		for (int id : players.keySet().stream().filter(Utils::isPositiveInteger).map(Integer::valueOf).collect(Collectors.toList())) {
-			if (id == playerID) {
-				Object data = type == PlayersDataType.ID ? Integer.valueOf(id) : ((JsonObject) players.get(String.valueOf(id))).getOrDefault(adaptPosition(type.getName()), null);
-				return data == null ? null : (T) (data instanceof BigDecimal ? adaptNumber(type, (BigDecimal) data) : data);
-			}
-		} return null;
-	}
-	
-	private Object adaptNumber(PlayersDataType<?> type, BigDecimal value) {
-		if (value == null)
-			return null;
-		if (type.getType() == long.class)
-			return value.longValue();
-		if (type.getType() == int.class)
-			return value.intValue();
-		return value.shortValue();
+		for (int id : players.keySet().stream().filter(Utils::isPositiveInteger).map(Integer::valueOf).collect(Collectors.toList()))
+			if (id == playerID)
+				return convertNumber(type == PlayersDataType.ID ? Integer.valueOf(id) : ((JsonObject) players.get(String.valueOf(id))).getOrDefault(adaptPosition(type.getName()), null), type);
+		return null;
 	}
 	
 	@Override

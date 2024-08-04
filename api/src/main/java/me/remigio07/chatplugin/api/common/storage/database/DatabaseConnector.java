@@ -147,19 +147,15 @@ public abstract class DatabaseConnector extends StorageConnector {
 		executeUpdate("DELETE FROM " + table.getDatabaseTableID() + " WHERE " + table.getIDColumn() + " = ?", id);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable(why = "Stored data may be SQL NULL")
 	public <T> T getPlayerData(PlayersDataType<T> type, OfflinePlayer player) throws SQLException {
-		Object data = get("SELECT " + type.getDatabaseTableID() + " FROM " + DataContainer.PLAYERS.getDatabaseTableID() + " WHERE player_uuid = ?", type.getDatabaseTableID(), type.getType(), player.getUUID().toString());
-		return (T) (type.getType() == long.class && data instanceof Integer ? Long.valueOf((int) data) : data);
+		return convertNumber(get("SELECT " + type.getDatabaseTableID() + " FROM " + DataContainer.PLAYERS.getDatabaseTableID() + " WHERE player_uuid = ?", type.getDatabaseTableID(), type.getType(), player.getUUID().toString()), type);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getPlayerData(PlayersDataType<T> type, int playerID) throws SQLException {
-		Object data = get("SELECT " + type.getDatabaseTableID() + " FROM " + DataContainer.PLAYERS.getDatabaseTableID() + " WHERE id = ?", type.getDatabaseTableID(), type.getType(), playerID);
-		return (T) (type.getType() == long.class && data instanceof Integer ? Long.valueOf((int) data) : data);
+		return convertNumber(get("SELECT " + type.getDatabaseTableID() + " FROM " + DataContainer.PLAYERS.getDatabaseTableID() + " WHERE id = ?", type.getDatabaseTableID(), type.getType(), playerID), type);
 	}
 	
 	@Override

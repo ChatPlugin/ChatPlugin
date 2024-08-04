@@ -52,7 +52,7 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 
 public class YAMLConnector extends FlatFileConnector {
 	
-	private Map<DataContainer, Configuration> yamls = new HashMap<>();
+	protected Map<DataContainer, Configuration> yamls = new HashMap<>();
 	
 	@Override
 	public void load() throws ChatPluginManagerException {
@@ -222,7 +222,11 @@ public class YAMLConnector extends FlatFileConnector {
 			throw new IllegalArgumentException("Unable to get next ID in container " + container.getName() + " since that container does not have IDs");
 		if (container == DataContainer.IP_ADDRESSES)
 			container = DataContainer.PLAYERS;
-		return yamls.get(container).getInt("current-id") + 1;
+		return getNextID0(container);
+	}
+	
+	protected int getNextID0(DataContainer container) {
+		return yamls.get(container).getInt("current-id") + 1; 
 	}
 	
 	@Override
@@ -235,31 +239,25 @@ public class YAMLConnector extends FlatFileConnector {
 		configuration.save();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public <T> @Nullable(why = "Stored data may be SQL NULL") T getPlayerData(PlayersDataType<T> type, OfflinePlayer player) {
 		Configuration players = yamls.get(DataContainer.PLAYERS);
 		String uuid = player.getUUID().toString();
 		
-		for (String id : players.getKeys()) {
-			if (Utils.isPositiveInteger(id) && uuid.equals(players.getString(id + ".player-uuid"))) {
-				Object data = type == PlayersDataType.ID ? Integer.valueOf(id) : players.getMappings().get(id + "." + type.getName(), null);
-				return data == null ? null : (T) (type.getType() == long.class && data instanceof Integer ? Long.valueOf((int) data) : data);
-			}
-		} return null;
+		for (String id : players.getKeys())
+			if (Utils.isPositiveInteger(id) && uuid.equals(players.getString(id + ".player-uuid")))
+				return convertNumber(type == PlayersDataType.ID ? Integer.valueOf(id) : players.getMappings().get(id + "." + type.getName(), null), type);
+		return null;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public <T> @Nullable(why = "Stored data may be SQL NULL") T getPlayerData(PlayersDataType<T> type, int playerID) {
 		Configuration players = yamls.get(DataContainer.PLAYERS);
 		
-		for (int id : players.getKeys().stream().filter(Utils::isPositiveInteger).map(Integer::valueOf).collect(Collectors.toList())) {
-			if (id == playerID) {
-				Object data = type == PlayersDataType.ID ? Integer.valueOf(id) : players.getMappings().get(id + "." + type.getName(), null);
-				return data == null ? null : (T) (type.getType() == long.class && data instanceof Integer ? Long.valueOf((int) data) : data);
-			}
-		} return null;
+		for (int id : players.getKeys().stream().filter(Utils::isPositiveInteger).map(Integer::valueOf).collect(Collectors.toList()))
+			if (id == playerID)
+				return convertNumber(type == PlayersDataType.ID ? Integer.valueOf(id) : players.getMappings().get(id + "." + type.getName(), null), type);
+		return null;
 	}
 	
 	@Override

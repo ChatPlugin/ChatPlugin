@@ -123,6 +123,7 @@ public abstract class StorageConnector {
 	 * @param player Player to clear warnings for
 	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
 	 * @throws IOException If something goes wrong and {@link StorageMethod#isFlatFile()}
+	 * @throws UnsupportedOperationException If <code>!</code>{@link ChatPlugin#isPremium()}
 	 */
 	public void clearWarnings(OfflinePlayer player) throws SQLException, IOException {
 		for (Warning warning : WarningManager.getInstance().getActiveWarnings(player))
@@ -363,6 +364,17 @@ public abstract class StorageConnector {
 	 */
 	public void cleanOldMessages() {
 		throw new UnsupportedOperationException("Unable to clean old messages from the storage on the free version");
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected <T> T convertNumber(Object data, PlayersDataType<T> type) {
+		if (data instanceof Number) {
+			if (type.getType() == long.class)
+				return (T) Long.valueOf(((Number) data).longValue());
+			if (type.getType() == int.class)
+				return (T) Integer.valueOf(((Number) data).intValue());
+			else return (T) Short.valueOf(((Number) data).shortValue());
+		} else return (T) data; // String
 	}
 	
 	/**

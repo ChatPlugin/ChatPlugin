@@ -48,7 +48,7 @@ public class Utils extends me.remigio07.chatplugin.api.server.util.Utils {
 	
 	private static boolean isAtLeastV1_20_5 = VersionUtils.getVersion().isAtLeast(Version.V1_20_5); 
 	private static String[] ATTEMPTS = new String[] { "a", "b", "c", "d", "e", "f" };
-	public static Map<UUID, String> spongeTitles = new HashMap<>();
+	public static Map<UUID, String> inventoryTitles = new HashMap<>();
 	
 	@SuppressWarnings("deprecation")
 	public static void setTitle(ChatPluginServerPlayer viewer, String title, int rows) {
@@ -69,12 +69,11 @@ public class Utils extends me.remigio07.chatplugin.api.server.util.Utils {
 			
 			viewer.sendPacket(SpongeReflection.getInstance("SPacketOpenWindow", new Class[] { int.class, String.class, SpongeReflection.getLoadedClass("ITextComponent"), int.class }, SpongeReflection.getFieldValue("Container", container, "field_75152_c"), "minecraft:container", SpongeReflection.invokeMethod("ITextComponent$Serializer", "func_150699_a", null, "{\"text\":\"" + title + "\"}"), rows * 9));
 			SpongeReflection.invokeMethod("EntityPlayerMP", "func_71120_a", viewer.toAdapter().spongeValue(), container);
-			spongeTitles.put(viewer.getUUID(), title);
-		}
+		} inventoryTitles.put(viewer.getUUID(), title);
 	}
 	
 	public static String getTitle(ChatPluginServerPlayer viewer) {
-		return Environment.isBukkit() ? (String) BukkitReflection.invokeMethod("InventoryView", "getTitle", BukkitReflection.invokeMethod("HumanEntity", "getOpenInventory", viewer.toAdapter().bukkitValue())) : spongeTitles.get(viewer.getUUID());
+		return inventoryTitles.get(viewer.getUUID());
 	}
 	
 	public static void displayAdvancement(ChatPluginServerPlayer player, String text, MaterialAdapter material, boolean glowing) {

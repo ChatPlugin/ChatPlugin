@@ -181,7 +181,7 @@ public class SpongePlayerManager extends ServerPlayerManager {
 		scoreboard.getScores().forEach(score -> scoreboard.removeScores(score.getName()));
 		new ArrayList<>(GUIManager.getInstance().getGUIs()).stream().filter(PerPlayerGUI.class::isInstance).map(PerPlayerGUI.class::cast).forEach(PerPlayerGUI::unload);
 		QuitMessageManager.getInstance().getFakeQuits().remove(player);
-		Utils.spongeTitles.remove(player);
+		Utils.inventoryTitles.remove(player);
 		
 		try {
 			StorageConnector.getInstance().setPlayerData(PlayersDataType.LAST_LOGOUT, serverPlayer, System.currentTimeMillis());

@@ -68,6 +68,7 @@ import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.server.bukkit.BukkitReflection;
 import me.remigio07.chatplugin.server.bukkit.ChatPluginBukkitPlayer;
 import me.remigio07.chatplugin.server.join_quit.QuitMessageManagerImpl.QuitPacketImpl;
+import me.remigio07.chatplugin.server.util.Utils;
 import me.remigio07.chatplugin.server.util.manager.VanishManagerImpl;
 
 public class BukkitPlayerManager extends ServerPlayerManager {
@@ -256,6 +257,7 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 			scoreboard.getObjective("tablist_suffix").unregister();
 		new ArrayList<>(GUIManager.getInstance().getGUIs()).stream().filter(PerPlayerGUI.class::isInstance).map(PerPlayerGUI.class::cast).forEach(PerPlayerGUI::unload);
 		QuitMessageManager.getInstance().getFakeQuits().remove(player);
+		Utils.inventoryTitles.remove(player);
 		
 		try {
 			StorageConnector.getInstance().setPlayerData(PlayersDataType.LAST_LOGOUT, serverPlayer, System.currentTimeMillis());

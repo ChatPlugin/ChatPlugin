@@ -75,7 +75,6 @@ public class BukkitReflection {
 			clazz = Class.forName("org.bukkit.inventory.InventoryView");
 			classes.put("InventoryView", clazz);
 			putMethod(clazz, "setTitle", Arrays.asList(String.class));
-			putMethod(clazz, "getTitle");
 			putMethod(clazz, "getTopInventory");
 			
 			// HumanEntity - we need this, too

@@ -56,7 +56,6 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.rank.Rank;
 import me.remigio07.chatplugin.api.server.rank.RankManager;
-import me.remigio07.chatplugin.api.server.rank.RankTag;
 import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
 import me.remigio07.chatplugin.api.server.scoreboard.ScoreboardManager;
 import me.remigio07.chatplugin.api.server.tablist.Tablist;
@@ -64,6 +63,7 @@ import me.remigio07.chatplugin.api.server.tablist.TablistManager;
 import me.remigio07.chatplugin.api.server.tablist.custom_suffix.CustomSuffixManager;
 import me.remigio07.chatplugin.api.server.tablist.custom_suffix.RenderType;
 import me.remigio07.chatplugin.api.server.util.adapter.scoreboard.ObjectiveAdapter;
+import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.server.bukkit.BukkitReflection;
 import me.remigio07.chatplugin.server.bukkit.ChatPluginBukkitPlayer;
@@ -189,16 +189,16 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 		for (Rank rank : RankManager.getInstance().getRanks()) {
 			Team team = scoreboard.registerNewTeam(rank.getTeamName());
 			
-			if (rank.getTag().toString().isEmpty())
+			if (!TablistManager.getInstance().isEnabled() || rank.getTag().toString().isEmpty())
 				continue;
-			RankTag tag = rank.getTag();
+			team.setPrefix(PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPrefixFormat(), serverPlayer, TablistManager.getInstance().getPlaceholderTypes()));
 			
-			team.setPrefix(ChatColor.translate(tag.getPrefix()));
-			
-			if (VersionUtils.getVersion().isAtLeast(Version.V1_12))
-				team.setColor(ChatColor.getByChar(tag.getNameColor().charAt(1)).bukkitValue());
-			else team.setPrefix(ChatColor.translate(team.getPrefix() + tag.getNameColor()));
-			team.setSuffix(ChatColor.translate(tag.getSuffix()));
+			if (VersionUtils.getVersion().isAtLeast(Version.V1_12)) {
+				String lastColors = ChatColor.getLastColors(team.getPrefix());
+				
+				if (!lastColors.isEmpty())
+					team.setColor((lastColors.startsWith("\u00A7x") ? ChatColor.of(lastColors.substring(3, 14).replace("\u00A7", "")).getClosestDefaultColor() : ChatColor.getByChar(lastColors.charAt(1))).bukkitValue());
+			} team.setSuffix(PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getSuffixFormat(), serverPlayer, TablistManager.getInstance().getPlaceholderTypes()));
 		} for (ChatPluginServerPlayer other : getPlayers().values()) {
 			scoreboard.getTeam(other.getRank().getTeamName()).addPlayer(other.toAdapter().bukkitValue());
 			other.getObjective().bukkitValue().getScoreboard().getTeam(serverPlayer.getRank().getTeamName()).addPlayer(bukkitValue);

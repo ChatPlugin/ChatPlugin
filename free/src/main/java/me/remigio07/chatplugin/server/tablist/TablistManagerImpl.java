@@ -55,6 +55,8 @@ public class TablistManagerImpl extends TablistManager {
 		enabled = true;
 		randomOrder = ConfigurationType.TABLISTS.get().getBoolean("tablists.settings.random-order");
 		sendingTimeout = ConfigurationType.TABLISTS.get().getLong("tablists.settings.sending-timeout-ms");
+		prefixFormat = ConfigurationType.TABLISTS.get().getString("tablists.settings.format.prefix");
+		suffixFormat = ConfigurationType.TABLISTS.get().getString("tablists.settings.format.suffix");
 		placeholderTypes = PlaceholderType.getPlaceholders(ConfigurationType.TABLISTS.get().getStringList("tablists.settings.placeholder-types"));
 		
 		for (String id : ConfigurationType.TABLISTS.get().getKeys("tablists")) {
@@ -100,6 +102,7 @@ public class TablistManagerImpl extends TablistManager {
 		
 		randomOrder = false;
 		sendingTimeout = 0;
+		prefixFormat = suffixFormat = null;
 		timerTaskID = timerIndex = -1;
 		constructor = null;
 	}

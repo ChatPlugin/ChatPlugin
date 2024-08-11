@@ -148,7 +148,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("settings.debug", false);
 		config.addDefault("settings.enable-every-world", true);
 		config.addDefault("settings.enable-bstats-metrics", Environment.isBukkit());
-		config.addDefault("settings.modify-display-name", false);
 		config.addDefault("settings.truncate-version-string", true);
 		config.addDefault("settings.use-week-timestamp", false);
 		config.addDefault("settings.anticheat-integration.reasons-start-with", Arrays.asList("[Matrix]", "[Vulcan]"));
@@ -829,7 +828,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		tablists.addDefault("tablists.settings.enabled", VersionUtils.getVersion().isAtLeast(Version.V1_8));
 		tablists.addDefault("tablists.settings.random-order", false);
 		tablists.addDefault("tablists.settings.sending-timeout-ms", 250);
-		tablists.addDefault("tablists.settings.placeholder-types", Arrays.asList("SERVER", "PLAYER", "INTEGRATIONS"));
+		tablists.addDefault("tablists.settings.format.prefix", "{tag_prefix}{tag_name_color}");
+		tablists.addDefault("tablists.settings.format.suffix", "{tag_suffix}");
+		tablists.addDefault("tablists.settings.placeholder-types", Arrays.asList("SERVER", "PLAYER"));
 		tablists.addDefault("tablists.settings.custom-suffix.enabled", true);
 		tablists.addDefault("tablists.settings.custom-suffix.displayed-value", "{ping}");
 		tablists.addDefault("tablists.settings.custom-suffix.render-type", "INTEGER");

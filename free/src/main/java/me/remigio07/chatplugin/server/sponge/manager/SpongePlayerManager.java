@@ -37,6 +37,7 @@ import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
+import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.bossbar.BossbarManager;
 import me.remigio07.chatplugin.api.server.chat.StaffChatManager;
 import me.remigio07.chatplugin.api.server.event.player.ServerPlayerLoadEvent;
@@ -48,18 +49,18 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.rank.Rank;
 import me.remigio07.chatplugin.api.server.rank.RankManager;
-import me.remigio07.chatplugin.api.server.rank.RankTag;
 import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
 import me.remigio07.chatplugin.api.server.scoreboard.ScoreboardManager;
 import me.remigio07.chatplugin.api.server.tablist.Tablist;
 import me.remigio07.chatplugin.api.server.tablist.TablistManager;
 import me.remigio07.chatplugin.api.server.tablist.custom_suffix.CustomSuffixManager;
 import me.remigio07.chatplugin.api.server.tablist.custom_suffix.RenderType;
-import me.remigio07.chatplugin.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.adapter.scoreboard.ObjectiveAdapter;
+import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.server.join_quit.QuitMessageManagerImpl.QuitPacketImpl;
 import me.remigio07.chatplugin.server.sponge.ChatPluginSpongePlayer;
+import me.remigio07.chatplugin.server.util.Utils;
 import me.remigio07.chatplugin.server.util.manager.VanishManagerImpl;
 
 public class SpongePlayerManager extends ServerPlayerManager {
@@ -119,14 +120,22 @@ public class SpongePlayerManager extends ServerPlayerManager {
 		for (Rank rank : RankManager.getInstance().getRanks()) {
 			scoreboard.registerTeam(Team.builder().name(rank.getTeamName()).build());
 			
-			Team team = scoreboard.getTeam(rank.getTeamName()).get();
-			
-			if (rank.getTag().toString().isEmpty())
+			if (!TablistManager.getInstance().isEnabled() ||  rank.getTag().toString().isEmpty())
 				continue;
-			RankTag tag = rank.getTag();
+			Team team = scoreboard.getTeam(rank.getTeamName()).get();
+			String prefix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPrefixFormat(), serverPlayer, TablistManager.getInstance().getPlaceholderTypes());
 			
-			team.setPrefix(Utils.serializeSpongeText(tag.getPrefix().split(" ")[0] + tag.getNameColor() + (tag.getPrefix().contains(" ") ? " " : ""), true));
-			team.setSuffix(Utils.serializeSpongeText(tag.getSuffix(), true));
+			if (prefix.contains(" ")) {
+				int index = prefix.lastIndexOf(' ');
+				
+				if (index != prefix.length() - 1) {
+					String str = prefix.substring(index + 1);
+					
+					if (ChatColor.stripColor(ChatColor.translate(str)).isEmpty())
+						prefix = prefix.substring(0, index) + str + " ";
+				}
+			} team.setPrefix(Utils.serializeSpongeText(prefix, false));
+			team.setSuffix(Utils.serializeSpongeText(PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getSuffixFormat(), serverPlayer, TablistManager.getInstance().getPlaceholderTypes()), false));
 		} for (ChatPluginServerPlayer other : getPlayers().values()) {
 			scoreboard.getTeam(other.getRank().getTeamName()).get().addMember(Utils.serializeSpongeText(other.getName(), false));
 			Iterables.getFirst(other.getObjective().spongeValue().getScoreboards(), null).getTeam(serverPlayer.getRank().getTeamName()).get().addMember(Utils.serializeSpongeText(player.getName(), false));

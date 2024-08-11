@@ -59,6 +59,7 @@ public abstract class TablistManager extends TimerTask implements ChatPluginMana
 	protected static TablistManager instance;
 	protected boolean enabled, randomOrder;
 	protected long sendingTimeout, timerTaskID = -1;
+	protected String prefixFormat, suffixFormat;
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
 	protected List<Tablist> tablists = new CopyOnWriteArrayList<>();
 	protected int timerIndex = -1;
@@ -94,6 +95,28 @@ public abstract class TablistManager extends TimerTask implements ChatPluginMana
 	 */
 	public long getSendingTimeout() {
 		return sendingTimeout;
+	}
+	
+	/**
+	 * Gets the format of the prefix prepended to players' names in the tablist.
+	 * 
+	 * <p><strong>Found at:</strong> "tablists.settings.format.prefix" in {@link ConfigurationType#TABLISTS}</p>
+	 * 
+	 * @return Prefix format
+	 */
+	public String getPrefixFormat() {
+		return prefixFormat;
+	}
+	
+	/**
+	 * Gets the format of the suffix appended to players' names in the tablist.
+	 * 
+	 * <p><strong>Found at:</strong> "tablists.settings.format.suffix" in {@link ConfigurationType#TABLISTS}</p>
+	 * 
+	 * @return Suffix format
+	 */
+	public String getSuffixFormat() {
+		return suffixFormat;
 	}
 	
 	/**

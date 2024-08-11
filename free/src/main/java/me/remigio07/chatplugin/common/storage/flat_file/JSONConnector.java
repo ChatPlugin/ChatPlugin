@@ -250,7 +250,7 @@ public class JSONConnector extends FlatFileConnector {
 		
 		for (String id : players.keySet())
 			if (Utils.isPositiveInteger(id) && uuid.equals(((JsonObject) players.get(id)).get("playerUUID")))
-				convertNumber(type == PlayersDataType.ID ? Integer.valueOf(id) : ((JsonObject) players.get(id)).getOrDefault(adaptPosition(type.getName()), null), type);
+				return convertNumber(type == PlayersDataType.ID ? Integer.valueOf(id) : ((JsonObject) players.get(id)).getOrDefault(adaptPosition(type.getName()), null), type);
 		return null;
 	}
 	

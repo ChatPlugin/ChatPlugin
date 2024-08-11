@@ -682,6 +682,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			return;
 		
 		chat.addDefault("chat.enabled", true);
+		chat.addDefault("chat.color-command-enabled", true);
 		chat.addDefault("chat.format", "&7«&f{prefix}{tag_name_color}{player}{suffix}&7» &f{chat_color}");
 		chat.addDefault("chat.console-format", "&8{world} &7<{prefix}{tag_name_color}{player}{suffix}&7> &f{chat_color}");
 		chat.addDefault("chat.recognized-tlds", Arrays.asList("com", "net", "org", "io", "me", "edu", "gov", "int", "info", "pro", "xyz", "gg", "us", "eu", "uk", "de", "fr", "es", "it", "co.uk", "jp", "ru"));

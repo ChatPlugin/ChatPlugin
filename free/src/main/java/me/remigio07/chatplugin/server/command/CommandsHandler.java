@@ -23,6 +23,7 @@ import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.server.ad.AdManager;
+import me.remigio07.chatplugin.api.server.chat.ChatManager;
 import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager;
 import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
 import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
@@ -97,8 +98,8 @@ public abstract class CommandsHandler {
 		put(new PlayerListCommand());
 		
 		if (!ChatPlugin.getInstance().isPremium()) {
-			put(new ChatColorCommand());
-			
+			if (ChatManager.getInstance().isChatColorCommandEnabled())
+				put(new ChatColorCommand());
 			if (InstantEmojisManager.getInstance().isEnabled())
 				put(new EmojisToneCommand());
 		}

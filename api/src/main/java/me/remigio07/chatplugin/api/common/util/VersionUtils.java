@@ -51,7 +51,7 @@ public class VersionUtils {
 			implementationVersion = Bukkit.getVersion();
 			implementationName = isArclight() ? "Arclight" : isPurpur() ? "Purpur" : isPaper() ? "Paper" : isSpigot() ? "Spigot" : "Bukkit";
 			
-			if (!isPaper() || version.isOlderThan(Version.V1_20_5) && version != Version.UNSUPPORTED)
+			if (version != Version.UNSUPPORTED && (!isPaper() || version.isOlderThan(Version.V1_20_5)))
 				nmsVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 			break;
 		case SPONGE:
@@ -951,7 +951,15 @@ public class VersionUtils {
 		 * <p><strong>Protocol version number:</strong> 767
 		 * <br><strong>Release date:</strong> June 13, 2024</p>
 		 */
-		V1_21(767, 1718229600000L);
+		V1_21(767, 1718229600000L, "1.21.0/1"),
+		
+		/**
+		 * Version 1.21.1.
+		 * 
+		 * <p><strong>Protocol version number:</strong> 767
+		 * <br><strong>Release date:</strong> August 8, 2024</p>
+		 */
+		V1_21_1(767, 1723068000000L, "1.21.0/1");
 		
 		private int protocol;
 		private long releaseDate;

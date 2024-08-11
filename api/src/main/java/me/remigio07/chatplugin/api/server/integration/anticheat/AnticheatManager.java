@@ -17,9 +17,9 @@ package me.remigio07.chatplugin.api.server.integration.anticheat;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import me.remigio07.chatplugin.api.common.integration.IntegrationManager;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
@@ -40,7 +40,7 @@ import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 public abstract class AnticheatManager implements ChatPluginManager {
 	
 	protected static AnticheatManager instance;
-	protected Map<OfflinePlayer, List<Violation>> violations = new HashMap<>();
+	protected Map<OfflinePlayer, List<Violation>> violations = new ConcurrentHashMap<>();
 	protected List<String> reasonsStartWith = new ArrayList<>();
 	protected long violationsExpirationTimeout = -1L, loadTime;
 	

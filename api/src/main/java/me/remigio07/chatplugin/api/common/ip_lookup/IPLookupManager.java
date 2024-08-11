@@ -18,9 +18,9 @@ package me.remigio07.chatplugin.api.common.ip_lookup;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 
 import me.remigio07.chatplugin.api.common.event.ip_lookup.IPLookupCacheEvent;
 import me.remigio07.chatplugin.api.common.event.ip_lookup.IPLookupCleanCacheEvent;
@@ -51,8 +51,8 @@ public abstract class IPLookupManager implements ChatPluginManager {
 	protected String maxMindUserID, base64AuthString;
 	protected int maxIPsStored;
 	protected IPLookup disabledFeatureConstructor;
-	protected Map<InetAddress, IPLookup> cache = new HashMap<>();
-	protected Map<InetAddress, CompletableFuture<IPLookup>> pendingFutures = new HashMap<>();
+	protected Map<InetAddress, IPLookup> cache = new ConcurrentHashMap<>();
+	protected Map<InetAddress, CompletableFuture<IPLookup>> pendingFutures = new ConcurrentHashMap<>();
 	protected long loadTime;
 	
 	/**

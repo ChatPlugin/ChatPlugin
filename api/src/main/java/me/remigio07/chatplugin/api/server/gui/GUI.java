@@ -15,9 +15,9 @@
 
 package me.remigio07.chatplugin.api.server.gui;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import me.remigio07.chatplugin.api.common.util.TriFunction;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
@@ -40,7 +40,7 @@ public abstract class GUI {
 	protected String id;
 	protected boolean loaded;
 	protected GUILayout layout;
-	protected List<CompletableFuture<ItemStackAdapter>> skullOwnerFutures = new ArrayList<>();
+	protected List<CompletableFuture<ItemStackAdapter>> skullOwnerFutures = new CopyOnWriteArrayList<>();
 	private TriFunction<Icon, String, Language, String> stringPlaceholdersTranslator;
 	private TriFunction<Icon, List<String>, Language, List<String>> stringListPlaceholdersTranslator;
 	

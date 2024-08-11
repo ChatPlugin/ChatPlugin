@@ -17,10 +17,10 @@ package me.remigio07.chatplugin.api.proxy.motd;
 
 import java.net.InetAddress;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 
 import me.remigio07.chatplugin.api.common.motd.MoTD;
 import me.remigio07.chatplugin.api.common.motd.MoTDManager;
@@ -38,7 +38,7 @@ public abstract class ProxyMoTDManager extends MoTDManager {
 	protected int serverSocketPort;
 	protected String providerServerID, serverUnreachableDescription;
 	protected URL serverUnreachableIconURL;
-	protected Map<InetAddress, Queue<CompletableFuture<MoTD>>> pendingFutures = new HashMap<>();
+	protected Map<InetAddress, Queue<CompletableFuture<MoTD>>> pendingFutures = new ConcurrentHashMap<>();
 	protected Server server;
 	protected FaviconAdapter serverUnreachableFavicon;
 	

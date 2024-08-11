@@ -17,10 +17,11 @@ package me.remigio07.chatplugin.api.server.bossbar;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
@@ -77,8 +78,8 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	protected long reflectionWitherTeleportationTimeout, sendingTimeout, loadingBossbarSendingTimeout, timerTaskID = -1, reflectionTimerTaskID = -1, lastRunTime = -1;
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
 	protected List<String> enabledWorlds = new ArrayList<>();
-	protected List<Bossbar> bossbars = new ArrayList<>();
-	protected Map<ChatPluginServerPlayer, Long> loadingBossbarsTasks = new HashMap<>();
+	protected List<Bossbar> bossbars = new CopyOnWriteArrayList<>();
+	protected Map<ChatPluginServerPlayer, Long> loadingBossbarsTasks = new ConcurrentHashMap<>();
 	protected ReflectionBossbarTimer reflectionBossbarTimer;
 	protected int timerIndex = -1;
 	protected long loadTime;
@@ -168,7 +169,7 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	 * 
 	 * @return Time between sendings while loading the bossbar
 	 */
-	public long getLoadingBossbarSendingTimeout() {
+	public long getLoadindBossbarSendingTimeout() {
 		return loadingBossbarSendingTimeout;
 	}
 	

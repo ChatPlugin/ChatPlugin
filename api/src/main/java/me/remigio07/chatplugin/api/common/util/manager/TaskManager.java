@@ -15,11 +15,12 @@
 
 package me.remigio07.chatplugin.api.common.util.manager;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.bukkit.Bukkit;
 import org.spongepowered.api.Sponge;
@@ -35,9 +36,10 @@ public abstract class TaskManager implements ChatPluginManager {
 	
 	protected static TaskManager instance;
 	protected boolean enabled;
-	protected Map<Long, UUID> syncTasks = new HashMap<>();
-	protected Map<Long, TimerTask> asyncTasks = new HashMap<>();
-	protected long currentSpongeID, currentAsyncID, loadTime;
+	protected Map<Long, UUID> syncTasks = new ConcurrentHashMap<>();
+	protected Map<Long, TimerTask> asyncTasks = new ConcurrentHashMap<>();
+	protected AtomicLong currentSpongeID = new AtomicLong(), currentAsyncID = new AtomicLong();
+	protected long loadTime;
 	
 	@Override
 	public boolean isEnabled() {
@@ -63,23 +65,23 @@ public abstract class TaskManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the next Sponge sync task's ID and increments it by 1.
+	 * Gets the current Sponge sync task's ID.
 	 * 
 	 * <p>It is only applicable when {@link Environment#isSponge()}.</p>
 	 * 
-	 * @return Next Sponge sync task's ID
+	 * @return Current Sponge sync task's ID
 	 */
-	public long getNextSpongeID() {
-		return currentSpongeID++;
+	public AtomicLong getNextSpongeID() {
+		return currentSpongeID;
 	}
 	
 	/**
-	 * Gets the next async task's ID and increments it by 1.
+	 * Gets the current async task's ID.
 	 * 
-	 * @return Next async task's ID
+	 * @return Current async task's ID
 	 */
-	public long getNextAsyncID() {
-		return currentAsyncID++;
+	public AtomicLong getCurrentAsyncID() {
+		return currentAsyncID;
 	}
 	
 	/**
@@ -101,7 +103,7 @@ public abstract class TaskManager implements ChatPluginManager {
 		
 		if (Environment.isProxy())
 			throw new UnsupportedOperationException("Synchronous tasks are not available on a " + Environment.getCurrent().getName() + " environment. Bukkit and Sponge only");
-		long taskID = Environment.isBukkit() ? (long) BukkitScheduler.runSync(runnable, delay) : instance.currentSpongeID++;
+		long taskID = Environment.isBukkit() ? (long) BukkitScheduler.runSync(runnable, delay) : instance.currentSpongeID.getAndIncrement();
 		
 		instance.syncTasks.put(taskID, Environment.isBukkit() ? UUID.randomUUID() : Sponge.getScheduler().createTaskBuilder().execute(runnable).delayTicks(delay / 50).submit(SpongeBootstrapper.getInstance()).getUniqueId());
 		runAsync(() -> instance.syncTasks.remove(taskID), delay);
@@ -116,7 +118,7 @@ public abstract class TaskManager implements ChatPluginManager {
 	 * @return Task's ID
 	 */
 	public static long runAsync(Runnable runnable, long delay) {
-		long taskID = instance.getNextAsyncID();
+		long taskID = instance.currentAsyncID.getAndIncrement();
 		TimerTask task = new TimerTask() {
 			
 			@Override
@@ -153,7 +155,7 @@ public abstract class TaskManager implements ChatPluginManager {
 		
 		if (Environment.isProxy())
 			throw new UnsupportedOperationException("Synchronous tasks are not available on a " + Environment.getCurrent().getName() + " environment. Bukkit and Sponge only");
-		long taskID = Environment.isBukkit() ? (long) BukkitScheduler.scheduleSync(runnable, delay, period) : instance.currentSpongeID++;
+		long taskID = Environment.isBukkit() ? (long) BukkitScheduler.scheduleSync(runnable, delay, period) : instance.currentSpongeID.getAndIncrement();
 		
 		instance.syncTasks.put(taskID, Environment.isBukkit() ? UUID.randomUUID() : Sponge.getScheduler().createTaskBuilder().execute(runnable).delayTicks(delay / 50).intervalTicks(period / 50).submit(SpongeBootstrapper.getInstance()).getUniqueId());
 		return taskID;
@@ -168,7 +170,7 @@ public abstract class TaskManager implements ChatPluginManager {
 	 * @return Task's ID
 	 */
 	public static long scheduleAsync(Runnable runnable, long delay, long period) {
-		long taskID = instance.getNextAsyncID();
+		long taskID = instance.currentAsyncID.getAndIncrement();
 		TimerTask task = new TimerTask() {
 			
 			@Override

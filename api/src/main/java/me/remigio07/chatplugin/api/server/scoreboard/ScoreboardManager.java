@@ -15,9 +15,9 @@
 
 package me.remigio07.chatplugin.api.server.scoreboard;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
@@ -54,7 +54,7 @@ public abstract class ScoreboardManager implements ChatPluginManager {
 	public static final Pattern SCOREBOARD_ID_PATTERN = Pattern.compile("^[a-zA-Z0-9-_]{2,36}$");
 	protected static ScoreboardManager instance;
 	protected boolean enabled;
-	protected List<Scoreboard> scoreboards = new ArrayList<>();
+	protected List<Scoreboard> scoreboards = new CopyOnWriteArrayList<>();
 	protected Timer timer;
 	protected long loadTime;
 	

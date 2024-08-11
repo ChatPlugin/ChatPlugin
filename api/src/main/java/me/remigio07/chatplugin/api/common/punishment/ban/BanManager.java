@@ -17,8 +17,8 @@ package me.remigio07.chatplugin.api.common.punishment.ban;
 
 import java.net.InetAddress;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import me.remigio07.chatplugin.api.common.event.punishment.ban.BanEvent;
 import me.remigio07.chatplugin.api.common.event.punishment.ban.BanUpdateEvent;
@@ -44,7 +44,7 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 public abstract class BanManager extends PunishmentManager {
 	
 	protected static BanManager instance;
-	protected List<Ban> bans = new ArrayList<>();
+	protected List<Ban> bans = new CopyOnWriteArrayList<>();
 	protected boolean defaultGlobal;
 	protected long loadTime;
 	

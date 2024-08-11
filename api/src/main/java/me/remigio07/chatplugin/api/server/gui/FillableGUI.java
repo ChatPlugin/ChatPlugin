@@ -15,10 +15,10 @@
 
 package me.remigio07.chatplugin.api.server.gui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiFunction;
 
 import me.remigio07.chatplugin.api.common.util.TriFunction;
@@ -38,10 +38,10 @@ import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
  */
 public abstract class FillableGUI<T> extends GUI {
 	
-	protected List<GUIFiller<T>> fillers = new ArrayList<>();
-	protected List<List<Icon>> generatedIcons = new ArrayList<>();
-	protected Map<Language, List<InventoryAdapter>> inventories = new HashMap<>();
-	protected Map<ChatPluginServerPlayer, Integer> viewers = new HashMap<>();
+	protected List<GUIFiller<T>> fillers = new CopyOnWriteArrayList<>();
+	protected List<List<Icon>> generatedIcons = new CopyOnWriteArrayList<>();
+	protected Map<Language, List<InventoryAdapter>> inventories = new ConcurrentHashMap<>();
+	protected Map<ChatPluginServerPlayer, Integer> viewers = new ConcurrentHashMap<>();
 	protected TriFunction<FillableGUI<T>, Language, Integer, String> titlesTranslator;
 	
 	protected FillableGUI(GUILayout layout) {

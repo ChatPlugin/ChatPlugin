@@ -15,10 +15,10 @@
 
 package me.remigio07.chatplugin.api.server.chat;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
@@ -40,7 +40,7 @@ public abstract class StaffChatManager implements ChatPluginManager {
 	protected boolean enabled;
 	protected String playerChatFormat, playerTerminalFormat, consoleChatFormat, consoleTerminalFormat;
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
-	protected List<UUID> players = new ArrayList<>();
+	protected List<UUID> players = new CopyOnWriteArrayList<>();
 	protected long loadTime;
 	
 	/**

@@ -15,10 +15,10 @@
 
 package me.remigio07.chatplugin.api.server.ad;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.TimerTask;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
@@ -52,7 +52,7 @@ public abstract class AdManager extends TimerTask implements ChatPluginManager {
 	protected SoundAdapter sound;
 	protected long sendingTimeout, timerTaskID = -1;
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
-	protected List<Ad> ads = new ArrayList<>();
+	protected List<Ad> ads = new CopyOnWriteArrayList<>();
 	protected int timerIndex = -1;
 	protected long loadTime;
 	

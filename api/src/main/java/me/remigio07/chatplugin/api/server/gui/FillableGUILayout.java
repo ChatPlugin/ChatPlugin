@@ -18,6 +18,7 @@ package me.remigio07.chatplugin.api.server.gui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
@@ -31,7 +32,7 @@ import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 public class FillableGUILayout extends GUILayout {
 	
 	protected int startSlot = -1, endSlot = -1;
-	protected List<IconLayout> iconsLayouts = new ArrayList<>();
+	protected List<IconLayout> iconsLayouts = new CopyOnWriteArrayList<>();
 	protected Icon emptyListIcon;
 	
 	protected FillableGUILayout(String id, int rows, OpenActions openActions, SoundAdapter clickSound, Map<Language, String> titles) {

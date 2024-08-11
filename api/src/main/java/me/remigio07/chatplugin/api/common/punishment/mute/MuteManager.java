@@ -16,8 +16,8 @@
 package me.remigio07.chatplugin.api.common.punishment.mute;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import me.remigio07.chatplugin.api.common.chat.DenyChatReasonHandler;
 import me.remigio07.chatplugin.api.common.event.punishment.mute.MuteEvent;
@@ -43,7 +43,7 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 public abstract class MuteManager extends PunishmentManager implements DenyChatReasonHandler  {
 	
 	protected static MuteManager instance;
-	protected List<Mute> mutes = new ArrayList<>();
+	protected List<Mute> mutes = new CopyOnWriteArrayList<>();
 	protected boolean defaultGlobal;
 	protected long loadTime;
 	

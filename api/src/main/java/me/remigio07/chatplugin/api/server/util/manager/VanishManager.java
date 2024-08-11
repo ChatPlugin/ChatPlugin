@@ -16,9 +16,9 @@
 package me.remigio07.chatplugin.api.server.util.manager;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import me.remigio07.chatplugin.api.common.chat.DenyChatReasonHandler;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
@@ -40,7 +40,7 @@ public abstract class VanishManager implements DenyChatReasonHandler {
 	public static final String VANISH_PERMISSION = "chatplugin.commands.vanish";
 	protected static VanishManager instance;
 	protected boolean enabled, invisibility;
-	protected Map<String, List<ChatPluginServerPlayer>> vanished = new HashMap<>();
+	protected Map<String, List<ChatPluginServerPlayer>> vanished = new ConcurrentHashMap<>();
 	protected long loadTime;
 	
 	@Override

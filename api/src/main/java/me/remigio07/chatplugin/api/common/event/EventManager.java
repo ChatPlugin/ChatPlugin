@@ -15,12 +15,11 @@
 
 package me.remigio07.chatplugin.api.common.event;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -39,7 +38,7 @@ public abstract class EventManager implements ChatPluginManager {
 	
 	protected static EventManager instance;
 	protected boolean enabled;
-	protected Map<Class<? extends ChatPluginEvent>, List<EventSubscriber<? extends ChatPluginEvent>>> subscribers = new HashMap<>();
+	protected Map<Class<? extends ChatPluginEvent>, List<EventSubscriber<? extends ChatPluginEvent>>> subscribers = new ConcurrentHashMap<>();
 	protected long loadTime;
 	
 	@Override
@@ -105,7 +104,7 @@ public abstract class EventManager implements ChatPluginManager {
 		@SuppressWarnings("deprecation")
 		EventSubscriber<E> subscriber = new EventSubscriber<>(event, (Consumer<E>) consumer);
 		
-		subscribers.put(event, Utils.addAndGet(subscribers.getOrDefault(event, new ArrayList<>()), Arrays.asList(subscriber)));
+		subscribers.put(event, Utils.addAndGet(subscribers.getOrDefault(event, Collections.emptyList()), Arrays.asList(subscriber)));
 		return subscriber;
 	}
 	
@@ -117,7 +116,7 @@ public abstract class EventManager implements ChatPluginManager {
 	 * @param eventSubscriber Event subscriber to unsubscribe
 	 */
 	public <E extends ChatPluginEvent> void unsubscribe(EventSubscriber<E> eventSubscriber) {
-		subscribers.put(eventSubscriber.getEvent(), Utils.removeAndGet(subscribers.getOrDefault(eventSubscriber.getEvent(), new ArrayList<>()), Arrays.asList(eventSubscriber)));
+		subscribers.put(eventSubscriber.getEvent(), Utils.removeAndGet(subscribers.getOrDefault(eventSubscriber.getEvent(), Collections.emptyList()), Arrays.asList(eventSubscriber)));
 	}
 	
 	/**

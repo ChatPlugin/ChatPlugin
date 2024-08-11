@@ -16,10 +16,10 @@
 package me.remigio07.chatplugin.api.server.gui;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.util.ValueContainer;
@@ -111,11 +111,11 @@ public class IconLayout {
 				null,
 				null,
 				null,
-				new ArrayList<>(),
-				new ArrayList<>(),
-				new HashMap<>(),
-				new HashMap<>(),
-				new HashMap<>()
+				new CopyOnWriteArrayList<>(),
+				new CopyOnWriteArrayList<>(),
+				new ConcurrentHashMap<>(),
+				new ConcurrentHashMap<>(),
+				new ConcurrentHashMap<>()
 				);
 	}
 	
@@ -124,6 +124,8 @@ public class IconLayout {
 	 * 
 	 * <p><strong>Note:</strong> {@link #IconLayout(Configuration, String)} is capable of reading icon layouts
 	 * from {@link Configuration}s. Use this constructor just to obtain custom icon layouts via code.</p>
+	 * 
+	 * <p>It is recommended to use thread-safe collections.</p>
 	 * 
 	 * @param id Icon layout's ID
 	 * @param material Icon layout's material

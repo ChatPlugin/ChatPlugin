@@ -15,10 +15,10 @@
 
 package me.remigio07.chatplugin.api.server.tablist;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.TimerTask;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
@@ -60,7 +60,7 @@ public abstract class TablistManager extends TimerTask implements ChatPluginMana
 	protected boolean enabled, randomOrder;
 	protected long sendingTimeout, timerTaskID = -1;
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
-	protected List<Tablist> tablists = new ArrayList<>();
+	protected List<Tablist> tablists = new CopyOnWriteArrayList<>();
 	protected int timerIndex = -1;
 	protected long loadTime;
 	

@@ -16,10 +16,10 @@
 package me.remigio07.chatplugin.api.common.punishment.warning;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import me.remigio07.chatplugin.api.common.event.punishment.warning.ClearWarningsEvent;
 import me.remigio07.chatplugin.api.common.event.punishment.warning.RemoveLastWarningEvent;
@@ -45,7 +45,7 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 public abstract class WarningManager extends PunishmentManager {
 	
 	protected static WarningManager instance;
-	protected List<Warning> warnings = new ArrayList<>();
+	protected List<Warning> warnings = new CopyOnWriteArrayList<>();
 	protected Map<Integer, Map<Language, List<String>>> punishCommands = new HashMap<>();
 	protected boolean defaultGlobal;
 	protected long duration;

@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.common.ip_lookup;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -89,13 +90,9 @@ public class IPLookupImpl extends IPLookup {
 			city = (String) ((JsonObject) ((JsonObject) json.get("city")).get("names")).get("en");
 		if (json.containsKey("postal") && ((JsonObject) json.get("postal")).containsKey("code"))
 			postalCode = (String) ((JsonObject) json.get("postal")).get("code");
-		if (json.containsKey("subdivisions")) {
-			JsonArray subdivisions = (JsonArray) json.get("subdivisions");
-			
-			for (int i = 0; i < subdivisions.size(); i++)
-				this.subdivisions.add((String) ((JsonObject) ((JsonObject) subdivisions.get(i)).get("names")).get("en"));
-			Collections.reverse(this.subdivisions);
-		} return this;
+		if (json.containsKey("subdivisions"))
+			Collections.reverse(subdivisions = ((JsonArray) json.get("subdivisions")).stream().map(subdivision -> (String) ((JsonObject) ((JsonObject) subdivision).get("names")).get("en")).collect(Collectors.toCollection(ArrayList::new)));
+		return this;
 	}
 	
 	@Override
@@ -118,7 +115,7 @@ public class IPLookupImpl extends IPLookup {
 	
 	@Override
 	public List<String> formatPlaceholders(List<String> input) {
-		return input.stream().map(str -> formatPlaceholders(str)).collect(Collectors.toList());
+		return input.stream().map(this::formatPlaceholders).collect(Collectors.toList());
 	}
 	
 }

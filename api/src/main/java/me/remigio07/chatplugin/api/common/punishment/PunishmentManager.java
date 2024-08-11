@@ -15,6 +15,8 @@
 
 package me.remigio07.chatplugin.api.common.punishment;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import me.remigio07.chatplugin.api.common.punishment.ban.BanManager;
 import me.remigio07.chatplugin.api.common.punishment.kick.KickManager;
 import me.remigio07.chatplugin.api.common.punishment.mute.MuteManager;
@@ -42,7 +44,8 @@ public abstract class PunishmentManager implements ChatPluginManager {
 	protected static StorageConnector storage;
 	protected static ComponentTranslator componentTranslator;
 	protected boolean enabled;
-	protected int nextID, storageCount, staffStorageCount, anticheatStorageCount;
+	protected AtomicInteger nextID;
+	protected int storageCount, staffStorageCount, anticheatStorageCount;
 	
 	@Override
 	public void load() throws ChatPluginManagerException {
@@ -60,7 +63,7 @@ public abstract class PunishmentManager implements ChatPluginManager {
 	 * 
 	 * @return Next punishment's ID
 	 */
-	public int getNextID() {
+	public AtomicInteger getNextID() {
 		return nextID;
 	}
 	
@@ -73,7 +76,7 @@ public abstract class PunishmentManager implements ChatPluginManager {
 	 * 
 	 * @return Amount of punishments
 	 */
-	public long getStorageCount() {
+	public int getStorageCount() {
 		return storageCount;
 	}
 	
@@ -90,7 +93,8 @@ public abstract class PunishmentManager implements ChatPluginManager {
 	 */
 	public void setStorageCount(int storageCount) {
 		this.storageCount = storageCount;
-		nextID = storageCount + 1;
+		
+		nextID.set(storageCount + 1);
 	}
 	
 	/**
@@ -128,7 +132,7 @@ public abstract class PunishmentManager implements ChatPluginManager {
 	 * 
 	 * @return Amount of punishments
 	 */
-	public long getAnticheatStorageCount() {
+	public int getAnticheatStorageCount() {
 		return anticheatStorageCount;
 	}
 	

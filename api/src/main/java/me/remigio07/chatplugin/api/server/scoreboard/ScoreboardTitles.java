@@ -15,10 +15,10 @@
 
 package me.remigio07.chatplugin.api.server.scoreboard;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
 
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
@@ -44,8 +44,8 @@ public abstract class ScoreboardTitles extends TimerTask {
 	 */
 	public static final String TITLE_TOO_LONG = "\u00A7cTitle exceeds \u00A7f" + MAX_TITLE_LENGTH + " \u00A7cchars";
 	protected Scoreboard scoreboard;
-	protected Map<Language, List<String>> values = new HashMap<>();
-	protected Map<Language, Integer> timerIndexes = new HashMap<>();
+	protected Map<Language, List<String>> values = new ConcurrentHashMap<>();
+	protected Map<Language, Integer> timerIndexes = new ConcurrentHashMap<>();
 	protected boolean randomOrder;
 	protected long sendingTimeout;
 	

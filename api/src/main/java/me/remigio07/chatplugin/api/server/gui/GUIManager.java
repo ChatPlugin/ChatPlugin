@@ -16,9 +16,9 @@
 package me.remigio07.chatplugin.api.server.gui;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
@@ -71,7 +71,7 @@ public abstract class GUIManager implements ChatPluginManager {
 	public static final Pattern PER_PLAYER_GUI_ID_PATTERN = Pattern.compile("^[a-zA-Z0-9-_]{2,19}$");
 	protected static GUIManager instance;
 	protected boolean enabled;
-	protected List<GUI> guis = new ArrayList<>();
+	protected List<GUI> guis = new CopyOnWriteArrayList<>();
 	protected long perPlayerGUIsUnloadTime, loadTime;
 	
 	/**

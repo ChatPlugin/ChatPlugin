@@ -15,11 +15,11 @@
 
 package me.remigio07.chatplugin.api.server.gui;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -56,7 +56,7 @@ public class GUILayout {
 		this.openActions = openActions;
 		this.clickSound = clickSound;
 		this.titles = titles;
-		icons = new ArrayList<>(Collections.nCopies(getSize(), null));
+		icons = new CopyOnWriteArrayList<>(Collections.nCopies(getSize(), null));
 	}
 	
 	protected GUILayout(Configuration configuration) {
@@ -65,7 +65,7 @@ public class GUILayout {
 				configuration.getInt("settings.rows"),
 				new OpenActions(configuration),
 				new SoundAdapter(configuration, "settings.click-sound"),
-				LanguageManager.getInstance().getLanguages().stream().collect(HashMap::new, (map, language) -> map.put(language, configuration.getString("settings.titles." + language.getID(), null)), HashMap::putAll)
+				LanguageManager.getInstance().getLanguages().stream().collect(ConcurrentHashMap::new, (map, language) -> map.put(language, configuration.getString("settings.titles." + language.getID(), null)), ConcurrentHashMap::putAll)
 				);
 		this.configuration = configuration;
 	}

@@ -23,11 +23,12 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -81,12 +82,12 @@ public class ItemStackAdapter implements Cloneable {
 	
 	private Object itemStack;
 	private MaterialAdapter type;
-	private List<ItemFlagAdapter> itemFlags = new ArrayList<>();
-	private Map<EnchantmentAdapter, Integer> enchantments = new HashMap<>();
+	private List<ItemFlagAdapter> itemFlags = new CopyOnWriteArrayList<>();
+	private Map<EnchantmentAdapter, Integer> enchantments = new ConcurrentHashMap<>();
 	private String skullOwner;
 	private boolean itemMeta = true;
-	private static Map<String, Object[]> skullsCache = new HashMap<>();
-	private static List<String> nonPremiumUsernames = new ArrayList<>();
+	private static Map<String, Object[]> skullsCache = new ConcurrentHashMap<>();
+	private static List<String> nonPremiumUsernames = new CopyOnWriteArrayList<>();
 	
 	/**
 	 * Constructs an item stack with the given material,
@@ -379,7 +380,7 @@ public class ItemStackAdapter implements Cloneable {
 	 * @return This item stack
 	 */
 	public ItemStackAdapter disenchant() {
-		new ArrayList<>(enchantments.keySet()).forEach(enchantment -> disenchant(enchantment));
+		enchantments.keySet().forEach(this::disenchant);
 		return this;
 	}
 	

@@ -16,11 +16,11 @@
 package me.remigio07.chatplugin.api.server.gui;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -131,11 +131,11 @@ public class Icon {
 				null,
 				null,
 				null,
-				new ArrayList<>(),
-				new ArrayList<>(),
-				new HashMap<>(),
-				new HashMap<>(),
-				new HashMap<>()
+				new CopyOnWriteArrayList<>(),
+				new CopyOnWriteArrayList<>(),
+				new ConcurrentHashMap<>(),
+				new ConcurrentHashMap<>(),
+				new ConcurrentHashMap<>()
 				);
 	}
 	
@@ -144,6 +144,8 @@ public class Icon {
 	 * 
 	 * <p><strong>Note:</strong> {@link GUIManager#createIcon(Configuration, String)} is capable of reading
 	 * icons from {@link Configuration}s. Use this constructor just to obtain custom icons via code.</p>
+	 * 
+	 * <p>It is recommended to use thread-safe collections.</p>
 	 * 
 	 * @param id Icon's ID
 	 * @param type Icon's type

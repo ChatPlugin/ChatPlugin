@@ -16,7 +16,6 @@
 package me.remigio07.chatplugin.api.common.ip_lookup;
 
 import java.net.InetAddress;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,7 +46,7 @@ public abstract class IPLookup {
 	protected String city = "unknown city";
 	protected String countryCode = "unknown country code";
 	protected String postalCode = "unknown postal code";
-	protected List<String> subdivisions = new ArrayList<>();
+	protected List<String> subdivisions = Collections.emptyList();
 	protected boolean insideEU, valid = true;
 	protected double latitude = -1, longitude = -1;
 	protected long accuracyRadius = -1;
@@ -213,7 +212,7 @@ public abstract class IPLookup {
 	 * @return Subdivisions merged into one string
 	 */
 	public String formatSubdivisions() {
-		String str = String.join(", ", subdivisions.toArray(new String[0]));
+		String str = String.join(", ", subdivisions);
 		return str.isEmpty() ? "unknown location" : str;
 	}
 	

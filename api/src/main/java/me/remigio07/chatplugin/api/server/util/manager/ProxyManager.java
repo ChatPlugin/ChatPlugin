@@ -17,9 +17,9 @@ package me.remigio07.chatplugin.api.server.util.manager;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
@@ -56,7 +56,7 @@ public abstract class ProxyManager implements ChatPluginManager {
 	protected boolean enabled;
 	protected String serverID, serverDisplayName;
 	protected List<String> logFilteredPackets = Collections.emptyList();
-	protected Map<String, ServerInformation> serversInformation = new HashMap<>();
+	protected Map<String, ServerInformation> serversInformation = new ConcurrentHashMap<>();
 	protected long[] taskIDs = new long[2];
 	protected long loadTime;
 	

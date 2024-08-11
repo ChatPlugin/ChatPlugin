@@ -15,7 +15,6 @@
 
 package me.remigio07.chatplugin.api.proxy.util.manager;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Queue;
@@ -36,7 +35,7 @@ public abstract class ProxyMessageManager implements ChatPluginManager {
 	
 	protected static ProxyMessageManager instance;
 	protected boolean enabled;
-	protected Map<String, ServerInformation> serversInformation = new HashMap<>();
+	protected Map<String, ServerInformation> serversInformation = new ConcurrentHashMap<>();
 	protected Map<String, Queue<PacketSerializer>> packetsQueue = new ConcurrentHashMap<>();
 	protected long taskID, loadTime;
 	

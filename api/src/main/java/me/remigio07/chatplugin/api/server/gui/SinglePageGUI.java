@@ -15,10 +15,10 @@
 
 package me.remigio07.chatplugin.api.server.gui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiFunction;
 
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -34,8 +34,8 @@ import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
  */
 public abstract class SinglePageGUI extends GUI {
 	
-	protected List<ChatPluginServerPlayer> viewers = new ArrayList<>();
-	protected Map<Language, InventoryAdapter> inventories = new HashMap<>();
+	protected List<ChatPluginServerPlayer> viewers = new CopyOnWriteArrayList<>();
+	protected Map<Language, InventoryAdapter> inventories = new ConcurrentHashMap<>();
 	protected BiFunction<SinglePageGUI, Language, String> titlesTranslator;
 	
 	protected SinglePageGUI(GUILayout layout) {

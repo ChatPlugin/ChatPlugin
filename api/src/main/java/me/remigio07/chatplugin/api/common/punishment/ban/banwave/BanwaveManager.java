@@ -16,9 +16,9 @@
 package me.remigio07.chatplugin.api.common.punishment.ban.banwave;
 
 import java.net.InetAddress;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import me.remigio07.chatplugin.api.common.event.punishment.ban.banwave.BanwaveEndEvent;
 import me.remigio07.chatplugin.api.common.event.punishment.ban.banwave.BanwaveEntryAddEvent;
@@ -49,7 +49,7 @@ public abstract class BanwaveManager extends TimerTask implements ChatPluginMana
 	protected boolean enabled, running, announce, forwardProxyCommands;
 	protected long timeout, delay;
 	protected List<String> reasonsStartWith, startCommands, endCommands;
-	protected List<BanwaveEntry> entries = new ArrayList<>();
+	protected List<BanwaveEntry> entries = new CopyOnWriteArrayList<>();
 	protected long loadTime;
 	
 	/**

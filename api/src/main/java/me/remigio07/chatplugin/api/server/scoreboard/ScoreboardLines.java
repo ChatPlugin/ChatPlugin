@@ -17,10 +17,10 @@ package me.remigio07.chatplugin.api.server.scoreboard;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
 
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
@@ -93,8 +93,8 @@ public abstract class ScoreboardLines {
 	public static abstract class ScoreboardLine extends TimerTask {
 		
 		protected ScoreboardLines lines;
-		protected Map<Language, List<String>> values = new HashMap<>();
-		protected Map<Language, Integer> timerIndexes = new HashMap<>();
+		protected Map<Language, List<String>> values = new ConcurrentHashMap<>();
+		protected Map<Language, Integer> timerIndexes = new ConcurrentHashMap<>();
 		protected int lineIndex;
 		protected boolean randomOrder;
 		protected long sendingTimeout;

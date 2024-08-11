@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -377,7 +378,7 @@ public class Utils {
 	 * @return Copy of <code>input</code> + <code>args</code>
 	 */
 	public static <T> List<T> addAndGet(Collection<T> input, Collection<T> args) {
-		List<T> list2 = new ArrayList<>(input);
+		List<T> list2 = new CopyOnWriteArrayList<>(input);
 		
 		for (T e : args) {
 			if (!list2.contains(e))
@@ -395,7 +396,7 @@ public class Utils {
 	 * @return Copy of <code>input</code> - <code>args</code>
 	 */
 	public static <T> List<T> removeAndGet(Collection<T> input, Collection<T> args) {
-		List<T> list2 = new ArrayList<>(input);
+		List<T> list2 = new CopyOnWriteArrayList<>(input);
 		
 		for (T e : args) {
 			if (list2.contains(e))

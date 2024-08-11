@@ -16,11 +16,10 @@
 package me.remigio07.chatplugin.api.proxy.player;
 
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
@@ -36,7 +35,7 @@ import me.remigio07.chatplugin.api.proxy.event.player.ProxyPlayerUnloadEvent;
  */
 public abstract class ProxyPlayerManager extends PlayerManager {
 	
-	protected Map<UUID, ChatPluginProxyPlayer> players = new HashMap<>();
+	protected Map<UUID, ChatPluginProxyPlayer> players = new ConcurrentHashMap<>();
 	
 	@Override
 	public void load() throws ChatPluginManagerException {
@@ -48,7 +47,7 @@ public abstract class ProxyPlayerManager extends PlayerManager {
 	public void unload() throws ChatPluginManagerException {
 		enabled = false;
 		
-		new ArrayList<>(players.keySet()).forEach(player -> unloadPlayer(player));
+		players.keySet().forEach(this::unloadPlayer);
 		players.clear();
 	}
 	

@@ -18,10 +18,11 @@ package me.remigio07.chatplugin.api.server.player;
 import java.net.InetAddress;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
@@ -44,11 +45,11 @@ import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
  */
 public abstract class ServerPlayerManager extends PlayerManager {
 	
-	private static Map<UUID, Version> playersVersions = new HashMap<>();
-	private static Map<UUID, Long> playersLoginTimes = new HashMap<>();
-	private static List<UUID> bedrockPlayers = new ArrayList<>();
+	private static Map<UUID, Version> playersVersions = new ConcurrentHashMap<>();
+	private static Map<UUID, Long> playersLoginTimes = new ConcurrentHashMap<>();
+	private static List<UUID> bedrockPlayers = new CopyOnWriteArrayList<>();
 	protected boolean everyWorldEnabled;
-	protected Map<UUID, ChatPluginServerPlayer> players = new HashMap<>();
+	protected Map<UUID, ChatPluginServerPlayer> players = new ConcurrentHashMap<>();
 	protected List<String> enabledWorlds = new ArrayList<>();
 	protected int storageCount;
 	
@@ -66,7 +67,7 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	public void unload() throws ChatPluginManagerException {
 		enabled = everyWorldEnabled = false;
 		
-		new ArrayList<>(players.keySet()).forEach(player -> unloadPlayer(player));
+		players.keySet().forEach(this::unloadPlayer);
 		players.clear();
 		enabledWorlds.clear();
 		
@@ -128,7 +129,7 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	public ChatPluginServerPlayer getPlayer(String name, boolean checkPattern, boolean ignoreCase) {
 		if (checkPattern && !Utils.isValidUsername(name))
 			throw new IllegalArgumentException("Username \"" + name + "\" is invalid as it does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
-		for (ChatPluginServerPlayer player : getPlayers().values())
+		for (ChatPluginServerPlayer player : players.values())
 			if (ignoreCase ? player.getName().equalsIgnoreCase(name) : player.getName().equals(name))
 				return player;
 		return null;

@@ -186,19 +186,23 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 		bukkitValue.setScoreboard(scoreboard);
 		serverPlayer.setObjective(new ObjectiveAdapter(objective));
 		
+		Boolean longTeams = TablistManager.getInstance().isEnabled() ? VersionUtils.getVersion().isAtLeast(Version.V1_13) && serverPlayer.getVersion().isAtLeast(Version.V1_13) : null;
+		
 		for (Rank rank : RankManager.getInstance().getRanks()) {
 			Team team = scoreboard.registerNewTeam(rank.getTeamName());
 			
-			if (!TablistManager.getInstance().isEnabled() || rank.getTag().toString().isEmpty())
+			if (longTeams == null || rank.getTag().toString().isEmpty())
 				continue;
-			team.setPrefix(PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPrefixFormat(), serverPlayer, TablistManager.getInstance().getPlaceholderTypes()));
+			String prefix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPrefixFormat(), serverPlayer, TablistManager.getInstance().getPlaceholderTypes());
+			String suffix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getSuffixFormat(), serverPlayer, TablistManager.getInstance().getPlaceholderTypes());
 			
 			if (VersionUtils.getVersion().isAtLeast(Version.V1_12)) {
 				String lastColors = ChatColor.getLastColors(team.getPrefix());
 				
 				if (!lastColors.isEmpty())
 					team.setColor((lastColors.startsWith("\u00A7x") ? ChatColor.of(lastColors.substring(3, 14).replace("\u00A7", "")).getClosestDefaultColor() : ChatColor.getByChar(lastColors.charAt(1))).bukkitValue());
-			} team.setSuffix(PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getSuffixFormat(), serverPlayer, TablistManager.getInstance().getPlaceholderTypes()));
+			} team.setPrefix(prefix.length() > (longTeams ? 64 : 16) ? me.remigio07.chatplugin.common.util.Utils.abbreviate(prefix, longTeams ? 64 : 16, false) : prefix);
+			team.setSuffix(suffix.length() > (longTeams ? 64 : 16) ? me.remigio07.chatplugin.common.util.Utils.abbreviate(suffix, longTeams ? 64 : 16, false) : suffix);
 		} for (ChatPluginServerPlayer other : getPlayers().values()) {
 			scoreboard.getTeam(other.getRank().getTeamName()).addPlayer(other.toAdapter().bukkitValue());
 			other.getObjective().bukkitValue().getScoreboard().getTeam(serverPlayer.getRank().getTeamName()).addPlayer(bukkitValue);

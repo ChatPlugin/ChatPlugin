@@ -639,7 +639,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		if (fileMissing) {
 			ranks.addDefault("ranks.user.display-name", "User");
-			ranks.addDefault("ranks.user.prefix", "&8[&f&lUser&8] &f");
+			ranks.addDefault("ranks.user.prefix", "&8[&f&lUser&8] ");
 			ranks.addDefault("ranks.user.suffix", "");
 			ranks.addDefault("ranks.user.tag.prefix", "");
 			ranks.addDefault("ranks.user.tag.suffix", "");
@@ -648,18 +648,18 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			ranks.addDefault("ranks.user.descriptions.italian", "&aRank: &f&lUser\n&aTipo: &fpredefinito");
 			
 			ranks.addDefault("ranks.vip.display-name", "VIP");
-			ranks.addDefault("ranks.vip.prefix", "&8[&d&lVIP&8] &f");
+			ranks.addDefault("ranks.vip.prefix", "&8[&d&lVIP&8] ");
 			ranks.addDefault("ranks.vip.suffix", " &a[*]");
-			ranks.addDefault("ranks.vip.tag.prefix", "&8[&d&lV&8] &f");
+			ranks.addDefault("ranks.vip.tag.prefix", "&8[&d&lV&8] ");
 			ranks.addDefault("ranks.vip.tag.suffix", " &a[*]");
 			ranks.addDefault("ranks.vip.tag.name-color", "");
 			ranks.addDefault("ranks.vip.descriptions.english", "&aRank: &d&lVIP\n&aType: &fpaid &o($4.99)");
 			ranks.addDefault("ranks.vip.descriptions.italian", "&aRank: &d&lVIP\n&aTipo: &fpagato &o($4.99)");
 			
 			ranks.addDefault("ranks.staff.display-name", "Staff");
-			ranks.addDefault("ranks.staff.prefix", "&8[&b&lStaff&8] &f");
+			ranks.addDefault("ranks.staff.prefix", "&8[&b&lStaff&8] ");
 			ranks.addDefault("ranks.staff.suffix", " &4[*]");
-			ranks.addDefault("ranks.staff.tag.prefix", "&8[&b&lS&8] &f");
+			ranks.addDefault("ranks.staff.tag.prefix", "&8[&b&lS&8] ");
 			ranks.addDefault("ranks.staff.tag.suffix", " &4[*]");
 			ranks.addDefault("ranks.staff.tag.name-color", "&f");
 			ranks.addDefault("ranks.staff.chat-color", "&f");

@@ -120,11 +120,13 @@ public class SpongePlayerManager extends ServerPlayerManager {
 		for (Rank rank : RankManager.getInstance().getRanks()) {
 			scoreboard.registerTeam(Team.builder().name(rank.getTeamName()).build());
 			
-			if (!TablistManager.getInstance().isEnabled() ||  rank.getTag().toString().isEmpty())
+			if (!TablistManager.getInstance().isEnabled() || rank.getTag().toString().isEmpty())
 				continue;
 			Team team = scoreboard.getTeam(rank.getTeamName()).get();
 			String prefix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPrefixFormat(), serverPlayer, TablistManager.getInstance().getPlaceholderTypes());
+			String suffix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getSuffixFormat(), serverPlayer, TablistManager.getInstance().getPlaceholderTypes());
 			
+			// not future-proof (Sponge v8/1.13+)
 			if (prefix.contains(" ")) {
 				int index = prefix.lastIndexOf(' ');
 				
@@ -134,8 +136,8 @@ public class SpongePlayerManager extends ServerPlayerManager {
 					if (ChatColor.stripColor(ChatColor.translate(str)).isEmpty())
 						prefix = prefix.substring(0, index) + str + " ";
 				}
-			} team.setPrefix(Utils.serializeSpongeText(prefix, false));
-			team.setSuffix(Utils.serializeSpongeText(PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getSuffixFormat(), serverPlayer, TablistManager.getInstance().getPlaceholderTypes()), false));
+			} team.setPrefix(Utils.serializeSpongeText(prefix.length() > 16 ? me.remigio07.chatplugin.common.util.Utils.abbreviate(prefix, 16, false) : prefix, false));
+			team.setSuffix(Utils.serializeSpongeText(suffix.length() > 16 ? me.remigio07.chatplugin.common.util.Utils.abbreviate(suffix, 16, false) : suffix, false));
 		} for (ChatPluginServerPlayer other : getPlayers().values()) {
 			scoreboard.getTeam(other.getRank().getTeamName()).get().addMember(Utils.serializeSpongeText(other.getName(), false));
 			Iterables.getFirst(other.getObjective().spongeValue().getScoreboards(), null).getTeam(serverPlayer.getRank().getTeamName()).get().addMember(Utils.serializeSpongeText(player.getName(), false));

@@ -54,7 +54,7 @@ public enum PlaceholderType {
 	 * Represents server-side placeholders.
 	 */
 	SERVER(new String[] {
-			"online", "online_total", "max_players", "vanished",
+			"online", "online@server-id", "online_total", "max_players", "vanished", "vanished@server-id",
 			"date_full", "date_day", "date_hour",
 			"enabled_worlds", "enabled_players", "enabled_managers", "startup_time", "last_reload_time", "uptime", "random_color",
 			"plugin_version", "server_version", "server_version_protocol", "server_nms_version", "server_java_version",

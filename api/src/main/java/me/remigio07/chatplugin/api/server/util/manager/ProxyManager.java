@@ -183,14 +183,14 @@ public abstract class ProxyManager implements ChatPluginManager {
 	/**
 	 * Checks if the specified String is a valid server ID.
 	 * 
-	 * <p>Will return <code>false</code> if you specify "proxy".</p>
+	 * <p>Will return <code>false</code> if you specify "proxy" or "all", ignoring case.</p>
 	 * 
 	 * @param serverID Server ID to check
 	 * @return Whether the specified server ID is valid
 	 * @see #SERVER_ID_PATTERN
 	 */
 	public boolean isValidServerID(String serverID) {
-		return serverID.equalsIgnoreCase("proxy") ? false : SERVER_ID_PATTERN.matcher(serverID).matches();
+		return serverID.equalsIgnoreCase("proxy") || serverID.equalsIgnoreCase("all") ? false : SERVER_ID_PATTERN.matcher(serverID).matches();
 	}
 	
 	/**

@@ -60,6 +60,7 @@ import me.remigio07.chatplugin.api.server.scoreboard.event.ScoreboardEvent;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.bootstrap.SpongeBootstrapper;
+import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.bossbar.NativeBossbar;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 
@@ -161,6 +162,16 @@ public class SpongeEventManager extends EventManager {
 			VanishManager.getInstance().hide(player);
 			QuitMessageManager.getInstance().getFakeQuits().add(player.getUUID());
 		} else JoinMessageManager.getInstance().sendJoinMessage(player);
+		
+		if (ConfigurationType.CONFIG.get().getBoolean("settings.enable-update-notification") && player.hasPermission("chatplugin.update-notification"))
+			TaskManager.runAsync(() -> {
+				if (player.isLoaded()) {
+					String latestVersion = Utils.getLatestVersion();
+					
+					if (latestVersion != null)
+						player.sendTranslatedMessage("misc.update-notification", latestVersion);
+				}
+			}, 1000L);
 	}
 	
 	public void onClientConnection$Disconnect(ClientConnectionEvent.Disconnect event) {

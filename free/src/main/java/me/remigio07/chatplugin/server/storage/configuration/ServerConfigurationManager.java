@@ -143,6 +143,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		config.addDefault("settings.license-id", "");
 		config.addDefault("settings.debug", false);
+		config.addDefault("settings.enable-update-notification", true);
 		config.addDefault("settings.enable-bstats-metrics", Environment.isBukkit());
 		config.addDefault("settings.truncate-version-string", true);
 		config.addDefault("settings.use-week-timestamp", false);
@@ -307,6 +308,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("misc.invalid-server", "{pfx} &f{0} &cis not a valid server. Is the proxy online with ChatPlugin installed?");
 		messages.addDefault("misc.invalid-ip-address", "{pfx} &f{0} &cis not a valid IP address.");
 		messages.addDefault("misc.database-error", "{pfx} &f{0} &coccurred while trying to access the database: &f{1}&c.");
+		messages.addDefault("misc.update-notification", "{pfx} &eYou are running an outdated version of ChatPlugin. It is recommended to update to the latest version (&f{0}&e) to avoid bugs and incompatibilities.");
 		
 		messages.addDefault("commands.help.free.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/whisper &8- &eSend a private message to another player.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.\n&f&l/chatcolor &8- &eChange your chat's default color.\n&f&l/emojistone &8- &eChange your emojis' default tone.");
 		messages.addDefault("commands.help.free.admin", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/staffchat &8- &eVery handy cross-server Staff chat.\n&f&l/socialspy &8- &eSpy other players' private messages.\n&f&l/rangedchatspy &8- &eSpy other players' local messages.\n&f&l/iplookup &8- &ePerform a lookup of an IP address.\n&f&l/lastseen &8- &eCheck when a player was last seen.\n&f&l/clearchat &8- &eClear chat to hide last messages.\n&f&l/muteall &8- &eToggle chat for non Staff members.");

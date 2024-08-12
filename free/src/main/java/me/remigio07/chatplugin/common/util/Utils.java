@@ -105,17 +105,24 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 	
 	public static void startUpdateChecker() {
 		TaskManager.scheduleAsync(() -> {
-			try (Scanner scanner = new Scanner(new URI("https://api.spigotmc.org/legacy/update.php?resource=115169/~").toURL().openStream())) {
-				if (scanner.hasNext()) {
-					String latestVersion = scanner.next();
-					
-					if (!latestVersion.equals(ChatPlugin.VERSION) && VersionChange.getVersionChange(ChatPlugin.VERSION, latestVersion).isSupported())
-						LogManager.log("You are running an outdated version of ChatPlugin. It is recommended to update to the latest version ({0}) to avoid bugs and incompatibilities.", 1, latestVersion);
-				}
-			} catch (Exception e) {
-				LogManager.log("Unable to check for updates using SpigotMC's API: {0}", 2, e.getMessage());
+			String latestVersion = getLatestVersion();
+			
+			if (latestVersion != null)
+				LogManager.log("You are running an outdated version of ChatPlugin. It is recommended to update to the latest version ({0}) to avoid bugs and incompatibilities.", 1, latestVersion);
+		}, 0L, 14400000L);
+	}
+	
+	public static String getLatestVersion() {
+		try (Scanner scanner = new Scanner(new URI("https://api.spigotmc.org/legacy/update.php?resource=115169/~").toURL().openStream())) {
+			if (scanner.hasNext()) {
+				String latestVersion = scanner.next();
+				
+				if (!latestVersion.equals(ChatPlugin.VERSION) && VersionChange.getVersionChange(ChatPlugin.VERSION, latestVersion).isSupported())
+					return latestVersion;
 			}
-		}, 0L, 7200000L);
+		} catch (Exception e) {
+			LogManager.log("Unable to check for updates using SpigotMC's API: {0}", 2, e.getMessage());
+		} return null;
 	}
 	
 	public static boolean isBedrockPlayer(UUID player) {

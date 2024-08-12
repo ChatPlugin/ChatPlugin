@@ -40,6 +40,7 @@ misc:
   invalid-server: '{pfx} &f{0} &cnon è un server valido. Il proxy è online con ChatPlugin installato?'
   invalid-ip-address: '{pfx} &f{0} &cnon è un indirizzo IP valido.'
   database-error: '{pfx} &cSi è verificata una &f{0} &cdurante l''accesso al database: &f{1}&c.'
+  update-notification: '{pfx} &eStai eseguendo una versione obsoleta di ChatPlugin. Si consiglia aggiornare all''ultima versione (&f{0}&e) per evitare bugs ed incompatibilità.'
 commands:
   help:
     free:

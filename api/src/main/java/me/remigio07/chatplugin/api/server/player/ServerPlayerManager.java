@@ -48,7 +48,6 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	private static Map<UUID, Version> playersVersions = new ConcurrentHashMap<>();
 	private static Map<UUID, Long> playersLoginTimes = new ConcurrentHashMap<>();
 	private static List<UUID> bedrockPlayers = new CopyOnWriteArrayList<>();
-	protected boolean everyWorldEnabled;
 	protected Map<UUID, ChatPluginServerPlayer> players = new ConcurrentHashMap<>();
 	protected List<String> enabledWorlds = new ArrayList<>();
 	protected int storageCount;
@@ -59,13 +58,14 @@ public abstract class ServerPlayerManager extends PlayerManager {
 			storageCount = StorageConnector.getInstance().count(DataContainer.PLAYERS).intValue();
 		} catch (SQLException e) {
 			throw new ChatPluginManagerException(this, e);
-		} if (everyWorldEnabled)
+		} if (ConfigurationType.CONFIG.get().getStringList("settings.enabled-worlds").contains("*")
+				|| ConfigurationType.CONFIG.get().getBoolean("settings.enable-every-world")) // compatibility with older ChatPlugin versions
 			enabledWorlds = Utils.getWorlds();
 	}
 	
 	@Override
 	public void unload() throws ChatPluginManagerException {
-		enabled = everyWorldEnabled = false;
+		enabled = false;
 		
 		players.keySet().forEach(this::unloadPlayer);
 		players.clear();
@@ -136,17 +136,6 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	}
 	
 	/**
-	 * Checks if every world is enabled by default.
-	 * 
-	 * <p><strong>Found at:</strong> "settings.enable-every-world" in {@link ConfigurationType#CONFIG}</p>
-	 * 
-	 * @return Whether every world is enabled
-	 */
-	public boolean isEveryWorldEnabled() {
-		return everyWorldEnabled;
-	}
-	
-	/**
 	 * Gets the list of the enabled worlds.
 	 * 
 	 * <p>Every feature of this plugin only
@@ -161,15 +150,13 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	}
 	
 	/**
-	 * Checks if a world is contained in the enabled worlds list.
-	 * 
-	 * <p>Will return <code>true</code> if {@link #isEveryWorldEnabled()}.</p>
+	 * Checks if a world is contained in the enabled worlds' list.
 	 * 
 	 * @param world Name of the world to check
 	 * @return Whether the world is enabled
 	 */
 	public boolean isWorldEnabled(String world) {
-		return isEveryWorldEnabled() || enabledWorlds.contains(world);
+		return enabledWorlds.contains(world);
 	}
 	
 	/**

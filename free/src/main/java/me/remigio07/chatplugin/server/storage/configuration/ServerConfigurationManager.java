@@ -18,9 +18,6 @@ package me.remigio07.chatplugin.server.storage.configuration;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.bukkit.Bukkit;
-import org.spongepowered.api.Sponge;
-
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationManager;
@@ -146,14 +143,13 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		config.addDefault("settings.license-id", "");
 		config.addDefault("settings.debug", false);
-		config.addDefault("settings.enable-every-world", true);
 		config.addDefault("settings.enable-bstats-metrics", Environment.isBukkit());
 		config.addDefault("settings.truncate-version-string", true);
 		config.addDefault("settings.use-week-timestamp", false);
 		config.addDefault("settings.anticheat-integration.reasons-start-with", Arrays.asList("[Matrix]", "[Vulcan]"));
 		config.addDefault("settings.anticheat-integration.violations-expiration-timeout", "1m");
 		config.addDefault("settings.storage-placeholders-update-timeout", "1m");
-		config.addDefault("settings.enabled-worlds", Arrays.asList(Environment.isBukkit() ? Bukkit.getWorlds().get(0).getName() : Sponge.getServer().getWorlds().iterator().next().getName()));
+		config.addDefault("settings.enabled-worlds", Arrays.asList("*"));
 		config.addDefault("settings.chat-event-priority", Environment.isBukkit() ? "HIGH" : "LATE");
 		config.addDefault("settings.displayed-memory.unit", "MEGABYTE");
 		config.addDefault("settings.displayed-memory.decimals", 0);

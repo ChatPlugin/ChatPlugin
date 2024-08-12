@@ -80,13 +80,13 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 		instance = this;
 		long ms = System.currentTimeMillis();
 		
-		if (!(everyWorldEnabled = ConfigurationType.CONFIG.get().getBoolean("settings.enable-every-world"))) {
+		super.load();
+		
+		if (enabledWorlds.isEmpty())
 			for (String world : ConfigurationType.CONFIG.get().getStringList("settings.enabled-worlds"))
 				if (Bukkit.getWorld(world) == null)
 					LogManager.log("World \"{0}\" specified at \"settings.enabled-worlds\" in config.yml does not exist (yet); skipping it.", 2, world);
 				else enabledWorlds.add(world);
-		} super.load();
-		
 		if (VersionUtils.getVersion().isOlderThan(Version.V1_12)) {
 			localeChangeTaskID = TaskManager.scheduleAsync(() -> {
 				for (ChatPluginServerPlayer serverPlayer : new ArrayList<>(players.values())) {

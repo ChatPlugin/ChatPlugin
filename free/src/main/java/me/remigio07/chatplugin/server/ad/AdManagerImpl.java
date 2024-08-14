@@ -18,9 +18,11 @@ package me.remigio07.chatplugin.server.ad;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.netty.util.internal.ThreadLocalRandom;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.adapter.text.ClickActionAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
@@ -65,9 +67,9 @@ public class AdManagerImpl extends AdManager {
 				continue;
 			if (isValidAdID(id)) {
 				if (getAd(id) == null) {
-					HashMap<Language, String> texts = new HashMap<>();
-					HashMap<Language, String> hovers = new HashMap<>();
-					HashMap<Language, String> clickValues = new HashMap<>();
+					Map<Language, String> texts = new HashMap<>();
+					Map<Language, String> hovers = new HashMap<>();
+					Map<Language, String> clickValues = new HashMap<>();
 					List<Rank> disabledRanks = new ArrayList<>();
 					
 					for (Language language : LanguageManager.getInstance().getLanguages()) {
@@ -158,26 +160,26 @@ public class AdManagerImpl extends AdManager {
 		
 		if (event.isCancelled())
 			return;
-		TextComponent text = Utils.deserializeLegacy(checkPrefixes(ad.getText(language, true)), true);
+		List<TextComponent> components = new ArrayList<>();
 		
+		if (player.getVersion().isAtLeast(Version.V1_8)) {
+			String[] lines = ad.getText(language, true).split("\n");
+			StringBuilder sb = new StringBuilder();
+			
+			for (int i = 0; i < lines.length; i++)
+				sb.append((hasPrefix && !lines[i].isEmpty() ? prefix + lines[i] : lines[i]) + (i == lines.length - 1 ? "" : "\n"));
+			components.add(Utils.deserializeLegacy(sb.toString(), true));
+		} else for (String line : ad.getText(language, true).split("\n")) // https://bugs.mojang.com/browse/MC-39987
+			components.add(Utils.deserializeLegacy((hasPrefix && !line.isEmpty() ? prefix + line : line), true));
 		if (ad.getHover(language) != null)
-			text = text.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(ad.getHover(language), true)));
+			for (int i = 0; i < components.size(); i++)
+				components.set(i, components.get(i).hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(ad.getHover(language), true))));
 		if (ad.getClickAction() != null && ad.getClickValue(language) != null)
-			text = text.clickEvent(ClickEvent.clickEvent(Action.NAMES.value(ad.getClickAction().getID()), ad.getClickValue(language)));
+			for (int i = 0; i < components.size(); i++)
+				components.set(i, components.get(i).clickEvent(ClickEvent.clickEvent(Action.NAMES.value(ad.getClickAction().getID()), ad.getClickValue(language))));
 		if (soundEnabled)
 			player.playSound(sound);
-		((BaseChatPluginServerPlayer) player).sendMessage(text);
-	}
-	
-	protected String checkPrefixes(String text) {
-		if (!hasPrefix || text.isEmpty())
-			return text;
-		StringBuilder sb = new StringBuilder();
-		
-		for (String line : text.split("\n"))
-			sb.append(prefix + line + "\n");
-		sb.delete(sb.length() - 2, sb.length());
-		return sb.toString();
+		((BaseChatPluginServerPlayer) player).sendMessage(components.toArray(new TextComponent[1]));
 	}
 	
 }

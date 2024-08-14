@@ -180,6 +180,6 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 	
 	public abstract double getDistance(double x, double y, double z);
 	
-	public abstract void sendMessage(Component component);
+	public abstract void sendMessage(Component... components);
 	
 }

@@ -38,6 +38,7 @@ import me.remigio07.chatplugin.api.common.storage.StorageConnector;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector.WhereCondition;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector.WhereCondition.WhereOperator;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
@@ -168,7 +169,10 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public void sendMessage(String message) {
-		player.sendMessage(Utils.serializeSpongeText(message, false));
+		if (version.isOlderThan(Version.V1_8)) // https://bugs.mojang.com/browse/MC-39987
+			for (String str : message.split("\n"))
+				player.sendMessage(Utils.serializeSpongeText(str, false));
+		else player.sendMessage(Utils.serializeSpongeText(message, false));
 	}
 	
 	@Override
@@ -189,8 +193,9 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	}
 	
 	@Override
-	public void sendMessage(Component component) {
-		audience.sendMessage(component);
+	public void sendMessage(Component... components) {
+		for (Component component : components)
+			audience.sendMessage(component);
 	}
 	
 	@Override

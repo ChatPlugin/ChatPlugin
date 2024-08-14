@@ -101,6 +101,7 @@ public class SpongePlayerManager extends ServerPlayerManager {
 		
 		Objective objective = scoreboard.getObjective("scoreboard").get();
 		
+		// custom suffix
 		if (CustomSuffixManager.getInstance().isEnabled()) {
 			scoreboard.addObjective(Objective.builder().name("tablist_suffix").criterion(CustomSuffixManager.getInstance().getRenderType() == RenderType.HEARTS ? Criteria.HEALTH : Criteria.DUMMY).build());
 			
@@ -109,7 +110,10 @@ public class SpongePlayerManager extends ServerPlayerManager {
 			if (VersionUtils.getVersion().isAtLeast(Version.V1_9))
 				customSuffix.setDisplayMode(CustomSuffixManager.getInstance().getRenderType().spongeValue());
 			scoreboard.updateDisplaySlot(customSuffix, DisplaySlots.LIST);
-		} for (int i = 0; i < 15; i++) {
+		}
+		
+		// scoreboard
+		for (int i = 0; i < 15; i++) {
 			Team team = Team.builder().name("line_" + i).build();
 			
 			scoreboard.registerTeam(team);
@@ -117,6 +121,14 @@ public class SpongePlayerManager extends ServerPlayerManager {
 		} player.spongeValue().setScoreboard(scoreboard);
 		serverPlayer.setObjective(new ObjectiveAdapter(objective));
 		
+		if (ScoreboardManager.getInstance().getScoreboard("default") != null)
+			ScoreboardManager.getInstance().getScoreboard("default").addPlayer(serverPlayer);
+		if (!serverPlayer.isPlayerStored() && ScoreboardManager.getInstance().getScoreboard("first-join-event") != null)
+			ScoreboardManager.getInstance().getScoreboard("first-join-event").addPlayer(serverPlayer);
+		else if (ScoreboardManager.getInstance().getScoreboard("join-event") != null)
+			ScoreboardManager.getInstance().getScoreboard("join-event").addPlayer(serverPlayer);
+		
+		// ranks
 		for (Rank rank : RankManager.getInstance().getRanks()) {
 			scoreboard.registerTeam(Team.builder().name(rank.getTeamName()).build());
 			
@@ -150,15 +162,9 @@ public class SpongePlayerManager extends ServerPlayerManager {
 			new QuitPacketImpl(serverPlayer);
 		if (VanishManager.getInstance().isEnabled())
 			VanishManager.getInstance().update(serverPlayer, false);
-		if (ScoreboardManager.getInstance().getScoreboard("default") != null)
-			ScoreboardManager.getInstance().getScoreboard("default").addPlayer(serverPlayer);
-		if (!serverPlayer.isPlayerStored() && ScoreboardManager.getInstance().getScoreboard("first-join-event") != null)
-			ScoreboardManager.getInstance().getScoreboard("first-join-event").addPlayer(serverPlayer);
-		else if (ScoreboardManager.getInstance().getScoreboard("join-event") != null)
-			ScoreboardManager.getInstance().getScoreboard("join-event").addPlayer(serverPlayer);
 		players.put(player.getUUID(), serverPlayer);
-		new ServerPlayerLoadEvent(serverPlayer, (int) ms).call();
-		LogManager.log("Player {0} has been loaded in {1} ms.", 4, player.getName(), ms = System.currentTimeMillis() - ms);
+		new ServerPlayerLoadEvent(serverPlayer, (int) (ms = System.currentTimeMillis() - ms)).call();
+		LogManager.log("Player {0} has been loaded in {1} ms.", 4, player.getName(), ms);
 		return (int) ms;
 	}
 	

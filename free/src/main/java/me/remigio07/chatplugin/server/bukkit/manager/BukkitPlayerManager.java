@@ -173,19 +173,31 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 		Objective objective = scoreboard.registerNewObjective("scoreboard", "dummy");
 		boolean atLeastV1_9 = VersionUtils.getVersion().isAtLeast(Version.V1_9);
 		
+		// custom suffix
 		if (CustomSuffixManager.getInstance().isEnabled()) {
 			Objective customSuffix = scoreboard.registerNewObjective("tablist_suffix", CustomSuffixManager.getInstance().getRenderType() == RenderType.HEARTS ? "health" : "dummy");
 			
 			if (VersionUtils.getVersion().isAtLeast(Version.V1_13_2))
 				customSuffix.setRenderType(CustomSuffixManager.getInstance().getRenderType().bukkitValue());
 			customSuffix.setDisplaySlot(DisplaySlot.PLAYER_LIST);
-		} for (int i = 0; i < 15; i++)
+		}
+		
+		// scoreboard
+		for (int i = 0; i < 15; i++)
 			if (atLeastV1_9)
 				scoreboard.registerNewTeam("line_" + i).addEntry(Scoreboard.SCORES[i]);
 			else BukkitReflection.invokeMethod("Scoreboard", "addPlayerToTeam", BukkitReflection.invokeMethod("CraftScoreboard", "getHandle", scoreboard), Scoreboard.SCORES[i], scoreboard.registerNewTeam("line_" + i).getName());
 		bukkitValue.setScoreboard(scoreboard);
 		serverPlayer.setObjective(new ObjectiveAdapter(objective));
 		
+		if (ScoreboardManager.getInstance().getScoreboard("default") != null)
+			ScoreboardManager.getInstance().getScoreboard("default").addPlayer(serverPlayer);
+		if (!serverPlayer.isPlayerStored() && ScoreboardManager.getInstance().getScoreboard("first-join-event") != null)
+			ScoreboardManager.getInstance().getScoreboard("first-join-event").addPlayer(serverPlayer);
+		else if (ScoreboardManager.getInstance().getScoreboard("join-event") != null)
+			ScoreboardManager.getInstance().getScoreboard("join-event").addPlayer(serverPlayer);
+		
+		// ranks
 		Boolean longTeams = TablistManager.getInstance().isEnabled() ? VersionUtils.getVersion().isAtLeast(Version.V1_13) && serverPlayer.getVersion().isAtLeast(Version.V1_13) : null;
 		
 		for (Rank rank : RankManager.getInstance().getRanks()) {
@@ -215,15 +227,9 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 			new QuitPacketImpl(serverPlayer);
 		if (VanishManager.getInstance().isEnabled())
 			VanishManager.getInstance().update(serverPlayer, false);
-		if (ScoreboardManager.getInstance().getScoreboard("default") != null)
-			ScoreboardManager.getInstance().getScoreboard("default").addPlayer(serverPlayer);
-		if (!serverPlayer.isPlayerStored() && ScoreboardManager.getInstance().getScoreboard("first-join-event") != null)
-			ScoreboardManager.getInstance().getScoreboard("first-join-event").addPlayer(serverPlayer);
-		else if (ScoreboardManager.getInstance().getScoreboard("join-event") != null)
-			ScoreboardManager.getInstance().getScoreboard("join-event").addPlayer(serverPlayer);
 		players.put(player.getUUID(), serverPlayer);
-		new ServerPlayerLoadEvent(serverPlayer, (int) ms).call();
-		LogManager.log("Player {0} has been loaded in {1} ms.", 4, player.getName(), ms = System.currentTimeMillis() - ms);
+		new ServerPlayerLoadEvent(serverPlayer, (int) (ms = System.currentTimeMillis() - ms)).call();
+		LogManager.log("Player {0} has been loaded in {1} ms.", 4, player.getName(), ms);
 		return (int) ms;
 	}
 	

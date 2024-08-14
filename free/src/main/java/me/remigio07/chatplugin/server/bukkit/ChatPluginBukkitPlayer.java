@@ -183,7 +183,10 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public void sendMessage(String message) {
-		player.sendMessage(message);
+		if (version.isOlderThan(Version.V1_8)) // https://bugs.mojang.com/browse/MC-39987
+			for (String str : message.split("\n"))
+				player.sendMessage(str);
+		else player.sendMessage(message);
 	}
 	
 	@Override
@@ -204,8 +207,9 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	}
 	
 	@Override
-	public void sendMessage(Component component) {
-		audience.sendMessage(component);
+	public void sendMessage(Component... components) {
+		for (Component component : components)
+			audience.sendMessage(component);
 	}
 	
 	@Override

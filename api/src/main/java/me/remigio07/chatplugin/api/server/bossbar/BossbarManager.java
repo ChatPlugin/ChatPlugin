@@ -73,7 +73,7 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	 */
 	public static final String TITLE_TOO_LONG = "\u00A7cTitle exceeds \u00A7f64 \u00A7cchars";
 	protected static BossbarManager instance;
-	protected boolean enabled, abbreviateLongTitles, randomOrder, loadingBossbarEnabled;
+	protected boolean enabled, randomOrder, abbreviateLongTitles, sendFullToLegacyPlayers, loadingBossbarEnabled;
 	protected double reflectionWitherTeleportationDistance;
 	protected long reflectionWitherTeleportationTimeout, sendingTimeout, loadingBossbarSendingTimeout, timerTaskID = -1, reflectionTimerTaskID = -1, lastRunTime = -1;
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
@@ -116,6 +116,20 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	 */
 	public boolean shouldAbbreviateLongTitles() {
 		return abbreviateLongTitles;
+	}
+	
+	/**
+	 * Checks if bossbars sent to legacy (pre-1.9) players should always be full.
+	 * 
+	 * <p>This is a workaround to prevent players from seeing invisible
+	 * withers in the distance when the bossbar is &lt;= 50%.</p>
+	 * 
+	 * <p><strong>Found at:</strong> "bossbars.settings.send-full-to-legacy-players" in {@link ConfigurationType#BOSSBARS}</p>
+	 * 
+	 * @return Whether to send full bossbars to legacy players
+	 */
+	public boolean shouldSendFullToLegacyPlayers() {
+		return sendFullToLegacyPlayers;
 	}
 	
 	/**
@@ -199,7 +213,7 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	}
 	
 	/**
-	 * Checks if a world is contained in the enabled worlds list.
+	 * Checks if a world is contained in the enabled worlds' list.
 	 * 
 	 * @param world Name of the world to check
 	 * @return Whether the world is enabled

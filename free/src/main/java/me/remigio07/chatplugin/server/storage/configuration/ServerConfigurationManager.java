@@ -931,6 +931,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		bossbars.addDefault("bossbars.settings.enabled", VersionUtils.getVersion().isAtLeast(Version.V1_9));
 		bossbars.addDefault("bossbars.settings.random-order", false);
 		bossbars.addDefault("bossbars.settings.abbreviate-long-titles", true);
+		bossbars.addDefault("bossbars.settings.send-full-to-legacy-players", true);
 		bossbars.addDefault("bossbars.settings.reflection-wither-teleportation.distance", 42.0D);
 		bossbars.addDefault("bossbars.settings.reflection-wither-teleportation.timeout-ms", 250);
 		bossbars.addDefault("bossbars.settings.sending-timeout-ms", 10000);

@@ -211,6 +211,8 @@ public class JSONConnector extends FlatFileConnector {
 	public void setData(DataContainer container, String position, int id, @Nullable(why = "Data will become SQL NULL if null") Object data) throws IOException {
 		if (container == DataContainer.PUBLIC_MESSAGES || container == DataContainer.PRIVATE_MESSAGES)
 			throw new IllegalArgumentException("Unable to set data to container " + container.getName() + " using an ID since that container does not have IDs");
+		if (jsons.get(container).get(String.valueOf(id)) == null)
+			jsons.get(container).put(String.valueOf(id), new JsonObject());
 		((JsonObject) jsons.get(container).get(String.valueOf(id))).put(adaptPosition(position), adaptNumber(data));
 		save(container);
 	}

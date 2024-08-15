@@ -82,11 +82,11 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Checks if muted players should be able to send private messages.
+	 * Checks if private messages sent by muted players should be blocked.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.private-messages.muted-players-blocked" in {@link ConfigurationType#CHAT}</p>
 	 * 
-	 * @return Whether muted players can send private messages
+	 * @return Whether to block private messages sent by muted players
 	 */
 	public boolean areMutedPlayersBlocked() {
 		return mutedPlayersBlocked;
@@ -110,7 +110,7 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	 * 
 	 * <p><strong>Found at:</strong> "chat.private-messages.advancements.icon.glowing" in {@link ConfigurationType#CHAT}</p>
 	 * 
-	 * @return Whether the advancements icon should have the glowing effect
+	 * @return Whether the advancements' icon should have the glowing effect
 	 */
 	public boolean isAdvancementsIconGlowing() {
 		return advancementsIconGlowing;
@@ -194,7 +194,7 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	 * 
 	 * <p><strong>Found at:</strong> "chat.private-messages.advancements.format"</p>
 	 * 
-	 * @return Received messages' advancement format
+	 * @return Received private messages' advancement format
 	 */
 	public String getAdvancementsFormat() {
 		return advancementsFormat;

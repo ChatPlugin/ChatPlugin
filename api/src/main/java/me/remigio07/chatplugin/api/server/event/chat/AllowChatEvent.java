@@ -16,13 +16,10 @@
 package me.remigio07.chatplugin.api.server.event.chat;
 
 import me.remigio07.chatplugin.api.common.event.CancellableEvent;
-import me.remigio07.chatplugin.api.server.chat.ChatManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
  * Represents an event called before a player's message is sent.
- * 
- * @see ChatManager#handleChatEvent(ChatPluginServerPlayer, String)
  */
 public class AllowChatEvent extends PublicMessageEvent implements CancellableEvent {
 	

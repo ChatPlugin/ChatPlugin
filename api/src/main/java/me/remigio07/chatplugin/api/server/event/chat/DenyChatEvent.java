@@ -15,14 +15,11 @@
 
 package me.remigio07.chatplugin.api.server.event.chat;
 
-import me.remigio07.chatplugin.api.server.chat.ChatManager;
 import me.remigio07.chatplugin.api.server.chat.antispam.DenyChatReason;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
  * Represents an event called before a player's message is blocked.
- * 
- * @see ChatManager#handleChatEvent(ChatPluginServerPlayer, String)
  */
 public class DenyChatEvent extends PublicMessageEvent {
 	

@@ -57,7 +57,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * Translates an input string with placeholders, formatted for the
 	 * specified player and translated for the player's language.
 	 * 
-	 * <p>You have to indicate what placeholder types you need for the string to be translated.</p>
+	 * <p>You have to indicate what placeholder types you need for the string to be translated.
+	 * Color and formatting codes are always translated.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated
@@ -73,7 +74,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * Translates an input string with placeholders, formatted for the
 	 * specified player and translated for the specified language.
 	 * 
-	 * <p>You have to indicate what placeholder types you need for the string to be translated.</p>
+	 * <p>You have to indicate what placeholder types you need for the string to be translated.
+	 * Color and formatting codes are always translated.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated
@@ -90,7 +92,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * Translates an input string list with placeholders, formatted for the
 	 * specified player and translated for the player's language.
 	 * 
-	 * <p>You have to indicate what placeholder types you need for the string to be translated.</p>
+	 * <p>You have to indicate what placeholder types you need for the string to be translated.
+	 * Color and formatting codes are always translated.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated
@@ -106,7 +109,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * Translates an input string list with placeholders, formatted for the
 	 * specified player and translated for the specified language.
 	 * 
-	 * <p>You have to indicate what placeholder types you need for the string to be translated.</p>
+	 * <p>You have to indicate what placeholder types you need for the string to be translated.
+	 * Color and formatting codes are always translated.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated
@@ -123,6 +127,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * Translates an input string with {@link PlaceholderType#PLAYER} placeholders,
 	 * formatted for the specified player and translated for the player's language.
 	 * 
+	 * <p>Color and formatting codes are always translated.</p>
+	 * 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated
 	 * @return Translated placeholders
@@ -135,6 +141,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	/**
 	 * Translates an input string with {@link PlaceholderType#PLAYER} placeholders,
 	 * specified player and translated for the specified language.
+	 * 
+	 * <p>Color and formatting codes are always translated.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated
@@ -150,6 +158,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * Translates an input string list with {@link PlaceholderType#PLAYER} placeholders,
 	 * formatted for the specified player and translated for the player's language.
 	 * 
+	 * <p>Color and formatting codes are always translated.</p>
+	 * 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated
 	 * @return Translated placeholders
@@ -162,6 +172,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	/**
 	 * Translates an input string list with {@link PlaceholderType#PLAYER} placeholders,
 	 * formatted for the specified player and translated for the specified language.
+	 * 
+	 * <p>Color and formatting codes are always translated.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated
@@ -177,6 +189,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * Translates an input string with {@link PlaceholderType#SERVER}
 	 * placeholders, translated for the specified language.
 	 * 
+	 * <p>Color and formatting codes are always translated.</p>
+	 * 
 	 * @param input Input containing placeholders
 	 * @param language Language used to translate the placeholders
 	 * @return Translated placeholders
@@ -189,6 +203,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	/**
 	 * Translates an input string list with {@link PlaceholderType#SERVER}
 	 * placeholders, translated for the specified language.
+	 * 
+	 * <p>Color and formatting codes are always translated.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param language Language used to translate the placeholders
@@ -203,6 +219,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * Translates an input string with {@link PlaceholderType#INTEGRATIONS} placeholders,
 	 * formatted for the specified player and translated for the player's language.
 	 * 
+	 * <p>Color and formatting codes are always translated.</p>
+	 * 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated
 	 * @return Translated placeholders
@@ -215,6 +233,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	/**
 	 * Translates an input string with {@link PlaceholderType#INTEGRATIONS} placeholders,
 	 * formatted for the specified player and translated for the specified language.
+	 * 
+	 * <p>Color and formatting codes are always translated.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated
@@ -230,6 +250,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * Translates an input string list with {@link PlaceholderType#INTEGRATIONS} placeholders,
 	 * formatted for the specified player and translated for the player's language.
 	 * 
+	 * <p>Color and formatting codes are always translated.</p>
+	 * 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated
 	 * @return Translated placeholders
@@ -242,6 +264,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	/**
 	 * Translates an input string list with {@link PlaceholderType#INTEGRATIONS} placeholders,
 	 * formatted for the specified player and translated for the specified language.
+	 * 
+	 * <p>Color and formatting codes are always translated.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated
@@ -273,7 +297,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * Translates an input string with placeholders, formatted for the
 	 * specified player and translated for the specified language.
 	 * 
-	 * <p>You have to indicate what placeholder types you need for the string to be translated.</p>
+	 * <p>You have to indicate what placeholder types you need for the string to be translated.
+	 * Color and formatting codes are always translated.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated
@@ -289,6 +314,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * Translates an input string with {@link PlaceholderType#PLAYER} placeholders,
 	 * formatted for the specified player and translated for the specified language.
 	 * 
+	 * <p>Color and formatting codes are always translated.</p>
+	 * 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated
 	 * @param language Language used to translate the placeholders
@@ -302,6 +329,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * Translates an input string with {@link PlaceholderType#SERVER}
 	 * placeholders, translated for the specified language.
 	 * 
+	 * <p>Color and formatting codes are always translated.</p>
+	 * 
 	 * @param input Input containing placeholders
 	 * @param language Language used to translate the placeholders
 	 * @param translateColors Whether to {@link ChatColor#translate(String)} the output
@@ -313,6 +342,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	/**
 	 * Translates an input string with {@link PlaceholderType#INTEGRATIONS} placeholders,
 	 * formatted for the specified player and translated for the specified language.
+	 * 
+	 * <p>Color and formatting codes are always translated.</p>
 	 * 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated

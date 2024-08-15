@@ -654,7 +654,7 @@ public abstract class StorageConnector {
 	public abstract String getEngineVersion() throws SQLException;
 	
 	/**
-	 * Represents a <code>WHERE</code> condition.
+	 * Represents a <a href="https://www.w3schools.com/SQl/sql_where.asp"><code>WHERE</code></a> SQL condition.
 	 */
 	public static class WhereCondition {
 		

@@ -101,14 +101,19 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 			ServerPlayerManager.getInstance().setStorageCount(storage.count(DataContainer.PLAYERS).intValue());
 			
 			if (ChatPlugin.getInstance().isPremium()) {
-				BanManager.getInstance().setStorageCount(storage.count(DataContainer.BANS).intValue());
-				WarningManager.getInstance().setStorageCount(storage.count(DataContainer.WARNINGS).intValue());
-				KickManager.getInstance().setStorageCount(storage.count(DataContainer.KICKS).intValue());
-				MuteManager.getInstance().setStorageCount(storage.count(DataContainer.MUTES).intValue());
-				BanManager.getInstance().setStaffStorageCount(getStaffPunishments(DataContainer.BANS));
-				WarningManager.getInstance().setStaffStorageCount(getStaffPunishments(DataContainer.WARNINGS));
-				KickManager.getInstance().setStaffStorageCount(getStaffPunishments(DataContainer.KICKS));
-				MuteManager.getInstance().setStaffStorageCount(getStaffPunishments(DataContainer.MUTES));
+				if (BanManager.getInstance().isEnabled()) {				
+					BanManager.getInstance().setStorageCount(storage.count(DataContainer.BANS).intValue());
+					BanManager.getInstance().setStaffStorageCount(getStaffPunishments(DataContainer.BANS));
+				} if (WarningManager.getInstance().isEnabled()) {
+					WarningManager.getInstance().setStorageCount(storage.count(DataContainer.WARNINGS).intValue());
+					WarningManager.getInstance().setStaffStorageCount(getStaffPunishments(DataContainer.WARNINGS));
+				} if (KickManager.getInstance().isEnabled()) {
+					KickManager.getInstance().setStorageCount(storage.count(DataContainer.KICKS).intValue());
+					KickManager.getInstance().setStaffStorageCount(getStaffPunishments(DataContainer.KICKS));
+				} if (MuteManager.getInstance().isEnabled()) {
+					MuteManager.getInstance().setStorageCount(storage.count(DataContainer.MUTES).intValue());
+					MuteManager.getInstance().setStaffStorageCount(getStaffPunishments(DataContainer.MUTES));
+				}
 			} for (ChatPluginServerPlayer player : ServerPlayerManager.getInstance().getPlayers().values()) {
 				((BaseChatPluginServerPlayer) player).setMessagesSent(storage.getPlayerData(PlayersDataType.MESSAGES_SENT, player));
 				

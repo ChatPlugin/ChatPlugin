@@ -15,8 +15,8 @@
 
 package me.remigio07.chatplugin.api.server.language;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
@@ -47,7 +47,7 @@ public abstract class LanguageManager implements ChatPluginManager {
 	protected static LanguageManager instance;
 	protected boolean enabled;
 	protected LanguageDetector detector;
-	protected List<Language> languages = new ArrayList<>();
+	protected List<Language> languages = new CopyOnWriteArrayList<>();
 	protected Language mainLanguage;
 	protected long loadTime;
 	

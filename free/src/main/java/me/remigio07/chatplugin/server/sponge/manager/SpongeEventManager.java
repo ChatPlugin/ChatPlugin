@@ -15,8 +15,6 @@
 
 package me.remigio07.chatplugin.server.sponge.manager;
 
-import java.util.Arrays;
-
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Event;
@@ -38,7 +36,6 @@ import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationTyp
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
-import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.bossbar.BossbarManager;
 import me.remigio07.chatplugin.api.server.chat.ChatManager;
@@ -57,11 +54,12 @@ import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
 import me.remigio07.chatplugin.api.server.scoreboard.ScoreboardManager;
 import me.remigio07.chatplugin.api.server.scoreboard.event.EventScoreboard;
 import me.remigio07.chatplugin.api.server.scoreboard.event.ScoreboardEvent;
+import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.bootstrap.SpongeBootstrapper;
-import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.bossbar.NativeBossbar;
+import me.remigio07.chatplugin.server.chat.ChatManagerImpl;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 
 public class SpongeEventManager extends EventManager {
@@ -75,18 +73,9 @@ public class SpongeEventManager extends EventManager {
 		long ms = System.currentTimeMillis();
 		SpongeBootstrapper instance = SpongeBootstrapper.getInstance();
 		org.spongepowered.api.event.EventManager manager = Sponge.getEventManager();
-		Order chatEventOrder;
 		
-		try {
-			chatEventOrder = Order.valueOf(ConfigurationType.CONFIG.get().getString("settings.chat-event-priority").toUpperCase());
-			
-			if (Arrays.asList(Order.PRE, Order.AFTER_PRE, Order.BEFORE_POST, Order.POST).contains(chatEventOrder))
-				throw new IllegalArgumentException();
-		} catch (IllegalArgumentException e) {
-			LogManager.log("Invalid event priority ({0}) set at \"settings.chat-event-priority\" in config.yml: only FIRST, EARLY, DEFAULT, LATE and LAST are allowed; setting to default value of LATE.", 2, ConfigurationType.CONFIG.get().getString("settings.chat-event-priority"));
-			
-			chatEventOrder = Order.LATE;
-		} manager.registerListener(instance, MessageChannelEvent.Chat.class, chatEventOrder, listener);
+		if (ChatManager.getInstance().isEnabled())
+			manager.registerListener(instance, MessageChannelEvent.Chat.class, Order.valueOf(ChatManager.getInstance().getChatEventPriority()), listener);
 		manager.registerListener(instance, ClientConnectionEvent.Join.class, Order.EARLY, listener);
 		manager.registerListener(instance, ClientConnectionEvent.Disconnect.class, Order.EARLY, listener);
 		manager.registerListener(instance, PlayerChangeClientSettingsEvent.class, Order.POST, listener);
@@ -128,9 +117,17 @@ public class SpongeEventManager extends EventManager {
 		
 		if (event.isCancelled() || serverPlayer == null)
 			return;
-		ChatManager.getInstance().handleChatEvent(serverPlayer, event.getRawMessage().toPlain());
-		applyScoreboard(ScoreboardEvent.CHAT, player);
-		event.setCancelled(true);
+		String[] args = { event.getRawMessage().toPlain(), Utils.deserializeSpongeText(event.getFormatter().format()) };
+		
+		if (!((ChatManagerImpl) ChatManager.getInstance()).handleChatEvent(serverPlayer, args)) {
+			applyScoreboard(ScoreboardEvent.CHAT, player);
+			
+			if (!ChatManager.getInstance().shouldOverrideChatEvent()) {
+				event.setMessage(Utils.serializeSpongeText(args[0], false));
+				event.getFormatter().setHeader(Utils.serializeSpongeText(args[1], false));
+				return;
+			}
+		} event.setCancelled(true);
 	}
 	
 	public void onClientConnection$Join(ClientConnectionEvent.Join event) {
@@ -166,7 +163,7 @@ public class SpongeEventManager extends EventManager {
 		if (ConfigurationType.CONFIG.get().getBoolean("settings.enable-update-notification") && player.hasPermission("chatplugin.update-notification"))
 			TaskManager.runAsync(() -> {
 				if (player.isLoaded()) {
-					String latestVersion = Utils.getLatestVersion();
+					String latestVersion = me.remigio07.chatplugin.common.util.Utils.getLatestVersion();
 					
 					if (latestVersion != null)
 						player.sendTranslatedMessage("misc.update-notification", latestVersion);

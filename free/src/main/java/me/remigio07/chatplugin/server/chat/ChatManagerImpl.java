@@ -16,9 +16,13 @@
 package me.remigio07.chatplugin.server.chat;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.bukkit.event.EventPriority;
+import org.spongepowered.api.event.Order;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
@@ -51,6 +55,7 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 import me.remigio07.chatplugin.api.server.util.URLValidator;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
+import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import net.kyori.adventure.text.TextComponent;
@@ -65,22 +70,48 @@ public class ChatManagerImpl extends ChatManager {
 		if (!ConfigurationType.CHAT.get().getBoolean("chat.enabled"))
 			return;
 		chatColorCommandEnabled = ConfigurationType.CHAT.get().getBoolean("chat.color-command-enabled");
+		overrideChatEvent = ConfigurationType.CHAT.get().getBoolean("chat.event.override");
+		chatEventPriority = ConfigurationType.CHAT.get().getString("chat.event.priority");
 		format = ConfigurationType.CHAT.get().getString("chat.format");
 		consoleFormat = ConfigurationType.CHAT.get().getString("chat.console-format");
 		recognizedTLDs = ConfigurationType.CHAT.get().getStringList("chat.recognized-tlds").stream().map(String::toLowerCase).collect(Collectors.toCollection(ArrayList::new));
 		placeholderTypes = PlaceholderType.getPlaceholders(ConfigurationType.CHAT.get().getStringList("chat.placeholder-types"));
+		
+		if (Environment.isBukkit())
+			try {
+				EventPriority priority = EventPriority.valueOf(ConfigurationType.CHAT.get().getString("chat.event.priority").toUpperCase());
+				
+				if (priority == EventPriority.MONITOR)
+					throw new IllegalArgumentException();
+				chatEventPriority = priority.name();
+			} catch (IllegalArgumentException e) {
+				LogManager.log("Invalid event priority ({0}) set at \"settings.chat-event-priority\" in config.yml: only LOWEST, LOW, NORMAL, HIGH and HIGHEST are allowed; setting to default value of HIGH.", 2, ConfigurationType.CONFIG.get().getString("settings.chat-event-priority"));
+				
+				chatEventPriority = "HIGH";
+			}
+		else try {
+				Order order = Order.valueOf(ConfigurationType.CHAT.get().getString("chat.event.priority").toUpperCase());
+				
+				if (Arrays.asList(Order.PRE, Order.AFTER_PRE, Order.BEFORE_POST, Order.POST).contains(order))
+					throw new IllegalArgumentException();
+				chatEventPriority = order.name();
+			} catch (IllegalArgumentException e) {
+				LogManager.log("Invalid event priority ({0}) set at \"settings.chat-event-priority\" in config.yml: only FIRST, EARLY, DEFAULT, LATE and LAST are allowed; setting to default value of LATE.", 2, ConfigurationType.CONFIG.get().getString("settings.chat-event-priority"));
+				
+				chatEventPriority = "LATE";
+			}
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}
 	
 	@Override
 	public void unload() throws ChatPluginManagerException {
-		enabled = chatColorCommandEnabled = chatMuted = false;
+		enabled = chatColorCommandEnabled = overrideChatEvent = chatMuted = false;
 		
 		recognizedTLDs.clear();
 		placeholderTypes.clear();
 		
-		format = consoleFormat = null;
+		chatEventPriority = format = consoleFormat = null;
 	}
 	
 	@Override
@@ -94,9 +125,8 @@ public class ChatManagerImpl extends ChatManager {
 		this.chatMuted = chatMuted;
 	}
 	
-	@Override
-	public void handleChatEvent(ChatPluginServerPlayer player, String message) {
-		message = message.trim();
+	public boolean handleChatEvent(ChatPluginServerPlayer player, String... args) {
+		String message = args[0].trim();
 		boolean global = false;
 		RangedChatManager rangedChatManager = RangedChatManager.getInstance();
 		
@@ -116,12 +146,12 @@ public class ChatManagerImpl extends ChatManager {
 		preChatEvent.call();
 		
 		if (preChatEvent.isCancelled())
-			return;
+			return true;
 		
 		// 1. staff-chat
 		if (StaffChatManager.getInstance().isEnabled() && player.hasPermission("chatplugin.commands.staffchat") && StaffChatManager.getInstance().isUsingStaffChat(player.getUUID())) {
 			StaffChatManager.getInstance().sendPlayerMessage(player, message);
-			return;
+			return true;
 		} DenyChatReason<?> reason = null;
 		List<String> urls = URLValidator.getURLs(message);
 		
@@ -190,13 +220,13 @@ public class ChatManagerImpl extends ChatManager {
 					ChatLogManager.getInstance().logPublicMessage(player, message, global, reason);
 				ChatPlugin.getInstance().sendConsoleMessage(ChatColor.translate(Language.getMainLanguage().getMessage("chat.deny-chat-notify", player.getName(), reason.name(), message)), false);
 			} player.sendMessage(denyMessage);
-			return;
+			return true;
 		} AllowChatEvent allowChatEvent = new AllowChatEvent(player, message, global);
 		
 		allowChatEvent.call();
 		
 		if (allowChatEvent.isCancelled())
-			return;
+			return true;
 		if (ChatLogManager.getInstance().isEnabled())
 			ChatLogManager.getInstance().logPublicMessage(player, message, global, null);
 		if (HoverInfoManager.getInstance().isEnabled()) {
@@ -212,17 +242,22 @@ public class ChatManagerImpl extends ChatManager {
 						} ((BaseChatPluginServerPlayer) other).sendMessage(text);
 					}
 			}
-		} else for (Language language : LanguageManager.getInstance().getLanguages()) {
-			String text = PlaceholderManager.getInstance().translatePlaceholders(rangedChatManager.isEnabled() && global ? rangedChatManager.getGlobalModeFormat() : format, player, language, placeholderTypes) + message;
-			
-			for (ChatPluginServerPlayer other : language.getOnlinePlayers())
-				if (!other.getIgnoredPlayers().contains(player)) {
-					if (rangedChatManager.isEnabled() && !global && ((BaseChatPluginServerPlayer) other).getDistance(player.getX(), player.getY(), player.getZ()) > rangedChatManager.getRange()) {
-						if (other.hasRangedChatSpyEnabled())
-							other.sendMessage(PlaceholderManager.getInstance().translatePlaceholders(rangedChatManager.getSpyFormat(), player, language, placeholderTypes) + message);
-						continue;
-					} other.sendMessage(text);
-				}
+		} else {
+			if (!overrideChatEvent) {
+				args[0] = message;
+				args[1] = PlaceholderManager.getInstance().translatePlaceholders(format, player, Language.getMainLanguage(), placeholderTypes);
+			} else for (Language language : LanguageManager.getInstance().getLanguages()) {
+				String text = PlaceholderManager.getInstance().translatePlaceholders(rangedChatManager.isEnabled() && global ? rangedChatManager.getGlobalModeFormat() : format, player, language, placeholderTypes) + message;
+				
+				for (ChatPluginServerPlayer other : language.getOnlinePlayers())
+					if (!other.getIgnoredPlayers().contains(player)) {
+						if (rangedChatManager.isEnabled() && !global && ((BaseChatPluginServerPlayer) other).getDistance(player.getX(), player.getY(), player.getZ()) > rangedChatManager.getRange()) {
+							if (other.hasRangedChatSpyEnabled())
+								other.sendMessage(PlaceholderManager.getInstance().translatePlaceholders(rangedChatManager.getSpyFormat(), player, language, placeholderTypes) + message);
+							continue;
+						} other.sendMessage(text);
+					}
+			}
 		} try {
 			StorageConnector.getInstance().incrementPlayerStat(PlayersDataType.MESSAGES_SENT, player);
 		} catch (Exception e) {
@@ -231,12 +266,14 @@ public class ChatManagerImpl extends ChatManager {
 		
 		if (IntegrationType.DISCORDSRV.isEnabled())
 			IntegrationType.DISCORDSRV.get().handleChatEvent(player, message);
+		return false;
 	}
 	
-	private static void logMessage(String message) {
+	private void logMessage(String message) {
 		if (!ChatLogManager.getInstance().isEnabled() || ChatLogManager.getInstance().isPrintToLogFile())
 			LogManager.getInstance().writeToFile(ChatColor.stripColor(message));
-		ChatPlugin.getInstance().sendConsoleMessage(message, false);
+		if (overrideChatEvent)
+			ChatPlugin.getInstance().sendConsoleMessage(message, false);
 	}
 	
 }

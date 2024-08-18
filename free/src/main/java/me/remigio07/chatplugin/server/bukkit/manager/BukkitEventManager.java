@@ -62,6 +62,7 @@ import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.bossbar.NativeBossbar;
 import me.remigio07.chatplugin.server.bossbar.ReflectionBossbar;
 import me.remigio07.chatplugin.server.bukkit.integration.cosmetic.gadgetsmenu.GadgetsMenuIntegration;
+import me.remigio07.chatplugin.server.chat.ChatManagerImpl;
 import me.remigio07.chatplugin.server.command.misc.TPSCommand;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 
@@ -75,18 +76,9 @@ public class BukkitEventManager extends EventManager {
 		long ms = System.currentTimeMillis();
 		BukkitBootstrapper instance = BukkitBootstrapper.getInstance();
 		PluginManager manager = instance.getServer().getPluginManager();
-		EventPriority chatEventPriority;
 		
-		try {
-			chatEventPriority = EventPriority.valueOf(ConfigurationType.CONFIG.get().getString("settings.chat-event-priority").toUpperCase());
-			
-			if (chatEventPriority == EventPriority.MONITOR)
-				throw new IllegalArgumentException();
-		} catch (IllegalArgumentException e) {
-			LogManager.log("Invalid event priority ({0}) set at \"settings.chat-event-priority\" in config.yml: only LOWEST, LOW, NORMAL, HIGH and HIGHEST are allowed; setting to default value of HIGH.", 2, ConfigurationType.CONFIG.get().getString("settings.chat-event-priority"));
-			
-			chatEventPriority = EventPriority.HIGH;
-		} manager.registerEvent(AsyncPlayerChatEvent.class, listener, chatEventPriority, listener, instance);
+		if (ChatManager.getInstance().isEnabled())
+			manager.registerEvent(AsyncPlayerChatEvent.class, listener, EventPriority.valueOf(ChatManager.getInstance().getChatEventPriority()), listener, instance);
 		manager.registerEvent(PlayerJoinEvent.class, listener, EventPriority.LOW, listener, instance);
 		manager.registerEvent(PlayerQuitEvent.class, listener, EventPriority.LOW, listener, instance);
 		manager.registerEvent(PlayerCommandPreprocessEvent.class, listener, EventPriority.NORMAL, listener, instance);
@@ -127,9 +119,17 @@ public class BukkitEventManager extends EventManager {
 		
 		if (event.isCancelled() || serverPlayer == null || !ChatManager.getInstance().isEnabled() || (IntegrationType.GADGETSMENU.isEnabled() && ((GadgetsMenuIntegration) IntegrationType.GADGETSMENU.get()).isRenamingPet(serverPlayer)))
 			return;
-		ChatManager.getInstance().handleChatEvent(serverPlayer, event.getMessage());
-		applyScoreboard(ScoreboardEvent.CHAT, player);
-		event.setCancelled(true);
+		String[] args = { event.getMessage(), event.getFormat() };
+		
+		if (!((ChatManagerImpl) ChatManager.getInstance()).handleChatEvent(serverPlayer, args)) {
+			applyScoreboard(ScoreboardEvent.CHAT, player);
+			
+			if (!ChatManager.getInstance().shouldOverrideChatEvent()) {
+				event.setMessage(args[0]);
+				event.setFormat(args[1] + "%2$s");
+				return;
+			}
+		} event.setCancelled(true);
 	}
 	
 	public void onPlayerJoin(PlayerJoinEvent event) {

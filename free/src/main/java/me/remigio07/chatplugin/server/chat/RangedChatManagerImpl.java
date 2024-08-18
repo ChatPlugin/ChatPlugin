@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.server.chat;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
+import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.server.chat.ChatManager;
 import me.remigio07.chatplugin.api.server.chat.RangedChatManager;
 
@@ -29,7 +30,10 @@ public class RangedChatManagerImpl extends RangedChatManager {
 		
 		if (!ChatManager.getInstance().isEnabled() || !ConfigurationType.CHAT.get().getBoolean("chat.ranged-chat.enabled"))
 			return;
-		spyOnJoinEnabled = ConfigurationType.CHAT.get().getBoolean("chat.ranged-chat.spy.on-join-enabled");
+		if (!ChatManager.getInstance().shouldOverrideChatEvent()) {
+			LogManager.log("The ranged chat module is enabled but \"chat.event.override\" in chat.yml is set to false. This setup is not supported: ChatPlugin needs to take over the chat event to make its features work; disabling module.", 2);
+			return;
+		} spyOnJoinEnabled = ConfigurationType.CHAT.get().getBoolean("chat.ranged-chat.spy.on-join-enabled");
 		globalModeEnabled = ConfigurationType.CHAT.get().getBoolean("chat.ranged-chat.global-mode.enabled");
 		range = ConfigurationType.CHAT.get().getInt("chat.ranged-chat.range");
 		spyFormat = ConfigurationType.CHAT.get().getString("chat.ranged-chat.spy.format");

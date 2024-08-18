@@ -21,11 +21,7 @@ import java.util.List;
 import me.remigio07.chatplugin.api.common.chat.DenyChatReasonHandler;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.server.chat.antispam.AntispamManager;
-import me.remigio07.chatplugin.api.server.event.chat.AllowChatEvent;
-import me.remigio07.chatplugin.api.server.event.chat.DenyChatEvent;
-import me.remigio07.chatplugin.api.server.event.chat.PreChatEvent;
 import me.remigio07.chatplugin.api.server.event.chat.ToggleChatMuteEvent;
-import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 
 /**
@@ -36,8 +32,8 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 public abstract class ChatManager implements DenyChatReasonHandler {
 	
 	protected static ChatManager instance;
-	protected boolean enabled, chatColorCommandEnabled, chatMuted;
-	protected String format, consoleFormat;
+	protected boolean enabled, chatColorCommandEnabled, overrideChatEvent, chatMuted;
+	protected String chatEventPriority, format, consoleFormat;
 	protected List<String> recognizedTLDs = Collections.emptyList();
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
 	protected long loadTime;
@@ -64,12 +60,37 @@ public abstract class ChatManager implements DenyChatReasonHandler {
 	}
 	
 	/**
+	 * Checks if the chat event should be overridden by ChatPlugin or if
+	 * it should only change its format and let other plugins handle it.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.event.override" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Whether to override the chat event
+	 */
+	public boolean shouldOverrideChatEvent() {
+		return overrideChatEvent;
+	}
+	
+	/**
 	 * Checks if the chat is globally muted.
 	 * 
 	 * @return Whether the chat is muted
 	 */
 	public boolean isChatMuted() {
 		return chatMuted;
+	}
+	
+	/**
+	 * Gets the priority of ChatPlugin's chat event.
+	 * 
+	 * <p>This value depends on the implementation.</p>
+	 * 
+	 * <p><strong>Found at:</strong> "chat.event.priority" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Chat event's priority
+	 */
+	public String getChatEventPriority() {
+		return chatEventPriority;
 	}
 	
 	/**
@@ -135,19 +156,5 @@ public abstract class ChatManager implements DenyChatReasonHandler {
 	 * @see ToggleChatMuteEvent
 	 */
 	public abstract void setChatMuted(boolean chatMuted);
-	
-	/**
-	 * Handles and processes a chat event.
-	 * 
-	 * <p>This method will consider that some
-	 * players may be ignored by other players.</p>
-	 * 
-	 * @param player Player involved
-	 * @param message Message involved
-	 * @see PreChatEvent
-	 * @see AllowChatEvent
-	 * @see DenyChatEvent
-	 */
-	public abstract void handleChatEvent(ChatPluginServerPlayer player, String message);
 	
 }

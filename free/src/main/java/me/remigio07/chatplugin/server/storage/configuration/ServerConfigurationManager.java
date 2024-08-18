@@ -151,7 +151,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("settings.anticheat-integration.violations-expiration-timeout", "1m");
 		config.addDefault("settings.storage-placeholders-update-timeout", "1m");
 		config.addDefault("settings.enabled-worlds", Arrays.asList("*"));
-		config.addDefault("settings.chat-event-priority", Environment.isBukkit() ? "HIGH" : "LATE");
 		config.addDefault("settings.displayed-memory.unit", "MEGABYTE");
 		config.addDefault("settings.displayed-memory.decimals", 0);
 		config.addDefault("settings.balance-placeholder.decimals", 2);
@@ -681,6 +680,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		chat.addDefault("chat.enabled", true);
 		chat.addDefault("chat.color-command-enabled", true);
+		chat.addDefault("chat.event.override", true);
+		chat.addDefault("chat.event.priority", Environment.isBukkit() ? "HIGH" : "LATE");
 		chat.addDefault("chat.format", "&7«&f{prefix}{tag_name_color}{player}{suffix}&7» &f{chat_color}");
 		chat.addDefault("chat.console-format", "&8{world} &7<{prefix}{tag_name_color}{player}{suffix}&7> &f{chat_color}");
 		chat.addDefault("chat.recognized-tlds", Arrays.asList("com", "net", "org", "io", "me", "edu", "gov", "int", "info", "pro", "xyz", "gg", "us", "eu", "uk", "de", "fr", "es", "it", "co.uk", "jp", "ru"));

@@ -48,12 +48,12 @@ public class ConfigurationMappings {
 	@SuppressWarnings("unchecked")
 	@Deprecated
 	public ConfigurationMappings(Map<String, Object> mappings) {
-		for (Entry<String, Object> entry : (this.mappings = mappings).entrySet()) {
+		for (Entry<String, Object> entry : mappings.entrySet()) {
 			String key = entry.getKey() == null ? "null" : entry.getKey().toString();
 			
 			if (entry.getValue() instanceof Map)
-				mappings.put(key, new ConfigurationMappings((Map<String, Object>) entry.getValue()));
-			else mappings.put(key, entry.getValue());
+				this.mappings.put(key, new ConfigurationMappings((Map<String, Object>) entry.getValue()));
+			else this.mappings.put(key, entry.getValue());
 		}
 	}
 	

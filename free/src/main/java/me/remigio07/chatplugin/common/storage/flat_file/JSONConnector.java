@@ -130,7 +130,7 @@ public class JSONConnector extends FlatFileConnector {
 		JsonObject mappings = jsons.get(container);
 		int amount = 0;
 		
-		for (String id : mappings.keySet())
+		for (String id : new ArrayList<>(mappings.keySet()))
 			if (Utils.isPositiveInteger(id) && checkConditions(id, mappings, conditions)) {
 				mappings.remove(id);
 				amount++;
@@ -352,7 +352,7 @@ public class JSONConnector extends FlatFileConnector {
 		String adaptedPosition = "";
 		
 		for (int i = 0; i < parts.length; i++)
-			adaptedPosition += i == 0 ? parts[i] : JSONConnector.UPPER_CASE_POSITIONS.contains(parts[i]) ? parts[i].toUpperCase() : Utils.capitalizeEveryWord(parts[i]);
+			adaptedPosition += i == 0 ? parts[i] : UPPER_CASE_POSITIONS.contains(parts[i]) ? parts[i].toUpperCase() : Utils.capitalizeEveryWord(parts[i]);
 		return adaptedPosition;
 	}
 	

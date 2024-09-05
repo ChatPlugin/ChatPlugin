@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.common.storage.configuration;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,18 +65,13 @@ public class Configuration {
 	/**
 	 * Constructs a new configuration of type {@link ConfigurationType#CUSTOM}.
 	 * 
-	 * <p>If <code>file</code> does not exist, it will be created.</p>
+	 * <p>You may want to {@link #load()} this configuration after calling {@link #createFile()}.</p>
 	 * 
 	 * @param file Configuration's file
-	 * @throws IOException If {@link File#createNewFile()} fails
 	 * @throws IllegalArgumentException If file's name does not end with ".yml" or ".yaml" (ignoring case)
 	 */
-	public Configuration(File file) throws IOException {
-		if (!file.exists()) {
-			if (file.getParentFile() != null)
-				file.getParentFile().mkdirs();
-			file.createNewFile();
-		} if (file.getName().toLowerCase().endsWith(".yml") || file.getName().toLowerCase().endsWith(".yaml")) {
+	public Configuration(File file) {
+		if (file.getName().toLowerCase().endsWith(".yml") || file.getName().toLowerCase().endsWith(".yaml")) {
 			type = ConfigurationType.CUSTOM;
 			this.file = file;
 		} else throw new IllegalArgumentException("File name \"" + file.getName() + "\" is invalid as it does not end with \".yml\" or \".yaml\" (ignoring case)");
@@ -138,7 +134,9 @@ public class Configuration {
 	/**
 	 * Loads {@link #getMappings()} from {@link #getFile()}.
 	 * 
+	 * @throws FileNotFoundException If {@link #getFile()} does not exist
 	 * @throws IOException If something goes wrong
+	 * @see #createFile()
 	 */
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	public void load() throws IOException {

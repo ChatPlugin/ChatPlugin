@@ -40,7 +40,7 @@ public class ProxyManagerImpl extends ProxyManager {
 			LogManager.log("Invalid server ID set at \"multi-instance-mode.server-id\" in config.yml: the ID can only contain alphanumeric values, hypens or underscores and it must be between 3 and 36 characters long and it cannot be \"proxy\". You should change it even if you are not using multi instance mode.", 1);
 		} serversInformation.put(serverID, new ServerInformation(serverID, 0, 0));
 		
-		long serverInformationUpdateTimeout = Utils.getTime(ConfigurationType.CONFIG.get().getString("multi-instance-mode.server-information-update-timeout"), false);
+		long serverInformationUpdateTimeout = Utils.getTime(ConfigurationType.CONFIG.get().getString("multi-instance-mode.server-information-update-timeout"), false, false);
 		taskIDs[0] = TaskManager.scheduleAsync(() -> {
 			serversInformation.get(serverID)
 			.setOnlinePlayers(PlayerAdapter.getOnlinePlayers().size())

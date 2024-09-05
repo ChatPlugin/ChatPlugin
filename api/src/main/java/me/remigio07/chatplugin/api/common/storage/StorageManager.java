@@ -53,7 +53,7 @@ public abstract class StorageManager implements ChatPluginManager {
 	public void load() throws ChatPluginManagerException {
 		method = StorageMethod.valueOf(ConfigurationType.CONFIG.get().getString("storage.method").toUpperCase());
 		(folder = new File(ConfigurationType.CONFIG.get().getString("storage.folder").replace("{0}", ChatPlugin.getInstance().getDataFolder().getAbsolutePath()))).mkdirs();
-		playersAutoCleanerPeriod = Utils.getTime(ConfigurationType.CONFIG.get().getString("storage.players-auto-cleaner-period"), false);
+		playersAutoCleanerPeriod = Utils.getTime(ConfigurationType.CONFIG.get().getString("storage.players-auto-cleaner-period"), false, false);
 	}
 	
 	@Override

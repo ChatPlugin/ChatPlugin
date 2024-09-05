@@ -69,8 +69,8 @@ public class RankManagerImpl extends RankManager {
 								ranks.size(),
 								descriptions,
 								new long[] {
-										ConfigurationType.RANKS.get().contains("ranks." + id + ".max-punishment-durations.ban") ? (temp = Utils.getTime(ConfigurationType.RANKS.get().getString("ranks." + id + ".max-punishment-durations.ban"), false)) == -1 ? -2 : temp : ranks.size() == 0 ? 0L : ranks.get(ranks.size() - 1).getMaxPunishmentDurations()[0],
-										ConfigurationType.RANKS.get().contains("ranks." + id + ".max-punishment-durations.mute") ? (temp = Utils.getTime(ConfigurationType.RANKS.get().getString("ranks." + id + ".max-punishment-durations.mute"), false)) == -1 ? -2 : temp : ranks.size() == 0 ? 0L : ranks.get(ranks.size() - 1).getMaxPunishmentDurations()[1],
+										ConfigurationType.RANKS.get().contains("ranks." + id + ".max-punishment-durations.ban") ? (temp = Utils.getTime(ConfigurationType.RANKS.get().getString("ranks." + id + ".max-punishment-durations.ban"), false, false)) == -1 ? -2 : temp : ranks.size() == 0 ? 0L : ranks.get(ranks.size() - 1).getMaxPunishmentDurations()[0],
+										ConfigurationType.RANKS.get().contains("ranks." + id + ".max-punishment-durations.mute") ? (temp = Utils.getTime(ConfigurationType.RANKS.get().getString("ranks." + id + ".max-punishment-durations.mute"), false, false)) == -1 ? -2 : temp : ranks.size() == 0 ? 0L : ranks.get(ranks.size() - 1).getMaxPunishmentDurations()[1],
 								});
 						
 						for (int i = 0; i < 2; i++) {

@@ -48,7 +48,7 @@ public class LanguageManagerImpl extends LanguageManager {
 	public void load() throws ChatPluginManagerException {
 		instance = this;
 		long ms = System.currentTimeMillis();
-		commandCooldown = Utils.getTime(ConfigurationType.CONFIG.get().getString("languages.command.cooldown"), false);
+		commandCooldown = Utils.getTime(ConfigurationType.CONFIG.get().getString("languages.command.cooldown"), false, false);
 		File customMessagesFolder = new File(ChatPlugin.getInstance().getDataFolder(), "custom-messages");
 		File messagesItalian = new File(customMessagesFolder, "messages-italian.yml");
 		

@@ -50,7 +50,7 @@ public class AnticheatManagerImpl extends AnticheatManager {
 		if (!isEnabled())
 			return;
 		reasonsStartWith = new ArrayList<>(ConfigurationType.CONFIG.get().getStringList("settings.anticheat-integration.reasons-start-with"));
-		violationsExpirationTimeout = Utils.getTime(ConfigurationType.CONFIG.get().getString("settings.anticheat-integration.violations-expiration-timeout"), false);
+		violationsExpirationTimeout = Utils.getTime(ConfigurationType.CONFIG.get().getString("settings.anticheat-integration.violations-expiration-timeout"), false, false);
 		loadTime = System.currentTimeMillis() - ms;
 	}
 	

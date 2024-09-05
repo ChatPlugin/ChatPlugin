@@ -69,7 +69,7 @@ public abstract class BaseIPLookupManager extends IPLookupManager {
 						);
 				
 				method = IPLookupMethod.REMOTE;
-			} cacheTime = Utils.getTime(ConfigurationType.CONFIG.get().getString("ip-lookup.cache-time"), false);
+			} cacheTime = Utils.getTime(ConfigurationType.CONFIG.get().getString("ip-lookup.cache-time"), false, false);
 			maxMindUserID = ConfigurationType.CONFIG.get().getString("ip-lookup.maxmind-account.user-id");
 			maxIPsStored = ConfigurationType.CONFIG.get().getInt("ip-lookup.max-ips-stored");
 			

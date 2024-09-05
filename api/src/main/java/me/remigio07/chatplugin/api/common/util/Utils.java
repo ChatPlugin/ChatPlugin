@@ -553,7 +553,8 @@ public class Utils {
 	/**
 	 * Calculates the time in milliseconds expressed by an input string.
 	 * 
-	 * <p>Will return -1 if the input is invalid or the time is &#60;= 0s.
+	 * <p>Will return -1 if the input is invalid or the time is
+	 * &#60; 0s or if <code>!allow0s</code> and the time is 0s.
 	 * Input string must not contain spaces and timestamps must be divided by a comma.</p>
 	 * 
 	 * 	<br><br><table class="borderless">
@@ -588,9 +589,10 @@ public class Utils {
 	 * 
 	 * @param input Input string
 	 * @param addCurrent Whether to add current time
-	 * @return Time in milliseconds or -1 if invalid input or time &#60;= 0s
+	 * @param allow0s Whether to allow the "0s" timestamp
+	 * @return Time in milliseconds or -1 if invalid input
 	 */
-	public static long getTime(String input, boolean addCurrent) {
+	public static long getTime(String input, boolean addCurrent, boolean allow0s) {
 		String[] array = input.split(",");
 		int seconds = 0;
 		int minutes = 0;
@@ -635,7 +637,7 @@ public class Utils {
 					break;
 				}
 			} long time = getTime(years, months, weeks, days, hours, minutes, seconds, addCurrent);
-			return time <= 0 ? -1 : time;
+			return time < 0 || (time == 0 && !allow0s) ? -1 : time;
 		} catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
 			return -1;
 		}

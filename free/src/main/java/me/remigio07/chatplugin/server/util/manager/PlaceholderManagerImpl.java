@@ -79,7 +79,7 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 		instance = this;
 		long ms = System.currentTimeMillis();
 		storage = StorageConnector.getInstance();
-		timerTaskID = TaskManager.scheduleAsync(this, 0L, Utils.getTime(ConfigurationType.CONFIG.get().getString("settings.storage-placeholders-update-timeout"), false));
+		timerTaskID = TaskManager.scheduleAsync(this, 0L, Utils.getTime(ConfigurationType.CONFIG.get().getString("settings.storage-placeholders-update-timeout"), false, false));
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}

@@ -59,7 +59,7 @@ public class AdManagerImpl extends AdManager {
 		soundEnabled = ConfigurationType.ADS.get().getBoolean("ads.settings.sound.enabled");
 		prefix = ConfigurationType.ADS.get().getString("ads.settings.prefix.format");
 		sound = new SoundAdapter(ConfigurationType.ADS.get(), "ads.settings.sound");
-		sendingTimeout = Utils.getTime(ConfigurationType.ADS.get().getString("ads.settings.sending-timeout"), false);
+		sendingTimeout = Utils.getTime(ConfigurationType.ADS.get().getString("ads.settings.sending-timeout"), false, false);
 		placeholderTypes = PlaceholderType.getPlaceholders(ConfigurationType.ADS.get().getStringList("ads.settings.placeholder-types"));
 		
 		for (String id : ConfigurationType.ADS.get().getKeys("ads")) {

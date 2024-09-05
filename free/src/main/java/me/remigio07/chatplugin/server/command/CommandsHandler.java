@@ -30,6 +30,7 @@ import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
 import me.remigio07.chatplugin.api.server.chat.RangedChatManager;
 import me.remigio07.chatplugin.api.server.chat.StaffChatManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.command.admin.ClearChatCommand;
 import me.remigio07.chatplugin.server.command.admin.IPLookupCommand;
@@ -118,7 +119,8 @@ public abstract class CommandsHandler {
 		put(new MuteAllCommand());
 		
 		// vanish
-		put(new VanishCommand());
+		if (VanishManager.getInstance().isEnabled())
+			put(new VanishCommand());
 		
 		// misc
 		put(new TPSCommand());

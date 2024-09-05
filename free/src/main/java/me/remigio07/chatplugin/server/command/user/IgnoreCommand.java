@@ -85,25 +85,23 @@ public class IgnoreCommand extends PlayerCommand {
 							if (target.getUUID().equals(Utils.NIL_UUID)) {
 								player.sendTranslatedMessage("misc.inexistent-player", args[1]);
 								return;
-							} if (target.hasPlayedBefore()) {
-								if (!target.hasPermission(getPermission() + ".bypass")) {
-									java.util.List<OfflinePlayer> ignoredPlayers = player.getIgnoredPlayers();
-									
-									if (!ignoredPlayers.contains(target)) {
-										if (ignoredPlayers.size() != 25) {
-											try {
+							} if (!target.equals(player)) {
+								if (target.hasPlayedBefore()) {
+									if (!target.hasPermission(getPermission() + ".bypass")) {
+										java.util.List<OfflinePlayer> ignoredPlayers = player.getIgnoredPlayers();
+										
+										if (!ignoredPlayers.contains(target)) {
+											if (ignoredPlayers.size() != 25) {
 												if (PlayerIgnoreManager.getInstance().ignore(player, target)) {
 													player.sendTranslatedMessage("commands.ignore.added.success.self", target.getName(), ignoredPlayers.size());
 													
 													if (target.isLoaded())
 														target.toServerPlayer().sendTranslatedMessage("commands.ignore.added.success.other", player.getName());
 												}
-											} catch (IllegalArgumentException e) {
-												player.sendTranslatedMessage("commands.ignore.cannot-ignore.self");
-											}
-										} else player.sendTranslatedMessage("commands.ignore.max-reached");
-									} else player.sendTranslatedMessage("commands.ignore.added.already-ignoring", target.getName());
-								} else player.sendTranslatedMessage("commands.ignore.cannot-ignore.other", target.getName());
+											} else player.sendTranslatedMessage("commands.ignore.max-reached");
+										} else player.sendTranslatedMessage("commands.ignore.added.already-ignoring", target.getName());
+									} else player.sendTranslatedMessage("commands.ignore.cannot-ignore.other", target.getName());
+								} else player.sendTranslatedMessage("commands.ignore.cannot-ignore.self");
 							} else player.sendTranslatedMessage("misc.player-not-stored", target.getName());
 						} catch (IllegalArgumentException e) {
 							player.sendTranslatedMessage("misc.invalid-player-name");

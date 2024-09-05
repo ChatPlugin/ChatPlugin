@@ -15,7 +15,6 @@
 
 package me.remigio07.chatplugin.server.sponge.manager;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 import org.spongepowered.api.Sponge;
@@ -30,7 +29,6 @@ import com.google.common.collect.Iterables;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
-import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
@@ -47,8 +45,6 @@ import me.remigio07.chatplugin.api.server.gui.PerPlayerGUI;
 import me.remigio07.chatplugin.api.server.join_quit.QuitMessageManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
-import me.remigio07.chatplugin.api.server.rank.Rank;
-import me.remigio07.chatplugin.api.server.rank.RankManager;
 import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
 import me.remigio07.chatplugin.api.server.scoreboard.ScoreboardManager;
 import me.remigio07.chatplugin.api.server.tablist.Tablist;
@@ -72,11 +68,6 @@ public class SpongePlayerManager extends ServerPlayerManager {
 		
 		super.load();
 		
-		if (enabledWorlds.isEmpty())
-			for (String world : ConfigurationType.CONFIG.get().getStringList("settings.enabled-worlds"))
-				if (!Sponge.getServer().getWorld(world).isPresent())
-					LogManager.log("World \"{0}\" specified at \"settings.enabled-worlds\" in config.yml does not exist (yet); skipping it.", 2, world);
-				else enabledWorlds.add(world);
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}
@@ -129,14 +120,29 @@ public class SpongePlayerManager extends ServerPlayerManager {
 			ScoreboardManager.getInstance().getScoreboard("join-event").addPlayer(serverPlayer);
 		
 		// ranks
-		for (Rank rank : RankManager.getInstance().getRanks()) {
-			scoreboard.registerTeam(Team.builder().name(rank.getTeamName()).build());
-			
-			if (!TablistManager.getInstance().isEnabled() || rank.getTag().toString().isEmpty())
-				continue;
-			Team team = scoreboard.getTeam(rank.getTeamName()).get();
-			String prefix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPrefixFormat(), serverPlayer, TablistManager.getInstance().getPlaceholderTypes());
-			String suffix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getSuffixFormat(), serverPlayer, TablistManager.getInstance().getPlaceholderTypes());
+		if (TablistManager.getInstance().isEnabled()) {
+			for (ChatPluginServerPlayer other : players.values()) {
+				setupTeams(serverPlayer, other);
+				setupTeams(other, serverPlayer);
+			} setupTeams(serverPlayer, serverPlayer);
+		}
+		
+		// misc
+		if (QuitMessageManager.getInstance().isEnabled())
+			new QuitPacketImpl(serverPlayer);
+		if (VanishManager.getInstance().isEnabled())
+			VanishManager.getInstance().update(serverPlayer, false);
+		players.put(player.getUUID(), serverPlayer);
+		new ServerPlayerLoadEvent(serverPlayer, (int) (ms = System.currentTimeMillis() - ms)).call();
+		LogManager.log("Player {0} has been loaded in {1} ms.", 4, player.getName(), ms);
+		return (int) ms;
+	}
+	
+	private void setupTeams(ChatPluginServerPlayer player, ChatPluginServerPlayer other) {
+		if (!other.getRank().getTag().toString().isEmpty()) {
+			Team team = Team.builder().name(other.getRank().formatIdentifier(other)).build();
+			String prefix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPrefixFormat(), other, player.getLanguage(), TablistManager.getInstance().getPlaceholderTypes());
+			String suffix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getSuffixFormat(), other, player.getLanguage(), TablistManager.getInstance().getPlaceholderTypes());
 			
 			// not future-proof (Sponge v8/1.13+)
 			if (prefix.contains(" ")) {
@@ -150,22 +156,9 @@ public class SpongePlayerManager extends ServerPlayerManager {
 				}
 			} team.setPrefix(Utils.serializeSpongeText(prefix.length() > 16 ? me.remigio07.chatplugin.common.util.Utils.abbreviate(prefix, 16, false) : prefix, false));
 			team.setSuffix(Utils.serializeSpongeText(suffix.length() > 16 ? me.remigio07.chatplugin.common.util.Utils.abbreviate(suffix, 16, false) : suffix, false));
-		} for (ChatPluginServerPlayer other : getPlayers().values()) {
-			scoreboard.getTeam(other.getRank().getTeamName()).get().addMember(Utils.serializeSpongeText(other.getName(), false));
-			Iterables.getFirst(other.getObjective().spongeValue().getScoreboards(), null).getTeam(serverPlayer.getRank().getTeamName()).get().addMember(Utils.serializeSpongeText(player.getName(), false));
-		} if (!getPlayers().containsKey(player.getUUID())) {
-			scoreboard.getTeam(serverPlayer.getRank().getTeamName()).get().addMember(Utils.serializeSpongeText(player.getName(), false));
-			Iterables.getFirst(serverPlayer.getObjective().spongeValue().getScoreboards(), null).getTeam(serverPlayer.getRank().getTeamName()).get().addMember(Utils.serializeSpongeText(player.getName(), false));
-		} // teams end
-		
-		if (QuitMessageManager.getInstance().isEnabled())
-			new QuitPacketImpl(serverPlayer);
-		if (VanishManager.getInstance().isEnabled())
-			VanishManager.getInstance().update(serverPlayer, false);
-		players.put(player.getUUID(), serverPlayer);
-		new ServerPlayerLoadEvent(serverPlayer, (int) (ms = System.currentTimeMillis() - ms)).call();
-		LogManager.log("Player {0} has been loaded in {1} ms.", 4, player.getName(), ms);
-		return (int) ms;
+			team.addMember(Utils.serializeSpongeText(other.toAdapter().spongeValue().getName(), false));
+			Iterables.getFirst(player.getObjective().spongeValue().getScoreboards(), null).registerTeam(team);
+		}
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -196,7 +189,10 @@ public class SpongePlayerManager extends ServerPlayerManager {
 			StaffChatManager.getInstance().removePlayer(player);
 		TablistManager.getInstance().sendTablist(Tablist.NULL_TABLIST, serverPlayer);
 		scoreboard.getScores().forEach(score -> scoreboard.removeScores(score.getName()));
-		new ArrayList<>(GUIManager.getInstance().getGUIs()).stream().filter(PerPlayerGUI.class::isInstance).map(PerPlayerGUI.class::cast).forEach(PerPlayerGUI::unload);
+		scoreboard.getTeams().forEach(Team::unregister);
+		scoreboard.getObjectives().forEach(scoreboard::removeObjective);
+		players.values().forEach(other -> Iterables.getFirst(other.getObjective().spongeValue().getScoreboards(), null).getTeam(serverPlayer.getRank().formatIdentifier(serverPlayer)).get().unregister());
+		GUIManager.getInstance().getGUIs().stream().filter(PerPlayerGUI.class::isInstance).map(PerPlayerGUI.class::cast).forEach(PerPlayerGUI::unload);
 		QuitMessageManager.getInstance().getFakeQuits().remove(player);
 		Utils.inventoryTitles.remove(player);
 		

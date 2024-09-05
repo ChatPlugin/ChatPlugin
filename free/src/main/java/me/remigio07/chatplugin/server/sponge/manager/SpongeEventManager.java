@@ -131,21 +131,22 @@ public class SpongeEventManager extends EventManager {
 	}
 	
 	public void onClientConnection$Join(ClientConnectionEvent.Join event) {
-		if (ServerPlayerManager.getInstance().isWorldEnabled(event.getTargetEntity().getWorld().getName()))
-			event.setMessageCancelled(true);
 		if (ProxyManager.getInstance().isEnabled())
 			return;
 		PlayerAdapter player = new PlayerAdapter(event.getTargetEntity());
 		
 		ServerPlayerManager.getPlayersVersions().put(player.getUUID(), IntegrationType.VIAVERSION.isEnabled() ? IntegrationType.VIAVERSION.get().getVersion(player) : IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(player) : VersionUtils.getVersion());
+		ServerPlayerManager.getPlayersLoginTimes().put(player.getUUID(), System.currentTimeMillis());
 		
 		if (IntegrationType.GEYSERMC.isEnabled() && IntegrationType.GEYSERMC.get().isBedrockPlayer(player))
 			ServerPlayerManager.getBedrockPlayers().add(player.getUUID());
-		processJoinEvent(player, false);
+		if (ServerPlayerManager.getInstance().isWorldEnabled(event.getTargetEntity().getWorld().getName())) {
+			event.setMessageCancelled(true);
+			processJoinEvent(player, false);
+		}
 	}
 	
 	public void processJoinEvent(PlayerAdapter playerAdapter, boolean vanished) {
-		ServerPlayerManager.getPlayersLoginTimes().put(playerAdapter.getUUID(), System.currentTimeMillis());
 		ServerPlayerManager.getInstance().loadPlayer(playerAdapter);
 		
 		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(playerAdapter.getUUID());

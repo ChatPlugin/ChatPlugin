@@ -18,6 +18,7 @@ package me.remigio07.chatplugin.api.server.player;
 import java.net.InetAddress;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -49,7 +50,7 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	private static Map<UUID, Long> playersLoginTimes = new ConcurrentHashMap<>();
 	private static List<UUID> bedrockPlayers = new CopyOnWriteArrayList<>();
 	protected Map<UUID, ChatPluginServerPlayer> players = new ConcurrentHashMap<>();
-	protected List<String> enabledWorlds = new ArrayList<>();
+	protected List<String> enabledWorlds = Collections.emptyList();
 	protected int storageCount;
 	
 	@Override
@@ -58,9 +59,7 @@ public abstract class ServerPlayerManager extends PlayerManager {
 			storageCount = StorageConnector.getInstance().count(DataContainer.PLAYERS).intValue();
 		} catch (SQLException e) {
 			throw new ChatPluginManagerException(this, e);
-		} if (ConfigurationType.CONFIG.get().getStringList("settings.enabled-worlds").contains("*")
-				|| ConfigurationType.CONFIG.get().getBoolean("settings.enable-every-world")) // compatibility with older ChatPlugin versions
-			enabledWorlds = Utils.getWorlds();
+		} enabledWorlds = new ArrayList<>(ConfigurationType.CONFIG.get().getStringList("settings.enabled-worlds"));
 	}
 	
 	@Override
@@ -156,7 +155,7 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	 * @return Whether the world is enabled
 	 */
 	public boolean isWorldEnabled(String world) {
-		return enabledWorlds.contains(world);
+		return enabledWorlds.contains("*") || enabledWorlds.contains(world) || ConfigurationType.CONFIG.get().getBoolean("settings.enable-every-world"); // compatibility with older ChatPlugin versions
 	}
 	
 	/**

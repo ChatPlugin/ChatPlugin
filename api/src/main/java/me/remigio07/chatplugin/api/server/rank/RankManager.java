@@ -38,7 +38,7 @@ public abstract class RankManager implements ChatPluginManager {
 	 * 
 	 * @see #isValidRankID(String)
 	 */
-	public static final Pattern RANK_ID_PATTERN = Pattern.compile("^[a-zA-Z0-9-_]{2,14}$");
+	public static final Pattern RANK_ID_PATTERN = Pattern.compile("^[a-zA-Z0-9-_]{2,36}$");
 	protected static RankManager instance;
 	protected boolean enabled, sortingEnabled, sortingFromTablistTop;
 	protected Rank defaultRank;

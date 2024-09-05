@@ -23,6 +23,7 @@ import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.language.Language;
+import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
  * Represents a rank handled by the {@link RankManager}.
@@ -192,19 +193,17 @@ public abstract class Rank {
 		if (!RankManager.getInstance().isSortingEnabled())
 			return "00";
 		String str;
-		
 		return (str = RankManager.getInstance().isSortingFromTablistTop() ? String.valueOf(RankManager.getInstance().getRanks().size() - position - 1) : String.valueOf(position)).length() == 1 ? "0" + str : str;
 	}
 	
 	/**
-	 * Gets this rank's ID which will be set as the Vanilla team name.
+	 * Gets this rank's identifier for the specified player.
 	 * 
-	 * <p>It is obtained by joining {@link #formatPosition()} with {@link #getID()}.</p>
-	 * 
-	 * @return The Vanilla team name
+	 * @param player Player to identify
+	 * @return Rank's identifier
 	 */
-	public String getTeamName() {
-		return formatPosition() + id;
+	public String formatIdentifier(ChatPluginServerPlayer player) {
+		return formatPosition() + String.format("%-4s", player.getName()).substring(0, 4) + String.format("%010d", player.getID());
 	}
 	
 	/**

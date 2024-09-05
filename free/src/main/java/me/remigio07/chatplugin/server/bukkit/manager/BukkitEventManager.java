@@ -133,21 +133,22 @@ public class BukkitEventManager extends EventManager {
 	}
 	
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		if (ServerPlayerManager.getInstance().isWorldEnabled(event.getPlayer().getWorld().getName()))
-			event.setJoinMessage(null);
 		if (ProxyManager.getInstance().isEnabled())
 			return;
 		PlayerAdapter player = new PlayerAdapter(event.getPlayer());
 		
 		ServerPlayerManager.getPlayersVersions().put(player.getUUID(), IntegrationType.VIAVERSION.isEnabled() ? IntegrationType.VIAVERSION.get().getVersion(player) : IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(player) : VersionUtils.getVersion());
+		ServerPlayerManager.getPlayersLoginTimes().put(player.getUUID(), System.currentTimeMillis());
 		
 		if (IntegrationType.GEYSERMC.isEnabled() && IntegrationType.GEYSERMC.get().isBedrockPlayer(player))
 			ServerPlayerManager.getBedrockPlayers().add(player.getUUID());
-		processJoinEvent(player, false);
+		if (ServerPlayerManager.getInstance().isWorldEnabled(event.getPlayer().getWorld().getName())) {
+			event.setJoinMessage(null);
+			processJoinEvent(player, false);
+		}
 	}
 	
 	public void processJoinEvent(PlayerAdapter playerAdapter, boolean vanished) {
-		ServerPlayerManager.getPlayersLoginTimes().put(playerAdapter.getUUID(), System.currentTimeMillis());
 		ServerPlayerManager.getInstance().loadPlayer(playerAdapter);
 		
 		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(playerAdapter.getUUID());

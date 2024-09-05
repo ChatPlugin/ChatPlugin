@@ -15,7 +15,6 @@
 
 package me.remigio07.chatplugin.api.server.bossbar;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -77,7 +76,7 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	protected double reflectionWitherTeleportationDistance;
 	protected long reflectionWitherTeleportationTimeout, sendingTimeout, loadingBossbarSendingTimeout, timerTaskID = -1, reflectionTimerTaskID = -1, lastRunTime = -1;
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
-	protected List<String> enabledWorlds = new ArrayList<>();
+	protected List<String> enabledWorlds = Collections.emptyList();
 	protected List<Bossbar> bossbars = new CopyOnWriteArrayList<>();
 	protected Map<ChatPluginServerPlayer, Long> loadingBossbarsTasks = new ConcurrentHashMap<>();
 	protected ReflectionBossbarTimer reflectionBossbarTimer;
@@ -219,7 +218,7 @@ public abstract class BossbarManager extends TimerTask implements ChatPluginMana
 	 * @return Whether the world is enabled
 	 */
 	public boolean isWorldEnabled(String world) {
-		return enabledWorlds.contains(world);
+		return enabledWorlds.contains("*") || enabledWorlds.contains(world);
 	}
 	
 	/**

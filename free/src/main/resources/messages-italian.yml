@@ -96,20 +96,20 @@ commands:
         &f&l/accountcheck &8- &eControlla gli accounts di un giocatore.
       punishments: |-
         {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
-        &f&l/ban &8- &eBanna un giocatore (disponibile anche /tempban).
+        &f&l/tempban &8- &eBanna temporaneamente un giocatore.
         &f&l/unban &8- &eRimuovi il ban ad un giocatore bannato.
         &f&l/warning &8- &eAvvisa un giocatore per un certo periodo.
         &f&l/removelastwarning &8- &eRimuovi l'ultimo avviso di un giocatore.
         &f&l/clearwarnings &8- &eCancella gli avvisi attivi di un giocatore.
         &f&l/kick &8- &eDisconnetti un giocatore dal server.
         &f&l/fakekick &8- &eDisconnetti con un errore casuale come motivo.
-        &f&l/mute &8- &eImpedisci ad un giocatore di utilizzare la chat.
+        &f&l/mute &8- &eMuta temporaneamente un giocatore.
         &f&l/unmute &8- &eRimuovi il mute ad un giocatore mutato.
       guis: |-
         {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/cp status &8- &eVisualizza lo stato attuale del server.
         &f&l/banlist &8- &eVisualizza la lista dei bans attivi.
-        &f&l/warnlist &8- &eVisualizza la lista dei warnings attivi.
+        &f&l/warnlist &8- &eVisualizza la lista degli avvisi attivi.
         &f&l/mutelist &8- &eVisualizza la lista dei mutes attivi.
         &f&l/violations &8- &eMostra le ultime violazioni dei giocatori.
         &f&l/playerinfo &8- &eMostra informazioni dettagliate di un giocatore.
@@ -232,22 +232,22 @@ commands:
     &eGlobale: &f{global}
     &eSilenzioso: &f{silent}
   warninginfo: |-
-    {pfx} &aInformazioni e dati sul warning &f#{id}&a:
+    {pfx} &aInformazioni e dati sull'avviso &f#{id}&a:
     &eNome del giocatore: &f{player}
     &eUUID del giocatore: &f{player_uuid}
     &eMembro dello Staff: &f{staff_member}
-    &eChi ha unwarnato: &f{who_unwarned}
+    &eChi ha rimosso l'avviso': &f{who_unwarned}
     &eMotivo: &f{reason}
     &eServer: &f{server}
     &eData: &f{date}
     &eDurata: &f{duration}
     &eTempo rimanente: &f{remaining_time}
-    &eData dell'unwarn: &f{unwarn_date}
+    &eData dell'avviso: &f{unwarn_date}
     &eAttivo: &f{active}
     &eGlobale: &f{global}
     &eSilenzioso: &f{silent}
   kickinfo: |-
-    {pfx} &aInformazioni e dati sul kick &f#{id}&a:
+    {pfx} &aInformazioni e dati sulla disconnessione &f#{id}&a:
     &eNome del giocatore: &f{player}
     &eUUID del giocatore: &f{player_uuid}
     &eIndirizzo IP: &f{ip_address}
@@ -275,8 +275,8 @@ commands:
     ids: '{pfx} &eIDs dei bans attivi: &f{0}&e.'
     empty: '{pfx} &eNon ci sono bans attivi.'
   warnlist:
-    ids: '{pfx} &eIDs dei warnings attivi: &f{0}&e.'
-    empty: '{pfx} &eNon ci sono warnings attivi.'
+    ids: '{pfx} &eIDs degli avvisi attivi: &f{0}&e.'
+    empty: '{pfx} &eNon ci sono avvisi attivi.'
   mutelist:
     ids: '{pfx} &eIDs dei mutes attivi: &f{0}&e.'
     empty: '{pfx} &eNon ci sono mutes attivi.'
@@ -296,15 +296,15 @@ commands:
     &eUltimo accesso: &f{last_login} fa
     &eTempo di gioco: &f{time_played}
     &eBans totali: &f{player_bans}x
-    &eWarnings totali: &f{player_warnings}x
-    &eKicks totali: &f{player_kicks}x
+    &eAvvisi totali: &f{player_warnings}x
+    &eDisconnessioni totali: &f{player_kicks}x
     &eMutes totali: &f{player_mutes}x
     &eMessaggi inviati: &f{messages_sent}x
   playerpunishments: |-
     {pfx} &aIDs delle punizioni di &f{0}&a:
     &eBans: &f{1}
-    &eWarnings: &f{2}
-    &eKicks: &f{3}
+    &eAvvisi: &f{2}
+    &eDisconnessioni: &f{3}
     &eMutes: &f{4}
   tps: '{pfx} &eTPS degli ultimi &f1m&e, &f5m&e, &f15m&e: &f{0}&e, &f{1}&e, &f{2}&e.'
   ad:
@@ -432,7 +432,7 @@ ban:
     kick: |-
       &8[&a&lLogin&8] &cDisconnessi dal server &f{server}&c: &fsiete stati bannati.
 
-      &eID ban: &f#{id}
+      &eID del ban: &f#{id}
       &eMembro dello Staff: &f{staff_member}
       &eMotivo: &f{reason}
       &eData: &f{date}
@@ -442,7 +442,7 @@ ban:
       &7Puoi fare una richiesta di unban sul nostro sito.
 
       &7Se la richiesta viene rifiutata, puoi acquistare l'unban sul nostro Store.
-    chat: '&8[&a&lLogin&8] &cDisconnessi dal server &f{server}&c: &fsiete stati bannati. &eID ban: &f#{id}&e, membro dello Staff: &f{staff_member}&e, motivo: &f{reason}&e, tempo rimanente: &f{remaining_time}&e, tipo: &f{type}&e.'
+    chat: '&8[&a&lLogin&8] &cDisconnessi dal server &f{server}&c: &fsiete stati bannati. &eID del ban: &f#{id}&e, membro dello Staff: &f{staff_member}&e, motivo: &f{reason}&e, tempo rimanente: &f{remaining_time}&e, tipo: &f{type}&e.'
   command-usage: |-
     {pfx} &cLa sintassi è errata. Utilizzo: &f{0}&c. Opzioni aggiuntive:
     &f&l-silent &8- &erendilo silenzioso: solo lo Staff verrà avvisato.
@@ -510,7 +510,7 @@ warning:
   command-usage: |-
     {pfx} &cLa sintassi è errata. Utilizzo: &f{0}&c. Opzioni aggiuntive:
     &f&l-silent &8- &erendilo silenzioso: solo lo Staff verrà avvisato.
-    &f&l-type &8- &ealterna lo scopo del warning (di default è &f{1}&e).
+    &f&l-type &8- &ealterna lo scopo dell'avviso (di default è &f{1}&e).
   preset-reasons:
   - Linguaggio inappropriato
   - Abuso di bugs
@@ -518,7 +518,7 @@ warning:
   - (Auto) promozione non consentita
   expired:
     self: '{pfx} &aIl tuo avviso (ID: &f#{id}&a) è appena scaduto.'
-    other: '{pfx} &eIl warning (ID: &f#{id}&e) di &f{player} &eè appena scaduto.'
+    other: '{pfx} &eL''avviso (ID: &f#{id}&e) di &f{player} &eè appena scaduto.'
   removed:
     self: '{pfx} &f{who_unwarned} &aha rimosso il tuo ultimo avviso (ID: &f#{id}&a).'
     other: '{pfx} &f{who_unwarned} &eha rimosso l''ultimo avviso di &f{player} &e(ID: &f#{id}&e).'
@@ -542,11 +542,11 @@ kick:
     kick: |-
       &8[&a&lLogin&8] &cDisconnessi dal server &f{server}&c: &fsiete stati espulsi.
 
-      &eID kick: &f#{id}
+      &eID della disconnessione: &f#{id}
       &eMembro dello Staff: &f{staff_member}
       &eMotivo: &f{reason}
       &eData: &f{date}
-    chat: '&8[&a&lLogin&8] &cDisconnessi dal server &f{server}&c: &fsiete stati espulsi. &eID kick: &f#{id}&e, staffer: &f{staffer}&e, motivo: &f{reason}&e.'
+    chat: '&8[&a&lLogin&8] &cDisconnessi dal server &f{server}&c: &fsiete stati espulsi. &eID della disconnessione: &f#{id}&e, staffer: &f{staffer}&e, motivo: &f{reason}&e.'
   fakekick-format:
     kick: '{fake_reason}'
     chat: '&8[&a&lLogin&8] &cDisconnessi dal server &f{server}&c: &f{fake_reason}&c.'
@@ -554,10 +554,10 @@ kick:
     kick: |-
       {pfx} &cLa sintassi è errata. Utilizzo: &f{0}&c. Opzioni aggiuntive:
       &f&l-silent &8- &erendilo silenzioso: solo lo Staff verrà avvisato.
-      &f&l-type &8- &ealterna il tipo di kick (di default è &f{1}&e).
+      &f&l-type &8- &ealterna il tipo di disconnessione (di default è &f{1}&e).
     fakekick: |-
       {pfx} &cLa sintassi è errata. Utilizzo: &f{0}&c. Opzioni aggiuntive:
-      &f&l-chat &8- &econnetti al server lobby con il motivo del kick in chat.
+      &f&l-chat &8- &econnetti al server lobby con il motivo della disconnessione in chat.
   preset-reasons:
   - Caps
   - Flood

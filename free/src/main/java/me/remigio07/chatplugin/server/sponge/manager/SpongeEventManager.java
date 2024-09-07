@@ -23,11 +23,16 @@ import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent.Teleport;
 import org.spongepowered.api.event.entity.living.humanoid.player.PlayerChangeClientSettingsEvent;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
+import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
+import org.spongepowered.api.event.item.inventory.InteractInventoryEvent.Close;
 import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.event.message.MessageChannelEvent.Chat;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent.Disconnect;
 import org.spongepowered.api.event.network.ClientConnectionEvent.Join;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 
 import me.remigio07.chatplugin.api.common.event.EventManager;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
@@ -39,6 +44,11 @@ import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerExceptio
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.bossbar.BossbarManager;
 import me.remigio07.chatplugin.api.server.chat.ChatManager;
+import me.remigio07.chatplugin.api.server.event.gui.GUICloseEvent;
+import me.remigio07.chatplugin.api.server.gui.FillableGUI;
+import me.remigio07.chatplugin.api.server.gui.GUI;
+import me.remigio07.chatplugin.api.server.gui.GUIManager;
+import me.remigio07.chatplugin.api.server.gui.SinglePageGUI;
 import me.remigio07.chatplugin.api.server.integration.anticheat.AnticheatManager;
 import me.remigio07.chatplugin.api.server.join_quit.JoinMessageManager;
 import me.remigio07.chatplugin.api.server.join_quit.JoinTitleManager;
@@ -79,6 +89,8 @@ public class SpongeEventManager extends EventManager {
 		manager.registerListener(instance, ClientConnectionEvent.Join.class, Order.EARLY, listener);
 		manager.registerListener(instance, ClientConnectionEvent.Disconnect.class, Order.EARLY, listener);
 		manager.registerListener(instance, PlayerChangeClientSettingsEvent.class, Order.POST, listener);
+		manager.registerListener(instance, ClickInventoryEvent.class, Order.DEFAULT, listener);
+		manager.registerListener(instance, InteractInventoryEvent.Close.class, Order.DEFAULT, listener);
 		
 		try { // Sponge v4.2
 			manager.registerListener(instance, (Class<? extends Event>) Class.forName("org.spongepowered.api.event.entity.DisplaceEntityEvent$Teleport"), Order.EARLY, listener);
@@ -102,11 +114,30 @@ public class SpongeEventManager extends EventManager {
 		case "MoveEntity$Teleport":
 			onMoveEntity$Teleport((Teleport) event);
 			break;
-		case "DisplaceEntity$Teleport":
-			onDisplaceEntityEvent$Teleport(event);
-			break;
 		case "PlayerChangeClientSettings":
 			onPlayerChangeClientSettings((PlayerChangeClientSettingsEvent) event);
+			break;
+		case "ClickInventory$Double":
+		case "ClickInventory$Drag$Middle":
+		case "ClickInventory$Drag$Primary":
+		case "ClickInventory$Drag$Secondary":
+		case "ClickInventory$Drop$Single":
+		case "ClickInventory$Drop$Full":
+		case "ClickInventory$Drop$Outside$Primary":
+		case "ClickInventory$Drop$Outside$Secondary":
+		case "ClickInventory$Middle":
+		case "ClickInventory$NumberPress":
+		case "ClickInventory$Primary":
+		case "ClickInventory$Secondary":
+		case "ClickInventory$Shift$Primary":
+		case "ClickInventory$Shift$Secondary":
+			onClickInventory((ClickInventoryEvent) event);
+			break;
+		case "InteractInventory$Close":
+			onInteractInventory$Close((Close) event);
+			break;
+		case "DisplaceEntity$Teleport":
+			onDisplaceEntityEvent$Teleport(event);
 			break;
 		}
 	}
@@ -131,17 +162,18 @@ public class SpongeEventManager extends EventManager {
 	}
 	
 	public void onClientConnection$Join(ClientConnectionEvent.Join event) {
-		if (ProxyManager.getInstance().isEnabled())
-			return;
-		PlayerAdapter player = new PlayerAdapter(event.getTargetEntity());
-		
-		ServerPlayerManager.getPlayersVersions().put(player.getUUID(), IntegrationType.VIAVERSION.isEnabled() ? IntegrationType.VIAVERSION.get().getVersion(player) : IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(player) : VersionUtils.getVersion());
-		ServerPlayerManager.getPlayersLoginTimes().put(player.getUUID(), System.currentTimeMillis());
-		
-		if (IntegrationType.GEYSERMC.isEnabled() && IntegrationType.GEYSERMC.get().isBedrockPlayer(player))
-			ServerPlayerManager.getBedrockPlayers().add(player.getUUID());
 		if (ServerPlayerManager.getInstance().isWorldEnabled(event.getTargetEntity().getWorld().getName())) {
 			event.setMessageCancelled(true);
+			
+			if (ProxyManager.getInstance().isEnabled())
+				return;
+			PlayerAdapter player = new PlayerAdapter(event.getTargetEntity());
+			
+			ServerPlayerManager.getPlayersVersions().put(player.getUUID(), IntegrationType.VIAVERSION.isEnabled() ? IntegrationType.VIAVERSION.get().getVersion(player) : IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(player) : VersionUtils.getVersion());
+			ServerPlayerManager.getPlayersLoginTimes().put(player.getUUID(), System.currentTimeMillis());
+			
+			if (IntegrationType.GEYSERMC.isEnabled() && IntegrationType.GEYSERMC.get().isBedrockPlayer(player))
+				ServerPlayerManager.getBedrockPlayers().add(player.getUUID());
 			processJoinEvent(player, false);
 		}
 	}
@@ -188,6 +220,63 @@ public class SpongeEventManager extends EventManager {
 		ServerPlayerManager.getBedrockPlayers().remove(event.getTargetEntity().getUniqueId());
 	}
 	
+	public void onPlayerChangeClientSettings(PlayerChangeClientSettingsEvent event) {
+		ChatPluginServerPlayer player = (ChatPluginServerPlayer) PlayerManager.getInstance().getPlayer(event.getTargetEntity().getUniqueId());
+		
+		if (player != null && System.currentTimeMillis() - player.getLoginTime() > 15000L && !player.getLocale().getLanguage().equals(event.getLocale().getLanguage())) {
+			LanguageDetector detector = LanguageManager.getInstance().getDetector();
+			
+			if (detector.isEnabled())
+				TaskManager.runAsync(() -> {
+					if (player.isLoaded()) {
+						Language detected = detector.detectUsingClientLocale(player);
+						
+						if (!detected.equals(player.getLanguage()))
+							((BaseChatPluginServerPlayer) player).sendLanguageDetectedMessage(detected);
+					}
+				}, detector.getDelay());
+			applyScoreboard(ScoreboardEvent.LOCALE_CHANGE, event.getTargetEntity(), player.getLocale().getDisplayLanguage());
+		}
+	}
+	
+	public void onClickInventory(ClickInventoryEvent event) {
+		if (event.getTransactions().isEmpty())
+			return;
+		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getCause().first(Player.class).get().getUniqueId());
+		
+		if (player == null)
+			return;
+		GUI gui = GUIManager.getInstance().getOpenGUI(player);
+		
+		if (gui != null) {
+			for (SlotTransaction transaction : event.getTransactions())
+				if (gui instanceof SinglePageGUI)
+					((SinglePageGUI) gui).handleClickEvent(player, transaction.getSlot().getInventoryProperty(SlotIndex.class).get().getValue());
+				else ((FillableGUI<?>) gui).handleClickEvent(player, ((FillableGUI<?>) gui).getViewers().get(player), transaction.getSlot().getInventoryProperty(SlotIndex.class).get().getValue());
+			event.setCancelled(true);
+		}
+	}
+	
+	public void onInteractInventory$Close(InteractInventoryEvent.Close event) {
+		if (event.isCancelled())
+			return;
+		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getCause().first(Player.class).get().getUniqueId());
+		
+		if (player == null)
+			return;
+		for (GUI gui : GUIManager.getInstance().getGUIs()) {
+			if (gui instanceof SinglePageGUI && ((SinglePageGUI) gui).getViewers().contains(player)) {
+				((SinglePageGUI) gui).getViewers().remove(player);
+				new GUICloseEvent(gui, player).call();
+				break;
+			} if (gui instanceof FillableGUI && ((FillableGUI<?>) gui).getViewers().containsKey(player)) {
+				((FillableGUI<?>) gui).getViewers().remove(player);
+				new GUICloseEvent(gui, player).call();
+				break;
+			}
+		}
+	}
+	
 	// Sponge v4.2
 	public void onDisplaceEntityEvent$Teleport(Object event) {
 		onMoveEntity$Teleport((MoveEntityEvent.Teleport) event);
@@ -221,25 +310,6 @@ public class SpongeEventManager extends EventManager {
 			VanishManager.getInstance().update(player, false);
 			playerManager.unloadPlayer(player.getUUID());
 		} else playerManager.loadPlayer(player.toAdapter());
-	}
-	
-	public void onPlayerChangeClientSettings(PlayerChangeClientSettingsEvent event) {
-		ChatPluginServerPlayer player = (ChatPluginServerPlayer) PlayerManager.getInstance().getPlayer(event.getTargetEntity().getUniqueId());
-		
-		if (player != null && System.currentTimeMillis() - player.getLoginTime() > 15000L && !player.getLocale().getLanguage().equals(event.getLocale().getLanguage())) {
-			LanguageDetector detector = LanguageManager.getInstance().getDetector();
-			
-			if (detector.isEnabled())
-				TaskManager.runAsync(() -> {
-					if (player.isLoaded()) {
-						Language detected = detector.detectUsingClientLocale(player);
-						
-						if (!detected.equals(player.getLanguage()))
-							((BaseChatPluginServerPlayer) player).sendLanguageDetectedMessage(detected);
-					}
-				}, detector.getDelay());
-			applyScoreboard(ScoreboardEvent.LOCALE_CHANGE, event.getTargetEntity(), player.getLocale().getDisplayLanguage());
-		}
 	}
 	
 	public void applyScoreboard(ScoreboardEvent event, Player player, Object... args) {

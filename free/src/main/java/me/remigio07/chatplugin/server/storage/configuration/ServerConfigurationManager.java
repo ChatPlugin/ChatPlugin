@@ -54,19 +54,20 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			putConfiguration(new Configuration(ConfigurationType.F3_SERVER_NAMES));
 			putConfiguration(new Configuration(ConfigurationType.JOIN_QUIT_MODULES));
 			
+			putConfiguration(new Configuration(ConfigurationType.MAIN_GUI));
+			putConfiguration(new Configuration(ConfigurationType.LANGUAGES_GUI));
+			putConfiguration(new Configuration(ConfigurationType.CHAT_COLOR_GUI));
+			putConfiguration(new Configuration(ConfigurationType.EMOJIS_TONE_GUI));
+			putConfiguration(new Configuration(ConfigurationType.PLAYER_INFO_GUI));
+			
 			if (ChatPlugin.getInstance().isPremium()) {
 				putConfiguration(new Configuration(ConfigurationType.DEFAULT_SCOREBOARD));
 				putConfiguration(new Configuration(ConfigurationType.BOSSBARS));
 				
-				putConfiguration(new Configuration(ConfigurationType.MAIN_GUI));
-				putConfiguration(new Configuration(ConfigurationType.LANGUAGES_GUI));
-				putConfiguration(new Configuration(ConfigurationType.CHAT_COLOR_GUI));
-				putConfiguration(new Configuration(ConfigurationType.EMOJIS_TONE_GUI));
 				putConfiguration(new Configuration(ConfigurationType.BANLIST_GUI));
 				putConfiguration(new Configuration(ConfigurationType.WARNLIST_GUI));
 				putConfiguration(new Configuration(ConfigurationType.MUTELIST_GUI));
 				putConfiguration(new Configuration(ConfigurationType.VIOLATIONS_GUI));
-				putConfiguration(new Configuration(ConfigurationType.PLAYER_INFO_GUI));
 				putConfiguration(new Configuration(ConfigurationType.PLAYER_PUNISHMENTS_GUI));
 				putConfiguration(new Configuration(ConfigurationType.PLAYER_VIOLATIONS_GUI));
 				putConfiguration(new Configuration(ConfigurationType.VIOLATIONS_ICONS));
@@ -107,19 +108,20 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		addF3ServerNamesDefaults(forceAdd);
 		addJoinQuitModulesDefaults(forceAdd);
 		
+		addMainGUIDefaults(forceAdd);
+		addLanguagesGUIDefaults(forceAdd);
+		addChatColorGUIDefaults(forceAdd);
+		addEmojisToneGUIDefaults(forceAdd);
+		addPlayerInfoGUIDefaults(forceAdd);
+		
 		if (ChatPlugin.getInstance().isPremium()) {
 			addDefaultScoreboardDefaults(forceAdd);
 			addBossbarsDefaults(forceAdd);
 			
-			addMainGUIDefaults(forceAdd);
-			addLanguagesGUIDefaults(forceAdd);
-			addChatColorGUIDefaults(forceAdd);
-			addEmojisToneGUIDefaults(forceAdd);
 			addBanlistGUIDefaults(forceAdd);
 			addWarnlistGUIDefaults(forceAdd);
 			addMutelistGUIDefaults(forceAdd);
 			addViolationsGUIDefaults(forceAdd);
-			addPlayerInfoGUIDefaults(forceAdd);
 			addPlayerPunishmentsGUIDefaults(forceAdd);
 			addPlayerViolationsGUIDefaults(forceAdd);
 			addViolationsIconsDefaults(forceAdd);
@@ -219,9 +221,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("warning.allow-warning-offline", false);
         config.addDefault("warning.duration", "7d");
         config.addDefault("warning.punish-commands.4.english", Arrays.asList("kick {player} You have been warned again (4/5 times). Next time you will get automatically banned for 5 days. -s"));
-        config.addDefault("warning.punish-commands.4.italian", Arrays.asList("kick {player} Siete stati avvertiti nuovamente (4/5 volte). La prossima volta verrete automaticamente bannati per 5 giorni. -s"));
+        config.addDefault("warning.punish-commands.4.italian", Arrays.asList("kick {player} Siete stati avvisati nuovamente (4/5 volte). La prossima volta verrete automaticamente bannati per 5 giorni. -s"));
         config.addDefault("warning.punish-commands.5.english", Arrays.asList("clearwarnings {player}", "tempban {player} 5d You have reached the limit of warnings (5/5). This is an automatic ban. -s"));
-        config.addDefault("warning.punish-commands.5.italian", Arrays.asList("clearwarnings {player}", "tempban {player} 5d Hai raggiunto il limite di avvertimenti (5/5). Questo è un ban automatico. -s"));
+        config.addDefault("warning.punish-commands.5.italian", Arrays.asList("clearwarnings {player}", "tempban {player} 5d Hai raggiunto il limite di avvisi (5/5). Questo è un ban automatico. -s"));
         
 		config.addDefault("kick.enabled", true);
 		config.addDefault("kick.reason-required", true);
@@ -1202,7 +1204,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		mainGUI.addDefault(path + "display-names.english", "&c&lWarnlist");
 		mainGUI.addDefault(path + "display-names.italian", "&c&lWarnlist");
 		mainGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to open", "&7the active warnings' list."));
-		mainGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per aprire la", "&7lista degli avvertimenti attivi."));
+		mainGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per aprire", "&7la lista degli avvisi attivi."));
 		
 		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
 			mainGUI.addDefault(path + "material", "BANNER");
@@ -1831,9 +1833,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		warnlistGUI.addDefault("settings.filling-function.end-slot", 35);
 		
 		warnlistGUI.addDefault("settings.filling-function.empty-list-icon.display-names.english", "&a&lNo warnings");
-		warnlistGUI.addDefault("settings.filling-function.empty-list-icon.display-names.italian", "&a&lNessun warning");
+		warnlistGUI.addDefault("settings.filling-function.empty-list-icon.display-names.italian", "&a&lNessun avviso");
 		warnlistGUI.addDefault("settings.filling-function.empty-list-icon.lores.english", Arrays.asList("&7There are no active", "&7warnings at the moment."));
-		warnlistGUI.addDefault("settings.filling-function.empty-list-icon.lores.italian", Arrays.asList("&7Non ci sono warnings", "&7attivi al momento."));
+		warnlistGUI.addDefault("settings.filling-function.empty-list-icon.lores.italian", Arrays.asList("&7Non ci sono avvisi", "&7attivi al momento."));
 		warnlistGUI.addDefault("settings.filling-function.empty-list-icon.material", "DIAMOND");
 		warnlistGUI.addDefault("settings.filling-function.empty-list-icon.keep-open", true);
 		warnlistGUI.addDefault("settings.filling-function.empty-list-icon.glowing", true);
@@ -1843,7 +1845,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		warnlistGUI.addDefault("settings.filling-function.icon-layouts.warning.display-names.english", "&c#&l{id}");
 		warnlistGUI.addDefault("settings.filling-function.icon-layouts.warning.display-names.italian", "&c#&l{id}");
 		warnlistGUI.addDefault("settings.filling-function.icon-layouts.warning.lores.english", Arrays.asList("&ePlayer name: &f{player}", "&ePlayer UUID: &f{player_uuid}", "&eStaff member: &f{staff_member}", "&eLast reason: &f{reason}", "&eServer: &f{server}", "&eDate: &f{date}", "&eDuration: &f{duration}", "&eRemaining time: &f{remaining_time}", "&eWarnings: &f{amount}/{max_amount}", "&eActive: &f{active}", "&eGlobal: &f{global}", "&eSilent: &f{silent}"));
-		warnlistGUI.addDefault("settings.filling-function.icon-layouts.warning.lores.italian", Arrays.asList("&eNome giocatore: &f{player}", "&eUUID giocatore: &f{player_uuid}", "&eMembro dello Staff: &f{staff_member}", "&eUltima motivazione: &f{reason}", "&eServer: &f{server}", "&eData: &f{date}", "&eDurata: &f{duration}", "&eTempo rimanente: &f{remaining_time}", "&eAvvertimenti: &f{amount}/{max_amount}", "&eAttivo: &f{active}", "&eGlobale: &f{global}", "&eSilenzioso: &f{silent}"));
+		warnlistGUI.addDefault("settings.filling-function.icon-layouts.warning.lores.italian", Arrays.asList("&eNome giocatore: &f{player}", "&eUUID giocatore: &f{player_uuid}", "&eMembro dello Staff: &f{staff_member}", "&eUltima motivazione: &f{reason}", "&eServer: &f{server}", "&eData: &f{date}", "&eDurata: &f{duration}", "&eTempo rimanente: &f{remaining_time}", "&eAvvisi: &f{amount}/{max_amount}", "&eAttivo: &f{active}", "&eGlobale: &f{global}", "&eSilenzioso: &f{silent}"));
 		
 		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
 			warnlistGUI.addDefault("settings.filling-function.icon-layouts.warning.material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
@@ -1856,7 +1858,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		warnlistGUI.addDefault(path + "display-names.english", "&c&lWarnlist");
 		warnlistGUI.addDefault(path + "display-names.italian", "&c&lWarnlist");
 		warnlistGUI.addDefault(path + "lores.english", Arrays.asList("&7This GUI allows you to", "&7view the active warnings' list."));
-		warnlistGUI.addDefault(path + "lores.italian", Arrays.asList("&7Questa GUI ti consente di visualizzare", "&7la lista degli avvertimenti attivi."));
+		warnlistGUI.addDefault(path + "lores.italian", Arrays.asList("&7Questa GUI ti consente di visualizzare", "&7la lista degli avvisi attivi."));
 		warnlistGUI.addDefault(path + "material", "PAPER");
 		warnlistGUI.addDefault(path + "keep-open", true);
 		warnlistGUI.addDefault(path + "x", 5);
@@ -2196,7 +2198,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		playerPunishmentsGUI.addDefault("settings.filling-function.empty-list-icon.x", 5);
 		playerPunishmentsGUI.addDefault("settings.filling-function.empty-list-icon.y", 3);
 		
-		
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.ban.display-names.english", "&4#&l{id}");
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.ban.display-names.italian", "&4#&l{id}");
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.ban.lores.english", Arrays.asList("&ePunishment: &4ban", "&eIP address: &f{ip_address}", "&eStaff member: &f{staff_member}", "&eReason: &f{reason}", "&eServer: &f{server}", "&eDate: &f{date}", "&eDuration: &f{duration}", "&eRemaining time: &f{remaining_time}", "&eType: &f{type}", "&eActive: &f{active}", "&eGlobal: &f{global}", "&eSilent: &f{silent}"));
@@ -2208,29 +2209,26 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		} else playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.ban.material", "RED_TERRACOTTA");
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.ban.commands", Arrays.asList("p: baninfo {id}"));
 		
-		
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.warning.display-names.english", "&c#&l{id}");
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.warning.display-names.italian", "&c#&l{id}");
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.warning.lores.english", Arrays.asList("&ePunishment: &cwarning", "&eStaff member: &f{staff_member}", "&eLast reason: &f{reason}", "&eServer: &f{server}", "&eDate: &f{date}", "&eDuration: &f{duration}", "&eRemaining time: &f{remaining_time}", "&eWarnings: &f{amount}/{max_amount}", "&eActive: &f{active}", "&eGlobal: &f{global}", "&eSilent: &f{silent}"));
-		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.warning.lores.italian", Arrays.asList("&ePunizione: &cwarning", "&eMembro dello Staff: &f{staff_member}", "&eUltima motivazione: &f{reason}", "&eServer: &f{server}", "&eData: &f{date}", "&eDurata: &f{duration}", "&eTempo rimanente: &f{remaining_time}", "&eAvvertimenti: &f{amount}/{max_amount}", "&eAttivo: &f{active}", "&eGlobale: &f{global}", "&eSilenzioso: &f{silent}"));
+		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.warning.lores.italian", Arrays.asList("&ePunizione: &cavviso", "&eMembro dello Staff: &f{staff_member}", "&eUltima motivazione: &f{reason}", "&eServer: &f{server}", "&eData: &f{date}", "&eDurata: &f{duration}", "&eTempo rimanente: &f{remaining_time}", "&eAvvisi: &f{amount}/{max_amount}", "&eAttivo: &f{active}", "&eGlobale: &f{global}", "&eSilenzioso: &f{silent}"));
 		
 		if (!isAtLeastV1_13) {
 			playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.warning.material", Environment.isBukkit() ? "HARD_CLAY" : "HARDENED_CLAY");
 		} else playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.warning.material", "TERRACOTTA");
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.warning.commands", Arrays.asList("p: warninginfo {id}"));
 		
-		
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.kick.display-names.english", "&6#&l{id}");
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.kick.display-names.italian", "&6#&l{id}");
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.kick.lores.english", Arrays.asList("&ePunishment: &6kick", "&eIP address: &f{ip_address}", "&eStaff member: &f{staff_member}", "&eReason: &f{reason}", "&eServer: &f{server}", "&eDate: &f{date}", "&eType: &f{type}", "&eSilent: &f{silent}"));
-		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.kick.lores.italian", Arrays.asList("&ePunizione: &6kick", "&eIndirizzo IP: &f{ip_address}", "&eMembro dello Staff: &f{staff_member}", "&eMotivazione: &f{reason}", "&eServer: &f{server}", "&eData: &f{date}", "&eTipo: &f{type}", "&eSilenzioso: &f{silent}"));
+		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.kick.lores.italian", Arrays.asList("&ePunizione: &6disconnessione", "&eIndirizzo IP: &f{ip_address}", "&eMembro dello Staff: &f{staff_member}", "&eMotivazione: &f{reason}", "&eServer: &f{server}", "&eData: &f{date}", "&eTipo: &f{type}", "&eSilenzioso: &f{silent}"));
 		
 		if (!isAtLeastV1_13) {
 			playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.kick.material", Environment.isBukkit() ? "STAINED_CLAY" : "STAINED_HARDENED_CLAY");
 			playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.kick.damage", 1);
 		} else playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.kick.material", "ORANGE_TERRACOTTA");
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.kick.commands", Arrays.asList("p: kickinfo {id}"));
-		
 		
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.mute.display-names.english", "&e#&l{id}");
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.mute.display-names.italian", "&e#&l{id}");

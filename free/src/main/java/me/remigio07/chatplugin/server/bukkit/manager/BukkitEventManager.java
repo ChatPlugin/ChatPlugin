@@ -20,6 +20,8 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventException;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -40,6 +42,11 @@ import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.bossbar.BossbarManager;
 import me.remigio07.chatplugin.api.server.chat.ChatManager;
+import me.remigio07.chatplugin.api.server.event.gui.GUICloseEvent;
+import me.remigio07.chatplugin.api.server.gui.FillableGUI;
+import me.remigio07.chatplugin.api.server.gui.GUI;
+import me.remigio07.chatplugin.api.server.gui.GUIManager;
+import me.remigio07.chatplugin.api.server.gui.SinglePageGUI;
 import me.remigio07.chatplugin.api.server.integration.anticheat.AnticheatManager;
 import me.remigio07.chatplugin.api.server.join_quit.JoinMessageManager;
 import me.remigio07.chatplugin.api.server.join_quit.JoinTitleManager;
@@ -83,6 +90,8 @@ public class BukkitEventManager extends EventManager {
 		manager.registerEvent(PlayerQuitEvent.class, listener, EventPriority.LOW, listener, instance);
 		manager.registerEvent(PlayerCommandPreprocessEvent.class, listener, EventPriority.NORMAL, listener, instance);
 		manager.registerEvent(PlayerChangedWorldEvent.class, listener, EventPriority.LOW, listener, instance);
+		manager.registerEvent(InventoryClickEvent.class, listener, EventPriority.NORMAL, listener, instance);
+		manager.registerEvent(InventoryCloseEvent.class, listener, EventPriority.NORMAL, listener, instance);
 		
 		if (VersionUtils.getVersion().isAtLeast(Version.V1_12))
 			manager.registerEvent(PlayerLocaleChangeEvent.class, listener, EventPriority.MONITOR, listener, instance);
@@ -106,6 +115,12 @@ public class BukkitEventManager extends EventManager {
 			break;
 		case "PlayerChangedWorld":
 			onPlayerChangedWorld((PlayerChangedWorldEvent) event);
+			break;
+		case "InventoryClick":
+			onInventoryClick((InventoryClickEvent) event);
+			break;
+		case "InventoryClose":
+			onInventoryClose((InventoryCloseEvent) event);
 			break;
 		case "PlayerLocaleChange":
 			onPlayerLocaleChange((PlayerLocaleChangeEvent) event);
@@ -133,17 +148,18 @@ public class BukkitEventManager extends EventManager {
 	}
 	
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		if (ProxyManager.getInstance().isEnabled())
-			return;
-		PlayerAdapter player = new PlayerAdapter(event.getPlayer());
-		
-		ServerPlayerManager.getPlayersVersions().put(player.getUUID(), IntegrationType.VIAVERSION.isEnabled() ? IntegrationType.VIAVERSION.get().getVersion(player) : IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(player) : VersionUtils.getVersion());
-		ServerPlayerManager.getPlayersLoginTimes().put(player.getUUID(), System.currentTimeMillis());
-		
-		if (IntegrationType.GEYSERMC.isEnabled() && IntegrationType.GEYSERMC.get().isBedrockPlayer(player))
-			ServerPlayerManager.getBedrockPlayers().add(player.getUUID());
 		if (ServerPlayerManager.getInstance().isWorldEnabled(event.getPlayer().getWorld().getName())) {
 			event.setJoinMessage(null);
+			
+			if (ProxyManager.getInstance().isEnabled())
+				return;
+			PlayerAdapter player = new PlayerAdapter(event.getPlayer());
+			
+			ServerPlayerManager.getPlayersVersions().put(player.getUUID(), IntegrationType.VIAVERSION.isEnabled() ? IntegrationType.VIAVERSION.get().getVersion(player) : IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(player) : VersionUtils.getVersion());
+			ServerPlayerManager.getPlayersLoginTimes().put(player.getUUID(), System.currentTimeMillis());
+			
+			if (IntegrationType.GEYSERMC.isEnabled() && IntegrationType.GEYSERMC.get().isBedrockPlayer(player))
+				ServerPlayerManager.getBedrockPlayers().add(player.getUUID());
 			processJoinEvent(player, false);
 		}
 	}
@@ -216,6 +232,42 @@ public class BukkitEventManager extends EventManager {
 			VanishManager.getInstance().update(player, false);
 			playerManager.unloadPlayer(player.getUUID());
 		} else playerManager.loadPlayer(player.toAdapter());
+	}
+	
+	@SuppressWarnings("deprecation")
+	public void onInventoryClick(InventoryClickEvent event) {
+		if (event.isCancelled())
+			return;
+		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getWhoClicked().getUniqueId());
+		
+		if (player == null)
+			return;
+		GUI gui = GUIManager.getInstance().getOpenGUI(player);
+		
+		if (gui != null) {
+			if (gui instanceof SinglePageGUI)
+				((SinglePageGUI) gui).handleClickEvent(player, event.getRawSlot());
+			else ((FillableGUI<?>) gui).handleClickEvent(player, ((FillableGUI<?>) gui).getViewers().get(player), event.getRawSlot());
+			
+			event.setCancelled(true);
+			event.setCursor(null);
+		}
+	}
+	
+	public void onInventoryClose(InventoryCloseEvent event) {
+		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getPlayer().getUniqueId());
+		
+		if (player == null)
+			return;
+		GUI gui = GUIManager.getInstance().getOpenGUI(player);
+		
+		if (gui != null) {
+			if (gui instanceof SinglePageGUI)
+				((SinglePageGUI) gui).getViewers().remove(player);
+			else ((FillableGUI<?>) gui).getViewers().remove(player);
+			
+			new GUICloseEvent(gui, player).call();
+		}
 	}
 	
 	public void onPlayerLocaleChange(PlayerLocaleChangeEvent event) {

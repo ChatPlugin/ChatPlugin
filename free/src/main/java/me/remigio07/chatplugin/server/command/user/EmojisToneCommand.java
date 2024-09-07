@@ -24,6 +24,8 @@ import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager;
+import me.remigio07.chatplugin.api.server.gui.GUIManager;
+import me.remigio07.chatplugin.api.server.gui.SinglePageGUI;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
@@ -33,7 +35,7 @@ import me.remigio07.chatplugin.server.command.BaseCommand;
 public class EmojisToneCommand extends BaseCommand {
 	
 	public EmojisToneCommand() {
-		super("/emojistone <tone> [player]");
+		super("/emojistone [tone] [player]");
 		tabCompletionArgs.put(0, Arrays.asList("{emojis_tones}"));
 		tabCompletionArgs.put(1, players);
 	}
@@ -46,7 +48,13 @@ public class EmojisToneCommand extends BaseCommand {
 	@Override
 	public void execute(CommandSenderAdapter sender, Language language, String[] args) {
 		if (InstantEmojisManager.getInstance().isEnabled()) {
-			if (args.length == 1) {
+			if (args.length == 0) {
+				if (reportOnlyPlayers(sender)) {
+					if (GUIManager.getInstance().isEnabled() && GUIManager.getInstance().getGUI("emojis-tone") != null)
+						((SinglePageGUI) GUIManager.getInstance().getGUI("emojis-tone")).open(sender.toServerPlayer(), true);
+					else sender.toServerPlayer().sendTranslatedMessage("misc.disabled-feature");
+				}
+			} else if (args.length == 1) {
 				if (reportOnlyPlayers(sender)) {
 					ChatPluginServerPlayer player = sender.toServerPlayer();
 					
@@ -121,5 +129,6 @@ public class EmojisToneCommand extends BaseCommand {
 	public static String unformatColorString(String string, String replacement) {
 		return string.replaceAll(".", replacement + "$0");
 	}
+	
 	
 }

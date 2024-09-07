@@ -23,6 +23,8 @@ import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
+import me.remigio07.chatplugin.api.server.gui.GUIManager;
+import me.remigio07.chatplugin.api.server.gui.SinglePageGUI;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
@@ -32,7 +34,7 @@ import me.remigio07.chatplugin.server.command.BaseCommand;
 public class ChatColorCommand extends BaseCommand {
 	
 	public ChatColorCommand() {
-		super("/chatcolor <color> [player]");
+		super("/chatcolor [color] [player]");
 		tabCompletionArgs.put(0, Arrays.asList(
 				"#DDD605", "&0", "&1", "&2", "&3", "&4", "&5", "&6", "&7", "&8", "&9", "&a", "&b", "&c", "&d", "&e", "&f", "&r",
 				"black", "dark_blue", "dark_green", "dark_aqua", "dark_red", "dark_purple", "gold", "gray", "dark_gray", "blue", "green", "aqua", "red", "light_purple", "yellow", "white", "reset"
@@ -47,7 +49,13 @@ public class ChatColorCommand extends BaseCommand {
 	
 	@Override
 	public void execute(CommandSenderAdapter sender, Language language, String[] args) {
-		if (args.length == 1) {
+		if (args.length == 0) {
+			if (reportOnlyPlayers(sender)) {
+				if (GUIManager.getInstance().isEnabled() && GUIManager.getInstance().getGUI("chat-color") != null)
+					((SinglePageGUI) GUIManager.getInstance().getGUI("chat-color")).open(sender.toServerPlayer(), true);
+				else sender.toServerPlayer().sendTranslatedMessage("misc.disabled-feature");
+			}
+		} else if (args.length == 1) {
 			if (!args[0].equals("#")) {
 				if (reportOnlyPlayers(sender)) {
 					ChatPluginServerPlayer player = sender.toServerPlayer();
@@ -65,7 +73,7 @@ public class ChatColorCommand extends BaseCommand {
 							} else player.sendTranslatedMessage("commands.chatcolor.no-permission");
 						} else player.sendTranslatedMessage("commands.chatcolor.invalid-color", unformatColorString(args[0], "&r"));
 					} else sender.sendMessage(language.getMessage("misc.disabled-world"));
-				} else sender.sendMessage(language.getMessage("commands.chatcolor.hex-usage", String.format("%06x", ThreadLocalRandom.current().nextInt(16777216)).toUpperCase()));
+				}
 			} else sender.sendMessage(language.getMessage("commands.chatcolor.hex-usage", String.format("%06x", ThreadLocalRandom.current().nextInt(16777216)).toUpperCase()));
 		} else if (args.length == 2) {
 			if (sender.hasPermission(getPermission() + ".others")) {

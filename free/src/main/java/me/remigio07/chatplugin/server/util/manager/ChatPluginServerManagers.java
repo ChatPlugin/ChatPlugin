@@ -99,7 +99,7 @@ import me.remigio07.chatplugin.server.chat.RangedChatManagerImpl;
 import me.remigio07.chatplugin.server.chat.StaffChatManagerImpl;
 import me.remigio07.chatplugin.server.chat.antispam.AntispamManagerImpl;
 import me.remigio07.chatplugin.server.chat.log.DummyChatLogManager;
-import me.remigio07.chatplugin.server.gui.DummyGUIManager;
+import me.remigio07.chatplugin.server.gui.GUIManagerImpl;
 import me.remigio07.chatplugin.server.integration.anticheat.AnticheatManagerImpl;
 import me.remigio07.chatplugin.server.join_quit.DummyAccountCheckManager;
 import me.remigio07.chatplugin.server.join_quit.DummySwitchMessageManager;
@@ -175,7 +175,7 @@ public class ChatPluginServerManagers extends ChatPluginManagers {
 		addManager(ActionbarManager.class, new ActionbarManagerImpl());
 		addManager(AdManager.class, new AdManagerImpl());
 		addManager(F3ServerNameManager.class, Environment.isBukkit() ? new BukkitF3ServerNameManager() : new SpongeF3ServerNameManager());
-		addManager(GUIManager.class, new DummyGUIManager());
+		addManager(GUIManager.class, new GUIManagerImpl());
 		addManager(MoTDManager.class, new DummyServerMoTDManager());
 		addManager(DiscordIntegrationManager.class, new DummyDiscordIntegrationManager());
 		addManager(TelegramIntegrationManager.class, new DummyTelegramIntegrationManager());

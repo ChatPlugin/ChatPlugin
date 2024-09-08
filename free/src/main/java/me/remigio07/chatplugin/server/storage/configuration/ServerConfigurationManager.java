@@ -2682,7 +2682,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		discordIntegration.addDefault("settings.channels-ids.punishments", 0L);
 		discordIntegration.addDefault("settings.channels-ids.staff-notifications", 0L);
 		discordIntegration.addDefault("settings.status.value", "with {online_minecraft} other players.");
-		discordIntegration.addDefault("settings.status.activity-type", "DEFAULT");
+		discordIntegration.addDefault("settings.status.activity-type", "PLAYING");
 		discordIntegration.addDefault("settings.status.update-timeout-ms", 10000L);
 		
 		path = "messages.main.";

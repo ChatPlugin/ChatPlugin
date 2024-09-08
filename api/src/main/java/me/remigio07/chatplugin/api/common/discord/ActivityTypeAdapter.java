@@ -32,20 +32,18 @@ public class ActivityTypeAdapter {
 	
 	/**
 	 * Used to indicate that the activity should display as a custom status.
-	 * 
-	 * <p><strong>Note:</strong> this activity type is read only for bots.</p>
 	 */
 	public static final ActivityTypeAdapter CUSTOM_STATUS = new ActivityTypeAdapter("CUSTOM_STATUS");
-	
-	/**
-	 * Used to indicate that the activity should display as a normal message.
-	 */
-	public static final ActivityTypeAdapter DEFAULT = new ActivityTypeAdapter("DEFAULT");
 	
 	/**
 	 * Used to indicate that the activity should display as "Listening...".
 	 */
 	public static final ActivityTypeAdapter LISTENING = new ActivityTypeAdapter("LISTENING");
+	
+	/**
+	 * Used to indicate that the activity should display as "Playing...".
+	 */
+	public static final ActivityTypeAdapter PLAYING = new ActivityTypeAdapter("PLAYING");
 	
 	/**
 	 * Used to indicate that the activity should display as "Streaming...".
@@ -54,11 +52,9 @@ public class ActivityTypeAdapter {
 	
 	/**
 	 * Used to indicate that the activity should display as "Watching...".
-	 * 
-	 * <p><strong>Note:</strong> this activity type is not confirmed for the official API yet.</p>
 	 */
 	public static final ActivityTypeAdapter WATCHING = new ActivityTypeAdapter("WATCHING");
-	private static final ActivityTypeAdapter[] VALUES = new ActivityTypeAdapter[] { COMPETING, CUSTOM_STATUS, DEFAULT, LISTENING, STREAMING, WATCHING };
+	private static final ActivityTypeAdapter[] VALUES = new ActivityTypeAdapter[] { COMPETING, CUSTOM_STATUS, LISTENING, PLAYING, STREAMING, WATCHING };
 	private String name;
 	
 	private ActivityTypeAdapter(String name) {

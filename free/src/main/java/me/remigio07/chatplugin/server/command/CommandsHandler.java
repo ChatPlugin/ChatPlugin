@@ -21,6 +21,7 @@ import java.util.Map;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
+import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.server.ad.AdManager;
 import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager;
@@ -59,6 +60,7 @@ import me.remigio07.chatplugin.server.command.vanish.VanishCommand;
 public abstract class CommandsHandler {
 	
 	protected static Map<String, BaseCommand[]> commands = new HashMap<String, BaseCommand[]>();
+	protected static List<String> disabledCommands;
 	protected static int total;
 	protected static long ms;
 	
@@ -68,7 +70,7 @@ public abstract class CommandsHandler {
 			total = 0;
 			
 			commands.clear();
-		}
+		} disabledCommands = ConfigurationType.CONFIG.get().getStringList("settings.disabled-commands");
 		
 		// main
 		put(

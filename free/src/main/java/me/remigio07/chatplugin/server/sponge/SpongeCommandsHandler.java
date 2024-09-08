@@ -15,6 +15,8 @@
 
 package me.remigio07.chatplugin.server.sponge;
 
+import java.util.stream.Collectors;
+
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandManager;
 
@@ -33,8 +35,10 @@ public class SpongeCommandsHandler extends CommandsHandler {
 			BaseCommand[] subcommands = commands.get(command);
 			BaseCommand mainCommand = subcommands[subcommands.length - 1];
 			
+			if (disabledCommands.containsAll(mainCommand.getMainArgs()))
+				continue;
 			manager.getAll(command).forEach(Sponge.getCommandManager()::removeMapping);
-			manager.register(SpongeBootstrapper.getInstance(), new SpongeCommandAdapter(mainCommand), mainCommand.getMainArgs());
+			manager.register(SpongeBootstrapper.getInstance(), new SpongeCommandAdapter(mainCommand), mainCommand.getMainArgs().stream().filter(alias -> !disabledCommands.contains(alias)).collect(Collectors.toList()));
 		} printTotalLoaded();
 	}
 	

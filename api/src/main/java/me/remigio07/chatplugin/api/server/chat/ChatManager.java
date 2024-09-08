@@ -32,7 +32,7 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 public abstract class ChatManager implements DenyChatReasonHandler {
 	
 	protected static ChatManager instance;
-	protected boolean enabled, chatColorCommandEnabled, overrideChatEvent, chatMuted;
+	protected boolean enabled, overrideChatEvent, chatMuted;
 	protected String chatEventPriority, format, consoleFormat;
 	protected List<String> recognizedTLDs = Collections.emptyList();
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
@@ -46,17 +46,6 @@ public abstract class ChatManager implements DenyChatReasonHandler {
 	@Override
 	public boolean isEnabled() {
 		return enabled;
-	}
-	
-	/**
-	 * Checks if /chatcolor should be enabled.
-	 * 
-	 * <p><strong>Found at:</strong> "chat.color-command-enabled" in {@link ConfigurationType#CHAT}</p>
-	 * 
-	 * @return Whether /chatcolor should be enabled
-	 */
-	public boolean isChatColorCommandEnabled() {
-		return chatColorCommandEnabled;
 	}
 	
 	/**

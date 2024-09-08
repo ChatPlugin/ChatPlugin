@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -94,8 +95,14 @@ public class BukkitCommandsHandler extends CommandsHandler implements CommandExe
 		try {
 			BaseCommand[] subcommands = commands.get(command);
 			List<String> aliases = subcommands[subcommands.length - 1].getMainArgs();
-			PluginCommand bukkitCommand = (PluginCommand) pluginCommandConstructor.newInstance(command, BukkitBootstrapper.getInstance()).setAliases(aliases.subList(1, aliases.size()));
 			
+			if (disabledCommands.containsAll(aliases))
+				return null;
+			aliases = aliases.stream().filter(alias -> !disabledCommands.contains(alias)).collect(Collectors.toList());
+			PluginCommand bukkitCommand = (PluginCommand) pluginCommandConstructor.newInstance(aliases.get(0), BukkitBootstrapper.getInstance());
+			
+			if (aliases.size() != 1)
+				bukkitCommand.setAliases(aliases.subList(1, aliases.size()));
 			commandMap.register("chatplugin", bukkitCommand);
 			return bukkitCommand;
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
@@ -123,12 +130,12 @@ public class BukkitCommandsHandler extends CommandsHandler implements CommandExe
 	
 	@Override
 	public boolean onCommand(CommandSender sender, org.bukkit.command.Command bukkitCommand, String label, String[] args) {
-		String name = bukkitCommand.getName().toLowerCase();
-		
-		for (String s : commands.keySet()) {
-			if (s.equals(name)) {
-				for (int i = 0; i < commands.get(s).length; i++) {
-					BaseCommand command = commands.get(s)[i];
+		if (label.contains(":"))
+			label = label.substring(11);
+		for (BaseCommand[] commands : CommandsHandler.commands.values()) {
+			if (commands[commands.length - 1].getMainArgs().contains(label.toLowerCase())) {
+				for (int i = 0; i < commands.length; i++) {
+					BaseCommand command = commands[i];
 					
 					if (!command.isSubCommand() || (args.length > 0 && command.getMainArgs().contains(args[0].toLowerCase()))) {
 						CommandSenderAdapter senderAdapter = new CommandSenderAdapter(sender);
@@ -145,7 +152,7 @@ public class BukkitCommandsHandler extends CommandsHandler implements CommandExe
 						} if (command.getPermission() != null && !sender.hasPermission(command.getPermission())) {
 							sender.sendMessage(language.getMessage("misc.no-permission"));
 							return true;
-						} LogManager.log(sender.getName() + " issued command: /" + name + " " + String.join(" ", args), 3);
+						} LogManager.log(sender.getName() + " issued command: /" + command.getName() + " " + String.join(" ", args), 3);
 						command.execute(senderAdapter, language, args);
 						return true;
 					}

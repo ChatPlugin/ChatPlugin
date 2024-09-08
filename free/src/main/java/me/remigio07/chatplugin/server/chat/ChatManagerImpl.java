@@ -69,7 +69,6 @@ public class ChatManagerImpl extends ChatManager {
 		
 		if (!ConfigurationType.CHAT.get().getBoolean("chat.enabled"))
 			return;
-		chatColorCommandEnabled = ConfigurationType.CHAT.get().getBoolean("chat.color-command-enabled");
 		overrideChatEvent = ConfigurationType.CHAT.get().getBoolean("chat.event.override");
 		chatEventPriority = ConfigurationType.CHAT.get().getString("chat.event.priority");
 		format = ConfigurationType.CHAT.get().getString("chat.format");
@@ -106,7 +105,7 @@ public class ChatManagerImpl extends ChatManager {
 	
 	@Override
 	public void unload() throws ChatPluginManagerException {
-		enabled = chatColorCommandEnabled = overrideChatEvent = chatMuted = false;
+		enabled = overrideChatEvent = chatMuted = false;
 		
 		recognizedTLDs.clear();
 		placeholderTypes.clear();

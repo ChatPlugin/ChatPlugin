@@ -83,7 +83,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			
 			if ((lastVersionChange = VersionChange.getVersionChange(ConfigurationType.CONFIG.get(), "version", ChatPlugin.VERSION)) != VersionChange.NULL) {
 				if (!lastVersionChange.isSupported())
-					throw new ChatPluginManagerException(this, "downgrading ChatPlugin's version is not supported. If you wish to use an older version, please delete the plugin's folder and let it generate new configuration files. You can also edit settings.version in config.yml to bypass this check, but errors may occur and no support will be given if you ask for it");
+					throw new ChatPluginManagerException(this, "downgrading ChatPlugin's version is not supported. If you wish to use an older version, please delete the plugin's folder and let it generate new configuration files. You can also edit \"settings.version\" in config.yml to bypass this check, but errors may occur and no support will be given if you ask for it");
 				addAllDefaults(true);
 			} else addAllDefaults(false);
 			
@@ -153,6 +153,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("settings.anticheat-integration.violations-expiration-timeout", "1m");
 		config.addDefault("settings.storage-placeholders-update-timeout", "1m");
 		config.addDefault("settings.enabled-worlds", Arrays.asList("*"));
+		config.addDefault("settings.disabled-commands", Arrays.asList());
 		config.addDefault("settings.displayed-memory.unit", "MEGABYTE");
 		config.addDefault("settings.displayed-memory.decimals", 0);
 		config.addDefault("settings.balance-placeholder.decimals", 2);

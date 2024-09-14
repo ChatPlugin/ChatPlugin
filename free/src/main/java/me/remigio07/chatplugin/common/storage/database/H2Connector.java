@@ -187,7 +187,7 @@ public class H2Connector extends DatabaseConnector {
 					+ "`rank_id` VARCHAR(14) NOT NULL, "
 					+ "`server` VARCHAR(36) NOT NULL, "
 					+ "`world` VARCHAR(248) NOT NULL, "
-					+ "`content` VARCHAR(256) NOT NULL, "
+					+ "`content` VARCHAR(508) NOT NULL, "
 					+ "`date` BIGINT NOT NULL, "
 					+ "`deny_chat_reason` ENUM('CAPS', 'FLOOD', 'FORMAT', 'IP_ADDRESS', 'MUTE', 'MUTEALL', 'SPAM', 'SWEAR', 'URL', 'VANISH'), "
 					+ "`global` BOOLEAN NOT NULL"
@@ -202,7 +202,7 @@ public class H2Connector extends DatabaseConnector {
 					+ "`rank_id` VARCHAR(14) NOT NULL, "
 					+ "`server` VARCHAR(36) NOT NULL, "
 					+ "`world` VARCHAR(248) NOT NULL, "
-					+ "`content` VARCHAR(256) NOT NULL, "
+					+ "`content` VARCHAR(505) NOT NULL, "
 					+ "`date` BIGINT NOT NULL, "
 					+ "`deny_chat_reason` ENUM('CAPS', 'FLOOD', 'IP_ADDRESS', 'SPAM', 'SWEAR', 'URL')"
 					+ ")";

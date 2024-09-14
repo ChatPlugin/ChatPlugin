@@ -116,6 +116,8 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 			return;
 		if ((sender == null && recipient == null) || (sender != null && sender.equals(recipient)))
 			throw new IllegalArgumentException("The sender and the recipient correspond");
+		if (privateMessage.length() > 505)
+			throw new IllegalArgumentException("Specified private message is longer than 505 characters");
 		Mute mute;
 		
 		if (sender == null) {

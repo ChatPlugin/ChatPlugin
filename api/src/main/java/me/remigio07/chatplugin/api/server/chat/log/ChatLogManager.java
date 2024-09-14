@@ -113,7 +113,7 @@ public abstract class ChatLogManager implements ChatPluginManager {
 	 * @param publicMessage Public message to log
 	 * @param global Whether the message is global
 	 * @param denyChatReason Public message's deny chat reason
-	 * @throws IllegalArgumentException If the public message's length exceeds 256 characters
+	 * @throws IllegalArgumentException If the public message's length exceeds 508 characters
 	 */
 	public abstract void logPublicMessage(
 			ChatPluginServerPlayer sender,
@@ -134,7 +134,7 @@ public abstract class ChatLogManager implements ChatPluginManager {
 	 * @param recipient Private message's recipient
 	 * @param privateMessage Private message to log
 	 * @param denyChatReason Private message's deny chat reason
-	 * @throws IllegalArgumentException If the private message's length exceeds 256 characters
+	 * @throws IllegalArgumentException If the private message's length exceeds 505 characters
 	 */
 	public abstract void logPrivateMessage(
 			@NotNull ChatPluginServerPlayer sender,

@@ -30,8 +30,6 @@ import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.discord.DiscordIntegrationManager;
 import me.remigio07.chatplugin.api.common.integration.IntegrationManager;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
-import me.remigio07.chatplugin.api.common.ip_lookup.IPLookup;
-import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.common.punishment.ban.BanManager;
 import me.remigio07.chatplugin.api.common.punishment.kick.KickManager;
@@ -281,12 +279,7 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 			output = player.getRank().formatPlaceholders(player.getChatColor() == ChatColor.RESET ? output : output.replace("{chat_color}", VersionUtils.getVersion().isAtLeast(Version.V1_16) ? player.getChatColor().toString() : player.getChatColor().getClosestDefaultColor().toString()), language);
 		if (output.contains("{isp}") || output.contains("{continent}") || output.contains("{country}") || output.contains("{subdivisions}") || output.contains("{city}") || output.contains("{country_code}")
 				|| output.contains("{postal_code}") || output.contains("{latitude}") || output.contains("{longitude}") || output.contains("{accuracy_radius")) {
-			if (IPLookupManager.getInstance().isEnabled()) {
-				IPLookup ipLookup = player.getIPLookup(false);
-				
-				if (ipLookup != null && ipLookup.isValid())
-					output = ipLookup.formatPlaceholders(output);
-			} else output = IPLookupManager.getInstance().getDisabledFeatureConstructor().formatPlaceholders(output);
+			output = player.getIPLookup(false).formatPlaceholders(output);
 		} return translateColors ? ChatColor.translate(output) : output;
 	}
 	

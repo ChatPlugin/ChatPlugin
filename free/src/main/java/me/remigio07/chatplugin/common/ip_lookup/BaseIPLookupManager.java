@@ -81,6 +81,7 @@ public abstract class BaseIPLookupManager extends IPLookupManager {
 			
 			if (maxIPsStored < 1 || maxIPsStored > 15) {
 				LogManager.log("Invalid max IPs stored amount ({0}) set at \"ip-lookup.max-stored-ips\" in config.yml: only values between 1 and 15 are permitted; setting to default value of 5.", 1, maxIPsStored);
+				
 				maxIPsStored = 5;
 			}
 		} return true;

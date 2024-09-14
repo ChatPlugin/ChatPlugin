@@ -18,9 +18,15 @@ package me.remigio07.chatplugin.server.command.admin;
 import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
+import me.remigio07.chatplugin.api.common.ip_lookup.IPLookup;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
+import me.remigio07.chatplugin.api.common.util.manager.LogManager;
+import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.util.adapter.user.CommandSenderAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
@@ -56,11 +62,19 @@ public class IPLookupCommand extends BaseCommand {
 			ipAddress = player == null ? null : player.getIPAddress();
 		} if (ipAddress != null) {
 			if (!ProxyManager.getInstance().isEnabled() || PlayerAdapter.getOnlinePlayers().size() != 0) {
-				IPLookupManager.getInstance().getIPLookup(ipAddress, sender.getName()).thenAccept(ipLookup -> {
-					if (ipLookup != null && ipLookup.isValid())
-						sender.sendMessage(ipLookup.formatPlaceholders(language.getMessage("commands.iplookup")));
-					else sender.sendMessage(language.getMessage("misc.invalid-ip-address", args[0]));
-				});
+				final InetAddress finalIPAddress = ipAddress;
+				
+				TaskManager.runAsync(() -> {
+					try {
+						IPLookup ipLookup = IPLookupManager.getInstance().getIPLookup(finalIPAddress, sender.getName()).get(5, TimeUnit.SECONDS);
+						
+						if (ipLookup.isValid())
+							sender.sendMessage(ipLookup.formatPlaceholders(language.getMessage("commands.iplookup")));
+						else sender.sendMessage(language.getMessage("misc.invalid-ip-address", args[0]));
+					} catch (InterruptedException | ExecutionException | TimeoutException e) {
+						LogManager.log("{0} occurred while waiting for IP lookup of {1}: {2}", 2, e.getClass().getSimpleName(), finalIPAddress.getHostAddress(), e.getMessage());
+					}
+				}, 0L);
 			} else sender.sendMessage(language.getMessage("misc.at-least-one-online"));
 		} else sender.sendMessage(language.getMessage("misc.player-not-found", args[0]));
 	}

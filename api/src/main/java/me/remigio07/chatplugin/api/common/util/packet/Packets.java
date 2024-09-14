@@ -581,6 +581,7 @@ public class Packets {
 		 * @deprecated Internal use only.
 		 * @param server Target server
 		 * @param ipAddress IP lookup's IP address
+		 * @param valid Whether this IP lookup is valid
 		 * @param isp IP lookup' ISP
 		 * @param json IP lookup's JSON representation
 		 * @return <code>IPLookupResponse</code> packet
@@ -590,12 +591,14 @@ public class Packets {
 		public static PacketSerializer ipLookupResponse(
 				@NotNull String server,
 				@NotNull InetAddress ipAddress,
+				boolean valid,
 				@NotNull String isp,
 				@NotNull String json
 				) {
 			return new PacketSerializer("IPLookupResponse")
 					.writeUTF(server)
 					.writeUTF(ipAddress.getHostAddress())
+					.writeBoolean(valid)
 					.writeUTF(isp)
 					.writeUTF(json);
 		}

@@ -181,7 +181,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 				try {
 					return ipLookup = IPLookupManager.getInstance().getIPLookup(getIPAddress()).get(5L, TimeUnit.SECONDS);
 				} catch (InterruptedException | ExecutionException | TimeoutException e) {
-					LogManager.log("{0} occurred while waiting for {1}'s IP ({2}) lookup: {3}", 2, e.getClass().getSimpleName(), name, getIPAddress().getHostName(), e.getMessage());
+					LogManager.log("{0} occurred while waiting for {1}'s IP ({2}) lookup: {3}", 2, e.getClass().getSimpleName(), name, getIPAddress().getHostAddress(), e.getMessage());
 				}
 			} return IPLookupManager.getInstance().getDisabledFeatureConstructor();
 		} else return ipLookup;

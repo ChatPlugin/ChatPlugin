@@ -219,12 +219,10 @@ public abstract class IPLookupManager implements ChatPluginManager {
 	 * 
 	 * <p>Returned lookup will be also {@link #putInCache(InetAddress, IPLookup)}.</p>
 	 * 
-	 * <p>You can specify <code>null</code> as <code>requesterName</code>
-	 * to prevent the proxy from sending them the message found at "misc.disabled-feature" if its
-	 * manager is not enabled, otherwise it will try to do it. Specify "CONSOLE" for the console.</p>
-	 * 
-	 * <p><strong>Note:</strong> this method might take some
-	 * time to be executed: async calls are recommended.</p>
+	 * <p>You can specify <code>null</code> as <code>requesterName</code> to prevent
+	 * the proxy from sending them the message found at "misc.disabled-feature" if
+	 * its {@link IPLookupManager} is not enabled, otherwise it will try to do it.
+	 * Specify "CONSOLE" for the console.</p>
 	 * 
 	 * @param ipAddress IP address to check
 	 * @param requesterName Who requested the IP lookup

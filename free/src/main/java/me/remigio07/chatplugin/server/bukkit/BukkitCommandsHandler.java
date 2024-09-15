@@ -132,7 +132,7 @@ public class BukkitCommandsHandler extends CommandsHandler implements CommandExe
 	public boolean onCommand(CommandSender sender, org.bukkit.command.Command bukkitCommand, String label, String[] args) {
 		if (label.contains(":"))
 			label = label.substring(11);
-		for (BaseCommand[] commands : CommandsHandler.commands.values()) {
+		for (BaseCommand[] commands : commands.values()) {
 			if (commands[commands.length - 1].getMainArgs().contains(label.toLowerCase())) {
 				for (int i = 0; i < commands.length; i++) {
 					BaseCommand command = commands[i];
@@ -162,14 +162,13 @@ public class BukkitCommandsHandler extends CommandsHandler implements CommandExe
 	}
 	
 	@Override
-	public List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command bukkitCommand, String alias, String[] args) {
+	public List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command bukkitCommand, String label, String[] args) {
 		List<String> list = null;
-		String name = bukkitCommand.getName().toLowerCase();
 		
-		for (String s : commands.keySet()) {
-			if (s.equals(name)) {
-				for (int i = 0; i < commands.get(s).length; i++) {
-					BaseCommand command = commands.get(s)[i];
+		for (BaseCommand[] commands : commands.values()) {
+			if (commands[commands.length - 1].getMainArgs().contains(label.toLowerCase())) {
+				for (int i = 0; i < commands.length; i++) {
+					BaseCommand command = commands[i];
 					
 					if (command.hasSubCommands() && args.length == 1) {
 						list = command.getTabCompletionArgs(new CommandSenderAdapter(sender), args[0], 0);

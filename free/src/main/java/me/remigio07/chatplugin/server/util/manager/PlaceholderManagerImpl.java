@@ -220,6 +220,10 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 			output = output.replace("{ping}", String.valueOf(player.getPing()));
 		if (output.contains("{ping_format}"))
 			output = output.replace("{ping_format}", PingManager.getInstance().formatPing(player));
+		if (output.contains("{ping_quality_color}"))
+			output = output.replace("{ping_quality_color}", PingManager.getInstance().getPingQuality(player.getPing()).getColor(language));
+		if (output.contains("{ping_quality_text}"))
+			output = output.replace("{ping_quality_text}", PingManager.getInstance().getPingQuality(player.getPing()).getText(language));
 		if (output.contains("{language_id"))
 			output = output.replace("{language_id}", player.getLanguage().getID());
 		if (output.contains("{language_display_name"))

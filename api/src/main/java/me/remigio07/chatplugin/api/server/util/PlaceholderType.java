@@ -42,7 +42,7 @@ public enum PlaceholderType {
 	 */
 	PLAYER(new String[] {
 			"player", "uuid", "display_name", "ip_address", "health", "max_health", "food", "level", "xp", "gamemode",
-			"ping", "ping_format", "language_id", "language_display_name", "locale", "version", "version_protocol", "client_edition", "last_login", "time_played", "emojis_tone",
+			"ping", "ping_format", "ping_quality_color", "ping_quality_text", "language_id", "language_display_name", "locale", "version", "version_protocol", "client_edition", "last_login", "time_played", "emojis_tone",
 			"world", "online_world", "vanished_world",
 			"player_id", "player_bans", "player_warnings", "player_kicks", "player_mutes", "messages_sent", "player_anticheat_bans", "player_anticheat_warnings", "player_anticheat_kicks", "player_anticheat_mutes",
 			"x", "y", "z", "yaw", "pitch",

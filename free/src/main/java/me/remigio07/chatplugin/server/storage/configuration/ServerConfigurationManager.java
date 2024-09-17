@@ -59,6 +59,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			putConfiguration(new Configuration(ConfigurationType.CHAT_COLOR_GUI));
 			putConfiguration(new Configuration(ConfigurationType.EMOJIS_TONE_GUI));
 			putConfiguration(new Configuration(ConfigurationType.PLAYER_INFO_GUI));
+			putConfiguration(new Configuration(ConfigurationType.PREFERENCES_GUI));
 			
 			if (ChatPlugin.getInstance().isPremium()) {
 				putConfiguration(new Configuration(ConfigurationType.DEFAULT_SCOREBOARD));
@@ -113,6 +114,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		addChatColorGUIDefaults(forceAdd);
 		addEmojisToneGUIDefaults(forceAdd);
 		addPlayerInfoGUIDefaults(forceAdd);
+		addPreferencesGUIDefaults(forceAdd);
 		
 		if (ChatPlugin.getInstance().isPremium()) {
 			addDefaultScoreboardDefaults(forceAdd);
@@ -331,6 +333,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.scoreboard.disabled", "{pfx} &aThe scoreboard has been disabled.");
 		messages.addDefault("commands.bossbar.enabled", "{pfx} &aThe bossbar has been enabled.");
 		messages.addDefault("commands.bossbar.disabled", "{pfx} &aThe bossbar has been disabled.");
+		messages.addDefault("commands.actionbar.enabled", "{pfx} &aThe actionbar has been enabled.");
+		messages.addDefault("commands.actionbar.disabled", "{pfx} &aThe actionbar has been disabled.");
 		messages.addDefault("commands.rankinfo", "{pfx} &aInformation about &f{player}&a's rank:\n&eRank: &f{rank_display_name}\n&ePrefix: &f{prefix}\n&eSuffix: &f{suffix}\n&eTag: &f{tag_prefix}{tag_name_color}{player}{tag_suffix}\n&eDescription:\n&f{rank_description}");
 		
 		messages.addDefault("commands.playerlist.all.message", "{pfx} &aThere are currently &f{0}/{1} &aplayers online:");
@@ -1622,7 +1626,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		emojisToneGUI.addDefault(path + "display-names.english", "&e&lEmojis' tone");
 		emojisToneGUI.addDefault(path + "display-names.italian", "&e&lTono delle emojis");
 		emojisToneGUI.addDefault(path + "lores.english", Arrays.asList("&7This GUI allows you to change", "&7your emojis' default tone."));
-		emojisToneGUI.addDefault(path + "lores.italian", Arrays.asList("&7Questa GUI ti consente di cambiare", "&7il colore predefinito delle tue emojis."));
+		emojisToneGUI.addDefault(path + "lores.italian", Arrays.asList("&7Questa GUI ti consente di cambiare", "&7il tono predefinito delle tue emojis."));
 		emojisToneGUI.addDefault(path + "material", "PAPER");
 		emojisToneGUI.addDefault(path + "keep-open", true);
 		emojisToneGUI.addDefault(path + "x", 5);
@@ -2100,7 +2104,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		playerInfoGUI.addDefault(path + "display-names.english", "&f&lPlayer info");
 		playerInfoGUI.addDefault(path + "display-names.italian", "&f&lInfo giocatore");
 		playerInfoGUI.addDefault(path + "lores.english", Arrays.asList("&7This GUI allows you to view", "&7information about a player."));
-		playerInfoGUI.addDefault(path + "lores.italian", Arrays.asList("&7Con questa GUI puoi visualizzare", "&7le informazioni di un giocatore."));
+		playerInfoGUI.addDefault(path + "lores.italian", Arrays.asList("&7Questa GUI ti consente di visualizzare", "&7le informazioni di un giocatore."));
 		playerInfoGUI.addDefault(path + "material", "PAPER");
 		playerInfoGUI.addDefault(path + "keep-open", true);
 		playerInfoGUI.addDefault(path + "x", 5);
@@ -2163,6 +2167,126 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		playerInfoGUI.addDefault(path + "y", 3);
 		
 		playerInfoGUI.save();
+	}
+	
+	public void addPreferencesGUIDefaults(boolean forceAdd) throws IOException {
+		Configuration preferencesGUI = configurations.get(ConfigurationType.PREFERENCES_GUI);
+		
+		if (!preferencesGUI.getFile().exists())
+			preferencesGUI.createFile();
+		else if (!forceAdd)
+			return;
+		
+		preferencesGUI.addDefault("settings.rows", 3);
+		preferencesGUI.addDefault("settings.titles.english", "&6&lPreferences");
+		preferencesGUI.addDefault("settings.titles.italian", "&6&lPreferenze");
+		preferencesGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &6&lPreferences &aGUI.");
+		preferencesGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &6&lPreferenze &ain corso.");
+		preferencesGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
+		preferencesGUI.addDefault("settings.open-actions.play-sound.volume", 1F);
+		preferencesGUI.addDefault("settings.open-actions.play-sound.pitch", 1F);
+		preferencesGUI.addDefault("settings.click-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : Environment.isBukkit() ? "CLICK" : "GUI_BUTTON");
+		preferencesGUI.addDefault("settings.click-sound.volume", 1F);
+		preferencesGUI.addDefault("settings.click-sound.pitch", 1F);
+		preferencesGUI.addDefault("settings.visibility-placeholder-format.enabled", "&2ON");
+		preferencesGUI.addDefault("settings.visibility-placeholder-format.disabled", "&4OFF");
+		
+		path = "icons.info.";
+		preferencesGUI.addDefault(path + "display-names.english", "&6&lPreferences");
+		preferencesGUI.addDefault(path + "display-names.italian", "&6&lPreferenze");
+		preferencesGUI.addDefault(path + "lores.english", Arrays.asList("&7This GUI allows you to set", "&7some personal preferences."));
+		preferencesGUI.addDefault(path + "lores.italian", Arrays.asList("&7Questa GUI ti consente di impostare", "&7alcune preferenze personali."));
+		preferencesGUI.addDefault(path + "material", "PAPER");
+		preferencesGUI.addDefault(path + "keep-open", true);
+		preferencesGUI.addDefault(path + "x", 5);
+		preferencesGUI.addDefault(path + "y", 1);
+		path = "icons.language.";
+		preferencesGUI.addDefault(path + "display-names.english", "&f&lLanguages");
+		preferencesGUI.addDefault(path + "display-names.italian", "&f&lLingue");
+		preferencesGUI.addDefault(path + "lores.english", Arrays.asList("&7This GUI allows you to change", "&7your language on the server."));
+		preferencesGUI.addDefault(path + "lores.italian", Arrays.asList("&7Questa GUI ti permette di cambiare", "&7la tua lingua sul server."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			preferencesGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			preferencesGUI.addDefault(path + "damage", 3);
+		} else preferencesGUI.addDefault(path + "material", "PLAYER_HEAD");
+		preferencesGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/25485031b37f0d8a4f3b7816eb717f03de89a87f6a40602aef52221cdfaf7488");
+		preferencesGUI.addDefault(path + "commands", Arrays.asList("p: language"));
+		preferencesGUI.addDefault(path + "x", 2);
+		preferencesGUI.addDefault(path + "y", 2);
+		path = "icons.chat-color.";
+		preferencesGUI.addDefault(path + "display-names.english", "&f&lChat color");
+		preferencesGUI.addDefault(path + "display-names.italian", "&f&lColore della chat");
+		preferencesGUI.addDefault(path + "lores.english", Arrays.asList("&7This GUI allows you to change", "&7your chat's default color."));
+		preferencesGUI.addDefault(path + "lores.italian", Arrays.asList("&7Questa GUI ti consente di cambiare", "&7il colore predefinito della tua chat."));
+		preferencesGUI.addDefault(path + "material", Environment.isSponge() || VersionUtils.getVersion().isAtLeast(Version.V1_13) ? "WRITABLE_BOOK" : "BOOK_AND_QUILL");
+		preferencesGUI.addDefault(path + "glowing", true);
+		preferencesGUI.addDefault(path + "commands", Arrays.asList("p: chatcolor"));
+		preferencesGUI.addDefault(path + "x", 3);
+		preferencesGUI.addDefault(path + "y", 2);
+		path = "icons.emojis-tone.";
+		preferencesGUI.addDefault(path + "display-names.english", "&e&lEmojis' tone");
+		preferencesGUI.addDefault(path + "display-names.italian", "&e&lTono delle emojis");
+		preferencesGUI.addDefault(path + "lores.english", Arrays.asList("&7This GUI allows you to change", "&7your emojis' default tone."));
+		preferencesGUI.addDefault(path + "lores.italian", Arrays.asList("&7Questa GUI ti permette di cambiare", "&7il tono predefinito delle tue emojis."));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			preferencesGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			preferencesGUI.addDefault(path + "damage", 3);
+		} else preferencesGUI.addDefault(path + "material", "PLAYER_HEAD");
+		preferencesGUI.addDefault(path + "skull-texture-url", "http://textures.minecraft.net/texture/e10cbeeff6184a4081d0a5462e2751793e65c68a4c6119629bf3aa3d1dff3a57");
+		preferencesGUI.addDefault(path + "commands", Arrays.asList("p: emojistone"));
+		preferencesGUI.addDefault(path + "x", 4);
+		preferencesGUI.addDefault(path + "y", 2);
+		path = "icons.overview.";
+		preferencesGUI.addDefault(path + "display-names.english", "&a&l{player}");
+		preferencesGUI.addDefault(path + "display-names.italian", "&a&l{player}");
+		preferencesGUI.addDefault(path + "lores.english", Arrays.asList("&ePlayer ID: &f#{player_id}", "&ePing: {ping_format} ms &f(quality: {ping_quality_text}&f)", "&eTime played: &f{time_played}", "&eBans/warnings/kicks/mutes: &f{player_bans}x/{player_warnings}x/{player_kicks}x/{player_mutes}x", "&eMessages sent: &f{messages_sent}x"));
+		preferencesGUI.addDefault(path + "lores.italian", Arrays.asList("&eID giocatore &f#{player_id}", "&ePing: {ping_format} ms &f(qualità: {ping_quality_text}&f)", "&eTempo di gioco: &f{time_played}", "&eBans/warnings/kicks/mutes: &f{player_bans}x/{player_warnings}x/{player_kicks}x/{player_mutes}x", "&eMessaggi inviati: &f{messages_sent}x"));
+		
+		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+			preferencesGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
+			preferencesGUI.addDefault(path + "damage", 3);
+		} else preferencesGUI.addDefault(path + "material", "PLAYER_HEAD");
+		preferencesGUI.addDefault(path + "skull-owner", "{player}");
+		preferencesGUI.addDefault(path + "keep-open", true);
+		preferencesGUI.addDefault(path + "x", 5);
+		preferencesGUI.addDefault(path + "y", 2);
+		path = "icons.scoreboard.";
+		preferencesGUI.addDefault(path + "display-names.english", "&a&lScoreboard");
+		preferencesGUI.addDefault(path + "display-names.italian", "&a&lScoreboard");
+		preferencesGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to toggle", "&7the scoreboard's visibility.", "", "&7Visibility: {scoreboard_visibility}"));
+		preferencesGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per cambiare", "&7la visibilità della scoreboard.", "", "&7Visibilità: {scoreboard_visibility}"));
+		preferencesGUI.addDefault(path + "material", "PAINTING");
+		preferencesGUI.addDefault(path + "keep-open", true);
+		preferencesGUI.addDefault(path + "glowing", true);
+		preferencesGUI.addDefault(path + "commands", Arrays.asList("p: scoreboard", "gui refresh preferences-{player}"));
+		preferencesGUI.addDefault(path + "x", 6);
+		preferencesGUI.addDefault(path + "y", 2);
+		path = "icons.bossbar.";
+		preferencesGUI.addDefault(path + "display-names.english", "&d&lBossbar");
+		preferencesGUI.addDefault(path + "display-names.italian", "&d&lBossbar");
+		preferencesGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to toggle", "&7the bossbar's visibility.", "", "&7Visibility: {bossbar_visibility}"));
+		preferencesGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per cambiare", "&7la visibilità della bossbar.", "", "&7Visibilità: {bossbar_visibility}"));
+		preferencesGUI.addDefault(path + "material", "DRAGON_EGG");
+		preferencesGUI.addDefault(path + "keep-open", true);
+		preferencesGUI.addDefault(path + "glowing", true);
+		preferencesGUI.addDefault(path + "commands", Arrays.asList("p: bossbar", "gui refresh preferences-{player}"));
+		preferencesGUI.addDefault(path + "x", 7);
+		preferencesGUI.addDefault(path + "y", 2);
+		path = "icons.actionbar.";
+		preferencesGUI.addDefault(path + "display-names.english", "&6&lActionbar");
+		preferencesGUI.addDefault(path + "display-names.italian", "&6&lActionbar");
+		preferencesGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to toggle", "&7the actionbar's visibility.", "", "&7Visibility: {actionbar_visibility}"));
+		preferencesGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per cambiare", "&7la visibilità dell'actionbar.", "", "&7Visibilità: {actionbar_visibility}"));
+		preferencesGUI.addDefault(path + "material", VersionUtils.getVersion().isAtLeast(Version.V1_14) ? "OAK_SIGN" : "SIGN");
+		preferencesGUI.addDefault(path + "keep-open", true);
+		preferencesGUI.addDefault(path + "glowing", true);
+		preferencesGUI.addDefault(path + "commands", Arrays.asList("p: actionbar", "gui refresh preferences-{player}"));
+		preferencesGUI.addDefault(path + "x", 8);
+		preferencesGUI.addDefault(path + "y", 2);
+		
+		preferencesGUI.save();
 	}
 	
 	public void addPlayerPunishmentsGUIDefaults(boolean forceAdd) throws IOException {

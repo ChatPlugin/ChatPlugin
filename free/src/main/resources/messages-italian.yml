@@ -158,6 +158,9 @@ commands:
   bossbar:
     enabled: '{pfx} &aLa bossbar è stata abilitata.'
     disabled: '{pfx} &aLa bossbar è stata disabilitata.'
+  actionbar:
+    enabled: '{pfx} &aL''actionbar è stata abilitata.'
+    disabled: '{pfx} &aL''actionbar è stata disabilitata.'
   rankinfo: |-
     {pfx} &aInformazioni sul rango di &f{player}&a:
     &eRango: &f{rank_display_name}

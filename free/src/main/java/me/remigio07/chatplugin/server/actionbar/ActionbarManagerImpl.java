@@ -123,7 +123,7 @@ public class ActionbarManagerImpl extends ActionbarManager {
 		
 		event.call();
 		
-		if (!event.isCancelled() && !actionbar.isHidden())
+		if (!event.isCancelled() && !actionbar.isHidden() && player.hasActionbarEnabled())
 			player.sendActionbar(PlaceholderManager.getInstance().translatePlaceholders((hasPrefix ? prefix : "") + actionbar.getText(player.getLanguage(), true), player, placeholderTypes));
 	}
 	

@@ -204,7 +204,8 @@ public abstract class ActionbarManager extends TimerTask implements ChatPluginMa
 	/**
 	 * Sends an actionbar to a loaded player.
 	 * 
-	 * <p>It will not be sent if {@link Actionbar#isHidden()}.</p>
+	 * <p>It will not be sent if {@link Actionbar#isHidden()} or
+	 * <code>!</code>{@link ChatPluginServerPlayer#hasActionbarEnabled()}.</p>
 	 * 
 	 * @param actionbar Actionbar to send
 	 * @param player Player to send the actionbar to

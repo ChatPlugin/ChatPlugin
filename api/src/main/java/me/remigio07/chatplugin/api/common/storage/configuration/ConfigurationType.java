@@ -267,6 +267,15 @@ public enum ConfigurationType {
 	PLAYER_VIOLATIONS_GUI,
 	
 	/**
+	 * Preferences GUI's configuration file.
+	 * 
+	 * <p><strong>Path:</strong> ChatPlugin/guis/preferences.yml</p>
+	 * 
+	 * @see GUIManager
+	 */
+	PREFERENCES_GUI,
+	
+	/**
 	 * Violations icons' configuration file.
 	 * 
 	 * <p>This is a special configuration that contains icons displayed by {@link AnticheatIntegration}s

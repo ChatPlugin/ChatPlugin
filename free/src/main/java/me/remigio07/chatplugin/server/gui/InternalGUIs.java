@@ -58,8 +58,9 @@ import me.remigio07.chatplugin.common.util.Utils;
 
 public class InternalGUIs {
 	
-	private static SinglePageGUILayout playerInfoLayout;
+	private static SinglePageGUILayout playerInfoLayout, preferencesLayout;
 	private static FillableGUILayout playerPunishmentsLayout, playerViolationsLayout;
+	private static String[] preferencesPlaceholders;
 	
 	public static void createMain() {
 		try {
@@ -287,6 +288,32 @@ public class InternalGUIs {
 		return playerInfoLayout;
 	}
 	
+	public static void preparePreferences() {
+		try {
+			preferencesLayout = (SinglePageGUILayout) manager().createGUILayout(ConfigurationType.PREFERENCES_GUI.get());
+			preferencesPlaceholders = new String[] { ConfigurationType.PREFERENCES_GUI.get().translateString("settings.visibility-placeholder-format.enabled"), ConfigurationType.PREFERENCES_GUI.get().translateString("settings.visibility-placeholder-format.disabled") };
+		} catch (Exception e) {
+			error(e, "preferences");
+		}
+	}
+	
+	public static SinglePageGUI createPreferences(ChatPluginServerPlayer player) {
+		SinglePageGUI playerInfo = manager().createPerPlayerGUI(preferencesLayout, player);
+		
+		playerInfo.setTitlesTranslator((t, u) -> PlaceholderManager.getInstance().translatePlaceholders(t.getLayout().getTitle(u, true), player, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
+		playerInfo.setStringPlaceholdersTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(u, player, v, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER))
+				.replace("{scoreboard_visibility}", preferencesPlaceholders[player.getScoreboard() == null ? 1 : 0])
+				.replace("{bossbar_visibility}", preferencesPlaceholders[player.getBossbar() == null ? 1 : 0])
+				.replace("{actionbar_visibility}", preferencesPlaceholders[player.hasActionbarEnabled() ? 0 : 1])
+				);
+		playerInfo.refresh();
+		return playerInfo;
+	}
+	
+	public static SinglePageGUILayout getPreferencesLayout() {
+		return preferencesLayout;
+	}
+	
 	public static void preparePlayerPunishments() {
 		try {
 			playerPunishmentsLayout = (FillableGUILayout) manager().createGUILayout(ConfigurationType.PLAYER_PUNISHMENTS_GUI.get());
@@ -406,7 +433,7 @@ public class InternalGUIs {
 	}
 	
 	public static void clearLayouts() {
-		playerInfoLayout = null;
+		playerInfoLayout = preferencesLayout = null;
 		playerPunishmentsLayout = playerViolationsLayout = null;
 	}
 	

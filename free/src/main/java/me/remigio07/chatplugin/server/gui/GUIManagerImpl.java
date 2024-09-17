@@ -82,6 +82,7 @@ public class GUIManagerImpl extends GUIManager {
 		InternalGUIs.createChatColor();
 		InternalGUIs.createEmojisTone();
 		InternalGUIs.preparePlayerInfo();
+		InternalGUIs.preparePreferences();
 		
 		if (ChatPlugin.getInstance().isPremium()) {
 			InternalGUIs.createBanlist();
@@ -93,7 +94,7 @@ public class GUIManagerImpl extends GUIManager {
 		} taskID = TaskManager.scheduleAsync(() -> {
 			if (ChatPlugin.getInstance().isReloading())
 				return;
-			List<String> internalGUIs = Arrays.asList("main", "chat-color", "violations", "player-info", "player-violations");
+			List<String> internalGUIs = Arrays.asList("main", "chat-color", "violations", "player-info", "preferences", "player-violations");
 			
 			for (GUI gui : guis)
 				if (internalGUIs.contains(gui.getLayout().getID()))

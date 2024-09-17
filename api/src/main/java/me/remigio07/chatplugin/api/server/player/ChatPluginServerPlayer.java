@@ -54,7 +54,7 @@ import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 public abstract class ChatPluginServerPlayer extends OfflinePlayer implements ChatPluginPlayer {
 	
 	protected Version version;
-	protected boolean bedrockPlayer, socialspyEnabled, rangedChatSpyEnabled;
+	protected boolean bedrockPlayer, socialspyEnabled, rangedChatSpyEnabled, actionbarEnabled = true;
 	protected Rank rank;
 	protected Language language;
 	protected Scoreboard scoreboard;
@@ -93,15 +93,6 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	}
 	
 	/**
-	 * Checks if this player has the ranged chat spy enabled.
-	 * 
-	 * @return Whether the ranged chat spy is enabled
-	 */
-	public boolean hasRangedChatSpyEnabled() {
-		return rangedChatSpyEnabled;
-	}
-	
-	/**
 	 * Sets whether this player should have socialspy enabled.
 	 * 
 	 * @param socialspyEnabled Whether socialspy is enabled
@@ -111,12 +102,39 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	}
 	
 	/**
+	 * Checks if this player has the ranged chat spy enabled.
+	 * 
+	 * @return Whether the ranged chat spy is enabled
+	 */
+	public boolean hasRangedChatSpyEnabled() {
+		return rangedChatSpyEnabled;
+	}
+	
+	/**
 	 * Sets whether this player should have the ranged chat spy enabled.
 	 * 
 	 * @param rangedChatSpyEnabled Whether the ranged chat spy is enabled
 	 */
 	public void setRangedChatSpyEnabled(boolean rangedChatSpyEnabled) {
 		this.rangedChatSpyEnabled = rangedChatSpyEnabled;
+	}
+	
+	/**
+	 * Checks if actionbars should be displayed to this player.
+	 * 
+	 * @return Whether their actionbar is enabled
+	 */
+	public boolean hasActionbarEnabled() {
+		return actionbarEnabled;
+	}
+	
+	/**
+	 * Sets whether actionbars should be displayed to this player.
+	 * 
+	 * @param actionbarEnabled Whether their actionbar is enabled
+	 */
+	public void setActionbarEnabled(boolean actionbarEnabled) {
+		this.actionbarEnabled = actionbarEnabled;
 	}
 	
 	/**

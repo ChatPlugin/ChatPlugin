@@ -23,6 +23,7 @@ import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
+import me.remigio07.chatplugin.api.server.actionbar.ActionbarManager;
 import me.remigio07.chatplugin.api.server.ad.AdManager;
 import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager;
 import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
@@ -42,10 +43,12 @@ import me.remigio07.chatplugin.server.command.admin.SocialspyCommand;
 import me.remigio07.chatplugin.server.command.admin.StaffChatCommand;
 import me.remigio07.chatplugin.server.command.gui.GUICommand;
 import me.remigio07.chatplugin.server.command.gui.PlayerInfoCommand;
+import me.remigio07.chatplugin.server.command.gui.PreferencesCommand;
 import me.remigio07.chatplugin.server.command.misc.AdCommand;
 import me.remigio07.chatplugin.server.command.misc.BroadcastCommand;
 import me.remigio07.chatplugin.server.command.misc.BroadcastRawCommand;
 import me.remigio07.chatplugin.server.command.misc.TPSCommand;
+import me.remigio07.chatplugin.server.command.user.ActionbarCommand;
 import me.remigio07.chatplugin.server.command.user.ChatColorCommand;
 import me.remigio07.chatplugin.server.command.user.EmojisToneCommand;
 import me.remigio07.chatplugin.server.command.user.IgnoreCommand;
@@ -105,6 +108,8 @@ public abstract class CommandsHandler {
 		
 		if (InstantEmojisManager.getInstance().isEnabled())
 			put(new EmojisToneCommand());
+		if (ActionbarManager.getInstance().isEnabled())
+			put(new ActionbarCommand());
 		
 		// admin
 		if (StaffChatManager.getInstance().isEnabled())
@@ -120,13 +125,14 @@ public abstract class CommandsHandler {
 		put(new MuteAllCommand());
 		
 		// guis
-		if (GUIManager.getInstance().isEnabled())
+		if (GUIManager.getInstance().isEnabled()) {
 			put(
 					new GUICommand.Open(),
 					new GUICommand.Refresh(),
 					new GUICommand()
 					);
-		put(new PlayerInfoCommand());
+			put(new PreferencesCommand());
+		} put(new PlayerInfoCommand());
 		
 		// vanish
 		if (VanishManager.getInstance().isEnabled())

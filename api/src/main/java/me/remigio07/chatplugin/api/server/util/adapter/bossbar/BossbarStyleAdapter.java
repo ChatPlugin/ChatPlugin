@@ -18,6 +18,7 @@ package me.remigio07.chatplugin.api.server.util.adapter.bossbar;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,7 +26,6 @@ import org.bukkit.boss.BarStyle;
 import org.spongepowered.api.boss.BossBarOverlay;
 import org.spongepowered.api.boss.BossBarOverlays;
 
-import io.netty.util.internal.ThreadLocalRandom;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;

@@ -19,8 +19,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
-import io.netty.util.internal.ThreadLocalRandom;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;

@@ -19,12 +19,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.messaging.Messenger;
 
-import io.netty.util.internal.ThreadLocalRandom;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;

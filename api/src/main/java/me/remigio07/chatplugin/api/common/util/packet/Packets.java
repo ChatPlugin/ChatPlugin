@@ -47,7 +47,7 @@ import me.remigio07.chatplugin.api.server.util.socket.Client;
  * Class used to create packets using {@link PacketSerializer}.
  * 
  * <p>Every inner class of this class represents a category of packets.
- * Deprecated methods and inner classes are internal use only, thus not documented.</p>
+ * Deprecated methods and inner classes are internal use only.</p>
  * 
  * @see PacketDeserializer
  */
@@ -690,6 +690,7 @@ public class Packets {
 		 * @param tps Server's ticks per second
 		 * @param versionProtocol Player's version's protocol
 		 * @param versionPreNettyRewrite Whether the player is using a pre-Netty rewrite version
+		 * @param bedrockEdition Whether the player is playing on Bedrock Edition
 		 * @return <code>PlayerViolation</code> packet
 		 */
 		@PacketScope(Scope.SERVER_TO_SERVER)
@@ -704,7 +705,8 @@ public class Packets {
 				int ping,
 				double tps,
 				int versionProtocol,
-				boolean versionPreNettyRewrite
+				boolean versionPreNettyRewrite,
+				boolean bedrockEdition
 				) {
 			return new PacketSerializer("PlayerViolation")
 					.writeUTF(server)
@@ -718,7 +720,8 @@ public class Packets {
 					.writeInt(ping)
 					.writeDouble(tps)
 					.writeInt(versionProtocol)
-					.writeBoolean(versionPreNettyRewrite);
+					.writeBoolean(versionPreNettyRewrite)
+					.writeBoolean(bedrockEdition);
 		}
 		
 		/**

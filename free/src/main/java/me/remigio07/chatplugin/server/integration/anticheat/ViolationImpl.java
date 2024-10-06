@@ -30,8 +30,8 @@ import me.remigio07.chatplugin.api.server.util.manager.TPSManager;
 
 public class ViolationImpl extends Violation {
 	
-	public ViolationImpl(OfflinePlayer cheater, IntegrationType<AnticheatIntegration> anticheat, String cheatID) {
-		super(cheater, anticheat, cheatID);
+	public ViolationImpl(OfflinePlayer cheater, IntegrationType<AnticheatIntegration> anticheat, String cheatID, Version version, boolean bedrockEdition) {
+		super(cheater, anticheat, cheatID, version, bedrockEdition);
 	}
 	
 	@Override
@@ -50,6 +50,7 @@ public class ViolationImpl extends Violation {
 				.replace("{tps}", TPSManager.getInstance().formatTPS(tps, language))
 				.replace("{version}", version.format())
 				.replace("{version_protocol}", String.valueOf(version.getProtocol()))
+				.replace("{client_edition}", bedrockEdition ? "Bedrock" : "Java")
 				.replace("{last_time}", Utils.formatTime(System.currentTimeMillis() - lastTime, language, false, true));
 	}
 	
@@ -58,13 +59,12 @@ public class ViolationImpl extends Violation {
 		return input.stream().map(str -> formatPlaceholders(str, language)).collect(Collectors.toList());
 	}
 	
-	public void updateData(String component, String server, int amount, int ping, double tps, Version version) {
+	public void updateData(String component, String server, int amount, int ping, double tps) {
 		this.component = component;
 		this.server = server;
 		this.amount = amount;
 		this.ping = ping;
 		this.tps = tps;
-		this.version = version;
 		lastTime = System.currentTimeMillis();
 	}
 	

@@ -32,23 +32,26 @@ public abstract class Violation {
 	 * Array containing all available placeholders that
 	 * can be translated with a violation's information.
 	 * 
-	 * <p><strong>Content:</strong> ["cheater", "cheater_uuid", "anticheat", "cheat_id", "cheat_display_name", "component", "server", "amount", "ping", "ping_format", "tps", "version", "version_protocol", "last_time"]</p>
+	 * <p><strong>Content:</strong> ["cheater", "cheater_uuid", "anticheat", "cheat_id", "cheat_display_name", "component", "server", "amount", "ping", "ping_format", "tps", "version", "version_protocol", "client_edition", "last_time"]</p>
 	 * 
 	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Integrations#placeholders-1">ChatPlugin wiki/Modules/Integrations/Anticheats/Placeholders</a>
 	 */
-	public static final String[] PLACEHOLDERS = new String[] { "cheater", "cheater_uuid", "anticheat", "cheat_id", "cheat_display_name", "component", "server", "amount", "ping", "ping_format", "tps", "version", "version_protocol", "last_time" };
+	public static final String[] PLACEHOLDERS = new String[] { "cheater", "cheater_uuid", "anticheat", "cheat_id", "cheat_display_name", "component", "server", "amount", "ping", "ping_format", "tps", "version", "version_protocol", "client_edition", "last_time" };
 	protected OfflinePlayer cheater;
 	protected IntegrationType<AnticheatIntegration> anticheat;
 	protected String cheatID, component, server;
 	protected int amount, ping;
 	protected double tps;
 	protected Version version;
+	protected boolean bedrockEdition;
 	protected long lastTime = System.currentTimeMillis();
 	
-	protected Violation(OfflinePlayer cheater, IntegrationType<AnticheatIntegration> anticheat, String cheatID) {
+	protected Violation(OfflinePlayer cheater, IntegrationType<AnticheatIntegration> anticheat, String cheatID, Version version, boolean bedrockEdition) {
 		this.cheater = cheater;
 		this.anticheat = anticheat;
 		this.cheatID = cheatID;
+		this.version = version;
+		this.bedrockEdition = bedrockEdition;
 	}
 	
 	/**
@@ -140,6 +143,16 @@ public abstract class Violation {
 	 */
 	public Version getVersion() {
 		return version;
+	}
+	
+	/**
+	 * Checks if the cheater is connected
+	 * through {@link IntegrationType#GEYSERMC}.
+	 * 
+	 * @return Whether the cheater is using the Bedrock Edition
+	 */
+	public boolean isBedrockPlayer() {
+		return bedrockEdition;
 	}
 	
 	/**

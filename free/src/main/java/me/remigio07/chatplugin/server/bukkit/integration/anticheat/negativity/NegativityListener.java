@@ -52,7 +52,8 @@ public class NegativityListener implements Listeners {
 					player.getPing(),
 					TPSManager.getInstance().getTPS(TPSTimeInterval.ONE_MINUTE),
 					player.getVersion().getProtocol(),
-					player.getVersion().isPreNettyRewrite()
+					player.getVersion().isPreNettyRewrite(),
+					player.isBedrockPlayer()
 					));
 		else AnticheatManager.getInstance().addViolation(
 				player,
@@ -63,7 +64,8 @@ public class NegativityListener implements Listeners {
 				violations,
 				player.getPing(),
 				TPSManager.getInstance().getTPS(TPSTimeInterval.ONE_MINUTE),
-				player.getVersion()
+				player.getVersion(),
+				player.isBedrockPlayer()
 				);
 	}
 	

@@ -81,7 +81,8 @@ public class VulcanIntegration extends ChatPluginBukkitIntegration<AnticheatInte
 							player.getPing(),
 							TPSManager.getInstance().getTPS(TPSTimeInterval.ONE_MINUTE),
 							player.getVersion().getProtocol(),
-							player.getVersion().isPreNettyRewrite()
+							player.getVersion().isPreNettyRewrite(),
+							player.isBedrockPlayer()
 							));
 				else AnticheatManager.getInstance().addViolation(
 						player,
@@ -92,7 +93,8 @@ public class VulcanIntegration extends ChatPluginBukkitIntegration<AnticheatInte
 						violations,
 						player.getPing(),
 						TPSManager.getInstance().getTPS(TPSTimeInterval.ONE_MINUTE),
-						player.getVersion()
+						player.getVersion(),
+						player.isBedrockPlayer()
 						);
 			}
 		});

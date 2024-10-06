@@ -73,7 +73,8 @@ public class AnticheatManagerImpl extends AnticheatManager {
 			int amount,
 			int ping,
 			double tps,
-			Version version
+			Version version,
+			boolean bedrockEdition
 			) {
 		if (!isEnabled())
 			return;
@@ -86,8 +87,8 @@ public class AnticheatManagerImpl extends AnticheatManager {
 				break;
 			}
 		if (target == null)
-			list.add(target = new ViolationImpl(cheater, anticheat, cheatID));
-		target.updateData(component, server, amount, ping, tps, version);
+			list.add(target = new ViolationImpl(cheater, anticheat, cheatID, version, bedrockEdition));
+		target.updateData(component, server, amount, ping, tps);
 		violations.put(cheater, list);
 		
 		final Violation finalViolation = target;

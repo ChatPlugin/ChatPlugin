@@ -25,7 +25,6 @@ import me.remigio07.chatplugin.api.common.integration.IntegrationManager;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
-import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -61,8 +60,8 @@ public abstract class AnticheatManager implements ChatPluginManager {
 	 * the list of their {@link Violation}s.</p>
 	 * 
 	 * <p>Do <strong>not</strong> modify the returned map.
-	 * Use {@link #addViolation(OfflinePlayer, IntegrationType, String, String, String, int, int, double, VersionUtils.Version)
-	 * addViolation(OfflinePlayer, IntegrationType, String, String, String, int, int, double, Version)},
+	 * Use {@link #addViolation(OfflinePlayer, IntegrationType, String, String, String, int, int, double, Version, boolean)
+	 * addViolation(OfflinePlayer, IntegrationType, String, String, String, int, int, double, Version, boolean)},
 	 * {@link #removeViolation(OfflinePlayer, IntegrationType, String)} and {@link #clearViolations(OfflinePlayer)}
 	 * to interact with it.</p>
 	 * 
@@ -79,8 +78,8 @@ public abstract class AnticheatManager implements ChatPluginManager {
 	 * {@link #getViolations()} does not contain the specified player.</p>
 	 * 
 	 * <p>Do <strong>not</strong> modify the returned list.
-	 * Use {@link #addViolation(OfflinePlayer, IntegrationType, String, String, String, int, int, double, VersionUtils.Version)
-	 * addViolation(OfflinePlayer, IntegrationType, String, String, String, int, int, double, Version)},
+	 * Use {@link #addViolation(OfflinePlayer, IntegrationType, String, String, String, int, int, double, Version, boolean)
+	 * addViolation(OfflinePlayer, IntegrationType, String, String, String, int, int, double, Version, boolean)},
 	 * {@link #removeViolation(OfflinePlayer, IntegrationType, String)} and {@link #clearViolations(OfflinePlayer)}
 	 * to interact with it.</p>
 	 * 
@@ -136,6 +135,7 @@ public abstract class AnticheatManager implements ChatPluginManager {
 	 * @param ping Cheater's ping
 	 * @param tps Origin server's TPS
 	 * @param version Cheater's version
+	 * @param bedrockEdition Whether the cheater is playing on Bedrock Edition
 	 */
 	public abstract void addViolation(
 			OfflinePlayer cheater,
@@ -146,7 +146,8 @@ public abstract class AnticheatManager implements ChatPluginManager {
 			int amount,
 			int ping,
 			double tps,
-			Version version
+			Version version,
+			boolean bedrockEdition
 			);
 	
 	/**

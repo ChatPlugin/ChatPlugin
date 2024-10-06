@@ -19,6 +19,7 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import com.github.cliftonlabs.json_simple.JsonArray;
@@ -30,8 +31,10 @@ import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupMethod;
 import me.remigio07.chatplugin.api.common.ip_lookup.LocalIPLookupManager;
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
-import me.remigio07.chatplugin.api.common.util.Utils;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
+import me.remigio07.chatplugin.api.server.language.Language;
+import me.remigio07.chatplugin.api.server.util.DateFormat;
+import me.remigio07.chatplugin.api.server.util.Utils;
 
 public class IPLookupImpl extends IPLookup {
 	
@@ -75,6 +78,8 @@ public class IPLookupImpl extends IPLookup {
 				longitude = ((Number) location.get("longitude")).doubleValue();
 			if (location.containsKey("accuracy_radius"))
 				accuracyRadius = ((Number) location.get("accuracy_radius")).longValue();
+			if (location.containsKey("time_zone"))
+				timeZone = (String) location.get("time_zone");
 		} if (country != null) {
 			if (country.containsKey("names"))
 				this.country = (String) ((JsonObject) country.get("names")).get("en");
@@ -104,8 +109,10 @@ public class IPLookupImpl extends IPLookup {
 				.replace("{country}", country)
 				.replace("{subdivisions}", formatSubdivisions())
 				.replace("{city}", city)
+				.replace("{country_code}", countryCode)
 				.replace("{inside_eu}", String.valueOf(insideEU))
-				.replace("{postal_code}", String.valueOf(postalCode))
+				.replace("{time_zone}", timeZone)
+				.replace("{postal_code}", postalCode)
 				.replace("{latitude}", String.valueOf(Utils.truncate(latitude, 3)))
 				.replace("{longitude}", String.valueOf(Utils.truncate(longitude, 3)))
 				.replace("{accuracy_radius_km}", String.valueOf(accuracyRadius))
@@ -114,8 +121,23 @@ public class IPLookupImpl extends IPLookup {
 	}
 	
 	@Override
+	public String formatPlaceholders(String input, Language language) {
+		TimeZone tz = TimeZone.getTimeZone(timeZone);
+		long date = tz.getID().equals(timeZone) ? tz.getOffset(System.currentTimeMillis()) - TimeZone.getDefault().getOffset(System.currentTimeMillis()) + System.currentTimeMillis() : -1;
+		return formatPlaceholders(input)
+				.replace("{relative_date_full}", date == -1 ? "unknown relative date" : Utils.formatDate(date, language, DateFormat.FULL))
+				.replace("{relative_date_day}", date == -1 ? "unknown relative date" : Utils.formatDate(date, language, DateFormat.DAY))
+				.replace("{relative_date_hour}", date == -1 ? "unknown relative date" : Utils.formatDate(date, language, DateFormat.HOUR));
+	}
+	
+	@Override
 	public List<String> formatPlaceholders(List<String> input) {
 		return input.stream().map(this::formatPlaceholders).collect(Collectors.toList());
+	}
+	
+	@Override
+	public List<String> formatPlaceholders(List<String> input, Language language) {
+		return input.stream().map(str -> formatPlaceholders(str, language)).collect(Collectors.toList());
 	}
 	
 }

@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import me.remigio07.chatplugin.api.common.util.Utils;
+import me.remigio07.chatplugin.api.server.language.Language;
 
 /**
  * Represents an IP lookup handled by the {@link IPLookupManager}.
@@ -32,11 +33,11 @@ public abstract class IPLookup {
 	 * Array containing all available placeholders that
 	 * can be translated with an IP lookup's information.
 	 * 
-	 * <p><strong>Content:</strong> ["ip_address", "isp", "continent", "country", "subdivisions", "city", "postal_code", "latitude", "longitude", "accuracy_radius_km", "accuracy_radius_mi", "accuracy_radius_nm"]</p>
+	 * <p><strong>Content:</strong> ["ip_address", "isp", "continent", "country", "subdivisions", "city", "country_code", "inside_eu", "time_zone", "postal_code", "latitude", "longitude", "accuracy_radius_km", "accuracy_radius_mi", "accuracy_radius_nm", "relative_date_full", "relative_date_day", "relative_date_hour"]</p>
 	 * 
 	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/IP-lookup#placeholders">ChatPlugin wiki/Modules/IP lookup/Placeholders</a>
 	 */
-	public static final String[] PLACEHOLDERS = new String[] { "ip_address", "isp", "continent", "country", "subdivisions", "city", "postal_code", "latitude", "longitude", "accuracy_radius_km", "accuracy_radius_mi", "accuracy_radius_nm" };
+	public static final String[] PLACEHOLDERS = new String[] { "ip_address", "isp", "continent", "country", "subdivisions", "city", "country_code", "inside_eu", "time_zone", "postal_code", "latitude", "longitude", "accuracy_radius_km", "accuracy_radius_mi", "accuracy_radius_nm", "relative_date_full", "relative_date_day", "relative_date_hour" };
 	protected IPLookupMethod method = IPLookupMethod.REMOTE;
 	protected InetAddress ipAddress;
 	protected String json = "{}";
@@ -45,6 +46,7 @@ public abstract class IPLookup {
 	protected String country = "unknown country";
 	protected String city = "unknown city";
 	protected String countryCode = "unknown country code";
+	protected String timeZone = "unknown time zone";
 	protected String postalCode = "unknown postal code";
 	protected List<String> subdivisions = Collections.emptyList();
 	protected boolean insideEU, valid = true;
@@ -92,6 +94,7 @@ public abstract class IPLookup {
 			country = "unknown country";
 			city = "unknown city";
 			countryCode = "unknown country code";
+			timeZone = "unknown time zone";
 			postalCode = "unknown postal code";
 			subdivisions = Collections.emptyList();
 			insideEU = false;
@@ -255,6 +258,24 @@ public abstract class IPLookup {
 	}
 	
 	/**
+	 * Gets this lookup's <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List">time zone</a>.
+	 * 
+	 * @return Lookup's time zone
+	 */
+	public String getTimeZone() {
+		return timeZone;
+	}
+	
+	/**
+	 * Sets this lookup's <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List">time zone</a>.
+	 * 
+	 * @param timeZone Lookup's time zone
+	 */
+	public void setTimeZone(String timeZone) {
+		this.timeZone = timeZone;
+	}
+	
+	/**
 	 * Gets this lookup's position's postal code.
 	 * 
 	 * <p><strong>Note:</strong> not all countries use postal codes.</p>
@@ -352,7 +373,14 @@ public abstract class IPLookup {
 	/**
 	 * Translates an input string with this IP lookup's specific placeholders.
 	 * 
-	 * <p>Check {@link #PLACEHOLDERS} to know the available placeholders.</p>
+	 * <p>Check {@link #PLACEHOLDERS} to know the available placeholders.
+	 * Unlike {@link #formatPlaceholders(String, Language)},
+	 * this method does not translate the following:
+	 * 	<ul>
+	 * 		<li><code>{relative_date_full}</code></li>
+	 * 		<li><code>{relative_date_day}</code></li>
+	 * 		<li><code>{relative_date_hour}</code></li>
+	 * 	</ul>
 	 * 
 	 * @param input Input containing placeholders
 	 * @return Translated placeholders
@@ -360,13 +388,42 @@ public abstract class IPLookup {
 	public abstract String formatPlaceholders(String input);
 	
 	/**
+	 * Translates an input string with this IP lookup's specific placeholders.
+	 * 
+	 * <p>Check {@link #PLACEHOLDERS} to know the available placeholders.</p>
+	 * 
+	 * @param input Input containing placeholders
+	 * @param language Language used to translate the placeholders
+	 * @return Translated placeholders
+	 */
+	public abstract String formatPlaceholders(String input, Language language);
+	
+	/**
+	 * Translates an input string list with this IP lookup's specific placeholders.
+	 * 
+	 * <p>Check {@link #PLACEHOLDERS} to know the available placeholders.
+	 * Unlike {@link #formatPlaceholders(List, Language)},
+	 * this method does not translate the following:
+	 * 	<ul>
+	 * 		<li><code>{relative_date_full}</code></li>
+	 * 		<li><code>{relative_date_day}</code></li>
+	 * 		<li><code>{relative_date_hour}</code></li>
+	 * 	</ul>
+	 * 
+	 * @param input Input containing placeholders
+	 * @return Translated placeholders
+	 */
+	public abstract List<String> formatPlaceholders(List<String> input);
+	
+	/**
 	 * Translates an input string list with this IP lookup's specific placeholders.
 	 * 
 	 * <p>Check {@link #PLACEHOLDERS} to know the available placeholders.</p>
 	 * 
-	 * @param input Input string list
-	 * @return Formatted string list
+	 * @param input Input containing placeholders
+	 * @param language Language used to translate the placeholders
+	 * @return Translated placeholders
 	 */
-	public abstract List<String> formatPlaceholders(List<String> input);
+	public abstract List<String> formatPlaceholders(List<String> input, Language language);
 	
 }

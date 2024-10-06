@@ -47,7 +47,7 @@ public enum PlaceholderType {
 			"player_id", "player_bans", "player_warnings", "player_kicks", "player_mutes", "messages_sent", "player_anticheat_bans", "player_anticheat_warnings", "player_anticheat_kicks", "player_anticheat_mutes",
 			"x", "y", "z", "yaw", "pitch",
 			"rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description",
-			"isp", "continent", "country", "subdivisions", "city", "country_code", "postal_code", "latitude", "longitude", "accuracy_radius_km", "accuracy_radius_mi", "accuracy_radius_nm"
+			"isp", "continent", "country", "subdivisions", "city", "country_code", "inside_eu", "time_zone", "postal_code", "latitude", "longitude", "accuracy_radius_km", "accuracy_radius_mi", "accuracy_radius_nm", "relative_date_full", "relative_date_day", "relative_date_hour"
 			}),
 	
 	/**

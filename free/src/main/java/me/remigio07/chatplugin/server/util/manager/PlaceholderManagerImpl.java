@@ -281,9 +281,10 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 					.replace("{pitch}", String.valueOf(Environment.isBukkit() ? ((org.bukkit.Location) location).getPitch() : ((Vector3d) headRotation).getY()));
 		} if (output.contains("{rank") || output.contains("prefix}") || output.contains("suffix}") || output.contains("color}") || output.contains("{rank_description}"))
 			output = player.getRank().formatPlaceholders(player.getChatColor() == ChatColor.RESET ? output : output.replace("{chat_color}", VersionUtils.getVersion().isAtLeast(Version.V1_16) ? player.getChatColor().toString() : player.getChatColor().getClosestDefaultColor().toString()), language);
-		if (output.contains("{isp}") || output.contains("{continent}") || output.contains("{country}") || output.contains("{subdivisions}") || output.contains("{city}") || output.contains("{country_code}")
-				|| output.contains("{postal_code}") || output.contains("{latitude}") || output.contains("{longitude}") || output.contains("{accuracy_radius")) {
-			output = player.getIPLookup(false).formatPlaceholders(output);
+		if (output.contains("{isp}") || output.contains("{continent}") || output.contains("{country}") || output.contains("{subdivisions}") || output.contains("{city}")
+				|| output.contains("{country_code}") || output.contains("{inside_eu}") || output.contains("{time_zone}") || output.contains("{country_code}") || output.contains("{postal_code}")
+				|| output.contains("{latitude}") || output.contains("{longitude}") || output.contains("{accuracy_radius_") || output.contains("{relative_date_")) {
+			output = player.getIPLookup(false).formatPlaceholders(output, language);
 		} return translateColors ? ChatColor.translate(output) : output;
 	}
 	

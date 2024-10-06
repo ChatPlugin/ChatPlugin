@@ -168,11 +168,16 @@ public abstract class ChatPlugin {
 	public abstract int unload();
 	
 	/**
-	 * Runs a command from the console.
+	 * Runs a command from the console synchronously.
+	 * 
+	 * <p>It will run on the next server tick if <code>forceSync</code>.
+	 * Otherwise, make sure the call comes from the server's main thread, unless
+	 * {@link Environment#isProxy()}, where everything is asynchronous.</p>
 	 * 
 	 * @param command Command to run
+	 * @param forceSync Whether to force synchronization
 	 */
-	public abstract void runConsoleCommand(String command);
+	public abstract void runConsoleCommand(String command, boolean forceSync);
 	
 	/**
 	 * Sends a message to the console.

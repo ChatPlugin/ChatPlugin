@@ -27,8 +27,9 @@ import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationTyp
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
-import me.remigio07.chatplugin.api.server.event.gui.GUIClickEvent;
+import me.remigio07.chatplugin.api.server.event.gui.EmptySlotClickEvent;
 import me.remigio07.chatplugin.api.server.event.gui.GUIOpenEvent;
+import me.remigio07.chatplugin.api.server.event.gui.IconClickEvent;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.util.GameFeature;
@@ -264,7 +265,7 @@ public abstract class GUIManager implements ChatPluginManager {
 	 * <p>The returned GUI's ID is set to {@link GUILayout#getID() layout.getID()}
 	 * <code> + "-" + </code>{@link ChatPluginServerPlayer#getName() player.getName()}.
 	 * A task that unloads the returned GUI after {@link #getPerPlayerGUIsUnloadTime()}
-	 * of inactivity ({@link GUIOpenEvent}, {@link GUIClickEvent}) is automatically started.
+	 * of inactivity ({@link GUIOpenEvent}, {@link EmptySlotClickEvent}, {@link IconClickEvent}) is automatically started.
 	 * The GUI gets removed when <code>player</code> is unloaded from {@link PlayerManager#getPlayers()}.</p>
 	 * 
 	 * @param <T> GUI's type

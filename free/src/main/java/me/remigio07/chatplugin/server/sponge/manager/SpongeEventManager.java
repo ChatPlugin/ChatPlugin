@@ -15,8 +15,14 @@
 
 package me.remigio07.chatplugin.server.sponge.manager;
 
+import java.io.IOException;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.persistence.DataFormats;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.EventListener;
 import org.spongepowered.api.event.Order;
@@ -24,6 +30,8 @@ import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent.Teleport;
 import org.spongepowered.api.event.entity.living.humanoid.player.PlayerChangeClientSettingsEvent;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent.Drag;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent.NumberPress;
 import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 import org.spongepowered.api.event.item.inventory.InteractInventoryEvent.Close;
 import org.spongepowered.api.event.message.MessageChannelEvent;
@@ -31,8 +39,13 @@ import org.spongepowered.api.event.message.MessageChannelEvent.Chat;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent.Disconnect;
 import org.spongepowered.api.event.network.ClientConnectionEvent.Join;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
-import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
+
+import com.github.cliftonlabs.json_simple.JsonException;
+import com.github.cliftonlabs.json_simple.JsonObject;
+import com.github.cliftonlabs.json_simple.Jsoner;
 
 import me.remigio07.chatplugin.api.common.event.EventManager;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
@@ -65,6 +78,11 @@ import me.remigio07.chatplugin.api.server.scoreboard.ScoreboardManager;
 import me.remigio07.chatplugin.api.server.scoreboard.event.EventScoreboard;
 import me.remigio07.chatplugin.api.server.scoreboard.event.ScoreboardEvent;
 import me.remigio07.chatplugin.api.server.util.Utils;
+import me.remigio07.chatplugin.api.server.util.adapter.inventory.ClickEventAdapter;
+import me.remigio07.chatplugin.api.server.util.adapter.inventory.ClickEventAdapter.ClickActionAdapter;
+import me.remigio07.chatplugin.api.server.util.adapter.inventory.ClickEventAdapter.ClickTypeAdapter;
+import me.remigio07.chatplugin.api.server.util.adapter.inventory.DragEventAdapter;
+import me.remigio07.chatplugin.api.server.util.adapter.inventory.item.ItemStackAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.bootstrap.SpongeBootstrapper;
@@ -118,20 +136,40 @@ public class SpongeEventManager extends EventManager {
 			onPlayerChangeClientSettings((PlayerChangeClientSettingsEvent) event);
 			break;
 		case "ClickInventory$Double":
+			onClickInventory((ClickInventoryEvent) event, ClickTypeAdapter.DOUBLE_CLICK);
+			break;
 		case "ClickInventory$Drag$Middle":
 		case "ClickInventory$Drag$Primary":
+			onDragInventory((Drag) event, false);
+			break;
 		case "ClickInventory$Drag$Secondary":
-		case "ClickInventory$Drop$Single":
+			onDragInventory((Drag) event, true);
+			break;
 		case "ClickInventory$Drop$Full":
-		case "ClickInventory$Drop$Outside$Primary":
-		case "ClickInventory$Drop$Outside$Secondary":
+			onClickInventory((ClickInventoryEvent) event, ClickTypeAdapter.CONTROL_DROP);
+			break;
+		case "ClickInventory$Drop$Single":
+			onClickInventory((ClickInventoryEvent) event, ClickTypeAdapter.DROP);
+			break;
 		case "ClickInventory$Middle":
+			onClickInventory((ClickInventoryEvent) event, ClickTypeAdapter.MIDDLE);
+			break;
 		case "ClickInventory$NumberPress":
+			onClickInventory((ClickInventoryEvent) event, ClickTypeAdapter.NUMBER_KEY);
+			break;
 		case "ClickInventory$Primary":
+		case "ClickInventory$Drop$Outside$Primary":
+			onClickInventory((ClickInventoryEvent) event, ClickTypeAdapter.LEFT);
+			break;
 		case "ClickInventory$Secondary":
+		case "ClickInventory$Drop$Outside$Secondary":
+			onClickInventory((ClickInventoryEvent) event, ClickTypeAdapter.RIGHT);
+			break;
 		case "ClickInventory$Shift$Primary":
+			onClickInventory((ClickInventoryEvent) event, ClickTypeAdapter.SHIFT_LEFT);
+			break;
 		case "ClickInventory$Shift$Secondary":
-			onClickInventory((ClickInventoryEvent) event);
+			onClickInventory((ClickInventoryEvent) event, ClickTypeAdapter.SHIFT_RIGHT);
 			break;
 		case "InteractInventory$Close":
 			onInteractInventory$Close((Close) event);
@@ -239,8 +277,146 @@ public class SpongeEventManager extends EventManager {
 		}
 	}
 	
-	public void onClickInventory(ClickInventoryEvent event) {
-		if (event.getTransactions().isEmpty())
+	public void onClickInventory(ClickInventoryEvent event, ClickTypeAdapter clickType) {
+		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getCause().first(Player.class).get().getUniqueId());
+		
+		if (player == null)
+			return;
+		GUI gui = GUIManager.getInstance().getOpenGUI(player);
+		
+		if (gui != null) {
+			ItemStack cursor = event.getCursorTransaction().getOriginal().createStack();
+			int slot = event.getSlot().isPresent() ? event.getSlot().get().getInventoryProperty(SlotIndex.class).get().getValue() : -1;
+			ClickActionAdapter clickAction = ClickActionAdapter.NOTHING;
+			
+			/*
+			 * Sponge does not provide any API to detect the click action, so we have to calculate it ourselves.
+			 * 
+			 * logic: https://hub.spigotmc.org/stash/projects/SPIGOT/repos/craftbukkit/browse/nms-patches/net/minecraft/server/network/PlayerConnection.patch#1343-1504
+			 * 
+			 * some the following statements do not check if the other inventory has free space to receive the moved items.
+			 * this is intentional to keep consistency between the Bukkit and the Sponge implementations.
+			 */
+			if (clickType == ClickTypeAdapter.LEFT) {
+				if (slot != -1) {
+					ItemStack clicked = event.getTransactions().get(0).getOriginal().createStack();
+					
+					if (!clicked.isEmpty()) {
+						if (!cursor.isEmpty()) {
+							try {
+								JsonObject cursorJSON = (JsonObject) Jsoner.deserialize(DataFormats.JSON.write(cursor.toContainer()));
+								JsonObject clickedJSON = (JsonObject) Jsoner.deserialize(DataFormats.JSON.write(clicked.toContainer()));
+								
+								cursorJSON.remove("Count");
+								clickedJSON.remove("Count");
+								
+								if (cursorJSON.equals(clickedJSON)) {
+									int toPlace = cursor.getQuantity();
+									toPlace = Math.min(toPlace, clicked.getMaxStackQuantity() - clicked.getQuantity());
+									toPlace = Math.min(toPlace, 64 - clicked.getQuantity());
+									
+									if (toPlace == 1)
+										clickAction = ClickActionAdapter.PLACE_ONE;
+									else if (toPlace == cursor.getQuantity())
+										clickAction = ClickActionAdapter.PLACE_ALL;
+									else if (toPlace < 0)
+										clickAction = toPlace != -1 ? ClickActionAdapter.PICKUP_SOME : ClickActionAdapter.PICKUP_ONE;
+									else if (toPlace != 0)
+										clickAction = ClickActionAdapter.PLACE_SOME;
+								} else if (cursor.getQuantity() <= clicked.getMaxStackQuantity())
+									clickAction = ClickActionAdapter.SWAP_WITH_CURSOR;
+							} catch (IOException | JsonException e) {
+								e.printStackTrace();
+							}
+						} else clickAction = ClickActionAdapter.PICKUP_ALL;
+					} else if (!cursor.isEmpty())
+						clickAction = ClickActionAdapter.PLACE_ALL;
+				} else if (!cursor.isEmpty())
+					clickAction = ClickActionAdapter.DROP_ALL_CURSOR;
+			} else if (clickType == ClickTypeAdapter.SHIFT_LEFT || clickType == ClickTypeAdapter.SHIFT_RIGHT) {
+				if (event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(slot))).peek().isPresent())
+					clickAction = ClickActionAdapter.MOVE_TO_OTHER_INVENTORY;
+			} else if (clickType == ClickTypeAdapter.RIGHT) {
+				if (slot != -1) {
+					ItemStack clicked = event.getTransactions().get(0).getOriginal().createStack();
+					
+					if (!clicked.isEmpty()) {
+						if (!cursor.isEmpty()) {
+							try {
+								JsonObject cursorJSON = (JsonObject) Jsoner.deserialize(DataFormats.JSON.write(cursor.toContainer()));
+								JsonObject clickedJSON = (JsonObject) Jsoner.deserialize(DataFormats.JSON.write(clicked.toContainer()));
+								
+								cursorJSON.remove("Count");
+								clickedJSON.remove("Count");
+								
+								if (cursorJSON.equals(clickedJSON)) {
+									int toPlace = 1;
+									toPlace = Math.min(toPlace, clicked.getMaxStackQuantity() - clicked.getQuantity());
+									toPlace = Math.min(toPlace, 64 - clicked.getQuantity());
+									
+									if (toPlace == 1)
+										clickAction = ClickActionAdapter.PLACE_ONE;
+									else if (toPlace == cursor.getQuantity())
+										clickAction = ClickActionAdapter.PLACE_ALL;
+									else if (toPlace < 0)
+										clickAction = toPlace != -1 ? ClickActionAdapter.PICKUP_SOME : ClickActionAdapter.PICKUP_ONE;
+									else if (toPlace != 0)
+										clickAction = ClickActionAdapter.PLACE_SOME;
+								} else if (cursor.getQuantity() <= clicked.getMaxStackQuantity())
+									clickAction = ClickActionAdapter.SWAP_WITH_CURSOR;
+							} catch (IOException | JsonException e) {
+								e.printStackTrace();
+							}
+						} else clickAction = ClickActionAdapter.PICKUP_HALF;
+					} else if (!cursor.isEmpty())
+						clickAction = ClickActionAdapter.PLACE_ONE;
+				} else if (!cursor.isEmpty())
+					clickAction = ClickActionAdapter.DROP_ONE_CURSOR;
+			} else if (clickType == ClickTypeAdapter.MIDDLE) {
+				if (cursor.isEmpty() && event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(slot))).peek().isPresent() && player.toAdapter().spongeValue().gameMode().get() == GameModes.CREATIVE)
+					clickAction = ClickActionAdapter.CLONE_STACK;
+			} else if (clickType == ClickTypeAdapter.NUMBER_KEY) {
+				Optional<ItemStack> hotbar = player.toAdapter().spongeValue().getInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(((NumberPress) event).getNumber()))).peek();
+				clickAction = event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(slot))).peek().isPresent()
+						? !hotbar.isPresent() || slot >= gui.getLayout().getSize()
+						? ClickActionAdapter.HOTBAR_SWAP
+						: ClickActionAdapter.HOTBAR_MOVE_AND_READD
+						: hotbar.isPresent() && !hotbar.get().isEmpty()
+						? ClickActionAdapter.HOTBAR_SWAP
+						: ClickActionAdapter.NOTHING;
+			} else if (clickType == ClickTypeAdapter.DOUBLE_CLICK) {
+				if (slot >= 0 && !cursor.isEmpty() && event.getTargetInventory().containsAny(cursor))
+					clickAction = ClickActionAdapter.COLLECT_TO_CURSOR;
+			} else if (clickType == ClickTypeAdapter.DROP) {
+				if (!event.getTransactions().isEmpty())
+					slot = event.getTransactions().get(0).getSlot().getInventoryProperty(SlotIndex.class).get().getValue();
+				if (slot != -1 && !event.getTransactions().get(0).getOriginal().createStack().isEmpty())
+					clickAction = ClickActionAdapter.DROP_ONE_SLOT;
+			} else if (clickType == ClickTypeAdapter.CONTROL_DROP) {
+				if (!event.getTransactions().isEmpty())
+					slot = event.getTransactions().get(0).getSlot().getInventoryProperty(SlotIndex.class).get().getValue();
+				if (slot != -1 && !event.getTransactions().get(0).getOriginal().createStack().isEmpty())
+					clickAction = ClickActionAdapter.DROP_ALL_SLOT;
+			} event.setCancelled(gui instanceof SinglePageGUI
+					? ((SinglePageGUI) gui).handleClickEvent(player, new ClickEventAdapter(
+							clickType,
+							clickAction,
+							new ItemStackAdapter(cursor),
+							slot,
+							event instanceof NumberPress ? ((NumberPress) event).getNumber() : -1
+							))
+					: ((FillableGUI<?>) gui).handleClickEvent(player, new ClickEventAdapter(
+							clickType,
+							clickAction,
+							new ItemStackAdapter(cursor),
+							slot,
+							event instanceof NumberPress ? ((NumberPress) event).getNumber() : -1
+							), ((FillableGUI<?>) gui).getViewers().get(player)));
+		}
+	}
+	
+	public void onDragInventory(ClickInventoryEvent.Drag event, boolean single) {
+		if (event.isCancelled())
 			return;
 		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getCause().first(Player.class).get().getUniqueId());
 		
@@ -249,11 +425,21 @@ public class SpongeEventManager extends EventManager {
 		GUI gui = GUIManager.getInstance().getOpenGUI(player);
 		
 		if (gui != null) {
-			for (SlotTransaction transaction : event.getTransactions())
-				if (gui instanceof SinglePageGUI)
-					((SinglePageGUI) gui).handleClickEvent(player, transaction.getSlot().getInventoryProperty(SlotIndex.class).get().getValue());
-				else ((FillableGUI<?>) gui).handleClickEvent(player, ((FillableGUI<?>) gui).getViewers().get(player), transaction.getSlot().getInventoryProperty(SlotIndex.class).get().getValue());
-			event.setCancelled(true);
+			ItemStackAdapter cursor = new ItemStackAdapter(event.getCursorTransaction().getDefault().createStack());
+			DragEventAdapter dragEvent = new DragEventAdapter(
+					event.getTransactions().stream().collect(Collectors.toMap(transaction -> transaction.getSlot().getInventoryProperty(SlotIndex.class).get().getValue(), transaction -> new ItemStackAdapter(transaction.getOriginal().createStack()))),
+					new ItemStackAdapter(event.getCursorTransaction().getOriginal().createStack()),
+					cursor,
+					single
+					);
+			
+			event.setCancelled(gui instanceof SinglePageGUI
+					? ((SinglePageGUI) gui).handleDragEvent(player, dragEvent)
+					: ((FillableGUI<?>) gui).handleDragEvent(player, dragEvent, ((FillableGUI<?>) gui).getViewers().get(player))
+					);
+			
+			if (cursor != dragEvent.getCursor())
+				event.getCursorTransaction().setCustom(dragEvent.getCursor().spongeValue().createSnapshot());
 		}
 	}
 	

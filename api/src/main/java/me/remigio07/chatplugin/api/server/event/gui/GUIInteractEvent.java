@@ -17,37 +17,22 @@ package me.remigio07.chatplugin.api.server.event.gui;
 
 import me.remigio07.chatplugin.api.common.event.CancellableEvent;
 import me.remigio07.chatplugin.api.server.event.player.ChatPluginServerPlayerEvent;
-import me.remigio07.chatplugin.api.server.gui.FillableGUI;
 import me.remigio07.chatplugin.api.server.gui.GUI;
-import me.remigio07.chatplugin.api.server.gui.Icon;
 import me.remigio07.chatplugin.api.server.gui.SinglePageGUI;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
- * Represents an event called when a player clicks a slot in a {@link GUI}.
- * 
- * @see SinglePageGUI#handleClickEvent(ChatPluginServerPlayer, int)
- * @see FillableGUI#handleClickEvent(ChatPluginServerPlayer, int, int)
+ * Represents an event called when a player interacts with a slot in a {@link GUI}.
  */
-public class GUIClickEvent extends GUIEvent implements CancellableEvent, ChatPluginServerPlayerEvent {
+public abstract class GUIInteractEvent extends GUIEvent implements CancellableEvent, ChatPluginServerPlayerEvent {
 	
-	private boolean cancelled;
-	private ChatPluginServerPlayer player;
-	private Icon icon;
-	private int page;
+	protected boolean cancelled = true;
+	protected ChatPluginServerPlayer player;
+	protected int page;
 	
-	/**
-	 * Constructs a new GUI click event.
-	 * 
-	 * @param gui GUI involved
-	 * @param player Player involved
-	 * @param icon Icon involved
-	 * @param page Page involved
-	 */
-	public GUIClickEvent(GUI gui, ChatPluginServerPlayer player, Icon icon, int page) {
+	protected GUIInteractEvent(GUI gui, ChatPluginServerPlayer player, int page) {
 		super(gui);
 		this.player = player;
-		this.icon = icon;
 		this.page = page;
 	}
 	
@@ -67,20 +52,11 @@ public class GUIClickEvent extends GUIEvent implements CancellableEvent, ChatPlu
 	}
 	
 	/**
-	 * Gets the clicked icon.
-	 * 
-	 * @return Clicked icon
-	 */
-	public Icon getIcon() {
-		return icon;
-	}
-	
-	/**
-	 * Gets the page containing {@link #getIcon()}.
+	 * Gets the page containing the clicked slot.
 	 * 
 	 * <p>Will return 0 for {@link SinglePageGUI}s.</p>
 	 * 
-	 * @return GUI's page
+	 * @return GUI's page, counting from 0
 	 */
 	public int getPage() {
 		return page;

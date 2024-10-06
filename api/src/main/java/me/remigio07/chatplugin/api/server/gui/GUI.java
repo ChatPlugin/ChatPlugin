@@ -22,8 +22,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import me.remigio07.chatplugin.api.common.util.TriFunction;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
-import me.remigio07.chatplugin.api.server.event.gui.GUIClickEvent;
 import me.remigio07.chatplugin.api.server.event.gui.GUIRefreshEvent;
+import me.remigio07.chatplugin.api.server.event.gui.IconClickEvent;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.item.ItemStackAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
@@ -117,7 +117,7 @@ public abstract class GUI {
 	 * 
 	 * <p>The required value (a <code>String</code>) is set to
 	 * {@link TriFunction#apply(Object, Object, Object)}'s result every time
-	 * {@link Icon#toItemStackAdapter(GUI, Language)} is called or a {@link GUIClickEvent} occurs.</p>
+	 * {@link Icon#toItemStackAdapter(GUI, Language)} is called or a {@link IconClickEvent} occurs.</p>
 	 * 
 	 * <p>It translates the following values:
 	 * 	<ul>
@@ -151,7 +151,7 @@ public abstract class GUI {
 	 * 
 	 * <p>The required value (a <code>String</code>) is set to
 	 * {@link TriFunction#apply(Object, Object, Object)}'s result every time
-	 * {@link Icon#toItemStackAdapter(GUI, Language)} is called or a {@link GUIClickEvent} occurs.
+	 * {@link Icon#toItemStackAdapter(GUI, Language)} is called or a {@link IconClickEvent} occurs.
 	 * You may also want to {@link #refresh()} the GUI after this operation.</p>
 	 * 
 	 * <p>It translates the following values:
@@ -198,7 +198,7 @@ public abstract class GUI {
 	 * 
 	 * <p>The required value (a <code>List&lt;String&gt;</code>) is set to
 	 * {@link TriFunction#apply(Object, Object, Object)}'s result every time
-	 * {@link Icon#toItemStackAdapter(GUI, Language)} is called or a {@link GUIClickEvent} occurs.</p>
+	 * {@link Icon#toItemStackAdapter(GUI, Language)} is called or a {@link IconClickEvent} occurs.</p>
 	 * 
 	 * <p>It translates the following values:
 	 * 	<ul>
@@ -231,7 +231,7 @@ public abstract class GUI {
 	 * 
 	 * <p>The required value (a <code>List&lt;String&gt;</code>) is set to
 	 * {@link TriFunction#apply(Object, Object, Object)}'s result every time
-	 * {@link Icon#toItemStackAdapter(GUI, Language)} is called or a {@link GUIClickEvent} occurs.
+	 * {@link Icon#toItemStackAdapter(GUI, Language)} is called or a {@link IconClickEvent} occurs.
 	 * You may also want to {@link #refresh()} the GUI after this operation.</p>
 	 * 
 	 * <p>It translates the following values:

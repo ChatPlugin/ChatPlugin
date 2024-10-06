@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
@@ -139,7 +140,7 @@ public class InternalGUIs {
 						return banlist.getLayout().getIconLayout(ban.getType() == BanType.ACCOUNT ? "ban" : "banip");
 					}
 					
-				}).collect(Collectors.toCollection(ArrayList::new)), true);
+				}).collect(Collectors.toCollection(CopyOnWriteArrayList::new)), true);
 				manager().addGUI(banlist);
 			} catch (Exception e) {
 				error(e, "banlist");
@@ -172,7 +173,7 @@ public class InternalGUIs {
 						return warning.formatPlaceholders(input, language);
 					}
 					
-				}).collect(Collectors.toCollection(ArrayList::new)), true);
+				}).collect(Collectors.toCollection(CopyOnWriteArrayList::new)), true);
 				manager().addGUI(warnlist);
 			} catch (Exception e) {
 				error(e, "warnlist");
@@ -205,7 +206,7 @@ public class InternalGUIs {
 						return mute.formatPlaceholders(input, language);
 					}
 					
-				}).collect(Collectors.toCollection(ArrayList::new)), true);
+				}).collect(Collectors.toCollection(CopyOnWriteArrayList::new)), true);
 				manager().addGUI(mutelist);
 			} catch (Exception e) {
 				error(e, "mutelist");
@@ -258,7 +259,7 @@ public class InternalGUIs {
 						} return list.stream().map(str -> formatPlaceholders(str, language)).collect(Collectors.toList());
 					}
 					
-				}).collect(Collectors.toCollection(ArrayList::new)), true);
+				}).collect(Collectors.toCollection(CopyOnWriteArrayList::new)), true);
 				manager().addGUI(violations);
 			} catch (Exception e) {
 				error(e, "violations");
@@ -370,7 +371,7 @@ public class InternalGUIs {
 				return punishment instanceof Ban ? playerPunishments.getLayout().getIconLayout("ban") : punishment instanceof Warning ? playerPunishments.getLayout().getIconLayout("warning") : punishment instanceof Kick ? playerPunishments.getLayout().getIconLayout("kick") : playerPunishments.getLayout().getIconLayout("mute");
 			}
 			
-		}).collect(Collectors.toCollection(ArrayList::new)), true);
+		}).collect(Collectors.toCollection(CopyOnWriteArrayList::new)), true);
 		return playerPunishments;
 	}
 	
@@ -424,7 +425,7 @@ public class InternalGUIs {
 				}
 			}
 			
-		}).collect(Collectors.toCollection(ArrayList::new)), true);
+		}).collect(Collectors.toCollection(CopyOnWriteArrayList::new)), true);
 		return playerViolations;
 	}
 	

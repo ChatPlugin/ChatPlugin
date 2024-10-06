@@ -189,7 +189,7 @@ commands:
       other: '{pfx} &aColore predefinito della chat di &f{0} &aresettato.'
     hex-usage: '{pfx} &ePer impostare un colore esadecimale, digita &f/chatcolor #&r{0}&e. Questo codice è solo un esempio: puoi usare qualsiasi colore.'
     invalid-color: '{pfx} &r{0} &cnon è un colore valido.'
-    no-permission: '{pfx} &cNon hai il permesso per utilizzare quel colore.'
+    no-permission: '{pfx} &cNon hai il permesso di utilizzare quel colore.'
   emojistone:
     set:
       self: '{pfx} &aTono predefinito delle emojis impostato sul tono &f#{0} &a(&r{1}&a).'
@@ -209,6 +209,7 @@ commands:
     &eCittà: &f{city} (codice postale: {postal_code})
     &eCoordinate: &f{latitude}° {longitude}°
     &eRaggio di accuratezza: &f~{accuracy_radius_km} km
+    &eData relativa: &f{relative_date_full}
   lastseen:
     online: '{pfx} &f{0} &esono stati online per &f{1}&e.'
     offline: '{pfx} &f{0} &esono stati visti l''ultima volta &f{1} &efa; indirizzo IP: &f{2}&e.'
@@ -426,8 +427,9 @@ chat:
         hover: '&9[Clicca qui per andare alla pagina {next_page}]'
 guis:
   no-permission: '{pfx} &cNon hai il permesso di utilizzare quella GUI.'
+  no-permission-icon: '{pfx} &cNon hai il permesso di utilizzare quell''icona.'
   player-went-offline: '{pfx} &f{0} &csono andati offline quindi la tua GUI aperta (&f{1}&c) è stata chiusa.'
-  unloaded: '{pfx} &eLa tua GUI aperta &f{0} &eè stat chiusa dopo &f{1} &edi inattività.'
+  unloaded: '{pfx} &eLa tua GUI aperta &f{0} &eè stata chiusa dopo &f{1} &edi inattività.'
   still-loading: '{pfx} &cLa GUI &f{0} &csi sta ancora caricando. Riprova tra pochi secondi.'
   banwave-executing: '{pfx} &cUna banwave è in esecuzione. Riprova tra pochi secondi.'
 ban:
@@ -655,7 +657,7 @@ vanish:
   disabled:
     self: '{pfx} &eNon sei più in vanish.'
     other: '{pfx} &f{0} &enon è più in vanish.'
-  no-permission: '{pfx} &f{0} &cnon ha il permesso per usare la vanish.'
+  no-permission: '{pfx} &f{0} &cnon ha il permesso di utilizzare la vanish.'
   no-chat: '{pfx} &cNon puoi usare la chat pubblica mentre sei in vanish.'
   cosmetics-reset: '{pfx} &eI seguenti cosmetics sono stati resettati: &f{0}&e.'
   gadgetsmenu-reload: '{pfx} &cGadgetsMenu è stato ricaricato. I suoi cosmetics non sono stati resettati.'

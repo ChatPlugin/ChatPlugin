@@ -361,7 +361,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		messages.addDefault("commands.staff-chat.enabled", "{pfx} &aStaff chat mode enabled.");
 		messages.addDefault("commands.staff-chat.disabled", "{pfx} &aStaff chat mode disabled.");
-		messages.addDefault("commands.iplookup", "{pfx} &f{ip_address}&a's lookup:\n&eISP: &f{isp}\n&eCountry: &f{country}, {continent}\n&eSubdivision(s): &f{subdivisions}\n&eCity: &f{city} (postal code: {postal_code})\n&eCoords: &f{latitude}° {longitude}°\n&eAccuracy radius: &f~{accuracy_radius_km} km");
+		messages.addDefault("commands.iplookup", "{pfx} &f{ip_address}&a's lookup:\n&eISP: &f{isp}\n&eCountry: &f{country}, {continent}\n&eSubdivision(s): &f{subdivisions}\n&eCity: &f{city} (postal code: {postal_code})\n&eCoords: &f{latitude}° {longitude}°\n&eAccuracy radius: &f~{accuracy_radius_km} km\n&eRelative date: &f{relative_date_full}");
 		messages.addDefault("commands.lastseen.online", "{pfx} &f{0} &ehas been online for &f{1}&e.");
 		messages.addDefault("commands.lastseen.offline", "{pfx} &f{0} &ewas last seen &f{1} &eago; IP address: &f{2}&e.");
 		messages.addDefault("commands.lastseen.never-joined", "{pfx} &f{0} &ehas never joined the server.");
@@ -452,6 +452,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("chat.log.page-switcher.next.hover", "&9[Click here to go to page {next_page}]");
 		
 		messages.addDefault("guis.no-permission", "{pfx} &cYou do not have the permission to use that GUI.");
+		messages.addDefault("guis.no-permission-icon", "{pfx} &cYou do not have the permission to use that icon.");
 		messages.addDefault("guis.player-went-offline", "{pfx} &f{0} &cwent offline so your open GUI (&f{1}&c) has been closed.");
 		messages.addDefault("guis.unloaded", "{pfx} &eYour open GUI &f{0} &ehas been closed after &f{1} &eof inactivity.");
 		messages.addDefault("guis.still-loading", "{pfx} &cGUI &f{0} &cis still loading. Retry in few seconds.");
@@ -766,8 +767,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.hover-info.player.click.action", "SUGGEST_TEXT");
 		chat.addDefault("chat.hover-info.player.click.value", "/msg {player} ");
 		chat.addDefault("chat.hover-info.player.placeholder-types", Arrays.asList("PLAYER", "SERVER"));
-		chat.addDefault("chat.hover-info.player.hovers.english", "&ePlayer: &f{player}\n&eTime: &f{date_hour}\n&ePing: {ping_format} ms\n&d&oClick = send /msg");
-		chat.addDefault("chat.hover-info.player.hovers.italian", "&eGiocatore: &f{player}\n&eOrario: &f{date_hour}\n&ePing: {ping_format} ms\n&d&oClick = invia /msg");
+		chat.addDefault("chat.hover-info.player.hovers.english", "&a&l{player}\n&7Language: &f{language_display_name}\n&7Time: &f{date_hour}\n&7Ping: {ping_format} ms\n\n&e&oClick to send a /msg!");
+		chat.addDefault("chat.hover-info.player.hovers.italian", "&a&l{player}\n&7Lingua: &f{language_display_name}\n&7Orario: &f{date_hour}\n&7Ping: {ping_format} ms\n\n&e&oClicca per inviare un /msg!");
 		chat.addDefault("chat.hover-info.url.enabled", true);
 		chat.addDefault("chat.hover-info.url.default-https", true);
 		chat.addDefault("chat.hover-info.url.color", "&b&n");
@@ -779,6 +780,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		if (fileMissing) {
 			chat.addDefault("chat.instant-emojis.values.:)", "{emojis_tone}\u263A");
+			chat.addDefault("chat.instant-emojis.values.<3", "&c\u2764");
 			chat.addDefault("chat.instant-emojis.values.:smile:", "{emojis_tone}\uD83D\uDE03");
 			chat.addDefault("chat.instant-emojis.values.:slight_smile:", "{emojis_tone}\uD83D\uDE42");
 			chat.addDefault("chat.instant-emojis.values.:grin:", "{emojis_tone}\uD83D\uDE01");
@@ -792,7 +794,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			chat.addDefault("chat.instant-emojis.values.:alien:", "&a\uD83D\uDC7D");
 			chat.addDefault("chat.instant-emojis.values.:thumbs_up:", "{emojis_tone}\uD83D\uDC4D");
 			chat.addDefault("chat.instant-emojis.values.:thumbs_down:", "{emojis_tone}\uD83D\uDC4E");
-			chat.addDefault("chat.instant-emojis.values.:heart:", "&c\u2764");
 			chat.addDefault("chat.instant-emojis.values.:note:", "&9\uD83C\uDFB5");
 			chat.addDefault("chat.instant-emojis.values.:pizza:", "&6\uD83C\uDF55");
 			chat.addDefault("chat.instant-emojis.values.:copyright:", "\u00A9");
@@ -907,7 +908,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			defaultScoreboard.addDefault("lines.2.values.italian", Arrays.asList("&aNome: &f{player}", "&eNome: &f{player}", "&6Nome: &f{player}", "&eNome: &f{player}"));
 			defaultScoreboard.addDefault("lines.2.sending-timeout-ms", 250);
 			defaultScoreboard.addDefault("lines.3.values.english", Arrays.asList("&aRank: &f{rank_display_name}", "&eRank: &f{rank_display_name}", "&6Rank: &f{rank_display_name}", "&eRank: &f{rank_display_name}"));
-			defaultScoreboard.addDefault("lines.3.values.italian", Arrays.asList("&aRank: &f{rank_display_name}", "&eRank: &f{rank_display_name}", "&6Rank: &f{rank_display_name}", "&eRank: &f{rank_display_name}"));
+			defaultScoreboard.addDefault("lines.3.values.italian", Arrays.asList("&aRango: &f{rank_display_name}", "&eRango: &f{rank_display_name}", "&6Rango: &f{rank_display_name}", "&eRango: &f{rank_display_name}"));
 			defaultScoreboard.addDefault("lines.3.sending-timeout-ms", 250);
 			defaultScoreboard.addDefault("lines.4.values.english", Arrays.asList("&aPing: &f{ping_format} ms", "&ePing: &f{ping_format} ms", "&6Ping: &f{ping_format} ms", "&ePing: &f{ping_format} ms"));
 			defaultScoreboard.addDefault("lines.4.values.italian", Arrays.asList("&aPing: &f{ping_format} ms", "&ePing: &f{ping_format} ms", "&6Ping: &f{ping_format} ms", "&ePing: &f{ping_format} ms"));
@@ -1211,7 +1212,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		mainGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to open", "&7the active warnings' list."));
 		mainGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per aprire", "&7la lista degli avvisi attivi."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			mainGUI.addDefault(path + "material", "BANNER");
 			mainGUI.addDefault(path + "damage", 14);
 		} else mainGUI.addDefault(path + "material", "ORANGE_BANNER");
@@ -1222,8 +1223,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.status.";
 		mainGUI.addDefault(path + "display-names.english", "&d&lServer status");
 		mainGUI.addDefault(path + "display-names.italian", "&d&lStato del server");
-		mainGUI.addDefault(path + "lores.english", Arrays.asList("&eOS: &f{server_os_name} {server_os_version}&e, Java: &f{server_java_version}", "&eServer: &f{server_version} (protocol: &f{server_version_protocol})", "&eChatPlugin version: &f{plugin_version}", "&eUptime: &f{uptime}", "&eTPS (1m, 5m, 15m): &f{tps_1_min_format}&f, {tps_5_min_format}&f, {tps_15_min_format}", "&eUsed memory: &f{used_memory}/{max_memory} MB", "&eAllocated: &f{total_memory} MB&e, free: &f{free_memory} MB", "&eCurrent threads count: &f{active_threads}x", "&eUsed storage: &f{used_storage}/{total_storage} GB", "&eFree storage: &f{free_storage} GB", "&eEnabled worlds: &f{enabled_worlds}x&e, &f{enabled_players} &eplayers", "&eEnabled managers: &f{enabled_managers}x", "&eStartup: &f{startup_time} ms&e, last reload: &f{last_reload_time} ms"));
-		mainGUI.addDefault(path + "lores.italian", Arrays.asList("&eOS: &f{server_os_name} {server_os_version}&e, Java: &f{server_java_version}", "&eServer: &f{server_version} (protocollo: &f{server_version_protocol})", "&eVersione ChatPlugin: &f{plugin_version}", "&eUptime: &f{uptime}", "&eTPS (1m, 5m, 15m): &f{tps_1_min_format}&f, {tps_5_min_format}&f, {tps_15_min_format}", "&eUtilizzo memoria: &f{used_memory}/{max_memory} MB", "&eAllocata: &f{total_memory} MB&e, libera: &f{free_memory} MB", "&eConteggio threads attivi: &f{active_threads}x", "&eStorage utilizzato: &f{used_storage}/{total_storage} GB", "&eStorage libero: &f{free_storage} GB", "&eMondi abilitati: &f{enabled_worlds}x&e, &f{enabled_players} &egiocatori", "&eManagers abilitati: &f{enabled_managers}x", "&eStartup: &f{startup_time} ms&e, ultimo reload: &f{last_reload_time} ms"));
+		mainGUI.addDefault(path + "lores.english", Arrays.asList("&7OS: &f{server_os_name} {server_os_version}&7, Java: &f{server_java_version}", "&7Server: &f{server_version} (protocol: &f{server_version_protocol})", "&7ChatPlugin version: &f{plugin_version}", "&7Uptime: &f{uptime}", "&7TPS (1m, 5m, 15m): &f{tps_1_min_format}&f, {tps_5_min_format}&f, {tps_15_min_format}", "&7Used memory: &f{used_memory}/{max_memory} MB", "&7Allocated memory: &f{total_memory} MB&7, free: &f{free_memory} MB", "&7Current threads count: &f{active_threads}x", "&7Used storage: &f{used_storage}/{total_storage} GB", "&7Free storage: &f{free_storage} GB", "&7Enabled worlds: &f{enabled_worlds}x&7, &f{enabled_players} &7players", "&7Enabled managers: &f{enabled_managers}x", "&7Startup: &f{startup_time} ms&7, last reload: &f{last_reload_time} ms"));
+		mainGUI.addDefault(path + "lores.italian", Arrays.asList("&7OS: &f{server_os_name} {server_os_version}&7, Java: &f{server_java_version}", "&7Server: &f{server_version} (protocollo: &f{server_version_protocol})", "&7Versione ChatPlugin: &f{plugin_version}", "&7Uptime: &f{uptime}", "&7TPS (1m, 5m, 15m): &f{tps_1_min_format}&f, {tps_5_min_format}&f, {tps_15_min_format}", "&7Utilizzo memoria: &f{used_memory}/{max_memory} MB", "&7Memoria allocata: &f{total_memory} MB&7, libera: &f{free_memory} MB", "&7Conteggio threads attivi: &f{active_threads}x", "&7Storage utilizzato: &f{used_storage}/{total_storage} GB", "&7Storage libero: &f{free_storage} GB", "&7Mondi abilitati: &f{enabled_worlds}x&7, &f{enabled_players} &7giocatori", "&7Managers abilitati: &f{enabled_managers}x", "&7Startup: &f{startup_time} ms&7, ultimo reload: &f{last_reload_time} ms"));
 		mainGUI.addDefault(path + "material", Environment.isSponge() || VersionUtils.getVersion().isAtLeast(Version.V1_13) ? "COMMAND_BLOCK" : "COMMAND");
 		mainGUI.addDefault(path + "keep-open", true);
 		mainGUI.addDefault(path + "glowing", true);
@@ -1252,7 +1253,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		mainGUI.addDefault(path + "y", 3);
 		path = "icons.reload.";
 		mainGUI.addDefault(path + "display-names.english", "&b&lReload plugin");
-		mainGUI.addDefault(path + "display-names.italian", "&b&lReload plugin");
+		mainGUI.addDefault(path + "display-names.italian", "&b&lRicarica il plugin");
 		mainGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to", "&7reload ChatPlugin."));
 		mainGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per", "&7ricaricare ChatPlugin."));
 		mainGUI.addDefault(path + "material", "REDSTONE");
@@ -1273,10 +1274,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			return;
 		
 		languagesGUI.addDefault("settings.rows", 3);
-		languagesGUI.addDefault("settings.titles.english", "&f&lLanguages");
-		languagesGUI.addDefault("settings.titles.italian", "&f&lLingue");
-		languagesGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &f&lLanguages &aGUI.");
-		languagesGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &f&lLingue &ain corso.");
+		languagesGUI.addDefault("settings.titles.english", "&b&lLanguages");
+		languagesGUI.addDefault("settings.titles.italian", "&b&lLingue");
+		languagesGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &b&lLanguages &aGUI.");
+		languagesGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &b&lLingue &ain corso.");
 		languagesGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
 		languagesGUI.addDefault("settings.open-actions.play-sound.volume", 1F);
 		languagesGUI.addDefault("settings.open-actions.play-sound.pitch", 1F);
@@ -1284,8 +1285,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		languagesGUI.addDefault("settings.click-sound.volume", 1F);
 		languagesGUI.addDefault("settings.click-sound.pitch", 1F);
 		path = "icons.info.";
-		languagesGUI.addDefault(path + "display-names.english", "&f&lLanguages");
-		languagesGUI.addDefault(path + "display-names.italian", "&f&lLingue");
+		languagesGUI.addDefault(path + "display-names.english", "&b&lLanguages");
+		languagesGUI.addDefault(path + "display-names.italian", "&b&lLingue");
 		languagesGUI.addDefault(path + "lores.english", Arrays.asList("&7This GUI allows you to change", "&7your language on the server."));
 		languagesGUI.addDefault(path + "lores.italian", Arrays.asList("&7Questa GUI ti consente di cambiare", "&7la tua lingua sul server."));
 		languagesGUI.addDefault(path + "material", "PAPER");
@@ -1298,7 +1299,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		languagesGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set", "&7your language to English."));
 		languagesGUI.addDefault(path + "lores.italian", Arrays.asList("&7Click this icon to set", "&7your language to English."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			languagesGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			languagesGUI.addDefault(path + "damage", 3);
 		} else languagesGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1309,10 +1310,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.italian.";
 		languagesGUI.addDefault(path + "display-names.english", "&9&lItaliano");
 		languagesGUI.addDefault(path + "display-names.italian", "&9&lItaliano");
-		languagesGUI.addDefault(path + "lores.english", Arrays.asList("&7Clicca questa icona per impostare", "&7la tua lingua su italiano."));
-		languagesGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare", "&7la tua lingua su italiano."));
+		languagesGUI.addDefault(path + "lores.english", Arrays.asList("&7Clicca questa icona per impostare", "&7la tua lingua sull'italiano."));
+		languagesGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare", "&7la tua lingua sull'italiano."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			languagesGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			languagesGUI.addDefault(path + "damage", 3);
 		} else languagesGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1356,9 +1357,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault(path + "display-names.english", "&4&lDark red &f(&&f4)");
 		chatColorGUI.addDefault(path + "display-names.italian", "&4&lRosso scuro &f(&&f4)");
 		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to dark red."));
-		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su rosso scuro."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat sul rosso scuro."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			chatColorGUI.addDefault(path + "damage", 3);
 		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1370,9 +1371,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault(path + "display-names.english", "&c&lRed &f(&&fc)");
 		chatColorGUI.addDefault(path + "display-names.italian", "&c&lRosso &f(&&fc)");
 		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to red."));
-		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su rosso."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat sul rosso."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			chatColorGUI.addDefault(path + "damage", 3);
 		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1384,9 +1385,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault(path + "display-names.english", "&6&lGold &f(&&f6)");
 		chatColorGUI.addDefault(path + "display-names.italian", "&6&lOro &f(&&f6)");
 		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to gold."));
-		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su oro."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat sull'oro."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			chatColorGUI.addDefault(path + "damage", 3);
 		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1398,9 +1399,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault(path + "display-names.english", "&e&lYellow &f(&&fe)");
 		chatColorGUI.addDefault(path + "display-names.italian", "&e&lGiallo &f(&&fe)");
 		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to yellow."));
-		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su giallo."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat sul giallo."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			chatColorGUI.addDefault(path + "damage", 3);
 		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1412,9 +1413,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault(path + "display-names.english", "&2&lDark green &f(&&f2)");
 		chatColorGUI.addDefault(path + "display-names.italian", "&2&lVerde scuro &f(&&f2)");
 		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to dark green."));
-		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su verde scuro."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat sul verde scuro."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			chatColorGUI.addDefault(path + "damage", 3);
 		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1426,9 +1427,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault(path + "display-names.english", "&a&lGreen &f(&&fa)");
 		chatColorGUI.addDefault(path + "display-names.italian", "&a&lVerde &f(&&fa)");
 		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to green."));
-		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su verde."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat sul verde."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			chatColorGUI.addDefault(path + "damage", 3);
 		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1440,9 +1441,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault(path + "display-names.english", "&b&lAqua &f(&&fb)");
 		chatColorGUI.addDefault(path + "display-names.italian", "&b&lAcqua &f(&&fb)");
 		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to aqua."));
-		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su acqua."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat sull'acqua."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			chatColorGUI.addDefault(path + "damage", 3);
 		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1454,9 +1455,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault(path + "display-names.english", "&3&lDark aqua &f(&&f3)");
 		chatColorGUI.addDefault(path + "display-names.italian", "&3&lAcqua scuro &f(&&f3)");
 		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to dark aqua."));
-		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su acqua scuro."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat sull'acqua scuro."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			chatColorGUI.addDefault(path + "damage", 3);
 		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1468,9 +1469,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault(path + "display-names.english", "&1&lDark blue &f(&&f1)");
 		chatColorGUI.addDefault(path + "display-names.italian", "&1&lBlu scuro &f(&&f1)");
 		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to dark blue."));
-		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su blu scuro."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat sul blu scuro."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			chatColorGUI.addDefault(path + "damage", 3);
 		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1482,9 +1483,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault(path + "display-names.english", "&9&lBlue &f(&&f9)");
 		chatColorGUI.addDefault(path + "display-names.italian", "&9&lBlu &f(&&f9)");
 		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to blue."));
-		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su blu."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat sul blu."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			chatColorGUI.addDefault(path + "damage", 3);
 		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1496,9 +1497,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault(path + "display-names.english", "&d&lLight purple &f(&&fd)");
 		chatColorGUI.addDefault(path + "display-names.italian", "&d&lViola chiaro &f(&&fd)");
 		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to light purple."));
-		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su viola chiaro."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat sul viola chiaro."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			chatColorGUI.addDefault(path + "damage", 3);
 		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1510,9 +1511,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault(path + "display-names.english", "&5&lDark purple &f(&&f5)");
 		chatColorGUI.addDefault(path + "display-names.italian", "&5&lViola scuro &f(&&f5)");
 		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to dark purple."));
-		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su viola scuro."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat sul viola scuro."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			chatColorGUI.addDefault(path + "damage", 3);
 		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1524,9 +1525,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault(path + "display-names.english", "&f&lWhite &f(&&ff)");
 		chatColorGUI.addDefault(path + "display-names.italian", "&f&lBianco &f(&&ff)");
 		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to white."));
-		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su bianco."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat sul bianco."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			chatColorGUI.addDefault(path + "damage", 3);
 		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1538,9 +1539,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault(path + "display-names.english", "&7&lGray &f(&&f7)");
 		chatColorGUI.addDefault(path + "display-names.italian", "&7&lGrigio &f(&&f7)");
 		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to gray."));
-		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su grigio."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat sul grigio."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			chatColorGUI.addDefault(path + "damage", 3);
 		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1552,9 +1553,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault(path + "display-names.english", "&8&lDark gray &f(&&f8)");
 		chatColorGUI.addDefault(path + "display-names.italian", "&8&lGrigio scuro &f(&&f8)");
 		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to dark gray."));
-		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su grigio scuro."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat sul grigio scuro."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			chatColorGUI.addDefault(path + "damage", 3);
 		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1566,9 +1567,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault(path + "display-names.english", "&0&lBlack &f(&&f0)");
 		chatColorGUI.addDefault(path + "display-names.italian", "&0&lNero &f(&&f0)");
 		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7chat's color to black."));
-		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat su nero."));
+		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il", "&7colore della tua chat sul nero."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			chatColorGUI.addDefault(path + "damage", 3);
 		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1582,7 +1583,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your chat's", "&7color to a hexadecimal color.", "", "&7Requirement: &d&lVIP"));
 		chatColorGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare il colore", "&7della tua chat su un colore esadecimale.", "", "&7Requisito: &d&lVIP"));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			chatColorGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			chatColorGUI.addDefault(path + "damage", 3);
 		} else chatColorGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1637,7 +1638,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		emojisToneGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to reset", "&7your emojis' tone."));
 		emojisToneGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per", "&7resettare il tono delle tue emojis."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			emojisToneGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			emojisToneGUI.addDefault(path + "damage", 3);
 		} else emojisToneGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1651,7 +1652,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		emojisToneGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7emojis' tone to tone #1."));
 		emojisToneGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare", "&7il tono delle tue emojis sul tono #1."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			emojisToneGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			emojisToneGUI.addDefault(path + "damage", 3);
 		} else emojisToneGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1665,7 +1666,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		emojisToneGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7emojis' tone to tone #2."));
 		emojisToneGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare", "&7il tono delle tue emojis sul tono #2."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			emojisToneGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			emojisToneGUI.addDefault(path + "damage", 3);
 		} else emojisToneGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1679,7 +1680,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		emojisToneGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7emojis' tone to tone #3."));
 		emojisToneGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare", "&7il tono delle tue emojis sul tono #3."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			emojisToneGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			emojisToneGUI.addDefault(path + "damage", 3);
 		} else emojisToneGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1693,7 +1694,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		emojisToneGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7emojis' tone to tone #4."));
 		emojisToneGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare", "&7il tono delle tue emojis sul tono #4."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			emojisToneGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			emojisToneGUI.addDefault(path + "damage", 3);
 		} else emojisToneGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1707,7 +1708,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		emojisToneGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to set your", "&7emojis' tone to tone #5."));
 		emojisToneGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per impostare", "&7il tono delle tue emojis sul tono #5."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			emojisToneGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			emojisToneGUI.addDefault(path + "damage", 3);
 		} else emojisToneGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -1754,10 +1755,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		banlistGUI.addDefault("settings.filling-function.icon-layouts.ban.display-names.english", "&4#&l{id}");
 		banlistGUI.addDefault("settings.filling-function.icon-layouts.ban.display-names.italian", "&4#&l{id}");
-		banlistGUI.addDefault("settings.filling-function.icon-layouts.ban.lores.english", Arrays.asList("&ePlayer name: &f{player}", "&ePlayer UUID: &f{player_uuid}", "&eIP address: &f{ip_address}", "&eStaff member: &f{staff_member}", "&eReason: &f{reason}", "&eServer: &f{server}", "&eDate: &f{date}", "&eDuration: &f{duration}", "&eRemaining time: &f{remaining_time}", "&eType: &f{type}", "&eActive: &f{active}", "&eGlobal: &f{global}", "&eSilent: &f{silent}"));
-		banlistGUI.addDefault("settings.filling-function.icon-layouts.ban.lores.italian", Arrays.asList("&eNome giocatore: &f{player}", "&eUUID giocatore: &f{player_uuid}", "&eIndirizzo IP: &f{ip_address}", "&eMembro dello Staff: &f{staff_member}", "&eMotivazione: &f{reason}", "&eServer: &f{server}", "&eData: &f{date}", "&eDurata: &f{duration}", "&eTempo rimanente: &f{remaining_time}", "&eTipo: &f{type}", "&eAttivo: &f{active}", "&eGlobale: &f{global}", "&eSilenzioso: &f{silent}"));
+		banlistGUI.addDefault("settings.filling-function.icon-layouts.ban.lores.english", Arrays.asList("&7Player name: &f{player}", "&7Player UUID: &f{player_uuid}", "&7IP address: &f{ip_address}", "&7Staff member: &f{staff_member}", "&7Reason: &f{reason}", "&7Server: &f{server}", "&7Date: &f{date}", "&7Duration: &f{duration}", "&7Remaining time: &f{remaining_time}", "&7Type: &f{type}", "&7Active: &f{active}", "&7Global: &f{global}", "&7Silent: &f{silent}"));
+		banlistGUI.addDefault("settings.filling-function.icon-layouts.ban.lores.italian", Arrays.asList("&7Nome giocatore: &f{player}", "&7UUID giocatore: &f{player_uuid}", "&7Indirizzo IP: &f{ip_address}", "&7Membro dello Staff: &f{staff_member}", "&7Motivo: &f{reason}", "&7Server: &f{server}", "&7Data: &f{date}", "&7Durata: &f{duration}", "&7Tempo rimanente: &f{remaining_time}", "&7Tipo: &f{type}", "&7Attivo: &f{active}", "&7Globale: &f{global}", "&7Silenzioso: &f{silent}"));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			banlistGUI.addDefault("settings.filling-function.icon-layouts.ban.material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			banlistGUI.addDefault("settings.filling-function.icon-layouts.ban.damage", 3);
 		} else banlistGUI.addDefault("settings.filling-function.icon-layouts.ban.material", "PLAYER_HEAD");
@@ -1766,8 +1767,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		banlistGUI.addDefault("settings.filling-function.icon-layouts.banip.display-names.english", "&4#&l{id}");
 		banlistGUI.addDefault("settings.filling-function.icon-layouts.banip.display-names.italian", "&4#&l{id}");
-		banlistGUI.addDefault("settings.filling-function.icon-layouts.banip.lores.english", Arrays.asList("&ePlayer name: &f{player}", "&ePlayer UUID: &f{player_uuid}", "&eIP address: &f{ip_address}", "&eStaff member: &f{staff_member}", "&eReason: &f{reason}", "&eServer: &f{server}", "&eDate: &f{date}", "&eDuration: &f{duration}", "&eRemaining time: &f{remaining_time}", "&eType: &f{type}", "&eActive: &f{active}", "&eGlobal: &f{global}", "&eSilent: &f{silent}"));
-		banlistGUI.addDefault("settings.filling-function.icon-layouts.banip.lores.italian", Arrays.asList("&eNome giocatore: &f{player}", "&eUUID giocatore: &f{player_uuid}", "&eIndirizzo IP: &f{ip_address}", "&eMembro dello Staff: &f{staff_member}", "&eMotivazione: &f{reason}", "&eServer: &f{server}", "&eData: &f{date}", "&eDurata: &f{duration}", "&eTempo rimanente: &f{remaining_time}", "&eTipo: &f{type}", "&eAttivo: &f{active}", "&eGlobale: &f{global}", "&eSilenzioso: &f{silent}"));
+		banlistGUI.addDefault("settings.filling-function.icon-layouts.banip.lores.english", Arrays.asList("&7Player name: &f{player}", "&7Player UUID: &f{player_uuid}", "&7IP address: &f{ip_address}", "&7Staff member: &f{staff_member}", "&7Reason: &f{reason}", "&7Server: &f{server}", "&7Date: &f{date}", "&7Duration: &f{duration}", "&7Remaining time: &f{remaining_time}", "&7Type: &f{type}", "&7Active: &f{active}", "&7Global: &f{global}", "&7Silent: &f{silent}"));
+		banlistGUI.addDefault("settings.filling-function.icon-layouts.banip.lores.italian", Arrays.asList("&7Nome giocatore: &f{player}", "&7UUID giocatore: &f{player_uuid}", "&7Indirizzo IP: &f{ip_address}", "&7Membro dello Staff: &f{staff_member}", "&7Motivo: &f{reason}", "&7Server: &f{server}", "&7Data: &f{date}", "&7Durata: &f{duration}", "&7Tempo rimanente: &f{remaining_time}", "&7Tipo: &f{type}", "&7Attivo: &f{active}", "&7Globale: &f{global}", "&7Silenzioso: &f{silent}"));
 		banlistGUI.addDefault("settings.filling-function.icon-layouts.banip.material", "NAME_TAG");
 		banlistGUI.addDefault("settings.filling-function.icon-layouts.banip.commands", Arrays.asList("p: baninfo {id}"));
 		
@@ -1783,8 +1784,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.previous-page.";
 		banlistGUI.addDefault(path + "display-names.english", "&e&lPrevious page");
 		banlistGUI.addDefault(path + "display-names.italian", "&e&lPagina precedente");
-		banlistGUI.addDefault(path + "lores.english", Arrays.asList("&7Takes you back to the", "&7previous page of the list."));
-		banlistGUI.addDefault(path + "lores.italian", Arrays.asList("&7Ti riporta alla pagina", "&7precedente della lista."));
+		banlistGUI.addDefault(path + "lores.english", Arrays.asList("&7Go to the previous", "&7page of the GUI."));
+		banlistGUI.addDefault(path + "lores.italian", Arrays.asList("&7Vai alla pagina", "&7precedente della GUI."));
 		banlistGUI.addDefault(path + "material", "ARROW");
 		banlistGUI.addDefault(path + "keep-open", true);
 		banlistGUI.addDefault(path + "commands", Arrays.asList("gui open banlist {viewer} {previous_page}"));
@@ -1793,8 +1794,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.next-page.";
 		banlistGUI.addDefault(path + "display-names.english", "&e&lNext page");
 		banlistGUI.addDefault(path + "display-names.italian", "&e&lPagina successiva");
-		banlistGUI.addDefault(path + "lores.english", Arrays.asList("&7Go to the next page", "&7of this menu."));
-		banlistGUI.addDefault(path + "lores.italian", Arrays.asList("&7Vai alla pagina", "&7successiva del menu."));
+		banlistGUI.addDefault(path + "lores.english", Arrays.asList("&7Go to the next", "&7page of the GUI."));
+		banlistGUI.addDefault(path + "lores.italian", Arrays.asList("&7Vai alla pagina", "&7successiva della GUI."));
 		banlistGUI.addDefault(path + "material", "ARROW");
 		banlistGUI.addDefault(path + "keep-open", true);
 		banlistGUI.addDefault(path + "commands", Arrays.asList("gui open banlist {viewer} {next_page}"));
@@ -1802,9 +1803,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		banlistGUI.addDefault(path + "y", 5);
 		path = "icons.refresh.";
 		banlistGUI.addDefault(path + "display-names.english", "&e&lRefresh");
-		banlistGUI.addDefault(path + "display-names.italian", "&e&lRefresh");
+		banlistGUI.addDefault(path + "display-names.italian", "&e&lAggiorna");
 		banlistGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to refresh the", "&7GUI's variables and values."));
-		banlistGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per ricaricare", "&7le variabili e i valori della GUI."));
+		banlistGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per aggiornare", "&7le variabili ed i valori della GUI."));
 		banlistGUI.addDefault(path + "material", VersionUtils.getVersion().isAtLeast(Version.V1_13) || Environment.isSponge() ? "CLOCK" : "WATCH");
 		banlistGUI.addDefault(path + "keep-open", true);
 		banlistGUI.addDefault(path + "commands", Arrays.asList("gui refresh banlist"));
@@ -1849,10 +1850,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		warnlistGUI.addDefault("settings.filling-function.icon-layouts.warning.display-names.english", "&c#&l{id}");
 		warnlistGUI.addDefault("settings.filling-function.icon-layouts.warning.display-names.italian", "&c#&l{id}");
-		warnlistGUI.addDefault("settings.filling-function.icon-layouts.warning.lores.english", Arrays.asList("&ePlayer name: &f{player}", "&ePlayer UUID: &f{player_uuid}", "&eStaff member: &f{staff_member}", "&eLast reason: &f{reason}", "&eServer: &f{server}", "&eDate: &f{date}", "&eDuration: &f{duration}", "&eRemaining time: &f{remaining_time}", "&eWarnings: &f{amount}/{max_amount}", "&eActive: &f{active}", "&eGlobal: &f{global}", "&eSilent: &f{silent}"));
-		warnlistGUI.addDefault("settings.filling-function.icon-layouts.warning.lores.italian", Arrays.asList("&eNome giocatore: &f{player}", "&eUUID giocatore: &f{player_uuid}", "&eMembro dello Staff: &f{staff_member}", "&eUltima motivazione: &f{reason}", "&eServer: &f{server}", "&eData: &f{date}", "&eDurata: &f{duration}", "&eTempo rimanente: &f{remaining_time}", "&eAvvisi: &f{amount}/{max_amount}", "&eAttivo: &f{active}", "&eGlobale: &f{global}", "&eSilenzioso: &f{silent}"));
+		warnlistGUI.addDefault("settings.filling-function.icon-layouts.warning.lores.english", Arrays.asList("&7Player name: &f{player}", "&7Player UUID: &f{player_uuid}", "&7Staff member: &f{staff_member}", "&7Last reason: &f{reason}", "&7Server: &f{server}", "&7Date: &f{date}", "&7Duration: &f{duration}", "&7Remaining time: &f{remaining_time}", "&7Warnings: &f{amount}/{max_amount}", "&7Active: &f{active}", "&7Global: &f{global}", "&7Silent: &f{silent}"));
+		warnlistGUI.addDefault("settings.filling-function.icon-layouts.warning.lores.italian", Arrays.asList("&7Nome giocatore: &f{player}", "&7UUID giocatore: &f{player_uuid}", "&7Membro dello Staff: &f{staff_member}", "&7Ultimo motivo: &f{reason}", "&7Server: &f{server}", "&7Data: &f{date}", "&7Durata: &f{duration}", "&7Tempo rimanente: &f{remaining_time}", "&7Avvisi: &f{amount}/{max_amount}", "&7Attivo: &f{active}", "&7Globale: &f{global}", "&7Silenzioso: &f{silent}"));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			warnlistGUI.addDefault("settings.filling-function.icon-layouts.warning.material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			warnlistGUI.addDefault("settings.filling-function.icon-layouts.warning.damage", 3);
 		} else warnlistGUI.addDefault("settings.filling-function.icon-layouts.warning.material", "PLAYER_HEAD");
@@ -1871,8 +1872,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.previous-page.";
 		warnlistGUI.addDefault(path + "display-names.english", "&e&lPrevious page");
 		warnlistGUI.addDefault(path + "display-names.italian", "&e&lPagina precedente");
-		warnlistGUI.addDefault(path + "lores.english", Arrays.asList("&7Takes you back to the", "&7previous page of the list."));
-		warnlistGUI.addDefault(path + "lores.italian", Arrays.asList("&7Ti riporta alla pagina", "&7precedente della lista."));
+		warnlistGUI.addDefault(path + "lores.english", Arrays.asList("&7Go to the previous", "&7page of the GUI."));
+		warnlistGUI.addDefault(path + "lores.italian", Arrays.asList("&7Vai alla pagina", "&7precedente della GUI."));
 		warnlistGUI.addDefault(path + "material", "ARROW");
 		warnlistGUI.addDefault(path + "keep-open", true);
 		warnlistGUI.addDefault(path + "commands", Arrays.asList("gui open warnlist {viewer} {previous_page}"));
@@ -1881,8 +1882,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.next-page.";
 		warnlistGUI.addDefault(path + "display-names.english", "&e&lNext page");
 		warnlistGUI.addDefault(path + "display-names.italian", "&e&lPagina successiva");
-		warnlistGUI.addDefault(path + "lores.english", Arrays.asList("&7Go to the next page", "&7of this menu."));
-		warnlistGUI.addDefault(path + "lores.italian", Arrays.asList("&7Vai alla pagina", "&7successiva del menu."));
+		warnlistGUI.addDefault(path + "lores.english", Arrays.asList("&7Go to the next", "&7page of the GUI."));
+		warnlistGUI.addDefault(path + "lores.italian", Arrays.asList("&7Vai alla pagina", "&7successiva della GUI."));
 		warnlistGUI.addDefault(path + "material", "ARROW");
 		warnlistGUI.addDefault(path + "keep-open", true);
 		warnlistGUI.addDefault(path + "commands", Arrays.asList("gui open warnlist {viewer} {next_page}"));
@@ -1890,9 +1891,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		warnlistGUI.addDefault(path + "y", 5);
 		path = "icons.refresh.";
 		warnlistGUI.addDefault(path + "display-names.english", "&e&lRefresh");
-		warnlistGUI.addDefault(path + "display-names.italian", "&e&lRefresh");
+		warnlistGUI.addDefault(path + "display-names.italian", "&e&lAggiorna");
 		warnlistGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to refresh the", "&7GUI's variables and values."));
-		warnlistGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per ricaricare", "&7le variabili e i valori della GUI."));
+		warnlistGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per aggiornare", "&7le variabili ed i valori della GUI."));
 		warnlistGUI.addDefault(path + "material", VersionUtils.getVersion().isAtLeast(Version.V1_13) || Environment.isSponge() ? "CLOCK" : "WATCH");
 		warnlistGUI.addDefault(path + "keep-open", true);
 		warnlistGUI.addDefault(path + "commands", Arrays.asList("gui refresh warnlist"));
@@ -1937,10 +1938,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		mutelistGUI.addDefault("settings.filling-function.icon-layouts.mute.display-names.english", "&e#&l{id}");
 		mutelistGUI.addDefault("settings.filling-function.icon-layouts.mute.display-names.italian", "&e#&l{id}");
-		mutelistGUI.addDefault("settings.filling-function.icon-layouts.mute.lores.english", Arrays.asList("&ePlayer name: &f{player}", "&ePlayer UUID: &f{player_uuid}", "&eStaff member: &f{staff_member}", "&eReason: &f{reason}", "&eServer: &f{server}", "&eDate: &f{date}", "&eDuration: &f{duration}", "&eRemaining time: &f{remaining_time}", "&eActive: &f{active}", "&eGlobal: &f{global}", "&eSilent: &f{silent}"));
-		mutelistGUI.addDefault("settings.filling-function.icon-layouts.mute.lores.italian", Arrays.asList("&eNome giocatore: &f{player}", "&eUUID giocatore: &f{player_uuid}", "&eMembro dello Staff: &f{staff_member}", "&eMotivazione: &f{reason}", "&eServer: &f{server}", "&eData: &f{date}", "&eDurata: &f{duration}", "&eTempo rimanente: &f{remaining_time}", "&eAttivo: &f{active}", "&eGlobale: &f{global}", "&eSilenzioso: &f{silent}"));
+		mutelistGUI.addDefault("settings.filling-function.icon-layouts.mute.lores.english", Arrays.asList("&7Player name: &f{player}", "&7Player UUID: &f{player_uuid}", "&7Staff member: &f{staff_member}", "&7Reason: &f{reason}", "&7Server: &f{server}", "&7Date: &f{date}", "&7Duration: &f{duration}", "&7Remaining time: &f{remaining_time}", "&7Active: &f{active}", "&7Global: &f{global}", "&7Silent: &f{silent}"));
+		mutelistGUI.addDefault("settings.filling-function.icon-layouts.mute.lores.italian", Arrays.asList("&7Nome giocatore: &f{player}", "&7UUID giocatore: &f{player_uuid}", "&7Membro dello Staff: &f{staff_member}", "&7Motivo: &f{reason}", "&7Server: &f{server}", "&7Data: &f{date}", "&7Durata: &f{duration}", "&7Tempo rimanente: &f{remaining_time}", "&7Attivo: &f{active}", "&7Globale: &f{global}", "&7Silenzioso: &f{silent}"));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			mutelistGUI.addDefault("settings.filling-function.icon-layouts.mute.material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			mutelistGUI.addDefault("settings.filling-function.icon-layouts.mute.damage", 3);
 		} else mutelistGUI.addDefault("settings.filling-function.icon-layouts.mute.material", "PLAYER_HEAD");
@@ -1959,8 +1960,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.previous-page.";
 		mutelistGUI.addDefault(path + "display-names.english", "&e&lPrevious page");
 		mutelistGUI.addDefault(path + "display-names.italian", "&e&lPagina precedente");
-		mutelistGUI.addDefault(path + "lores.english", Arrays.asList("&7Takes you back to the", "&7previous page of the list."));
-		mutelistGUI.addDefault(path + "lores.italian", Arrays.asList("&7Ti riporta alla pagina", "&7precedente della lista."));
+		mutelistGUI.addDefault(path + "lores.english", Arrays.asList("&7Go to the previous", "&7page of the GUI."));
+		mutelistGUI.addDefault(path + "lores.italian", Arrays.asList("&7Vai alla pagina", "&7precedente della GUI."));
 		mutelistGUI.addDefault(path + "material", "ARROW");
 		mutelistGUI.addDefault(path + "keep-open", true);
 		mutelistGUI.addDefault(path + "commands", Arrays.asList("gui open mutelist {viewer} {previous_page}"));
@@ -1969,8 +1970,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.next-page.";
 		mutelistGUI.addDefault(path + "display-names.english", "&e&lNext page");
 		mutelistGUI.addDefault(path + "display-names.italian", "&e&lPagina successiva");
-		mutelistGUI.addDefault(path + "lores.english", Arrays.asList("&7Go to the next page", "&7of this menu."));
-		mutelistGUI.addDefault(path + "lores.italian", Arrays.asList("&7Vai alla pagina", "&7successiva del menu."));
+		mutelistGUI.addDefault(path + "lores.english", Arrays.asList("&7Go to the next", "&7page of the GUI."));
+		mutelistGUI.addDefault(path + "lores.italian", Arrays.asList("&7Vai alla pagina", "&7successiva della GUI."));
 		mutelistGUI.addDefault(path + "material", "ARROW");
 		mutelistGUI.addDefault(path + "keep-open", true);
 		mutelistGUI.addDefault(path + "commands", Arrays.asList("gui open mutelist {viewer} {next_page}"));
@@ -1978,9 +1979,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		mutelistGUI.addDefault(path + "y", 5);
 		path = "icons.refresh.";
 		mutelistGUI.addDefault(path + "display-names.english", "&e&lRefresh");
-		mutelistGUI.addDefault(path + "display-names.italian", "&e&lRefresh");
+		mutelistGUI.addDefault(path + "display-names.italian", "&e&lAggiorna");
 		mutelistGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to refresh the", "&7GUI's variables and values."));
-		mutelistGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per ricaricare", "&7le variabili e i valori della GUI."));
+		mutelistGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per aggiornare", "&7le variabili ed i valori della GUI."));
 		mutelistGUI.addDefault(path + "material", VersionUtils.getVersion().isAtLeast(Version.V1_13) || Environment.isSponge() ? "CLOCK" : "WATCH");
 		mutelistGUI.addDefault(path + "keep-open", true);
 		mutelistGUI.addDefault(path + "commands", Arrays.asList("gui refresh mutelist"));
@@ -2025,17 +2026,17 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.display-names.english", "&c&l{cheater}");
 		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.display-names.italian", "&c&l{cheater}");
-		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.lores.english", Arrays.asList("&eAnticheat: &f{anticheat}", "&eServer: &f{server}", "&ePing: &f{ping_format} ms&e, TPS: &f{tps}", "&eVersion: &f{version} ({version_protocol})", "", "&eRecent violations:", "{violations}", "", "&d&oClick to teleport you there!"));
-		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.lores.italian", Arrays.asList("&eAnticheat: &f{anticheat}", "&eServer: &f{server}", "&ePing: &f{ping_format} ms&e, TPS: &f{tps}", "&eVersione: &f{version} ({version_protocol})", "", "&eViolazioni recenti:", "{violations}", "", "&d&oClicca per teletrasportarti!"));
+		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.lores.english", Arrays.asList("&7Anticheat: &f{anticheat}", "&7Server: &f{server}", "&7Ping: &f{ping_format} ms&7, TPS: &f{tps}", "&7Version: &f{client_edition} Edition {version} ({version_protocol})", "", "&7Recent violations:", "{violations}", "", "&e&oClick to teleport you there!"));
+		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.lores.italian", Arrays.asList("&7Anticheat: &f{anticheat}", "&7Server: &f{server}", "&7Ping: &f{ping_format} ms&7, TPS: &f{tps}", "&7Versione: &f{client_edition} Edition {version} ({version_protocol})", "", "&7Violazioni recenti:", "{violations}", "", "&e&oClicca per teletrasportarti!"));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			violationsGUI.addDefault("settings.filling-function.icon-layouts.player.material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			violationsGUI.addDefault("settings.filling-function.icon-layouts.player.damage", 3);
 		} else violationsGUI.addDefault("settings.filling-function.icon-layouts.player.material", "PLAYER_HEAD");
 		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.skull-owner", "{cheater}");
 		violationsGUI.addDefault("settings.filling-function.icon-layouts.player.commands", Arrays.asList("p: silentteleport player {cheater}"));
 		
-		violationsGUI.addDefault("settings.violations-list-format", "&7{cheat_display_name}: &f{amount}x");
+		violationsGUI.addDefault("settings.violations-list-format", "&8- &7{cheat_display_name}: &f{amount}x");
 		
 		path = "icons.info.";
 		violationsGUI.addDefault(path + "display-names.english", "&3&lViolations");
@@ -2049,8 +2050,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.previous-page.";
 		violationsGUI.addDefault(path + "display-names.english", "&e&lPrevious page");
 		violationsGUI.addDefault(path + "display-names.italian", "&e&lPagina precedente");
-		violationsGUI.addDefault(path + "lores.english", Arrays.asList("&7Takes you back to the", "&7previous page of the list."));
-		violationsGUI.addDefault(path + "lores.italian", Arrays.asList("&7Ti riporta alla pagina", "&7precedente della lista."));
+		violationsGUI.addDefault(path + "lores.english", Arrays.asList("&7Go to the previous", "&7page of the GUI."));
+		violationsGUI.addDefault(path + "lores.italian", Arrays.asList("&7Vai alla pagina", "&7precedente della GUI."));
 		violationsGUI.addDefault(path + "material", "ARROW");
 		violationsGUI.addDefault(path + "keep-open", true);
 		violationsGUI.addDefault(path + "commands", Arrays.asList("gui open violations {viewer} {previous_page}"));
@@ -2059,8 +2060,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.next-page.";
 		violationsGUI.addDefault(path + "display-names.english", "&e&lNext page");
 		violationsGUI.addDefault(path + "display-names.italian", "&e&lPagina successiva");
-		violationsGUI.addDefault(path + "lores.english", Arrays.asList("&7Go to the next page", "&7of this menu."));
-		violationsGUI.addDefault(path + "lores.italian", Arrays.asList("&7Vai alla pagina", "&7successiva del menu."));
+		violationsGUI.addDefault(path + "lores.english", Arrays.asList("&7Go to the next", "&7page of the GUI."));
+		violationsGUI.addDefault(path + "lores.italian", Arrays.asList("&7Vai alla pagina", "&7successiva della GUI."));
 		violationsGUI.addDefault(path + "material", "ARROW");
 		violationsGUI.addDefault(path + "keep-open", true);
 		violationsGUI.addDefault(path + "commands", Arrays.asList("gui open violations {viewer} {next_page}"));
@@ -2068,9 +2069,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		violationsGUI.addDefault(path + "y", 5);
 		path = "icons.refresh.";
 		violationsGUI.addDefault(path + "display-names.english", "&e&lRefresh");
-		violationsGUI.addDefault(path + "display-names.italian", "&e&lRefresh");
+		violationsGUI.addDefault(path + "display-names.italian", "&e&lAggiorna");
 		violationsGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to refresh the", "&7GUI's variables and values."));
-		violationsGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per ricaricare", "&7le variabili e i valori della GUI."));
+		violationsGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per aggiornare", "&7le variabili ed i valori della GUI."));
 		violationsGUI.addDefault(path + "material", VersionUtils.getVersion().isAtLeast(Version.V1_13) || Environment.isSponge() ? "CLOCK" : "WATCH");
 		violationsGUI.addDefault(path + "keep-open", true);
 		violationsGUI.addDefault(path + "commands", Arrays.asList("gui refresh violations"));
@@ -2112,10 +2113,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.overview.";
 		playerInfoGUI.addDefault(path + "display-names.english", "&a&l{player}");
 		playerInfoGUI.addDefault(path + "display-names.italian", "&a&l{player}");
-		playerInfoGUI.addDefault(path + "lores.english", Arrays.asList("&eUUID: &f{uuid}", "&ePlayer ID: &f#{player_id}", "&eVersion: &f{client_edition} Edition {version} (protocol: {version_protocol})", "&eLanguage: &f{language_display_name}", "&ePing: &f{ping_format} ms", "&eTime played: &f{time_played}", "&eLast login: &f{last_login} ago", "&eMessages sent: &f{messages_sent}x"));
-		playerInfoGUI.addDefault(path + "lores.italian", Arrays.asList("&eUUID: &f{uuid}", "&eID giocatore: &f#{player_id}", "&eVersione: &f{client_edition} Edition {version} (protocollo: {version_protocol})", "&eLingua: &f{language_display_name}", "&ePing: &f{ping_format} ms", "&eTempo di gioco: &f{time_played}", "&eUltimo login: &f{last_login} fa", "&eMessaggi inviati: &f{messages_sent}x"));
+		playerInfoGUI.addDefault(path + "lores.english", Arrays.asList("&7UUID: &f{uuid}", "&7Player ID: &f#{player_id}", "&7Version: &f{client_edition} Edition {version} (protocol: {version_protocol})", "&7Language: &f{language_display_name}", "&7Ping: &f{ping_format} ms &f({ping_quality_text}&f)", "&7Time played: &f{time_played}", "&7Last login: &f{last_login} ago", "&7Messages sent: &f{messages_sent}x"));
+		playerInfoGUI.addDefault(path + "lores.italian", Arrays.asList("&7UUID: &f{uuid}", "&7ID giocatore: &f#{player_id}", "&7Versione: &f{client_edition} Edition {version} (protocollo: {version_protocol})", "&7Lingua: &f{language_display_name}", "&7Ping: &f{ping_format} ms &f({ping_quality_text}&f)", "&7Tempo di gioco: &f{time_played}", "&7Ultimo login: &f{last_login} fa", "&7Messaggi inviati: &f{messages_sent}x"));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			playerInfoGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			playerInfoGUI.addDefault(path + "damage", 3);
 		} else playerInfoGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -2127,8 +2128,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.ip-lookup.";
 		playerInfoGUI.addDefault(path + "display-names.english", "&5&lIP lookup");
 		playerInfoGUI.addDefault(path + "display-names.italian", "&5&lLookup IP");
-		playerInfoGUI.addDefault(path + "lores.english", Arrays.asList("&eIP address: &f{ip_address}", "&eISP: &f{isp}", "&eCountry: &f{country}, {continent}", "&eSubdivisions: &f{subdivisions}", "&eCity: &f{city} (postal code: {postal_code})", "&eCoords: &f{latitude}° {longitude}°", "&eAccuracy radius: &f~{accuracy_radius_km} km"));
-		playerInfoGUI.addDefault(path + "lores.italian", Arrays.asList("&eIndirizzo IP: &f{ip_address}", "&eISP: &f{isp}", "&ePaese: &f{country}, {continent}", "&eSuddivisioni: &f{subdivisions}", "&eCittà: &f{city} (codice postale: {postal_code})", "&eCoordinate: &f{latitude}° {longitude}°", "&eRaggio di accuratezza: &f~{accuracy_radius_km} km"));
+		playerInfoGUI.addDefault(path + "lores.english", Arrays.asList("&7IP address: &f{ip_address}", "&7ISP: &f{isp}", "&7Country: &f{country}, {continent}", "&7Subdivisions: &f{subdivisions}", "&7City: &f{city} (postal code: {postal_code})", "&7Coords: &f{latitude}° {longitude}°", "&7Accuracy radius: &f~{accuracy_radius_km} km", "&7Relative date: &f{relative_date_full}"));
+		playerInfoGUI.addDefault(path + "lores.italian", Arrays.asList("&7Indirizzo IP: &f{ip_address}", "&7ISP: &f{isp}", "&7Paese: &f{country}, {continent}", "&7Suddivisioni: &f{subdivisions}", "&7Città: &f{city} (codice postale: {postal_code})", "&7Coordinate: &f{latitude}° {longitude}°", "&7Raggio di accuratezza: &f~{accuracy_radius_km} km", "&7Data relativa: &f{relative_date_full}"));
 		playerInfoGUI.addDefault(path + "material", "COMPASS");
 		playerInfoGUI.addDefault(path + "glowing", true);
 		playerInfoGUI.addDefault(path + "commands", Arrays.asList("p: iplookup {player}"));
@@ -2137,8 +2138,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.rank.";
 		playerInfoGUI.addDefault(path + "display-names.english", "&6&lRank");
 		playerInfoGUI.addDefault(path + "display-names.italian", "&6&lRank");
-		playerInfoGUI.addDefault(path + "lores.english", Arrays.asList("&eRank: &f{rank_display_name}", "&ePrefix: &f{prefix}", "&eSuffix: &f{suffix}", "&eTag: &f{tag_prefix}{tag_name_color}{player}{tag_suffix}", "&eDescription:", "&f{rank_description}"));
-		playerInfoGUI.addDefault(path + "lores.italian", Arrays.asList("&eRank: &f{rank_display_name}", "&ePrefix: &f{prefix}", "&eSuffix: &f{suffix}", "&eTag: &f{tag_prefix}{tag_name_color}{player}{tag_suffix}", "&eDescrizione:", "&f{rank_description}"));
+		playerInfoGUI.addDefault(path + "lores.english", Arrays.asList("&7Rank: &f{rank_display_name}", "&7Prefix: &f{prefix}", "&7Suffix: &f{suffix}", "&7Tag: &f{tag_prefix}{tag_name_color}{player}{tag_suffix}", "&7Description:", "&f{rank_description}"));
+		playerInfoGUI.addDefault(path + "lores.italian", Arrays.asList("&7Rank: &f{rank_display_name}", "&7Prefix: &f{prefix}", "&7Suffix: &f{suffix}", "&7Tag: &f{tag_prefix}{tag_name_color}{player}{tag_suffix}", "&7Descrizione:", "&f{rank_description}"));
 		playerInfoGUI.addDefault(path + "material", "NAME_TAG");
 		playerInfoGUI.addDefault(path + "glowing", true);
 		playerInfoGUI.addDefault(path + "commands", Arrays.asList("p: rankinfo {player}"));
@@ -2201,12 +2202,12 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		preferencesGUI.addDefault(path + "x", 5);
 		preferencesGUI.addDefault(path + "y", 1);
 		path = "icons.language.";
-		preferencesGUI.addDefault(path + "display-names.english", "&f&lLanguages");
-		preferencesGUI.addDefault(path + "display-names.italian", "&f&lLingue");
+		preferencesGUI.addDefault(path + "display-names.english", "&b&lLanguages");
+		preferencesGUI.addDefault(path + "display-names.italian", "&b&lLingue");
 		preferencesGUI.addDefault(path + "lores.english", Arrays.asList("&7This GUI allows you to change", "&7your language on the server."));
-		preferencesGUI.addDefault(path + "lores.italian", Arrays.asList("&7Questa GUI ti permette di cambiare", "&7la tua lingua sul server."));
+		preferencesGUI.addDefault(path + "lores.italian", Arrays.asList("&7Questa GUI ti consente di", "&7cambiare la tua lingua sul server."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			preferencesGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			preferencesGUI.addDefault(path + "damage", 3);
 		} else preferencesGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -2228,9 +2229,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		preferencesGUI.addDefault(path + "display-names.english", "&e&lEmojis' tone");
 		preferencesGUI.addDefault(path + "display-names.italian", "&e&lTono delle emojis");
 		preferencesGUI.addDefault(path + "lores.english", Arrays.asList("&7This GUI allows you to change", "&7your emojis' default tone."));
-		preferencesGUI.addDefault(path + "lores.italian", Arrays.asList("&7Questa GUI ti permette di cambiare", "&7il tono predefinito delle tue emojis."));
+		preferencesGUI.addDefault(path + "lores.italian", Arrays.asList("&7Questa GUI ti consente di cambiare", "&7il tono predefinito delle tue emojis."));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			preferencesGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			preferencesGUI.addDefault(path + "damage", 3);
 		} else preferencesGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -2241,10 +2242,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.overview.";
 		preferencesGUI.addDefault(path + "display-names.english", "&a&l{player}");
 		preferencesGUI.addDefault(path + "display-names.italian", "&a&l{player}");
-		preferencesGUI.addDefault(path + "lores.english", Arrays.asList("&ePlayer ID: &f#{player_id}", "&ePing: {ping_format} ms &f(quality: {ping_quality_text}&f)", "&eTime played: &f{time_played}", "&eBans/warnings/kicks/mutes: &f{player_bans}x/{player_warnings}x/{player_kicks}x/{player_mutes}x", "&eMessages sent: &f{messages_sent}x"));
-		preferencesGUI.addDefault(path + "lores.italian", Arrays.asList("&eID giocatore &f#{player_id}", "&ePing: {ping_format} ms &f(qualità: {ping_quality_text}&f)", "&eTempo di gioco: &f{time_played}", "&eBans/warnings/kicks/mutes: &f{player_bans}x/{player_warnings}x/{player_kicks}x/{player_mutes}x", "&eMessaggi inviati: &f{messages_sent}x"));
+		preferencesGUI.addDefault(path + "lores.english", Arrays.asList("&7Player ID: &f#{player_id}", "&7Ping: {ping_format} ms &f({ping_quality_text}&f)", "&7Time played: &f{time_played}", "&7Bans/warnings/kicks/mutes: &f{player_bans}x/{player_warnings}x/{player_kicks}x/{player_mutes}x", "&7Messages sent: &f{messages_sent}x"));
+		preferencesGUI.addDefault(path + "lores.italian", Arrays.asList("&7ID giocatore &f#{player_id}", "&7Ping: {ping_format} ms &f({ping_quality_text}&f)", "&7Tempo di gioco: &f{time_played}", "&7Bans/warnings/kicks/mutes: &f{player_bans}x/{player_warnings}x/{player_kicks}x/{player_mutes}x", "&7Messaggi inviati: &f{messages_sent}x"));
 		
-		if (!VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			preferencesGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");
 			preferencesGUI.addDefault(path + "damage", 3);
 		} else preferencesGUI.addDefault(path + "material", "PLAYER_HEAD");
@@ -2325,8 +2326,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.ban.display-names.english", "&4#&l{id}");
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.ban.display-names.italian", "&4#&l{id}");
-		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.ban.lores.english", Arrays.asList("&ePunishment: &4ban", "&eIP address: &f{ip_address}", "&eStaff member: &f{staff_member}", "&eReason: &f{reason}", "&eServer: &f{server}", "&eDate: &f{date}", "&eDuration: &f{duration}", "&eRemaining time: &f{remaining_time}", "&eType: &f{type}", "&eActive: &f{active}", "&eGlobal: &f{global}", "&eSilent: &f{silent}"));
-		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.ban.lores.italian", Arrays.asList("&ePunizione: &4ban", "&eIndirizzo IP: &f{ip_address}", "&eMembro dello Staff: &f{staff_member}", "&eMotivazione: &f{reason}", "&eServer: &f{server}", "&eData: &f{date}", "&eDurata: &f{duration}", "&eTempo rimanente: &f{remaining_time}", "&eTipo: &f{type}", "&eAttivo: &f{active}", "&eGlobale: &f{global}", "&eSilenzioso: &f{silent}"));
+		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.ban.lores.english", Arrays.asList("&7Punishment: &4ban", "&7IP address: &f{ip_address}", "&7Staff member: &f{staff_member}", "&7Reason: &f{reason}", "&7Server: &f{server}", "&7Date: &f{date}", "&7Duration: &f{duration}", "&7Remaining time: &f{remaining_time}", "&7Type: &f{type}", "&7Active: &f{active}", "&7Global: &f{global}", "&7Silent: &f{silent}"));
+		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.ban.lores.italian", Arrays.asList("&7Punizione: &4ban", "&7Indirizzo IP: &f{ip_address}", "&7Membro dello Staff: &f{staff_member}", "&7Motivo: &f{reason}", "&7Server: &f{server}", "&7Data: &f{date}", "&7Durata: &f{duration}", "&7Tempo rimanente: &f{remaining_time}", "&7Tipo: &f{type}", "&7Attivo: &f{active}", "&7Globale: &f{global}", "&7Silenzioso: &f{silent}"));
 		
 		if (!isAtLeastV1_13) {
 			playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.ban.material", Environment.isBukkit() ? "STAINED_CLAY" : "STAINED_HARDENED_CLAY");
@@ -2336,8 +2337,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.warning.display-names.english", "&c#&l{id}");
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.warning.display-names.italian", "&c#&l{id}");
-		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.warning.lores.english", Arrays.asList("&ePunishment: &cwarning", "&eStaff member: &f{staff_member}", "&eLast reason: &f{reason}", "&eServer: &f{server}", "&eDate: &f{date}", "&eDuration: &f{duration}", "&eRemaining time: &f{remaining_time}", "&eWarnings: &f{amount}/{max_amount}", "&eActive: &f{active}", "&eGlobal: &f{global}", "&eSilent: &f{silent}"));
-		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.warning.lores.italian", Arrays.asList("&ePunizione: &cavviso", "&eMembro dello Staff: &f{staff_member}", "&eUltima motivazione: &f{reason}", "&eServer: &f{server}", "&eData: &f{date}", "&eDurata: &f{duration}", "&eTempo rimanente: &f{remaining_time}", "&eAvvisi: &f{amount}/{max_amount}", "&eAttivo: &f{active}", "&eGlobale: &f{global}", "&eSilenzioso: &f{silent}"));
+		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.warning.lores.english", Arrays.asList("&7Punishment: &cwarning", "&7Staff member: &f{staff_member}", "&7Last reason: &f{reason}", "&7Server: &f{server}", "&7Date: &f{date}", "&7Duration: &f{duration}", "&7Remaining time: &f{remaining_time}", "&7Warnings: &f{amount}/{max_amount}", "&7Active: &f{active}", "&7Global: &f{global}", "&7Silent: &f{silent}"));
+		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.warning.lores.italian", Arrays.asList("&7Punizione: &cavviso", "&7Membro dello Staff: &f{staff_member}", "&7Ultimo motivo: &f{reason}", "&7Server: &f{server}", "&7Data: &f{date}", "&7Durata: &f{duration}", "&7Tempo rimanente: &f{remaining_time}", "&7Avvisi: &f{amount}/{max_amount}", "&7Attivo: &f{active}", "&7Globale: &f{global}", "&7Silenzioso: &f{silent}"));
 		
 		if (!isAtLeastV1_13) {
 			playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.warning.material", Environment.isBukkit() ? "HARD_CLAY" : "HARDENED_CLAY");
@@ -2346,8 +2347,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.kick.display-names.english", "&6#&l{id}");
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.kick.display-names.italian", "&6#&l{id}");
-		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.kick.lores.english", Arrays.asList("&ePunishment: &6kick", "&eIP address: &f{ip_address}", "&eStaff member: &f{staff_member}", "&eReason: &f{reason}", "&eServer: &f{server}", "&eDate: &f{date}", "&eType: &f{type}", "&eSilent: &f{silent}"));
-		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.kick.lores.italian", Arrays.asList("&ePunizione: &6disconnessione", "&eIndirizzo IP: &f{ip_address}", "&eMembro dello Staff: &f{staff_member}", "&eMotivazione: &f{reason}", "&eServer: &f{server}", "&eData: &f{date}", "&eTipo: &f{type}", "&eSilenzioso: &f{silent}"));
+		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.kick.lores.english", Arrays.asList("&7Punishment: &6kick", "&7IP address: &f{ip_address}", "&7Staff member: &f{staff_member}", "&7Reason: &f{reason}", "&7Server: &f{server}", "&7Date: &f{date}", "&7Type: &f{type}", "&7Silent: &f{silent}"));
+		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.kick.lores.italian", Arrays.asList("&7Punizione: &6disconnessione", "&7Indirizzo IP: &f{ip_address}", "&7Membro dello Staff: &f{staff_member}", "&7Motivo: &f{reason}", "&7Server: &f{server}", "&7Data: &f{date}", "&7Tipo: &f{type}", "&7Silenzioso: &f{silent}"));
 		
 		if (!isAtLeastV1_13) {
 			playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.kick.material", Environment.isBukkit() ? "STAINED_CLAY" : "STAINED_HARDENED_CLAY");
@@ -2357,8 +2358,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.mute.display-names.english", "&e#&l{id}");
 		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.mute.display-names.italian", "&e#&l{id}");
-		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.mute.lores.english", Arrays.asList("&ePunishment: &emute", "&eStaff member: &f{staff_member}", "&eReason: &f{reason}", "&eServer: &f{server}", "&eDate: &f{date}", "&eDuration: &f{duration}", "&eRemaining time: &f{remaining_time}", "&eActive: &f{active}", "&eGlobal: &f{global}", "&eSilent: &f{silent}"));
-		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.mute.lores.italian", Arrays.asList("&ePunizione: &emute", "&eMembro dello Staff: &f{staff_member}", "&eMotivazione: &f{reason}", "&eServer: &f{server}", "&eData: &f{date}", "&eDurata: &f{duration}", "&eTempo rimanente: &f{remaining_time}", "&eAttivo: &f{active}", "&eGlobale: &f{global}", "&eSilenzioso: &f{silent}"));
+		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.mute.lores.english", Arrays.asList("&7Punishment: &emute", "&7Staff member: &f{staff_member}", "&7Reason: &f{reason}", "&7Server: &f{server}", "&7Date: &f{date}", "&7Duration: &f{duration}", "&7Remaining time: &f{remaining_time}", "&7Active: &f{active}", "&7Global: &f{global}", "&7Silent: &f{silent}"));
+		playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.mute.lores.italian", Arrays.asList("&7Punizione: &emute", "&7Membro dello Staff: &f{staff_member}", "&7Motivo: &f{reason}", "&7Server: &f{server}", "&7Data: &f{date}", "&7Durata: &f{duration}", "&7Tempo rimanente: &f{remaining_time}", "&7Attivo: &f{active}", "&7Globale: &f{global}", "&7Silenzioso: &f{silent}"));
 		
 		if (!isAtLeastV1_13) {
 			playerPunishmentsGUI.addDefault("settings.filling-function.icon-layouts.mute.material", Environment.isBukkit() ? "STAINED_CLAY" : "STAINED_HARDENED_CLAY");
@@ -2378,8 +2379,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.previous-page.";
 		playerPunishmentsGUI.addDefault(path + "display-names.english", "&e&lPrevious page");
 		playerPunishmentsGUI.addDefault(path + "display-names.italian", "&e&lPagina precedente");
-		playerPunishmentsGUI.addDefault(path + "lores.english", Arrays.asList("&7Takes you back to the", "&7previous page of the list."));
-		playerPunishmentsGUI.addDefault(path + "lores.italian", Arrays.asList("&7Ti riporta alla pagina", "&7precedente della lista."));
+		playerPunishmentsGUI.addDefault(path + "lores.english", Arrays.asList("&7Go to the previous", "&7page of the GUI."));
+		playerPunishmentsGUI.addDefault(path + "lores.italian", Arrays.asList("&7Vai alla pagina", "&7precedente della GUI."));
 		playerPunishmentsGUI.addDefault(path + "material", "ARROW");
 		playerPunishmentsGUI.addDefault(path + "keep-open", true);
 		playerPunishmentsGUI.addDefault(path + "commands", Arrays.asList("gui open player-punishments-{player} {viewer} {previous_page}"));
@@ -2388,8 +2389,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.next-page.";
 		playerPunishmentsGUI.addDefault(path + "display-names.english", "&e&lNext page");
 		playerPunishmentsGUI.addDefault(path + "display-names.italian", "&e&lPagina successiva");
-		playerPunishmentsGUI.addDefault(path + "lores.english", Arrays.asList("&7Go to the next page", "&7of this menu."));
-		playerPunishmentsGUI.addDefault(path + "lores.italian", Arrays.asList("&7Vai alla pagina", "&7successiva del menu."));
+		playerPunishmentsGUI.addDefault(path + "lores.english", Arrays.asList("&7Go to the next", "&7page of the GUI."));
+		playerPunishmentsGUI.addDefault(path + "lores.italian", Arrays.asList("&7Vai alla pagina", "&7successiva della GUI."));
 		playerPunishmentsGUI.addDefault(path + "material", "ARROW");
 		playerPunishmentsGUI.addDefault(path + "keep-open", true);
 		playerPunishmentsGUI.addDefault(path + "commands", Arrays.asList("gui open player-punishments-{player} {viewer} {next_page}"));
@@ -2397,9 +2398,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		playerPunishmentsGUI.addDefault(path + "y", 5);
 		path = "icons.refresh.";
 		playerPunishmentsGUI.addDefault(path + "display-names.english", "&e&lRefresh");
-		playerPunishmentsGUI.addDefault(path + "display-names.italian", "&e&lRefresh");
+		playerPunishmentsGUI.addDefault(path + "display-names.italian", "&e&lAggiorna");
 		playerPunishmentsGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to refresh the", "&7GUI's variables and values."));
-		playerPunishmentsGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per ricaricare", "&7le variabili e i valori della GUI."));
+		playerPunishmentsGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per aggiornare", "&7le variabili ed i valori della GUI."));
 		playerPunishmentsGUI.addDefault(path + "material", isAtLeastV1_13 || Environment.isSponge() ? "CLOCK" : "WATCH");
 		playerPunishmentsGUI.addDefault(path + "keep-open", true);
 		playerPunishmentsGUI.addDefault(path + "commands", Arrays.asList("gui refresh player-punishments-{player}"));
@@ -2444,8 +2445,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.display-names.english", "&c&l{cheat_display_name}");
 		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.display-names.italian", "&c&l{cheat_display_name}");
-		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.lores.english", Arrays.asList("&eAnticheat: &f{anticheat}", "&eComponent: &f{component}", "&eViolations: &f{amount}x", "&ePing: &f{ping_format} ms&e, TPS: &f{tps}", "&eLast time: &f{last_time} ago", "&d&oClick to teleport you there!"));
-		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.lores.italian", Arrays.asList("&eAnticheat: &f{anticheat}", "&eComponente: &f{component}", "&eViolazioni: &f{amount}x", "&ePing: &f{ping_format} ms&e, TPS: &f{tps}", "&eUltima volta: &f{last_time} fa", "&d&oClicca per teletrasportarti!"));
+		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.lores.english", Arrays.asList("&7Anticheat: &f{anticheat}", "&7Component: &f{component}", "&7Violations: &f{amount}x", "&7Ping: &f{ping_format} ms&7, TPS: &f{tps}", "&7Last time: &f{last_time} ago", "", "&e&oClick to teleport you there!"));
+		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.lores.italian", Arrays.asList("&7Anticheat: &f{anticheat}", "&7Componente: &f{component}", "&7Violazioni: &f{amount}x", "&7Ping: &f{ping_format} ms&7, TPS: &f{tps}", "&7Ultima volta: &f{last_time} fa", "", "&e&oClicca per teletrasportarti!"));
 		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.material", "AIR");
 		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.amount", "{amount}");
 		playerViolationsGUI.addDefault("settings.filling-function.icon-layouts.violation.commands", Arrays.asList("p: silentteleport player {cheater}"));
@@ -2463,8 +2464,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.previous-page.";
 		playerViolationsGUI.addDefault(path + "display-names.english", "&e&lPrevious page");
 		playerViolationsGUI.addDefault(path + "display-names.italian", "&e&lPagina precedente");
-		playerViolationsGUI.addDefault(path + "lores.english", Arrays.asList("&7Takes you back to the", "&7previous page of the list."));
-		playerViolationsGUI.addDefault(path + "lores.italian", Arrays.asList("&7Ti riporta alla pagina", "&7precedente della lista."));
+		playerViolationsGUI.addDefault(path + "lores.english", Arrays.asList("&7Go to the previous", "&7page of the GUI."));
+		playerViolationsGUI.addDefault(path + "lores.italian", Arrays.asList("&7Vai alla pagina", "&7precedente della GUI."));
 		playerViolationsGUI.addDefault(path + "material", "ARROW");
 		playerViolationsGUI.addDefault(path + "keep-open", true);
 		playerViolationsGUI.addDefault(path + "commands", Arrays.asList("gui open player-violations-{player} {viewer} {previous_page}"));
@@ -2473,8 +2474,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.next-page.";
 		playerViolationsGUI.addDefault(path + "display-names.english", "&e&lNext page");
 		playerViolationsGUI.addDefault(path + "display-names.italian", "&e&lPagina successiva");
-		playerViolationsGUI.addDefault(path + "lores.english", Arrays.asList("&7Go to the next page", "&7of this menu."));
-		playerViolationsGUI.addDefault(path + "lores.italian", Arrays.asList("&7Vai alla pagina", "&7successiva del menu."));
+		playerViolationsGUI.addDefault(path + "lores.english", Arrays.asList("&7Go to the next", "&7page of the GUI."));
+		playerViolationsGUI.addDefault(path + "lores.italian", Arrays.asList("&7Vai alla pagina", "&7successiva della GUI."));
 		playerViolationsGUI.addDefault(path + "material", "ARROW");
 		playerViolationsGUI.addDefault(path + "keep-open", true);
 		playerViolationsGUI.addDefault(path + "commands", Arrays.asList("gui open player-violations-{player} {viewer} {next_page}"));
@@ -2482,9 +2483,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		playerViolationsGUI.addDefault(path + "y", 5);
 		path = "icons.refresh.";
 		playerViolationsGUI.addDefault(path + "display-names.english", "&e&lRefresh");
-		playerViolationsGUI.addDefault(path + "display-names.italian", "&e&lRefresh");
+		playerViolationsGUI.addDefault(path + "display-names.italian", "&e&lAggiorna");
 		playerViolationsGUI.addDefault(path + "lores.english", Arrays.asList("&7Click this icon to refresh the", "&7GUI's variables and values."));
-		playerViolationsGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per ricaricare", "&7le variabili e i valori della GUI."));
+		playerViolationsGUI.addDefault(path + "lores.italian", Arrays.asList("&7Clicca questa icona per aggiornare", "&7le variabili ed i valori della GUI."));
 		playerViolationsGUI.addDefault(path + "material", VersionUtils.getVersion().isAtLeast(Version.V1_13) || Environment.isSponge() ? "CLOCK" : "WATCH");
 		playerViolationsGUI.addDefault(path + "keep-open", true);
 		playerViolationsGUI.addDefault(path + "commands", Arrays.asList("gui refresh player-violations-{player}"));

@@ -242,8 +242,10 @@ public class ChatPluginBukkit extends ChatPlugin {
 	}
 	
 	@Override
-	public void runConsoleCommand(String command) {
-		TaskManager.runSync(() -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command), 0L);
+	public void runConsoleCommand(String command, boolean forceSync) {
+		if (forceSync)
+			TaskManager.runSync(() -> runConsoleCommand(command, false), 0L);
+		else Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
 	}
 	
 	@Override

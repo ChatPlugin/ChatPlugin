@@ -33,7 +33,6 @@ import me.remigio07.chatplugin.api.server.chat.StaffChatManager;
 import me.remigio07.chatplugin.api.server.gui.GUIManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
-import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.command.admin.ClearChatCommand;
 import me.remigio07.chatplugin.server.command.admin.IPLookupCommand;
 import me.remigio07.chatplugin.server.command.admin.LastSeenCommand;
@@ -163,13 +162,11 @@ public abstract class CommandsHandler {
 	
 	public static void executeCommands(ChatPluginServerPlayer player, List<String> commands) {
 		for (String command : commands) {
-			if (command.isEmpty() || command.equals(Utils.STRING_NOT_FOUND))
+			if (command.isEmpty())
 				continue;
-			if (player != null && command.startsWith("p:"))
-				if (player.isOnline())
-					player.executeCommand(command.substring(2).trim());
-				else return;
-			else ChatPlugin.getInstance().runConsoleCommand(command.replace("{0}", player == null ? "" : player.getName()));
+			if (command.startsWith("p:"))
+				player.executeCommand(command.substring(2).trim());
+			else ChatPlugin.getInstance().runConsoleCommand(command.replace("{0}", player.getName()), false);
 		}
 	}
 	

@@ -49,7 +49,7 @@ public class Icon {
 	 * @see #isValidIconID(String)
 	 */
 	public static final Pattern ICON_ID_PATTERN = Pattern.compile("^[a-zA-Z0-9-_]{2,36}$");
-	private String id, skullOwner, skullTextureURL;
+	private String id, skullOwner, skullTextureURL, permission;
 	private IconType type;
 	private MaterialAdapter material;
 	private ValueContainer<Short> amount;
@@ -84,6 +84,7 @@ public class Icon {
 				icon.getSkullOwner(),
 				icon.getSkullTextureURL(),
 				icon.getLeatherArmorColor(),
+				icon.getPermission(),
 				icon.getCommands(),
 				icon.getItemFlags(),
 				icon.getDisplayNames(),
@@ -131,6 +132,7 @@ public class Icon {
 				null,
 				null,
 				null,
+				null,
 				new CopyOnWriteArrayList<>(),
 				new CopyOnWriteArrayList<>(),
 				new ConcurrentHashMap<>(),
@@ -158,6 +160,7 @@ public class Icon {
 	 * @param skullOwner Icon's skull's owner
 	 * @param skullTextureURL Icon's skull's texture's URL
 	 * @param leatherArmorColor Icon's leather armor's color
+	 * @param permission Icon's permission
 	 * @param commands Icon's commands executed on click
 	 * @param itemFlags Icon's item flags
 	 * @param displayNames Icon's display names
@@ -177,6 +180,7 @@ public class Icon {
 			@Nullable(why = "Skull's owner is removed when null") String skullOwner,
 			@Nullable(why = "Skull's texture's URL is removed when null") String skullTextureURL,
 			@Nullable(why = "Color is set to #A06540 when null") Color leatherArmorColor,
+			@Nullable(why = "No permission check is performed when null") String permission,
 			@NotNull List<String> commands,
 			@NotNull List<ItemFlagAdapter> itemFlags,
 			@NotNull Map<Language, String> displayNames,
@@ -196,6 +200,7 @@ public class Icon {
 		this.skullOwner = skullOwner;
 		this.skullTextureURL = skullTextureURL;
 		this.leatherArmorColor = leatherArmorColor;
+		this.permission = permission;
 		this.commands = commands;
 		this.itemFlags = itemFlags;
 		this.displayNames = displayNames;
@@ -415,6 +420,31 @@ public class Icon {
 	public Icon setLeatherArmorColor(@Nullable(why = "Color is set to #A06540 when null") Color leatherArmorColor) {
 		this.leatherArmorColor = leatherArmorColor;
 		return this;
+	}
+	
+	/**
+	 * Gets this icon's permission.
+	 * 
+	 * <p>Will return <code>null</code> if this icon does
+	 * not require any permission to be clicked.</p>
+	 * 
+	 * @return Icon's permission
+	 */
+	@Nullable(why = "No permission check is performed when null")
+	public String getPermission() {
+		return permission;
+	}
+	
+	/**
+	 * Sets this icon's permission.
+	 * 
+	 * <p>Specify <code>null</code> if this icon should
+	 * not require any permission to be clicked.</p>
+	 * 
+	 * @param permission Icon's permission
+	 */
+	public void setPermission(@Nullable(why = "No permission check is performed when null") String permission) {
+		this.permission = permission;
 	}
 	
 	/**

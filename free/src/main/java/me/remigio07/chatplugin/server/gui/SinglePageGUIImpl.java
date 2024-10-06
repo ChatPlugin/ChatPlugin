@@ -25,8 +25,10 @@ import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
-import me.remigio07.chatplugin.api.server.event.gui.GUIClickEvent;
+import me.remigio07.chatplugin.api.server.event.gui.EmptySlotClickEvent;
+import me.remigio07.chatplugin.api.server.event.gui.GUIDragEvent;
 import me.remigio07.chatplugin.api.server.event.gui.GUIOpenEvent;
+import me.remigio07.chatplugin.api.server.event.gui.IconClickEvent;
 import me.remigio07.chatplugin.api.server.gui.GUIManager;
 import me.remigio07.chatplugin.api.server.gui.Icon;
 import me.remigio07.chatplugin.api.server.gui.PerPlayerGUI;
@@ -35,10 +37,11 @@ import me.remigio07.chatplugin.api.server.gui.SinglePageGUILayout;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.util.adapter.inventory.ClickEventAdapter;
+import me.remigio07.chatplugin.api.server.util.adapter.inventory.DragEventAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.InventoryAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.item.ItemStackAdapter;
 import me.remigio07.chatplugin.bootstrap.Environment;
-import me.remigio07.chatplugin.server.command.CommandsHandler;
 import me.remigio07.chatplugin.server.util.Utils;
 
 public class SinglePageGUIImpl extends SinglePageGUI {
@@ -121,33 +124,53 @@ public class SinglePageGUIImpl extends SinglePageGUI {
 	}
 	
 	@Override
-	public boolean handleClickEvent(ChatPluginServerPlayer player, int slot) {
+	public boolean handleClickEvent(ChatPluginServerPlayer player, ClickEventAdapter clickEvent) {
 		if (player.hasPermission("chatplugin.guis." + layout.getID())) {
+			if (this instanceof PerPlayer)
+				((PerPlayer) this).refreshUnloadTask();
 			try {
-				Icon icon = layout.getIcons().get(slot);
+				Icon icon = layout.getIcons().get(clickEvent.getSlot());
 				
 				if (icon != null) {
-					GUIClickEvent event = new GUIClickEvent(this, player, icon, 0);
+					IconClickEvent event = new IconClickEvent(this, player, 0, clickEvent, icon, false);
 					
 					event.call();
 					
-					if (event.isCancelled())
-						return false;
-					if (this instanceof PerPlayer)
-						((PerPlayer) this).refreshUnloadTask();
-					TaskManager.runSync(() -> {
-						if (!icon.isKeepOpen())
-							player.closeInventory();
-						CommandsHandler.executeCommands(player, icon.formatPlaceholders(icon.getCommands().stream().map(command -> command.replace("{viewer}", player.getName())).collect(Collectors.toList()), this, player.getLanguage(), false));
-					}, 0L);
-					player.playSound(layout.getClickSound());
-					return true;
+					if (icon.getPermission() == null || player.hasPermission(icon.getPermission())) {
+						if (event.shouldPerformActions()) {
+							TaskManager.runSync(() -> {
+								if (!icon.isKeepOpen())
+									player.closeInventory();
+								GUIManagerImpl.executeCommands(player, icon.formatPlaceholders(
+										icon.getCommands().stream().map(command -> command
+												.replace("{viewer}", player.getName())
+												).collect(Collectors.toList()),
+										this,
+										player.getLanguage(),
+										false
+										), clickEvent.getClickType());
+							}, 0L);
+							player.playSound(layout.getClickSound());
+						}
+					} else player.sendTranslatedMessage("guis.no-permission-icon");
+					return event.isCancelled();
 				}
 			} catch (IndexOutOfBoundsException e) {
 				
-			}
+			} EmptySlotClickEvent event = new EmptySlotClickEvent(this, player, 0, clickEvent);
+			
+			event.call();
+			return event.isCancelled();
 		} else player.sendTranslatedMessage("guis.no-permission");
-		return false;
+		return true;
+	}
+	
+	@Override
+	public boolean handleDragEvent(ChatPluginServerPlayer player, DragEventAdapter dragEvent) {
+		GUIDragEvent event = new GUIDragEvent(this, player, 0, dragEvent);
+		
+		event.call();
+		return event.isCancelled();
 	}
 	
 	public static class PerPlayer extends SinglePageGUIImpl implements PerPlayerGUI {

@@ -52,6 +52,7 @@ import me.remigio07.chatplugin.api.server.language.LanguageManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.util.adapter.block.MaterialAdapter;
+import me.remigio07.chatplugin.api.server.util.adapter.inventory.ClickEventAdapter.ClickTypeAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.InventoryAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.item.EnchantmentAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.item.ItemFlagAdapter;
@@ -175,6 +176,7 @@ public class GUIManagerImpl extends GUIManager {
 				configuration.getString(path + ".skull-owner", null),
 				configuration.getString(path + ".skull-texture-url", null),
 				configuration.contains(path + ".leather-armor-color") ? Color.decode(configuration.getString(path + ".leather-armor-color")) : null,
+				configuration.getString(path + ".permission", null),
 				new ArrayList<>(configuration.getList(path + ".commands", Collections.emptyList())),
 				configuration.getStringList(path + ".item-flags").stream().map(ItemFlagAdapter::valueOf).filter(Objects::nonNull).collect(Collectors.toCollection(ArrayList::new)),
 				LanguageManager.getInstance().getLanguages().stream().collect(HashMap::new, (map, language) -> map.put(language, configuration.getString(path + ".display-names." + language.getID(), null)), HashMap::putAll),
@@ -200,6 +202,26 @@ public class GUIManagerImpl extends GUIManager {
 					if (Environment.isBukkit() ? inventory.equals(page.bukkitValue()) : (inventory = page.spongeValue().getInventoryProperty(InventoryTitle.class).orElse(null)) == null ? false : spongeTitle.equals(((InventoryTitle) inventory).getValue().toPlain()))
 						return gui;
 		return null;
+	}
+	
+	public static void executeCommands(ChatPluginServerPlayer player, List<String> commands, ClickTypeAdapter clickType) {
+		for (String command : commands) {
+			if (command.isEmpty())
+				continue;
+			ClickTypeAdapter ct = null;
+			
+			for (ClickTypeAdapter other : ClickTypeAdapter.values()) {
+				if (command.startsWith(other.name() + ":")) {
+					command = command.substring(command.indexOf(':') + 1).trim();
+					ct = other;
+					break;
+				}
+			} if (ct == null || ct == clickType) {
+				if (command.startsWith("p:"))
+					player.executeCommand(command.substring(2).trim());
+				else ChatPlugin.getInstance().runConsoleCommand(command.replace("{0}", player.getName()), false);
+			}
+		}
 	}
 	
 }

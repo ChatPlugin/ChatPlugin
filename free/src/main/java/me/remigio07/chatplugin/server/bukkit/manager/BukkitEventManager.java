@@ -15,13 +15,18 @@
 
 package me.remigio07.chatplugin.server.bukkit.manager;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventException;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.DragType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -62,6 +67,11 @@ import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
 import me.remigio07.chatplugin.api.server.scoreboard.ScoreboardManager;
 import me.remigio07.chatplugin.api.server.scoreboard.event.EventScoreboard;
 import me.remigio07.chatplugin.api.server.scoreboard.event.ScoreboardEvent;
+import me.remigio07.chatplugin.api.server.util.adapter.inventory.ClickEventAdapter;
+import me.remigio07.chatplugin.api.server.util.adapter.inventory.ClickEventAdapter.ClickActionAdapter;
+import me.remigio07.chatplugin.api.server.util.adapter.inventory.ClickEventAdapter.ClickTypeAdapter;
+import me.remigio07.chatplugin.api.server.util.adapter.inventory.DragEventAdapter;
+import me.remigio07.chatplugin.api.server.util.adapter.inventory.item.ItemStackAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
@@ -91,6 +101,7 @@ public class BukkitEventManager extends EventManager {
 		manager.registerEvent(PlayerCommandPreprocessEvent.class, listener, EventPriority.NORMAL, listener, instance);
 		manager.registerEvent(PlayerChangedWorldEvent.class, listener, EventPriority.LOW, listener, instance);
 		manager.registerEvent(InventoryClickEvent.class, listener, EventPriority.NORMAL, listener, instance);
+		manager.registerEvent(InventoryDragEvent.class, listener, EventPriority.NORMAL, listener, instance);
 		manager.registerEvent(InventoryCloseEvent.class, listener, EventPriority.NORMAL, listener, instance);
 		
 		if (VersionUtils.getVersion().isAtLeast(Version.V1_12))
@@ -118,6 +129,9 @@ public class BukkitEventManager extends EventManager {
 			break;
 		case "InventoryClick":
 			onInventoryClick((InventoryClickEvent) event);
+			break;
+		case "InventoryDrag":
+			onInventoryDrag((InventoryDragEvent) event);
 			break;
 		case "InventoryClose":
 			onInventoryClose((InventoryCloseEvent) event);
@@ -234,7 +248,6 @@ public class BukkitEventManager extends EventManager {
 		} else playerManager.loadPlayer(player.toAdapter());
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void onInventoryClick(InventoryClickEvent event) {
 		if (event.isCancelled())
 			return;
@@ -244,13 +257,52 @@ public class BukkitEventManager extends EventManager {
 			return;
 		GUI gui = GUIManager.getInstance().getOpenGUI(player);
 		
-		if (gui != null) {
-			if (gui instanceof SinglePageGUI)
-				((SinglePageGUI) gui).handleClickEvent(player, event.getRawSlot());
-			else ((FillableGUI<?>) gui).handleClickEvent(player, ((FillableGUI<?>) gui).getViewers().get(player), event.getRawSlot());
-			
+		if (gui != null && (gui instanceof SinglePageGUI
+				? ((SinglePageGUI) gui).handleClickEvent(player, new ClickEventAdapter(
+						ClickTypeAdapter.valueOf(event.getClick().name()),
+						ClickActionAdapter.valueOf(event.getAction().name()),
+						event.getCursor() == null ? null : new ItemStackAdapter(event.getCursor()),
+						event.getRawSlot() == -999 ? -1 : event.getRawSlot(),
+						event.getHotbarButton()
+						))
+				: ((FillableGUI<?>) gui).handleClickEvent(player, new ClickEventAdapter(
+						ClickTypeAdapter.valueOf(event.getClick().name()),
+						ClickActionAdapter.valueOf(event.getAction().name()),
+						event.getCursor() == null ? null : new ItemStackAdapter(event.getCursor()),
+						event.getRawSlot() == -999 ? -1 : event.getRawSlot(),
+						event.getHotbarButton()
+						), ((FillableGUI<?>) gui).getViewers().get(player)))) {
 			event.setCancelled(true);
-			event.setCursor(null);
+			TaskManager.runSync(() -> player.toAdapter().bukkitValue().updateInventory(), 0L);
+		}
+	}
+	
+	public void onInventoryDrag(InventoryDragEvent event) {
+		if (event.isCancelled())
+			return;
+		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getWhoClicked().getUniqueId());
+		
+		if (player == null)
+			return;
+		GUI gui = GUIManager.getInstance().getOpenGUI(player);
+		
+		if (gui != null) {
+			ItemStackAdapter cursor = event.getCursor() == null ? null : new ItemStackAdapter(event.getCursor());
+			DragEventAdapter dragEvent = new DragEventAdapter(
+					event.getNewItems().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> new ItemStackAdapter(entry.getValue()))),
+					new ItemStackAdapter(event.getOldCursor()),
+					cursor,
+					event.getType() == DragType.SINGLE
+					);
+			
+			event.setCancelled(gui instanceof SinglePageGUI
+					? ((SinglePageGUI) gui).handleDragEvent(player, dragEvent)
+					: ((FillableGUI<?>) gui).handleDragEvent(player, dragEvent, ((FillableGUI<?>) gui).getViewers().get(player))
+					);
+			
+			if (cursor != dragEvent.getCursor())
+				event.setCursor(dragEvent.getCursor().bukkitValue());
+			TaskManager.runSync(() -> player.toAdapter().bukkitValue().updateInventory(), 0L);
 		}
 	}
 	

@@ -260,8 +260,10 @@ public class ChatPluginSponge extends ChatPlugin {
 	}
 	
 	@Override
-	public void runConsoleCommand(String command) {
-		TaskManager.runSync(() -> Sponge.getCommandManager().process(Sponge.getServer().getConsole(), command), 0L);
+	public void runConsoleCommand(String command, boolean forceSync) {
+		if (forceSync)
+			TaskManager.runSync(() -> runConsoleCommand(command, false), 0L);
+		else Sponge.getCommandManager().process(Sponge.getServer().getConsole(), command);
 	}
 	
 	@Override

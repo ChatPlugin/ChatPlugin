@@ -22,10 +22,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiFunction;
 
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
-import me.remigio07.chatplugin.api.server.event.gui.GUIClickEvent;
+import me.remigio07.chatplugin.api.server.event.gui.EmptySlotClickEvent;
+import me.remigio07.chatplugin.api.server.event.gui.GUIDragEvent;
 import me.remigio07.chatplugin.api.server.event.gui.GUIOpenEvent;
+import me.remigio07.chatplugin.api.server.event.gui.IconClickEvent;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.util.adapter.inventory.ClickEventAdapter;
+import me.remigio07.chatplugin.api.server.util.adapter.inventory.DragEventAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.InventoryAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 
@@ -146,13 +150,33 @@ public abstract class SinglePageGUI extends GUI {
 	/**
 	 * Handles and processes a click event.
 	 * 
-	 * <p>Will do nothing if the slot is invalid.</p>
+	 * 	<p>In order:
+	 * 		<ol>
+	 * 			<li>checks if {@link ChatPluginServerPlayer#hasPermission(String)} to use this GUI</li>
+	 * 			<li>if the clicked icon is valid, checks if it requires a permission to be clicked</li>
+	 * 			<li>if {@link IconClickEvent#shouldPerformActions()}, executes {@link Icon#getCommands()} and plays {@link GUILayout#getClickSound()}</li>
+	 * 			<li>returns <code>true</code> to cancel the click event, unless <code>!</code>{@link EmptySlotClickEvent#isCancelled()} or <code>!</code>{@link IconClickEvent#isCancelled()}</li>
+	 * 		</ol>
 	 * 
 	 * @param player Player involved
-	 * @param slot Slot involved
-	 * @return Whether the click event completed successfully, with no cancellation
-	 * @see GUIClickEvent
+	 * @param clickEvent Click event to handle
+	 * @return Whether to cancel the click event
+	 * @see EmptySlotClickEvent
+	 * @see IconClickEvent
 	 */
-	public abstract boolean handleClickEvent(ChatPluginServerPlayer player, int slot);
+	public abstract boolean handleClickEvent(ChatPluginServerPlayer player, ClickEventAdapter clickEvent);
+	
+	/**
+	 * Handles and processes a drag event.
+	 * 
+	 * <p>Returns <code>true</code> to cancel the event by default,
+	 * unless <code>!</code>{@link GUIDragEvent#isCancelled()}.</p>
+	 * 
+	 * @param player Player involved
+	 * @param dragEvent Drag event to handle
+	 * @return Whether to cancel the drag event
+	 * @see GUIDragEvent
+	 */
+	public abstract boolean handleDragEvent(ChatPluginServerPlayer player, DragEventAdapter dragEvent);
 	
 }

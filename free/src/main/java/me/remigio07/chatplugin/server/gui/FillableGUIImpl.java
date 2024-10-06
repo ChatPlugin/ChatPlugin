@@ -33,8 +33,9 @@ import java.util.stream.Stream;
 
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
-import me.remigio07.chatplugin.api.server.event.gui.GUIClickEvent;
+import me.remigio07.chatplugin.api.server.event.gui.EmptySlotClickEvent;
 import me.remigio07.chatplugin.api.server.event.gui.GUIOpenEvent;
+import me.remigio07.chatplugin.api.server.event.gui.IconClickEvent;
 import me.remigio07.chatplugin.api.server.gui.FillableGUI;
 import me.remigio07.chatplugin.api.server.gui.FillableGUILayout;
 import me.remigio07.chatplugin.api.server.gui.GUI;
@@ -47,10 +48,11 @@ import me.remigio07.chatplugin.api.server.gui.PerPlayerGUI;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.util.adapter.inventory.ClickEventAdapter;
+import me.remigio07.chatplugin.api.server.util.adapter.inventory.DragEventAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.InventoryAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.item.ItemStackAdapter;
 import me.remigio07.chatplugin.bootstrap.Environment;
-import me.remigio07.chatplugin.server.command.CommandsHandler;
 import me.remigio07.chatplugin.server.util.Utils;
 
 public class FillableGUIImpl<T> extends FillableGUI<T> {
@@ -212,46 +214,64 @@ public class FillableGUIImpl<T> extends FillableGUI<T> {
 	}
 	
 	@Override
-	public boolean handleClickEvent(ChatPluginServerPlayer player, int page, int slot) {
+	public boolean handleClickEvent(ChatPluginServerPlayer player, ClickEventAdapter clickEvent, int page) {
 		if (player.hasPermission("chatplugin.guis." + layout.getID())) {
+			if (this instanceof PerPlayer)
+				((PerPlayer<T>) this).refreshUnloadTask();
 			Icon icon = null;
 			
 			try {
-				icon = layout.getIcons().get(slot);
+				icon = layout.getIcons().get(clickEvent.getSlot());
 			} catch (IndexOutOfBoundsException e) {
 				
 			} if (icon == null)
 				if (fillers.isEmpty()) {
-					if (getLayout().getEmptyListIcon().getPosition() == slot)
+					if (getLayout().getEmptyListIcon().getPosition() == clickEvent.getSlot())
 						icon = getLayout().getEmptyListIcon();
 				} else try {
-					icon = generatedIcons.get(page).get(slot);
+					icon = generatedIcons.get(page).get(clickEvent.getSlot());
 				} catch (IndexOutOfBoundsException e) {
 					
 				}
 			if (icon != null) {
-				if ((icon.getID().equals("previous-page") && page == 0) || (icon.getID().equals("next-page") && page == generatedIcons.size() - 1))
-					return false;
-				GUIClickEvent event = new GUIClickEvent(this, player, icon, page);
+				boolean hidden = (icon.getID().equals("previous-page") && page == 0) || (icon.getID().equals("next-page") && page == generatedIcons.size() - 1);
+				IconClickEvent event = new IconClickEvent(this, player, page, clickEvent, icon, hidden);
 				
 				event.call();
 				
-				if (event.isCancelled())
-					return false;
-				if (this instanceof PerPlayer)
-					((PerPlayer<T>) this).refreshUnloadTask();
-				Icon icon2 = icon;
-				
-				TaskManager.runSync(() -> {
-					if (!icon2.isKeepOpen())
-						player.closeInventory();
-					CommandsHandler.executeCommands(player, icon2.formatPlaceholders(icon2.getCommands().stream().map(command -> command.replace("{viewer}", player.getName()).replace("{previous_page}", String.valueOf(page)).replace("{next_page}", String.valueOf(page + 2))).collect(Collectors.toList()), this, player.getLanguage(), false));
-				}, 0L);
-				player.playSound(layout.getClickSound());
-				return true;
-			}
+				if (icon.getPermission() == null || player.hasPermission(icon.getPermission())) {
+					if (!hidden && event.shouldPerformActions()) {
+						Icon icon2 = icon;
+						
+						TaskManager.runSync(() -> {
+							if (!icon2.isKeepOpen())
+								player.closeInventory();
+							GUIManagerImpl.executeCommands(player, icon2.formatPlaceholders(
+									icon2.getCommands().stream().map(command -> command
+											.replace("{viewer}", player.getName())
+											.replace("{previous_page}", String.valueOf(page))
+											.replace("{next_page}", String.valueOf(page + 2))
+											).collect(Collectors.toList()),
+									this,
+									player.getLanguage(),
+									false
+									), clickEvent.getClickType());
+						}, 0L);
+						player.playSound(layout.getClickSound());
+					}
+				} else player.sendTranslatedMessage("guis.no-permission-icon");
+				return event.isCancelled();
+			} EmptySlotClickEvent event = new EmptySlotClickEvent(this, player, page, clickEvent);
+			
+			event.call();
+			return event.isCancelled();
 		} else player.sendTranslatedMessage("guis.no-permission");
-		return false;
+		return true;
+	}
+	
+	@Override
+	public boolean handleDragEvent(ChatPluginServerPlayer player, DragEventAdapter dragEvent, int page) {
+		return true;
 	}
 	
 	public static class PerPlayer<T> extends FillableGUIImpl<T> implements PerPlayerGUI {
@@ -324,6 +344,7 @@ public class FillableGUIImpl<T> extends FillableGUI<T> {
 					iconLayout.getSkullOwner(),
 					iconLayout.getSkullTextureURL(),
 					iconLayout.getLeatherArmorColor() == null ? null : new Color(iconLayout.getLeatherArmorColor().getRGB(), true),
+					iconLayout.getPermission(),
 					new ArrayList<>(iconLayout.getCommands()),
 					new ArrayList<>(iconLayout.getItemFlags()),
 					new HashMap<>(iconLayout.getDisplayNames()),

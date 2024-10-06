@@ -15,14 +15,15 @@
 
 package me.remigio07.chatplugin.api.server.gui;
 
-import me.remigio07.chatplugin.api.server.event.gui.GUIClickEvent;
+import me.remigio07.chatplugin.api.server.event.gui.EmptySlotClickEvent;
 import me.remigio07.chatplugin.api.server.event.gui.GUIOpenEvent;
+import me.remigio07.chatplugin.api.server.event.gui.IconClickEvent;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
  * Represents a GUI obtained through {@link GUIManager#createPerPlayerGUI(GUILayout, ChatPluginServerPlayer)}
  * that features a player and a task ID that unloads the GUI after {@link GUIManager#getPerPlayerGUIsUnloadTime()}
- * of inactivity ({@link GUIOpenEvent}, {@link GUIClickEvent}).
+ * of inactivity ({@link GUIOpenEvent}, {@link EmptySlotClickEvent}, {@link IconClickEvent}).
  */
 public interface PerPlayerGUI {
 	

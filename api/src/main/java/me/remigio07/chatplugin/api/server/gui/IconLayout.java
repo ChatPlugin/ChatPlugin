@@ -35,7 +35,7 @@ import me.remigio07.chatplugin.api.server.util.adapter.inventory.item.ItemFlagAd
  */
 public class IconLayout {
 	
-	private String id, skullOwner, skullTextureURL;
+	private String id, skullOwner, skullTextureURL, permission;
 	private MaterialAdapter material;
 	private ValueContainer<Short> amount;
 	private short damage;
@@ -72,6 +72,7 @@ public class IconLayout {
 		skullOwner = icon.getSkullOwner();
 		skullTextureURL = icon.getSkullTextureURL();
 		leatherArmorColor = icon.getLeatherArmorColor();
+		permission = icon.getPermission();
 		commands = icon.getCommands();
 		itemFlags = icon.getItemFlags();
 		displayNames = icon.getDisplayNames();
@@ -111,6 +112,7 @@ public class IconLayout {
 				null,
 				null,
 				null,
+				null,
 				new CopyOnWriteArrayList<>(),
 				new CopyOnWriteArrayList<>(),
 				new ConcurrentHashMap<>(),
@@ -136,6 +138,7 @@ public class IconLayout {
 	 * @param skullOwner Icon layout's skull's owner
 	 * @param skullTextureURL Icon layout's skull's texture's URL
 	 * @param leatherArmorColor Icon layout's leather armor's color
+	 * @param permission Icon layout's permission
 	 * @param commands Icon layout's commands executed on click
 	 * @param itemFlags Icon layout's item flags
 	 * @param displayNames Icon layout's display names
@@ -152,6 +155,7 @@ public class IconLayout {
 			@Nullable(why = "Skull's owner is removed when null") String skullOwner,
 			@Nullable(why = "Skull's texture's URL is removed when null") String skullTextureURL,
 			@Nullable(why = "Color is set to #A06540 when null") Color leatherArmorColor,
+			@Nullable(why = "No permission check is performed when null") String permission,
 			@NotNull List<String> commands,
 			@NotNull List<ItemFlagAdapter> itemFlags,
 			@NotNull Map<Language, String> displayNames,
@@ -167,6 +171,7 @@ public class IconLayout {
 		this.skullOwner = skullOwner;
 		this.skullTextureURL = skullTextureURL;
 		this.leatherArmorColor = leatherArmorColor;
+		this.permission = permission;
 		this.commands = commands;
 		this.itemFlags = itemFlags;
 		this.displayNames = displayNames;
@@ -357,6 +362,31 @@ public class IconLayout {
 	public IconLayout setLeatherArmorColor(@Nullable(why = "Color is set to #A06540 when null") Color leatherArmorColor) {
 		this.leatherArmorColor = leatherArmorColor;
 		return this;
+	}
+	
+	/**
+	 * Gets this icon layout's permission.
+	 * 
+	 * <p>Will return <code>null</code> if this icon layout
+	 * does not require any permission to be clicked.</p>
+	 * 
+	 * @return Icon layout's permission
+	 */
+	@Nullable(why = "No permission check is performed when null")
+	public String getPermission() {
+		return permission;
+	}
+	
+	/**
+	 * Sets this icon layout's permission.
+	 * 
+	 * <p>Specify <code>null</code> if this icon layout
+	 * should not require any permission to be clicked.</p>
+	 * 
+	 * @param permission Icon layout's permission
+	 */
+	public void setPermission(@Nullable(why = "No permission check is performed when null") String permission) {
+		this.permission = permission;
 	}
 	
 	/**

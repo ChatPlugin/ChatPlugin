@@ -46,7 +46,7 @@ public abstract class FillableGUI<T> extends GUI {
 	protected List<List<Icon>> generatedIcons = new CopyOnWriteArrayList<>();
 	protected Map<Language, List<InventoryAdapter>> inventories = new ConcurrentHashMap<>();
 	protected Map<ChatPluginServerPlayer, Integer> viewers = new ConcurrentHashMap<>();
-	protected TriFunction<FillableGUI<T>, Language, Integer, String> titlesTranslator;
+	protected TriFunction<String, Language, Integer, String> titlesTranslator;
 	
 	protected FillableGUI(GUILayout layout) {
 		super(layout);
@@ -122,6 +122,7 @@ public abstract class FillableGUI<T> extends GUI {
 	 * @param filler Filler to add ({@link GUIFiller#getFiller()})
 	 * @param formatPlaceholdersFunction {@link GUIFiller#formatPlaceholders(String, Language)}'s function
 	 * @param refresh Whether to {@link #refresh()} this GUI
+	 * @see GUIFiller#getIconLayout() Default icon layout used
 	 */
 	public void addFiller(@NotNull T filler, BiFunction<String, Language, String> formatPlaceholdersFunction, boolean refresh) {
 		FillableGUI<T> thisGUI = this;
@@ -264,7 +265,7 @@ public abstract class FillableGUI<T> extends GUI {
 	 * 
 	 * <p>The function is composed of the following arguments:
 	 * 	<ol>
-	 * 		<li>{@link FillableGUI} - this GUI's instance</li>
+	 * 		<li>{@link String} - the title to format with custom placeholders</li>
 	 * 		<li>{@link Language} - the language used to translate the title</li>
 	 * 		<li>{@link Integer} - the inventory's page whose title needs to be translated</li>
 	 * 	</ol>
@@ -276,7 +277,7 @@ public abstract class FillableGUI<T> extends GUI {
 	 * @return GUI's titles' translator
 	 */
 	@Nullable(why = "Titles' translator may not have been set")
-	public TriFunction<FillableGUI<T>, Language, Integer, String> getTitlesTranslator() {
+	public TriFunction<String, Language, Integer, String> getTitlesTranslator() {
 		return titlesTranslator;
 	}
 	
@@ -292,7 +293,7 @@ public abstract class FillableGUI<T> extends GUI {
 	 * 
 	 * <p>The function is composed of the following arguments:
 	 * 	<ol>
-	 * 		<li>{@link FillableGUI} - this GUI's instance</li>
+	 * 		<li>{@link String} - the title to format with custom placeholders</li>
 	 * 		<li>{@link Language} - the language used to translate the title</li>
 	 * 		<li>{@link Integer} - the inventory's page whose title needs to be translated</li>
 	 * 	</ol>
@@ -304,7 +305,7 @@ public abstract class FillableGUI<T> extends GUI {
 	 * @param titlesTranslator GUI's titles' translator
 	 * @return This GUI
 	 */
-	public FillableGUI<T> setTitlesTranslator(@Nullable(why = "Titles' translator is removed when null") TriFunction<FillableGUI<T>, Language, Integer, String> titlesTranslator) {
+	public FillableGUI<T> setTitlesTranslator(@Nullable(why = "Titles' translator is removed when null") TriFunction<String, Language, Integer, String> titlesTranslator) {
 		this.titlesTranslator = titlesTranslator;
 		return this;
 	}
@@ -317,7 +318,7 @@ public abstract class FillableGUI<T> extends GUI {
 	 * @return This GUI
 	 */
 	public FillableGUI<T> setServerTitlesTranslator() {
-		titlesTranslator = (t, u, v) -> PlaceholderManager.getInstance().translateServerPlaceholders(t.getLayout().getTitle(u, true), u);
+		titlesTranslator = (t, u, v) -> PlaceholderManager.getInstance().translateServerPlaceholders(t, u);
 		return this;
 	}
 	
@@ -366,5 +367,14 @@ public abstract class FillableGUI<T> extends GUI {
 	 * @see GUIDragEvent
 	 */
 	public abstract boolean handleDragEvent(ChatPluginServerPlayer player, DragEventAdapter dragEvent, int page);
+	
+	/**
+	 * Gets this GUI's title using {@link #getTitlesTranslator()}.
+	 * 
+	 * @param language Language used to translate the title
+	 * @param page Page involved
+	 * @return Formatted title
+	 */
+	public abstract String getTitle(Language language, int page);
 	
 }

@@ -110,10 +110,17 @@ public class OpenActions {
 	 * Performs these open actions.
 	 * 
 	 * @param player Target player
+	 * @param gui Target GUI
 	 */
-	public void perform(ChatPluginServerPlayer player) {
+	public void perform(ChatPluginServerPlayer player, GUI gui) {
 		player.playSound(sound);
-		player.sendMessage(ChatColor.translate(getMessage(player.getLanguage(), true).replace("{pfx}", player.getLanguage().getMessage("misc.prefix"))));
+		player.sendMessage(ChatColor.translate(getMessage(player.getLanguage(), true)
+				.replace("{pfx}", player.getLanguage().getMessage("misc.prefix"))
+				.replace("{0}", gui instanceof SinglePageGUI
+						? ((SinglePageGUI) gui).getTitle(player.getLanguage())
+						: ((FillableGUI<?>) gui).getTitle(player.getLanguage(), ((FillableGUI<?>) gui).getViewers().get(player))
+						)
+				));
 	}
 	
 }

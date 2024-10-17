@@ -140,37 +140,43 @@ public class ItemStackAdapter implements Cloneable {
 	 * 
 	 * @param itemStack Bukkit's item stack
 	 */
-	@SuppressWarnings("deprecation")
-	public ItemStackAdapter(org.bukkit.inventory.ItemStack itemStack) {
-		this.itemStack = itemStack;
-		type = new MaterialAdapter(itemStack.getType().name());
-		
-		if (itemStack.hasItemMeta()) {
-			itemStack.getItemMeta().getItemFlags().forEach(itemFlag -> itemFlags.add(ItemFlagAdapter.valueOf(itemFlag.name())));
-			itemStack.getItemMeta().getEnchants().forEach((enchantment, level) -> enchantments.put(EnchantmentAdapter.valueOf(enchantment.getName()), level));
-			
-			if (isPlayerHead())
-				skullOwner = ((SkullMeta) itemStack.getItemMeta()).getOwner();
-		} else itemMeta = false;
-	}
 	
 	/**
-	 * Constructs an item stack with the given
-	 * {@link org.spongepowered.api.item.inventory.ItemStack}.
+	 * Constructs an item stack adapter that accepts one of the following specified as input:
+	 * 	<ul>
+	 * 		<li>{@link org.bukkit.inventory.ItemStack} for Bukkit environments</li>
+	 * 		<li>{@link org.spongepowered.api.item.inventory.ItemStack} for Sponge environments</li>
+	 * 	</ul>
 	 * 
-	 * @param itemStack Sponge's item stack
+	 * @param itemStack Item stack object
 	 */
-	public ItemStackAdapter(org.spongepowered.api.item.inventory.ItemStack itemStack) {
+	@SuppressWarnings("deprecation")
+	public ItemStackAdapter(Object itemStack) {
 		this.itemStack = itemStack;
-		type = new MaterialAdapter(itemStack.getType().getId().substring(10));
 		
-		for (ItemFlagAdapter itemFlag : ItemFlagAdapter.values())
-			if (itemStack.getOrElse(itemFlag.spongeValue(), false))
-				itemFlags.add(itemFlag);
-		if (!itemStack.getOrCreate(EnchantmentData.class).get().enchantments().isEmpty())
-			itemStack.get(EnchantmentData.class).get().enchantments().get().forEach(enchantment -> enchantments.put(EnchantmentAdapter.valueOf(enchantment.getType().getId().substring(10)), enchantment.getLevel()));
-		if (isPlayerHead())
-			spongeValue().get(RepresentedPlayerData.class).ifPresent(player -> player.owner().get().getName().ifPresent(name -> skullOwner = name));
+		if (Environment.isBukkit()) {
+			type = new MaterialAdapter(((org.bukkit.inventory.ItemStack) itemStack).getType().name());
+			
+			if (((org.bukkit.inventory.ItemStack) itemStack).hasItemMeta()) {
+				ItemMeta meta = ((org.bukkit.inventory.ItemStack) itemStack).getItemMeta();
+				
+				meta.getItemFlags().forEach(itemFlag -> itemFlags.add(ItemFlagAdapter.valueOf(itemFlag.name())));
+				meta.getEnchants().forEach((enchantment, level) -> enchantments.put(EnchantmentAdapter.valueOf(enchantment.getName()), level));
+				
+				if (isPlayerHead())
+					skullOwner = ((SkullMeta) meta).getOwner();
+			} else itemMeta = false;
+		} else {
+			type = new MaterialAdapter(((ItemStack) itemStack).getType().getId().substring(10));
+			
+			for (ItemFlagAdapter itemFlag : ItemFlagAdapter.values())
+				if (((ItemStack) itemStack).getOrElse(itemFlag.spongeValue(), false))
+					itemFlags.add(itemFlag);
+			if (!((ItemStack) itemStack).getOrCreate(EnchantmentData.class).get().enchantments().isEmpty())
+				((ItemStack) itemStack).get(EnchantmentData.class).get().enchantments().get().forEach(enchantment -> enchantments.put(EnchantmentAdapter.valueOf(enchantment.getType().getId().substring(10)), enchantment.getLevel()));
+			if (isPlayerHead())
+				spongeValue().get(RepresentedPlayerData.class).ifPresent(player -> player.owner().get().getName().ifPresent(name -> skullOwner = name));
+		}
 	}
 	
 	@Override
@@ -182,7 +188,7 @@ public class ItemStackAdapter implements Cloneable {
 		if (hasLore())
 			itemStack.setLore(new ArrayList<>(getLore()));
 		if (isEnchanted())
-			enchantments.forEach((enchantment, level) -> itemStack.enchant(enchantment, level));
+			enchantments.forEach(itemStack::enchant);
 		if (isPlayerHead()) {
 			if (getSkullOwner() != null)
 				itemStack.setSkullOwner(getSkullOwner());
@@ -356,7 +362,7 @@ public class ItemStackAdapter implements Cloneable {
 	 * @return This item stack
 	 */
 	public ItemStackAdapter enchant(Map<EnchantmentAdapter, Integer> enchantments) {
-		enchantments.forEach((enchantment, level) -> enchant(enchantment, level));
+		enchantments.forEach(this::enchant);
 		return this;
 	}
 	
@@ -557,6 +563,8 @@ public class ItemStackAdapter implements Cloneable {
 				} else if (itemMeta) {
 					ItemMeta meta = bukkitValue().getItemMeta();
 					
+					if (itemFlag == ItemFlagAdapter.HIDE_ATTRIBUTES && VersionUtils.getVersion().isAtLeast(Version.V1_20_5))
+						meta.removeAttributeModifier(Attribute.GENERIC_ARMOR);
 					meta.removeItemFlags(itemFlag.bukkitValue());
 					bukkitValue().setItemMeta(meta);
 				} this.itemFlags.remove(itemFlag);
@@ -626,7 +634,6 @@ public class ItemStackAdapter implements Cloneable {
 							} skullsCache.put(skullOwner, new Object[] { UUIDFetcher.getInstance().getSkinTextureURL(uuid), uuid });
 							setSkullTextureURL((String) skullsCache.get(skullOwner)[0], uuid);
 						} catch (IOException e) {
-							e.printStackTrace();
 							LogManager.log("IOException occurred while setting a skull's owner for an item stack: {0}", 2, e.getMessage());
 						} future.complete(this);
 					}, 0L);
@@ -889,7 +896,7 @@ public class ItemStackAdapter implements Cloneable {
 		}
 		
 		public static List<String> toStringList(List<Text> list) {
-			return list.stream().map(text -> Utils.deserializeSpongeText(text)).collect(Collectors.toList());
+			return list.stream().map(Utils::deserializeSpongeText).collect(Collectors.toList());
 		}
 		
 	}

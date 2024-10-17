@@ -32,8 +32,8 @@ import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 public class FillableGUILayout extends GUILayout {
 	
 	protected int startSlot = -1, endSlot = -1;
-	protected List<IconLayout> iconsLayouts = new CopyOnWriteArrayList<>();
 	protected Icon emptyListIcon;
+	protected List<IconLayout> iconsLayouts = new CopyOnWriteArrayList<>();
 	
 	protected FillableGUILayout(String id, int rows, OpenActions openActions, SoundAdapter clickSound, Map<Language, String> titles) {
 		super(id, rows, openActions, clickSound, titles);
@@ -85,6 +85,25 @@ public class FillableGUILayout extends GUILayout {
 		if (endSlot < 0 || endSlot > getSize() - 1 || (startSlot != -1 && startSlot > endSlot))
 			throw new IllegalArgumentException("Specified start slot's position (" + startSlot + ") is invalid as it is outside of range 0 - " + (getSize() - 1) + " or bigger than end slot's position (" + endSlot + ")");
 		this.endSlot = endSlot;
+	}
+	
+	/**
+	 * Gets the icon displayed when {@link FillableGUI#getFillers()} is empty.
+	 * 
+	 * @return Empty fillers list icon
+	 */
+	@NotNull
+	public Icon getEmptyListIcon() {
+		return emptyListIcon;
+	}
+	
+	/**
+	 * Sets the icon displayed when {@link FillableGUI#getFillers()} is empty.
+	 * 
+	 * @param emptyListIcon Empty fillers list icon
+	 */
+	public void setEmptyListIcon(@NotNull Icon emptyListIcon) {
+		this.emptyListIcon = emptyListIcon;
 	}
 	
 	/**
@@ -145,25 +164,6 @@ public class FillableGUILayout extends GUILayout {
 	}
 	
 	/**
-	 * Gets the icon displayed when {@link FillableGUI#getFillers()} is empty.
-	 * 
-	 * @return Empty fillers list icon
-	 */
-	@NotNull
-	public Icon getEmptyListIcon() {
-		return emptyListIcon;
-	}
-	
-	/**
-	 * Sets the icon displayed when {@link FillableGUI#getFillers()} is empty.
-	 * 
-	 * @param emptyListIcon Empty fillers list icon
-	 */
-	public void setEmptyListIcon(@NotNull Icon emptyListIcon) {
-		this.emptyListIcon = emptyListIcon;
-	}
-	
-	/**
 	 * Represents the builder used to create {@link FillableGUILayout}s using
 	 * {@link GUIManager#createFillableGUILayoutBuilder(String, int, OpenActions, SoundAdapter, Map)}.
 	 */
@@ -181,14 +181,6 @@ public class FillableGUILayout extends GUILayout {
 		public abstract Builder setSlots(int startSlot, int endSlot);
 		
 		/**
-		 * Sets one of this builder's icons' layouts.
-		 * 
-		 * @param iconLayout Icon layout to set
-		 * @return This builder
-		 */
-		public abstract Builder setIconLayout(IconLayout iconLayout);
-		
-		/**
 		 * Sets the icon displayed when {@link FillableGUI#getFillers()} is empty.
 		 * 
 		 * @param emptyListIcon Empty fillers list icon
@@ -197,13 +189,21 @@ public class FillableGUILayout extends GUILayout {
 		public abstract Builder setEmptyListIcon(Icon emptyListIcon);
 		
 		/**
+		 * Sets one of this builder's icons' layouts.
+		 * 
+		 * @param iconLayout Icon layout to set
+		 * @return This builder
+		 */
+		public abstract Builder setIconLayout(IconLayout iconLayout);
+		
+		/**
 		 * Builds the GUI layout.
 		 * 
 		 * @return New GUI layout
-		 * @throws IllegalStateException If one of the following has not been called yet:
+		 * @throws IllegalStateException If one of the following has
+		 * not been called (without throwing any exceptions) yet:
 		 * 	<ul>
 		 * 		<li>{@link #setSlots(int, int)}</li>
-		 * 		<li>{@link #setIconLayout(IconLayout)}</li>
 		 * 		<li>{@link #setEmptyListIcon(Icon)}</li>
 		 * 	</ul>
 		 * or not all {@link IconType#PAGE_SWITCHER_ICONS_IDS} have been specified ({@link #setIcon(Icon)})

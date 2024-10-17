@@ -15,7 +15,6 @@
 
 package me.remigio07.chatplugin.server.gui;
 
-import java.util.ArrayList;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -55,10 +54,6 @@ public class SinglePageGUIImpl extends SinglePageGUI {
 		for (Language language : LanguageManager.getInstance().getLanguages())
 			inventories.put(language, new InventoryAdapter(layout.getRows()));
 		load();
-	}
-	
-	public String getTitle(Language language) {
-		return ChatColor.translate(titlesTranslator == null ? layout.getTitle(language, true) : titlesTranslator.apply(this, language));
 	}
 	
 	@Override
@@ -110,7 +105,7 @@ public class SinglePageGUIImpl extends SinglePageGUI {
 			if (event.isCancelled())
 				return false;
 			if (openActions)
-				layout.getOpenActions().perform(player);
+				layout.getOpenActions().perform(player, this);
 			if (this instanceof PerPlayer)
 				((PerPlayer) this).refreshUnloadTask();
 			TaskManager.runSync(() -> {
@@ -173,6 +168,12 @@ public class SinglePageGUIImpl extends SinglePageGUI {
 		return event.isCancelled();
 	}
 	
+	@Override
+	public String getTitle(Language language) {
+		String title = layout.getTitle(language, true);
+		return ChatColor.translate(titlesTranslator == null ? title : titlesTranslator.apply(title, language));
+	}
+	
 	public static class PerPlayer extends SinglePageGUIImpl implements PerPlayerGUI {
 		
 		private ChatPluginServerPlayer player;
@@ -198,12 +199,14 @@ public class SinglePageGUIImpl extends SinglePageGUI {
 		
 		@Deprecated
 		@Override
-		public void unload() {
-			for (ChatPluginServerPlayer viewer : new ArrayList<>(viewers)) {
+		public void unload(boolean quit) {
+			for (ChatPluginServerPlayer viewer : viewers) {
+				if (quit)
+					viewer.sendTranslatedMessage("guis.player-went-offline", player.getName(), getTitle(viewer.getLanguage()));
+				else viewer.sendTranslatedMessage("guis.unloaded", getTitle(viewer.getLanguage()), Utils.formatTime(GUIManager.getInstance().getPerPlayerGUIsUnloadTime(), viewer.getLanguage(), false, true));
+				
 				viewer.closeInventory();
-				viewer.sendTranslatedMessage("guis.player-went-offline", player.getName(), getTitle(viewer.getLanguage()));
-			} viewers.clear();
-			skullOwnerFutures.forEach(future -> future.cancel(false));
+			} skullOwnerFutures.forEach(future -> future.cancel(false));
 			TaskManager.cancelSync(unloadTaskID);
 			GUIManager.getInstance().getGUIs().remove(this);
 		}
@@ -211,16 +214,7 @@ public class SinglePageGUIImpl extends SinglePageGUI {
 		public void refreshUnloadTask() {
 			if (unloadTaskID != -1)
 				TaskManager.cancelSync(unloadTaskID);
-			unloadTaskID = TaskManager.runSync(() -> {
-				for (ChatPluginServerPlayer viewer : new ArrayList<>(viewers)) {
-					viewer.closeInventory();
-					viewer.sendTranslatedMessage(
-							"guis.unloaded",
-							super.getTitle(viewer.getLanguage()),
-							Utils.formatTime(GUIManager.getInstance().getPerPlayerGUIsUnloadTime(), viewer.getLanguage(), false, true)
-							);
-				}
-			}, GUIManager.getInstance().getPerPlayerGUIsUnloadTime());
+			unloadTaskID = TaskManager.runSync(() -> unload(false), GUIManager.getInstance().getPerPlayerGUIsUnloadTime());
 		}
 		
 	}

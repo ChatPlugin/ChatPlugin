@@ -35,6 +35,22 @@ import me.remigio07.chatplugin.api.server.util.adapter.inventory.item.ItemFlagAd
  */
 public class IconLayout {
 	
+	/**
+	 * Represents an empty icon layout that can be used
+	 * 
+	 * <p>This is obtained by calling {@link #IconLayout(String, MaterialAdapter, boolean, boolean, ValueContainer, short)}
+	 * specifying the following parameters:
+	 * 
+	 * 	<ol>
+	 * 		<li>"empty-icon-layout"</li>
+	 * 		<li>{@link MaterialAdapter#AIR}</li>
+	 * 		<li><code>true</code></li>
+	 * 		<li><code>false</code></li>
+	 * 		<li>{@link ValueContainer#ValueContainer(Object) new ValueContainer&lt;&gt;((short) 0)}</li>
+	 * 		<li><code>(short) 0</code></li>
+	 * 	</ol>
+	 */
+	public static final IconLayout EMPTY_ICON_LAYOUT = new IconLayout("empty-icon-layout", MaterialAdapter.AIR, true, false, new ValueContainer<>((short) 0), (short) 0);
 	private String id, skullOwner, skullTextureURL, permission;
 	private MaterialAdapter material;
 	private ValueContainer<Short> amount;

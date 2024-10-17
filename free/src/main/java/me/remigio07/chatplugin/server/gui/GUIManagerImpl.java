@@ -153,6 +153,10 @@ public class GUIManagerImpl extends GUIManager {
 	
 	@Override
 	public <T extends GUI & PerPlayerGUI> T createPerPlayerGUI(GUILayout layout, ChatPluginServerPlayer player) {
+		if (!isValidPerPlayerGUIID(layout.getID()))
+			throw new IllegalArgumentException("GUI ID \"" + layout.getID() + "\" is invalid as it does not respect the following pattern: \"" + PER_PLAYER_GUI_ID_PATTERN.pattern() + "\"");
+		if (getGUI(layout.getID() + "-" + player.getName()) != null)
+			throw new IllegalArgumentException("Specified ID (" + layout.getID() + "-" + player.getName() + ") is already in use");
 		@SuppressWarnings("unchecked")
 		T gui = (T) (layout instanceof SinglePageGUILayout ? new SinglePageGUIImpl.PerPlayer((SinglePageGUILayout) layout, player) : new FillableGUIImpl.PerPlayer<>((FillableGUILayout) layout, player));
 		

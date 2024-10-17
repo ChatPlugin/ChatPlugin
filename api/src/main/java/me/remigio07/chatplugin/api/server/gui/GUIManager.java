@@ -204,6 +204,9 @@ public abstract class GUIManager implements ChatPluginManager {
 	 * or an icon's ID {@link Icon#isValidIconID(String)} or an icon's material's ID is invalid
 	 * or an icon's {@link Icon#getPosition()} is outside of valid range
 	 * @throws IndexOutOfBoundsException If less than 1 or more than 6 rows are specified
+	 * or {@link IconType#PAGE_SWITCHER} icons' positions are inside of the start and end positions' range
+	 * @throws IllegalStateException If start and end slots positions or the empty list icon
+	 * or not all {@link IconType#PAGE_SWITCHER_ICONS_IDS} have been specified
 	 * @throws NumberFormatException If an icon's {@link Icon#getLeatherArmorColor()} is not
 	 * <code>null</code> and is invalid (does not respect the format required by {@link Color#decode(String)})
 	 */
@@ -251,6 +254,7 @@ public abstract class GUIManager implements ChatPluginManager {
 	
 	/**
 	 * Reads a GUI from the specified GUI layout.
+	 * 
 	 * <p>Add it to {@link #getGUIs()} using {@link #addGUI(GUI)}.</p>
 	 * 
 	 * @param layout GUI layout to read

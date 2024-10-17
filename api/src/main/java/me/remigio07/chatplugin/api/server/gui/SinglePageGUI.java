@@ -40,7 +40,7 @@ public abstract class SinglePageGUI extends GUI {
 	
 	protected List<ChatPluginServerPlayer> viewers = new CopyOnWriteArrayList<>();
 	protected Map<Language, InventoryAdapter> inventories = new ConcurrentHashMap<>();
-	protected BiFunction<SinglePageGUI, Language, String> titlesTranslator;
+	protected BiFunction<String, Language, String> titlesTranslator;
 	
 	protected SinglePageGUI(GUILayout layout) {
 		super(layout);
@@ -90,14 +90,14 @@ public abstract class SinglePageGUI extends GUI {
 	 * 
 	 * <p>The function is composed of the following arguments:
 	 * 	<ol>
-	 * 		<li>{@link SinglePageGUI} - this GUI's instance</li>
+	 * 		<li>{@link String} - the title to format with custom placeholders</li>
 	 * 		<li>{@link Language} - the language used to translate the title</li>
 	 * 	</ol>
 	 * 
 	 * @return GUI's titles' translator
 	 */
 	@Nullable(why = "Titles' translator may not have been set")
-	public BiFunction<SinglePageGUI, Language, String> getTitlesTranslator() {
+	public BiFunction<String, Language, String> getTitlesTranslator() {
 		return titlesTranslator;
 	}
 	
@@ -113,14 +113,14 @@ public abstract class SinglePageGUI extends GUI {
 	 * 
 	 * <p>The function is composed of the following arguments:
 	 * 	<ol>
-	 * 		<li>{@link SinglePageGUI} - this GUI's instance</li>
+	 * 		<li>{@link String} - the title to format with custom placeholders</li>
 	 * 		<li>{@link Language} - the language used to translate the title</li>
 	 * 	</ol>
 	 * 
 	 * @param titlesTranslator GUI's titles' translator
 	 * @return This GUI
 	 */
-	public SinglePageGUI setTitlesTranslator(@Nullable(why = "Titles' translator is removed when null") BiFunction<SinglePageGUI, Language, String> titlesTranslator) {
+	public SinglePageGUI setTitlesTranslator(@Nullable(why = "Titles' translator is removed when null") BiFunction<String, Language, String> titlesTranslator) {
 		this.titlesTranslator = titlesTranslator;
 		return this;
 	}
@@ -133,7 +133,7 @@ public abstract class SinglePageGUI extends GUI {
 	 * @return This GUI
 	 */
 	public SinglePageGUI setServerTitlesTranslator() {
-		titlesTranslator = (t, u) -> PlaceholderManager.getInstance().translateServerPlaceholders(t.getLayout().getTitle(u, true), u);
+		titlesTranslator = (t, u) -> PlaceholderManager.getInstance().translateServerPlaceholders(t, u);
 		return this;
 	}
 	
@@ -150,13 +150,13 @@ public abstract class SinglePageGUI extends GUI {
 	/**
 	 * Handles and processes a click event.
 	 * 
-	 * 	<p>In order:
-	 * 		<ol>
-	 * 			<li>checks if {@link ChatPluginServerPlayer#hasPermission(String)} to use this GUI</li>
-	 * 			<li>if the clicked icon is valid, checks if it requires a permission to be clicked</li>
-	 * 			<li>if {@link IconClickEvent#shouldPerformActions()}, executes {@link Icon#getCommands()} and plays {@link GUILayout#getClickSound()}</li>
-	 * 			<li>returns <code>true</code> to cancel the click event, unless <code>!</code>{@link EmptySlotClickEvent#isCancelled()} or <code>!</code>{@link IconClickEvent#isCancelled()}</li>
-	 * 		</ol>
+	 * <p>In order:
+	 * 	<ol>
+	 * 		<li>checks if {@link ChatPluginServerPlayer#hasPermission(String)} to use this GUI</li>
+	 * 		<li>if the clicked icon is valid, checks if it requires a permission to be clicked</li>
+	 * 		<li>if {@link IconClickEvent#shouldPerformActions()}, executes {@link Icon#getCommands()} and plays {@link GUILayout#getClickSound()}</li>
+	 * 		<li>returns <code>true</code> to cancel the click event, unless <code>!</code>{@link EmptySlotClickEvent#isCancelled()} or <code>!</code>{@link IconClickEvent#isCancelled()}</li>
+	 * 	</ol>
 	 * 
 	 * @param player Player involved
 	 * @param clickEvent Click event to handle
@@ -178,5 +178,13 @@ public abstract class SinglePageGUI extends GUI {
 	 * @see GUIDragEvent
 	 */
 	public abstract boolean handleDragEvent(ChatPluginServerPlayer player, DragEventAdapter dragEvent);
+	
+	/**
+	 * Gets this GUI's title using {@link #getTitlesTranslator()}.
+	 * 
+	 * @param language Language used to translate the title
+	 * @return Formatted title
+	 */
+	public abstract String getTitle(Language language);
 	
 }

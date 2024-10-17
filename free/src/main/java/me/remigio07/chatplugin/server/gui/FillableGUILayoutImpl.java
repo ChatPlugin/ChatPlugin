@@ -41,7 +41,7 @@ public class FillableGUILayoutImpl extends FillableGUILayout {
 	
 	public static class Builder extends FillableGUILayout.Builder {
 		
-		private int integer = 0;
+		private byte state = 0;
 		
 		public Builder(String id, int rows, OpenActions openActions, SoundAdapter clickSound, Map<Language, String> titles) {
 			layout = new FillableGUILayoutImpl(id, rows, openActions, clickSound, titles);
@@ -56,17 +56,8 @@ public class FillableGUILayoutImpl extends FillableGUILayout {
 			((FillableGUILayout) layout).setStartSlot(startSlot);
 			((FillableGUILayout) layout).setEndSlot(endSlot);
 			
-			if ((integer & 0b1) != 0b1)
-				integer += 1;
-			return this;
-		}
-		
-		@Override
-		public Builder setIconLayout(IconLayout iconLayout) {
-			((FillableGUILayout) layout).setIconLayout(iconLayout);
-			
-			if ((integer & 0b10) != 0b10)
-				integer += 2;
+			if ((state & 0b1) != 0b1)
+				state += 1;
 			return this;
 		}
 		
@@ -74,15 +65,21 @@ public class FillableGUILayoutImpl extends FillableGUILayout {
 		public Builder setEmptyListIcon(Icon emptyListIcon) {
 			((FillableGUILayout) layout).setEmptyListIcon(emptyListIcon);
 			
-			if ((integer & 0b100) != 0b100)
-				integer += 4;
+			if ((state & 0b10) != 0b10)
+				state += 2;
+			return this;
+		}
+		
+		@Override
+		public Builder setIconLayout(IconLayout iconLayout) {
+			((FillableGUILayout) layout).setIconLayout(iconLayout);
 			return this;
 		}
 		
 		@Override
 		public FillableGUILayout build() {
-			if ((integer & 0b111) != 0b111)
-				throw new IllegalStateException("GUI cannot be built until the slots, at least an icon layout and the empty list icon have been set");
+			if ((state & 0b11) != 0b11)
+				throw new IllegalStateException("GUI cannot be built until the slots and the empty list icon have been set");
 			if (layout.getIcons().stream().filter(icon -> icon != null && icon.getType() == IconType.PAGE_SWITCHER).anyMatch(icon -> icon.getPosition() >= ((FillableGUILayout) layout).getStartSlot() && icon.getPosition() <= ((FillableGUILayout) layout).getEndSlot()))
 				throw new IndexOutOfBoundsException("A page switcher icon's position is inside of filling start-end slots' range (" + ((FillableGUILayout) layout).getStartSlot() + " - " + ((FillableGUILayout) layout).getEndSlot() + ")");
 			if (layout.getIcons().stream().filter(Objects::nonNull).map(Icon::getID).collect(Collectors.toList()).containsAll(IconType.PAGE_SWITCHER_ICONS_IDS))

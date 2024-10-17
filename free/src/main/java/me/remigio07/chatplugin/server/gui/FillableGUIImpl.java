@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -34,6 +35,7 @@ import java.util.stream.Stream;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.event.gui.EmptySlotClickEvent;
+import me.remigio07.chatplugin.api.server.event.gui.GUIDragEvent;
 import me.remigio07.chatplugin.api.server.event.gui.GUIOpenEvent;
 import me.remigio07.chatplugin.api.server.event.gui.IconClickEvent;
 import me.remigio07.chatplugin.api.server.gui.FillableGUI;
@@ -64,18 +66,12 @@ public class FillableGUIImpl<T> extends FillableGUI<T> {
 	
 	private void init() {
 		for (Language language : LanguageManager.getInstance().getLanguages())
-			inventories.put(language, Stream.of(new InventoryAdapter(layout.getRows())).collect(Collectors.toCollection(ArrayList::new)));
+			inventories.put(language, Stream.of(new InventoryAdapter(layout.getRows())).collect(Collectors.toCollection(CopyOnWriteArrayList::new)));
 		load();
 	}
 	
-	public String getTitle(Language language, int page) {
-		return ChatColor.translate(titlesTranslator == null ? layout.getTitle(language, true) : titlesTranslator.apply(this, language, page))
-				.replace("{current_page}", String.valueOf(page + 1))
-				.replace("{max_page}", String.valueOf(generatedIcons.size()));
-	}
-	
 	@Override
-	protected synchronized int load() {
+	protected synchronized int load() { // chaos start
 		long ms = System.currentTimeMillis();
 		int pages = 1, fillersPerPage = 0, previousPageIconPosition = -1, nextPageIconPosition = -1;
 		Map<Language, ItemStackAdapter[]> items = new HashMap<>();
@@ -120,8 +116,8 @@ public class FillableGUIImpl<T> extends FillableGUI<T> {
 			List<Icon> generatedIcons = getGeneratedIcons(page);
 			
 			if (generatedIcons == null)
-				this.generatedIcons.add(generatedIcons = new ArrayList<>(Collections.nCopies(getLayout().getEndSlot() + 1, null)));
-			else this.generatedIcons.set(page, generatedIcons = new ArrayList<>(Collections.nCopies(getLayout().getEndSlot() + 1, null)));
+				this.generatedIcons.add(generatedIcons = new CopyOnWriteArrayList<>(Collections.nCopies(getLayout().getEndSlot() + 1, null)));
+			else this.generatedIcons.set(page, generatedIcons = new CopyOnWriteArrayList<>(Collections.nCopies(getLayout().getEndSlot() + 1, null)));
 			
 			for (int index = page * fillersPerPage, position = getLayout().getStartSlot(); index < (page + 1) * fillersPerPage; index++) {
 				if (index == fillers.size())
@@ -129,9 +125,8 @@ public class FillableGUIImpl<T> extends FillableGUI<T> {
 				while (layout.getIcons().get(position) != null)
 					position++;
 				GUIFiller<?> filler = fillers.get(index);
-				Icon icon = filler.getIcon(new GeneratedIcon(filler, filler.getIconLayout(), position));
 				
-				generatedIcons.set(position, icon);
+				generatedIcons.set(position, filler.getIcon(new GeneratedIcon(filler, filler.getIconLayout(), position)));
 				position++;
 			} for (Language language : LanguageManager.getInstance().getLanguages()) {
 				ItemStackAdapter[] array = items.get(language);
@@ -200,7 +195,7 @@ public class FillableGUIImpl<T> extends FillableGUI<T> {
 			if (event.isCancelled())
 				return false;
 			if (openActions)
-				layout.getOpenActions().perform(player);
+				layout.getOpenActions().perform(player, this);
 			if (this instanceof PerPlayer)
 				((PerPlayer<T>) this).refreshUnloadTask();
 			TaskManager.runSync(() -> {
@@ -247,11 +242,7 @@ public class FillableGUIImpl<T> extends FillableGUI<T> {
 							if (!icon2.isKeepOpen())
 								player.closeInventory();
 							GUIManagerImpl.executeCommands(player, icon2.formatPlaceholders(
-									icon2.getCommands().stream().map(command -> command
-											.replace("{viewer}", player.getName())
-											.replace("{previous_page}", String.valueOf(page))
-											.replace("{next_page}", String.valueOf(page + 2))
-											).collect(Collectors.toList()),
+									icon2.getCommands().stream().map(command -> formatPagePlaceholders(command.replace("{viewer}", player.getName()), page)).collect(Collectors.toList()),
 									this,
 									player.getLanguage(),
 									false
@@ -269,9 +260,26 @@ public class FillableGUIImpl<T> extends FillableGUI<T> {
 		return true;
 	}
 	
+	public String formatPagePlaceholders(String input, int page) {
+		return input
+				.replace("{previous_page}", String.valueOf(page))
+				.replace("{current_page}", String.valueOf(page + 1))
+				.replace("{next_page}", String.valueOf(page + 2))
+				.replace("{max_page}", String.valueOf(generatedIcons.size()));
+	}
+	
 	@Override
 	public boolean handleDragEvent(ChatPluginServerPlayer player, DragEventAdapter dragEvent, int page) {
-		return true;
+		GUIDragEvent event = new GUIDragEvent(this, player, page, dragEvent);
+		
+		event.call();
+		return event.isCancelled();
+	}
+	
+	@Override
+	public String getTitle(Language language, int page) {
+		String title = layout.getTitle(language, true);
+		return ChatColor.translate(formatPagePlaceholders(titlesTranslator == null ? title : titlesTranslator.apply(title, language, page), page));
 	}
 	
 	public static class PerPlayer<T> extends FillableGUIImpl<T> implements PerPlayerGUI {
@@ -289,12 +297,14 @@ public class FillableGUIImpl<T> extends FillableGUI<T> {
 		
 		@Deprecated
 		@Override
-		public void unload() {
+		public void unload(boolean quit) {
 			for (Entry<ChatPluginServerPlayer, Integer> viewer : new HashSet<>(viewers.entrySet())) {
+				if (quit)
+					viewer.getKey().sendTranslatedMessage("guis.player-went-offline", player.getName(), getTitle(viewer.getKey().getLanguage(), viewer.getValue().intValue()));
+				else viewer.getKey().sendTranslatedMessage("guis.unloaded", getTitle(viewer.getKey().getLanguage(), viewer.getValue().intValue()), Utils.formatTime(GUIManager.getInstance().getPerPlayerGUIsUnloadTime(), viewer.getKey().getLanguage(), false, true));
+				
 				viewer.getKey().closeInventory();
-				viewer.getKey().sendTranslatedMessage("guis.player-went-offline", player.getName(), getTitle(viewer.getKey().getLanguage(), viewer.getValue().intValue()));
-			} viewers.clear();
-			skullOwnerFutures.forEach(future -> future.cancel(false));
+			} skullOwnerFutures.forEach(future -> future.cancel(false));
 			TaskManager.cancelSync(unloadTaskID);
 			GUIManager.getInstance().getGUIs().remove(this);
 		}
@@ -302,16 +312,7 @@ public class FillableGUIImpl<T> extends FillableGUI<T> {
 		public void refreshUnloadTask() {
 			if (unloadTaskID != -1)
 				TaskManager.cancelSync(unloadTaskID);
-			unloadTaskID = TaskManager.runSync(() -> {
-				for (Entry<ChatPluginServerPlayer, Integer> viewer : new HashSet<>(viewers.entrySet())) {
-					viewer.getKey().closeInventory();
-					viewer.getKey().sendTranslatedMessage(
-							"guis.unloaded",
-							super.getTitle(viewer.getKey().getLanguage(), viewer.getValue().intValue()),
-							Utils.formatTime(GUIManager.getInstance().getPerPlayerGUIsUnloadTime(), viewer.getKey().getLanguage(), false, true)
-							);
-				}
-			}, GUIManager.getInstance().getPerPlayerGUIsUnloadTime());
+			unloadTaskID = TaskManager.runSync(() -> unload(false), GUIManager.getInstance().getPerPlayerGUIsUnloadTime());
 		}
 		
 		@Override

@@ -591,7 +591,7 @@ public class Icon {
 		
 		if (glowing)
 			itemStack.setGlowing();
-		enchantments.forEach((enchantment, level) -> itemStack.enchant(enchantment, level));
+		enchantments.forEach(itemStack::enchant);
 		return itemStack;
 	}
 	
@@ -620,7 +620,7 @@ public class Icon {
 		CompletableFuture<ItemStackAdapter> future = new CompletableFuture<>();
 		
 		try {
-			itemStack.setSkullOwner(skullOwner == null ? null : formatPlaceholders(skullOwner, gui, language, false)).thenAccept(newItemStack -> future.complete(newItemStack));
+			itemStack.setSkullOwner(skullOwner == null ? null : formatPlaceholders(skullOwner, gui, language, false)).thenAccept(future::complete);
 		} catch (IllegalArgumentException e) {
 			future.complete(itemStack);
 		} return future;
@@ -637,8 +637,8 @@ public class Icon {
 	 * @return Translated placeholders
 	 */
 	public String formatPlaceholders(String input, GUI gui, Language language, boolean translateColors) {
-		return translateColors ? ChatColor.translate(gui.getStringPlaceholdersTranslator() == null ? input : gui.getStringPlaceholdersTranslator().apply(this, input, language))
-				: gui.getStringPlaceholdersTranslator() == null ? input : gui.getStringPlaceholdersTranslator().apply(this, input, language);
+		return translateColors ? ChatColor.translate(gui.getStringPlaceholdersTranslator() == null ? input : gui.getStringPlaceholdersTranslator().apply(input, language, this))
+				: gui.getStringPlaceholdersTranslator() == null ? input : gui.getStringPlaceholdersTranslator().apply(input, language, this);
 	}
 	
 	/**
@@ -653,7 +653,7 @@ public class Icon {
 	 */
 	public List<String> formatPlaceholders(List<String> input, GUI gui, Language language, boolean translateColors) {
 		return gui.getStringListPlaceholdersTranslator() == null ? input.stream().map(str -> formatPlaceholders(str, gui, language, translateColors)).collect(Collectors.toList())
-				: translateColors ? ChatColor.translate(gui.getStringListPlaceholdersTranslator().apply(this, input, language)) : gui.getStringListPlaceholdersTranslator().apply(this, input, language);
+				: translateColors ? ChatColor.translate(gui.getStringListPlaceholdersTranslator().apply(input, language, this)) : gui.getStringListPlaceholdersTranslator().apply(input, language, this);
 	}
 	
 	/**

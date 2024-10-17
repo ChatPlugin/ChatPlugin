@@ -18,21 +18,21 @@ package me.remigio07.chatplugin.api.server.event.gui;
 import me.remigio07.chatplugin.api.server.gui.GUI;
 
 /**
- * Represents the event called after a GUI is refreshed.
+ * Represents an event called after a GUI has been refreshed.
  * 
  * @see GUI#refresh()
  */
-public class GUIRefreshEvent extends GUIEvent {
+public class GUIRefreshEndEvent extends GUIEvent {
 	
 	private int refreshTime;
 	
 	/**
-	 * Constructs a new GUI refresh event.
+	 * Constructs a new GUI refresh end event.
 	 * 
 	 * @param gui GUI involved
 	 * @param refreshTime Time elapsed, in milliseconds
 	 */
-	public GUIRefreshEvent(GUI gui, int refreshTime) {
+	public GUIRefreshEndEvent(GUI gui, int refreshTime) {
 		super(gui);
 		this.refreshTime = refreshTime;
 	}

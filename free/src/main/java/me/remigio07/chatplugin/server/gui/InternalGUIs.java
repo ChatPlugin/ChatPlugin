@@ -279,8 +279,8 @@ public class InternalGUIs {
 		SinglePageGUI playerInfo = manager().createPerPlayerGUI(playerInfoLayout, player);
 		
 		TaskManager.runAsync(() -> player.getIPLookup(true), 0L);
-		playerInfo.setTitlesTranslator((t, u) -> PlaceholderManager.getInstance().translatePlaceholders(t.getLayout().getTitle(u, true), player, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
-		playerInfo.setStringPlaceholdersTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(u, player, v, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
+		playerInfo.setTitlesTranslator((t, u) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
+		playerInfo.setStringPlaceholdersTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, u, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
 		playerInfo.refresh();
 		return playerInfo;
 	}
@@ -301,8 +301,8 @@ public class InternalGUIs {
 	public static SinglePageGUI createPreferences(ChatPluginServerPlayer player) {
 		SinglePageGUI playerInfo = manager().createPerPlayerGUI(preferencesLayout, player);
 		
-		playerInfo.setTitlesTranslator((t, u) -> PlaceholderManager.getInstance().translatePlaceholders(t.getLayout().getTitle(u, true), player, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
-		playerInfo.setStringPlaceholdersTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(u, player, v, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER))
+		playerInfo.setTitlesTranslator((t, u) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
+		playerInfo.setStringPlaceholdersTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, u, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER))
 				.replace("{scoreboard_visibility}", preferencesPlaceholders[player.getScoreboard() == null ? 1 : 0])
 				.replace("{bossbar_visibility}", preferencesPlaceholders[player.getBossbar() == null ? 1 : 0])
 				.replace("{actionbar_visibility}", preferencesPlaceholders[player.hasActionbarEnabled() ? 0 : 1])
@@ -347,8 +347,8 @@ public class InternalGUIs {
 					punishments.add(storage.getMute(id.intValue()));
 		} catch (SQLException e) {
 			
-		} playerPunishments.setTitlesTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t.getLayout().getTitle(u, true), player, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
-		playerPunishments.setStringPlaceholdersTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(u, player, v, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
+		} playerPunishments.setTitlesTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
+		playerPunishments.setStringPlaceholdersTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, u, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
 		playerPunishments.setFillers(punishments.stream().map(punishment -> new GUIFiller<Punishment>() {
 			
 			@Override
@@ -390,8 +390,8 @@ public class InternalGUIs {
 	public static FillableGUI<Violation> createPlayerViolations(ChatPluginServerPlayer player) {
 		FillableGUI<Violation> playerViolations = manager().createPerPlayerGUI(playerViolationsLayout, player);
 		
-		playerViolations.setTitlesTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t.getLayout().getTitle(u, true), player, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
-		playerViolations.setStringPlaceholdersTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(u, player, v, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
+		playerViolations.setTitlesTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
+		playerViolations.setStringPlaceholdersTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, u, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
 		playerViolations.setFillers(AnticheatManager.getInstance().getViolations(player).stream().map(violation -> new GUIFiller<Violation>() {
 			
 			@Override

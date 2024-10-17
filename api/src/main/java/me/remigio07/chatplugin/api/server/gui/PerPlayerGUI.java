@@ -46,8 +46,9 @@ public interface PerPlayerGUI {
 	 * it from {@link GUIManager#getGUIs()}.
 	 * 
 	 * @deprecated Internal use only.
+	 * @param quit Whether the player quit the server
 	 */
 	@Deprecated
-	public void unload();
+	public void unload(boolean quit);
 	
 }

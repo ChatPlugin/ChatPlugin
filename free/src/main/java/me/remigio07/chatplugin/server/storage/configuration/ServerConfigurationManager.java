@@ -1179,8 +1179,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		mainGUI.addDefault("settings.rows", 5);
 		mainGUI.addDefault("settings.titles.english", "&c&lChat&f&lPlugin");
 		mainGUI.addDefault("settings.titles.italian", "&c&lChat&f&lPlugin");
-		mainGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &c&lChat&f&lPlugin &aGUI.");
-		mainGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &c&lChat&f&lPlugin &ain corso.");
+		mainGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &f{0} &aGUI.");
+		mainGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &f{0} &ain corso.");
 		mainGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
 		mainGUI.addDefault("settings.open-actions.play-sound.volume", 1F);
 		mainGUI.addDefault("settings.open-actions.play-sound.pitch", 1F);
@@ -1276,8 +1276,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		languagesGUI.addDefault("settings.rows", 3);
 		languagesGUI.addDefault("settings.titles.english", "&b&lLanguages");
 		languagesGUI.addDefault("settings.titles.italian", "&b&lLingue");
-		languagesGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &b&lLanguages &aGUI.");
-		languagesGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &b&lLingue &ain corso.");
+		languagesGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &f{0} &aGUI.");
+		languagesGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &f{0} &ain corso.");
 		languagesGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
 		languagesGUI.addDefault("settings.open-actions.play-sound.volume", 1F);
 		languagesGUI.addDefault("settings.open-actions.play-sound.pitch", 1F);
@@ -1336,8 +1336,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chatColorGUI.addDefault("settings.rows", 4);
 		chatColorGUI.addDefault("settings.titles.english", "&f&lChat color");
 		chatColorGUI.addDefault("settings.titles.italian", "&f&lColore chat");
-		chatColorGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &f&lChat color &aGUI.");
-		chatColorGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &f&lColore chat &ain corso.");
+		chatColorGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &f{0} &aGUI.");
+		chatColorGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &f{0} &ain corso.");
 		chatColorGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
 		chatColorGUI.addDefault("settings.open-actions.play-sound.volume", 1F);
 		chatColorGUI.addDefault("settings.open-actions.play-sound.pitch", 1F);
@@ -1615,8 +1615,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		emojisToneGUI.addDefault("settings.rows", 3);
 		emojisToneGUI.addDefault("settings.titles.english", "&e&lEmojis' tone");
 		emojisToneGUI.addDefault("settings.titles.italian", "&e&lTono delle emojis");
-		emojisToneGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &e&lEmojis' tone &aGUI.");
-		emojisToneGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &e&lTono delle emojis &ain corso.");
+		emojisToneGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &f{0} &aGUI.");
+		emojisToneGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &f{0} &ain corso.");
 		emojisToneGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
 		emojisToneGUI.addDefault("settings.open-actions.play-sound.volume", 1F);
 		emojisToneGUI.addDefault("settings.open-actions.play-sound.pitch", 1F);
@@ -1743,11 +1743,11 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		banlistGUI.addDefault("settings.filling-function.start-slot", 9);
 		banlistGUI.addDefault("settings.filling-function.end-slot", 35);
 		
-		banlistGUI.addDefault("settings.filling-function.empty-list-icon.display-names.english", "&a&lNo bans");
-		banlistGUI.addDefault("settings.filling-function.empty-list-icon.display-names.italian", "&a&lNessun ban");
+		banlistGUI.addDefault("settings.filling-function.empty-list-icon.display-names.english", "&9&lNo bans");
+		banlistGUI.addDefault("settings.filling-function.empty-list-icon.display-names.italian", "&9&lNessun ban");
 		banlistGUI.addDefault("settings.filling-function.empty-list-icon.lores.english", Arrays.asList("&7There are no active", "&7bans at the moment."));
 		banlistGUI.addDefault("settings.filling-function.empty-list-icon.lores.italian", Arrays.asList("&7Non ci sono bans", "&7attivi al momento."));
-		banlistGUI.addDefault("settings.filling-function.empty-list-icon.material", "DIAMOND");
+		banlistGUI.addDefault("settings.filling-function.empty-list-icon.material", VersionUtils.getVersion().isAtLeast(Version.V1_10) ? "STRUCTURE_VOID" : "ENDER_PEARL");
 		banlistGUI.addDefault("settings.filling-function.empty-list-icon.keep-open", true);
 		banlistGUI.addDefault("settings.filling-function.empty-list-icon.glowing", true);
 		banlistGUI.addDefault("settings.filling-function.empty-list-icon.x", 5);
@@ -1838,11 +1838,11 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		warnlistGUI.addDefault("settings.filling-function.start-slot", 9);
 		warnlistGUI.addDefault("settings.filling-function.end-slot", 35);
 		
-		warnlistGUI.addDefault("settings.filling-function.empty-list-icon.display-names.english", "&a&lNo warnings");
-		warnlistGUI.addDefault("settings.filling-function.empty-list-icon.display-names.italian", "&a&lNessun avviso");
+		warnlistGUI.addDefault("settings.filling-function.empty-list-icon.display-names.english", "&9&lNo warnings");
+		warnlistGUI.addDefault("settings.filling-function.empty-list-icon.display-names.italian", "&9&lNessun avviso");
 		warnlistGUI.addDefault("settings.filling-function.empty-list-icon.lores.english", Arrays.asList("&7There are no active", "&7warnings at the moment."));
 		warnlistGUI.addDefault("settings.filling-function.empty-list-icon.lores.italian", Arrays.asList("&7Non ci sono avvisi", "&7attivi al momento."));
-		warnlistGUI.addDefault("settings.filling-function.empty-list-icon.material", "DIAMOND");
+		warnlistGUI.addDefault("settings.filling-function.empty-list-icon.material", VersionUtils.getVersion().isAtLeast(Version.V1_10) ? "STRUCTURE_VOID" : "ENDER_PEARL");
 		warnlistGUI.addDefault("settings.filling-function.empty-list-icon.keep-open", true);
 		warnlistGUI.addDefault("settings.filling-function.empty-list-icon.glowing", true);
 		warnlistGUI.addDefault("settings.filling-function.empty-list-icon.x", 5);
@@ -1926,11 +1926,11 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		mutelistGUI.addDefault("settings.filling-function.start-slot", 9);
 		mutelistGUI.addDefault("settings.filling-function.end-slot", 35);
 		
-		mutelistGUI.addDefault("settings.filling-function.empty-list-icon.display-names.english", "&a&lNo mutes");
-		mutelistGUI.addDefault("settings.filling-function.empty-list-icon.display-names.italian", "&a&lNessun mute");
+		mutelistGUI.addDefault("settings.filling-function.empty-list-icon.display-names.english", "&9&lNo mutes");
+		mutelistGUI.addDefault("settings.filling-function.empty-list-icon.display-names.italian", "&9&lNessun mute");
 		mutelistGUI.addDefault("settings.filling-function.empty-list-icon.lores.english", Arrays.asList("&7There are no active", "&7mutes at the moment."));
 		mutelistGUI.addDefault("settings.filling-function.empty-list-icon.lores.italian", Arrays.asList("&7Non ci sono mutes", "&7attivi al momento."));
-		mutelistGUI.addDefault("settings.filling-function.empty-list-icon.material", "DIAMOND");
+		mutelistGUI.addDefault("settings.filling-function.empty-list-icon.material", VersionUtils.getVersion().isAtLeast(Version.V1_10) ? "STRUCTURE_VOID" : "ENDER_PEARL");
 		mutelistGUI.addDefault("settings.filling-function.empty-list-icon.keep-open", true);
 		mutelistGUI.addDefault("settings.filling-function.empty-list-icon.glowing", true);
 		mutelistGUI.addDefault("settings.filling-function.empty-list-icon.x", 5);
@@ -2014,11 +2014,11 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		violationsGUI.addDefault("settings.filling-function.start-slot", 9);
 		violationsGUI.addDefault("settings.filling-function.end-slot", 35);
 		
-		violationsGUI.addDefault("settings.filling-function.empty-list-icon.display-names.english", "&a&lNo violations");
-		violationsGUI.addDefault("settings.filling-function.empty-list-icon.display-names.italian", "&a&lNessuna violazione");
+		violationsGUI.addDefault("settings.filling-function.empty-list-icon.display-names.english", "&9&lNo violations");
+		violationsGUI.addDefault("settings.filling-function.empty-list-icon.display-names.italian", "&9&lNessuna violazione");
 		violationsGUI.addDefault("settings.filling-function.empty-list-icon.lores.english", Arrays.asList("&7There are no recent", "&7violations at the moment."));
 		violationsGUI.addDefault("settings.filling-function.empty-list-icon.lores.italian", Arrays.asList("&7Non ci sono violazioni", "&7recenti al momento."));
-		violationsGUI.addDefault("settings.filling-function.empty-list-icon.material", "DIAMOND");
+		violationsGUI.addDefault("settings.filling-function.empty-list-icon.material", VersionUtils.getVersion().isAtLeast(Version.V1_10) ? "STRUCTURE_VOID" : "ENDER_PEARL");
 		violationsGUI.addDefault("settings.filling-function.empty-list-icon.keep-open", true);
 		violationsGUI.addDefault("settings.filling-function.empty-list-icon.glowing", true);
 		violationsGUI.addDefault("settings.filling-function.empty-list-icon.x", 5);
@@ -2092,8 +2092,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		playerInfoGUI.addDefault("settings.rows", 5);
 		playerInfoGUI.addDefault("settings.titles.english", "&f&lPlayer info");
 		playerInfoGUI.addDefault("settings.titles.italian", "&f&lInfo giocatore");
-		playerInfoGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &f&lPlayer info &aGUI.");
-		playerInfoGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &f&lInfo giocatore &ain corso.");
+		playerInfoGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &f{0} &aGUI.");
+		playerInfoGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &f{0} &ain corso.");
 		playerInfoGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
 		playerInfoGUI.addDefault("settings.open-actions.play-sound.volume", 1F);
 		playerInfoGUI.addDefault("settings.open-actions.play-sound.pitch", 1F);
@@ -2181,8 +2181,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		preferencesGUI.addDefault("settings.rows", 3);
 		preferencesGUI.addDefault("settings.titles.english", "&6&lPreferences");
 		preferencesGUI.addDefault("settings.titles.italian", "&6&lPreferenze");
-		preferencesGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &6&lPreferences &aGUI.");
-		preferencesGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &6&lPreferenze &ain corso.");
+		preferencesGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &f{0} &aGUI.");
+		preferencesGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &f{0} &ain corso.");
 		preferencesGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
 		preferencesGUI.addDefault("settings.open-actions.play-sound.volume", 1F);
 		preferencesGUI.addDefault("settings.open-actions.play-sound.pitch", 1F);
@@ -2300,8 +2300,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		boolean isAtLeastV1_13 = VersionUtils.getVersion().isAtLeast(Version.V1_13);
 		
 		playerPunishmentsGUI.addDefault("settings.rows", 5);
-		playerPunishmentsGUI.addDefault("settings.titles.english", "&c&lPlayer punishments");
-		playerPunishmentsGUI.addDefault("settings.titles.italian", "&c&lPunizioni giocatore");
+		playerPunishmentsGUI.addDefault("settings.titles.english", "&c&lPlayer punishments &8(Page {current_page}/{max_page})");
+		playerPunishmentsGUI.addDefault("settings.titles.italian", "&c&lPunizioni giocatore &8(Pagina {current_page}/{max_page})");
 		playerPunishmentsGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &c&lPlayer punishments &aGUI.");
 		playerPunishmentsGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &c&lPunizioni giocatore &ain corso.");
 		playerPunishmentsGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
@@ -2314,11 +2314,11 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		playerPunishmentsGUI.addDefault("settings.filling-function.start-slot", 9);
 		playerPunishmentsGUI.addDefault("settings.filling-function.end-slot", 35);
 		
-		playerPunishmentsGUI.addDefault("settings.filling-function.empty-list-icon.display-names.english", "&a&lNo punishments");
-		playerPunishmentsGUI.addDefault("settings.filling-function.empty-list-icon.display-names.italian", "&a&lNessuna punizione");
+		playerPunishmentsGUI.addDefault("settings.filling-function.empty-list-icon.display-names.english", "&9&lNo punishments");
+		playerPunishmentsGUI.addDefault("settings.filling-function.empty-list-icon.display-names.italian", "&9&lNessuna punizione");
 		playerPunishmentsGUI.addDefault("settings.filling-function.empty-list-icon.lores.english", Arrays.asList("&7There are no active", "&7punishments at the moment."));
 		playerPunishmentsGUI.addDefault("settings.filling-function.empty-list-icon.lores.italian", Arrays.asList("&7Non ci sono punizioni", "&7attive al momento."));
-		playerPunishmentsGUI.addDefault("settings.filling-function.empty-list-icon.material", "DIAMOND");
+		playerPunishmentsGUI.addDefault("settings.filling-function.empty-list-icon.material", VersionUtils.getVersion().isAtLeast(Version.V1_10) ? "STRUCTURE_VOID" : "ENDER_PEARL");
 		playerPunishmentsGUI.addDefault("settings.filling-function.empty-list-icon.keep-open", true);
 		playerPunishmentsGUI.addDefault("settings.filling-function.empty-list-icon.glowing", true);
 		playerPunishmentsGUI.addDefault("settings.filling-function.empty-list-icon.x", 5);
@@ -2419,8 +2419,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			return;
 		
 		playerViolationsGUI.addDefault("settings.rows", 5);
-		playerViolationsGUI.addDefault("settings.titles.english", "&3&lPlayer violations");
-		playerViolationsGUI.addDefault("settings.titles.italian", "&3&lViolazioni giocatore");
+		playerViolationsGUI.addDefault("settings.titles.english", "&3&lPlayer violations &8(Page {current_page}/{max_page})");
+		playerViolationsGUI.addDefault("settings.titles.italian", "&3&lViolazioni giocatore &8(Pagina {current_page}/{max_page})");
 		playerViolationsGUI.addDefault("settings.open-actions.send-messages.english", "{pfx} &aOpening &3&lPlayer violations &aGUI.");
 		playerViolationsGUI.addDefault("settings.open-actions.send-messages.italian", "{pfx} &aApertura GUI &3&lViolazioni giocatore &ain corso.");
 		playerViolationsGUI.addDefault("settings.open-actions.play-sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
@@ -2433,11 +2433,11 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		playerViolationsGUI.addDefault("settings.filling-function.start-slot", 9);
 		playerViolationsGUI.addDefault("settings.filling-function.end-slot", 35);
 		
-		playerViolationsGUI.addDefault("settings.filling-function.empty-list-icon.display-names.english", "&a&lNo violations");
-		playerViolationsGUI.addDefault("settings.filling-function.empty-list-icon.display-names.italian", "&a&lNessuna violazione");
+		playerViolationsGUI.addDefault("settings.filling-function.empty-list-icon.display-names.english", "&9&lNo violations");
+		playerViolationsGUI.addDefault("settings.filling-function.empty-list-icon.display-names.italian", "&9&lNessuna violazione");
 		playerViolationsGUI.addDefault("settings.filling-function.empty-list-icon.lores.english", Arrays.asList("&7There are no recent", "&7violations at the moment."));
 		playerViolationsGUI.addDefault("settings.filling-function.empty-list-icon.lores.italian", Arrays.asList("&7Non ci sono violazioni", "&7recenti al momento."));
-		playerViolationsGUI.addDefault("settings.filling-function.empty-list-icon.material", "DIAMOND");
+		playerViolationsGUI.addDefault("settings.filling-function.empty-list-icon.material", VersionUtils.getVersion().isAtLeast(Version.V1_10) ? "STRUCTURE_VOID" : "ENDER_PEARL");
 		playerViolationsGUI.addDefault("settings.filling-function.empty-list-icon.keep-open", true);
 		playerViolationsGUI.addDefault("settings.filling-function.empty-list-icon.glowing", true);
 		playerViolationsGUI.addDefault("settings.filling-function.empty-list-icon.x", 5);

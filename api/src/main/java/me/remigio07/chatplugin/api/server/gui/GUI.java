@@ -22,7 +22,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import me.remigio07.chatplugin.api.common.util.TriFunction;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
-import me.remigio07.chatplugin.api.server.event.gui.GUIRefreshEvent;
+import me.remigio07.chatplugin.api.server.event.gui.GUIRefreshEndEvent;
+import me.remigio07.chatplugin.api.server.event.gui.GUIRefreshStartEvent;
 import me.remigio07.chatplugin.api.server.event.gui.IconClickEvent;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.item.ItemStackAdapter;
@@ -41,8 +42,8 @@ public abstract class GUI {
 	protected boolean loaded;
 	protected GUILayout layout;
 	protected List<CompletableFuture<ItemStackAdapter>> skullOwnerFutures = new CopyOnWriteArrayList<>();
-	private TriFunction<Icon, String, Language, String> stringPlaceholdersTranslator;
-	private TriFunction<Icon, List<String>, Language, List<String>> stringListPlaceholdersTranslator;
+	private TriFunction<String, Language, Icon, String> stringPlaceholdersTranslator;
+	private TriFunction<List<String>, Language, Icon, List<String>> stringListPlaceholdersTranslator;
 	
 	protected GUI(GUILayout layout) {
 		this.id = layout.getID();
@@ -69,8 +70,8 @@ public abstract class GUI {
 	public synchronized GUI setID(String id) {
 		if (!GUIManager.getInstance().isValidGUIID(id))
 			throw new IllegalArgumentException("GUI ID \"" + id + "\" is invalid as it does not respect the following pattern: \"" + GUIManager.GUI_ID_PATTERN.pattern() + "\"");
-		if (GUIManager.getInstance().getGUI(id) != null)
-			throw new IllegalArgumentException("Specified ID (" + id + ") is already in use");
+		if (GUIManager.getInstance().getGUIs().contains(this) && GUIManager.getInstance().getGUI(id) != null)
+			throw new IllegalArgumentException("Specified ID (\"" + id + "\") is already in use");
 		this.id = id;
 		return this;
 	}
@@ -98,14 +99,21 @@ public abstract class GUI {
 	/**
 	 * Refreshes this GUI.
 	 * 
-	 * @return Time elapsed in milliseconds or 0 if not loaded
-	 * @see GUIRefreshEvent
+	 * @return Time elapsed in milliseconds or 0 if not loaded or -1 if cancelled
+	 * @see GUIRefreshStartEvent
+	 * @see GUIRefreshEndEvent
 	 */
 	public synchronized int refresh() {
+		GUIRefreshStartEvent event = new GUIRefreshStartEvent(this);
+		
+		event.call();
+		
+		if (event.isCancelled())
+			return -1;
 		if (isLoaded()) {
 			int ms = load();
 			
-			new GUIRefreshEvent(this, ms).call();
+			new GUIRefreshEndEvent(this, ms).call();
 			return ms;
 		} return 0;
 	}
@@ -126,20 +134,23 @@ public abstract class GUI {
 	 * 		<li>{@link Icon#getSkullTextureURL()}</li>
 	 * 	</ul>
 	 * 
+	 * <p>Additionally, if {@link #getStringListPlaceholdersTranslator()}<code> == null</code>, it will also translate:
+	 * 	<ul>
+	 * 		<li>{@link Icon#getLores()}</li>
+	 * 		<li>{@link Icon#getCommands()}</li>
+	 * 	</ul>
+	 * 
 	 * <p>The function is composed of the following arguments:
 	 * 	<ol>
-	 * 		<li>{@link Icon} - this icon's instance</li>
 	 * 		<li>{@link String} - the text to format with custom placeholders</li>
-	 * 		<li>{@link Language} - the language used to translate the value</li>
+	 * 		<li>{@link Language} - the language used to translate the text</li>
+	 * 		<li>{@link Icon} - the icon's instance</li>
 	 * 	</ol>
-	 * 
-	 * If {@link #getStringPlaceholdersTranslator()}<code> != null</code> it will be also used to translate string lists when
-	 * {@link #getStringListPlaceholdersTranslator()}<code> == null</code>, passing every element to the function's method.
 	 * 
 	 * @return GUI's placeholders' translator
 	 */
 	@Nullable(why = "Placeholders' translator may not have been set")
-	public TriFunction<Icon, String, Language, String> getStringPlaceholdersTranslator() {
+	public TriFunction<String, Language, Icon, String> getStringPlaceholdersTranslator() {
 		return stringPlaceholdersTranslator;
 	}
 	
@@ -161,20 +172,23 @@ public abstract class GUI {
 	 * 		<li>{@link Icon#getSkullTextureURL()}</li>
 	 * 	</ul>
 	 * 
+	 * <p>Additionally, if {@link #getStringListPlaceholdersTranslator()}<code> == null</code>, it will also translate:
+	 * 	<ul>
+	 * 		<li>{@link Icon#getLores()}</li>
+	 * 		<li>{@link Icon#getCommands()}</li>
+	 * 	</ul>
+	 * 
 	 * <p>The function is composed of the following arguments:
 	 * 	<ol>
-	 * 		<li>{@link Icon} - this icon's instance</li>
 	 * 		<li>{@link String} - the text to format with custom placeholders</li>
-	 * 		<li>{@link Language} - the language used to translate the value</li>
+	 * 		<li>{@link Language} - the language used to translate the text</li>
+	 * 		<li>{@link Icon} - the icon's instance</li>
 	 * 	</ol>
-	 * 
-	 * If {@link #getStringPlaceholdersTranslator()}<code> != null</code> it will be also used to translate string lists when
-	 * {@link #getStringListPlaceholdersTranslator()}<code> == null</code>, passing every element to the function's method.
 	 * 
 	 * @param stringPlaceholdersTranslator GUI's placeholders' translator
 	 * @return This GUI
 	 */
-	public GUI setStringPlaceholdersTranslator(TriFunction<Icon, String, Language, String> stringPlaceholdersTranslator) {
+	public GUI setStringPlaceholdersTranslator(TriFunction<String, Language, Icon, String> stringPlaceholdersTranslator) {
 		this.stringPlaceholdersTranslator = stringPlaceholdersTranslator;
 		return this;
 	}
@@ -187,7 +201,7 @@ public abstract class GUI {
 	 * @return This GUI
 	 */
 	public GUI setServerStringPlaceholdersTranslator() {
-		stringPlaceholdersTranslator = (t, u, v) -> PlaceholderManager.getInstance().translateServerPlaceholders(u, v, false);
+		stringPlaceholdersTranslator = (t, u, v) -> PlaceholderManager.getInstance().translateServerPlaceholders(t, u, false);
 		return this;
 	}
 	
@@ -200,7 +214,7 @@ public abstract class GUI {
 	 * {@link TriFunction#apply(Object, Object, Object)}'s result every time
 	 * {@link Icon#toItemStackAdapter(GUI, Language)} is called or a {@link IconClickEvent} occurs.</p>
 	 * 
-	 * <p>It translates the following values:
+	 * <p>It translates only the following values:
 	 * 	<ul>
 	 * 		<li>{@link Icon#getLores()}</li>
 	 * 		<li>{@link Icon#getCommands()}</li>
@@ -208,9 +222,9 @@ public abstract class GUI {
 	 * 
 	 * <p>The function is composed of the following arguments:
 	 * 	<ol>
-	 * 		<li>{@link Icon} - this icon's instance</li>
 	 * 		<li>{@link List}<code>&lt;{@link String}&gt;</code> - the text to format with custom placeholders</li>
-	 * 		<li>{@link Language} - the language used to translate the value</li>
+	 * 		<li>{@link Language} - the language used to translate the text</li>
+	 * 		<li>{@link Icon} - the icon's instance</li>
 	 * 	</ol>
 	 * 
 	 * If {@link #getStringPlaceholdersTranslator()}<code> != null</code> it will be also used to translate string lists when
@@ -219,7 +233,7 @@ public abstract class GUI {
 	 * @return GUI's placeholders' translator
 	 */
 	@Nullable(why = "Placeholders' translator may not have been set")
-	public TriFunction<Icon, List<String>, Language, List<String>> getStringListPlaceholdersTranslator() {
+	public TriFunction<List<String>, Language, Icon, List<String>> getStringListPlaceholdersTranslator() {
 		return stringListPlaceholdersTranslator;
 	}
 	
@@ -234,7 +248,7 @@ public abstract class GUI {
 	 * {@link Icon#toItemStackAdapter(GUI, Language)} is called or a {@link IconClickEvent} occurs.
 	 * You may also want to {@link #refresh()} the GUI after this operation.</p>
 	 * 
-	 * <p>It translates the following values:
+	 * <p>It translates only the following values:
 	 * 	<ul>
 	 * 		<li>{@link Icon#getLores()}</li>
 	 * 		<li>{@link Icon#getCommands()}</li>
@@ -242,9 +256,9 @@ public abstract class GUI {
 	 * 
 	 * <p>The function is composed of the following arguments:
 	 * 	<ol>
-	 * 		<li>{@link Icon} - this icon's instance</li>
 	 * 		<li>{@link List}<code>&lt;{@link String}&gt;</code> - the text to format with custom placeholders</li>
-	 * 		<li>{@link Language} - the language used to translate the value</li>
+	 * 		<li>{@link Language} - the language used to translate the text</li>
+	 * 		<li>{@link Icon} - the icon's instance</li>
 	 * 	</ol>
 	 * 
 	 * If {@link #getStringPlaceholdersTranslator()}<code> != null</code> it will be also used to translate string lists when
@@ -253,7 +267,7 @@ public abstract class GUI {
 	 * @param stringListPlaceholdersTranslator GUI's placeholders' translator
 	 * @return This GUI
 	 */
-	public GUI setStringListPlaceholdersTranslator(TriFunction<Icon, List<String>, Language, List<String>> stringListPlaceholdersTranslator) {
+	public GUI setStringListPlaceholdersTranslator(TriFunction<List<String>, Language, Icon, List<String>> stringListPlaceholdersTranslator) {
 		this.stringListPlaceholdersTranslator = stringListPlaceholdersTranslator;
 		return this;
 	}

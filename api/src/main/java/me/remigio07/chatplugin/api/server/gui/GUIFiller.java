@@ -47,11 +47,15 @@ public interface GUIFiller<T> {
 	/**
 	 * Translates an input string containing placeholders for the specified language.
 	 * 
+	 * <p>It returns <code>input</code> by default.</p>
+	 * 
 	 * @param input Input containing placeholders
 	 * @param language Language used to translate the placeholders
 	 * @return Translated placeholders
 	 */
-	public String formatPlaceholders(String input, Language language);
+	public default String formatPlaceholders(String input, Language language) {
+		return input;
+	}
 	
 	/**
 	 * Translates an input string list containing placeholders for the specified language.
@@ -70,12 +74,17 @@ public interface GUIFiller<T> {
 	 * Gets this filler's icon's layout.
 	 * 
 	 * <p>Returns {@link #getGUI()}'s {@link FillableGUI#getLayout()}'s
-	 * {@link FillableGUILayout#getIconsLayouts()}'s first element by default.</p>
+	 * {@link FillableGUILayout#getIconsLayouts()}'s first element or
+	 * {@link IconLayout#EMPTY_ICON_LAYOUT} if it is empty, by default.</p>
 	 * 
 	 * @return Filler's icon's layout
 	 */
 	public default IconLayout getIconLayout() {
-		return getGUI().getLayout().getIconsLayouts().get(0);
+		try {
+			return getGUI().getLayout().getIconsLayouts().get(0);
+		} catch (IndexOutOfBoundsException e) {
+			return IconLayout.EMPTY_ICON_LAYOUT;
+		}
 	}
 	
 	/**

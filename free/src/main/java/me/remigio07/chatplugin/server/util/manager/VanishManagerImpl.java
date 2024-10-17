@@ -41,6 +41,8 @@ import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationTyp
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
+import me.remigio07.chatplugin.api.server.event.vanish.VanishDisableEvent;
+import me.remigio07.chatplugin.api.server.event.vanish.VanishEnableEvent;
 import me.remigio07.chatplugin.api.server.join_quit.QuitMessageManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
@@ -72,6 +74,12 @@ public class VanishManagerImpl extends VanishManager {
 	@Override
 	public void hide(ChatPluginServerPlayer player) {
 		if (!enabled)
+			return;
+		VanishEnableEvent event = new VanishEnableEvent(player);
+		
+		event.call();
+		
+		if (event.isCancelled())
 			return;
 		vanished.put(player.getWorld(), Utils.addAndGet(getVanishedList(player.getWorld()), Arrays.asList(player)));
 		
@@ -122,6 +130,12 @@ public class VanishManagerImpl extends VanishManager {
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	public void show(ChatPluginServerPlayer player, boolean fixQuitPacket) {
 		if (!enabled)
+			return;
+		VanishDisableEvent event = new VanishDisableEvent(player);
+		
+		event.call();
+		
+		if (event.isCancelled())
 			return;
 		vanished.put(player.getWorld(), Utils.removeAndGet(getVanishedList(player.getWorld()), Arrays.asList(player)));
 		

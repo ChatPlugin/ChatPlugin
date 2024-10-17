@@ -22,6 +22,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import me.remigio07.chatplugin.api.common.chat.DenyChatReasonHandler;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
+import me.remigio07.chatplugin.api.server.event.vanish.VanishDisableEvent;
+import me.remigio07.chatplugin.api.server.event.vanish.VanishEnableEvent;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
@@ -108,6 +110,7 @@ public abstract class VanishManager implements DenyChatReasonHandler {
 	 * Hides a player from the ones who do not have the {@link #VANISH_PERMISSION}.
 	 * 
 	 * @param player Player to hide
+	 * @see VanishEnableEvent
 	 */
 	public abstract void hide(ChatPluginServerPlayer player);
 	
@@ -115,6 +118,7 @@ public abstract class VanishManager implements DenyChatReasonHandler {
 	 * Shows a player (who was previously vanished) to all online players.
 	 * 
 	 * @param player Player to show
+	 * @see VanishDisableEvent
 	 */
 	public abstract void show(ChatPluginServerPlayer player);
 	

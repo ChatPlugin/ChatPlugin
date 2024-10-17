@@ -191,7 +191,7 @@ public class SpongePlayerManager extends ServerPlayerManager {
 		scoreboard.getScores().forEach(score -> scoreboard.removeScores(score.getName()));
 		scoreboard.getTeams().forEach(Team::unregister);
 		scoreboard.getObjectives().forEach(scoreboard::removeObjective);
-		players.values().forEach(other -> Iterables.getFirst(other.getObjective().spongeValue().getScoreboards(), null).getTeam(serverPlayer.getRank().formatIdentifier(serverPlayer)).get().unregister());
+		players.values().forEach(other -> Iterables.getFirst(other.getObjective().spongeValue().getScoreboards(), null).getTeam(serverPlayer.getRank().formatIdentifier(serverPlayer)).ifPresent(Team::unregister));
 		GUIManager.getInstance().getGUIs().stream().filter(PerPlayerGUI.class::isInstance).map(PerPlayerGUI.class::cast).forEach(gui -> gui.unload(true));
 		QuitMessageManager.getInstance().getFakeQuits().remove(player);
 		Utils.inventoryTitles.remove(player);

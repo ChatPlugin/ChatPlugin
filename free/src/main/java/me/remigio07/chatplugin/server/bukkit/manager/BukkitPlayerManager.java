@@ -257,7 +257,7 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 		TablistManager.getInstance().sendTablist(Tablist.NULL_TABLIST, serverPlayer);
 		scoreboard.getTeams().forEach(Team::unregister);
 		scoreboard.getObjectives().forEach(Objective::unregister);
-		players.values().forEach(other -> other.getObjective().bukkitValue().getScoreboard().getTeam(serverPlayer.getRank().formatIdentifier(serverPlayer)).unregister());
+		players.values().forEach(other -> other.getObjective().bukkitValue().getScoreboard().getTeams().stream().filter(team -> team.getName().equals(serverPlayer.getRank().formatIdentifier(serverPlayer))).forEach(Team::unregister));
 		GUIManager.getInstance().getGUIs().stream().filter(PerPlayerGUI.class::isInstance).map(PerPlayerGUI.class::cast).forEach(gui -> gui.unload(true));
 		QuitMessageManager.getInstance().getFakeQuits().remove(player);
 		Utils.inventoryTitles.remove(player);

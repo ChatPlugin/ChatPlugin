@@ -130,8 +130,7 @@ public class SpongePlayerManager extends ServerPlayerManager {
 		// misc
 		if (QuitMessageManager.getInstance().isEnabled())
 			new QuitPacketImpl(serverPlayer);
-		if (VanishManager.getInstance().isEnabled())
-			VanishManager.getInstance().update(serverPlayer, false);
+		((VanishManagerImpl) VanishManager.getInstance()).update(serverPlayer, false);
 		players.put(player.getUUID(), serverPlayer);
 		new ServerPlayerLoadEvent(serverPlayer, (int) (ms = System.currentTimeMillis() - ms)).call();
 		LogManager.log("Player {0} has been loaded in {1} ms.", 4, player.getName(), ms);

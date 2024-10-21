@@ -119,6 +119,10 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 					}, 0L);
 				}
 			} language = Language.getMainLanguage();
+		} try {
+			id = storage.getPlayerData(PlayersDataType.ID, this);
+		} catch (SQLException e) {
+			LogManager.log("SQLException occurred while getting {0}'s ID from the the database: {1}", 2, name, e.getMessage());
 		} if (BossbarManager.getInstance().isEnabled() && BossbarManager.getInstance().isWorldEnabled(getWorld())) {
 			bossbar = VersionUtils.getVersion().isAtLeast(Version.V1_9) ? new NativeBossbar(this) : new ReflectionBossbar(this);
 			
@@ -142,7 +146,6 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 		} TaskManager.runAsync(() -> {
 			try {
 				String currentIPAddress = player.getAddress().getAddress().getHostAddress();
-				id = storage.getPlayerData(PlayersDataType.ID, this);
 				
 				if (playerStored && !storage.getPlayerData(PlayersDataType.PLAYER_NAME, this).equals(player.getName()))
 					storage.setPlayerData(PlayersDataType.PLAYER_NAME, this, player.getName());
@@ -172,7 +175,7 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 					}
 				} storage.setPlayerData(PlayersDataType.PLAYER_IP, id, currentIPAddress);
 			} catch (SQLException | IOException e) {
-				LogManager.log("{0} occurred while getting {1}'s ID, name or IP address(es) from the storage: {2}", 2, e.getClass().getSimpleName(), name, e.getMessage());
+				LogManager.log("{0} occurred while getting/setting {1}'s name or IP address(es) from/in the storage: {2}", 2, e.getClass().getSimpleName(), name, e.getMessage());
 			} if (!playerStored) {
 				if (AccountCheckManager.getInstance().isPerformOnFirstJoin())
 					AccountCheckManager.getInstance().check(this);

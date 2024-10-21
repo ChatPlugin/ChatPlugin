@@ -82,6 +82,7 @@ import me.remigio07.chatplugin.server.bukkit.integration.cosmetic.gadgetsmenu.Ga
 import me.remigio07.chatplugin.server.chat.ChatManagerImpl;
 import me.remigio07.chatplugin.server.command.misc.TPSCommand;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
+import me.remigio07.chatplugin.server.util.manager.VanishManagerImpl;
 
 public class BukkitEventManager extends EventManager {
 	
@@ -183,7 +184,7 @@ public class BukkitEventManager extends EventManager {
 		
 		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(playerAdapter.getUUID());
 		
-		VanishManager.getInstance().update(player, true);
+		((VanishManagerImpl) VanishManager.getInstance()).update(player, true);
 		SuggestedVersionManager.getInstance().check(player);
 		JoinTitleManager.getInstance().sendJoinTitle(player, true);
 		WelcomeMessageManager.getInstance().sendWelcomeMessage(player, true);
@@ -222,30 +223,33 @@ public class BukkitEventManager extends EventManager {
 	
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
 		ServerPlayerManager playerManager = ServerPlayerManager.getInstance();
-		ChatPluginServerPlayer player = playerManager.getPlayer(event.getPlayer().getUniqueId());
-		boolean oldWorld = playerManager.isWorldEnabled(event.getFrom().getName());
 		
-		if (oldWorld == playerManager.isWorldEnabled(player.getWorld())) {
-			if (BossbarManager.getInstance().isEnabled()) {
-				boolean oldWorld2 = BossbarManager.getInstance().isWorldEnabled(event.getFrom().getName());
+		if (playerManager.isWorldEnabled(event.getFrom().getName())) {
+			ChatPluginServerPlayer player = playerManager.getPlayer(event.getPlayer().getUniqueId());
+			
+			if (playerManager.isWorldEnabled(player.getWorld())) { // enabled -> enabled
+				BossbarManager bossbarManager = BossbarManager.getInstance();
 				
-				if (oldWorld2 == BossbarManager.getInstance().isWorldEnabled(player.getWorld()))
-					return;
-				if (oldWorld2) {
-					player.getBossbar().unregister();
-					((BaseChatPluginServerPlayer) player).setBossbar(null);
-				} else {
-					((BaseChatPluginServerPlayer) player).setBossbar(VersionUtils.getVersion().isAtLeast(Version.V1_9) ? new NativeBossbar(player) : new ReflectionBossbar(player));
-					
-					if (BossbarManager.getInstance().isLoadingBossbarEnabled())
-						BossbarManager.getInstance().startLoading(player);
-					else BossbarManager.getInstance().sendBossbar(BossbarManager.getInstance().getBossbars().get(BossbarManager.getInstance().getTimerIndex() == -1 ? 0 : BossbarManager.getInstance().getTimerIndex()), player);
+				if (bossbarManager.isEnabled()) {
+					if (bossbarManager.isWorldEnabled(event.getFrom().getName())) {
+						if (!bossbarManager.isWorldEnabled(player.getWorld())) { // bossbar: enabled -> disabled
+							player.getBossbar().unregister();
+							((BaseChatPluginServerPlayer) player).setBossbar(null);
+						}
+					} else if (bossbarManager.isWorldEnabled(player.getWorld())) { // bossbar: disabled -> enabled
+						((BaseChatPluginServerPlayer) player).setBossbar(VersionUtils.getVersion().isAtLeast(Version.V1_9) ? new NativeBossbar(player) : new ReflectionBossbar(player));
+						
+						if (bossbarManager.isLoadingBossbarEnabled())
+							bossbarManager.startLoading(player);
+						else bossbarManager.sendBossbar(bossbarManager.getBossbars().get(bossbarManager.getTimerIndex() == -1 ? 0 : bossbarManager.getTimerIndex()), player);
+					}
 				}
-			} return;
-		} if (oldWorld) {
-			VanishManager.getInstance().update(player, false);
-			playerManager.unloadPlayer(player.getUUID());
-		} else playerManager.loadPlayer(player.toAdapter());
+			} else { // enabled -> disabled
+				((VanishManagerImpl) VanishManager.getInstance()).update(player, false);
+				playerManager.unloadPlayer(player.getUUID());
+			}
+		} else if (playerManager.isWorldEnabled(event.getPlayer().getWorld().getName())) // disabled -> enabled
+			playerManager.loadPlayer(new PlayerAdapter(event.getPlayer()));
 	}
 	
 	public void onInventoryClick(InventoryClickEvent event) {

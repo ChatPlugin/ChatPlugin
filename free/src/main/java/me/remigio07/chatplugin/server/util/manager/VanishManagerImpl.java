@@ -174,7 +174,6 @@ public class VanishManagerImpl extends VanishManager {
 	}
 	
 	@SuppressWarnings("deprecation")
-	@Override
 	public void update(ChatPluginServerPlayer player, boolean justJoined) {
 		if (!enabled)
 			return;

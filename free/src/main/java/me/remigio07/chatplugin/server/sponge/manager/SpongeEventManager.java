@@ -89,6 +89,7 @@ import me.remigio07.chatplugin.bootstrap.SpongeBootstrapper;
 import me.remigio07.chatplugin.server.bossbar.NativeBossbar;
 import me.remigio07.chatplugin.server.chat.ChatManagerImpl;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
+import me.remigio07.chatplugin.server.util.manager.VanishManagerImpl;
 
 public class SpongeEventManager extends EventManager {
 	
@@ -221,7 +222,7 @@ public class SpongeEventManager extends EventManager {
 		
 		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(playerAdapter.getUUID());
 		
-		VanishManager.getInstance().update(player, true);
+		((VanishManagerImpl) VanishManager.getInstance()).update(player, true);
 		SuggestedVersionManager.getInstance().check(player);
 		JoinTitleManager.getInstance().sendJoinTitle(player, true);
 		WelcomeMessageManager.getInstance().sendWelcomeMessage(player, true);
@@ -472,30 +473,33 @@ public class SpongeEventManager extends EventManager {
 		if (!(event.getTargetEntity() instanceof Player))
 			return;
 		ServerPlayerManager playerManager = ServerPlayerManager.getInstance();
-		ChatPluginServerPlayer player = playerManager.getPlayer(event.getTargetEntity().getUniqueId());
-		boolean oldWorld = playerManager.isWorldEnabled(event.getFromTransform().getExtent().getName());
 		
-		if (oldWorld == playerManager.isWorldEnabled(player.getWorld())) {
-			if (BossbarManager.getInstance().isEnabled()) {
-				boolean oldWorld2 = BossbarManager.getInstance().isWorldEnabled(event.getFromTransform().getExtent().getName());
+		if (playerManager.isWorldEnabled(event.getFromTransform().getExtent().getName())) {
+			ChatPluginServerPlayer player = playerManager.getPlayer(event.getTargetEntity().getUniqueId());
+			
+			if (playerManager.isWorldEnabled(player.getWorld())) { // enabled -> enabled
+				BossbarManager bossbarManager = BossbarManager.getInstance();
 				
-				if (oldWorld2 == BossbarManager.getInstance().isWorldEnabled(player.getWorld()))
-					return;
-				if (oldWorld2) {
-					player.getBossbar().unregister();
-					((BaseChatPluginServerPlayer) player).setBossbar(null);
-				} else {
-					((BaseChatPluginServerPlayer) player).setBossbar(new NativeBossbar(player));
-					
-					if (BossbarManager.getInstance().isLoadingBossbarEnabled())
-						BossbarManager.getInstance().startLoading(player);
-					else BossbarManager.getInstance().sendBossbar(BossbarManager.getInstance().getBossbars().get(BossbarManager.getInstance().getTimerIndex() == -1 ? 0 : BossbarManager.getInstance().getTimerIndex()), player);
+				if (bossbarManager.isEnabled()) {
+					if (bossbarManager.isWorldEnabled(event.getFromTransform().getExtent().getName())) {
+						if (!bossbarManager.isWorldEnabled(player.getWorld())) { // bossbar: enabled -> disabled
+							player.getBossbar().unregister();
+							((BaseChatPluginServerPlayer) player).setBossbar(null);
+						}
+					} else if (bossbarManager.isWorldEnabled(player.getWorld())) { // bossbar: disabled -> enabled
+						((BaseChatPluginServerPlayer) player).setBossbar(new NativeBossbar(player));
+						
+						if (bossbarManager.isLoadingBossbarEnabled())
+							bossbarManager.startLoading(player);
+						else bossbarManager.sendBossbar(bossbarManager.getBossbars().get(bossbarManager.getTimerIndex() == -1 ? 0 : bossbarManager.getTimerIndex()), player);
+					}
 				}
-			} return;
-		} if (oldWorld) {
-			VanishManager.getInstance().update(player, false);
-			playerManager.unloadPlayer(player.getUUID());
-		} else playerManager.loadPlayer(player.toAdapter());
+			} else { // enabled -> disabled
+				((VanishManagerImpl) VanishManager.getInstance()).update(player, false);
+				playerManager.unloadPlayer(player.getUUID());
+			}
+		} else if (playerManager.isWorldEnabled(event.getTargetEntity().getWorld().getName())) // disabled -> enabled
+			playerManager.loadPlayer(new PlayerAdapter(event.getTargetEntity()));
 	}
 	
 	public void applyScoreboard(ScoreboardEvent event, Player player, Object... args) {

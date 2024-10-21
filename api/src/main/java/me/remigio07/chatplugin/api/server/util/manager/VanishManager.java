@@ -123,14 +123,6 @@ public abstract class VanishManager implements DenyChatReasonHandler {
 	public abstract void show(ChatPluginServerPlayer player);
 	
 	/**
-	 * Updates a player's visibility.
-	 * 
-	 * @param player Player to update
-	 * @param justJoined Whether the player just joined the server
-	 */
-	public abstract void update(ChatPluginServerPlayer player, boolean justJoined);
-	
-	/**
 	 * Gets a list containing the vanished players.
 	 * 
 	 * @return Vanished players

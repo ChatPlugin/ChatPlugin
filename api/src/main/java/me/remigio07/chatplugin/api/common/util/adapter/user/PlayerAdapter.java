@@ -31,7 +31,9 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.spongepowered.api.Sponge;
 
+import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.player.ChatPluginPlayer;
+import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -70,6 +72,35 @@ public class PlayerAdapter {
 	 */
 	public PlayerAdapter(Object player) {
 		this.player = player;
+	}
+	
+	/**
+	 * Checks if another object is an instance of {@link PlayerAdapter} and if this
+	 * player's {@link #getUUID()} (if running on online mode) or {@link #getName()}
+	 * (if running on offline mode) value is equal to the other object's one.
+	 * 
+	 * @param obj Object to compare
+	 * @return Whether the two objects are equal
+	 * @throws IllegalStateException If {@link ChatPlugin#isOnlineMode()} cannot be run yet
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof PlayerAdapter ? ChatPlugin.getInstance().isOnlineMode() ? ((PlayerAdapter) obj).getUUID().equals(getUUID()) : ((OfflinePlayer) obj).getName() == null ? false : ((OfflinePlayer) obj).getName().equalsIgnoreCase(getName()) : false;
+	}
+	
+	/**
+	 * Gets this player's hash code.
+	 * 
+	 * <p>Will return {@link #getUUID()}'s (if running on online mode)
+	 * or {@link #getName()}'s (if running on offline mode) hash code
+	 * or -1 if the name is <code>null</code>.</p>
+	 * 
+	 * @return Player's hash code
+	 * @throws IllegalStateException If {@link ChatPlugin#isOnlineMode()} cannot be run yet
+	 */
+	@Override
+	public int hashCode() {
+		return ChatPlugin.getInstance().isOnlineMode() ? getUUID().hashCode() : getName() == null ? -1 : getName().hashCode();
 	}
 	
 	/**

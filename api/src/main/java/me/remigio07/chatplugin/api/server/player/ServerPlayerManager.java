@@ -46,9 +46,9 @@ import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
  */
 public abstract class ServerPlayerManager extends PlayerManager {
 	
-	private static Map<UUID, Version> playersVersions = new ConcurrentHashMap<>();
-	private static Map<UUID, Long> playersLoginTimes = new ConcurrentHashMap<>();
-	private static List<UUID> bedrockPlayers = new CopyOnWriteArrayList<>();
+	protected static Map<UUID, Version> playersVersions = new ConcurrentHashMap<>();
+	protected static Map<UUID, Long> playersLoginTimes = new ConcurrentHashMap<>();
+	protected static List<UUID> bedrockPlayers = new CopyOnWriteArrayList<>();
 	protected Map<UUID, ChatPluginServerPlayer> players = new ConcurrentHashMap<>();
 	protected List<String> enabledWorlds = Collections.emptyList();
 	protected int storageCount;
@@ -137,12 +137,10 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	/**
 	 * Gets the list of the enabled worlds.
 	 * 
-	 * <p>Every feature of this plugin only
-	 * applies to players in enabled worlds.</p>
-	 * 
 	 * <p><strong>Found at:</strong> "settings.enabled-worlds" in {@link ConfigurationType#CONFIG}</p>
 	 * 
 	 * @return List of enabled worlds
+	 * @see #isWorldEnabled(String)
 	 */
 	public List<String> getEnabledWorlds() {
 		return enabledWorlds;
@@ -150,6 +148,12 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	
 	/**
 	 * Checks if a world is contained in the enabled worlds' list.
+	 * 
+	 * <p>
+	 * <strong>Note:</strong> do not use this method to check if players are loaded.
+	 * Players may be loaded in disabled worlds and unloaded in enabled worlds. Use
+	 * {@link #getPlayer(UUID)} to check whether a player is loaded or not.
+	 * </p>
 	 * 
 	 * @param world Name of the world to check
 	 * @return Whether the world is enabled

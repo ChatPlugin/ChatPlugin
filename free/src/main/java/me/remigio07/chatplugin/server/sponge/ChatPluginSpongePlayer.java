@@ -191,8 +191,8 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	}
 	
 	@Override
-	public double getDistance(double x, double y, double z) {
-		return player.getLocation().getPosition().distance(x, y, z);
+	public double getDistance(String world, double x, double y, double z) {
+		return getWorld().equals(world) ? player.getLocation().getPosition().distance(x, y, z) : Double.MAX_VALUE;
 	}
 	
 	@Override

@@ -79,7 +79,7 @@ import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.bossbar.NativeBossbar;
 import me.remigio07.chatplugin.server.bossbar.ReflectionBossbar;
 import me.remigio07.chatplugin.server.bukkit.integration.cosmetic.gadgetsmenu.GadgetsMenuIntegration;
-import me.remigio07.chatplugin.server.chat.ChatManagerImpl;
+import me.remigio07.chatplugin.server.chat.BaseChatManager;
 import me.remigio07.chatplugin.server.command.misc.TPSCommand;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import me.remigio07.chatplugin.server.util.manager.VanishManagerImpl;
@@ -95,8 +95,6 @@ public class BukkitEventManager extends EventManager {
 		BukkitBootstrapper instance = BukkitBootstrapper.getInstance();
 		PluginManager manager = instance.getServer().getPluginManager();
 		
-		if (ChatManager.getInstance().isEnabled())
-			manager.registerEvent(AsyncPlayerChatEvent.class, listener, EventPriority.valueOf(ChatManager.getInstance().getChatEventPriority()), listener, instance);
 		manager.registerEvent(PlayerJoinEvent.class, listener, EventPriority.LOW, listener, instance);
 		manager.registerEvent(PlayerQuitEvent.class, listener, EventPriority.LOW, listener, instance);
 		manager.registerEvent(PlayerCommandPreprocessEvent.class, listener, EventPriority.NORMAL, listener, instance);
@@ -143,7 +141,7 @@ public class BukkitEventManager extends EventManager {
 		}
 	}
 	
-	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
+	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) { // see BukkitChatManager
 		Player player = event.getPlayer();
 		ChatPluginServerPlayer serverPlayer = ServerPlayerManager.getInstance().getPlayer(player.getUniqueId());
 		
@@ -151,31 +149,29 @@ public class BukkitEventManager extends EventManager {
 			return;
 		String[] args = { event.getMessage(), event.getFormat() };
 		
-		if (!((ChatManagerImpl) ChatManager.getInstance()).handleChatEvent(serverPlayer, args)) {
+		if (!((BaseChatManager) ChatManager.getInstance()).handleChatEvent(serverPlayer, args)) {
 			applyScoreboard(ScoreboardEvent.CHAT, player);
 			
 			if (!ChatManager.getInstance().shouldOverrideChatEvent()) {
 				event.setMessage(args[0]);
-				event.setFormat(args[1] + "%2$s");
+				event.setFormat(args[1].replace("%", "%%") + "%2$s");
 				return;
 			}
 		} event.setCancelled(true);
 	}
 	
 	public void onPlayerJoin(PlayerJoinEvent event) {
+		PlayerAdapter player = new PlayerAdapter(event.getPlayer());
+		
+		ServerPlayerManager.getPlayersVersions().put(player.getUUID(), IntegrationType.VIAVERSION.isEnabled() ? IntegrationType.VIAVERSION.get().getVersion(player) : IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(player) : VersionUtils.getVersion());
+		ServerPlayerManager.getPlayersLoginTimes().put(player.getUUID(), System.currentTimeMillis());
+		
+		if (IntegrationType.GEYSERMC.isEnabled() && IntegrationType.GEYSERMC.get().isBedrockPlayer(player))
+			ServerPlayerManager.getBedrockPlayers().add(player.getUUID());
 		if (ServerPlayerManager.getInstance().isWorldEnabled(event.getPlayer().getWorld().getName())) {
+			if (!ProxyManager.getInstance().isEnabled())
+				processJoinEvent(player, false);
 			event.setJoinMessage(null);
-			
-			if (ProxyManager.getInstance().isEnabled())
-				return;
-			PlayerAdapter player = new PlayerAdapter(event.getPlayer());
-			
-			ServerPlayerManager.getPlayersVersions().put(player.getUUID(), IntegrationType.VIAVERSION.isEnabled() ? IntegrationType.VIAVERSION.get().getVersion(player) : IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(player) : VersionUtils.getVersion());
-			ServerPlayerManager.getPlayersLoginTimes().put(player.getUUID(), System.currentTimeMillis());
-			
-			if (IntegrationType.GEYSERMC.isEnabled() && IntegrationType.GEYSERMC.get().isBedrockPlayer(player))
-				ServerPlayerManager.getBedrockPlayers().add(player.getUUID());
-			processJoinEvent(player, false);
 		}
 	}
 	
@@ -206,8 +202,6 @@ public class BukkitEventManager extends EventManager {
 	}
 	
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		if (ServerPlayerManager.getInstance().isWorldEnabled(event.getPlayer().getWorld().getName()))
-			event.setQuitMessage(null);
 		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getPlayer().getUniqueId());
 		
 		if (player != null) {
@@ -216,6 +210,7 @@ public class BukkitEventManager extends EventManager {
 				QuitMessageManager.getInstance().getQuitPackets().remove(player.getUUID());
 			} AnticheatManager.getInstance().clearViolations(player);
 			ServerPlayerManager.getInstance().unloadPlayer(player.getUUID());
+			event.setQuitMessage(null);
 		} ServerPlayerManager.getPlayersVersions().remove(event.getPlayer().getUniqueId());
 		ServerPlayerManager.getPlayersLoginTimes().remove(event.getPlayer().getUniqueId());
 		ServerPlayerManager.getBedrockPlayers().remove(event.getPlayer().getUniqueId());
@@ -223,10 +218,9 @@ public class BukkitEventManager extends EventManager {
 	
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
 		ServerPlayerManager playerManager = ServerPlayerManager.getInstance();
+		ChatPluginServerPlayer player = playerManager.getPlayer(event.getPlayer().getUniqueId());
 		
-		if (playerManager.isWorldEnabled(event.getFrom().getName())) {
-			ChatPluginServerPlayer player = playerManager.getPlayer(event.getPlayer().getUniqueId());
-			
+		if (player != null) {
 			if (playerManager.isWorldEnabled(player.getWorld())) { // enabled -> enabled
 				BossbarManager bossbarManager = BossbarManager.getInstance();
 				

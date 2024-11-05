@@ -134,13 +134,16 @@ public class PlayerPingManagerImpl extends PlayerPingManager {
 			return Collections.emptyList();
 		List<String> words = Arrays.asList(message.split(" "));
 		return words.contains("@everyone") && player.hasPermission("chatplugin.player-ping.everyone")
-				? ServerPlayerManager.getInstance().getPlayers().values().stream().filter(other -> other != player && (globalChat || !(((BaseChatPluginServerPlayer) other).getDistance(player.getX(), player.getY(), player.getZ()) > RangedChatManager.getInstance().getRange())))
+				? ServerPlayerManager.getInstance().getPlayers().values()
+						.stream()
+						.filter(other -> other != player && (globalChat || !(((BaseChatPluginServerPlayer) other).getDistance(player.getWorld(), player.getX(), player.getY(), player.getZ()) > RangedChatManager.getInstance().getRange())))
 						.collect(Collectors.toList())
-				: words.stream()
+				: words
+				.stream()
 				.filter(str -> str.startsWith("@") || !atSignRequired)
 				.map(str -> ServerPlayerManager.getInstance().getPlayer(atSignRequired ? str.substring(1) : str, false, false))
 				.distinct()
-				.filter(other -> other != null && other != player && (globalChat || !(((BaseChatPluginServerPlayer) other).getDistance(player.getX(), player.getY(), player.getZ()) > RangedChatManager.getInstance().getRange())))
+				.filter(other -> other != null && other != player && (globalChat || !(((BaseChatPluginServerPlayer) other).getDistance(player.getWorld(), player.getX(), player.getY(), player.getZ()) > RangedChatManager.getInstance().getRange())))
 				.collect(Collectors.toList());
 	}
 	

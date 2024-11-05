@@ -33,7 +33,6 @@ import org.spongepowered.api.Sponge;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.player.ChatPluginPlayer;
-import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -85,7 +84,7 @@ public class PlayerAdapter {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		return obj instanceof PlayerAdapter ? ChatPlugin.getInstance().isOnlineMode() ? ((PlayerAdapter) obj).getUUID().equals(getUUID()) : ((OfflinePlayer) obj).getName() == null ? false : ((OfflinePlayer) obj).getName().equalsIgnoreCase(getName()) : false;
+		return obj instanceof PlayerAdapter ? ChatPlugin.getInstance().isOnlineMode() ? ((PlayerAdapter) obj).getUUID().equals(getUUID()) : ((PlayerAdapter) obj).getName() == null ? false : ((PlayerAdapter) obj).getName().equalsIgnoreCase(getName()) : false;
 	}
 	
 	/**

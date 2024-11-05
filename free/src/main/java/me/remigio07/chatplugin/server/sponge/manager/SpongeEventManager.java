@@ -87,7 +87,7 @@ import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.bootstrap.SpongeBootstrapper;
 import me.remigio07.chatplugin.server.bossbar.NativeBossbar;
-import me.remigio07.chatplugin.server.chat.ChatManagerImpl;
+import me.remigio07.chatplugin.server.chat.BaseChatManager;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import me.remigio07.chatplugin.server.util.manager.VanishManagerImpl;
 
@@ -103,8 +103,6 @@ public class SpongeEventManager extends EventManager {
 		SpongeBootstrapper instance = SpongeBootstrapper.getInstance();
 		org.spongepowered.api.event.EventManager manager = Sponge.getEventManager();
 		
-		if (ChatManager.getInstance().isEnabled())
-			manager.registerListener(instance, MessageChannelEvent.Chat.class, Order.valueOf(ChatManager.getInstance().getChatEventPriority()), listener);
 		manager.registerListener(instance, ClientConnectionEvent.Join.class, Order.EARLY, listener);
 		manager.registerListener(instance, ClientConnectionEvent.Disconnect.class, Order.EARLY, listener);
 		manager.registerListener(instance, PlayerChangeClientSettingsEvent.class, Order.POST, listener);
@@ -181,7 +179,7 @@ public class SpongeEventManager extends EventManager {
 		}
 	}
 	
-	public void onMessageChannel$Chat(MessageChannelEvent.Chat event) {
+	public void onMessageChannel$Chat(MessageChannelEvent.Chat event) { // see SpongeChatManager
 		Player player = event.getCause().first(Player.class).get();
 		ChatPluginServerPlayer serverPlayer = ServerPlayerManager.getInstance().getPlayer(player.getUniqueId());
 		
@@ -189,7 +187,7 @@ public class SpongeEventManager extends EventManager {
 			return;
 		String[] args = { event.getRawMessage().toPlain(), Utils.deserializeSpongeText(event.getFormatter().format()) };
 		
-		if (!((ChatManagerImpl) ChatManager.getInstance()).handleChatEvent(serverPlayer, args)) {
+		if (!((BaseChatManager) ChatManager.getInstance()).handleChatEvent(serverPlayer, args)) {
 			applyScoreboard(ScoreboardEvent.CHAT, player);
 			
 			if (!ChatManager.getInstance().shouldOverrideChatEvent()) {
@@ -201,19 +199,17 @@ public class SpongeEventManager extends EventManager {
 	}
 	
 	public void onClientConnection$Join(ClientConnectionEvent.Join event) {
+		PlayerAdapter player = new PlayerAdapter(event.getTargetEntity());
+		
+		ServerPlayerManager.getPlayersVersions().put(player.getUUID(), IntegrationType.VIAVERSION.isEnabled() ? IntegrationType.VIAVERSION.get().getVersion(player) : IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(player) : VersionUtils.getVersion());
+		ServerPlayerManager.getPlayersLoginTimes().put(player.getUUID(), System.currentTimeMillis());
+		
+		if (IntegrationType.GEYSERMC.isEnabled() && IntegrationType.GEYSERMC.get().isBedrockPlayer(player))
+			ServerPlayerManager.getBedrockPlayers().add(player.getUUID());
 		if (ServerPlayerManager.getInstance().isWorldEnabled(event.getTargetEntity().getWorld().getName())) {
+			if (!ProxyManager.getInstance().isEnabled())
+				processJoinEvent(player, false);
 			event.setMessageCancelled(true);
-			
-			if (ProxyManager.getInstance().isEnabled())
-				return;
-			PlayerAdapter player = new PlayerAdapter(event.getTargetEntity());
-			
-			ServerPlayerManager.getPlayersVersions().put(player.getUUID(), IntegrationType.VIAVERSION.isEnabled() ? IntegrationType.VIAVERSION.get().getVersion(player) : IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(player) : VersionUtils.getVersion());
-			ServerPlayerManager.getPlayersLoginTimes().put(player.getUUID(), System.currentTimeMillis());
-			
-			if (IntegrationType.GEYSERMC.isEnabled() && IntegrationType.GEYSERMC.get().isBedrockPlayer(player))
-				ServerPlayerManager.getBedrockPlayers().add(player.getUUID());
-			processJoinEvent(player, false);
 		}
 	}
 	
@@ -244,8 +240,6 @@ public class SpongeEventManager extends EventManager {
 	}
 	
 	public void onClientConnection$Disconnect(ClientConnectionEvent.Disconnect event) {
-		if (ServerPlayerManager.getInstance().isWorldEnabled(event.getTargetEntity().getWorld().getName()))
-			event.setMessageCancelled(true);
 		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getTargetEntity().getUniqueId());
 		
 		if (player != null) {
@@ -254,6 +248,7 @@ public class SpongeEventManager extends EventManager {
 				QuitMessageManager.getInstance().getQuitPackets().remove(player.getUUID());
 			} AnticheatManager.getInstance().clearViolations(player);
 			ServerPlayerManager.getInstance().unloadPlayer(player.getUUID());
+			event.setMessageCancelled(true);
 		} ServerPlayerManager.getPlayersVersions().remove(event.getTargetEntity().getUniqueId());
 		ServerPlayerManager.getPlayersLoginTimes().remove(event.getTargetEntity().getUniqueId());
 		ServerPlayerManager.getBedrockPlayers().remove(event.getTargetEntity().getUniqueId());
@@ -470,13 +465,12 @@ public class SpongeEventManager extends EventManager {
 	}
 	
 	public void onMoveEntity$Teleport(MoveEntityEvent.Teleport event) {
-		if (!(event.getTargetEntity() instanceof Player))
+		if (event.isCancelled() || !(event.getTargetEntity() instanceof Player))
 			return;
 		ServerPlayerManager playerManager = ServerPlayerManager.getInstance();
+		ChatPluginServerPlayer player = playerManager.getPlayer(event.getTargetEntity().getUniqueId());
 		
-		if (playerManager.isWorldEnabled(event.getFromTransform().getExtent().getName())) {
-			ChatPluginServerPlayer player = playerManager.getPlayer(event.getTargetEntity().getUniqueId());
-			
+		if (player != null) {
 			if (playerManager.isWorldEnabled(player.getWorld())) { // enabled -> enabled
 				BossbarManager bossbarManager = BossbarManager.getInstance();
 				

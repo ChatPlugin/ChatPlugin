@@ -118,7 +118,7 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 				LogManager.log("Reload detected. This operation is not fully supported by ViaVersion and all players must be kicked in order to use its API.", 1);
 				players.forEach(player -> player.disconnect(reason));
 			} else {
-				if (ServerPlayerManager.getPlayersVersions().isEmpty()) {
+				if (playersVersions.isEmpty()) {
 					String message = null;
 					
 					if (file.exists())
@@ -130,11 +130,11 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 							for (String player : onlinePlayersData.getKeys()) {
 								UUID uuid = UUID.fromString(player);
 								
-								ServerPlayerManager.getPlayersVersions().put(uuid, Version.getVersion(onlinePlayersData.getString(player + ".version")));
-								ServerPlayerManager.getPlayersLoginTimes().put(uuid, onlinePlayersData.getLong(player + ".login-time"));
+								playersVersions.put(uuid, Version.getVersion(onlinePlayersData.getString(player + ".version")));
+								playersLoginTimes.put(uuid, onlinePlayersData.getLong(player + ".login-time"));
 								
 								if (onlinePlayersData.getBoolean(player + ".bedrock"))
-									ServerPlayerManager.getBedrockPlayers().add(uuid);
+									bedrockPlayers.add(uuid);
 							}
 						} catch (IOException e) {
 							message = e.getMessage();

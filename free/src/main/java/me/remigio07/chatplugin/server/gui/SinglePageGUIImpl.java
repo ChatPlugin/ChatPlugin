@@ -104,14 +104,15 @@ public class SinglePageGUIImpl extends SinglePageGUI {
 			
 			if (event.isCancelled())
 				return false;
-			if (openActions)
-				layout.getOpenActions().perform(player, this);
 			if (this instanceof PerPlayer)
 				((PerPlayer) this).refreshUnloadTask();
 			TaskManager.runSync(() -> {
+				viewers.add(player);
 				player.openInventory(getInventory(player.getLanguage()));
 				Utils.setTitle(player, getTitle(player.getLanguage()), layout.getRows());
-				viewers.add(player);
+				
+				if (openActions)
+					layout.getOpenActions().perform(player, this);
 			}, 0L);
 			return true;
 		} else player.sendTranslatedMessage("guis.still-loading", getTitle(player.getLanguage()));

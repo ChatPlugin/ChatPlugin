@@ -194,14 +194,15 @@ public class FillableGUIImpl<T> extends FillableGUI<T> {
 			
 			if (event.isCancelled())
 				return false;
-			if (openActions)
-				layout.getOpenActions().perform(player, this);
 			if (this instanceof PerPlayer)
 				((PerPlayer<T>) this).refreshUnloadTask();
 			TaskManager.runSync(() -> {
+				viewers.put(player, page);
 				player.openInventory(getInventory(player.getLanguage(), page));
 				Utils.setTitle(player, getTitle(player.getLanguage(), page), layout.getRows());
-				viewers.put(player, page);
+				
+				if (openActions)
+					layout.getOpenActions().perform(player, this);
 			}, 0L);
 			return true;
 		} else player.sendTranslatedMessage("guis.still-loading", getTitle(player.getLanguage(), page));

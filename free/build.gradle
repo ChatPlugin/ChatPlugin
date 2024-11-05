@@ -19,13 +19,13 @@ dependencies {
 	
 	compileOnly 'org.spongepowered:spongecommon:1.12.2-7.4.7:dev@jar'
 	
-	compileOnly files(libsDir + 'UltraCosmetics-3.3.jar')
-	compileOnly files(libsDir + 'GadgetsMenu-4.9.3.jar')
-	compileOnly files(libsDir + 'Vulcan-2.7.5.jar')
+	compileOnly files(libsDir + 'CombatLogX-11.5.0.0.1242.jar')
+	compileOnly files(libsDir + 'GadgetsMenu-4.15.3.jar')
 	compileOnly files(libsDir + 'Matrix-6.8.19.jar')
 	compileOnly files(libsDir + 'MVdWPlaceholderAPI-3.1.1.jar')
 	compileOnly files(libsDir + 'Negativity-2.7.1.jar')
-	compileOnly files(libsDir + 'CombatLogX-11.4.0.0.1156.jar')
+	compileOnly files(libsDir + 'UltraCosmetics-3.8.jar')
+	compileOnly files(libsDir + 'Vulcan-2.9.0.jar')
 	
 	compileOnly 'net.kyori:adventure-platform-bukkit:4.3.0'
 	compileOnly 'net.kyori:adventure-platform-spongeapi:4.3.0'

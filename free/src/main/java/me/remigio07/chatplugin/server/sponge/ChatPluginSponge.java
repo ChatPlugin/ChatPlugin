@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
@@ -82,7 +81,6 @@ public class ChatPluginSponge extends ChatPlugin {
 			managers.loadManagers();
 			SpongeCommandsHandler.registerCommands();
 			me.remigio07.chatplugin.common.util.Utils.startUpdateChecker();
-			TaskManager.scheduleAsync(() -> LogManager.log(me.remigio07.chatplugin.common.util.Utils.FREE_VERSION_ADS[ThreadLocalRandom.current().nextInt(me.remigio07.chatplugin.common.util.Utils.FREE_VERSION_ADS.length)], 0), 10800000L, 10800000L); // yeah, I've put it right here... remove it if you want, I guess 🙄
 			TaskManager.runAsync(() -> {
 				long ms2 = System.currentTimeMillis();
 				

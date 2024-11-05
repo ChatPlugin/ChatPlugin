@@ -48,17 +48,6 @@ import net.md_5.bungee.api.ProxyServer;
 
 public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 	
-	public static final String[] STARTUP_MESSAGES = new String[] {
-			"loading 0s and 1s",
-			"loading stuff",
-			"hold tight",
-			"ready to launch"
-	};
-	public static final String[] FREE_VERSION_ADS = new String[] {
-			"You are running the free version of the plugin. Buy premium to unlock new features and get rid of ads.",
-			"Did you know the premium version includes custom GUIs? Buy premium to unlock new features and get rid of ads.",
-			"The paid version supports multi-instance synchronization. Buy premium to unlock new features and get rid of ads."
-	};
 	public static final Library[] RELOCATION_LIBS = new Library[] {
 			Library.ASM,
 			Library.ASM_COMMONS,

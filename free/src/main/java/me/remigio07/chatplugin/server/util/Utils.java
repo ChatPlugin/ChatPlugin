@@ -18,13 +18,16 @@ package me.remigio07.chatplugin.server.util;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.advancement.Advancement;
 
+import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
+import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
@@ -39,16 +42,23 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public class Utils extends me.remigio07.chatplugin.api.server.util.Utils {
 	
-	public static boolean reportPerm(ChatPluginServerPlayer player, String permission) {
-		if (permission.isEmpty() || player.hasPermission(permission))
-			return true;
-		player.sendTranslatedMessage("misc.no-permission");
-		return false;
-	}
-	
+	public static final String[] FREE_VERSION_ADS = new String[] {
+			"You are running the free version of the plugin.",
+			"Did you know the premium version includes a punishment system?",
+			"Did you know the premium version includes Discord and Telegram integrations?",
+			"Did you know the premium version includes an advanced chat logging system?",
+			"The paid version supports multi-instance synchronization.",
+			"The paid version supports exclusive anticheat integrations.",
+			"The paid version supports proxy softwares for networks.",
+	};
 	private static boolean isAtLeastV1_20_5 = VersionUtils.getVersion().isAtLeast(Version.V1_20_5); 
 	private static String[] ATTEMPTS = new String[] { "a", "b", "c", "d", "e", "f" };
 	public static Map<UUID, String> inventoryTitles = new HashMap<>();
+	
+	static {
+		if (!ChatPlugin.getInstance().isPremium()) // yeah, I've put it right here... remove it if you want, I guess 🙄
+			TaskManager.scheduleAsync(() -> LogManager.log(FREE_VERSION_ADS[ThreadLocalRandom.current().nextInt(FREE_VERSION_ADS.length)] + " Buy premium to unlock new features and get rid of ads.", 0), 14400000L, 14400000L);
+	}
 	
 	@SuppressWarnings("deprecation")
 	public static void setTitle(ChatPluginServerPlayer viewer, String title, int rows) {

@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -85,7 +84,6 @@ public class ChatPluginBukkit extends ChatPlugin {
 			managers.loadManagers();
 			BukkitCommandsHandler.registerCommands();
 			Utils.startUpdateChecker();
-			TaskManager.scheduleAsync(() -> LogManager.log(Utils.FREE_VERSION_ADS[ThreadLocalRandom.current().nextInt(Utils.FREE_VERSION_ADS.length)], 0), 10800000L, 10800000L); // yeah, I've put it right here... remove it if you want, I guess 🙄
 			TaskManager.runAsync(() -> {
 				long ms2 = System.currentTimeMillis();
 				

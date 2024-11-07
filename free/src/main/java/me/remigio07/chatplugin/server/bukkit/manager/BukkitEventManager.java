@@ -359,7 +359,7 @@ public class BukkitEventManager extends EventManager {
 		if (scoreboard != null) {
 			ChatPluginServerPlayer serverPlayer = ServerPlayerManager.getInstance().getPlayer(player.getUniqueId());
 			
-			if (serverPlayer != null) {
+			if (serverPlayer != null && serverPlayer.getScoreboard() != null) {
 				((EventScoreboard) scoreboard).prepareEvent(serverPlayer, args);
 				scoreboard.addPlayer(serverPlayer);
 			}

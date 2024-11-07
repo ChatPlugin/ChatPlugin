@@ -44,7 +44,7 @@ public class UUIDFetcherImpl extends UUIDFetcher {
 		HttpsURLConnection connection = (HttpsURLConnection) new URI(url).toURL().openConnection();
 		
 		connection.setRequestProperty("Content-Type", "application/json");
-		connection.setRequestProperty("User-Agent", "Mozilla/5.0 +https://remigio07.me/chatplugin ChatPlugin/" + ChatPlugin.VERSION);
+		connection.setRequestProperty("User-Agent", Utils.USER_AGENT);
 		connection.setConnectTimeout(5000);
 		
 		int responseCode = connection.getResponseCode();

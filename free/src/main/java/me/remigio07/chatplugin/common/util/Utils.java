@@ -126,7 +126,7 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 	public static InputStream download(URL url) throws IOException {
 		HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 		
-		connection.setRequestProperty("User-Agent", "Mozilla/5.0 +https://remigio07.me/chatplugin ChatPlugin/" + ChatPlugin.VERSION);
+		connection.setRequestProperty("User-Agent", USER_AGENT);
 		connection.setConnectTimeout(5000);
 		return connection.getInputStream();
 	}

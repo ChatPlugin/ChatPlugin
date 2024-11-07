@@ -27,7 +27,6 @@ import java.util.concurrent.CompletableFuture;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.event.ip_lookup.IPLookupCacheEvent;
 import me.remigio07.chatplugin.api.common.event.ip_lookup.IPLookupCleanCacheEvent;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookup;
@@ -144,7 +143,8 @@ public abstract class BaseIPLookupManager extends IPLookupManager {
 		HttpsURLConnection connection = (HttpsURLConnection) new URI(url).toURL().openConnection();
 		
 		connection.setRequestProperty("Authorization", "Basic " + base64AuthString);
-		connection.setRequestProperty("User-Agent", "Mozilla/5.0 +https://remigio07.me/chatplugin ChatPlugin/" + ChatPlugin.VERSION);
+		connection.setRequestProperty("Accept", "application/json");
+		connection.setRequestProperty("User-Agent", Utils.USER_AGENT);
 		connection.setConnectTimeout(5000);
 		
 		StringBuilder output = new StringBuilder();

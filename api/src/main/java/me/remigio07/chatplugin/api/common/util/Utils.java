@@ -32,6 +32,7 @@ import java.util.stream.Stream;
 import org.bukkit.Bukkit;
 import org.spongepowered.api.Sponge;
 
+import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagers;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
@@ -56,6 +57,13 @@ public class Utils {
 	 * <p><strong>Content:</strong> "N/A"</p>
 	 */
 	public static final String NOT_APPLICABLE = "N/A";
+	
+	/**
+	 * ChatPlugin's default user agent.
+	 * 
+	 * <p><strong>Content:</strong> "Mozilla/5.0 +https://remigio07.me/chatplugin ChatPlugin/" + {@link ChatPlugin#VERSION}</p>
+	 */
+	public static final String USER_AGENT = "Mozilla/5.0 +https://remigio07.me/chatplugin ChatPlugin/" + ChatPlugin.VERSION;
 	
 	/**
 	 * UUID representing the <a href=https://wikipedia.org/wiki/Universally_unique_identifier#Special_UUIDs>nil UUID</a>.

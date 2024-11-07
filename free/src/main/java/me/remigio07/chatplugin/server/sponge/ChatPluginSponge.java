@@ -49,7 +49,6 @@ import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.bootstrap.SpongeBootstrapper;
 import me.remigio07.chatplugin.common.util.manager.SLF4JLogManager;
 import me.remigio07.chatplugin.server.command.BaseCommand;
-import me.remigio07.chatplugin.server.sponge.manager.SpongeEventManager;
 import me.remigio07.chatplugin.server.storage.configuration.ServerConfigurationManager;
 import me.remigio07.chatplugin.server.util.bstats.ServerMetrics;
 import me.remigio07.chatplugin.server.util.manager.ChatPluginServerManagers;
@@ -88,11 +87,9 @@ public class ChatPluginSponge extends ChatPlugin {
 					LogManager.log("[ASYNC] Metrics loaded in {0} ms.", 4, System.currentTimeMillis() - ms2);
 			}, 0L);
 		} catch (ChatPluginManagerException e) {
-			String message = e.getMessage() + ". Contact support if you are unable to solve the issue.";
-			
 			if (LogManager.getInstance() == null)
-				System.err.println(message);
-			else LogManager.log(message, 2);
+				System.err.println(e.getMessage() + ". Contact support if you are unable to solve the issue.");
+			else LogManager.log(e.getMessage() + ". Contact support if you are unable to solve the issue.", 2);
 			return -1;
 		} LogManager.log("Ready. Plugin loaded successfully in {0} ms.", 0, startupTime = (int) (System.currentTimeMillis() - ms));
 		new ChatPluginLoadEvent(startupTime).call();
@@ -141,7 +138,7 @@ public class ChatPluginSponge extends ChatPlugin {
 			new ChatPluginUnloadEvent().call();
 			// Sponge's crash-proof stuff
 			SpongeCommandsHandler.unregisterCommands();
-			Sponge.getEventManager().unregisterListeners(((SpongeEventManager) SpongeEventManager.getInstance()).getListener());
+			Sponge.getEventManager().unregisterPluginListeners(SpongeBootstrapper.getInstance());
 			// ChatPlugin's stuff which might crash
 			managers.unloadManagers();
 			LogManager.log("Plugin unloaded successfully in {0} ms.", 3, ms = System.currentTimeMillis() - ms);

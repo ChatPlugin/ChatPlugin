@@ -333,7 +333,7 @@ public class ChatPluginCommand extends BaseCommand {
 						if (manager.equalsIgnoreCase(args[1])) {
 							if (Debugger.getEnabledManagersNames().contains(manager)) {
 								sender.sendMessage(language.getMessage("misc.debug.manager.info", manager + "Manager"));
-								sender.sendMessage(Debugger.getContent(Utils.getOriginalClass(ChatPluginManagers.getInstance().getManager(manager))).replaceAll(" +", " ").trim());
+								sender.sendMessage(" " + Debugger.getContent(Utils.getOriginalClass(ChatPluginManagers.getInstance().getManager(manager))).trim().replaceAll(" +", " "));
 							} else sender.sendMessage(language.getMessage("misc.debug.manager.disabled"));
 							return;
 						}

@@ -47,6 +47,7 @@ import me.remigio07.chatplugin.server.command.BaseCommand;
 import me.remigio07.chatplugin.server.command.CommandsHandler;
 import me.remigio07.chatplugin.server.command.PlayerCommand;
 
+@SuppressWarnings("unchecked")
 public class BukkitCommandsHandler extends CommandsHandler implements CommandExecutor, TabCompleter {
 	
 	public static final BukkitCommandsHandler HANDLER = new BukkitCommandsHandler();
@@ -55,11 +56,6 @@ public class BukkitCommandsHandler extends CommandsHandler implements CommandExe
 	private static Map<String, Command> knownCommands;
 	
 	static {
-		init();
-	}
-	
-	@SuppressWarnings({ "all", "unchecked" })
-	private static void init() {
 		try {
 			pluginCommandConstructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
 			Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
@@ -78,7 +74,6 @@ public class BukkitCommandsHandler extends CommandsHandler implements CommandExe
 	
 	public static void registerCommands() {
 		registerCommands0();
-		unregisterCommands(false);
 		
 		for (String command : commands.keySet()) {
 			PluginCommand bukkitCommand = registerCommand(command);
@@ -116,8 +111,10 @@ public class BukkitCommandsHandler extends CommandsHandler implements CommandExe
 			BaseCommand[] subcommands = commands.get(command);
 			
 			for (String alias : subcommands[subcommands.length - 1].getMainArgs()) {
-				knownCommands.remove(alias);
-				knownCommands.remove("chatplugin:" + alias);
+				if (!disabledCommands.contains(alias)) {
+					knownCommands.remove(alias);
+					knownCommands.remove("chatplugin:" + alias);
+				}
 			}
 		} if (sync)
 			syncCommands();
@@ -165,6 +162,8 @@ public class BukkitCommandsHandler extends CommandsHandler implements CommandExe
 	public List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command bukkitCommand, String label, String[] args) {
 		List<String> list = null;
 		
+		if (label.contains(":"))
+			label = label.substring(11);
 		for (BaseCommand[] commands : commands.values()) {
 			if (commands[commands.length - 1].getMainArgs().contains(label.toLowerCase())) {
 				for (int i = 0; i < commands.length; i++) {

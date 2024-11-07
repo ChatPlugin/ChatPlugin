@@ -59,20 +59,17 @@ public class ChatColorCommand extends BaseCommand {
 			if (!args[0].equals("#")) {
 				if (reportOnlyPlayers(sender)) {
 					ChatPluginServerPlayer player = sender.toServerPlayer();
+					ChatColor color = getColor(args[0]);
 					
-					if (player != null) {
-						ChatColor color = getColor(args[0]);
-						
-						if (color != null) {
-							if (color.isDefaultColor() || player.hasPermission(getPermission() + ".hex")) {
-								player.setChatColor(color);
-								
-								if (color == ChatColor.RESET)
-									player.sendTranslatedMessage("commands.chatcolor.reset.self");
-								else player.sendTranslatedMessage("commands.chatcolor.set.self", unformatColorString(color.isDefaultColor() ? "&" + color.getCode() : color.name(), (VersionUtils.getVersion().isAtLeast(Version.V1_16) ? color : color.getClosestDefaultColor()).toString()));
-							} else player.sendTranslatedMessage("commands.chatcolor.no-permission");
-						} else player.sendTranslatedMessage("commands.chatcolor.invalid-color", unformatColorString(args[0], "&r"));
-					} else sender.sendMessage(language.getMessage("misc.disabled-world"));
+					if (color != null) {
+						if (color.isDefaultColor() || player.hasPermission(getPermission() + ".hex")) {
+							player.setChatColor(color);
+							
+							if (color == ChatColor.RESET)
+								player.sendTranslatedMessage("commands.chatcolor.reset.self");
+							else player.sendTranslatedMessage("commands.chatcolor.set.self", unformatColorString(color.isDefaultColor() ? "&" + color.getCode() : color.name(), (VersionUtils.getVersion().isAtLeast(Version.V1_16) ? color : color.getClosestDefaultColor()).toString()));
+						} else player.sendTranslatedMessage("commands.chatcolor.no-permission");
+					} else player.sendTranslatedMessage("commands.chatcolor.invalid-color", unformatColorString(args[0], "&r"));
 				}
 			} else sender.sendMessage(language.getMessage("commands.chatcolor.hex-usage", String.format("%06x", ThreadLocalRandom.current().nextInt(16777216)).toUpperCase()));
 		} else if (args.length == 2) {

@@ -50,7 +50,6 @@ import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.common.util.manager.JavaLogManager;
-import me.remigio07.chatplugin.server.bukkit.manager.BukkitEventManager;
 import me.remigio07.chatplugin.server.storage.configuration.ServerConfigurationManager;
 import me.remigio07.chatplugin.server.util.bstats.ServerMetrics;
 import me.remigio07.chatplugin.server.util.manager.ChatPluginServerManagers;
@@ -91,11 +90,9 @@ public class ChatPluginBukkit extends ChatPlugin {
 					LogManager.log("[ASYNC] Metrics loaded in {0} ms.", 4, System.currentTimeMillis() - ms2);
 			}, 0L);
 		} catch (ChatPluginManagerException e) {
-			String message = e.getMessage() + ". Contact support if you are unable to solve the issue.";
-			
 			if (LogManager.getInstance() == null)
-				System.err.println(message);
-			else LogManager.log(message, 2);
+				System.err.println(e.getMessage() + ". Contact support if you are unable to solve the issue.");
+			else LogManager.log(e.getMessage() + ". Contact support if you are unable to solve the issue.", 2);
 			return -1;
 		} LogManager.log("Ready. Plugin loaded successfully in {0} ms.", 0, startupTime = (int) (System.currentTimeMillis() - ms));
 		new ChatPluginLoadEvent(startupTime).call();
@@ -114,6 +111,7 @@ public class ChatPluginBukkit extends ChatPlugin {
 		try {
 			LogManager.log("Reloading ChatPlugin...", 0);
 			managers.reloadManagers();
+			BukkitCommandsHandler.unregisterCommands(false);
 			BukkitCommandsHandler.registerCommands();
 			LogManager.log("Plugin reloaded successfully in {0} ms.", 0, lastReloadTime = (int) (System.currentTimeMillis() - ms));
 			new ChatPluginReloadEvent(lastReloadTime).call();
@@ -165,7 +163,7 @@ public class ChatPluginBukkit extends ChatPlugin {
 			new ChatPluginUnloadEvent().call();
 			// Bukkit's crash-proof stuff
 			BukkitCommandsHandler.unregisterCommands(true);
-			HandlerList.unregisterAll(((BukkitEventManager) BukkitEventManager.getInstance()).getListener());
+			HandlerList.unregisterAll(BukkitBootstrapper.getInstance());
 			// ChatPlugin's stuff which might crash
 			managers.unloadManagers();
 			LogManager.log("Plugin unloaded successfully in {0} ms.", 3, ms = System.currentTimeMillis() - ms);

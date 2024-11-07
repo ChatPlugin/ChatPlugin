@@ -67,7 +67,7 @@ public abstract class CommandsHandler {
 	protected static long ms;
 	
 	protected static void registerCommands0() {
-		if (ms == 0) {
+		if (!ChatPlugin.getInstance().isPremium()) {
 			ms = System.currentTimeMillis();
 			total = 0;
 			

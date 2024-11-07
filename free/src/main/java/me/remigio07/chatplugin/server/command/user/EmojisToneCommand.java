@@ -57,26 +57,23 @@ public class EmojisToneCommand extends BaseCommand {
 			} else if (args.length == 1) {
 				if (reportOnlyPlayers(sender)) {
 					ChatPluginServerPlayer player = sender.toServerPlayer();
+					ChatColor tone = getColor(args[0]);
+					List<ChatColor> tones = InstantEmojisManager.getInstance().getTones();
 					
-					if (player != null) {
-						ChatColor tone = getColor(args[0]);
-						List<ChatColor> tones = InstantEmojisManager.getInstance().getTones();
+					if (tone == ChatColor.RESET || tones.contains(tone)) {
+						int index = 0;
 						
-						if (tone == ChatColor.RESET || tones.contains(tone)) {
-							int index = 0;
-							
-							for (int i = 0; i < tones.size(); i++)
-								if (tone.equals(tones.get(i))) {
-									index = i;
-									break;
-								}
-							player.setEmojisTone(tone);
-							
-							if (tone == ChatColor.RESET)
-								player.sendTranslatedMessage("commands.emojistone.reset.self");
-							else player.sendTranslatedMessage("commands.emojistone.set.self", index, unformatColorString(tone.isDefaultColor() ? "&" + tone.getCode() : tone.name(), (VersionUtils.getVersion().isAtLeast(Version.V1_16) ? tone : tone.getClosestDefaultColor()).toString()));
-						} else player.sendTranslatedMessage("commands.emojistone.invalid-tone", unformatColorString(args[0], "&r"));
-					} else sender.sendMessage(language.getMessage("misc.disabled-world"));
+						for (int i = 0; i < tones.size(); i++)
+							if (tone.equals(tones.get(i))) {
+								index = i;
+								break;
+							}
+						player.setEmojisTone(tone);
+						
+						if (tone == ChatColor.RESET)
+							player.sendTranslatedMessage("commands.emojistone.reset.self");
+						else player.sendTranslatedMessage("commands.emojistone.set.self", index, unformatColorString(tone.isDefaultColor() ? "&" + tone.getCode() : tone.name(), (VersionUtils.getVersion().isAtLeast(Version.V1_16) ? tone : tone.getClosestDefaultColor()).toString()));
+					} else player.sendTranslatedMessage("commands.emojistone.invalid-tone", unformatColorString(args[0], "&r"));
 				}
 			} else if (args.length == 2) {
 				if (sender.hasPermission(getPermission() + ".others")) {

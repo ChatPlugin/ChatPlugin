@@ -34,7 +34,7 @@ public class NegativityListener implements Listeners {
 	public void onCheat(PlayerCheatAlertEvent event) {
 		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getPlayer().getUniqueId());
 		
-		if (player == null)
+		if (event.isCancelled() || player == null)
 			return;
 		int violations = IntegrationType.NEGATIVITY.get().getViolations(player, event.getCheat().getKey().getLowerKey());
 		

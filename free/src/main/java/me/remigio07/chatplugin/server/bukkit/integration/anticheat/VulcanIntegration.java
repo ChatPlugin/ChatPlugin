@@ -63,7 +63,7 @@ public class VulcanIntegration extends ChatPluginBukkitIntegration<AnticheatInte
 				VulcanFlagEvent flagEvent = (VulcanFlagEvent) event;
 				ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(flagEvent.getPlayer().getUniqueId());
 				
-				if (player == null)
+				if (flagEvent.isCancelled() || player == null)
 					return;
 				int violations = flagEvent.getCheck().getVl() + 1;
 				

@@ -57,7 +57,7 @@ public class MatrixIntegration extends ChatPluginBukkitIntegration<AnticheatInte
 				PlayerViolationEvent violationEvent = (PlayerViolationEvent) event;
 				ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(violationEvent.getPlayer().getUniqueId());
 				
-				if (player == null)
+				if (violationEvent.isCancelled() || player == null)
 					return;
 				int violations = getViolations(player, violationEvent.getHackType().name());
 				

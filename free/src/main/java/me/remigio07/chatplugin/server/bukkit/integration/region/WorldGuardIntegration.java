@@ -33,7 +33,6 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 
 import me.remigio07.chatplugin.api.common.event.EventManager;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
-import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.server.integration.region.RegionIntegration;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
@@ -56,7 +55,7 @@ public class WorldGuardIntegration extends ChatPluginBukkitIntegration<RegionInt
 			
 			@Override
 			public void execute(Listener listener, Event event) throws EventException {
-				if (((ServerPlayerManager) PlayerManager.getInstance()).isWorldEnabled(((PlayerMoveEvent) event).getTo().getWorld().getName())) {
+				if (!((PlayerMoveEvent) event).isCancelled() && ServerPlayerManager.getInstance().isWorldEnabled(((PlayerMoveEvent) event).getTo().getWorld().getName())) {
 					Location from = ((PlayerMoveEvent) event).getFrom();
 					Location to = ((PlayerMoveEvent) event).getTo();
 					
@@ -65,17 +64,12 @@ public class WorldGuardIntegration extends ChatPluginBukkitIntegration<RegionInt
 						String newRegion = getRegionID(to);
 						
 						if (oldRegion == null) {
-							if (newRegion != null) {
-								// 1
+							if (newRegion != null)
 								((BukkitEventManager) EventManager.getInstance()).applyScoreboard(ScoreboardEvent.REGION_ENTER, ((PlayerMoveEvent) event).getPlayer(), newRegion);
-							} // else 3 - do nothing
-						} else if (newRegion == null) {
-							// 2
+						} else if (newRegion == null)
 							((BukkitEventManager) EventManager.getInstance()).applyScoreboard(ScoreboardEvent.REGION_LEAVE, ((PlayerMoveEvent) event).getPlayer(), oldRegion);
-						} else if (!oldRegion.equals(newRegion)) {
-							// 4
+						else if (!oldRegion.equals(newRegion))
 							((BukkitEventManager) EventManager.getInstance()).applyScoreboard(ScoreboardEvent.REGION_ENTER, ((PlayerMoveEvent) event).getPlayer(), newRegion);
-						} // else 5 - do nothing
 					}
 				}
 			}

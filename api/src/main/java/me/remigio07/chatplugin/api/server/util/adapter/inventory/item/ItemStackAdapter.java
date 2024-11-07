@@ -16,7 +16,6 @@
 package me.remigio07.chatplugin.api.server.util.adapter.inventory.item;
 
 import java.awt.Color;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URL;
@@ -29,6 +28,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -625,16 +625,16 @@ public class ItemStackAdapter implements Cloneable {
 				if (cache == null) {
 					TaskManager.runAsync(() -> {
 						try {
-							UUID uuid = UUIDFetcher.getInstance().getOnlineUUID(skullOwner);
+							UUID uuid = UUIDFetcher.getInstance().getOnlineUUID(skullOwner).get();
 							
-							if (uuid == null) {
+							if (uuid.equals(Utils.NIL_UUID)) {
 								nonPremiumUsernames.add(skullOwner);
 								future.complete(this);
 								return;
-							} skullsCache.put(skullOwner, new Object[] { UUIDFetcher.getInstance().getSkinTextureURL(uuid), uuid });
+							} skullsCache.put(skullOwner, new Object[] { UUIDFetcher.getInstance().getSkinTextureURL(uuid).get(), uuid });
 							setSkullTextureURL((String) skullsCache.get(skullOwner)[0], uuid);
-						} catch (IOException e) {
-							LogManager.log("IOException occurred while setting a skull's owner for an item stack: {0}", 2, e.getMessage());
+						} catch (InterruptedException | ExecutionException e) {
+							LogManager.log("{0} occurred while setting a skull's owner for an item stack: {1}", 2, e.getClass().getSimpleName(), e.getMessage());
 						} future.complete(this);
 					}, 0L);
 					return future;

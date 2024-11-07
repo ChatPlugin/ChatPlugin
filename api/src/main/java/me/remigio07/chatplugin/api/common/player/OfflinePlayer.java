@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.sql.SQLException;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
@@ -100,7 +101,7 @@ public class OfflinePlayer {
 	 * Gets an offline player by their UUID.
 	 * 
 	 * <p>In order to obtain their name, the following operations will be performed:
-	 * 	<ul>
+	 * 	<ol>
 	 * 		<li>if they are online, use the online player's name</li>
 	 * 		<li>check if they are saved in {@link DataContainer#PLAYERS}</li>
 	 * 		<li>check the {@link UUID#version()}:
@@ -109,10 +110,10 @@ public class OfflinePlayer {
 	 * 				<br>&emsp;&emsp;if true, fetch the name from Mojang's servers
 	 * 				<br>&emsp;&emsp;if false, set name to <code>null</code> and UUID to {@link Utils#NIL_UUID}
 	 * 		</li>
-	 * 	</ul>
+	 * 	</ol>
 	 * 
-	 * <strong>Note:</strong> this constructor might take
-	 * some time to be executed: async calls are recommended.
+	 * <p><strong>Note:</strong> this constructor may take some time to be executed
+	 * when {@link ChatPlugin#isOnlineMode()}: async calls are recommended.</p>
 	 * 
 	 * @param uuid Player's UUID
 	 * @throws UnsupportedOperationException When trying to obtain the name using an offline UUID
@@ -127,10 +128,14 @@ public class OfflinePlayer {
 			
 			if (name == null) {
 				if (uuid.version() == 4) {
-					this.name = UUIDFetcher.getInstance().getOnlineName(uuid);
-					
-					if (this.name == null)
-						this.uuid = Utils.NIL_UUID;
+					try {
+						this.name = UUIDFetcher.getInstance().getOnlineName(uuid).get();
+						
+						if (this.name == null)
+							this.uuid = Utils.NIL_UUID;
+					} catch (InterruptedException | ExecutionException e) {
+						throw new IOException(e);
+					}
 				} else throw new UnsupportedOperationException("Unable to obtain a player name from an offline UUID");
 			} else this.name = name;
 		} else name = player.getName();
@@ -141,7 +146,7 @@ public class OfflinePlayer {
 	 * Gets an offline player by their name.
 	 * 
 	 * <p>In order to obtain their UUID, the following operations will be performed:
-	 * 	<ul>
+	 * 	<ol>
 	 * 		<li>if specified name <code>!</code>{@link Utils#isValidUsername(String)}, throw {@link IllegalArgumentException}</li>
 	 * 		<li>if they are online, use the online player's UUID and name</li>
 	 * 		<li>check if they are saved in {@link DataContainer#PLAYERS}:
@@ -152,10 +157,10 @@ public class OfflinePlayer {
 	 * 					<br>&emsp;&emsp;&emsp;if true, fetch the name from Mojang's servers
 	 * 					<br>&emsp;&emsp;&emsp;if false, set name to <code>null</code> and UUID to {@link Utils#NIL_UUID}
 	 * 		</li>
-	 * 	</ul>
+	 * 	</ol>
 	 * 
-	 * <strong>Note:</strong> this constructor might take
-	 * some time to be executed: async calls are recommended.
+	 * <p><strong>Note:</strong> this constructor may take some time to be executed
+	 * when {@link ChatPlugin#isOnlineMode()}: async calls are recommended.</p>
 	 * 
 	 * @param name Player's name
 	 * @throws IllegalArgumentException If specified name <code>!</code>{@link Utils#isValidUsername(String)}
@@ -172,9 +177,13 @@ public class OfflinePlayer {
 			
 			if (uuid == null) {
 				if (ChatPlugin.getInstance().isOnlineMode()) {
-					UUID onlineUUID = UUIDFetcher.getInstance().getOnlineUUID(name);
-					this.uuid = onlineUUID;
-					this.name = onlineUUID.equals(Utils.NIL_UUID) ? null : UUIDFetcher.getInstance().getOnlineName(onlineUUID);
+					try {
+						UUID onlineUUID = UUIDFetcher.getInstance().getOnlineUUID(name).get();
+						this.uuid = onlineUUID;
+						this.name = onlineUUID.equals(Utils.NIL_UUID) ? null : UUIDFetcher.getInstance().getOnlineName(onlineUUID).get();
+					} catch (InterruptedException | ExecutionException e) {
+						throw new IOException(e);
+					}
 				} else {
 					this.uuid = UUIDFetcher.getInstance().getOfflineUUID(name);
 					this.name = name;

@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -35,6 +36,8 @@ public abstract class UUIDFetcher {
 	/**
 	 * Reads the content at the specified URL.
 	 * 
+	 * <p>It has a connection timeout of 5 seconds.</p>
+	 * 
 	 * @param url URL to read
 	 * @return URL's response code and content
 	 * @throws URISyntaxException If the URL is invalid
@@ -46,12 +49,13 @@ public abstract class UUIDFetcher {
 	 * Calls {@link #getOnlineUUID(String)} or {@link #getOfflineUUID(String)}
 	 * depending on {@link ChatPlugin#isOnlineMode()}.
 	 * 
+	 * <p>The future throws {@link IOException} if a connection or JSON error occurs.</p>
+	 * 
 	 * @param name Player's name
 	 * @return Player's UUID
 	 * @throws IllegalArgumentException If specified name !{@link Utils#isValidUsername(String)}
-	 * @throws IOException If a connection or JSON error occurrs
 	 */
-	public abstract UUID getUUID(String name) throws IOException;
+	public abstract CompletableFuture<UUID> getUUID(String name);
 	
 	/**
 	 * Fetches the specified player's online UUID v4 from Mojang's servers.
@@ -59,15 +63,13 @@ public abstract class UUIDFetcher {
 	 * <p>Will return {@link Utils#NIL_UUID} if the specified
 	 * name does not belong to a premium account.</p>
 	 * 
-	 * <p><strong>Note:</strong> this method might take some
-	 * time to be executed: async calls are recommended.</p>
+	 * <p>The future throws {@link IOException} if a connection or JSON error occurs.</p>
 	 * 
 	 * @param name Player's name
 	 * @return Player's online UUID
 	 * @throws IllegalArgumentException If specified name !{@link Utils#isValidUsername(String)}
-	 * @throws IOException If a connection or JSON error occurrs
 	 */
-	public abstract UUID getOnlineUUID(String name) throws IOException;
+	public abstract CompletableFuture<UUID> getOnlineUUID(String name);
 	
 	/**
 	 * Calculates the specified player's offline UUID
@@ -85,15 +87,13 @@ public abstract class UUIDFetcher {
 	 * <p>Will return <code>null</code> if the specified
 	 * UUID does not belong to a premium account.</p>
 	 * 
-	 * <p><strong>Note:</strong> this method might take some
-	 * time to be executed: async calls are recommended.</p>
+	 * <p>The future throws {@link IOException} if a connection or JSON error occurs.</p>
 	 * 
 	 * @param uuid Player's online UUID
 	 * @return Player's name
-	 * @throws IOException If a connection or JSON error occurrs
 	 */
 	@Nullable(why = "The specified UUID may not belong to any premium account")
-	public abstract String getOnlineName(UUID uuid) throws IOException;
+	public abstract CompletableFuture<String> getOnlineName(UUID uuid);
 	
 	/**
 	 * Gets a premium player's skin's texture's URL.
@@ -101,19 +101,17 @@ public abstract class UUIDFetcher {
 	 * <p>Will return <code>null</code> if the specified
 	 * name does not belong to a premium account.</p>
 	 * 
+	 * <p>The future throws {@link IOException} if a connection or JSON error occurs.</p>
+	 * 
 	 * <p>The URL will point to <code>textures.minecraft.net</code> or to
 	 * <code>api.mineatar.io</code> if a rate limit is encountered.</p>
-	 * 
-	 * <p><strong>Note:</strong> this method might take some
-	 * time to be executed: async calls are recommended.</p>
 	 * 
 	 * @param name Player's name
 	 * @return Player's skin's texture's URL
 	 * @throws IllegalArgumentException If specified name !{@link Utils#isValidUsername(String)}
-	 * @throws IOException If a connection or JSON error occurrs
 	 */
 	@Nullable(why = "The specified name may not belong to any premium account")
-	public abstract String getSkinTextureURL(String name) throws IOException;
+	public abstract CompletableFuture<String> getSkinTextureURL(String name);
 	
 	/**
 	 * Gets a premium player's skin's texture's URL.
@@ -121,18 +119,16 @@ public abstract class UUIDFetcher {
 	 * <p>Will return <code>null</code> if the specified
 	 * UUID does not belong to a premium account.</p>
 	 * 
+	 * <p>The future throws {@link IOException} if a connection or JSON error occurs.</p>
+	 * 
 	 * <p>The URL will point to <code>textures.minecraft.net</code> or to
 	 * <code>api.mineatar.io</code> if a rate limit is encountered.</p>
 	 * 
-	 * <p><strong>Note:</strong> this method might take some
-	 * time to be executed: async calls are recommended.</p>
-	 * 
 	 * @param uuid Player's UUID
 	 * @return Player's skin's texture's URL
-	 * @throws IOException If a connection or JSON error occurrs
 	 */
 	@Nullable(why = "The specified UUID may not belong to any premium account")
-	public abstract String getSkinTextureURL(UUID uuid) throws IOException;
+	public abstract CompletableFuture<String> getSkinTextureURL(UUID uuid);
 	
 	/**
 	 * Gets a premium player's cape's texture's URL.
@@ -140,19 +136,17 @@ public abstract class UUIDFetcher {
 	 * <p>Will return <code>null</code> if the specified name does
 	 * not belong to a premium account or they do not have a cape.</p>
 	 * 
+	 * <p>The future throws {@link IOException} if a connection or JSON error occurs.</p>
+	 * 
 	 * <p>The URL will point to <code>textures.minecraft.net</code> or
 	 * to <code>api.capes.dev</code> if a rate limit is encountered.</p>
-	 * 
-	 * <p><strong>Note:</strong> this method might take some
-	 * time to be executed: async calls are recommended.</p>
 	 * 
 	 * @param name Player's name
 	 * @return Player's cape's texture's URL
 	 * @throws IllegalArgumentException If specified name !{@link Utils#isValidUsername(String)}
-	 * @throws IOException If a connection or JSON error occurrs
 	 */
 	@Nullable(why = "The specified name may not belong to any premium account or may not have a cape")
-	public abstract String getCapeTextureURL(String name) throws IOException;
+	public abstract CompletableFuture<String> getCapeTextureURL(String name);
 	
 	/**
 	 * Gets a premium player's cape's texture's URL.
@@ -160,18 +154,16 @@ public abstract class UUIDFetcher {
 	 * <p>Will return <code>null</code> if the specified UUID does
 	 * not belong to a premium account or they do not have a cape.</p>
 	 * 
+	 * <p>The future throws {@link IOException} if a connection or JSON error occurs.</p>
+	 * 
 	 * <p>The URL will point to <code>textures.minecraft.net</code> or
 	 * to <code>api.capes.dev</code> if a rate limit is encountered.</p>
 	 * 
-	 * <p><strong>Note:</strong> this method might take some
-	 * time to be executed: async calls are recommended.</p>
-	 * 
 	 * @param uuid Player's UUID
 	 * @return Player's cape's texture's URL
-	 * @throws IOException If a connection or JSON error occurrs
 	 */
 	@Nullable(why = "The specified UUID may not belong to any premium account or may not have a cape")
-	public abstract String getCapeTextureURL(UUID uuid) throws IOException;
+	public abstract CompletableFuture<String> getCapeTextureURL(UUID uuid);
 	
 	/**
 	 * Applies dashes to the given UUID. For example,

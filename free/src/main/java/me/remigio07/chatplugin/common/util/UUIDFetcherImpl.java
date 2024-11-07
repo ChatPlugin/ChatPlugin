@@ -25,6 +25,8 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.Base64;
 import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -36,6 +38,7 @@ import com.google.common.primitives.UnsignedLongs;
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.util.UUIDFetcher;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
+import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 
 public class UUIDFetcherImpl extends UUIDFetcher {
 	
@@ -63,41 +66,49 @@ public class UUIDFetcherImpl extends UUIDFetcher {
 	}
 	
 	@Override
-	public UUID getUUID(String name) throws IOException {
+	public CompletableFuture<UUID> getUUID(String name) {
 		if (!Utils.isValidUsername(name))
 			throw new IllegalArgumentException("Username \"" + name + "\" is invalid as it does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
-		return ChatPlugin.getInstance().isOnlineMode() ? getOnlineUUID(name) : getOfflineUUID(name);
+		return ChatPlugin.getInstance().isOnlineMode() ? getOnlineUUID(name) : CompletableFuture.completedFuture(getOfflineUUID(name));
 	}
 	
 	@Override
-	public UUID getOnlineUUID(String name) throws IOException {
+	public CompletableFuture<UUID> getOnlineUUID(String name) {
 		if (!Utils.isValidUsername(name))
 			throw new IllegalArgumentException("Username \"" + name + "\" is invalid as it does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
-		try {
-			Entry<Integer, String> response = readURL("https://api.mojang.com/users/profiles/minecraft/" + name);
-			
-			switch (response.getKey()) {
-			case 200:
-				JsonObject json = (JsonObject) Jsoner.deserialize(response.getValue());
+		CompletableFuture<UUID> future = new CompletableFuture<>();
+		
+		TaskManager.runAsync(() -> {
+			try {
+				Entry<Integer, String> response = readURL("https://api.mojang.com/users/profiles/minecraft/" + name);
 				
-				if (json.containsKey("id"))
-					return dash((String) json.get("id"));
-				break;
-			case 429:
-				response = readURL("https://playerdb.co/api/player/minecraft/" + name);
-				
-				if (response.getKey() == 200) {
-					JsonObject json2 = (JsonObject) Jsoner.deserialize(response.getValue());
+				switch (response.getKey()) {
+				case 200:
+					JsonObject json = (JsonObject) Jsoner.deserialize(response.getValue());
 					
-					if (json2.containsKey("data") && (json2 = (JsonObject) json2.get("data")).containsKey("player") && (json2 = (JsonObject) json2.get("player")).containsKey("id"))
-						return UUID.fromString((String) json2.get("id"));
-				} break;
-			default:
-				break;
-			} return Utils.NIL_UUID;
-		} catch (Exception e) {
-			throw new IOException(e);
-		}
+					if (json.containsKey("id")) {
+						future.complete(dash((String) json.get("id")));
+						return;
+					} break;
+				case 429:
+					response = readURL("https://playerdb.co/api/player/minecraft/" + name);
+					
+					if (response.getKey() == 200) {
+						JsonObject json2 = (JsonObject) Jsoner.deserialize(response.getValue());
+						
+						if (json2.containsKey("data") && (json2 = (JsonObject) json2.get("data")).containsKey("player") && (json2 = (JsonObject) json2.get("player")).containsKey("id")) {
+							future.complete(UUID.fromString((String) json2.get("id")));
+							return;
+						}
+					} break;
+				default:
+					break;
+				} future.complete(Utils.NIL_UUID);
+			} catch (Exception e) {
+				future.completeExceptionally(new IOException(e));
+			}
+		}, 0L);
+		return future;
 	}
 	
 	@Override
@@ -108,103 +119,144 @@ public class UUIDFetcherImpl extends UUIDFetcher {
 	}
 	
 	@Override
-	public String getOnlineName(UUID uuid) throws IOException {
-		try {
-			Entry<Integer, String> response = readURL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid.toString());
-			
-			switch (response.getKey()) {
-			case 200:
-				JsonObject json = (JsonObject) Jsoner.deserialize(response.getValue());
+	public CompletableFuture<String> getOnlineName(UUID uuid) {
+		CompletableFuture<String> future = new CompletableFuture<>();
+		
+		TaskManager.runAsync(() -> {
+			try {
+				Entry<Integer, String> response = readURL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid.toString());
 				
-				if (json.containsKey("name"))
-					return (String) json.get("name");
-				break;
-			case 429:
-				response = readURL("https://playerdb.co/api/player/minecraft/" + uuid.toString());
-				
-				if (response.getKey() == 200) {
-					JsonObject json2 = (JsonObject) Jsoner.deserialize(response.getValue());
+				switch (response.getKey()) {
+				case 200:
+					JsonObject json = (JsonObject) Jsoner.deserialize(response.getValue());
 					
-					if (json2.containsKey("data") && (json2 = (JsonObject) json2.get("data")).containsKey("player") && (json2 = (JsonObject) json2.get("player")).containsKey("username"))
-						return (String) json2.get("username");
-				} break;
-			default:
-				break;
-			} return null;
-		} catch (Exception e) {
-			throw new IOException(e);
-		}
+					if (json.containsKey("name")) {
+						future.complete((String) json.get("name"));
+						return;
+					} break;
+				case 429:
+					response = readURL("https://playerdb.co/api/player/minecraft/" + uuid.toString());
+					
+					if (response.getKey() == 200) {
+						JsonObject json2 = (JsonObject) Jsoner.deserialize(response.getValue());
+						
+						if (json2.containsKey("data") && (json2 = (JsonObject) json2.get("data")).containsKey("player") && (json2 = (JsonObject) json2.get("player")).containsKey("username")) {
+							future.complete((String) json2.get("username"));
+							return;
+						}
+					} break;
+				default:
+					break;
+				} future.complete(null);
+			} catch (Exception e) {
+				future.completeExceptionally(new IOException(e));
+			}
+		}, 0L);
+		return future;
 	}
 	
 	@Override
-	public String getSkinTextureURL(String name) throws IOException {
+	public CompletableFuture<String> getSkinTextureURL(String name) {
 		if (!Utils.isValidUsername(name))
 			throw new IllegalArgumentException("Username \"" + name + "\" is invalid as it does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
-		return getSkinTextureURL(getOnlineUUID(name));
+		CompletableFuture<String> future = new CompletableFuture<>();
+		
+		TaskManager.runAsync(() -> {
+			try {
+				future.complete(getSkinTextureURL(getOnlineUUID(name).get()).get());
+			} catch (InterruptedException | ExecutionException e) {
+				future.completeExceptionally(e);
+			}
+		}, 0L);
+		return future;
 	}
 	
 	@Override
-	public String getSkinTextureURL(UUID uuid) throws IOException {
-		try {
-			Entry<Integer, String> response = readURL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid.toString());
-			
-			switch (response.getKey()) {
-			case 200:
-				JsonObject json = (JsonObject) Jsoner.deserialize(response.getValue());
-				JsonArray array;
+	public CompletableFuture<String> getSkinTextureURL(UUID uuid) {
+		CompletableFuture<String> future = new CompletableFuture<>();
+		
+		TaskManager.runAsync(() -> {
+			try {
+				Entry<Integer, String> response = readURL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid.toString());
 				
-				if (json.containsKey("properties") && (array = (JsonArray) json.get("properties")).size() > 0 && (json = (JsonObject) array.get(0)).containsKey("value")
-						&& (json = (JsonObject) Jsoner.deserialize(new String(Base64.getDecoder().decode((String) json.get("value")), StandardCharsets.ISO_8859_1))).containsKey("textures")
-						&& (json = (JsonObject) json.get("textures")).containsKey("SKIN") && (json = (JsonObject) json.get("SKIN")).containsKey("url"))
-					return (String) json.get("url");
-				break;
-			case 429:
-				return "https://api.mineatar.io/skin/" + uuid.toString();
-			default:
-				break;
-			} return null;
-		} catch (Exception e) {
-			throw new IOException(e);
-		}
+				switch (response.getKey()) {
+				case 200:
+					JsonObject json = (JsonObject) Jsoner.deserialize(response.getValue());
+					JsonArray array;
+					
+					if (json.containsKey("properties") && (array = (JsonArray) json.get("properties")).size() > 0 && (json = (JsonObject) array.get(0)).containsKey("value")
+							&& (json = (JsonObject) Jsoner.deserialize(new String(Base64.getDecoder().decode((String) json.get("value")), StandardCharsets.ISO_8859_1))).containsKey("textures")
+							&& (json = (JsonObject) json.get("textures")).containsKey("SKIN") && (json = (JsonObject) json.get("SKIN")).containsKey("url")) {
+						future.complete((String) json.get("url"));
+						return;
+					} break;
+				case 429:
+					future.complete("https://api.mineatar.io/skin/" + uuid.toString());
+					return;
+				default:
+					break;
+				} future.complete(null);
+			} catch (Exception e) {
+				future.completeExceptionally(new IOException(e));
+			}
+		}, 0L);
+		return future;
 	}
 	
 	@Override
-	public @Nullable(why = "The specified name may not belong to any premium account or may not have a cape") String getCapeTextureURL(String name) throws IOException {
+	public @Nullable(why = "The specified name may not belong to any premium account or may not have a cape") CompletableFuture<String> getCapeTextureURL(String name) {
 		if (!Utils.isValidUsername(name))
 			throw new IllegalArgumentException("Username \"" + name + "\" is invalid as it does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
-		return getCapeTextureURL(getOnlineUUID(name));
+		CompletableFuture<String> future = new CompletableFuture<>();
+		
+		TaskManager.runAsync(() -> {
+			try {
+				future.complete(getCapeTextureURL(getOnlineUUID(name).get()).get());
+			} catch (InterruptedException | ExecutionException e) {
+				future.completeExceptionally(e);
+			}
+		}, 0L);
+		return future;
 	}
 	
 	@Override
-	public @Nullable(why = "The specified UUID may not belong to any premium account or may not have a cape") String getCapeTextureURL(UUID uuid) throws IOException {
-		try {
-			Entry<Integer, String> response = readURL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid.toString());
-			
-			switch (response.getKey()) {
-			case 200:
-				JsonObject json = (JsonObject) Jsoner.deserialize(response.getValue());
-				JsonArray array;
+	public @Nullable(why = "The specified UUID may not belong to any premium account or may not have a cape") CompletableFuture<String> getCapeTextureURL(UUID uuid) {
+		CompletableFuture<String> future = new CompletableFuture<>();
+		
+		TaskManager.runAsync(() -> {
+			try {
+				Entry<Integer, String> response = readURL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid.toString());
 				
-				if (json.containsKey("properties") && (array = (JsonArray) json.get("properties")).size() > 0 && (json = (JsonObject) array.get(0)).containsKey("value")
-						&& (json = (JsonObject) Jsoner.deserialize(new String(Base64.getDecoder().decode((String) json.get("value")), StandardCharsets.ISO_8859_1))).containsKey("textures")
-						&& (json = (JsonObject) json.get("textures")).containsKey("CAPE") && (json = (JsonObject) json.get("CAPE")).containsKey("url"))
-					return (String) json.get("url");
-				break;
-			case 429:
-				response = readURL("https://api.capes.dev/load/" + uuid.toString() + "/minecraft");
-				
-				if (response.getKey() == 200 || response.getKey() == 304) {
-					JsonObject json2 = (JsonObject) Jsoner.deserialize(response.getValue());
+				switch (response.getKey()) {
+				case 200:
+					JsonObject json = (JsonObject) Jsoner.deserialize(response.getValue());
+					JsonArray array;
 					
-					if (json2.containsKey("imageUrl"))
-						return (String) json2.get("imageUrl");
-				} break;
-			default:
-				break;
-			} return null;
-		} catch (Exception e) {
-			throw new IOException(e);
-		}
+					if (json.containsKey("properties") && (array = (JsonArray) json.get("properties")).size() > 0 && (json = (JsonObject) array.get(0)).containsKey("value")
+							&& (json = (JsonObject) Jsoner.deserialize(new String(Base64.getDecoder().decode((String) json.get("value")), StandardCharsets.ISO_8859_1))).containsKey("textures")
+							&& (json = (JsonObject) json.get("textures")).containsKey("CAPE") && (json = (JsonObject) json.get("CAPE")).containsKey("url")) {
+						future.complete((String) json.get("url"));
+						return;
+					} break;
+				case 429:
+					response = readURL("https://api.capes.dev/load/" + uuid.toString() + "/minecraft");
+					
+					if (response.getKey() == 200 || response.getKey() == 304) {
+						JsonObject json2 = (JsonObject) Jsoner.deserialize(response.getValue());
+						
+						if (json2.containsKey("imageUrl")) {
+							future.complete((String) json2.get("imageUrl"));
+							return;
+						}
+					} break;
+				default:
+					break;
+				} future.complete(null);
+			} catch (Exception e) {
+				future.completeExceptionally(new IOException(e));
+			}
+		}, 0L);
+		return future;
 	}
 	
 	@Override

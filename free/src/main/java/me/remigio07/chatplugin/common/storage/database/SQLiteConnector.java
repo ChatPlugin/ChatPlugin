@@ -34,6 +34,7 @@ import me.remigio07.chatplugin.api.common.storage.database.DatabaseManager;
 import me.remigio07.chatplugin.api.common.util.Library;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
+import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.bootstrap.IsolatedClassLoader;
 import me.remigio07.chatplugin.common.util.LibrariesUtils;
 
@@ -42,6 +43,7 @@ public class SQLiteConnector extends DatabaseConnector {
 	@Override
 	public void load() throws ChatPluginManagerException {
 		instance = this;
+		long serverModeTask = -1;
 		
 		try {
 			LibrariesUtils.load(Library.SQLITE_JDBC);
@@ -51,7 +53,10 @@ public class SQLiteConnector extends DatabaseConnector {
 			boolean serverMode = ConfigurationType.CONFIG.get().getBoolean("storage.database.use-server-mode");
 			
 			if (serverMode)
-				LogManager.log("SQLite is selected as storage method with the server mode (\"storage.database.use-server-mode\" in config.yml) enabled. This may require extra time to start the database if no connections are open.", 0);
+				serverModeTask = TaskManager.runAsync(() -> {
+					if (connection == null)
+						LogManager.log("SQLite is selected as storage method with the server mode (\"storage.database.use-server-mode\" in config.yml) enabled. This may require extra time to start the database if no connections are open.", 0);
+				}, 1000L);
 			connection = (Connection) IsolatedClassLoader.getInstance().loadClass("org.sqlite.jdbc4.JDBC4Connection").getConstructor(String.class, String.class, Properties.class).newInstance(
 					"jdbc:sqlite:" + file + (serverMode ? "?cache=shared" : ""),
 					file,
@@ -61,6 +66,7 @@ public class SQLiteConnector extends DatabaseConnector {
 			if (serverMode)
 				prepareStatement("PRAGMA journal_mode=WAL").executeQuery().close();
 		} catch (Exception e) {
+			TaskManager.cancelAsync(serverModeTask);
 			throw new ChatPluginManagerException(DatabaseManager.getInstance(), e);
 		}
 	}
@@ -87,7 +93,7 @@ public class SQLiteConnector extends DatabaseConnector {
 	public void createDataContainer(DataContainer container) throws SQLException, IOException {
 		String update = null;
 		
-		LogManager.log("Creating default database table \"" + container.getDatabaseTableID() + "\"...", 0);
+		LogManager.log("Creating default database table \"{0}\"...", 0, container.getDatabaseTableID());
 		
 		switch (container) {
 		case BANS:

@@ -33,6 +33,7 @@ import me.remigio07.chatplugin.api.common.storage.database.DatabaseManager;
 import me.remigio07.chatplugin.api.common.util.Library;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
+import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.bootstrap.IsolatedClassLoader;
 import me.remigio07.chatplugin.common.util.LibrariesUtils;
 
@@ -41,6 +42,7 @@ public class H2Connector extends DatabaseConnector {
 	@Override
 	public void load() throws ChatPluginManagerException {
 		instance = this;
+		long serverModeTask = -1;
 		
 		try {
 			LibrariesUtils.load(Library.H2_DATABASE_ENGINE);
@@ -48,7 +50,10 @@ public class H2Connector extends DatabaseConnector {
 			boolean serverMode = ConfigurationType.CONFIG.get().getBoolean("storage.database.use-server-mode");
 			
 			if (serverMode)
-				LogManager.log("H2 is selected as storage method with the server mode (\"storage.database.use-server-mode\" in config.yml) enabled. This may require extra time to start the database if no connections are open.", 0);
+				serverModeTask = TaskManager.runAsync(() -> {
+					if (connection == null)
+						LogManager.log("H2 is selected as storage method with the server mode (\"storage.database.use-server-mode\" in config.yml) enabled. This may require extra time to start the database if no connections are open.", 0);
+				}, 1000L);
 			connection = (Connection) IsolatedClassLoader.getInstance().loadClass("org.h2.jdbc.JdbcConnection").getConstructor(String.class, Properties.class, String.class, Object.class, boolean.class).newInstance(
 					"jdbc:h2:file:"
 					+ DatabaseManager.getInstance().getFolder().getAbsolutePath()
@@ -62,6 +67,7 @@ public class H2Connector extends DatabaseConnector {
 			
 			executeUpdate("SET IGNORECASE TRUE");
 		} catch (Exception e) {
+			TaskManager.cancelAsync(serverModeTask);
 			throw new ChatPluginManagerException(DatabaseManager.getInstance(), e);
 		}
 	}
@@ -88,7 +94,7 @@ public class H2Connector extends DatabaseConnector {
 	public void createDataContainer(DataContainer container) throws SQLException, IOException {
 		String update = null;
 		
-		LogManager.log("Creating default database table \"" + container.getDatabaseTableID() + "\"...", 0);
+		LogManager.log("Creating default database table \"{0}\"...", 0, container.getDatabaseTableID());
 		
 		switch (container) {
 		case BANS:
@@ -233,7 +239,8 @@ public class H2Connector extends DatabaseConnector {
 	
 	@Override
 	public String getEngineVersion() throws SQLException {
-		return get("SELECT setting_value FROM information_schema.settings WHERE setting_name = ?", "setting_value", String.class, "info.VERSION");
+		String url = Library.H2_DATABASE_ENGINE.getURL().toString();
+		return url.substring(url.indexOf("h2-") + 3, url.indexOf(".jar"));
 	}
 	
 }

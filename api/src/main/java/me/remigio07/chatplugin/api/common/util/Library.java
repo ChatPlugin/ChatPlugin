@@ -279,9 +279,9 @@ public enum Library {
 	MAXMIND_GEOIP2("MaxMind GeoIP2", "com.maxmind.geoip2.GeoIp2Provider", new Relocation("com.maxmind.geoip2"), "https://repo1.maven.org/maven2/com/maxmind/geoip2/geoip2/2.17.0/geoip2-2.17.0.jar", "maxmind-geoip2.jar"),
 	
 	/**
-	 * Represents the <a href="https://dev.mysql.com/doc/connector-j/8.1/en/">MySQL Connector/J</a> library.
+	 * Represents the <a href="https://dev.mysql.com/doc/connector-j/en/">MySQL Connector/J</a> library.
 	 */
-	MYSQL_CONNECTOR_J("MySQL Connector/J", "com.mysql.jdbc.Driver", new Relocation("com.mysql"), "https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.2.0/mysql-connector-j-8.2.0.jar", "mysql-connector-j.jar"),
+	MYSQL_CONNECTOR_J("MySQL Connector/J", "com.mysql.jdbc.Driver", new Relocation("com.mysql"), "https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/9.1.0/mysql-connector-j-9.1.0.jar", "mysql-connector-j.jar"),
 	
 	/**
 	 * Represents the <a href="https://github.com/TakahikoKawasaki/nv-websocket-client">NV WebSocket Client</a> library.
@@ -316,7 +316,7 @@ public enum Library {
 	/**
 	 * Represents the <a href="https://github.com/xerial/sqlite-jdbc">SQLite JDBC</a> library.
 	 */
-	SQLITE_JDBC("SQLite JDBC", "org.sqlite.JDBC", "https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.43.0.0/sqlite-jdbc-3.43.0.0.jar", "sqlite-driver.jar", "CE4481C5A3E9D4C97613FD263B651883");
+	SQLITE_JDBC("SQLite JDBC", "org.sqlite.JDBC", "https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.47.0.0/sqlite-jdbc-3.47.0.0.jar", "sqlite-driver.jar", "07B66539A5703FA7DEF2D8BBCBC51070");
 	
 	private String name, clazz, url, fileName, md5Hash;
 	private Relocation relocation;

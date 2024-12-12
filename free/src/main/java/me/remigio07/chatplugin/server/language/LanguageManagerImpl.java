@@ -138,7 +138,7 @@ public class LanguageManagerImpl extends LanguageManager {
 				ServerPlayerManager.getInstance().loadPlayer(player.toAdapter());
 			} new LanguageChangeEvent(player, language).call();
 			LogManager.log("{0}'s language has been set to {1}.", 4, player.getName(), language.getID());
-		} catch (Exception e) {
+		} catch (SQLException | IOException e) {
 			LogManager.log("{0} occurred while setting {1}'s language to {2}: {3}", 2, e.getClass().getSimpleName(), player.getName(), language.getDisplayName(), e.getMessage());
 		}
 	}

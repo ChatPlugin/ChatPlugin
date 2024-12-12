@@ -25,7 +25,6 @@ import me.remigio07.chatplugin.api.common.ip_lookup.IPLookup;
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.Utils;
-import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 
@@ -87,18 +86,17 @@ public abstract class Language {
 	}
 	
 	/**
-	 * Gets a message from this language's {@link #getConfiguration()} and
-	 * translates its placeholders using {@link Utils#numericPlaceholders(String, Object...)}.
+	 * Gets a message from this language's {@link #getConfiguration()} and translates
+	 * its placeholders using {@link Utils#numericPlaceholders(String, Object...)}.
 	 * 
-	 * <p>The "{pfx}" placeholder will be translated with the message found at "misc.prefix".
-	 * Returned text will also be translated using {@link ChatColor#translate(String)}.</p>
+	 * <p>The "{pfx}" placeholder will be translated with the message found at "misc.prefix".</p>
 	 * 
 	 * @param path Message's path
 	 * @param args Optional arguments (translated using {@link Utils#numericPlaceholders(String, Object...)})
 	 * @return Translated message
 	 */
 	public String getMessage(String path, Object... args) {
-		return ChatColor.translate(Utils.numericPlaceholders(configuration.getString(path, ConfigurationType.MESSAGES.get().getString(path)).replace("{pfx}", configuration.getString("misc.prefix", ConfigurationType.MESSAGES.get().getString("misc.prefix"))), args));
+		return Utils.numericPlaceholders(configuration.translateString(path, ConfigurationType.MESSAGES.get().translateString(path)).replace("{pfx}", configuration.translateString("misc.prefix", ConfigurationType.MESSAGES.get().translateString("misc.prefix"))), args);
 	}
 	
 	/**

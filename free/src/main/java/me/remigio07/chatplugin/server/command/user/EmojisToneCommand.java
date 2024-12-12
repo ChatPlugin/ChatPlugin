@@ -72,8 +72,8 @@ public class EmojisToneCommand extends BaseCommand {
 						
 						if (tone == ChatColor.RESET)
 							player.sendTranslatedMessage("commands.emojistone.reset.self");
-						else player.sendTranslatedMessage("commands.emojistone.set.self", index, unformatColorString(tone.isDefaultColor() ? "&" + tone.getCode() : tone.name(), (VersionUtils.getVersion().isAtLeast(Version.V1_16) ? tone : tone.getClosestDefaultColor()).toString()));
-					} else player.sendTranslatedMessage("commands.emojistone.invalid-tone", unformatColorString(args[0], "&r"));
+						else player.sendTranslatedMessage("commands.emojistone.set.self", index, (VersionUtils.getVersion().isAtLeast(Version.V1_16) ? tone : tone.getClosestDefaultColor()).toString() + (tone.isDefaultColor() ? "&" + tone.getCode() : tone.name()));
+					} else player.sendTranslatedMessage("commands.emojistone.invalid-tone", args[0]);
 				}
 			} else if (args.length == 2) {
 				if (sender.hasPermission(getPermission() + ".others")) {
@@ -97,8 +97,8 @@ public class EmojisToneCommand extends BaseCommand {
 								
 								if (tone == ChatColor.RESET)
 									sender.sendMessage(language.getMessage("commands.emojistone.reset.other", player.getName()));
-								else sender.sendMessage(language.getMessage("commands.emojistone.set.other", player.getName(), index, unformatColorString(tone.isDefaultColor() ? "&" + tone.getCode() : tone.name(), (VersionUtils.getVersion().isAtLeast(Version.V1_16) ? tone : tone.getClosestDefaultColor()).toString())));
-							} else sender.sendMessage(language.getMessage("commands.emojistone.invalid-tone", unformatColorString(args[0], "&r")));
+								else sender.sendMessage(language.getMessage("commands.emojistone.set.other", player.getName(), index, (VersionUtils.getVersion().isAtLeast(Version.V1_16) ? tone : tone.getClosestDefaultColor()).toString() + (tone.isDefaultColor() ? "&" + tone.getCode() : tone.name())));
+							} else sender.sendMessage(language.getMessage("commands.emojistone.invalid-tone", args[0]));
 						} else sender.sendMessage(language.getMessage("misc.disabled-world"));
 					} else sender.sendMessage(language.getMessage("misc.player-not-found", args[1]));
 				} else sender.sendMessage(language.getMessage("misc.no-permission"));
@@ -122,10 +122,5 @@ public class EmojisToneCommand extends BaseCommand {
 			}
 		return ChatColor.valueOf(arg.toUpperCase());
 	}
-	
-	public static String unformatColorString(String string, String replacement) {
-		return string.replaceAll(".", replacement + "$0");
-	}
-	
 	
 }

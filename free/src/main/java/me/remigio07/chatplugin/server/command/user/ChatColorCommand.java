@@ -67,9 +67,9 @@ public class ChatColorCommand extends BaseCommand {
 							
 							if (color == ChatColor.RESET)
 								player.sendTranslatedMessage("commands.chatcolor.reset.self");
-							else player.sendTranslatedMessage("commands.chatcolor.set.self", unformatColorString(color.isDefaultColor() ? "&" + color.getCode() : color.name(), (VersionUtils.getVersion().isAtLeast(Version.V1_16) ? color : color.getClosestDefaultColor()).toString()));
+							else player.sendTranslatedMessage("commands.chatcolor.set.self", (VersionUtils.getVersion().isAtLeast(Version.V1_16) ? color : color.getClosestDefaultColor()).toString() + (color.isDefaultColor() ? "&" + color.getCode() : color.name()));
 						} else player.sendTranslatedMessage("commands.chatcolor.no-permission");
-					} else player.sendTranslatedMessage("commands.chatcolor.invalid-color", unformatColorString(args[0], "&r"));
+					} else player.sendTranslatedMessage("commands.chatcolor.invalid-color", args[0]);
 				}
 			} else sender.sendMessage(language.getMessage("commands.chatcolor.hex-usage", String.format("%06x", ThreadLocalRandom.current().nextInt(16777216)).toUpperCase()));
 		} else if (args.length == 2) {
@@ -86,8 +86,8 @@ public class ChatColorCommand extends BaseCommand {
 							
 							if (color == ChatColor.RESET)
 								sender.sendMessage(language.getMessage("commands.chatcolor.reset.other", player.getName()));
-							else sender.sendMessage(language.getMessage("commands.chatcolor.set.other", player.getName(), unformatColorString(color.isDefaultColor() ? "&" + color.getCode() : color.name(), (VersionUtils.getVersion().isAtLeast(Version.V1_16) ? color : color.getClosestDefaultColor()).toString())));
-						} else sender.sendMessage(language.getMessage("commands.chatcolor.invalid-color", unformatColorString(args[0], "&r")));
+							else sender.sendMessage(language.getMessage("commands.chatcolor.set.other", player.getName(), (VersionUtils.getVersion().isAtLeast(Version.V1_16) ? color : color.getClosestDefaultColor()).toString() + (color.isDefaultColor() ? "&" + color.getCode() : color.name())));
+						} else sender.sendMessage(language.getMessage("commands.chatcolor.invalid-color", args[0]));
 					} else sender.sendMessage(language.getMessage("misc.disabled-world"));
 				} else sender.sendMessage(language.getMessage("misc.player-not-found", args[1]));
 			} else sender.sendMessage(language.getMessage("misc.no-permission"));
@@ -104,10 +104,6 @@ public class ChatColorCommand extends BaseCommand {
 				
 			}
 		return ChatColor.valueOf(arg.toUpperCase());
-	}
-	
-	public static String unformatColorString(String string, String replacement) {
-		return string.replaceAll(".", replacement + "$0");
 	}
 	
 }

@@ -165,7 +165,7 @@ public class ChatPluginCommand extends BaseCommand {
 		@Override
 		public void execute(CommandSenderAdapter sender, me.remigio07.chatplugin.api.server.language.Language language, String[] args) {
 			if (sender.getName().equals("Remigio07") || sender.hasPermission(super.getPermission()))
-				sender.sendMessage(language.getMessage("commands.version", ChatPlugin.getInstance().isPremium() ? "&6Premium" : "&2Free", ChatPlugin.VERSION, VersionUtils.getImplementationName(), VersionUtils.getVersion().getName()));
+				sender.sendMessage(language.getMessage("commands.version", ChatPlugin.getInstance().isPremium() ? "\u00A76Premium" : "\u00A72Free", ChatPlugin.VERSION, VersionUtils.getImplementationName(), VersionUtils.getVersion().getName()));
 			else sender.sendMessage(language.getMessage("misc.no-permission"));
 		}
 		
@@ -195,17 +195,19 @@ public class ChatPluginCommand extends BaseCommand {
 				
 				if (newLanguage != null) {
 					if (!LanguageManagerImpl.isCommandCooldownActive(player) || player.hasPermission(getPermission() + ".cooldown-bypass")) {
-						try {
-							LanguageManager.getInstance().setLanguage(player, newLanguage);
-							
-							player = ServerPlayerManager.getInstance().getPlayer(player.getUUID());
-							
-							CommandsHandler.executeCommands(player, formatPlaceholders(player, newLanguage, ConfigurationType.CONFIG.get().getStringList("languages.command.commands")));
-							player.sendTranslatedMessage("languages.set", newLanguage.getDisplayName());
-							LanguageManagerImpl.startCommandCooldown(player.getUUID());
-						} catch (IllegalArgumentException e) {
-							player.sendTranslatedMessage("languages.set-already", player.getLanguage().getDisplayName());
-						}
+						TaskManager.runAsync(() -> {
+							try {
+								LanguageManager.getInstance().setLanguage(player, newLanguage);
+								
+								ChatPluginServerPlayer newPlayer = ServerPlayerManager.getInstance().getPlayer(player.getUUID());
+								
+								TaskManager.runSync(() -> CommandsHandler.executeCommands(newPlayer, formatPlaceholders(newPlayer, newLanguage, ConfigurationType.CONFIG.get().getStringList("languages.command.commands"))), 0L);
+								newPlayer.sendTranslatedMessage("languages.set", newLanguage.getDisplayName());
+								LanguageManagerImpl.startCommandCooldown(newPlayer.getUUID());
+							} catch (IllegalArgumentException e) {
+								player.sendTranslatedMessage("languages.set-already", player.getLanguage().getDisplayName());
+							}
+						}, 0L);
 					} else player.sendTranslatedMessage("misc.cooldown-active"); 
 				} else player.sendTranslatedMessage("languages.invalid", Utils.getStringFromList(LanguageManager.getInstance().getLanguages().stream().map(me.remigio07.chatplugin.api.server.language.Language::getID).collect(Collectors.toList()), false, true));
 			} else sendUsage(player);

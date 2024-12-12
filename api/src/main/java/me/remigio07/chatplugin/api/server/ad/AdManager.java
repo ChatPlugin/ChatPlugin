@@ -17,7 +17,6 @@ package me.remigio07.chatplugin.api.server.ad;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
@@ -36,7 +35,7 @@ import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
  * 
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Ads">ChatPlugin wiki/Modules/Ads</a>
  */
-public abstract class AdManager extends TimerTask implements ChatPluginManager {
+public abstract class AdManager implements ChatPluginManager, Runnable {
 	
 	/**
 	 * Pattern representing the allowed ad IDs.

@@ -17,7 +17,6 @@ package me.remigio07.chatplugin.api.server.util.manager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimerTask;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
@@ -30,7 +29,7 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
  * 
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Ping">ChatPlugin wiki/Modules/Ping</a>
  */
-public abstract class PingManager extends TimerTask implements ChatPluginManager {
+public abstract class PingManager implements ChatPluginManager, Runnable {
 	
 	protected static PingManager instance;
 	protected boolean enabled;

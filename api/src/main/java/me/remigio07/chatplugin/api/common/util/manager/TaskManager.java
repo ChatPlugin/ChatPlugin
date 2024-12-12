@@ -16,10 +16,12 @@
 package me.remigio07.chatplugin.api.common.util.manager;
 
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.bukkit.Bukkit;
@@ -36,8 +38,9 @@ public abstract class TaskManager implements ChatPluginManager {
 	
 	protected static TaskManager instance;
 	protected boolean enabled;
+	protected ScheduledExecutorService executor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
 	protected Map<Long, UUID> syncTasks = new ConcurrentHashMap<>();
-	protected Map<Long, TimerTask> asyncTasks = new ConcurrentHashMap<>();
+	protected Map<Long, ScheduledFuture<?>> asyncTasks = new ConcurrentHashMap<>();
 	protected AtomicLong currentSpongeID = new AtomicLong(), currentAsyncID = new AtomicLong();
 	protected long loadTime;
 	
@@ -47,20 +50,29 @@ public abstract class TaskManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the synchronous tasks map.
+	 * Gets the asynchronous tasks' executor.
 	 * 
-	 * @return Sync tasks
+	 * @return Async tasks' executor
+	 */
+	public ScheduledExecutorService getExecutor() {
+		return executor;
+	}
+	
+	/**
+	 * Gets the synchronous tasks' map.
+	 * 
+	 * @return Sync tasks' map
 	 */
 	public Map<Long, UUID> getSyncTasks() {
 		return syncTasks;
 	}
 	
 	/**
-	 * Gets the asynchronous tasks map.
+	 * Gets the asynchronous tasks' map.
 	 * 
-	 * @return Async tasks
+	 * @return Async tasks' map
 	 */
-	public Map<Long, TimerTask> getAsyncTasks() {
+	public Map<Long, ScheduledFuture<?>> getAsyncTasks() {
 		return asyncTasks;
 	}
 	
@@ -99,10 +111,9 @@ public abstract class TaskManager implements ChatPluginManager {
 	 * @throws UnsupportedOperationException If {@link Environment#isProxy()}
 	 */
 	public static long runSync(Runnable runnable, long delay) {
-		delay = delay < 0 ? 0 : delay;
-		
 		if (Environment.isProxy())
 			throw new UnsupportedOperationException("Synchronous tasks are not available on a " + Environment.getCurrent().getName() + " environment. Bukkit and Sponge only");
+		delay = delay < 0 ? 0 : delay;
 		long taskID = Environment.isBukkit() ? (long) BukkitScheduler.runSync(runnable, delay) : instance.currentSpongeID.getAndIncrement();
 		
 		instance.syncTasks.put(taskID, Environment.isBukkit() ? UUID.randomUUID() : Sponge.getScheduler().createTaskBuilder().execute(runnable).delayTicks(delay / 50).submit(SpongeBootstrapper.getInstance()).getUniqueId());
@@ -119,23 +130,17 @@ public abstract class TaskManager implements ChatPluginManager {
 	 */
 	public static long runAsync(Runnable runnable, long delay) {
 		long taskID = instance.currentAsyncID.getAndIncrement();
-		TimerTask task = new TimerTask() {
-			
-			@Override
-			public void run() {
-				if (runnable != null)
-					runnable.run();
-				instance.asyncTasks.remove(taskID);
-			}
-			
-		};
-		new Timer().schedule(task, delay < 0 ? 0 : delay);
-		instance.asyncTasks.put(taskID, task);
+		
+		instance.asyncTasks.put(taskID, instance.executor.schedule(() -> {
+			if (runnable != null)
+				runnable.run();
+			instance.asyncTasks.remove(taskID);
+		}, delay < 0 ? 0 : delay, TimeUnit.MILLISECONDS));
 		return taskID;
 	}
 	
 	/**
-	 * Schedules a synchronous task on the main thread.
+	 * Schedules a synchronous task (fixed delay) on the main thread.
 	 * 
 	 * <p>Might impact performance with heavy tasks: use
 	 * {@link #scheduleAsync(Runnable, long, long)} if possible.</p>
@@ -150,11 +155,10 @@ public abstract class TaskManager implements ChatPluginManager {
 	 * @throws UnsupportedOperationException If {@link Environment#isProxy()}
 	 */
 	public static long scheduleSync(Runnable runnable, long delay, long period) {
-		delay = delay < 0 ? 0 : delay;
-		period = period < 1 ? 1 : period;
-		
 		if (Environment.isProxy())
 			throw new UnsupportedOperationException("Synchronous tasks are not available on a " + Environment.getCurrent().getName() + " environment. Bukkit and Sponge only");
+		delay = delay < 0 ? 0 : delay;
+		period = period < 1 ? 1 : period;
 		long taskID = Environment.isBukkit() ? (long) BukkitScheduler.scheduleSync(runnable, delay, period) : instance.currentSpongeID.getAndIncrement();
 		
 		instance.syncTasks.put(taskID, Environment.isBukkit() ? UUID.randomUUID() : Sponge.getScheduler().createTaskBuilder().execute(runnable).delayTicks(delay / 50).intervalTicks(period / 50).submit(SpongeBootstrapper.getInstance()).getUniqueId());
@@ -162,7 +166,7 @@ public abstract class TaskManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Schedules an asynchronous task on a new thread.
+	 * Schedules an asynchronous task (fixed delay) on a new thread.
 	 * 
 	 * @param runnable Task to run
 	 * @param delay Delay to wait for first execution, in milliseconds
@@ -171,17 +175,11 @@ public abstract class TaskManager implements ChatPluginManager {
 	 */
 	public static long scheduleAsync(Runnable runnable, long delay, long period) {
 		long taskID = instance.currentAsyncID.getAndIncrement();
-		TimerTask task = new TimerTask() {
-			
-			@Override
-			public void run() {
-				if (runnable != null)
-					runnable.run();
-			}
-			
-		};
-		new Timer().schedule(task, delay < 0 ? 0 : delay, period < 1 ? 1 : period);
-		instance.asyncTasks.put(taskID, task);
+		
+		instance.asyncTasks.put(taskID, instance.executor.scheduleWithFixedDelay(() -> {
+			if (runnable != null)
+				runnable.run();
+		}, delay < 0 ? 0 : delay, period < 1 ? 1 : period, TimeUnit.MILLISECONDS));
 		return taskID;
 	}
 	
@@ -223,10 +221,8 @@ public abstract class TaskManager implements ChatPluginManager {
 	 * @see #getAsyncTasks()
 	 */
 	public static void cancelAsync(long id) {
-		if (instance.asyncTasks.containsKey(id)) {
-			instance.asyncTasks.get(id).cancel();
-			instance.asyncTasks.remove(id);
-		}
+		if (instance.asyncTasks.containsKey(id))
+			instance.asyncTasks.remove(id).cancel(false);
 	}
 	
 	/**

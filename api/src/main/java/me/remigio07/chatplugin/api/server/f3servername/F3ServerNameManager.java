@@ -17,7 +17,6 @@ package me.remigio07.chatplugin.api.server.f3servername;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
@@ -45,7 +44,7 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 		minimumBukkitVersion = Version.V1_7_2,
 		minimumSpongeVersion = Version.UNSUPPORTED
 		)
-public abstract class F3ServerNameManager extends TimerTask implements ChatPluginManager {
+public abstract class F3ServerNameManager implements ChatPluginManager, Runnable {
 	
 	/**
 	 * Pattern representing the allowed F3 server name IDs.

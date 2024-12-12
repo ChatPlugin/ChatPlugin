@@ -17,7 +17,6 @@ package me.remigio07.chatplugin.api.common.punishment.ban.banwave;
 
 import java.net.InetAddress;
 import java.util.List;
-import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import me.remigio07.chatplugin.api.common.event.punishment.ban.banwave.BanwaveEndEvent;
@@ -42,7 +41,7 @@ import me.remigio07.chatplugin.bootstrap.Environment;
  * 
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Punishments#banwaves">ChatPlugin wiki/Punishments/Bans/Banwaves</a>
  */
-public abstract class BanwaveManager extends TimerTask implements ChatPluginManager {
+public abstract class BanwaveManager implements ChatPluginManager, Runnable {
 	
 	protected static BanwaveManager instance;
 	protected static ComponentTranslator componentTranslator;
@@ -155,7 +154,7 @@ public abstract class BanwaveManager extends TimerTask implements ChatPluginMana
 	/**
 	 * Gets the banwave entries' list.
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned list.</p>
+	 * <p>Do <em>not</em> modify the returned list.</p>
 	 * 
 	 * @return Banwave entries' list
 	 */

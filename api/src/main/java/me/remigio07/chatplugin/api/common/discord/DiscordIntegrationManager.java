@@ -15,8 +15,6 @@
 
 package me.remigio07.chatplugin.api.common.discord;
 
-import java.util.TimerTask;
-
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.Library;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -29,7 +27,7 @@ import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
  * 
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Discord-integration">ChatPlugin wiki/Modules/Discord integration</a>
  */
-public abstract class DiscordIntegrationManager extends TimerTask implements ChatPluginManager {
+public abstract class DiscordIntegrationManager implements ChatPluginManager, Runnable {
 	
 	/**
 	 * Array containing all the libraries required for this module to work.

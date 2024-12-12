@@ -15,8 +15,6 @@
 
 package me.remigio07.chatplugin.api.common.telegram;
 
-import java.util.TimerTask;
-
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.Library;
 import me.remigio07.chatplugin.api.common.util.annotation.SensitiveData;
@@ -28,7 +26,7 @@ import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
  * 
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Telegram-integration">ChatPlugin wiki/Modules/Telegram integration</a>
  */
-public abstract class TelegramIntegrationManager extends TimerTask implements ChatPluginManager {
+public abstract class TelegramIntegrationManager implements ChatPluginManager, Runnable {
 	
 	/**
 	 * Array containing all the libraries required for this module to work.

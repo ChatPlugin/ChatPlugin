@@ -17,7 +17,6 @@ package me.remigio07.chatplugin.api.server.util.manager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimerTask;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
@@ -29,7 +28,7 @@ import me.remigio07.chatplugin.api.server.language.Language;
  * 
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/TPS">ChatPlugin wiki/Modules/TPS</a>
  */
-public abstract class TPSManager extends TimerTask implements ChatPluginManager {
+public abstract class TPSManager implements ChatPluginManager, Runnable {
 	
 	protected static TPSManager instance;
 	protected boolean enabled;

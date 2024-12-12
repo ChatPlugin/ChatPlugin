@@ -15,8 +15,6 @@
 
 package me.remigio07.chatplugin.common.util.manager;
 
-import java.util.TimerTask;
-
 import org.bukkit.Bukkit;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.scheduler.Task;
@@ -42,9 +40,8 @@ public class TaskManagerImpl extends TaskManager {
 			syncTasks.keySet().forEach(task -> Bukkit.getScheduler().cancelTask(task.intValue())); // should not exceed Integer.MAX_VALUE
 		else if (Environment.isSponge())
 			Sponge.getScheduler().getScheduledTasks(SpongeBootstrapper.getInstance()).forEach(Task::cancel);
-		asyncTasks.values().forEach(TimerTask::cancel);
+		asyncTasks.keySet().forEach(future -> asyncTasks.remove(future).cancel(false));
 		syncTasks.clear();
-		asyncTasks.clear();
 	}
 	
 }

@@ -17,7 +17,6 @@ package me.remigio07.chatplugin.api.server.tablist.custom_suffix;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.TimerTask;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.ValueContainer;
@@ -33,7 +32,7 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Tablists#custom-suffix">ChatPlugin wiki/Modules/Tablists/Custom suffix</a>
  * @see RenderType
  */
-public abstract class CustomSuffixManager extends TimerTask implements ChatPluginManager {
+public abstract class CustomSuffixManager implements ChatPluginManager, Runnable {
 	
 	protected static CustomSuffixManager instance;
 	protected boolean enabled;

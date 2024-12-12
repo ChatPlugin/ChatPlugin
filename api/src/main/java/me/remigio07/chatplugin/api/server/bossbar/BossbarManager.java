@@ -47,7 +47,7 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 		minimumBukkitVersion = Version.V1_0,
 		minimumSpongeVersion = Version.V1_9
 		)
-public abstract class BossbarManager extends TimerTask implements ChatPluginManager {
+public abstract class BossbarManager implements ChatPluginManager, Runnable {
 	
 	/**
 	 * Pattern representing the allowed bossbar IDs.

@@ -17,7 +17,6 @@ package me.remigio07.chatplugin.api.server.actionbar;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
@@ -45,7 +44,7 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 		minimumBukkitVersion = Version.V1_8,
 		minimumSpongeVersion = Version.V1_11
 		)
-public abstract class ActionbarManager extends TimerTask implements ChatPluginManager {
+public abstract class ActionbarManager implements ChatPluginManager, Runnable {
 	
 	/**
 	 * Pattern representing the allowed actionbar IDs.

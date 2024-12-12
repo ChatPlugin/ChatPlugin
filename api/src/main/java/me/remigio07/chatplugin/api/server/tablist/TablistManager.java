@@ -17,7 +17,6 @@ package me.remigio07.chatplugin.api.server.tablist;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
@@ -46,7 +45,7 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 		minimumBukkitVersion = Version.V1_8,
 		minimumSpongeVersion = Version.V1_8
 		)
-public abstract class TablistManager extends TimerTask implements ChatPluginManager {
+public abstract class TablistManager implements ChatPluginManager, Runnable {
 	
 	/**
 	 * Pattern representing the allowed tablist IDs.

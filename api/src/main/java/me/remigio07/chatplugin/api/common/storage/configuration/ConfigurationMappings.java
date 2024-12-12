@@ -578,8 +578,8 @@ public class ConfigurationMappings {
 	// Translators
 	
 	/**
-	 * Calls {@link #translateString(String, String, boolean)} specifying
-	 * <code>path</code>, "" and <code>true</code> as arguments.
+	 * Calls {@link #translateString(String, String)}
+	 * specifying <code>path</code> and "" as arguments.
 	 * 
 	 * <p>Will return "" if a {@link String} is not found at the specified path.</p>
 	 * 
@@ -588,7 +588,25 @@ public class ConfigurationMappings {
 	 */
 	@NotNull
 	public String translateString(String path) {
-		return translateString(path, "", true);
+		return translateString(path, "");
+	}
+	
+	/**
+	 * Calls {@link #translateString(String, String, boolean)} specifying
+	 * <code>path</code>, <code>def</code> and <code>true</code> as arguments.
+	 * 
+	 * <p>Will return <code>def</code> if a {@link String}
+	 * is not found at the specified path.</p>
+	 * 
+	 * <p>You can specify <code>null</code> as <code>def</code>.</p>
+	 * 
+	 * @param path Path to check
+	 * @param def Default value
+	 * @return Translated String
+	 */
+	@Nullable(why = "Default value may be null")
+	public String translateString(String path, @Nullable(why = "Default value may be null") String def) {
+		return translateString(path, def, true);
 	}
 	
 	/**
@@ -607,12 +625,12 @@ public class ConfigurationMappings {
 	 */
 	@Nullable(why = "Default value may be null")
 	public String translateString(String path, @Nullable(why = "Default value may be null") String def, boolean retainNewLines) {
-		return ChatColor.translate(getString(path, def), retainNewLines);
+		return contains(path) || def != null ? ChatColor.translate(getString(path, def), retainNewLines) : null;
 	}
 	
 	/**
-	 * Calls {@link #translateStringList(String, List, boolean)} specifying <code>path</code>,
-	 * <code>new </code>{@link ArrayList} and <code>true</code> as arguments.
+	 * Calls {@link #translateStringList(String, List)} specifying
+	 * <code>path</code>, <code>new </code>{@link ArrayList} and <code>true</code> as arguments.
 	 * 
 	 * <p>Will return a new {@link ArrayList} if a
 	 * {@link List}<code>&lt;{@link String}&gt;</code>
@@ -623,7 +641,26 @@ public class ConfigurationMappings {
 	 */
 	@NotNull
 	public List<String> translateStringList(String path) {
-		return translateStringList(path, new ArrayList<>(), true);
+		return translateStringList(path, new ArrayList<>());
+	}
+	
+	/**
+	 * Calls {@link #translateStringList(String, List, boolean)} specifying
+	 * <code>path</code>, <code>def</code> and <code>true</code> as arguments.
+	 * 
+	 * <p>Will return <code>def</code> if a
+	 * {@link List}<code>&lt;{@link String}&gt;</code>
+	 * is not found at the specified path.</p>
+	 * 
+	 * <p>You can specify <code>null</code> as <code>def</code>.</p>
+	 * 
+	 * @param path Path to check
+	 * @param def Default value
+	 * @return Translated String list
+	 */
+	@Nullable(why = "Default value may be null")
+	public List<String> translateStringList(String path, @Nullable(why = "Default value may be null") List<String> def) {
+		return translateStringList(path, def, true);
 	}
 	
 	/**
@@ -643,9 +680,7 @@ public class ConfigurationMappings {
 	 */
 	@Nullable(why = "Default value may be null")
 	public List<String> translateStringList(String path, @Nullable(why = "Default value may be null") List<String> def, boolean retainNewLines) {
-		if (def == null && !contains(path))
-			return null;
-		return ChatColor.translate(getList(path, def), retainNewLines);
+		return contains(path) || def != null ? ChatColor.translate(getList(path, def), retainNewLines) : null;
 	}
 	
 }

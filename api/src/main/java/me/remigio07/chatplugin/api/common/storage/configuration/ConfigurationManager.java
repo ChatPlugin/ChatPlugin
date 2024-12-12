@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.util.VersionChange;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -43,12 +42,6 @@ public abstract class ConfigurationManager implements ChatPluginManager {
 	public void unload() throws ChatPluginManagerException {
 		enabled = false;
 		
-		if (!ChatPlugin.getInstance().isReloading())
-			try {
-				saveAll();
-			} catch (IOException e) {
-				throw new ChatPluginManagerException(this, e);
-			}
 		configurations.clear();
 		
 		path = null;
@@ -62,7 +55,7 @@ public abstract class ConfigurationManager implements ChatPluginManager {
 	/**
 	 * Gets the loaded configurations' map.
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned map.</p>
+	 * <p>Do <em>not</em> modify the returned map.</p>
 	 * 
 	 * @return Loaded configurations' map
 	 */
@@ -94,22 +87,7 @@ public abstract class ConfigurationManager implements ChatPluginManager {
 		
 		for (Configuration configuration : configurations.values())
 			configuration.load();
-		LogManager.log("Loaded {0} configuration files in {1} ms.", 3, configurations.size(), System.currentTimeMillis() - ms);
-	}
-	
-	/**
-	 * Saves every internal configuration to its file.
-	 * 
-	 * @throws IOException If something goes wrong
-	 */
-	public void saveAll() throws IOException {
-		long ms = System.currentTimeMillis();
-		
-		for (Configuration configuration : configurations.values()) {
-			if (!configuration.getFile().exists())
-				configuration.createFile();
-			configuration.save();
-		} LogManager.log("Saved {0} configuration files in {1} ms.", 3, configurations.size(), System.currentTimeMillis() - ms);
+		LogManager.log("Loaded {0} configuration files in {1} ms.", 4, configurations.size(), System.currentTimeMillis() - ms);
 	}
 	
 	protected void putConfiguration(Configuration configuration) {

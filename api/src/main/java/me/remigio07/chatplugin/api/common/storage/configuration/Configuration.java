@@ -561,6 +561,20 @@ public class Configuration {
 	}
 	
 	/**
+	 * Shortcut for {@link ConfigurationMappings#translateString(String, String)}.
+	 * 
+	 * <p>You can specify <code>null</code> as <code>def</code>.</p>
+	 * 
+	 * @param path Path to check
+	 * @param def Default value
+	 * @return Translated String
+	 */
+	@Nullable(why = "Default value may be null")
+	public String translateString(String path, @Nullable(why = "Default value may be null") String def) {
+		return mappings.translateString(path, def);
+	}
+	
+	/**
 	 * Shortcut for {@link ConfigurationMappings#translateString(String, String, boolean)}.
 	 * 
 	 * <p>You can specify <code>null</code> as <code>def</code>.</p>
@@ -584,6 +598,20 @@ public class Configuration {
 	@NotNull
 	public List<String> translateStringList(String path) {
 		return mappings.translateStringList(path);
+	}
+	
+	/**
+	 * Shortcut for {@link ConfigurationMappings#translateStringList(String, List)}.
+	 * 
+	 * <p>You can specify <code>null</code> as <code>def</code>.</p>
+	 * 
+	 * @param path Path to check
+	 * @param def Default value
+	 * @return Translated String list
+	 */
+	@Nullable(why = "Default value may be null")
+	public List<String> translateStringList(String path, @Nullable(why = "Default value may be null") List<String> def) {
+		return mappings.translateStringList(path, def);
 	}
 	
 	/**

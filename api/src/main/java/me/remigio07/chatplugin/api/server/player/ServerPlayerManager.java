@@ -26,15 +26,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
+import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.util.ChatPluginState;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
+import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.common.util.packet.Packets;
 import me.remigio07.chatplugin.api.server.event.player.ServerPlayerLoadEvent;
 import me.remigio07.chatplugin.api.server.event.player.ServerPlayerUnloadEvent;
@@ -76,7 +79,7 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	/**
 	 * Gets the loaded {@link ChatPluginServerPlayer}s' map.
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned map.</p>
+	 * <p>Do <em>not</em> modify the returned map.</p>
 	 * 
 	 * @return Loaded players' map
 	 */
@@ -182,6 +185,12 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	 */
 	public void setStorageCount(int storageCount) {
 		this.storageCount = storageCount;
+	}
+	
+	protected void checkState(Runnable runnable) {
+		if (ChatPlugin.getState() == ChatPluginState.RELOADING || ChatPlugin.getState() == ChatPluginState.UNLOADING)
+			runnable.run();
+		else TaskManager.runAsync(runnable, 0L);
 	}
 	
 	/**

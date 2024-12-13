@@ -93,8 +93,6 @@ public class GUIManagerImpl extends GUIManager {
 			InternalGUIs.preparePlayerPunishments();
 			InternalGUIs.preparePlayerViolations();
 		} taskID = TaskManager.scheduleAsync(() -> {
-			if (ChatPlugin.getInstance().isReloading())
-				return;
 			List<String> internalGUIs = Arrays.asList("main", "chat-color", "violations", "player-info", "preferences", "player-violations");
 			
 			for (GUI gui : guis)

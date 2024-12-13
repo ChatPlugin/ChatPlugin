@@ -17,14 +17,20 @@ package me.remigio07.chatplugin.api;
 
 import java.io.File;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicReference;
 
 import me.remigio07.chatplugin.api.common.event.plugin.ChatPluginCrashEvent;
 import me.remigio07.chatplugin.api.common.event.plugin.ChatPluginReloadEvent;
 import me.remigio07.chatplugin.api.common.event.plugin.ChatPluginUnloadEvent;
+import me.remigio07.chatplugin.api.common.util.ChatPluginState;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagers;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager.LoggerType;
+import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
+import me.remigio07.chatplugin.bootstrap.BungeeCordBootstrapper;
 import me.remigio07.chatplugin.bootstrap.Environment;
+import me.remigio07.chatplugin.bootstrap.SpongeBootstrapper;
+import me.remigio07.chatplugin.bootstrap.VelocityBootstrapper;
 
 /**
  * ChatPlugin's main class's abstraction.
@@ -38,10 +44,10 @@ public abstract class ChatPlugin {
 	 */
 	public static final String VERSION;
 	protected static ChatPlugin instance;
+	protected static AtomicReference<ChatPluginState> state = new AtomicReference<>(ChatPluginState.NOT_STARTED_YET);
 	protected ChatPluginManagers managers;
 	protected Object logger;
 	protected File dataFolder;
-	protected boolean loaded, started, reloading;
 	protected int startupTime, lastReloadTime = -1;
 	
 	static {
@@ -52,33 +58,6 @@ public abstract class ChatPlugin {
 			String version = scanner.nextLine();
 			VERSION = version.substring(10, version.indexOf('\'', 10));
 		}
-	}
-	
-	/**
-	 * Checks if ChatPlugin has finished (re)loading.
-	 * 
-	 * @return Whether the plugin is loaded
-	 */
-	public boolean isLoaded() {
-		return loaded;
-	}
-	
-	/**
-	 * Checks if ChatPlugin has started correctly.
-	 * 
-	 * @return Whether the plugin has started
-	 */
-	public boolean hasStarted() {
-		return started;
-	}
-	
-	/**
-	 * Checks if a reload is being performed.
-	 * 
-	 * @return Whether the plugin is reloading
-	 */
-	public synchronized boolean isReloading() {
-		return reloading;
 	}
 	
 	/**
@@ -107,46 +86,65 @@ public abstract class ChatPlugin {
 	}
 	
 	/**
-	 * Gets ChatPlugin's data folder in plugins folder.
+	 * Gets the plugin's data folder in the plugins
+	 * (Bukkit/BungeeCord/Velocity) or mods (Sponge) folder.
 	 * 
-	 * @return Data folder
+	 * @return Plugin's data folder
 	 */
 	public File getDataFolder() {
 		return dataFolder;
 	}
 	
 	/**
-	 * Gets the time elapsed during ChatPlugin's startup, in milliseconds.
+	 * Gets the time elapsed during the plugin's startup, in milliseconds.
 	 * 
-	 * @return Time elapsed in milliseconds
+	 * @return Startup's time, in milliseconds
 	 */
 	public int getStartupTime() {
 		return startupTime;
 	}
 	
 	/**
-	 * Gets the time elapsed during ChatPlugin's last reload, in milliseconds.
+	 * Gets the time elapsed during the plugin's last reload, in milliseconds.
 	 * 
-	 * @return Time elapsed in milliseconds
+	 * <p>Will return -1 if no reloads have been performed yet.</p>
+	 * 
+	 * @return Last reload's time, in milliseconds
 	 */
 	public int getLastReloadTime() {
 		return lastReloadTime;
 	}
 	
 	/**
-	 * Gets ChatPlugin's instance, the main one.
+	 * Gets the main instance of the plugin.
+	 * 
+	 * <p>You may need instances of the bootstrappers
+	 * instead: check the following methods, too.</p>
 	 * 
 	 * @return Main instance
+	 * @see BukkitBootstrapper#getInstance()
+	 * @see SpongeBootstrapper#getInstance()
+	 * @see BungeeCordBootstrapper#getInstance()
+	 * @see VelocityBootstrapper#getInstance()
 	 */
 	public static ChatPlugin getInstance() {
 		return instance;
 	}
 	
 	/**
+	 * Gets the plugin's state.
+	 * 
+	 * @return Plugin's state
+	 */
+	public static ChatPluginState getState() {
+		return state.get();
+	}
+	
+	/**
 	 * Reloads ChatPlugin. Totally.
 	 * 
-	 * <p>If the reload fails the plugin will be safely disabled
-	 * and an error message will be sent to the console.</p>
+	 * <p>If the reload fails the plugin will be safely disabled, enter
+	 * recovery mode if possible and send an error message to the console.</p>
 	 * 
 	 * @return Time elapsed in milliseconds or 0 if not loaded or -1 if failed
 	 * @see ChatPluginReloadEvent
@@ -157,11 +155,11 @@ public abstract class ChatPlugin {
 	/**
 	 * Unloads ChatPlugin.
 	 * 
-	 * <p>If the unload fails the plugin will be safely disabled
-	 * and an error message will be sent to the console.</p>
+	 * <p>If the unload fails the plugin will be safely disabled, enter
+	 * recovery mode if possible and send an error message to the console.</p>
 	 * 
 	 * @deprecated Internal use only. You should never need to manually unload ChatPlugin.
-	 * @return Time elapsed in milliseconds or 0 if already unloaded or -1 if failed
+	 * @return Time elapsed in milliseconds or 0 if not loaded or -1 if failed
 	 * @see ChatPluginUnloadEvent
 	 */
 	@Deprecated
@@ -193,15 +191,16 @@ public abstract class ChatPlugin {
 	public abstract void printStartMessage();
 	
 	/**
-	 * Checks if ChatPlugin is running on online mode.
+	 * Checks if the plugin is running on online mode.
 	 * 
 	 * @return Whether online mode is enabled
-	 * @throws IllegalStateException If <code>!</code>{@link Environment#isProxy()} and <code>!</code>{@link #isLoaded()}
+	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()}
+	 * &amp;&amp; {@link #getState()} != {@link ChatPluginState#LOADED LOADED}</code>
 	 */
 	public abstract boolean isOnlineMode();
 	
 	/**
-	 * Checks if a licensed copy of ChatPlugin is running.
+	 * Checks if a premium copy of the plugin is running.
 	 * 
 	 * @return Whether the plugin is premium
 	 */

@@ -39,6 +39,7 @@ import me.remigio07.chatplugin.api.common.event.plugin.ChatPluginUnloadEvent;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationManager;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.util.ChatPluginState;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
@@ -63,6 +64,8 @@ public class ChatPluginSponge extends ChatPlugin {
 	
 	@SuppressWarnings("deprecation")
 	public int load(Logger logger, Path dataFolder) {
+		state.set(ChatPluginState.STARTING);
+		
 		long ms = System.currentTimeMillis();
 		this.logger = logger;
 		this.dataFolder = dataFolder.toFile();
@@ -86,23 +89,23 @@ public class ChatPluginSponge extends ChatPlugin {
 				if ((metrics = new SpongeMetrics(Sponge.getPluginManager().getPlugin("chatplugin").get(), 12758)).load().areMetricsEnabled())
 					LogManager.log("[ASYNC] Metrics loaded in {0} ms.", 4, System.currentTimeMillis() - ms2);
 			}, 0L);
-		} catch (ChatPluginManagerException e) {
+		} catch (ChatPluginManagerException cpme) {
 			if (LogManager.getInstance() == null)
-				System.err.println(e.getMessage() + ". Contact support if you are unable to solve the issue.");
-			else LogManager.log(e.getMessage() + ". Contact support if you are unable to solve the issue.", 2);
+				System.err.println(cpme.getLocalizedMessage() + ". Contact support if you are unable to solve the issue.");
+			else LogManager.log("{0}. Contact support if you are unable to solve the issue.", 2, cpme.getLocalizedMessage());
 			return -1;
 		} LogManager.log("Ready. Plugin loaded successfully in {0} ms.", 0, startupTime = (int) (System.currentTimeMillis() - ms));
+		state.set(ChatPluginState.LOADED);
 		new ChatPluginLoadEvent(startupTime).call();
-		
-		started = loaded = true;
 		return startupTime;
 	}
 	
 	@Override
 	public synchronized int reload() {
-		if (reloading || !loaded)
+		if (state.get() != ChatPluginState.LOADED)
 			return 0;
-		reloading = true;
+		state.set(ChatPluginState.RELOADING);
+		
 		long ms = System.currentTimeMillis();
 		
 		try {
@@ -111,28 +114,28 @@ public class ChatPluginSponge extends ChatPlugin {
 			SpongeCommandsHandler.unregisterCommands();
 			SpongeCommandsHandler.registerCommands();
 			LogManager.log("Plugin reloaded successfully in {0} ms.", 0, lastReloadTime = (int) (System.currentTimeMillis() - ms));
+			state.set(ChatPluginState.LOADED);
 			new ChatPluginReloadEvent(lastReloadTime).call();
 			return lastReloadTime;
-		} catch (ChatPluginManagerException e) {
-			LogManager.log(e.getMessage() + "; unloading...", 2);
-			new ChatPluginCrashEvent(e.getMessage()).call();
+		} catch (ChatPluginManagerException cpme) {
+			LogManager.log("{0}; unloading...", 2, cpme.getLocalizedMessage());
+			new ChatPluginCrashEvent(cpme.getLocalizedMessage()).call();
 			
 			if (unload() != -1)
 				performRecovery();
 			return -1;
-		} finally {
-			reloading = false;
 		}
 	}
 	
 	@Deprecated
 	@Override
 	public synchronized int unload() {
-		if (!started || !loaded)
+		if (state.get() != ChatPluginState.LOADED && state.get() != ChatPluginState.RELOADING)
 			return 0;
+		state.set(ChatPluginState.UNLOADING);
+		
 		try {
 			long ms = System.currentTimeMillis();
-			loaded = false;
 			
 			LogManager.log("Unloading ChatPlugin...", 0);
 			new ChatPluginUnloadEvent().call();
@@ -142,17 +145,20 @@ public class ChatPluginSponge extends ChatPlugin {
 			// ChatPlugin's stuff which might crash
 			managers.unloadManagers();
 			LogManager.log("Plugin unloaded successfully in {0} ms.", 3, ms = System.currentTimeMillis() - ms);
+			state.set(ChatPluginState.UNLOADED);
 			return (int) ms;
-		} catch (NoClassDefFoundError e) {
+		} catch (NoClassDefFoundError ncdfe) {
 			System.err.println("You cannot replace the plugin JAR while the server is running. Reloads are supported but not in this case; shutting down...");
 			Sponge.getServer().shutdown();
-		} catch (ChatPluginManagerException e) {
-			LogManager.log(e.getMessage() + "; performing recovery...", 2);
+		} catch (ChatPluginManagerException cpme) {
+			LogManager.log("{0}; performing recovery...", 2, cpme.getLocalizedMessage());
 			performRecovery();
 		} return -1;
 	}
 	
 	public void performRecovery() {
+		state.set(ChatPluginState.RECOVERY);
+		
 		CommandCallable callable = new CommandCallable() {
 			
 			@Override

@@ -216,33 +216,38 @@ public abstract class PlayerPingManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Pings every loaded player contained in <code>message</code> and
+	 * Pings every loaded player contained in <code>pingedPlayers</code> and
 	 * returns the message with their names colored using {@link #getColor()}.
 	 * 
-	 * <p>Specifying "@everyone" will result in all players being pinged.</p>
+	 * <p>Specifying "@everyone" will result in all players being pinged if <code>globalChat</code>.
+	 * Otherwise, only players inside of {@link RangedChatManager#getRange()} will be pinged.</p>
 	 * 
 	 * <p>Will do nothing if the player does not have the permission "chatplugin.player-ping"
 	 * or "chatplugin.player-ping.everyone" if they have tried to ping everyone.</p>
 	 * 
-	 * <p>This method will consider that some players may be ignored
-	 * by other players and that some players may be vanished.</p>
+	 * <p>This method will consider that some players may be ignored by other players.</p>
 	 * 
 	 * @param player Player involved
 	 * @param message Message involved
 	 * @param globalChat Whether the message has been sent to the global chat
+	 * @param pingedPlayers Pinged players' list ({@link #getPingedPlayers(ChatPluginServerPlayer, String, boolean)})
 	 * @return Message adjusted with color
 	 * @see PlayerPingEvent
 	 * @see PlayerIgnoreManager#getIgnoredPlayers(OfflinePlayer)
 	 */
-	public abstract String performPing(ChatPluginServerPlayer player, String message, boolean globalChat);
+	public abstract String performPing(ChatPluginServerPlayer player, String message, boolean globalChat, List<ChatPluginServerPlayer> pingedPlayers);
 	
 	/**
 	 * Gets the list of every loaded player contained in <code>message</code>.
 	 * 
-	 * <p>Specifying "@everyone" will result in all players being pinged.</p>
+	 * <p>Specifying "@everyone" will result in all players being pinged if <code>globalChat</code>.
+	 * Otherwise, only players inside of {@link RangedChatManager#getRange()} will be pinged.</p>
 	 * 
 	 * <p>Will return an empty list if the player does not have the permission "chatplugin.player-ping"
 	 * or "chatplugin.player-ping.everyone" if they have tried to ping everyone.</p>
+	 * 
+	 * <p>This method will <em>not</em> consider that some players may be ignored
+	 * by other players but will consider that some players may be vanished.</p>
 	 * 
 	 * @param player Player involved
 	 * @param message Message involved

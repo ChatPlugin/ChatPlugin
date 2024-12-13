@@ -15,6 +15,11 @@
 
 package me.remigio07.chatplugin.server.chat;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
@@ -38,7 +43,11 @@ public class InstantEmojisManagerImpl extends InstantEmojisManager {
 			return;
 		for (String id : ConfigurationType.CHAT.get().getKeys("chat.instant-emojis.values"))
 			if (getInstantEmoji(id) == null)
-				instantEmojis.add(new InstantEmoji(id, ConfigurationType.CHAT.get().getString("chat.instant-emojis.values." + id)));
+				try {
+					instantEmojis.add(new InstantEmoji(id, ConfigurationType.CHAT.get().getString("chat.instant-emojis.values." + id)));
+				} catch (IllegalArgumentException e) {
+					LogManager.log("Invalid instant emoji \"{0}\" set at \"chat.instant-emojis.values.{1}\" in chat.yml: the string cannot contain spaces.", 2, ConfigurationType.CHAT.get().getString("chat.instant-emojis.values." + id), id);
+				}
 		for (String tone : ConfigurationType.CHAT.get().getStringList("chat.instant-emojis.tones"))
 			try {
 				tones.add(ChatColor.of(tone));
@@ -62,17 +71,40 @@ public class InstantEmojisManagerImpl extends InstantEmojisManager {
 	}
 	
 	@Override
-	public String translateInstantEmojis(ChatPluginServerPlayer player, String message, boolean globalChat) {
+	public String translateInstantEmojis(ChatPluginServerPlayer player, String message, boolean globalChat, List<InstantEmoji> instantEmojis) {
 		String format = PlaceholderManager.getInstance().translatePlaceholders(RangedChatManager.getInstance().isEnabled() && globalChat ? RangedChatManager.getInstance().getGlobalModeFormat() : ChatManager.getInstance().getFormat(), player, ChatManager.getInstance().getPlaceholderTypes());
 		ChatColor tone = player.getEmojisTone() == ChatColor.RESET ? getDefaultTone() : player.getEmojisTone();
 		
-		for (InstantEmoji instantEmoji : instantEmojis) {
+		for (InstantEmoji instantEmoji : sort(instantEmojis)) {
 			String string = instantEmoji.getString().replace("{emojis_tone}", (VersionUtils.getVersion().isAtLeast(Version.V1_16) ? tone : tone.getClosestDefaultColor()).toString());
 			int index = 0;
 			
 			while ((index = message.indexOf(instantEmoji.getID(), index)) != -1)
 				message = message.replaceFirst(instantEmoji.getLiteralPattern(), string + ChatColor.getLastColors(format + message.substring(0, index)));
 		} return message;
+	}
+	
+	@Override
+	public List<InstantEmoji> getInstantEmojis(ChatPluginServerPlayer player, String message) {
+		List<InstantEmoji> instantEmojis = new ArrayList<>();
+		
+		for (InstantEmoji instantEmoji : sort(this.instantEmojis)) {
+			int index = 0;
+			
+			while ((index = message.indexOf(instantEmoji.getID(), index)) != -1) {
+				index += instantEmoji.getID().length();
+				
+				instantEmojis.add(instantEmoji);
+			}
+		} return instantEmojis;
+	}
+	
+	private List<InstantEmoji> sort(List<InstantEmoji> instantEmojis) {
+		List<InstantEmoji> sorted = new ArrayList<>(instantEmojis);
+		
+		sorted.sort(Comparator.comparingInt(emoji -> emoji.getString().length()));
+		Collections.reverse(sorted);
+		return sorted;
 	}
 	
 }

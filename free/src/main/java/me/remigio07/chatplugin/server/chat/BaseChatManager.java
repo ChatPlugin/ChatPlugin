@@ -15,8 +15,11 @@
 
 package me.remigio07.chatplugin.server.chat;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +36,7 @@ import me.remigio07.chatplugin.api.server.chat.ChatManager;
 import me.remigio07.chatplugin.api.server.chat.FormattedChatManager;
 import me.remigio07.chatplugin.api.server.chat.HoverInfoManager;
 import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager;
+import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager.InstantEmoji;
 import me.remigio07.chatplugin.api.server.chat.PlayerPingManager;
 import me.remigio07.chatplugin.api.server.chat.RangedChatManager;
 import me.remigio07.chatplugin.api.server.chat.StaffChatManager;
@@ -90,7 +94,7 @@ public abstract class BaseChatManager extends ChatManager {
 		this.chatMuted = chatMuted;
 	}
 	
-	public boolean handleChatEvent(ChatPluginServerPlayer player, String... args) {
+	public boolean handleChatEvent(ChatPluginServerPlayer player, String... args) { // *chaos starts*
 		String message = args[0].trim();
 		boolean global = false;
 		RangedChatManager rangedChatManager = RangedChatManager.getInstance();
@@ -105,7 +109,7 @@ public abstract class BaseChatManager extends ChatManager {
 			}
 		} else global = true;
 		
-		message = message.replaceAll(" +", " ");
+		message = message.replaceAll("\\s+", " ");
 		PreChatEvent preChatEvent = new PreChatEvent(player, message, global);
 		
 		preChatEvent.call();
@@ -113,30 +117,32 @@ public abstract class BaseChatManager extends ChatManager {
 		if (preChatEvent.isCancelled())
 			return true;
 		
-		// 1. staff-chat
+		// 1. staff chat
 		if (StaffChatManager.getInstance().isEnabled() && player.hasPermission("chatplugin.commands.staffchat") && StaffChatManager.getInstance().isUsingStaffChat(player.getUUID())) {
 			StaffChatManager.getInstance().sendPlayerMessage(player, message);
 			return true;
 		} DenyChatReason<?> reason = null;
-		List<String> urls = URLValidator.getURLs(message);
 		
 		// 2. vanish
 		if (player.isVanished())
 			reason = DenyChatReason.VANISH;
 		
-		// 3. mute
+		// 3. mute(all)
 		if (reason == null)
 			if (chatMuted && !player.hasPermission("chatplugin.commands.muteall"))
 				reason = DenyChatReason.MUTEALL;
 			else if (MuteManager.getInstance().isEnabled() && MuteManager.getInstance().isMuted(player, ProxyManager.getInstance().getServerID()))
 				reason = DenyChatReason.MUTE;
 		
+		String stripColor = ChatColor.stripColor(message);
+		
 		// 4. antispam
 		if (reason == null && AntispamManager.getInstance().isEnabled())
-			reason = AntispamManager.getInstance().getDenyChatReason(player, message, Collections.emptyList());
+			reason = AntispamManager.getInstance().getDenyChatReason(player, stripColor, Collections.emptyList());
+		List<String> urls = URLValidator.getURLs(stripColor);
 		
-		// 5. formatted-chat
-		if (reason == null && FormattedChatManager.getInstance().isEnabled() && FormattedChatManager.getInstance().containsFormattedText(message, urls, true)) {
+		// 5. formatted chat
+		if (reason == null && FormattedChatManager.getInstance().isEnabled() && FormattedChatManager.getInstance().containsFormattedText(stripColor, urls, true)) {
 			if (!player.hasPermission("chatplugin.formatted-chat"))
 				if (!FormattedChatManager.getInstance().isSendAnyway())
 					reason = DenyChatReason.FORMAT;
@@ -144,20 +150,26 @@ public abstract class BaseChatManager extends ChatManager {
 			else message = FormattedChatManager.getInstance().translate(message, urls, true);
 		}
 		
-		// 6. blank-message
-		if (reason == null && ChatColor.stripColor(message).replaceAll("\\s", "").isEmpty())
+		// 6. blank message
+		if (reason == null && ChatColor.stripColor(message).replace(" ", "").isEmpty())
 			reason = DenyChatReason.BLANK_MESSAGE;
+		List<InstantEmoji> instantEmojis = Collections.emptyList();
+		List<ChatPluginServerPlayer> pingedPlayers = Collections.emptyList();
 		
-		// 7. instant-emojis
-		if (reason == null && InstantEmojisManager.getInstance().isEnabled())
-			message = InstantEmojisManager.getInstance().translateInstantEmojis(player, message, global);
-		
-		// 8. player-ping
-		if (reason == null && PlayerPingManager.getInstance().isEnabled())
-			message = PlayerPingManager.getInstance().performPing(player, message, global);
-		
-		// denied
-		if (reason != null) {
+		if (reason == null) {
+			// 7. chat color
+			if (!player.getChatColor().equals(ChatColor.RESET))
+				message = player.getChatColor().toString() + message;
+			
+			// 8. instant emojis
+			if (InstantEmojisManager.getInstance().isEnabled())
+				message = InstantEmojisManager.getInstance().translateInstantEmojis(player, message, global, instantEmojis = InstantEmojisManager.getInstance().getInstantEmojis(player, message));
+			
+			// 9. player ping
+			if (PlayerPingManager.getInstance().isEnabled())
+				message = PlayerPingManager.getInstance().performPing(player, message, global, pingedPlayers = PlayerPingManager.getInstance().getPingedPlayers(player, message, global));
+			
+		} else { // denied
 			String denyMessage = reason.getMessage(player.getLanguage());
 			
 			new DenyChatEvent(player, message, global, reason).call();
@@ -183,7 +195,7 @@ public abstract class BaseChatManager extends ChatManager {
 						staff.sendTranslatedMessage("chat.deny-chat-notify", player.getName(), reason.name(), message);
 				if (ChatLogManager.getInstance().isEnabled())
 					ChatLogManager.getInstance().logPublicMessage(player, message, global, reason);
-				ChatPlugin.getInstance().sendConsoleMessage(ChatColor.translate(Language.getMainLanguage().getMessage("chat.deny-chat-notify", player.getName(), reason.name(), message)), false);
+				ChatPlugin.getInstance().sendConsoleMessage(Language.getMainLanguage().getMessage("chat.deny-chat-notify", player.getName(), reason.name(), message), false);
 			} player.sendMessage(denyMessage);
 			return true;
 		} AllowChatEvent allowChatEvent = new AllowChatEvent(player, message, global);
@@ -196,7 +208,7 @@ public abstract class BaseChatManager extends ChatManager {
 			ChatLogManager.getInstance().logPublicMessage(player, message, global, null);
 		if (HoverInfoManager.getInstance().isEnabled()) {
 			for (Language language : LanguageManager.getInstance().getLanguages()) {
-				TextComponent text = ((BaseHoverInfoManager) HoverInfoManager.getInstance()).getMessageHoverInfo(message, rangedChatManager.isEnabled() && global, urls, player, language);
+				TextComponent text = ((BaseHoverInfoManager) HoverInfoManager.getInstance()).getMessageHoverInfo(player, language, message, rangedChatManager.isEnabled() && global, urls, pingedPlayers, new HashSet<>(instantEmojis));
 				
 				for (ChatPluginServerPlayer other : language.getOnlinePlayers())
 					if (!other.getIgnoredPlayers().contains(player)) {
@@ -225,11 +237,11 @@ public abstract class BaseChatManager extends ChatManager {
 			}
 		} try {
 			StorageConnector.getInstance().incrementPlayerStat(PlayersDataType.MESSAGES_SENT, player);
-		} catch (Exception e) {
-			LogManager.log("{0} occurred while incrementing messages sent stat for {1}: {2}", 2, e.getClass().getSimpleName(), player.getName(), e.getMessage());
-		} logMessage(ChatColor.translate(PlaceholderManager.getInstance().translatePlaceholders(consoleFormat, player, placeholderTypes)) + message);
+		} catch (SQLException | IOException e) {
+			LogManager.log("{0} occurred while incrementing messages sent stat for {1}: {2}", 2, e.getClass().getSimpleName(), player.getName(), e.getLocalizedMessage());
+		} logMessage(PlaceholderManager.getInstance().translatePlaceholders(consoleFormat, player, placeholderTypes) + message);
 		
-		if (IntegrationType.DISCORDSRV.isEnabled())
+		if (overrideChatEvent && IntegrationType.DISCORDSRV.isEnabled())
 			IntegrationType.DISCORDSRV.get().handleChatEvent(player, message);
 		return false;
 	}

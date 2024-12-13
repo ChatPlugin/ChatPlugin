@@ -46,10 +46,10 @@ public class FormattedChatManagerImpl extends FormattedChatManager {
 	public boolean containsFormattedText(String input, List<String> urls, boolean considerURLs) {
 		if (considerURLs) {
 			for (String arg : input.split(" "))
-				if (!urls.contains(arg) && !ChatColor.stripColor(ChatColor.translate(arg)).equals(arg))
+				if (!urls.contains(arg) && !ChatColor.stripColor(ChatColor.translate(arg)).equals(ChatColor.stripColor(arg)))
 					return true;
 			return false;
-		} return !ChatColor.stripColor(ChatColor.translate(input)).equals(input);
+		} return !ChatColor.stripColor(ChatColor.translate(input)).equals(ChatColor.stripColor(input));
 	}
 	
 	@Override

@@ -77,7 +77,7 @@ public abstract class InstantEmojisManager implements ChatPluginManager {
 	/**
 	 * Gets the list of loaded instant emojis' tones.
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned list.</p>
+	 * <p>Do <em>not</em> modify the returned list.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "chat.instant-emojis.tones" in {@link ConfigurationType#CHAT}</p>
 	 * 
@@ -109,14 +109,28 @@ public abstract class InstantEmojisManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Formats a message translating all the instant emojis loaded.
+	 * Translates every loaded instant emoji contained in <code>instantEmojis</code>.
 	 * 
 	 * @param player Player involved
 	 * @param message Message involved
 	 * @param globalChat Whether the message has been sent to the global chat
+	 * @param instantEmojis Instant emojis' list ({@link #getInstantEmojis(ChatPluginServerPlayer, String)})
 	 * @return Translated message
 	 */
-	public abstract String translateInstantEmojis(ChatPluginServerPlayer player, String message, boolean globalChat);
+	public abstract String translateInstantEmojis(ChatPluginServerPlayer player, String message, boolean globalChat, List<InstantEmoji> instantEmojis);
+	
+	/**
+	 * Gets the list of every loaded instant emoji contained in <code>message</code>.
+	 * 
+	 * <p>The returned list will contain duplicate elements
+	 * if the same emoji has been typed more than once.
+	 * There are no guarantees on the order of the elements.</p>
+	 * 
+	 * @param player Player involved
+	 * @param message Message involved
+	 * @return Instant emojis' list
+	 */
+	public abstract List<InstantEmoji> getInstantEmojis(ChatPluginServerPlayer player, String message);
 	
 	/**
 	 * Represents an instant emoji handled by the {@link InstantEmojisManager}.
@@ -132,8 +146,11 @@ public abstract class InstantEmojisManager implements ChatPluginManager {
 		 * 
 		 * @param id Instant emoji's ID
 		 * @param string Instant emoji's string
+		 * @throws IllegalArgumentException If <code>string.contains(" ")</code>
 		 */
 		public InstantEmoji(String id, String string) {
+			if (string.contains(" "))
+				throw new IllegalArgumentException("Instant emoji's string cannot contain spaces");
 			this.id = id;
 			this.string = ChatColor.translate(string);
 			literalPattern = Pattern.quote(id);

@@ -691,8 +691,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.color-command-enabled", true);
 		chat.addDefault("chat.event.override", true);
 		chat.addDefault("chat.event.priority", Environment.isBukkit() ? "HIGH" : "LATE");
-		chat.addDefault("chat.format", "&7«&f{prefix}{tag_name_color}{player}{suffix}&7» &f{chat_color}");
-		chat.addDefault("chat.console-format", "&8{world} &7<{prefix}{tag_name_color}{player}{suffix}&7> &f{chat_color}");
+		chat.addDefault("chat.format", "&7«&f{prefix}{tag_name_color}{player}{suffix}&7» &f");
+		chat.addDefault("chat.console-format", "&8{world} &7<{prefix}{tag_name_color}{player}{suffix}&7> &f");
 		chat.addDefault("chat.recognized-tlds", Arrays.asList("com", "net", "org", "io", "me", "edu", "gov", "int", "info", "pro", "xyz", "gg", "us", "eu", "uk", "de", "fr", "es", "it", "co.uk", "jp", "ru"));
 		chat.addDefault("chat.placeholder-types", Arrays.asList("PLAYER"));
 		
@@ -702,10 +702,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.ranged-chat.enabled", false);
 		chat.addDefault("chat.ranged-chat.range", 50);
 		chat.addDefault("chat.ranged-chat.spy.on-join-enabled", true);
-		chat.addDefault("chat.ranged-chat.spy.format", "&7«&8[&4&lS&8] &f{prefix}{tag_name_color}{player}{suffix}&7» &f{chat_color}");
+		chat.addDefault("chat.ranged-chat.spy.format", "&7«&8[&4&lS&8] &f{prefix}{tag_name_color}{player}{suffix}&7» &f");
 		chat.addDefault("chat.ranged-chat.global-mode.enabled", true);
 		chat.addDefault("chat.ranged-chat.global-mode.prefix", "!");
-		chat.addDefault("chat.ranged-chat.global-mode.format", "&7«&8[&2&lG&8] &f{prefix}{tag_name_color}{player}{suffix}&7» &f{chat_color}");
+		chat.addDefault("chat.ranged-chat.global-mode.format", "&7«&8[&2&lG&8] &f{prefix}{tag_name_color}{player}{suffix}&7» &f");
 		
 		chat.addDefault("chat.antispam.enabled", true);
 		chat.addDefault("chat.antispam.leet-filter-enabled", true);
@@ -775,6 +775,10 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.hover-info.url.color", "&b&n");
 		chat.addDefault("chat.hover-info.url.hovers.english", "&9[Click here to open the URL]");
 		chat.addDefault("chat.hover-info.url.hovers.italian", "&9[Clicca qui per aprire l'URL]");
+		chat.addDefault("chat.hover-info.player-ping.enabled", true);
+		chat.addDefault("chat.hover-info.instant-emoji.enabled", true);
+		chat.addDefault("chat.hover-info.instant-emoji.hovers.english", "{emoji} &f{emoji_id}\n&7A default emoji. You can use this\n&7emoji everywhere on this server.");
+		chat.addDefault("chat.hover-info.instant-emoji.hovers.italian", "{emoji} &f{emoji_id}\n&7Un'emoji predefinita. Puoi usare questa\n&7emoji ovunque su questo server.");
 		
 		chat.addDefault("chat.instant-emojis.enabled", true);
 		chat.addDefault("chat.instant-emojis.tones", Arrays.asList("#FFFF55", "#F9E0C1", "#E3C29C", "#C6956C", "#A06940", "#5C473C"));

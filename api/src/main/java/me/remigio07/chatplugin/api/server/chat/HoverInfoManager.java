@@ -45,11 +45,11 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 public abstract class HoverInfoManager implements ChatPluginManager {
 	
 	protected static HoverInfoManager instance;
-	protected boolean enabled, rankHoverEnabled, playerHoverEnabled, urlHoverEnabled, defaultHTTPS;
+	protected boolean enabled, rankHoverEnabled, playerHoverEnabled, urlHoverEnabled, defaultHTTPS, playerPingHoverEnabled, instantEmojiHoverEnabled;
 	protected ClickActionAdapter playerClickAction;
 	protected String playerClickValue, urlColor;
 	protected List<PlaceholderType> playerPlaceholderTypes = Collections.emptyList();
-	protected Map<Language, String> playerHovers = new HashMap<>(), urlHovers = new HashMap<>();
+	protected Map<Language, String> playerHovers = new HashMap<>(), urlHovers = new HashMap<>(), instantEmojiHovers = new HashMap<>();
 	protected List<String> chatFormat = new ArrayList<>(), globalChatFormat = new ArrayList<>();
 	protected long loadTime;
 	
@@ -105,6 +105,28 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	 */
 	public boolean isDefaultHTTPS() {
 		return defaultHTTPS;
+	}
+	
+	/**
+	 * Checks if info should be displayed when hovering over a player ping in the chat.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.hover-info.player-ping.enabled" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Whether player ping hover should be displayed
+	 */
+	public boolean isPlayerPingHoverEnabled() {
+		return playerPingHoverEnabled;
+	}
+	
+	/**
+	 * Checks if info should be displayed when hovering over an instant emoji in the chat.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.hover-info.instant-emoji.enabled" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Whether instant emoji hover should be displayed
+	 */
+	public boolean isInstantEmojiHoverEnabled() {
+		return instantEmojiHoverEnabled;
 	}
 	
 	/**

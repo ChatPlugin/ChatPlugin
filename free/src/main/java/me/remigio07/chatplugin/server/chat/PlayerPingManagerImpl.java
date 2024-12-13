@@ -15,9 +15,11 @@
 
 package me.remigio07.chatplugin.server.chat;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
@@ -37,6 +39,8 @@ import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 
 public class PlayerPingManagerImpl extends PlayerPingManager {
+	
+	private static final Pattern EVERYONE_PATTERN = pattern("everyone", true);
 	
 	@Override
 	public void load() throws ChatPluginManagerException {
@@ -95,55 +99,59 @@ public class PlayerPingManagerImpl extends PlayerPingManager {
 	}
 	
 	@Override
-	public String performPing(ChatPluginServerPlayer player, String message, boolean globalChat) {
+	public String performPing(ChatPluginServerPlayer player, String message, boolean globalChat, List<ChatPluginServerPlayer> pingedPlayers) {
 		if (enabled) {
-			List<ChatPluginServerPlayer> pingedPlayers = getPingedPlayers(player, message, globalChat);
-			String str = PlaceholderManager.getInstance().translatePlaceholders(RangedChatManager.getInstance().isEnabled() && globalChat ? RangedChatManager.getInstance().getGlobalModeFormat() : ChatManager.getInstance().getFormat(), player, ChatManager.getInstance().getPlaceholderTypes());
-			
-			if (Arrays.asList(message.split(" ")).contains("@everyone") && player.hasPermission("chatplugin.player-ping.everyone")) {
-				String[] array = message.split("\\s*@everyone\\s*", 2);
-				message = message.replaceFirst("\\s*@everyone\\s*", (array[0].isEmpty() ? "" : " ") + ChatColor.translate(color) + "@everyone" + (array[1].isEmpty() ? "" : (" " + ChatColor.getLastColors(str + array[0]))));
-			} if (!pingedPlayers.isEmpty())
-				for (ChatPluginServerPlayer pinged : pingedPlayers)
-					if (!pinged.isVanished()) {
-						String regex = "\\s*" + (atSignRequired ? "@" : "") + pinged.getName() + "\\s*";
-						String[] array = message.split(regex, 2);
-						
-						if (array.length == 2)
-							message = message.replaceFirst(regex, (array[0].isEmpty() ? "" : " ") + ChatColor.translate(color) + "@" + pinged.getName() + (array[1].isEmpty() ? "" : (" " + ChatColor.getLastColors(str + array[0]))));
-						if (!PlayerIgnoreManager.getInstance().isEnabled() || !pinged.getIgnoredPlayers().contains(player)) {
-							if (titlesEnabled)
-								pinged.sendTitle(
-										PlaceholderManager.getInstance().translatePlayerPlaceholders(getTitle(pinged.getLanguage(), true), player, pinged.getLanguage()),
-										PlaceholderManager.getInstance().translatePlayerPlaceholders(getSubtitle(pinged.getLanguage(), true), player, pinged.getLanguage()),
-										(int) titlesFadeIn,
-										(int) titlesStay,
-										(int) titlesFadeOut
-										);
-							pinged.sendTranslatedMessage("chat.pinged", player.getName());
-							playPingSound(pinged);
-						}
+			if (!pingedPlayers.isEmpty()) {
+				String str = PlaceholderManager.getInstance().translatePlaceholders(RangedChatManager.getInstance().isEnabled() && globalChat ? RangedChatManager.getInstance().getGlobalModeFormat() : ChatManager.getInstance().getFormat(), player, ChatManager.getInstance().getPlaceholderTypes());
+				Matcher matcher = EVERYONE_PATTERN.matcher(message);
+				
+				if (matcher.find() && player.hasPermission("chatplugin.player-ping.everyone")) {
+					String[] array = new String[] { message.substring(0, matcher.start()), message.substring(matcher.end(), message.length()) };
+					message = array[0] + ChatColor.translate(color) + "@everyone" + ChatColor.getLastColors(str + array[0] + matcher.group()) + array[1];
+				} for (ChatPluginServerPlayer pinged : pingedPlayers) {
+					matcher = pattern(pinged.getName(), atSignRequired).matcher(message);
+					
+					if (matcher.find()) {
+						String[] array = new String[] { message.substring(0, matcher.start()), message.substring(matcher.end(), message.length()) };
+						message = array[0] + ChatColor.translate(color) + "@" + pinged.getName() + ChatColor.getLastColors(str + array[0] + matcher.group()) + array[1];
+					} if (!PlayerIgnoreManager.getInstance().isEnabled() || !pinged.getIgnoredPlayers().contains(player)) {
+						if (titlesEnabled)
+							pinged.sendTitle(
+									PlaceholderManager.getInstance().translatePlayerPlaceholders(getTitle(pinged.getLanguage(), true), player, pinged.getLanguage()),
+									PlaceholderManager.getInstance().translatePlayerPlaceholders(getSubtitle(pinged.getLanguage(), true), player, pinged.getLanguage()),
+									(int) titlesFadeIn,
+									(int) titlesStay,
+									(int) titlesFadeOut
+									);
+						pinged.sendTranslatedMessage("chat.pinged", player.getName());
+						playPingSound(pinged);
 					}
+				}
+			}
 		} return message;
 	}
 	
-	@SuppressWarnings("deprecation")
+	private static Pattern pattern(String str, boolean appendAtSign) {
+		StringBuilder sb = new StringBuilder("(?i)(?<=^|\\W)");
+		
+		if (appendAtSign)
+			sb.append("(§[0-9A-FK-ORX])*@");
+		for (char c : str.toCharArray())
+			sb.append("(§[0-9A-FK-ORX])*(?-i:").append(c).append(')');
+		return Pattern.compile(sb.append("(§[0-9A-FK-ORX])*(?=$|\\W)").toString());
+	}
+	
 	@Override
 	public List<ChatPluginServerPlayer> getPingedPlayers(ChatPluginServerPlayer player, String message, boolean globalChat) {
 		if (!player.hasPermission("chatplugin.player-ping"))
 			return Collections.emptyList();
-		List<String> words = Arrays.asList(message.split(" "));
-		return words.contains("@everyone") && player.hasPermission("chatplugin.player-ping.everyone")
-				? ServerPlayerManager.getInstance().getPlayers().values()
-						.stream()
-						.filter(other -> other != player && (globalChat || !(((BaseChatPluginServerPlayer) other).getDistance(player.getWorld(), player.getX(), player.getY(), player.getZ()) > RangedChatManager.getInstance().getRange())))
-						.collect(Collectors.toList())
-				: words
+		Predicate<ChatPluginServerPlayer> predicate = other -> other != player
+				&& !other.isVanished()
+				&& (globalChat || !(((BaseChatPluginServerPlayer) other).getDistance(player.getWorld(), player.getX(), player.getY(), player.getZ()) > RangedChatManager.getInstance().getRange()));
+		return ServerPlayerManager.getInstance().getPlayers().values()
 				.stream()
-				.filter(str -> str.startsWith("@") || !atSignRequired)
-				.map(str -> ServerPlayerManager.getInstance().getPlayer(atSignRequired ? str.substring(1) : str, false, false))
-				.distinct()
-				.filter(other -> other != null && other != player && (globalChat || !(((BaseChatPluginServerPlayer) other).getDistance(player.getWorld(), player.getX(), player.getY(), player.getZ()) > RangedChatManager.getInstance().getRange())))
+				.filter(EVERYONE_PATTERN.matcher(message).find() && player.hasPermission("chatplugin.player-ping.everyone")
+						? predicate : other -> predicate.test(other) && pattern(other.getName(), atSignRequired).matcher(message).find())
 				.collect(Collectors.toList());
 	}
 	

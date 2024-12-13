@@ -56,13 +56,12 @@ import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.server.bossbar.NativeBossbar;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
+import me.remigio07.chatplugin.server.sponge.manager.SpongePlayerManager;
 import me.remigio07.chatplugin.server.util.Utils;
-import net.kyori.adventure.platform.spongeapi.SpongeAudiences;
 import net.kyori.adventure.text.Component;
 
 public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	
-	private static SpongeAudiences audiences;
 	private static Cause inventoryCause;
 	private Player player;
 	
@@ -77,7 +76,7 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	public ChatPluginSpongePlayer(Player player) {
 		super(new PlayerAdapter(player));
 		this.player = player;
-		audience = (audiences == null ? audiences = SpongeAudiences.create(Sponge.getPluginManager().getPlugin("chatplugin").get(), Sponge.getGame()) : audiences).player(player);
+		audience = SpongePlayerManager.getAudiences().player(player);
 		rank = RankManager.getInstance().calculateRank(this);
 		version = version == null ? VersionUtils.getVersion() : version;
 		playerConnection = player.getConnection();
@@ -94,7 +93,7 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 			
 			try {
 				storage.insertNewPlayer(this);
-			} catch (Exception e) {
+			} catch (SQLException | IOException e) {
 				LogManager.log("{0} occurred while inserting {1} in the storage: {2}", 2, e.getClass().getSimpleName(), name, e.getMessage());
 			} if (detector.isEnabled()) {
 				if (detector.getMethod() == LanguageDetectionMethod.CLIENT_LOCALE) {
@@ -187,7 +186,9 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public void disconnect(String reason) {
-		TaskManager.runSync(() -> player.kick(Utils.serializeSpongeText(reason, true)), 0L);
+		if (Sponge.getServer().isMainThread())
+			player.kick(Utils.serializeSpongeText(reason, true));
+		else TaskManager.runSync(() -> disconnect(reason), 0L);
 	}
 	
 	@Override

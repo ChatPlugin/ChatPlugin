@@ -17,15 +17,19 @@ package me.remigio07.chatplugin.server.bukkit.manager;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ScheduledFuture;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import com.viaversion.viaversion.api.Via;
@@ -53,7 +57,6 @@ import me.remigio07.chatplugin.api.server.gui.PerPlayerGUI;
 import me.remigio07.chatplugin.api.server.join_quit.QuitMessageManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
-import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
 import me.remigio07.chatplugin.api.server.scoreboard.ScoreboardManager;
 import me.remigio07.chatplugin.api.server.tablist.Tablist;
 import me.remigio07.chatplugin.api.server.tablist.TablistManager;
@@ -62,14 +65,17 @@ import me.remigio07.chatplugin.api.server.tablist.custom_suffix.RenderType;
 import me.remigio07.chatplugin.api.server.util.adapter.scoreboard.ObjectiveAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
+import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07.chatplugin.server.bukkit.BukkitReflection;
 import me.remigio07.chatplugin.server.bukkit.ChatPluginBukkitPlayer;
 import me.remigio07.chatplugin.server.join_quit.QuitMessageManagerImpl.QuitPacketImpl;
 import me.remigio07.chatplugin.server.util.Utils;
 import me.remigio07.chatplugin.server.util.manager.VanishManagerImpl;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 
 public class BukkitPlayerManager extends ServerPlayerManager {
 	
+	private static BukkitAudiences audiences;
 	private long localeChangeTaskID;
 	
 	@Override
@@ -96,7 +102,9 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 					}
 				}
 			}, 0L, 2000L);
-		} enabled = true;
+		} if (audiences == null)
+			TaskManager.runSync(() -> audiences = BukkitAudiences.create(BukkitBootstrapper.getInstance()), 0L);
+		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}
 	
@@ -136,8 +144,8 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 								if (onlinePlayersData.getBoolean(player + ".bedrock"))
 									bedrockPlayers.add(uuid);
 							}
-						} catch (IOException e) {
-							message = e.getMessage();
+						} catch (IOException ioe) {
+							message = ioe.getLocalizedMessage();
 						}
 					else message = file.getPath() + " file does not exist";
 					
@@ -160,8 +168,7 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 		long ms = System.currentTimeMillis();
 		Player bukkitValue = player.bukkitValue();
 		ChatPluginBukkitPlayer serverPlayer = new ChatPluginBukkitPlayer(bukkitValue);
-		// teams start
-		org.bukkit.scoreboard.Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+		Scoreboard scoreboard = getNewScoreboard();
 		Objective objective = scoreboard.registerNewObjective("scoreboard", "dummy");
 		boolean atLeastV1_9 = VersionUtils.getVersion().isAtLeast(Version.V1_9);
 		
@@ -177,8 +184,8 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 		// scoreboard
 		for (int i = 0; i < 15; i++)
 			if (atLeastV1_9)
-				scoreboard.registerNewTeam("line_" + i).addEntry(Scoreboard.SCORES[i]);
-			else BukkitReflection.invokeMethod("Scoreboard", "addPlayerToTeam", BukkitReflection.invokeMethod("CraftScoreboard", "getHandle", scoreboard), Scoreboard.SCORES[i], scoreboard.registerNewTeam("line_" + i).getName());
+				scoreboard.registerNewTeam("line_" + i).addEntry(me.remigio07.chatplugin.api.server.scoreboard.Scoreboard.SCORES[i]);
+			else BukkitReflection.invokeMethod("Scoreboard", "addPlayerToTeam", BukkitReflection.invokeMethod("CraftScoreboard", "getHandle", scoreboard), me.remigio07.chatplugin.api.server.scoreboard.Scoreboard.SCORES[i], scoreboard.registerNewTeam("line_" + i).getName());
 		bukkitValue.setScoreboard(scoreboard);
 		serverPlayer.setObjective(new ObjectiveAdapter(objective));
 		
@@ -207,6 +214,15 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 		new ServerPlayerLoadEvent(serverPlayer, (int) (ms = System.currentTimeMillis() - ms)).call();
 		LogManager.log("Player {0} has been loaded in {1} ms.", 4, player.getName(), ms);
 		return (int) ms;
+	}
+	
+	private static Scoreboard getNewScoreboard() {
+		if (Bukkit.isPrimaryThread())
+			return Bukkit.getScoreboardManager().getNewScoreboard();
+		CompletableFuture<Scoreboard> future = new CompletableFuture<>();
+		
+		TaskManager.runSync(() -> future.complete(getNewScoreboard()), 0L);
+		return future.join();
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -245,29 +261,38 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 			serverPlayer.getBossbar().unregister();
 		if (GUIManager.getInstance().getOpenGUI(serverPlayer) != null)
 			serverPlayer.closeInventory();
-		if (IPLookupManager.getInstance().isEnabled())
-			IPLookupManager.getInstance().removeFromCache(serverPlayer.getIPAddress());
-		if (VanishManager.getInstance().isEnabled())
-			((VanishManagerImpl) VanishManager.getInstance()).show(serverPlayer, false);
-		if (BossbarManager.getInstance().getLoadingBossbarsTasks().containsKey(serverPlayer))
-			TaskManager.getInstance().getAsyncTasks().get(BossbarManager.getInstance().getLoadingBossbarsTasks().remove(serverPlayer)).run();
-		if (StaffChatManager.getInstance().isEnabled())
-			StaffChatManager.getInstance().removePlayer(player);
+		IPLookupManager.getInstance().removeFromCache(serverPlayer.getIPAddress());
+		StaffChatManager.getInstance().removePlayer(player);
 		TablistManager.getInstance().sendTablist(Tablist.NULL_TABLIST, serverPlayer);
-		scoreboard.getTeams().forEach(Team::unregister);
+		((VanishManagerImpl) VanishManager.getInstance()).show(serverPlayer, false);
+		
+		Long taskID = BossbarManager.getInstance().getLoadingBossbarsTasks().remove(serverPlayer);
+		
+		if (taskID != null) {
+			ScheduledFuture<?> task = TaskManager.getInstance().getAsyncTasks().get(taskID);
+			
+			if (task != null)
+				((Runnable) task).run();
+		} scoreboard.getTeams().forEach(Team::unregister);
 		scoreboard.getObjectives().forEach(Objective::unregister);
 		players.values().forEach(other -> other.getObjective().bukkitValue().getScoreboard().getTeams().stream().filter(team -> team.getName().equals(serverPlayer.getRank().formatIdentifier(serverPlayer))).forEach(Team::unregister));
 		GUIManager.getInstance().getGUIs().stream().filter(PerPlayerGUI.class::isInstance).map(PerPlayerGUI.class::cast).forEach(gui -> gui.unload(true));
 		QuitMessageManager.getInstance().getFakeQuits().remove(player);
 		Utils.inventoryTitles.remove(player);
-		
-		try {
-			StorageConnector.getInstance().setPlayerData(PlayersDataType.LAST_LOGOUT, serverPlayer, System.currentTimeMillis());
-			StorageConnector.getInstance().setPlayerData(PlayersDataType.TIME_PLAYED, serverPlayer, StorageConnector.getInstance().getPlayerData(PlayersDataType.TIME_PLAYED, serverPlayer) + (System.currentTimeMillis() - serverPlayer.getLoginTime()));
-		} catch (Exception e) {
-			LogManager.log("{0} occurred while setting {1}'s last logout or time played in the storage: {2}", 2, e.getClass().getSimpleName(), serverPlayer.getName(), e.getMessage());
-		} LogManager.log("Player {0} has been unloaded in {1} ms.", 4, serverPlayer.getName(), ms = System.currentTimeMillis() - ms);
+		checkState(() -> {
+			try {
+				StorageConnector.getInstance().setPlayerData(PlayersDataType.LAST_LOGOUT, serverPlayer, System.currentTimeMillis()); // this is called on every unload too, not just quits...
+				StorageConnector.getInstance().setPlayerData(PlayersDataType.TIME_PLAYED, serverPlayer, StorageConnector.getInstance().getPlayerData(PlayersDataType.TIME_PLAYED, serverPlayer) + (System.currentTimeMillis() - serverPlayer.getLoginTime()));
+			} catch (SQLException | IOException  e) {
+				LogManager.log("{0} occurred while setting {1}'s last logout or time played in the storage: {2}", 2, e.getClass().getSimpleName(), serverPlayer.getName(), e.getLocalizedMessage());
+			}
+		});
+		LogManager.log("Player {0} has been unloaded in {1} ms.", 4, serverPlayer.getName(), ms = System.currentTimeMillis() - ms);
 		return (int) ms;
+	}
+	
+	public static BukkitAudiences getAudiences() {
+		return audiences;
 	}
 	
 }

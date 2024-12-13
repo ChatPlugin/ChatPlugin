@@ -207,9 +207,12 @@ public class SpongeEventManager extends EventManager {
 		if (IntegrationType.GEYSERMC.isEnabled() && IntegrationType.GEYSERMC.get().isBedrockPlayer(player))
 			ServerPlayerManager.getBedrockPlayers().add(player.getUUID());
 		if (ServerPlayerManager.getInstance().isWorldEnabled(event.getTargetEntity().getWorld().getName())) {
-			if (!ProxyManager.getInstance().isEnabled())
-				processJoinEvent(player, false);
-			event.setMessageCancelled(true);
+			if (JoinMessageManager.getInstance().isEnabled())
+				event.setMessageCancelled(true);
+			TaskManager.runAsync(() -> {
+				if (!ProxyManager.getInstance().isEnabled())
+					processJoinEvent(player, false);
+			}, 0L);
 		}
 	}
 	
@@ -243,34 +246,55 @@ public class SpongeEventManager extends EventManager {
 		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getTargetEntity().getUniqueId());
 		
 		if (player != null) {
-			if (!ProxyManager.getInstance().isEnabled()) {
-				QuitMessageManager.getInstance().sendQuitMessage(QuitMessageManager.getInstance().getQuitPackets().get(player.getUUID()));
-				QuitMessageManager.getInstance().getQuitPackets().remove(player.getUUID());
-			} AnticheatManager.getInstance().clearViolations(player);
+			if (QuitMessageManager.getInstance().isEnabled())
+				event.setMessageCancelled(true);
+			TaskManager.runAsync(() -> {
+				if (!ProxyManager.getInstance().isEnabled()) {
+					QuitMessageManager.getInstance().sendQuitMessage(QuitMessageManager.getInstance().getQuitPackets().get(player.getUUID()));
+					QuitMessageManager.getInstance().getQuitPackets().remove(player.getUUID());
+				} AnticheatManager.getInstance().clearViolations(player);
+			}, 0L);
 			ServerPlayerManager.getInstance().unloadPlayer(player.getUUID());
-			event.setMessageCancelled(true);
 		} ServerPlayerManager.getPlayersVersions().remove(event.getTargetEntity().getUniqueId());
 		ServerPlayerManager.getPlayersLoginTimes().remove(event.getTargetEntity().getUniqueId());
 		ServerPlayerManager.getBedrockPlayers().remove(event.getTargetEntity().getUniqueId());
 	}
 	
-	public void onPlayerChangeClientSettings(PlayerChangeClientSettingsEvent event) {
-		ChatPluginServerPlayer player = (ChatPluginServerPlayer) PlayerManager.getInstance().getPlayer(event.getTargetEntity().getUniqueId());
+	// Sponge v4.2
+	public void onDisplaceEntityEvent$Teleport(Object event) {
+		onMoveEntity$Teleport((MoveEntityEvent.Teleport) event);
+	}
+	
+	public void onMoveEntity$Teleport(MoveEntityEvent.Teleport event) {
+		if (event.isCancelled() || !(event.getTargetEntity() instanceof Player))
+			return;
+		ServerPlayerManager playerManager = ServerPlayerManager.getInstance();
+		ChatPluginServerPlayer player = playerManager.getPlayer(event.getTargetEntity().getUniqueId());
 		
-		if (player != null && System.currentTimeMillis() - player.getLoginTime() > 15000L && !player.getLocale().getLanguage().equals(event.getLocale().getLanguage())) {
-			LanguageDetector detector = LanguageManager.getInstance().getDetector();
-			
-			if (detector.isEnabled())
-				TaskManager.runAsync(() -> {
-					if (player.isLoaded()) {
-						Language detected = detector.detectUsingClientLocale(player);
+		if (player != null) {
+			if (playerManager.isWorldEnabled(player.getWorld())) { // enabled -> enabled
+				BossbarManager bossbarManager = BossbarManager.getInstance();
+				
+				if (bossbarManager.isEnabled()) {
+					if (bossbarManager.isWorldEnabled(event.getFromTransform().getExtent().getName())) {
+						if (!bossbarManager.isWorldEnabled(player.getWorld())) { // bossbar: enabled -> disabled
+							player.getBossbar().unregister();
+							((BaseChatPluginServerPlayer) player).setBossbar(null);
+						}
+					} else if (bossbarManager.isWorldEnabled(player.getWorld())) { // bossbar: disabled -> enabled
+						((BaseChatPluginServerPlayer) player).setBossbar(new NativeBossbar(player));
 						
-						if (!detected.equals(player.getLanguage()))
-							((BaseChatPluginServerPlayer) player).sendLanguageDetectedMessage(detected);
+						if (bossbarManager.isLoadingBossbarEnabled())
+							bossbarManager.startLoading(player);
+						else bossbarManager.sendBossbar(bossbarManager.getBossbars().get(bossbarManager.getTimerIndex() == -1 ? 0 : bossbarManager.getTimerIndex()), player);
 					}
-				}, detector.getDelay());
-			applyScoreboard(ScoreboardEvent.LOCALE_CHANGE, event.getTargetEntity(), player.getLocale().getDisplayLanguage());
-		}
+				}
+			} else { // enabled -> disabled
+				((VanishManagerImpl) VanishManager.getInstance()).update(player, false);
+				playerManager.unloadPlayer(player.getUUID());
+			}
+		} else if (playerManager.isWorldEnabled(event.getTargetEntity().getWorld().getName())) // disabled -> enabled
+			TaskManager.runAsync(() -> playerManager.loadPlayer(new PlayerAdapter(event.getTargetEntity())), 0L);
 	}
 	
 	public void onClickInventory(ClickInventoryEvent event, ClickTypeAdapter clickType) {
@@ -286,7 +310,7 @@ public class SpongeEventManager extends EventManager {
 			ClickActionAdapter clickAction = ClickActionAdapter.NOTHING;
 			
 			/*
-			 * Sponge does not provide any API to detect the click action, so we have to calculate it ourselves.
+			 * Sponge does not provide any API to detect the click action, so we have to "calculate" it ourselves.
 			 * 
 			 * logic: https://hub.spigotmc.org/stash/projects/SPIGOT/repos/craftbukkit/browse/nms-patches/net/minecraft/server/network/PlayerConnection.patch#1343-1504
 			 * 
@@ -459,41 +483,23 @@ public class SpongeEventManager extends EventManager {
 		}
 	}
 	
-	// Sponge v4.2
-	public void onDisplaceEntityEvent$Teleport(Object event) {
-		onMoveEntity$Teleport((MoveEntityEvent.Teleport) event);
-	}
-	
-	public void onMoveEntity$Teleport(MoveEntityEvent.Teleport event) {
-		if (event.isCancelled() || !(event.getTargetEntity() instanceof Player))
-			return;
-		ServerPlayerManager playerManager = ServerPlayerManager.getInstance();
-		ChatPluginServerPlayer player = playerManager.getPlayer(event.getTargetEntity().getUniqueId());
+	public void onPlayerChangeClientSettings(PlayerChangeClientSettingsEvent event) {
+		ChatPluginServerPlayer player = (ChatPluginServerPlayer) PlayerManager.getInstance().getPlayer(event.getTargetEntity().getUniqueId());
 		
-		if (player != null) {
-			if (playerManager.isWorldEnabled(player.getWorld())) { // enabled -> enabled
-				BossbarManager bossbarManager = BossbarManager.getInstance();
-				
-				if (bossbarManager.isEnabled()) {
-					if (bossbarManager.isWorldEnabled(event.getFromTransform().getExtent().getName())) {
-						if (!bossbarManager.isWorldEnabled(player.getWorld())) { // bossbar: enabled -> disabled
-							player.getBossbar().unregister();
-							((BaseChatPluginServerPlayer) player).setBossbar(null);
-						}
-					} else if (bossbarManager.isWorldEnabled(player.getWorld())) { // bossbar: disabled -> enabled
-						((BaseChatPluginServerPlayer) player).setBossbar(new NativeBossbar(player));
+		if (player != null && System.currentTimeMillis() - player.getLoginTime() > 15000L && !player.getLocale().getLanguage().equals(event.getLocale().getLanguage())) {
+			LanguageDetector detector = LanguageManager.getInstance().getDetector();
+			
+			if (detector.isEnabled())
+				TaskManager.runAsync(() -> {
+					if (player.isLoaded()) {
+						Language detected = detector.detectUsingClientLocale(player);
 						
-						if (bossbarManager.isLoadingBossbarEnabled())
-							bossbarManager.startLoading(player);
-						else bossbarManager.sendBossbar(bossbarManager.getBossbars().get(bossbarManager.getTimerIndex() == -1 ? 0 : bossbarManager.getTimerIndex()), player);
+						if (!detected.equals(player.getLanguage()))
+							((BaseChatPluginServerPlayer) player).sendLanguageDetectedMessage(detected);
 					}
-				}
-			} else { // enabled -> disabled
-				((VanishManagerImpl) VanishManager.getInstance()).update(player, false);
-				playerManager.unloadPlayer(player.getUUID());
-			}
-		} else if (playerManager.isWorldEnabled(event.getTargetEntity().getWorld().getName())) // disabled -> enabled
-			playerManager.loadPlayer(new PlayerAdapter(event.getTargetEntity()));
+				}, detector.getDelay());
+			applyScoreboard(ScoreboardEvent.LOCALE_CHANGE, event.getTargetEntity(), player.getLocale().getDisplayLanguage());
+		}
 	}
 	
 	public void applyScoreboard(ScoreboardEvent event, Player player, Object... args) {

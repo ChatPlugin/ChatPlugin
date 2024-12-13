@@ -15,7 +15,10 @@
 
 package me.remigio07.chatplugin.server.sponge.manager;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.UUID;
+import java.util.concurrent.ScheduledFuture;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -58,8 +61,11 @@ import me.remigio07.chatplugin.server.join_quit.QuitMessageManagerImpl.QuitPacke
 import me.remigio07.chatplugin.server.sponge.ChatPluginSpongePlayer;
 import me.remigio07.chatplugin.server.util.Utils;
 import me.remigio07.chatplugin.server.util.manager.VanishManagerImpl;
+import net.kyori.adventure.platform.spongeapi.SpongeAudiences;
 
 public class SpongePlayerManager extends ServerPlayerManager {
+	
+	private static SpongeAudiences audiences;
 	
 	@Override
 	public void load() throws ChatPluginManagerException {
@@ -68,6 +74,8 @@ public class SpongePlayerManager extends ServerPlayerManager {
 		
 		super.load();
 		
+		if (audiences == null)
+			TaskManager.runSync(() -> audiences = SpongeAudiences.create(Sponge.getPluginManager().getPlugin("chatplugin").get(), Sponge.getGame()), 0L);
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}
@@ -85,7 +93,6 @@ public class SpongePlayerManager extends ServerPlayerManager {
 			return 0;
 		long ms = System.currentTimeMillis();
 		ChatPluginSpongePlayer serverPlayer = new ChatPluginSpongePlayer(player.spongeValue());
-		// teams start
 		org.spongepowered.api.scoreboard.Scoreboard scoreboard = org.spongepowered.api.scoreboard.Scoreboard.builder().build();
 		
 		scoreboard.addObjective(Objective.builder().name("scoreboard").criterion(Criteria.DUMMY).build());
@@ -178,30 +185,39 @@ public class SpongePlayerManager extends ServerPlayerManager {
 			serverPlayer.getBossbar().unregister();
 		if (GUIManager.getInstance().getOpenGUI(serverPlayer) != null)
 			serverPlayer.closeInventory();
-		if (IPLookupManager.getInstance().isEnabled())
-			IPLookupManager.getInstance().removeFromCache(serverPlayer.getIPAddress());
-		if (VanishManager.getInstance().isEnabled())
-			((VanishManagerImpl) VanishManager.getInstance()).show(serverPlayer, false);
-		if (BossbarManager.getInstance().getLoadingBossbarsTasks().containsKey(serverPlayer))
-			TaskManager.getInstance().getAsyncTasks().get(BossbarManager.getInstance().getLoadingBossbarsTasks().remove(serverPlayer)).run();
-		if (StaffChatManager.getInstance().isEnabled())
-			StaffChatManager.getInstance().removePlayer(player);
+		IPLookupManager.getInstance().removeFromCache(serverPlayer.getIPAddress());
+		StaffChatManager.getInstance().removePlayer(player);
 		TablistManager.getInstance().sendTablist(Tablist.NULL_TABLIST, serverPlayer);
-		scoreboard.getScores().forEach(score -> scoreboard.removeScores(score.getName()));
+		((VanishManagerImpl) VanishManager.getInstance()).show(serverPlayer, false);
+		
+		Long taskID = BossbarManager.getInstance().getLoadingBossbarsTasks().remove(serverPlayer);
+		
+		if (taskID != null) {
+			ScheduledFuture<?> task = TaskManager.getInstance().getAsyncTasks().get(taskID);
+			
+			if (task != null)
+				((Runnable) task).run();
+		} scoreboard.getScores().forEach(score -> scoreboard.removeScores(score.getName()));
 		scoreboard.getTeams().forEach(Team::unregister);
 		scoreboard.getObjectives().forEach(scoreboard::removeObjective);
 		players.values().forEach(other -> Iterables.getFirst(other.getObjective().spongeValue().getScoreboards(), null).getTeam(serverPlayer.getRank().formatIdentifier(serverPlayer)).ifPresent(Team::unregister));
 		GUIManager.getInstance().getGUIs().stream().filter(PerPlayerGUI.class::isInstance).map(PerPlayerGUI.class::cast).forEach(gui -> gui.unload(true));
 		QuitMessageManager.getInstance().getFakeQuits().remove(player);
 		Utils.inventoryTitles.remove(player);
-		
-		try {
-			StorageConnector.getInstance().setPlayerData(PlayersDataType.LAST_LOGOUT, serverPlayer, System.currentTimeMillis());
-			StorageConnector.getInstance().setPlayerData(PlayersDataType.TIME_PLAYED, serverPlayer, StorageConnector.getInstance().getPlayerData(PlayersDataType.TIME_PLAYED, serverPlayer) + (System.currentTimeMillis() - serverPlayer.getLoginTime()));
-		} catch (Exception e) {
-			LogManager.log("{0} occurred while setting {1}'s last logout or time played in the storage: {2}", 2, e.getClass().getSimpleName(), serverPlayer.getName(), e.getMessage());
-		} LogManager.log("Player {0} has been unloaded in {1} ms.", 4, serverPlayer.getName(), ms = System.currentTimeMillis() - ms);
+		checkState(() -> {
+			try {
+				StorageConnector.getInstance().setPlayerData(PlayersDataType.LAST_LOGOUT, serverPlayer, System.currentTimeMillis()); // this is called on every unload too, not just quits...
+				StorageConnector.getInstance().setPlayerData(PlayersDataType.TIME_PLAYED, serverPlayer, StorageConnector.getInstance().getPlayerData(PlayersDataType.TIME_PLAYED, serverPlayer) + (System.currentTimeMillis() - serverPlayer.getLoginTime()));
+			} catch (SQLException | IOException e) {
+				LogManager.log("{0} occurred while setting {1}'s last logout or time played in the storage: {2}", 2, e.getClass().getSimpleName(), serverPlayer.getName(), e.getLocalizedMessage());
+			}
+		});
+		LogManager.log("Player {0} has been unloaded in {1} ms.", 4, serverPlayer.getName(), ms = System.currentTimeMillis() - ms);
 		return (int) ms;
+	}
+	
+	public static SpongeAudiences getAudiences() {
+		return audiences;
 	}
 	
 }

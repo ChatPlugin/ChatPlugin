@@ -24,6 +24,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.advancement.Advancement;
 
+import com.github.cliftonlabs.json_simple.Jsoner;
+
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
@@ -87,7 +89,7 @@ public class Utils extends me.remigio07.chatplugin.api.server.util.Utils {
 	}
 	
 	public static void displayAdvancement(ChatPluginServerPlayer player, String text, MaterialAdapter material, boolean glowing) {
-		TaskManager.runSync(() -> BukkitAdvancement.displayAdvancement(player, text, material, glowing), 0L);
+		TaskManager.runAsync(() -> BukkitAdvancement.displayAdvancement(player, text, material, glowing), 0L);
 	}
 	
 	public static TextComponent deserializeLegacy(String text, boolean translate) {
@@ -104,14 +106,16 @@ public class Utils extends me.remigio07.chatplugin.api.server.util.Utils {
 		public static void displayAdvancement(ChatPluginServerPlayer player, String text, MaterialAdapter material, boolean glowing) {
 			org.bukkit.UnsafeValues unsafe = Bukkit.getUnsafe();
 			NamespacedKey key = new NamespacedKey(BukkitBootstrapper.getInstance(), UUID.randomUUID().toString());
-			Advancement adv = unsafe.loadAdvancement(key, "{\"display\":{\"icon\":{\"" + (isAtLeastV1_20_5 ? "id" : "item") + "\":\"" + material.bukkitValue().getKey().getKey() + "\""
+			Advancement advancement = unsafe.loadAdvancement(key, "{\"display\":{\"icon\":{\"" + (isAtLeastV1_20_5 ? "id" : "item") + "\":\"" + material.bukkitValue().getKey().getKey() + "\""
 					+ (glowing ? isAtLeastV1_20_5 ? ",\"components\":{\"enchantments\":{\"levels\":{\"unbreaking\":1}}}" : ",\"nbt\":\"{Enchantments:[{id:unbreaking,lvl:1}]}\"" : "")
-					+ "},\"title\":\"" + text + "\",\"frame\":\"goal\",\"description\":\"ChatPlugin's private message\",\"announce_to_chat\":false,\"show_toast\":true,\"hidden\":true},"
+					+ "},\"title\":\"" + Jsoner.escape(text) + "\",\"frame\":\"goal\",\"description\":\"ChatPlugin's private message\",\"announce_to_chat\":false,\"show_toast\":true,\"hidden\":true},"
 					+ "\"criteria\":{\"impossible\":{\"trigger\":\"" + (isAtLeastV1_20_5 ? "impossible" : "minecraft:impossible") + "\"}}}"
 					);
 			
-			player.toAdapter().bukkitValue().getAdvancementProgress(adv).awardCriteria("impossible");
-			unsafe.removeAdvancement(key);
+			TaskManager.runSync(() -> {
+				player.toAdapter().bukkitValue().getAdvancementProgress(advancement).awardCriteria("impossible");
+				unsafe.removeAdvancement(key);
+			}, 0L);
 		}
 		
 	}

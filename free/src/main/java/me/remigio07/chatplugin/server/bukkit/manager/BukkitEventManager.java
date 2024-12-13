@@ -169,9 +169,12 @@ public class BukkitEventManager extends EventManager {
 		if (IntegrationType.GEYSERMC.isEnabled() && IntegrationType.GEYSERMC.get().isBedrockPlayer(player))
 			ServerPlayerManager.getBedrockPlayers().add(player.getUUID());
 		if (ServerPlayerManager.getInstance().isWorldEnabled(event.getPlayer().getWorld().getName())) {
-			if (!ProxyManager.getInstance().isEnabled())
-				processJoinEvent(player, false);
-			event.setJoinMessage(null);
+			if (JoinMessageManager.getInstance().isEnabled())
+				event.setJoinMessage(null);
+			TaskManager.runAsync(() -> {
+				if (!ProxyManager.getInstance().isEnabled())
+					processJoinEvent(player, false);
+			}, 0L);
 		}
 	}
 	
@@ -205,12 +208,15 @@ public class BukkitEventManager extends EventManager {
 		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getPlayer().getUniqueId());
 		
 		if (player != null) {
-			if (!ProxyManager.getInstance().isEnabled()) {
-				QuitMessageManager.getInstance().sendQuitMessage(QuitMessageManager.getInstance().getQuitPackets().get(player.getUUID()));
-				QuitMessageManager.getInstance().getQuitPackets().remove(player.getUUID());
-			} AnticheatManager.getInstance().clearViolations(player);
+			if (QuitMessageManager.getInstance().isEnabled())
+				event.setQuitMessage(null);
+			TaskManager.runAsync(() -> {
+				if (!ProxyManager.getInstance().isEnabled()) {
+					QuitMessageManager.getInstance().sendQuitMessage(QuitMessageManager.getInstance().getQuitPackets().get(player.getUUID()));
+					QuitMessageManager.getInstance().getQuitPackets().remove(player.getUUID());
+				} AnticheatManager.getInstance().clearViolations(player);
+			}, 0L);
 			ServerPlayerManager.getInstance().unloadPlayer(player.getUUID());
-			event.setQuitMessage(null);
 		} ServerPlayerManager.getPlayersVersions().remove(event.getPlayer().getUniqueId());
 		ServerPlayerManager.getPlayersLoginTimes().remove(event.getPlayer().getUniqueId());
 		ServerPlayerManager.getBedrockPlayers().remove(event.getPlayer().getUniqueId());
@@ -243,7 +249,7 @@ public class BukkitEventManager extends EventManager {
 				playerManager.unloadPlayer(player.getUUID());
 			}
 		} else if (playerManager.isWorldEnabled(event.getPlayer().getWorld().getName())) // disabled -> enabled
-			playerManager.loadPlayer(new PlayerAdapter(event.getPlayer()));
+			TaskManager.runAsync(() -> playerManager.loadPlayer(new PlayerAdapter(event.getPlayer())), 0L);
 	}
 	
 	public void onInventoryClick(InventoryClickEvent event) {

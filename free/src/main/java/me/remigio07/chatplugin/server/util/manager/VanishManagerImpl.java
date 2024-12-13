@@ -21,7 +21,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.potion.PotionEffectType;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.PotionEffectData;
@@ -41,6 +43,7 @@ import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationTyp
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
+import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.event.vanish.VanishDisableEvent;
 import me.remigio07.chatplugin.api.server.event.vanish.VanishEnableEvent;
 import me.remigio07.chatplugin.api.server.join_quit.QuitMessageManager;
@@ -82,30 +85,37 @@ public class VanishManagerImpl extends VanishManager {
 		if (event.isCancelled())
 			return;
 		vanished.put(player.getWorld(), Utils.addAndGet(getVanishedList(player.getWorld()), Arrays.asList(player)));
-		
-		if (Environment.isSponge()) {
-			Player spongePlayer = player.toAdapter().spongeValue();
+		ensureSync(() -> {
+			Object adaptedPlayer = null;
 			
-			try { // Sponge v4.2
-				spongePlayer.offer((Key<Value<Boolean>>) Keys.class.getField("INVISIBLE").get(null), true);
-				spongePlayer.offer((Key<Value<Boolean>>) Keys.class.getField("INVISIBILITY_IGNORES_COLLISION").get(null), true);
-				spongePlayer.offer((Key<Value<Boolean>>) Keys.class.getField("INVISIBILITY_PREVENTS_TARGETING").get(null), true);
-			} catch (NoSuchFieldException | IllegalAccessException e) {
-				spongePlayer.offer(Keys.VANISH, true);
-				spongePlayer.offer(Keys.VANISH_IGNORES_COLLISION, true);
-				spongePlayer.offer(Keys.VANISH_PREVENTS_TARGETING, true);
-			}
-		} for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
-			if (!other.hasPermission(VANISH_PERMISSION))
-				if (Environment.isBukkit()) {
-					if (other.toAdapter().bukkitValue().canSee(player.toAdapter().bukkitValue()))
-						other.toAdapter().bukkitValue().hidePlayer(player.toAdapter().bukkitValue());
-				} else if (other.toAdapter().spongeValue().getTabList().getEntry(player.getUUID()).isPresent())
-					other.toAdapter().spongeValue().getTabList().removeEntry(player.getUUID());
-		} if (invisibility)
-			if (Environment.isBukkit())
-				player.toAdapter().bukkitValue().addPotionEffect(new org.bukkit.potion.PotionEffect(PotionEffectType.INVISIBILITY, VersionUtils.getVersion().isAtLeast(Version.V1_20) ? -1 : Integer.MAX_VALUE, 0, true, false));
-			else player.toAdapter().spongeValue().getOrCreate(PotionEffectData.class).get().addElement(PotionEffect.of(PotionEffectTypes.INVISIBILITY, 0, Integer.MAX_VALUE));
+			if (Environment.isSponge()) {
+				adaptedPlayer = player.toAdapter().spongeValue();
+				
+				try { // Sponge v4.2
+					((Player) adaptedPlayer).offer((Key<Value<Boolean>>) Keys.class.getField("INVISIBLE").get(null), true);
+					((Player) adaptedPlayer).offer((Key<Value<Boolean>>) Keys.class.getField("INVISIBILITY_IGNORES_COLLISION").get(null), true);
+					((Player) adaptedPlayer).offer((Key<Value<Boolean>>) Keys.class.getField("INVISIBILITY_PREVENTS_TARGETING").get(null), true);
+				} catch (NoSuchFieldException | IllegalAccessException e) {
+					((Player) adaptedPlayer).offer(Keys.VANISH, true);
+					((Player) adaptedPlayer).offer(Keys.VANISH_IGNORES_COLLISION, true);
+					((Player) adaptedPlayer).offer(Keys.VANISH_PREVENTS_TARGETING, true);
+				}
+			} else adaptedPlayer = player.toAdapter().bukkitValue();
+			
+			for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
+				if (!other.hasPermission(VANISH_PERMISSION))
+					if (Environment.isBukkit()) {
+						org.bukkit.entity.Player otherBukkitPlayer = other.toAdapter().bukkitValue();
+						
+						if (otherBukkitPlayer.canSee((org.bukkit.entity.Player) adaptedPlayer))
+							otherBukkitPlayer.hidePlayer((org.bukkit.entity.Player) adaptedPlayer); // backward-compatible
+					} else other.toAdapter().spongeValue().getTabList().removeEntry(player.getUUID());
+			} if (invisibility)
+				if (Environment.isBukkit())
+					((org.bukkit.entity.Player) adaptedPlayer).addPotionEffect(new org.bukkit.potion.PotionEffect(PotionEffectType.INVISIBILITY, VersionUtils.getVersion().isAtLeast(Version.V1_20) ? -1 : Integer.MAX_VALUE, 0, true, false));
+				else ((Player) adaptedPlayer).getOrCreate(PotionEffectData.class).get().addElement(PotionEffect.of(PotionEffectTypes.INVISIBILITY, 0, Integer.MAX_VALUE));
+		});
+		
 		List<String> removedCosmetics = new ArrayList<>();
 		
 		if (IntegrationType.GADGETSMENU.isEnabled() && WorldUtils.isWorldEnabled(player.toAdapter().bukkitValue().getWorld())) {
@@ -138,37 +148,41 @@ public class VanishManagerImpl extends VanishManager {
 		if (event.isCancelled())
 			return;
 		vanished.put(player.getWorld(), Utils.removeAndGet(getVanishedList(player.getWorld()), Arrays.asList(player)));
-		
-		Object spongePlayer = null;
-		
-		if (Environment.isSponge()) {
-			spongePlayer = player.toAdapter().spongeValue();
+		ensureSync(() -> {
+			Object adaptedPlayer = null;
 			
-			try { // Sponge v4.2
-				((Player) spongePlayer).offer((Key<Value<Boolean>>) Keys.class.getField("INVISIBLE").get(null), false);
-				((Player) spongePlayer).offer((Key<Value<Boolean>>) Keys.class.getField("INVISIBILITY_IGNORES_COLLISION").get(null), false);
-				((Player) spongePlayer).offer((Key<Value<Boolean>>) Keys.class.getField("INVISIBILITY_PREVENTS_TARGETING").get(null), false);
-			} catch (NoSuchFieldException | IllegalAccessException e) {
-				((Player) spongePlayer).offer(Keys.VANISH, false);
-				((Player) spongePlayer).offer(Keys.VANISH_IGNORES_COLLISION, false);
-				((Player) spongePlayer).offer(Keys.VANISH_PREVENTS_TARGETING, false);
-			}
-		} for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values())
 			if (Environment.isSponge()) {
-				TabList tablist = other.toAdapter().spongeValue().getTabList();
+				adaptedPlayer = player.toAdapter().spongeValue();
 				
-				if (!tablist.getEntry(player.getUUID()).isPresent())
-					tablist.addEntry(new TabListEntryBuilder()
-							.list(tablist)
-							.gameMode(((Player) spongePlayer).gameMode().get())
-							.profile(((Player) spongePlayer).getProfile())
-							.build()
-							);
-			} else other.toAdapter().bukkitValue().showPlayer(player.toAdapter().bukkitValue());
-		if (invisibility)
-			if (Environment.isBukkit())
-				player.toAdapter().bukkitValue().removePotionEffect(PotionEffectType.INVISIBILITY);
-			else player.toAdapter().spongeValue().getOrCreate(PotionEffectData.class).get().remove(PotionEffect.of(org.spongepowered.api.effect.potion.PotionEffectTypes.INVISIBILITY, 0, Integer.MAX_VALUE));
+				try { // Sponge v4.2
+					((Player) adaptedPlayer).offer((Key<Value<Boolean>>) Keys.class.getField("INVISIBLE").get(null), false);
+					((Player) adaptedPlayer).offer((Key<Value<Boolean>>) Keys.class.getField("INVISIBILITY_IGNORES_COLLISION").get(null), false);
+					((Player) adaptedPlayer).offer((Key<Value<Boolean>>) Keys.class.getField("INVISIBILITY_PREVENTS_TARGETING").get(null), false);
+				} catch (NoSuchFieldException | IllegalAccessException e) {
+					((Player) adaptedPlayer).offer(Keys.VANISH, false);
+					((Player) adaptedPlayer).offer(Keys.VANISH_IGNORES_COLLISION, false);
+					((Player) adaptedPlayer).offer(Keys.VANISH_PREVENTS_TARGETING, false);
+				}
+			} else adaptedPlayer = player.toAdapter().bukkitValue();
+			
+			for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values())
+				if (Environment.isSponge()) {
+					TabList tablist = other.toAdapter().spongeValue().getTabList();
+					
+					if (!tablist.getEntry(player.getUUID()).isPresent())
+						tablist.addEntry(new TabListEntryBuilder()
+								.list(tablist)
+								.gameMode(((Player) adaptedPlayer).gameMode().get())
+								.profile(((Player) adaptedPlayer).getProfile())
+								.build()
+								);
+				} else other.toAdapter().bukkitValue().showPlayer((org.bukkit.entity.Player) adaptedPlayer); // backward-compatible
+			if (invisibility)
+				if (Environment.isBukkit())
+					((org.bukkit.entity.Player) adaptedPlayer).removePotionEffect(PotionEffectType.INVISIBILITY);
+				else ((Player) adaptedPlayer).getOrCreate(PotionEffectData.class).get().remove(PotionEffect.of(org.spongepowered.api.effect.potion.PotionEffectTypes.INVISIBILITY, 0, Integer.MAX_VALUE));
+		});
+		
 		if (QuitMessageManager.getInstance().getQuitPackets().containsKey(player.getUUID()) && fixQuitPacket)
 			((QuitPacketImpl) QuitMessageManager.getInstance().getQuitPackets().get(player.getUUID())).setVanished(false);
 	}
@@ -177,33 +191,40 @@ public class VanishManagerImpl extends VanishManager {
 	public void update(ChatPluginServerPlayer player, boolean justJoined) {
 		if (!enabled)
 			return;
-		if (!justJoined) {
-			Object spongePlayer = null;
-			
-			if (Environment.isSponge())
-				spongePlayer = player.toAdapter().spongeValue();
-			for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
-				if (Environment.isBukkit()) {
-					if (!player.toAdapter().bukkitValue().canSee(other.toAdapter().bukkitValue()))
-						player.toAdapter().bukkitValue().showPlayer(other.toAdapter().bukkitValue());
-				} else {
-					TabList tablist = other.toAdapter().spongeValue().getTabList();
-					
-					if (!tablist.getEntry(player.getUUID()).isPresent())
-						tablist.addEntry(new TabListEntryBuilder()
-								.list(tablist)
-								.gameMode(((Player) spongePlayer).gameMode().get())
-								.profile(((Player) spongePlayer).getProfile())
-								.build()
-								);
+		Object adaptedPlayer = Environment.isBukkit() ? player.toAdapter().bukkitValue() : player.toAdapter().spongeValue();
+		
+		ensureSync(() -> {
+			if (!justJoined) {
+				for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
+					if (Environment.isBukkit()) {
+						org.bukkit.entity.Player bukkitPlayer = other.toAdapter().bukkitValue();
+						
+						if (!((org.bukkit.entity.Player) adaptedPlayer).canSee(bukkitPlayer))
+							((org.bukkit.entity.Player) adaptedPlayer).showPlayer(bukkitPlayer);
+					} else {
+						TabList tablist = other.toAdapter().spongeValue().getTabList();
+						
+						if (!tablist.getEntry(player.getUUID()).isPresent())
+							tablist.addEntry(new TabListEntryBuilder()
+									.list(tablist)
+									.gameMode(((Player) adaptedPlayer).gameMode().get())
+									.profile(((Player) adaptedPlayer).getProfile())
+									.build()
+									);
+					}
 				}
-			}
-		} if (player.hasPermission(VANISH_PERMISSION))
-			return;
-		for (ChatPluginServerPlayer vanishedPlayer : getVanishedList())
-			if (Environment.isBukkit())
-				player.toAdapter().bukkitValue().hidePlayer(vanishedPlayer.toAdapter().bukkitValue());
-			else player.toAdapter().spongeValue().getTabList().removeEntry(vanishedPlayer.getUUID());
+			} if (!player.hasPermission(VANISH_PERMISSION))
+				for (ChatPluginServerPlayer vanishedPlayer : getVanishedList())
+					if (Environment.isBukkit())
+						((org.bukkit.entity.Player) adaptedPlayer).hidePlayer(vanishedPlayer.toAdapter().bukkitValue());
+					else ((Player) adaptedPlayer).getTabList().removeEntry(vanishedPlayer.getUUID());
+		});
+	}
+	
+	private static void ensureSync(Runnable runnable) {
+		if (Environment.isBukkit() ? Bukkit.isPrimaryThread() : Sponge.getServer().isMainThread())
+			runnable.run();
+		else TaskManager.runSync(runnable, 0L);
 	}
 	
 	@Override

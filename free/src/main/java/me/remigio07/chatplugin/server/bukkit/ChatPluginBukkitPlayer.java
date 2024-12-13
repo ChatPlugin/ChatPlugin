@@ -55,19 +55,17 @@ import me.remigio07.chatplugin.api.server.rank.RankManager;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.InventoryAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
-import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07.chatplugin.server.bossbar.NativeBossbar;
 import me.remigio07.chatplugin.server.bossbar.ReflectionBossbar;
+import me.remigio07.chatplugin.server.bukkit.manager.BukkitPlayerManager;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import me.remigio07.chatplugin.server.util.Utils;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.Title.Times;
 
 public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
-	private static BukkitAudiences audiences;
 	private Player player;
 	private Object craftPlayer;
 	private Locale lastLocale;
@@ -75,7 +73,7 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	public ChatPluginBukkitPlayer(Player player) {
 		super(new PlayerAdapter(player));
 		this.player = player;
-		audience = (audiences == null ? audiences = BukkitAudiences.create(BukkitBootstrapper.getInstance()) : audiences).player(player);
+		audience = BukkitPlayerManager.getAudiences().player(player);
 		rank = RankManager.getInstance().calculateRank(this);
 		version = version == null ? VersionUtils.getVersion() : version;
 		craftPlayer = BukkitReflection.getLoadedClass("CraftPlayer").cast(player);
@@ -93,8 +91,7 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 			
 			try {
 				storage.insertNewPlayer(this);
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (SQLException | IOException e) {
 				LogManager.log("{0} occurred while inserting {1} in the storage: {2}", 2, e.getClass().getSimpleName(), name, e.getMessage());
 			} if (detector.isEnabled()) {
 				if (detector.getMethod() == LanguageDetectionMethod.CLIENT_LOCALE) {
@@ -201,7 +198,9 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public void disconnect(String reason) {
-		TaskManager.runSync(() -> player.kickPlayer(reason), 0L);
+		if (Bukkit.isPrimaryThread())
+			player.kickPlayer(reason);
+		else TaskManager.runSync(() -> disconnect(reason), 0L);
 	}
 	
 	@Override

@@ -84,8 +84,8 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 		
 		if (totalMilliseconds == -1)
 			return language.getMessage(everInsteadOfNever ? "timestamps.ever" : "timestamps.never");
-		if (totalSeconds < 1 && !useZeroSecondsInstead)
-			return language.getMessage("timestamps.now");
+		if (totalSeconds < 1)
+			return useZeroSecondsInstead ? "0" + language.getMessage("timestamps.seconds") : language.getMessage("timestamps.now");
 		int years = (int) (totalSeconds / SECONDS_IN_A_YEAR);
 		totalSeconds -= years * SECONDS_IN_A_YEAR;
 		int months = (int) (totalSeconds / SECONDS_IN_A_MONTH);

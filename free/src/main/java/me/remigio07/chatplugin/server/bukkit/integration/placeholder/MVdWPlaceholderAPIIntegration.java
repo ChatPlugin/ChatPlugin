@@ -42,7 +42,12 @@ public class MVdWPlaceholderAPIIntegration extends ChatPluginBukkitIntegration<P
 	
 	@Override
 	public String translatePlaceholders(String input, ChatPluginServerPlayer player) {
-		return PlaceholderAPI.replacePlaceholders(player.toAdapter().bukkitValue(), input);
+		try {
+			return PlaceholderAPI.replacePlaceholders(player.toAdapter().bukkitValue(), input);
+		} catch (Throwable t) {
+			String message = t.getLocalizedMessage();
+			return "\u00A7c" + (message == null ? t.getClass().getSimpleName() : (t.getClass().getSimpleName() + ": " + message)) + "\u00A7r";
+		}
 	}
 	
 	public class Expansion {
@@ -53,7 +58,6 @@ public class MVdWPlaceholderAPIIntegration extends ChatPluginBukkitIntegration<P
 				@Override
 				public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
 					ChatPluginServerPlayer player = (ChatPluginServerPlayer) PlayerManager.getInstance().getPlayer(event.getPlayer().getUniqueId());
-					
 					return player == null ? "\u00A7f" + event.getPlayer().getName() + " \u00A7cis not loaded." : event.isOnline() ? PlaceholderManager.getInstance().translatePlaceholders("{" + event.getPlaceholder() + "}", player, Arrays.asList(PlaceholderType.getPlaceholderType(event.getPlaceholder()))) : "\u00A7f" + player.getName() + " \u00A7cis offline.";
 				}
 			});

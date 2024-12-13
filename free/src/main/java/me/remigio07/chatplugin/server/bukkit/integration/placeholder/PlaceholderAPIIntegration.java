@@ -15,9 +15,10 @@
 
 package me.remigio07.chatplugin.server.bukkit.integration.placeholder;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.bukkit.entity.Player;
 
@@ -45,7 +46,12 @@ public class PlaceholderAPIIntegration extends ChatPluginBukkitIntegration<Place
 	
 	@Override
 	public String translatePlaceholders(String input, ChatPluginServerPlayer player) {
-		return PlaceholderAPI.setPlaceholders(player.toAdapter().bukkitValue(), input);
+		try {
+			return PlaceholderAPI.setPlaceholders(player.toAdapter().bukkitValue(), input);
+		} catch (Throwable t) {
+			String message = t.getLocalizedMessage();
+			return "\u00A7c" + (message == null ? t.getClass().getSimpleName() : (t.getClass().getSimpleName() + ": " + message)) + "\u00A7r";
+		}
 	}
 	
 	public class Expansion extends PlaceholderExpansion {
@@ -72,10 +78,10 @@ public class PlaceholderAPIIntegration extends ChatPluginBukkitIntegration<Place
 		
 		@Override
 		public List<String> getPlaceholders() {
-			List<String> placeholders = new ArrayList<>(Arrays.asList(PlaceholderType.PLAYER.getPlaceholders()));
-			
-			placeholders.addAll(Arrays.asList(PlaceholderType.SERVER.getPlaceholders()));
-			return placeholders;
+			return Stream.concat(
+					Stream.of(PlaceholderType.PLAYER.getPlaceholders()),
+					Stream.of(PlaceholderType.SERVER.getPlaceholders())
+					).collect(Collectors.toList());
 		}
 		
 		@Override

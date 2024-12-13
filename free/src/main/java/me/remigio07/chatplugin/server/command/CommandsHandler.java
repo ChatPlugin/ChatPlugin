@@ -63,6 +63,7 @@ public abstract class CommandsHandler {
 	
 	protected static Map<String, BaseCommand[]> commands = new HashMap<String, BaseCommand[]>();
 	protected static List<String> disabledCommands;
+	protected static boolean logCommandBlocksCommands;
 	protected static int total;
 	protected static long ms;
 	
@@ -73,6 +74,7 @@ public abstract class CommandsHandler {
 			
 			commands.clear();
 		} disabledCommands = ConfigurationType.CONFIG.get().getStringList("settings.disabled-commands");
+		logCommandBlocksCommands = ConfigurationType.CONFIG.get().getBoolean("settings.log-command-blocks-commands");
 		
 		// main
 		put(
@@ -172,6 +174,10 @@ public abstract class CommandsHandler {
 	
 	public static Map<String, BaseCommand[]> getCommands() {
 		return commands;
+	}
+	
+	public static boolean shouldLogCommandBlocksCommands() {
+		return logCommandBlocksCommands;
 	}
 	
 	public static int getTotal() {

@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
@@ -32,6 +34,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.minecart.CommandMinecart;
 import org.bukkit.plugin.Plugin;
 
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
@@ -149,7 +152,17 @@ public class BukkitCommandsHandler extends CommandsHandler implements CommandExe
 						} if (command.getPermission() != null && !sender.hasPermission(command.getPermission())) {
 							sender.sendMessage(language.getMessage("misc.no-permission"));
 							return true;
-						} LogManager.log(sender.getName() + " issued command: /" + command.getName() + " " + String.join(" ", args), 3);
+						} if (sender instanceof BlockCommandSender) {
+							Block block = ((BlockCommandSender) sender).getBlock();
+							
+							if (logCommandBlocksCommands)
+								LogManager.log("@ ({0}, {1} {2} {3}) issued command: /{4} {5}", 3, block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), command.getName(), String.join(" ", args));
+						} else if (sender instanceof CommandMinecart) {
+							Block block = ((CommandMinecart) sender).getLocation().getBlock();
+							
+							if (logCommandBlocksCommands)
+								LogManager.log("@ ({0}, {1} {2} {3}) issued command: /{4} {5}", 3, block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), command.getName(), String.join(" ", args));
+						} else LogManager.log("{0} issued command: /{1} {2}", 3, sender.getName(), command.getName(), String.join(" ", args));
 						command.execute(senderAdapter, language, args);
 						return true;
 					}

@@ -25,6 +25,7 @@ import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.command.source.CommandBlockSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
@@ -72,7 +73,12 @@ public class SpongeCommandAdapter implements CommandCallable {
 				} if (command.getPermission() != null && !sender.hasPermission(command.getPermission())) {
 					sender.sendMessage(Utils.serializeSpongeText(language.getMessage("misc.no-permission"), false));
 					return CommandResult.success();
-				} LogManager.log(sender.getName() + " issued command: /" + command.getName() + " " + text, 3);
+				} if (sender instanceof CommandBlockSource) {
+					Location<World> location = ((CommandBlockSource) sender).getLocation();
+					
+					if (CommandsHandler.shouldLogCommandBlocksCommands())
+						LogManager.log("@ ({0}, {1} {2} {3}) issued command: /{4} {5}", 3, location.getExtent().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ(), command.getName(), text);
+				} else LogManager.log("{0} issued command: /{1} {2}", 3, sender.getName(), command.getName(), text);
 				command.execute(senderAdapter, language, args);
 				return CommandResult.success();
 			}

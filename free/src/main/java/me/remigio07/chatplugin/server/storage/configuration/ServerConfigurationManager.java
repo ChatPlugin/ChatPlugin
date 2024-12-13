@@ -148,6 +148,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("settings.license-id", "");
 		config.addDefault("settings.debug", false);
 		config.addDefault("settings.enable-update-notification", true);
+		config.addDefault("settings.log-command-blocks-commands", true);
 		config.addDefault("settings.enable-bstats-metrics", Environment.isBukkit());
 		config.addDefault("settings.truncate-version-string", true);
 		config.addDefault("settings.use-week-timestamp", false);

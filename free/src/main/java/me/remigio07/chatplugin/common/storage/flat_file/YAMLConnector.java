@@ -345,6 +345,7 @@ public class YAMLConnector extends FlatFileConnector {
 		} else players.set(id + ".time-played", 0L);
 		
 		players.set(id + ".messages-sent", 0);
+		players.set(id + ".antispam-infractions", 0);
 		players.set(id + ".bans", (short) 0);
 		players.set(id + ".warnings", (short) 0);
 		players.set(id + ".kicks", (short) 0);

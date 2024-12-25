@@ -127,6 +127,13 @@ public class PlayersDataType<T> {
 	public static final PlayersDataType<Integer> MESSAGES_SENT = new PlayersDataType<>("MESSAGES_SENT", int.class);
 	
 	/**
+	 * Player's antispam infractions amount.
+	 * 
+	 * @see ChatPluginServerPlayer#getAntispamInfractions()
+	 */
+	public static final PlayersDataType<Integer> ANTISPAM_INFRACTIONS = new PlayersDataType<>("ANTISPAM_INFRACTIONS", int.class);
+	
+	/**
 	 * Player's bans' amount.
 	 * 
 	 * @see ChatPluginServerPlayer#getBans()
@@ -153,7 +160,7 @@ public class PlayersDataType<T> {
 	 * @see ChatPluginServerPlayer#getMutes()
 	 */
 	public static final PlayersDataType<Short> MUTES = new PlayersDataType<>("MUTES", short.class);
-	private static final PlayersDataType<?>[] VALUES = new PlayersDataType[] { ID, PLAYER_UUID, PLAYER_NAME, PLAYER_IP, LANGUAGE, IGNORED_PLAYERS, CHAT_COLOR, EMOJIS_TONE, LAST_LOGOUT, TIME_PLAYED, MESSAGES_SENT, BANS, WARNINGS, KICKS, MUTES };
+	private static final PlayersDataType<?>[] VALUES = new PlayersDataType[] { ID, PLAYER_UUID, PLAYER_NAME, PLAYER_IP, LANGUAGE, IGNORED_PLAYERS, CHAT_COLOR, EMOJIS_TONE, LAST_LOGOUT, TIME_PLAYED, MESSAGES_SENT, ANTISPAM_INFRACTIONS, BANS, WARNINGS, KICKS, MUTES };
 	private String name;
 	private Class<T> type;
 	

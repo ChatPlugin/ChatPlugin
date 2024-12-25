@@ -15,6 +15,9 @@
 
 package me.remigio07.chatplugin.common.util.text;
 
+import java.util.Arrays;
+
+import com.github.cliftonlabs.json_simple.JsonArray;
 import com.github.cliftonlabs.json_simple.JsonException;
 import com.github.cliftonlabs.json_simple.JsonObject;
 import com.github.cliftonlabs.json_simple.Jsoner;
@@ -38,7 +41,7 @@ public class ComponentTranslatorImpl extends ComponentTranslator {
 	public String createJSON(Component component, Object... values) {
 		if (component.getKeys().length != values.length && !containsArray(values))
 			throw new IllegalArgumentException("The lengths of the arrays of the specified values (" + values.length + ") and " + component.name() + "'s keys (" + component.getKeys().length + ") do not match");
-		StringBuilder json = new StringBuilder("{\"id\":\"" + component.getID().toLowerCase() + "\",");
+		StringBuilder json = new StringBuilder("{\"id\":\"" + component.getID() + "\",");
 		
 		for (int i = 0; i < component.getKeys().length; i++) {
 			json.append("\"" + component.getKeys()[i] + "\":");
@@ -46,9 +49,9 @@ public class ComponentTranslatorImpl extends ComponentTranslator {
 			if (values[i].getClass().isArray())
 				json.append(toJSON((Object[]) values[i]));
 			else if (values[i] instanceof String || values[i] instanceof Enum)
-				json.append("\"" + values[i] + "\",");
-			else json.append(values[i] + ",");
-		} json.delete(json.length() - 1, json.length());
+				json.append("\"" + Jsoner.escape(String.valueOf(values[i])) + "\",");
+			else json.append(Jsoner.escape(String.valueOf(values[i])) + ",");
+		} json.setLength(json.length() - 1);
 		return json.toString() + "}";
 	}
 	
@@ -61,13 +64,13 @@ public class ComponentTranslatorImpl extends ComponentTranslator {
 	
 	private static String toJSON(Object[] array) {
 		if (array.length == 0)
-			return "[]";
+			return "[],";
 		StringBuilder sb = new StringBuilder("[");
 		
 		for (Object o : array)
-			sb.append("\"" + o + "\", ");
+			sb.append("\"" + Jsoner.escape(String.valueOf(o)) + "\", ");
 		sb.setLength(sb.length() - 2);
-		sb.append(']');
+		sb.append("],");
 		return sb.toString();
 	}
 	
@@ -165,9 +168,15 @@ public class ComponentTranslatorImpl extends ComponentTranslator {
 				return MemoryUtils.formatMemory(((Number) defaultValue).longValue(), MemoryUtils.valueOf((String) json.get("scale")));
 			case MEMORY_DEFAULT_FORMAT:
 				return MemoryUtils.formatMemory(((Number) defaultValue).longValue());
-			case TRANSLATED_MESSAGE:
-			case TRANSLATED_MESSAGE_ARGS:
-				return language.getMessage((String) defaultValue, json.containsKey("args") ? (Object[]) json.get("args") : new Object[0]);
+			case MESSAGE:
+			case MESSAGE_NUMERIC_PLACEHOLDERS:
+				return language.getMessage((String) defaultValue, Arrays.stream(json.containsKey("args") ? ((JsonArray) json.get("args")).toArray(new String[0]) : new String[0]).map(arg -> translate(language, arg)).toArray());
+			case MESSAGE_CUSTOM_PLACEHOLDERS:
+				return Utils.replaceCustomPlaceholders(
+						language.getMessage((String) defaultValue),
+						json.containsKey("placeholders") ? ((JsonArray) json.get("placeholders")).toArray(new String[0]) : new String[0],
+						Arrays.stream(json.containsKey("args") ? ((JsonArray) json.get("args")).toArray(new String[0]) : new String[0]).map(arg -> translate(language, arg)).toArray()
+						);
 			}
 		} catch (ClassCastException | IllegalArgumentException e) {
 			e.printStackTrace();

@@ -37,6 +37,7 @@ import me.remigio07.chatplugin.api.server.chat.ChatManager;
 import me.remigio07.chatplugin.api.server.chat.FormattedChatManager;
 import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
 import me.remigio07.chatplugin.api.server.chat.antispam.AntispamManager;
+import me.remigio07.chatplugin.api.server.chat.antispam.AntispamResult;
 import me.remigio07.chatplugin.api.server.chat.antispam.DenyChatReason;
 import me.remigio07.chatplugin.api.server.chat.log.ChatLogManager;
 import me.remigio07.chatplugin.api.server.event.chat.AllowPrivateMessageEvent;
@@ -50,6 +51,8 @@ import me.remigio07.chatplugin.api.server.util.adapter.block.MaterialAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
+import me.remigio07.chatplugin.bootstrap.Environment;
+import me.remigio07.chatplugin.server.chat.antispam.AntispamManagerImpl;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import me.remigio07.chatplugin.server.util.Utils;
 
@@ -76,15 +79,17 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 		advancementsMaxMessageLength = ConfigurationType.CHAT.get().getInt("chat.private-messages.advancements.max-message-length");
 		
 		if (advancementsEnabled && VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
-			LogManager.log("You have enabled advancements for private messages at \"chat.private-messages.advancements.enabled\" in chat.yml, but this feature only works on 1.13+ servers; disabling it.", 2);
+			LogManager.log("You have enabled advancements for private messages at \"chat.private-messages.advancements.enabled\" in chat.yml, but this feature only works on 1.13+ servers; disabling module.", 2);
 			
 			advancementsEnabled = false;
 		} try {
 			advancementsIconMaterial = new MaterialAdapter(ConfigurationType.CHAT.get().getString("chat.private-messages.advancements.icon.material").toUpperCase());
 		} catch (IllegalArgumentException e) {
-			LogManager.log("Invalid material (\"{0}\") set at \"chat.private-messages.advancements.icon.material\" in chat.yml; setting to default value of BARRIER.", 2, ConfigurationType.CHAT.get().getString("chat.private-messages.advancements.icon.material"));
+			String material = Environment.isSponge() || VersionUtils.getVersion().isAtLeast(Version.V1_13) ? "WRITABLE_BOOK" : "BOOK_AND_QUILL";
 			
-			advancementsIconMaterial = new MaterialAdapter("BARRIER");
+			LogManager.log("Invalid material (\"{0}\") set at \"chat.private-messages.advancements.icon.material\" in chat.yml; setting to default value of {1}.", 2, ConfigurationType.CHAT.get().getString("chat.private-messages.advancements.icon.material"), material);
+			
+			advancementsIconMaterial = new MaterialAdapter(material);
 		} advancementsIconGlowing = ConfigurationType.CHAT.get().getBoolean("chat.private-messages.advancements.icon.glowing");
 		bypassAntispamChecks = new ArrayList<>();
 		
@@ -223,54 +228,55 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 		
 		if (prePrivateMessageEvent.isCancelled())
 			return null;
-		DenyChatReason<?> reason = null;
+		AntispamResult antispamResult = null;
+		DenyChatReason<?> denyChatReason = null;
 		
 		// 0. antispam
-		if (sender != null && AntispamManager.getInstance().isEnabled())
-			reason = AntispamManager.getInstance().getDenyChatReason(sender, privateMessage, bypassAntispamChecks);
+		if (sender != null && AntispamManager.getInstance().isEnabled()) {
+			antispamResult = AntispamManager.getInstance().check(sender, privateMessage, bypassAntispamChecks);
+			denyChatReason = antispamResult.getReason();
+		}
 		
 		// 1. formatted-chat
-		if (reason == null && FormattedChatManager.getInstance().isEnabled()) {
+		if (denyChatReason == null && FormattedChatManager.getInstance().isEnabled()) {
 			List<String> urls = URLValidator.getURLs(privateMessage);
 			
 			if (FormattedChatManager.getInstance().containsFormattedText(privateMessage, urls, true)) {
 				if (sender != null && !sender.hasPermission("chatplugin.formatted-chat"))
 					if (!FormattedChatManager.getInstance().isSendAnyway())
-						reason = DenyChatReason.FORMAT;
+						denyChatReason = DenyChatReason.FORMAT;
 					else sender.sendTranslatedMessage("chat.no-format");
 				else privateMessage = FormattedChatManager.getInstance().translate(privateMessage, urls, true);
 			}
 		}
 		
 		// 2. blank-message
-		if (reason == null && ChatColor.stripColor(privateMessage).replaceAll("\\s", "").isEmpty())
-			reason = DenyChatReason.BLANK_MESSAGE;
+		if (denyChatReason == null && ChatColor.stripColor(privateMessage).replaceAll("\\s", "").isEmpty())
+			denyChatReason = DenyChatReason.BLANK_MESSAGE;
 		
 		// denied
-		if (reason != null) {
-			String denyMessage = reason.getMessage(sender == null ? Language.getMainLanguage() : sender.getLanguage());
+		if (denyChatReason != null) {
+			String denyMessage = denyChatReason.getMessage(sender == null ? Language.getMainLanguage() : sender.getLanguage());
 			
-			new DenyPrivateMessageEvent(sender, recipient, privateMessage, reason).call();
+			new DenyPrivateMessageEvent(sender, recipient, privateMessage, denyChatReason, antispamResult).call();
 			
-			switch (reason.name()) {
+			switch (denyChatReason.name()) {
 			case "CAPS":
-				denyMessage = Utils.numericPlaceholders(denyMessage, AntispamManager.getInstance().getMaxCapsPercent(), AntispamManager.getInstance().getMaxCapsLength());
+				denyMessage = Utils.replaceNumericPlaceholders(denyMessage, Utils.truncate(AntispamManager.getInstance().getMaxCapsPercentage(), 2), AntispamManager.getInstance().getMaxCapsLength());
 				break;
 			case "FLOOD":
-				denyMessage = Utils.numericPlaceholders(denyMessage, AntispamManager.getInstance().getSecondsBetweenMsg());
+				denyMessage = Utils.replaceNumericPlaceholders(denyMessage, AntispamManager.getInstance().getSecondsBetweenMessages());
 				break;
 			case "SPAM":
-				denyMessage = Utils.numericPlaceholders(denyMessage, AntispamManager.getInstance().getSecondsBetweenSameMsg());
+				denyMessage = Utils.replaceNumericPlaceholders(denyMessage, AntispamManager.getInstance().getSecondsBetweenSameMessages());
 				break;
 			default:
 				break;
-			} if (reason != DenyChatReason.BLANK_MESSAGE) {
-				for (ChatPluginServerPlayer staff : ServerPlayerManager.getInstance().getPlayers().values())
-					if (staff.hasPermission("chatplugin.deny-chat-notify"))
-						staff.sendTranslatedMessage("chat.deny-chat-notify", sender.getName(), reason.name(), privateMessage);
+			} if (denyChatReason != DenyChatReason.BLANK_MESSAGE) {
 				if (ChatLogManager.getInstance().isEnabled() && recipient != null)
-					ChatLogManager.getInstance().logPrivateMessage(sender, recipient, privateMessage, reason);
-				ChatPlugin.getInstance().sendConsoleMessage(Language.getMainLanguage().getMessage("chat.deny-chat-notify", sender.getName(), reason.name(), privateMessage), false);
+					ChatLogManager.getInstance().logPrivateMessage(sender, recipient, privateMessage, denyChatReason);
+				if (denyChatReason.getHandlerClass() == AntispamManager.class)
+					((AntispamManagerImpl) AntispamManager.getInstance()).sendNotification(sender, antispamResult);
 			} if (sender == null)
 				ChatPlugin.getInstance().sendConsoleMessage(denyMessage, false);
 			else sender.sendMessage(denyMessage);

@@ -45,7 +45,7 @@ public class JavaLogManager extends LogManager {
 	
 	@Override
 	public void logMessage(String message, LogLevel logLevel, Object... args) {
-		message = Utils.numericPlaceholders(message, args);
+		message = Utils.replaceNumericPlaceholders(message, args);
 		
 		switch (logLevel) {
 		case WARNING:

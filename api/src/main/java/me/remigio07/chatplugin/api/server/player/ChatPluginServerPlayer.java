@@ -33,7 +33,6 @@ import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
-import me.remigio07.chatplugin.api.common.util.packet.type.MessagePacketType;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.bossbar.PlayerBossbar;
 import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager;
@@ -62,7 +61,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	protected IPLookup ipLookup;
 	protected ObjectiveAdapter objective;
 	protected Object playerConnection;
-	protected int ping, id, messagesSent;
+	protected int ping, id, messagesSent, antispamInfractions;
 	protected short bans, anticheatBans, warnings, anticheatWarnings, kicks, anticheatKicks, mutes, anticheatMutes;
 	protected long loginTime;
 	protected OfflinePlayer lastCorrespondent;
@@ -325,6 +324,15 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	}
 	
 	/**
+	 * Gets this player's {@link PlayersDataType#ANTISPAM_INFRACTIONS} from {@link DataContainer#PLAYERS}.
+	 * 
+	 * @return Player's antispam infractions in the storage
+	 */
+	public int getAntispamInfractions() {
+		return antispamInfractions;
+	}
+	
+	/**
 	 * Gets this player's login time, in milliseconds.
 	 * 
 	 * @return Player's login time
@@ -398,30 +406,26 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	}
 	
 	/**
-	 * Sends a {@link MessagePacketType#NUMERIC_PLACEHOLDERS} message to this player.
+	 * Sends a translated message (with numeric placeholders) to this player.
 	 * 
 	 * @param path Message's path
-	 * @param args Optional arguments (translated using {@link Utils#numericPlaceholders(String, Object...)})
+	 * @param args Optional arguments
+	 * @see Utils#replaceNumericPlaceholders(String, Object...)
 	 */
 	public void sendTranslatedMessage(String path, Object... args) {
 		sendMessage(language.getMessage(path, args));
 	}
 	
 	/**
-	 * Sends a {@link MessagePacketType#CUSTOM_PLACEHOLDERS} message to this player.
-	 * 
-	 * <p>The <code>placeholders</code> and the <code>args</code> arrays cannot contain <code>null</code> elements.</p>
+	 * Sends a translated message (with custom placeholders) to this player.
 	 * 
 	 * @param path Message's path
 	 * @param placeholders Message's placeholders
-	 * @param args Message's arguments
+	 * @param args Optional arguments
+	 * @see Utils#replaceCustomPlaceholders(String, String[], Object...)
 	 */
 	public void sendTranslatedMessage(String path, String[] placeholders, Object... args) {
-		String message = language.getMessage(path);
-		
-		for (int i = 0; i < placeholders.length; i++)
-			message = message.replace("{" + placeholders[i] + "}", String.valueOf(args[i]));
-		sendMessage(message);
+		sendMessage(Utils.replaceCustomPlaceholders(language.getMessage(path), placeholders, args));
 	}
 	
 	/**

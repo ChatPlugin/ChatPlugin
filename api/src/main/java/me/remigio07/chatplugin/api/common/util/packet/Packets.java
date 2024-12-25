@@ -17,9 +17,7 @@ package me.remigio07.chatplugin.api.common.util.packet;
 
 import java.net.InetAddress;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
@@ -31,7 +29,6 @@ import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.packet.PacketScope.Scope;
 import me.remigio07.chatplugin.api.common.util.packet.type.DiscordMessagePacketType;
-import me.remigio07.chatplugin.api.common.util.packet.type.MessagePacketType;
 import me.remigio07.chatplugin.api.common.util.packet.type.PunishmentPacketType;
 import me.remigio07.chatplugin.api.common.util.packet.type.SilentTeleportPacketType;
 import me.remigio07.chatplugin.api.common.util.packet.type.ViolationPacketType;
@@ -59,38 +56,49 @@ public class Packets {
 	public static class Messages {
 		
 		/**
-		 * Sends a {@link MessagePacketType#PLAIN} message to the specified target(s).
-		 * 
-		 * <p>You can specify <code>null</code> as <code>permission</code> if no permission is required to receive the message.</p>
+		 * Sends a message to the specified target(s).
 		 * 
 		 * <p>Available targets:
 		 * 	<ul>
 		 * 		<li>"ALL CONNECTED" - every player connected to specified <code>server</code>(s)</li>
-		 * 		<li>"ALL ENABLED" - every loaded player ({@link OfflinePlayer#isLoaded()}) connected</li>
+		 * 		<li>"ALL LOADED" - every loaded player ({@link OfflinePlayer#isLoaded()}) connected</li>
 		 * 		<li>"ALL CONNECTED EXCEPT &lt;player&gt;" - every connected player except the specified one</li>
 		 * 		<li>"ALL CONNECTED EXCEPT &lt;IP address&gt;" - every connected player except the ones with given IP</li>
-		 * 		<li>"ALL ENABLED EXCEPT &lt;player&gt;" - every loaded player except the specified one</li>
-		 * 		<li>"ALL ENABLED EXCEPT &lt;IP address&gt;" - every loaded player except the ones with given IP</li>
-		 * 		<li>"ENABLED &lt;player&gt;" - a player; they will receive the message only if they are loaded</li>
-		 * 		<li>"ENABLED &lt;IP address&gt;" - players with given IP; they will receive the message only if they are loaded</li>
+		 * 		<li>"ALL CONNECTED OUTSIDE &lt;server&gt;" - every connected player outside of the specified server</li>
+		 * 		<li>"ALL LOADED EXCEPT &lt;player&gt;" - every loaded player except the specified one</li>
+		 * 		<li>"ALL LOADED EXCEPT &lt;IP address&gt;" - every loaded player except the ones with given IP</li>
+		 * 		<li>"ALL LOADED OUTSIDE &lt;server&gt;" - every loaded player outside of the specified server</li>
+		 * 		<li>"LOADED &lt;player&gt;" - a player; they will receive the message only if they are loaded</li>
+		 * 		<li>"LOADED &lt;IP address&gt;" - players with given IP; they will receive the message only if they are loaded</li>
 		 * 		<li>"&lt;player&gt;" - a player; they will receive the message even if they are not loaded</li>
 		 * 		<li>"&lt;IP address&gt;" - players with given IP; they will receive the message even if they are not loaded</li>
 		 * 		<li>"CONSOLE" - console only; specify <code>false</code> as <code>includeConsole</code> to avoid double messages</li>
 		 * 	</ul>
 		 * 
+		 * <p>You can specify <code>null</code> as <code>permission</code>
+		 * if no permission is required to receive the message.</p>
+		 * 
+		 * <p>If <code>json</code> the message will be treated as an
+		 * <a href="https://docs.advntr.dev/serializer/json.html">Adventure JSON message</a>.</p>
+		 * 
+		 * <p>This method supports {@link Component}s: the message's content may be
+		 * obtained using {@link ComponentTranslator#createJSON(Component, Object...)}.</p>
+		 * 
 		 * @param server Target server
 		 * @param targets Target player(s) or console
 		 * @param permission Required permission
 		 * @param includeConsole Whether to include the console
+		 * @param json Whether this is an Adventure JSON message
 		 * @param message Message to send
 		 * @return <code>PlayerMessage</code> packet
 		 */
 		@PacketScope(Scope.SERVER_TO_SERVER)
-		public static PacketSerializer plainPlayerMessage(
+		public static PacketSerializer playerMessage(
 				@NotNull String server,
 				@NotNull String targets,
 				@Nullable(why = "Permission may not be required") String permission,
 				boolean includeConsole,
+				boolean json,
 				@NotNull String message
 				) {
 			return new PacketSerializer("PlayerMessage")
@@ -98,104 +106,16 @@ public class Packets {
 					.writeUTF(targets)
 					.writeUTF(permission)
 					.writeBoolean(includeConsole)
-					.writeUTF(MessagePacketType.PLAIN.name())
+					.writeBoolean(json)
 					.writeUTF(message);
 		}
 		
 		/**
-		 * Sends a {@link MessagePacketType#NUMERIC_PLACEHOLDERS} message to the specified target(s).
+		 * Disconnects the specified player player
+		 * specifying a message as the kick's reason.
 		 * 
-		 * <p>You can specify <code>null</code> as <code>permission</code> if no permission is required to receive the message.
-		 * The <code>args</code> array cannot contain <code>null</code> elements.</p>
-		 * 
-		 * <p>This method supports {@link Component}s: the <code>args</code> array may be composed of
-		 * strings obtained using {@link ComponentTranslator#createJSON(Component, Object...)}.</p>
-		 * 
-		 * <p>Refer to {@link #plainPlayerMessage(String, String, String, boolean, String)}
-		 * to find out the available <code>targets</code>.</p>
-		 * 
-		 * @param server Target server
-		 * @param targets Target player(s) or console
-		 * @param permission Required permission
-		 * @param includeConsole Whether to include the console
-		 * @param messagePath Message's path
-		 * @param args Message's arguments
-		 * @return <code>PlayerMessage</code> packet
-		 */
-		@PacketScope(Scope.SERVER_TO_SERVER)
-		public static PacketSerializer numericPlaceholdersPlayerMessage(
-				@NotNull String server,
-				@NotNull String targets,
-				@Nullable(why = "Permission may not be required") String permission,
-				boolean includeConsole,
-				@NotNull String messagePath,
-				@NotNull Object... args
-				) {
-			return new PacketSerializer("PlayerMessage")
-					.writeUTF(server)
-					.writeUTF(targets)
-					.writeUTF(permission)
-					.writeBoolean(includeConsole)
-					.writeUTF(MessagePacketType.NUMERIC_PLACEHOLDERS.name())
-					.writeUTF(messagePath)
-					.writeUTFArray(Arrays.asList(args)
-							.stream()
-							.map(obj -> String.valueOf(obj))
-							.collect(Collectors.toList())
-							.toArray(new String[0])
-							);
-		}
-		
-		/**
-		 * Sends a {@link MessagePacketType#CUSTOM_PLACEHOLDERS} message to the specified target(s).
-		 * 
-		 * <p>You can specify <code>null</code> as <code>permission</code> if no permission is required to receive the message.
-		 * The <code>placeholders</code> and the <code>args</code> arrays cannot contain <code>null</code> elements.</p>
-		 * 
-		 * <p>This method supports {@link Component}s: the <code>args</code> array may be composed of
-		 * strings obtained using {@link ComponentTranslator#createJSON(Component, Object...)}.</p>
-		 * 
-		 * <p>Refer to {@link #plainPlayerMessage(String, String, String, boolean, String)}
-		 * to find out the available <code>targets</code>.</p>
-		 * 
-		 * @param server Target server
-		 * @param targets Target player(s) or console
-		 * @param permission Required permission
-		 * @param includeConsole Whether to include the console
-		 * @param messagePath Message's path
-		 * @param placeholders Message's placeholders
-		 * @param args Message's arguments
-		 * @return <code>PlayerMessage</code> packet
-		 */
-		@PacketScope(Scope.SERVER_TO_SERVER)
-		public static PacketSerializer customPlaceholdersPlayerMessage(
-				@NotNull String server,
-				@NotNull String targets,
-				@Nullable(why = "Permission may not be required") String permission,
-				boolean includeConsole,
-				@NotNull String messagePath,
-				@NotNull String[] placeholders,
-				@NotNull Object... args
-				) {
-			return new PacketSerializer("PlayerMessage")
-					.writeUTF(server)
-					.writeUTF(targets)
-					.writeUTF(permission)
-					.writeBoolean(includeConsole)
-					.writeUTF(MessagePacketType.CUSTOM_PLACEHOLDERS.name())
-					.writeUTF(messagePath)
-					.writeUTFArray(placeholders)
-					.writeUTFArray(Arrays.asList(args)
-							.stream()
-							.map(obj -> String.valueOf(obj))
-							.collect(Collectors.toList())
-							.toArray(new String[0])
-							);
-		}
-		
-		/**
-		 * Disconnects a player specifying a
-		 * {@link MessagePacketType#PLAIN} message as the kick's reason.
+		 * <p>This method supports {@link Component}s: the message's content may be
+		 * obtained using {@link ComponentTranslator#createJSON(Component, Object...)}.</p>
 		 * 
 		 * @param server Target server
 		 * @param player Player's UUID
@@ -203,87 +123,15 @@ public class Packets {
 		 * @return <code>PlayerDisconnect</code> packet
 		 */
 		@PacketScope(Scope.SERVER_TO_SERVER)
-		public static PacketSerializer plainPlayerDisconnect(
+		public static PacketSerializer playerDisconnect(
 				@NotNull String server,
 				@NotNull UUID player,
 				@NotNull String reason
 				) {
 			return new PacketSerializer("PlayerDisconnect")
 					.writeUTF(server)
-					.writeUTF(player.toString())
-					.writeUTF(MessagePacketType.PLAIN.name())
+					.writeUUID(player)
 					.writeUTF(reason);
-		}
-		
-		/**
-		 * Disconnects a player specifying a {@link MessagePacketType#NUMERIC_PLACEHOLDERS} message as the kick's reason.
-		 * 
-		 * <p>The <code>args</code> array cannot contain <code>null</code> elements.</p>
-		 * 
-		 * <p>This method supports {@link Component}s: the <code>args</code> array may be composed of
-		 * strings obtained using {@link ComponentTranslator#createJSON(Component, Object...)}.</p>
-		 * 
-		 * @param server Target server
-		 * @param player Player's UUID
-		 * @param reasonPath Kick's reason's path
-		 * @param args Kick's reason's arguments
-		 * @return <code>PlayerDisconnect</code> packet
-		 */
-		@PacketScope(Scope.SERVER_TO_SERVER)
-		public static PacketSerializer numericPlaceholdersPlayerDisconnect(
-				@NotNull String server,
-				@NotNull UUID player,
-				@NotNull String reasonPath,
-				@NotNull Object... args
-				) {
-			return new PacketSerializer("PlayerDisconnect")
-					.writeUTF(server)
-					.writeUTF(player.toString())
-					.writeUTF(MessagePacketType.NUMERIC_PLACEHOLDERS.name())
-					.writeUTF(reasonPath)
-					.writeUTFArray(Arrays.asList(args)
-							.stream()
-							.map(obj -> String.valueOf(obj))
-							.collect(Collectors.toList())
-							.toArray(new String[0])
-							);
-		}
-		
-		/**
-		 * Disconnects a player specifying a {@link MessagePacketType#CUSTOM_PLACEHOLDERS} message as the kick's reason.
-		 * 
-		 * <p>The <code>args</code> array cannot contain <code>null</code> elements.</p>
-		 * 
-		 * <p>This method supports {@link Component}s: the <code>args</code> array may be composed of
-		 * strings obtained using {@link ComponentTranslator#createJSON(Component, Object...)}.</p>
-		 * 
-		 * @param server Target server
-		 * @param player Player's UUID
-		 * @param reasonPath Kick's reason's path
-		 * @param placeholders Kick's reason's placeholders
-		 * @param args Kick's reason's packet
-		 * @return <code>PlayerDisconnect</code> packet
-		 */
-		@PacketScope(Scope.SERVER_TO_SERVER)
-		public static PacketSerializer customPlaceholdersPlayerDisconnect(
-				@NotNull String server,
-				@NotNull UUID player,
-				@NotNull String reasonPath,
-				@NotNull String[] placeholders,
-				@NotNull Object... args
-				) {
-			return new PacketSerializer("PlayerDisconnect")
-					.writeUTF(server)
-					.writeUTF(player.toString())
-					.writeUTF(MessagePacketType.CUSTOM_PLACEHOLDERS.name())
-					.writeUTF(reasonPath)
-					.writeUTFArray(placeholders)
-					.writeUTFArray(Arrays.asList(args)
-							.stream()
-							.map(obj -> String.valueOf(obj))
-							.collect(Collectors.toList())
-							.toArray(new String[0])
-							);
 		}
 		
 		/**

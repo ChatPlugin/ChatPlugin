@@ -92,14 +92,14 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 	}
 	
 	@Override
-	public void run() {
+	public void run() { // TODO: set these in BaseChatPluginServerPlayer's constructor and increment them when needed
 		if (!enabled)
 			return;
 		try {
 			ServerPlayerManager.getInstance().setStorageCount(storage.count(DataContainer.PLAYERS).intValue());
 			
 			if (ChatPlugin.getInstance().isPremium()) {
-				if (BanManager.getInstance().isEnabled()) {				
+				if (BanManager.getInstance().isEnabled()) {
 					BanManager.getInstance().setStorageCount(storage.count(DataContainer.BANS).intValue());
 					BanManager.getInstance().setStaffStorageCount(getStaffPunishments(DataContainer.BANS));
 				} if (WarningManager.getInstance().isEnabled()) {
@@ -114,6 +114,7 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 				}
 			} for (ChatPluginServerPlayer player : ServerPlayerManager.getInstance().getPlayers().values()) {
 				((BaseChatPluginServerPlayer) player).setMessagesSent(storage.getPlayerData(PlayersDataType.MESSAGES_SENT, player));
+				((BaseChatPluginServerPlayer) player).setAntispamInfractions(storage.getPlayerData(PlayersDataType.ANTISPAM_INFRACTIONS, player));
 				
 				if (ChatPlugin.getInstance().isPremium()) {
 					((BaseChatPluginServerPlayer) player).setBans(getStaffPunishments(player, DataContainer.BANS));
@@ -136,8 +137,8 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 					MuteManager.getInstance().setAnticheatStorageCount(getAnticheatPunishments(DataContainer.MUTES));
 				} refreshAnticheatCounters = !refreshAnticheatCounters;
 			}
-		} catch (SQLException e) {
-			LogManager.log("SQLException occurred while updating the server's punishments' placeholders: {0}", 2, e.getMessage());
+		} catch (SQLException sqle) {
+			LogManager.log("SQLException occurred while placeholders for a player or the server: {0}", 2, sqle.getLocalizedMessage());
 		}
 	}
 	
@@ -261,6 +262,8 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 			output = output.replace("{player_mutes}", String.valueOf(player.getMutes()));
 		if (output.contains("{messages_sent}"))
 			output = output.replace("{messages_sent}", String.valueOf(player.getMessagesSent()));
+		if (output.contains("{antispam_infractions}"))
+			output = output.replace("{antispam_infractions}", String.valueOf(player.getAntispamInfractions()));
 		if (output.contains("{player_anticheat_bans}"))
 			output = output.replace("{player_anticheat_bans}", String.valueOf(player.getAnticheatBans()));
 		if (output.contains("{player_anticheat_warnings}"))
@@ -424,7 +427,7 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 			if (IntegrationType.MVDWPLACEHOLDERAPI.isEnabled())
 				output = IntegrationType.MVDWPLACEHOLDERAPI.get().translatePlaceholders(output, player);
 			return translateColors ? ChatColor.translate(output) : output;
-		} catch (NullPointerException e) {
+		} catch (NullPointerException npe) { // wtf is this?
 			return input;
 		}
 	}

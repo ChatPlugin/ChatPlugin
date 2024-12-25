@@ -207,4 +207,53 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 		} return null;
 	}
 	
+	// https://gist.github.com/jjfiv/2ac5c081e088779f49aa
+	public static String unescapeJSON(String json) {
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+		
+		while (i < json.length()) {
+			char delimiter = json.charAt(i);
+			i++;
+			
+			if (delimiter == '\\' && i < json.length()) {
+				char ch = json.charAt(i);
+				i++;
+				
+				switch (ch) {
+				case '\\':
+				case '/':
+				case '"':
+				case '\'':
+					sb.append(ch);
+					break;
+				case 'n':
+					sb.append('\n');
+					break;
+				case 'r':
+					sb.append('\r');
+					break;
+				case 't':
+					sb.append('\t');
+					break;
+				case 'b':
+					sb.append('\b');
+					break;
+				case 'f':
+					sb.append('\f');
+					break;
+				case 'u':
+					StringBuilder hex = new StringBuilder();
+					
+					for (char x : json.substring(i, i + 4).toCharArray())
+						hex.append(Character.toLowerCase(x));
+					i += 4;
+					
+					sb.append((char) Integer.parseInt(hex.toString(), 16));
+					break;
+				}
+			} else sb.append(delimiter);
+		} return sb.toString();
+	}
+	
 }

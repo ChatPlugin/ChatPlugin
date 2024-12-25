@@ -27,6 +27,7 @@ import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
@@ -691,22 +692,29 @@ public class Utils {
 	 * @param args Optional arguments
 	 * @return String with placeholders translated
 	 */
-	public static String numericPlaceholders(String string, Object... args) {
-		for (int i = 0; i < args.length; i++)
-			if (string.contains("{" + i + "}"))
-				string = string.replace("{" + String.valueOf(i) + "}", String.valueOf(args[i]));
-		return string;
+	public static String replaceNumericPlaceholders(String string, Object... args) {
+		return replaceCustomPlaceholders(string, IntStream.range(0, args.length).mapToObj(String::valueOf).toArray(String[]::new), args);
 	}
 	
 	/**
-	 * Calls {@link #numericPlaceholders(String, Object...)} for every string in the specified list.
+	 * Replaces custom placeholders in a string with the given arguments:
+	 * 	<ul>
+	 * 		<li><code>placeholders[0]</code> will be replaced with <code>args[0]</code></li>
+	 * 		<li><code>placeholders[1]</code> will be replaced with <code>args[1]</code></li>
+	 * 		<li><code>placeholders[7]</code> will be replaced with <code>args[7]</code></li>
+	 * 	</ul>
 	 * 
-	 * @param list List containing placeholders
+	 * ...and so on.
+	 * 
+	 * @param string String containing placeholders
+	 * @param placeholders Placeholders to translate
 	 * @param args Optional arguments
-	 * @return List with placeholders translated
+	 * @return String with placeholders translated
 	 */
-	public static List<String> numericPlaceholders(List<String> list, Object... args) {
-		return list.stream().map(string -> numericPlaceholders(string, args)).collect(Collectors.toList());
+	public static String replaceCustomPlaceholders(String string, String[] placeholders, Object... args) {
+		for (int i = 0; i < args.length; i++)
+			string = string.replace("{" + placeholders[i] + "}", String.valueOf(args[i]));
+		return string;
 	}
 	
 	/**

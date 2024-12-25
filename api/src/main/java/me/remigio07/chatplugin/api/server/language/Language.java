@@ -87,16 +87,16 @@ public abstract class Language {
 	
 	/**
 	 * Gets a message from this language's {@link #getConfiguration()} and translates
-	 * its placeholders using {@link Utils#numericPlaceholders(String, Object...)}.
+	 * its placeholders using {@link Utils#replaceNumericPlaceholders(String, Object...)}.
 	 * 
 	 * <p>The "{pfx}" placeholder will be translated with the message found at "misc.prefix".</p>
 	 * 
 	 * @param path Message's path
-	 * @param args Optional arguments (translated using {@link Utils#numericPlaceholders(String, Object...)})
+	 * @param args Optional arguments (translated using {@link Utils#replaceNumericPlaceholders(String, Object...)})
 	 * @return Translated message
 	 */
 	public String getMessage(String path, Object... args) {
-		return Utils.numericPlaceholders(configuration.translateString(path, ConfigurationType.MESSAGES.get().translateString(path)).replace("{pfx}", configuration.translateString("misc.prefix", ConfigurationType.MESSAGES.get().translateString("misc.prefix"))), args);
+		return Utils.replaceNumericPlaceholders(configuration.translateString(path, ConfigurationType.MESSAGES.get().translateString(path)).replace("{pfx}", configuration.translateString("misc.prefix", ConfigurationType.MESSAGES.get().translateString("misc.prefix"))), args);
 	}
 	
 	/**

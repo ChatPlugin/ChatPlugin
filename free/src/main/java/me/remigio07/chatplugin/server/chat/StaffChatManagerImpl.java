@@ -69,10 +69,11 @@ public class StaffChatManagerImpl extends StaffChatManager {
 		if (staffChatEvent.isCancelled())
 			return;
 		if (ProxyManager.getInstance().isEnabled()) {
-			ProxyManager.getInstance().sendPluginMessage(Packets.Messages.plainPlayerMessage(
+			ProxyManager.getInstance().sendPluginMessage(Packets.Messages.playerMessage(
 					"ALL",
-					"ALL ENABLED",
+					"ALL LOADED",
 					"chatplugin.commands.staffchat",
+					false,
 					false,
 					ChatColor.translate(PlaceholderManager.getInstance().translatePlaceholders(
 							playerChatFormat,
@@ -82,10 +83,11 @@ public class StaffChatManagerImpl extends StaffChatManager {
 							false
 							) + message)
 					));
-			ProxyManager.getInstance().sendPluginMessage(Packets.Messages.plainPlayerMessage(
+			ProxyManager.getInstance().sendPluginMessage(Packets.Messages.playerMessage(
 					"ALL",
 					"CONSOLE",
 					null,
+					false,
 					false,
 					ChatColor.translate(PlaceholderManager.getInstance().translatePlaceholders(
 							playerTerminalFormat,
@@ -129,10 +131,11 @@ public class StaffChatManagerImpl extends StaffChatManager {
 		if (staffChatEvent.isCancelled())
 			return;
 		if (ProxyManager.getInstance().isEnabled()) {
-			ProxyManager.getInstance().sendPluginMessage(Packets.Messages.plainPlayerMessage(
+			ProxyManager.getInstance().sendPluginMessage(Packets.Messages.playerMessage(
 					"ALL",
-					"ALL ENABLED",
+					"ALL LOADED",
 					"chatplugin.commands.staffchat",
+					false,
 					false,
 					ChatColor.translate(PlaceholderManager.getInstance().translateServerPlaceholders(
 							consoleChatFormat,
@@ -140,10 +143,11 @@ public class StaffChatManagerImpl extends StaffChatManager {
 							false
 							) + message)
 					));
-			ProxyManager.getInstance().sendPluginMessage(Packets.Messages.plainPlayerMessage(
+			ProxyManager.getInstance().sendPluginMessage(Packets.Messages.playerMessage(
 					"ALL",
 					"CONSOLE",
 					null,
+					false,
 					false,
 					ChatColor.translate(PlaceholderManager.getInstance().translateServerPlaceholders(
 							consoleTerminalFormat,

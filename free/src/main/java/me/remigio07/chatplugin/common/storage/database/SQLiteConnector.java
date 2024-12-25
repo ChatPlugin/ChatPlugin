@@ -179,6 +179,7 @@ public class SQLiteConnector extends DatabaseConnector {
 					+ "`last_logout` INTEGER, "
 					+ "`time_played` INTEGER DEFAULT 0, "
 					+ "`messages_sent` INTEGER DEFAULT 0, "
+					+ "`antispam_infractions` INTEGER DEFAULT 0, "
 					+ "`bans` INTEGER DEFAULT 0, "
 					+ "`warnings` INTEGER DEFAULT 0, "
 					+ "`kicks` INTEGER DEFAULT 0, "

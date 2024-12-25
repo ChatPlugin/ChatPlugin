@@ -15,6 +15,11 @@
 
 package me.remigio07.chatplugin.api.server.event.chat;
 
+import java.util.List;
+
+import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
+import me.remigio07.chatplugin.api.server.chat.antispam.AntispamManager;
+import me.remigio07.chatplugin.api.server.chat.antispam.AntispamResult;
 import me.remigio07.chatplugin.api.server.chat.antispam.DenyChatReason;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
@@ -23,7 +28,8 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
  */
 public class DenyChatEvent extends PublicMessageEvent {
 	
-	private DenyChatReason<?> reason;
+	private DenyChatReason<?> denyChatReason;
+	private AntispamResult antispamResult;
 	
 	/**
 	 * Constructs a new deny chat event.
@@ -31,20 +37,40 @@ public class DenyChatEvent extends PublicMessageEvent {
 	 * @param player Player involved
 	 * @param message Message involved
 	 * @param global Whether the message is global
-	 * @param reason Deny chat reason
+	 * @param denyChatReason Reason why the message has been blocked
+	 * @param antispamResult Result of the antispam's check
 	 */
-	public DenyChatEvent(ChatPluginServerPlayer player, String message, boolean global, DenyChatReason<?> reason) {
+	public DenyChatEvent(
+			ChatPluginServerPlayer player,
+			String message,
+			boolean global,
+			DenyChatReason<?> denyChatReason,
+			@Nullable(why = "Null if getDenyChatReason().getHandlerClass() != AntispamManager.class") AntispamResult antispamResult
+			) {
 		super(player, message, global);
-		this.reason = reason;
+		this.denyChatReason = denyChatReason;
+		this.antispamResult = antispamResult;
 	}
 	
 	/**
-	 * Gets the reason why the message has been denied.
+	 * Gets the reason why the message has been blocked.
 	 * 
-	 * @return Deny chat reason
+	 * @return Reason why the message has been blocked
 	 */
-	public DenyChatReason<?> getReason() {
-		return reason;
+	public DenyChatReason<?> getDenyChatReason() {
+		return denyChatReason;
+	}
+	
+	/**
+	 * Gets the result of {@link AntispamManager#check(ChatPluginServerPlayer, String, List)}.
+	 * 
+	 * <p>Will return <code>null</code> if the antispam has allowed this message.
+	 * 
+	 * @return Result of the antispam's check
+	 */
+	@Nullable(why = "Null if getDenyChatReason().getHandlerClass() != AntispamManager.class")
+	public AntispamResult getAntispamResult() {
+		return antispamResult;
 	}
 	
 }

@@ -99,7 +99,7 @@ public class H2Connector extends DatabaseConnector {
 		switch (container) {
 		case BANS:
 			update = "CREATE TABLE IF NOT EXISTS {table_id} ("
-					+ "`id` INT PRIMARY KEY AUTO_INCREMENT, "
+					+ "`id` INTEGER PRIMARY KEY AUTO_INCREMENT, "
 					+ "`player_uuid` VARCHAR(36), "
 					+ "`player_name` VARCHAR(16), "
 					+ "`player_ip` VARCHAR(15), "
@@ -119,7 +119,7 @@ public class H2Connector extends DatabaseConnector {
 			break;
 		case WARNINGS:
 			update = "CREATE TABLE IF NOT EXISTS {table_id} ("
-					+ "`id` INT PRIMARY KEY AUTO_INCREMENT, "
+					+ "`id` INTEGER PRIMARY KEY AUTO_INCREMENT, "
 					+ "`player_uuid` VARCHAR(36) NOT NULL, "
 					+ "`player_name` VARCHAR(16) NOT NULL, "
 					+ "`staff_member` VARCHAR(16) NOT NULL, "
@@ -137,7 +137,7 @@ public class H2Connector extends DatabaseConnector {
 			break;
 		case KICKS:
 			update = "CREATE TABLE IF NOT EXISTS {table_id} ("
-					+ "`id` INT PRIMARY KEY AUTO_INCREMENT, "
+					+ "`id` INTEGER PRIMARY KEY AUTO_INCREMENT, "
 					+ "`player_uuid` VARCHAR(36) NOT NULL, "
 					+ "`player_name` VARCHAR(16) NOT NULL, "
 					+ "`player_ip` VARCHAR(15) NOT NULL, "
@@ -151,7 +151,7 @@ public class H2Connector extends DatabaseConnector {
 			break;
 		case MUTES:
 			update = "CREATE TABLE IF NOT EXISTS {table_id} ("
-					+ "`id` INT PRIMARY KEY AUTO_INCREMENT, "
+					+ "`id` INTEGER PRIMARY KEY AUTO_INCREMENT, "
 					+ "`player_uuid` VARCHAR(36) NOT NULL, "
 					+ "`player_name` VARCHAR(16) NOT NULL, "
 					+ "`staff_member` VARCHAR(16) NOT NULL, "
@@ -169,7 +169,7 @@ public class H2Connector extends DatabaseConnector {
 			break;
 		case PLAYERS:
 			update = "CREATE TABLE IF NOT EXISTS {table_id} ("
-					+ "`id` INT PRIMARY KEY AUTO_INCREMENT, "
+					+ "`id` INTEGER PRIMARY KEY AUTO_INCREMENT, "
 					+ "`player_uuid` VARCHAR(36) NOT NULL, "
 					+ "`player_name` VARCHAR(16) NOT NULL, "
 					+ "`player_ip` VARCHAR(15), "
@@ -179,7 +179,8 @@ public class H2Connector extends DatabaseConnector {
 					+ "`emojis_tone` INTEGER, "
 					+ "`last_logout` BIGINT, "
 					+ "`time_played` BIGINT DEFAULT 0, "
-					+ "`messages_sent` MEDIUMINT DEFAULT 0, "
+					+ "`messages_sent` INTEGER DEFAULT 0, "
+					+ "`antispam_infractions` INTEGER DEFAULT 0, "
 					+ "`bans` SMALLINT DEFAULT 0, "
 					+ "`warnings` SMALLINT DEFAULT 0, "
 					+ "`kicks` SMALLINT DEFAULT 0, "
@@ -215,7 +216,7 @@ public class H2Connector extends DatabaseConnector {
 			break;
 		case IP_ADDRESSES:
 			update = "CREATE TABLE IF NOT EXISTS {table_id} ("
-					+ "`player_id` INT PRIMARY KEY NOT NULL, "
+					+ "`player_id` INTEGER PRIMARY KEY NOT NULL, "
 					+ "`ip_addresses` VARCHAR(255) NOT NULL"
 					+ ")";
 			break;

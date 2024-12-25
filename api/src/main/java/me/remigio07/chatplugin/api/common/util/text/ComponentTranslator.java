@@ -338,20 +338,29 @@ public abstract class ComponentTranslator {
 		MEMORY_DEFAULT_FORMAT(DEFAULT_COMPONENT_KEY),
 		
 		/**
-		 * Translated message's (with no arguments) component.
+		 * Translated message's (without placeholders) component.
 		 * 
 		 * @see Language#getMessage(String, Object...)
 		 */
-		TRANSLATED_MESSAGE(DEFAULT_COMPONENT_KEY),
+		MESSAGE(DEFAULT_COMPONENT_KEY),
 		
 		/**
-		 * Translated message's (with arguments) component.
+		 * Translated message's (with numeric placeholders) component.
 		 * 
 		 * <p><strong>Keys:</strong> ["value", "args"]</p>
 		 * 
-		 * @see Language#getMessage(String, Object...)
+		 * @see Utils#replaceNumericPlaceholders(String, Object...)
 		 */
-		TRANSLATED_MESSAGE_ARGS(DEFAULT_COMPONENT_KEY, "args");
+		MESSAGE_NUMERIC_PLACEHOLDERS(DEFAULT_COMPONENT_KEY, "args"),
+		
+		/**
+		 * Translated message's (with custom placeholders) component.
+		 * 
+		 * <p><strong>Keys:</strong> ["value", "placeholders", "args"]</p>
+		 * 
+		 * @see Utils#replaceCustomPlaceholders(String, String[], Object...)
+		 */
+		MESSAGE_CUSTOM_PLACEHOLDERS(DEFAULT_COMPONENT_KEY, "placeholders", "args");
 		
 		private String[] keys;
 		

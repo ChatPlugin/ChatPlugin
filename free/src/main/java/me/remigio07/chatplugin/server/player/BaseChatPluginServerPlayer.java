@@ -67,25 +67,35 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 		try {
 			Integer color = StorageManager.getInstance().getConnector().getPlayerData(PlayersDataType.CHAT_COLOR, this);
 			chatColor = color == null ? ChatColor.RESET : ChatColor.of(new Color(color, true));
-		} catch (SQLException e) {
+		} catch (SQLException sqle) {
 			try {
-				if (e.getMessage().contains("Column \"CHAT_COLOR\" not found") || e.getMessage().contains("(no such column: chat_color)")) // compatibility with older ChatPlugin versions
+				if (sqle.getMessage().contains("Column \"CHAT_COLOR\" not found") || sqle.getMessage().contains("(no such column: chat_color)")) // compatibility with older ChatPlugin versions
 					DatabaseConnector.getInstance().executeUpdate("ALTER TABLE " + DataContainer.PLAYERS.getDatabaseTableID() + " ADD `chat_color` INTEGER");
-				else LogManager.log("Unable to get chat's color from database for player {0}: {1}", 2, name, e.getMessage());
-			} catch (SQLException e2) {
-				LogManager.log("Unable to alter database table {0} after version update: {1}", 2, DataContainer.PLAYERS.getDatabaseTableID(), e2.getMessage());
+				else LogManager.log("Unable to get chat's color from database for player {0}: {1}", 2, name, sqle.getLocalizedMessage());
+			} catch (SQLException sqle2) {
+				LogManager.log("Unable to alter database table {0} after version update: {1}", 2, DataContainer.PLAYERS.getDatabaseTableID(), sqle2.getLocalizedMessage());
 			} chatColor = ChatColor.RESET;
 		} try {
 			Integer tone = StorageManager.getInstance().getConnector().getPlayerData(PlayersDataType.EMOJIS_TONE, this);
 			emojisTone = tone == null ? ChatColor.RESET : ChatColor.of(new Color(tone, true));
-		} catch (SQLException e) {
+		} catch (SQLException sqle) {
 			try {
-				if (e.getMessage().contains("Column \"EMOJIS_TONE\" not found") || e.getMessage().contains("(no such column: emojis_tone)")) // compatibility with older ChatPlugin versions
+				if (sqle.getMessage().contains("Column \"EMOJIS_TONE\" not found") || sqle.getMessage().contains("(no such column: emojis_tone)")) // compatibility with older ChatPlugin versions
 					DatabaseConnector.getInstance().executeUpdate("ALTER TABLE " + DataContainer.PLAYERS.getDatabaseTableID() + " ADD `emojis_tone` INTEGER");
-				else LogManager.log("Unable to get emojis' tone from database for player {0}: {1}", 2, name, e.getMessage());
-			} catch (SQLException e2) {
-				LogManager.log("Unable to alter database table {0} after version update: {1}", 2, DataContainer.PLAYERS.getDatabaseTableID(), e2.getMessage());
+				else LogManager.log("Unable to get emojis' tone from database for player {0}: {1}", 2, name, sqle.getLocalizedMessage());
+			} catch (SQLException sqle2) {
+				LogManager.log("Unable to alter database table {0} after version update: {1}", 2, DataContainer.PLAYERS.getDatabaseTableID(), sqle2.getLocalizedMessage());
 			} emojisTone = ChatColor.RESET;
+		} try {
+			antispamInfractions = StorageManager.getInstance().getConnector().getPlayerData(PlayersDataType.ANTISPAM_INFRACTIONS, this);
+		} catch (SQLException sqle) {
+			try {
+				if (sqle.getMessage().contains("Column \"ANTISPAM_INFRACTIONS\" not found") || sqle.getMessage().contains("(no such column: antispam_infractions)")) // compatibility with older ChatPlugin versions
+					DatabaseConnector.getInstance().executeUpdate("ALTER TABLE " + DataContainer.PLAYERS.getDatabaseTableID() + " ADD `antispam_infractions` INTEGER DEFAULT 0");
+				else LogManager.log("Unable to get antispam infractions from database for player {0}: {1}", 2, name, sqle.getLocalizedMessage());
+			} catch (SQLException sqle2) {
+				LogManager.log("Unable to alter database table {0} after version update: {1}", 2, DataContainer.PLAYERS.getDatabaseTableID(), sqle2.getLocalizedMessage());
+			}
 		}
 	}
 	
@@ -161,6 +171,10 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 	
 	public void setMessagesSent(int messagesSent) {
 		this.messagesSent = messagesSent;
+	}
+	
+	public void setAntispamInfractions(int antispamInfractions) {
+		this.antispamInfractions = antispamInfractions;
 	}
 	
 	public void setLastCorrespondent(OfflinePlayer lastCorrespondent) {

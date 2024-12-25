@@ -400,6 +400,7 @@ public class JSONConnector extends FlatFileConnector {
 		} else map.put("timePlayed", 0L);
 		
 		map.put("messagesSent", 0);
+		map.put("antispamInfractions", 0);
 		map.put("bans", (short) 0);
 		map.put("warnings", (short) 0);
 		map.put("kicks", (short) 0);

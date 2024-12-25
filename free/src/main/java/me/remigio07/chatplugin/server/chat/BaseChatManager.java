@@ -41,6 +41,7 @@ import me.remigio07.chatplugin.api.server.chat.PlayerPingManager;
 import me.remigio07.chatplugin.api.server.chat.RangedChatManager;
 import me.remigio07.chatplugin.api.server.chat.StaffChatManager;
 import me.remigio07.chatplugin.api.server.chat.antispam.AntispamManager;
+import me.remigio07.chatplugin.api.server.chat.antispam.AntispamResult;
 import me.remigio07.chatplugin.api.server.chat.antispam.DenyChatReason;
 import me.remigio07.chatplugin.api.server.chat.log.ChatLogManager;
 import me.remigio07.chatplugin.api.server.event.chat.AllowChatEvent;
@@ -50,12 +51,12 @@ import me.remigio07.chatplugin.api.server.event.chat.ToggleChatMuteEvent;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
-import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 import me.remigio07.chatplugin.api.server.util.URLValidator;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.common.util.Utils;
+import me.remigio07.chatplugin.server.chat.antispam.AntispamManagerImpl;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import net.kyori.adventure.text.TextComponent;
 
@@ -121,42 +122,44 @@ public abstract class BaseChatManager extends ChatManager {
 		if (StaffChatManager.getInstance().isEnabled() && player.hasPermission("chatplugin.commands.staffchat") && StaffChatManager.getInstance().isUsingStaffChat(player.getUUID())) {
 			StaffChatManager.getInstance().sendPlayerMessage(player, message);
 			return true;
-		} DenyChatReason<?> reason = null;
+		} DenyChatReason<?> denyChatReason = null;
+		AntispamResult antispamResult = null;
 		
 		// 2. vanish
 		if (player.isVanished())
-			reason = DenyChatReason.VANISH;
+			denyChatReason = DenyChatReason.VANISH;
 		
 		// 3. mute(all)
-		if (reason == null)
+		if (denyChatReason == null)
 			if (chatMuted && !player.hasPermission("chatplugin.commands.muteall"))
-				reason = DenyChatReason.MUTEALL;
+				denyChatReason = DenyChatReason.MUTEALL;
 			else if (MuteManager.getInstance().isEnabled() && MuteManager.getInstance().isMuted(player, ProxyManager.getInstance().getServerID()))
-				reason = DenyChatReason.MUTE;
+				denyChatReason = DenyChatReason.MUTE;
 		
 		String stripColor = ChatColor.stripColor(message);
 		
 		// 4. antispam
-		if (reason == null && AntispamManager.getInstance().isEnabled())
-			reason = AntispamManager.getInstance().getDenyChatReason(player, stripColor, Collections.emptyList());
-		List<String> urls = URLValidator.getURLs(stripColor);
+		if (denyChatReason == null && AntispamManager.getInstance().isEnabled()) {
+			antispamResult = AntispamManager.getInstance().check(player, stripColor, Collections.emptyList());
+			denyChatReason = antispamResult.getReason();
+		} List<String> urls = URLValidator.getURLs(stripColor);
 		
 		// 5. formatted chat
-		if (reason == null && FormattedChatManager.getInstance().isEnabled() && FormattedChatManager.getInstance().containsFormattedText(stripColor, urls, true)) {
+		if (denyChatReason == null && FormattedChatManager.getInstance().isEnabled() && FormattedChatManager.getInstance().containsFormattedText(stripColor, urls, true)) {
 			if (!player.hasPermission("chatplugin.formatted-chat"))
 				if (!FormattedChatManager.getInstance().isSendAnyway())
-					reason = DenyChatReason.FORMAT;
+					denyChatReason = DenyChatReason.FORMAT;
 				else player.sendTranslatedMessage("chat.no-format");
 			else message = FormattedChatManager.getInstance().translate(message, urls, true);
 		}
 		
 		// 6. blank message
-		if (reason == null && ChatColor.stripColor(message).replace(" ", "").isEmpty())
-			reason = DenyChatReason.BLANK_MESSAGE;
+		if (denyChatReason == null && ChatColor.stripColor(message).replace(" ", "").isEmpty())
+			denyChatReason = DenyChatReason.BLANK_MESSAGE;
 		List<InstantEmoji> instantEmojis = Collections.emptyList();
 		List<ChatPluginServerPlayer> pingedPlayers = Collections.emptyList();
 		
-		if (reason == null) {
+		if (denyChatReason == null) {
 			// 7. chat color
 			if (!player.getChatColor().equals(ChatColor.RESET))
 				message = player.getChatColor().toString() + message;
@@ -170,34 +173,37 @@ public abstract class BaseChatManager extends ChatManager {
 				message = PlayerPingManager.getInstance().performPing(player, message, global, pingedPlayers = PlayerPingManager.getInstance().getPingedPlayers(player, message, global));
 			
 		} else { // denied
-			String denyMessage = reason.getMessage(player.getLanguage());
+			String denyMessage = denyChatReason.getMessage(player.getLanguage());
 			
-			new DenyChatEvent(player, message, global, reason).call();
+			new DenyChatEvent(player, message, global, denyChatReason, antispamResult).call();
 			
-			switch (reason.name()) {
+			switch (denyChatReason.name()) {
 			case "CAPS":
-				denyMessage = Utils.numericPlaceholders(denyMessage, AntispamManager.getInstance().getMaxCapsPercent(), AntispamManager.getInstance().getMaxCapsLength());
+				denyMessage = Utils.replaceNumericPlaceholders(denyMessage, Utils.truncate(AntispamManager.getInstance().getMaxCapsPercentage(), 2), AntispamManager.getInstance().getMaxCapsLength());
 				break;
 			case "FLOOD":
-				denyMessage = Utils.numericPlaceholders(denyMessage, AntispamManager.getInstance().getSecondsBetweenMsg());
+				denyMessage = Utils.replaceNumericPlaceholders(denyMessage, AntispamManager.getInstance().getSecondsBetweenMessages());
 				break;
 			case "MUTE":
 				denyMessage = MuteManager.getInstance().getActiveMute(player, ProxyManager.getInstance().getServerID()).formatPlaceholders(denyMessage, player.getLanguage());
 				break;
 			case "SPAM":
-				denyMessage = Utils.numericPlaceholders(denyMessage, AntispamManager.getInstance().getSecondsBetweenSameMsg());
+				denyMessage = Utils.replaceNumericPlaceholders(denyMessage, AntispamManager.getInstance().getSecondsBetweenSameMessages());
 				break;
 			default:
 				break;
-			} if (reason != DenyChatReason.MUTEALL && reason != DenyChatReason.VANISH && reason != DenyChatReason.BLANK_MESSAGE) {
-				for (ChatPluginServerPlayer staff : ServerPlayerManager.getInstance().getPlayers().values())
-					if (staff.hasPermission("chatplugin.deny-chat-notify"))
-						staff.sendTranslatedMessage("chat.deny-chat-notify", player.getName(), reason.name(), message);
+			} if (denyChatReason != DenyChatReason.MUTEALL && denyChatReason != DenyChatReason.VANISH && denyChatReason != DenyChatReason.BLANK_MESSAGE) {
 				if (ChatLogManager.getInstance().isEnabled())
-					ChatLogManager.getInstance().logPublicMessage(player, message, global, reason);
-				ChatPlugin.getInstance().sendConsoleMessage(Language.getMainLanguage().getMessage("chat.deny-chat-notify", player.getName(), reason.name(), message), false);
+					ChatLogManager.getInstance().logPublicMessage(player, message, global, denyChatReason);
+				if (denyChatReason.getHandlerClass() == AntispamManager.class)
+					((AntispamManagerImpl) AntispamManager.getInstance()).sendNotification(player, antispamResult);
 			} player.sendMessage(denyMessage);
-			return true;
+			
+			try {
+				StorageConnector.getInstance().incrementPlayerStat(PlayersDataType.ANTISPAM_INFRACTIONS, player);
+			} catch (SQLException | IOException e) {
+				LogManager.log("{0} occurred while incrementing antispam infractions stat for {1}: {2}", 2, e.getClass().getSimpleName(), player.getName(), e.getLocalizedMessage());
+			} return true;
 		} AllowChatEvent allowChatEvent = new AllowChatEvent(player, message, global);
 		
 		allowChatEvent.call();

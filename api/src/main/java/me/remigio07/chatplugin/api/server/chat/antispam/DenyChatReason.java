@@ -46,9 +46,9 @@ public class DenyChatReason<H extends DenyChatReasonHandler> {
 	public static final DenyChatReason<ChatManager> BLANK_MESSAGE = new DenyChatReason<>("BLANK_MESSAGE", "chat.no-blank-messages", ChatManager.class);
 	
 	/**
-	 * The message {@link AntispamManager#exceedsMaxCapsLength(String)} and
-	 * {@link AntispamManager#exceedsMaxCapsPercentage(String)} and the sender does not
-	 * have the permission "chatplugin.antispam.caps" or "chatplugin.antispam.bypass".
+	 * When the message exceeds both {@link AntispamManager#getMaxCapsLength()} and
+	 * {@link AntispamManager#getMaxCapsPercentage()} and the sender does not have
+	 * the permission "chatplugin.antispam.caps" or "chatplugin.antispam.bypass".
 	 * 
 	 * <p><strong>Handler:</strong> {@link AntispamManager}
 	 * <br><strong>Message path:</strong> "chat.antispam.no-caps"</p>
@@ -56,7 +56,7 @@ public class DenyChatReason<H extends DenyChatReasonHandler> {
 	public static final DenyChatReason<AntispamManager> CAPS = new DenyChatReason<>("CAPS", "chat.antispam.no-caps", AntispamManager.class);
 	
 	/**
-	 * The {@link AntispamManager#getFloodCache()} list contains the sender and they do not
+	 * When {@link AntispamManager#getFloodCache()} contains the sender and they do not
 	 * have the permission "chatplugin.antispam.flood" or "chatplugin.antispam.bypass".
 	 * 
 	 * <p><strong>Handler:</strong> {@link AntispamManager}
@@ -74,13 +74,13 @@ public class DenyChatReason<H extends DenyChatReasonHandler> {
 	public static final DenyChatReason<FormattedChatManager> FORMAT = new DenyChatReason<>("FORMAT", "chat.no-format", FormattedChatManager.class);
 	
 	/**
-	 * When the message {@link AntispamManager#containsDisallowedIP(String)}
+	 * When {@link AntispamManager#getDisallowedIPAddress(String)} finds a match
 	 * and the sender does not have the permission "chatplugin.antispam.bypass".
 	 * 
 	 * <p><strong>Handler:</strong> {@link AntispamManager}
-	 * <br><strong>Message path:</strong> "chat.antispam.no-ip"</p>
+	 * <br><strong>Message path:</strong> "chat.antispam.no-ip-address"</p>
 	 */
-	public static final DenyChatReason<AntispamManager> IP_ADDRESS = new DenyChatReason<>("IP_ADDRESS", "chat.antispam.no-ip", AntispamManager.class);
+	public static final DenyChatReason<AntispamManager> IP_ADDRESS = new DenyChatReason<>("IP_ADDRESS", "chat.antispam.no-ip-address", AntispamManager.class);
 	
 	/**
 	 * When the sender {@link MuteManager#isMuted(OfflinePlayer, String)}.
@@ -99,7 +99,7 @@ public class DenyChatReason<H extends DenyChatReasonHandler> {
 	public static final DenyChatReason<ChatManager> MUTEALL = new DenyChatReason<>("MUTEALL", "commands.muteall.muted", ChatManager.class);
 	
 	/**
-	 * The {@link AntispamManager#getSpamCache()} map contains the sender and they do not
+	 * When {@link AntispamManager#getSpamCache()} contains the sender and they do not
 	 * have the permission "chatplugin.antispam.spam" or "chatplugin.antispam.bypass".
 	 * 
 	 * <p><strong>Handler:</strong> {@link AntispamManager}
@@ -108,8 +108,8 @@ public class DenyChatReason<H extends DenyChatReasonHandler> {
 	public static final DenyChatReason<AntispamManager> SPAM = new DenyChatReason<>("SPAM", "chat.antispam.no-spam", AntispamManager.class);
 	
 	/**
-	 * When the message {@link AntispamManager#containsBlacklistedWord(String)}
-	 * and the sender does not have the permission "chatplugin.antispam.bypass".
+	 * When {@link AntispamManager#getDisallowedWord(String)} finds a match and
+	 * the sender does not have the permission "chatplugin.antispam.bypass".
 	 * 
 	 * <p><strong>Handler:</strong> {@link AntispamManager}
 	 * <br><strong>Message path:</strong> "chat.antispam.no-swear"</p>
@@ -117,8 +117,8 @@ public class DenyChatReason<H extends DenyChatReasonHandler> {
 	public static final DenyChatReason<AntispamManager> SWEAR = new DenyChatReason<>("SWEAR", "chat.antispam.no-swear", AntispamManager.class);
 	
 	/**
-	 * When the message {@link AntispamManager#containsDisallowedURL(String)}
-	 * and the sender does not have the permission "chatplugin.antispam.bypass".
+	 * When {@link AntispamManager#getDisallowedURL(String)} finds a match and
+	 * the sender does not have the permission "chatplugin.antispam.bypass".
 	 * 
 	 * <p><strong>Handler:</strong> {@link AntispamManager}
 	 * <br><strong>Message path:</strong> "chat.antispam.no-url"</p>

@@ -169,7 +169,7 @@ public abstract class LogManager implements ChatPluginManager {
 	 * 
 	 * @param message Message to send and write to file
 	 * @param logLevel Log level's ID (0, 1, 2, 3, 4)
-	 * @param args Optional arguments (translated using {@link Utils#numericPlaceholders(String, Object...)})
+	 * @param args Optional arguments (translated using {@link Utils#replaceNumericPlaceholders(String, Object...)})
 	 * @see LogLevel
 	 */
 	public static void log(String message, int logLevel, Object... args) {
@@ -190,7 +190,7 @@ public abstract class LogManager implements ChatPluginManager {
 	 * 
 	 * @param message Message to send and write to file
 	 * @param logLevel Log level
-	 * @param args Optional arguments (translated using {@link Utils#numericPlaceholders(String, Object...)})
+	 * @param args Optional arguments (translated using {@link Utils#replaceNumericPlaceholders(String, Object...)})
 	 */
 	public abstract void logMessage(String message, LogLevel logLevel, Object... args);
 	

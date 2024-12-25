@@ -56,7 +56,7 @@ public abstract class StorageConnector {
 	 * @param player Player to set data for
 	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
 	 * @throws IOException If something goes wrong and {@link StorageMethod#isFlatFile()}
-	 * @throws IllegalArgumentException If <code>type</code> is not one of the following: {@link PlayersDataType#MESSAGES_SENT MESSAGES_SENT},
+	 * @throws IllegalArgumentException If <code>type</code> is not one of the following: {@link PlayersDataType#MESSAGES_SENT MESSAGES_SENT}, {@link PlayersDataType#ANTISPAM_INFRACTIONS ANTISPAM_INFRACTIONS},
 	 * {@link PlayersDataType#BANS BANS}, {@link PlayersDataType#WARNINGS WARNINGS}, {@link PlayersDataType#KICKS KICKS}, {@link PlayersDataType#MUTES MUTES}
 	 */
 	public void incrementPlayerStat(PlayersDataType<? extends Number> type, OfflinePlayer player) throws SQLException, IOException {

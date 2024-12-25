@@ -275,7 +275,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		else if (!forceAdd)
 			return;
 		
-		messages.addDefault("misc.prefix", "&8[&c&lChat&f&lPlugin&8]&r");
+		messages.addDefault("misc.prefix", "&8[&c&lChat&f&lPlugin&8]&f");
 		
 		messages.addDefault("misc.simple-date-format.full", "E, MM/dd/yyyy hh:mm a");
 		messages.addDefault("misc.simple-date-format.day", "E, MM/dd/yyyy");
@@ -346,16 +346,16 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.playerlist.name-format.vanished", "&f&o");
 		messages.addDefault("commands.playerlist.name-format.not-vanished", "&f");
 		
-		messages.addDefault("commands.chatcolor.set.self", "{pfx} &aChat's default color set to &r{0}&a.");
-		messages.addDefault("commands.chatcolor.set.other", "{pfx} &f{0}&a's chat's default color set to &r{1}&a.");
+		messages.addDefault("commands.chatcolor.set.self", "{pfx} &aChat's default color set to &f{0}&a.");
+		messages.addDefault("commands.chatcolor.set.other", "{pfx} &f{0}&a's chat's default color set to &f{1}&a.");
 		messages.addDefault("commands.chatcolor.reset.self", "{pfx} &aChat's default color reset.");
 		messages.addDefault("commands.chatcolor.reset.other", "{pfx} &f{0}&a's chat's default color reset.");
-		messages.addDefault("commands.chatcolor.hex-usage", "{pfx} &eTo set a hexadecimal color, type &f/chatcolor #&r{0}&e. This code is just an example: you can use any color.");
+		messages.addDefault("commands.chatcolor.hex-usage", "{pfx} &eTo set a hexadecimal color, type &f/chatcolor #&f{0}&e. This code is just an example: you can use any color.");
 		messages.addDefault("commands.chatcolor.invalid-color", "{pfx} &f{0} &cis not a valid color.");
 		messages.addDefault("commands.chatcolor.no-permission", "{pfx} &cYou do not have the permission to use that color.");
 		
-		messages.addDefault("commands.emojistone.set.self", "{pfx} &aEmojis' default tone set to tone &f#{0} &a(&r{1}&a).");
-		messages.addDefault("commands.emojistone.set.other", "{pfx} &f{0}&a's emojis' tones set to tone &f#{1} &a(&r{2})&a.");
+		messages.addDefault("commands.emojistone.set.self", "{pfx} &aEmojis' default tone set to tone &f#{0} &a(&f{1}&a).");
+		messages.addDefault("commands.emojistone.set.other", "{pfx} &f{0}&a's emojis' tones set to tone &f#{1} &a(&f{2})&a.");
 		messages.addDefault("commands.emojistone.reset.self", "{pfx} &aEmojis' default tone reset.");
 		messages.addDefault("commands.emojistone.reset.other", "{pfx} &f{0}&a's emojis' default tone reset.");
 		messages.addDefault("commands.emojistone.invalid-tone", "{pfx} &f{0} &cis not a valid tone.");
@@ -379,7 +379,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.warnlist.empty", "{pfx} &eThere are no active warnings.");
 		messages.addDefault("commands.mutelist.ids", "{pfx} &eActive mutes' IDs: &f{0}&e.");
 		messages.addDefault("commands.mutelist.empty", "{pfx} &eThere are no active mutes.");
-		messages.addDefault("commands.playerinfo", "{pfx} &aInformation and data about &f{player}&a:\n&ePlayer ID: &f#{player_id}\n&eUUID: &f{uuid}\n&eVersion: &f{client_edition} Edition {version} (protocol: {version_protocol})\n&eIP address: &f{ip_address}\n&eISP: &f{isp}\n&eLocation: &f{subdivisions}\n&eCity: &f{city} (~{accuracy_radius_km} km)\n&ePing: &f{ping_format} ms\n&eRank: &f{rank_display_name}\n&eTag: &f{tag_prefix}{tag_name_color}{tag_suffix}\n&eLanguage: &f{language_display_name}\n&eLast login: &f{last_login} ago\n&eTime played: &f{time_played}\n&eTotal bans: &f{player_bans}x\n&eTotal warnings: &f{player_warnings}x\n&eTotal kicks: &f{player_kicks}x\n&eTotal mutes: &f{player_mutes}x\n&eMessages sent: &f{messages_sent}x");
+		messages.addDefault("commands.playerinfo", "{pfx} &aInformation and data about &f{player}&a:\n&ePlayer ID: &f#{player_id}\n&eUUID: &f{uuid}\n&eVersion: &f{client_edition} Edition {version} (protocol: {version_protocol})\n&eIP address: &f{ip_address}\n&eISP: &f{isp}\n&eLocation: &f{subdivisions}\n&eCity: &f{city} (~{accuracy_radius_km} km)\n&ePing: &f{ping_format} ms\n&eRank: &f{rank_display_name}\n&eTag: &f{tag_prefix}{tag_name_color}{tag_suffix}\n&eLanguage: &f{language_display_name}\n&eLast login: &f{last_login} ago\n&eTime played: &f{time_played}\n&eTotal bans: &f{player_bans}x\n&eTotal warnings: &f{player_warnings}x\n&eTotal kicks: &f{player_kicks}x\n&eTotal mutes: &f{player_mutes}x\n&eMessages sent: &f{messages_sent}x\n&eAntispam infractions: &f{antispam_infractions}x");
 		messages.addDefault("commands.playerpunishments", "{pfx} &f{0}&e's punishments' IDs:\n&eBans: &f{1}\n&eWarnings: &f{2}\n&eKicks: &f{3}\n&eMutes: &f{4}");
 		messages.addDefault("commands.tps", "{pfx} &eTPS from last &f1m&e, &f5m&e, &f15m&e: &f{0}&e, &f{1}&e, &f{2}&e.");
 		messages.addDefault("commands.ad.send.one", "{pfx} &aAd &f{0} &ahas been successfully sent to &f{1}&a.");
@@ -419,16 +419,17 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.rangedchatspy.enabled", "{pfx} &aRanged chat spy mode enabled.");
 		messages.addDefault("commands.rangedchatspy.disabled", "{pfx} &aRanged chat spy mode disabled.");
 		
-		messages.addDefault("chat.broadcast-format.local", "&8[&c&lBroadcast&8] &r{0}");
-		messages.addDefault("chat.broadcast-format.global", "&8[&c&lBroadcast&8] &r{0}");
+		messages.addDefault("chat.broadcast-format.local", "&8[&c&lBroadcast&8] &f{0}");
+		messages.addDefault("chat.broadcast-format.global", "&8[&c&lBroadcast&8] &f{0}");
 		
+		messages.addDefault("chat.antispam.notification-format.text", "{pfx} &f{player} &cin &f{location} &chas tried to say:\n&f{message}");
+		messages.addDefault("chat.antispam.notification-format.hover", "&c&l{player}\n&7Location: &f{location}\n&7Reason: &f{reason}\n\n&e&oClick to perform a /mute!");
 		messages.addDefault("chat.antispam.no-caps", "{pfx} &cYou cannot use more than &f{0}% &cof caps in messages longer than &f{1} &ccharacters. Buy a &fVIP package &cto bypass this restriction.");
 		messages.addDefault("chat.antispam.no-flood", "{pfx} &cYou cannot chat more than once every &f{0} &cseconds. Buy a &fVIP package &cto bypass this restriction.");
 		messages.addDefault("chat.antispam.no-spam", "{pfx} &cYou can write two identical messages every &f{0} &cseconds. Buy a &fVIP package &cto bypass this restriction.");
 		messages.addDefault("chat.antispam.no-swear", "{pfx} &cYour message contains disallowed words.");
 		messages.addDefault("chat.antispam.no-url", "{pfx} &cYour message contains a disallowed URL.");
-		messages.addDefault("chat.antispam.no-ip", "{pfx} &cYour message contains a disallowed IP address.");
-		messages.addDefault("chat.deny-chat-notify", "{pfx} &f{0} &cwas prevented (reason: &f{1}&c) from sending:\n&f{2}");
+		messages.addDefault("chat.antispam.no-ip-address", "{pfx} &cYour message contains a disallowed IP address.");
 		messages.addDefault("chat.no-format", "{pfx} &cYou cannot write formatted messages. Buy a &fVIP package &cto bypass this restriction.");
 		messages.addDefault("chat.no-blank-messages", "{pfx} &cYou cannot send blank messages.");
 		messages.addDefault("chat.pinged", "{pfx} &eYou got pinged by &f{0}&e.");
@@ -445,11 +446,11 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("chat.log.message-format.date-format", "MM/dd hh:mm:ss a");
 		messages.addDefault("chat.log.message-format.denied-format.yes", "&4denied &f({deny_chat_reason})");
 		messages.addDefault("chat.log.message-format.denied-format.no", "&2allowed");
-		messages.addDefault("chat.log.page-switcher.footer", "{pfx} &aPage &f{current_page}/{max_page}&a. Browse: &r{page_switcher}");
+		messages.addDefault("chat.log.page-switcher.footer", "{pfx} &aPage &f{current_page}/{max_page}&a. Browse: &f{page_switcher}");
 		messages.addDefault("chat.log.page-switcher.invalid", "{pfx} &cPage &f{current_page} &cnot found. Last page: &f{max_page}&c.");
-		messages.addDefault("chat.log.page-switcher.previous.text", "&e[« {previous_page}/{max_page}]");
+		messages.addDefault("chat.log.page-switcher.previous.text", "&8[&e&l&n« {previous_page}/{max_page}&8]");
 		messages.addDefault("chat.log.page-switcher.previous.hover", "&9[Click here to go back to page {previous_page}]");
-		messages.addDefault("chat.log.page-switcher.next.text", "&e[{next_page}/{max_page} »]");
+		messages.addDefault("chat.log.page-switcher.next.text", "&8[&e&l&n{next_page}/{max_page} »&8]");
 		messages.addDefault("chat.log.page-switcher.next.hover", "&9[Click here to go to page {next_page}]");
 		
 		messages.addDefault("guis.no-permission", "{pfx} &cYou do not have the permission to use that GUI.");
@@ -693,7 +694,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.event.priority", Environment.isBukkit() ? "HIGH" : "LATE");
 		chat.addDefault("chat.format", "&7«&f{prefix}{tag_name_color}{player}{suffix}&7» &f");
 		chat.addDefault("chat.console-format", "&8{world} &7<{prefix}{tag_name_color}{player}{suffix}&7> &f");
-		chat.addDefault("chat.recognized-tlds", Arrays.asList("com", "net", "org", "io", "me", "edu", "gov", "int", "info", "pro", "xyz", "gg", "us", "eu", "uk", "de", "fr", "es", "it", "co.uk", "jp", "ru"));
+		chat.addDefault("chat.recognized-tlds", Arrays.asList("com", "net", "org", "me", "io", "edu", "gov", "int", "info", "pro", "xyz", "gg", "dev", "link", "eu", "it", "de", "fr", "es", "br", "jp", "ru", "uk", "co.uk"));
 		chat.addDefault("chat.placeholder-types", Arrays.asList("PLAYER"));
 		
 		chat.addDefault("chat.formatted-chat.enabled", true);
@@ -714,15 +715,16 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.antispam.prevention.urls.whitelist", Arrays.asList("spigotmc.org/forums"));
 		chat.addDefault("chat.antispam.prevention.ips.enabled", true);
 		chat.addDefault("chat.antispam.prevention.ips.whitelist", Arrays.asList("127.0.0.1"));
+		chat.addDefault("chat.antispam.seconds-between-messages", 2);
+		chat.addDefault("chat.antispam.seconds-between-same-messages", 10);
 		chat.addDefault("chat.antispam.max-caps-length", 4);
-		chat.addDefault("chat.antispam.max-caps-percent", 50);
-		chat.addDefault("chat.antispam.seconds-between-msg", 2);
-		chat.addDefault("chat.antispam.seconds-between-same-msg", 10);
-		chat.addDefault("chat.antispam.words-blacklist", Arrays.asList(
-				" arse", " ass ", "asshole", "bastard", "bitch", "blowjob", "bollock", "bullshit", "cocksucker", " crap", " cum", "dick", "faggot", "fuck", "gtfo", "handjob", "kys", "nigga", "nigger", "pussy", " shit", "slut", "twat", "whore",
-				"arrap", "bocchin", " caca", "caga", " cazz", "checc", "coglion", "cojon", "ditalin", "figa", "fotter", "fottut", "froci", "merd", "mignott", "minchi", "negr", "puttan", "pompin", "ricchion", "sborr", "stronz", "troia", " troie ", "zoccola", "zoccole"
-				));
+		chat.addDefault("chat.antispam.max-caps-percentage", 50F);
+		chat.addDefault("chat.antispam.highlight-color", "&4&n");
 		chat.addDefault("chat.antispam.messages-whitelist", Arrays.asList("hello", "hey", "ok", "ciao"));
+		chat.addDefault("chat.antispam.words-blacklist", Arrays.asList(
+				" arse ", "arsehole", " ass ", "asshole", "bastard", "bitch", "blowjob", "bollock", "bullshit", "cocksucker", " crap", " cum", "cunt", "dick", "faggot", "fuck", "gtfo", "handjob", "kys", "nigga", "nigger", "pussy", " shit", "slut", "twat", " wank", "whore",
+				"arrap", "bocchin", " caca", "caga", " cazz", "checc", "coglion", "cojon", "culo", "ditalin", "figa", "fotter", "fottut", "froci", "merd", "mignott", "minchi", "negr", "puttan", "pompin", "ricchion", "sborr", "stronz", "troia", " troie ", "zoccola", "zoccole"
+				));
 		
 		chat.addDefault("chat.player-ping.enabled", true);
 		chat.addDefault("chat.player-ping.at-sign-required", false);
@@ -850,22 +852,22 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		tablists.addDefault("tablists.settings.custom-suffix.placeholder-types", Arrays.asList("PLAYER"));
 		
 		if (fileMissing) {
-			tablists.addDefault("tablists.tl-0.headers.english", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&c&lChat&f&lPlugin server\n&eremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&r");
-			tablists.addDefault("tablists.tl-0.headers.italian", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&f&lServer &c&lChat&f&lPlugin\n&eremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&r");
-			tablists.addDefault("tablists.tl-0.footers.english", "&r\n&7Ping: &r{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Time: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &r{tps_1_min_format}\n&r");
-			tablists.addDefault("tablists.tl-0.footers.italian", "&r\n&7Ping: &r{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Orario: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &r{tps_1_min_format}\n&r");
-			tablists.addDefault("tablists.tl-1.headers.english", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&c&lChat&f&lPlugin server\n&eremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&r");
-			tablists.addDefault("tablists.tl-1.headers.italian", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&f&lServer &c&lChat&f&lPlugin\n&eremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&r");
-			tablists.addDefault("tablists.tl-1.footers.english", "&r\n&7Ping: &r{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Time: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &r{tps_1_min_format}\n&r");
-			tablists.addDefault("tablists.tl-1.footers.italian", "&r\n&7Ping: &r{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Orario: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &r{tps_1_min_format}\n&r");
-			tablists.addDefault("tablists.tl-2.headers.english", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&c&lChat&f&lPlugin server\n&e&oremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&r");
-			tablists.addDefault("tablists.tl-2.headers.italian", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&f&lServer &c&lChat&f&lPlugin\n&e&oremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&r");
-			tablists.addDefault("tablists.tl-2.footers.english", "&r\n&7Ping: &r{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Time: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &r{tps_1_min_format}\n&r");
-			tablists.addDefault("tablists.tl-2.footers.italian", "&r\n&7Ping: &r{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Orario: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &r{tps_1_min_format}\n&r");
-			tablists.addDefault("tablists.tl-3.headers.english", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&c&lChat&f&lPlugin server\n&e&oremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&r");
-			tablists.addDefault("tablists.tl-3.headers.italian", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&f&lServer &c&lChat&f&lPlugin\n&e&oremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&r");
-			tablists.addDefault("tablists.tl-3.footers.english", "&r\n&7Ping: &r{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Time: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &r{tps_1_min_format}\n&r");
-			tablists.addDefault("tablists.tl-3.footers.italian", "&r\n&7Ping: &r{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Orario: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &r{tps_1_min_format}\n&r");
+			tablists.addDefault("tablists.tl-0.headers.english", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&c&lChat&f&lPlugin server\n&eremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&f");
+			tablists.addDefault("tablists.tl-0.headers.italian", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&f&lServer &c&lChat&f&lPlugin\n&eremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&f");
+			tablists.addDefault("tablists.tl-0.footers.english", "&f\n&7Ping: &f{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Time: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &f{tps_1_min_format}\n&f");
+			tablists.addDefault("tablists.tl-0.footers.italian", "&f\n&7Ping: &f{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Orario: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &f{tps_1_min_format}\n&f");
+			tablists.addDefault("tablists.tl-1.headers.english", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&c&lChat&f&lPlugin server\n&eremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&f");
+			tablists.addDefault("tablists.tl-1.headers.italian", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&f&lServer &c&lChat&f&lPlugin\n&eremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&f");
+			tablists.addDefault("tablists.tl-1.footers.english", "&f\n&7Ping: &f{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Time: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &f{tps_1_min_format}\n&f");
+			tablists.addDefault("tablists.tl-1.footers.italian", "&f\n&7Ping: &f{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Orario: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &f{tps_1_min_format}\n&f");
+			tablists.addDefault("tablists.tl-2.headers.english", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&c&lChat&f&lPlugin server\n&e&oremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&f");
+			tablists.addDefault("tablists.tl-2.headers.italian", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&f&lServer &c&lChat&f&lPlugin\n&e&oremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&f");
+			tablists.addDefault("tablists.tl-2.footers.english", "&f\n&7Ping: &f{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Time: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &f{tps_1_min_format}\n&f");
+			tablists.addDefault("tablists.tl-2.footers.italian", "&f\n&7Ping: &f{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Orario: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &f{tps_1_min_format}\n&f");
+			tablists.addDefault("tablists.tl-3.headers.english", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&c&lChat&f&lPlugin server\n&e&oremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&f");
+			tablists.addDefault("tablists.tl-3.headers.italian", "&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&f&lServer &c&lChat&f&lPlugin\n&e&oremigio07.me/chatplugin\n&8«&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &8»\n&f");
+			tablists.addDefault("tablists.tl-3.footers.english", "&f\n&7Ping: &f{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Time: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &f{tps_1_min_format}\n&f");
+			tablists.addDefault("tablists.tl-3.footers.italian", "&f\n&7Ping: &f{ping_format} ms\n&7Online: &f{online_total}/{max_players}\n&7Orario: &f{date_hour}\n&7RAM: &f{used_memory}/{max_memory} MB\n&7TPS: &f{tps_1_min_format}\n&f");
 		} tablists.save();
 	}
 	
@@ -975,8 +977,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			bossbars.addDefault("bossbars.bossbar-command.titles.italian", "&5La bossbar può essere disattivata con &f/bossbar&5.");
 			bossbars.addDefault("bossbars.bossbar-command.value", 25);
 			bossbars.addDefault("bossbars.bossbar-command.color", "PURPLE");
-			bossbars.addDefault("bossbars.5-star-review.titles.english", "&eLeave a &f5x &e\u2720 review on the plugin's page!");
-			bossbars.addDefault("bossbars.5-star-review.titles.italian", "&eLascia una recensione &f5x &e\u2720 sulla pagina del plugin!");
+			bossbars.addDefault("bossbars.5-star-review.titles.english", "&eLeave a &f5x &e\u2B50 review on the plugin's page!");
+			bossbars.addDefault("bossbars.5-star-review.titles.italian", "&eLascia una recensione &f5x &e\u2B50 sulla pagina del plugin!");
 			bossbars.addDefault("bossbars.5-star-review.value", 0);
 			bossbars.addDefault("bossbars.5-star-review.color", "YELLOW");
 			bossbars.addDefault("bossbars.language-command.titles.english", "&aChange the plugin's language with &f/language&a!");
@@ -1048,7 +1050,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		ads.addDefault("ads.settings.enabled", true);
 		ads.addDefault("ads.settings.random-order", true);
 		ads.addDefault("ads.settings.prefix.enabled", false);
-		ads.addDefault("ads.settings.prefix.format", "&8[&5&lAds&8] &r");
+		ads.addDefault("ads.settings.prefix.format", "&8[&5&lAds&8] &f");
 		ads.addDefault("ads.settings.sound.enabled", true);
 		ads.addDefault("ads.settings.sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "UI_BUTTON_CLICK" : Environment.isBukkit() ? "CLICK" : "GUI_BUTTON");
 		ads.addDefault("ads.settings.sound.volume", 1F);
@@ -1122,18 +1124,18 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		joinQuitModules.addDefault("join-quit-modules.join-messages.settings.enabled", true);
 		joinQuitModules.addDefault("join-quit-modules.join-messages.settings.placeholder-types", Arrays.asList("PLAYER"));
-		joinQuitModules.addDefault("join-quit-modules.join-messages.user.english", Arrays.asList("&8[&a&l+&8] &r{prefix}{tag_name_color}{player}{suffix}"));
-		joinQuitModules.addDefault("join-quit-modules.join-messages.user.italian", Arrays.asList("&8[&a&l+&8] &r{prefix}{tag_name_color}{player}{suffix}"));
+		joinQuitModules.addDefault("join-quit-modules.join-messages.user.english", Arrays.asList("&8[&a&l+&8] &f{prefix}{tag_name_color}{player}{suffix}"));
+		joinQuitModules.addDefault("join-quit-modules.join-messages.user.italian", Arrays.asList("&8[&a&l+&8] &f{prefix}{tag_name_color}{player}{suffix}"));
 		
 		joinQuitModules.addDefault("join-quit-modules.quit-messages.settings.enabled", true);
 		joinQuitModules.addDefault("join-quit-modules.quit-messages.settings.placeholder-types", Arrays.asList("PLAYER"));
-		joinQuitModules.addDefault("join-quit-modules.quit-messages.user.english", Arrays.asList("&8[&c&l-&8] &r{prefix}{tag_name_color}{player}{suffix}"));
-		joinQuitModules.addDefault("join-quit-modules.quit-messages.user.italian", Arrays.asList("&8[&c&l-&8] &r{prefix}{tag_name_color}{player}{suffix}"));
+		joinQuitModules.addDefault("join-quit-modules.quit-messages.user.english", Arrays.asList("&8[&c&l-&8] &f{prefix}{tag_name_color}{player}{suffix}"));
+		joinQuitModules.addDefault("join-quit-modules.quit-messages.user.italian", Arrays.asList("&8[&c&l-&8] &f{prefix}{tag_name_color}{player}{suffix}"));
 		
 		joinQuitModules.addDefault("join-quit-modules.switch-messages.settings.enabled", false);
 		joinQuitModules.addDefault("join-quit-modules.switch-messages.settings.placeholder-types", Arrays.asList("PLAYER"));
-		joinQuitModules.addDefault("join-quit-modules.switch-messages.user.english", Arrays.asList("&8[&e&l»&8] &r{prefix}{tag_name_color}{player}{suffix} &e\u27A1 &r{server}"));
-		joinQuitModules.addDefault("join-quit-modules.switch-messages.user.italian", Arrays.asList("&8[&e&l»&8] &r{prefix}{tag_name_color}{player}{suffix} &e\u27A1 &r{server}"));
+		joinQuitModules.addDefault("join-quit-modules.switch-messages.user.english", Arrays.asList("&8[&e&l»&8] &f{prefix}{tag_name_color}{player}{suffix} &e\u27A1 &f{server}"));
+		joinQuitModules.addDefault("join-quit-modules.switch-messages.user.italian", Arrays.asList("&8[&e&l»&8] &f{prefix}{tag_name_color}{player}{suffix} &e\u27A1 &f{server}"));
 		
 		joinQuitModules.addDefault("join-quit-modules.join-titles.settings.enabled", true);
 		joinQuitModules.addDefault("join-quit-modules.join-titles.settings.fade-in-ms", 500L);
@@ -2118,8 +2120,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "icons.overview.";
 		playerInfoGUI.addDefault(path + "display-names.english", "&a&l{player}");
 		playerInfoGUI.addDefault(path + "display-names.italian", "&a&l{player}");
-		playerInfoGUI.addDefault(path + "lores.english", Arrays.asList("&7UUID: &f{uuid}", "&7Player ID: &f#{player_id}", "&7Version: &f{client_edition} Edition {version} (protocol: {version_protocol})", "&7Language: &f{language_display_name}", "&7Ping: &f{ping_format} ms &f({ping_quality_text}&f)", "&7Time played: &f{time_played}", "&7Last login: &f{last_login} ago", "&7Messages sent: &f{messages_sent}x"));
-		playerInfoGUI.addDefault(path + "lores.italian", Arrays.asList("&7UUID: &f{uuid}", "&7ID giocatore: &f#{player_id}", "&7Versione: &f{client_edition} Edition {version} (protocollo: {version_protocol})", "&7Lingua: &f{language_display_name}", "&7Ping: &f{ping_format} ms &f({ping_quality_text}&f)", "&7Tempo di gioco: &f{time_played}", "&7Ultimo login: &f{last_login} fa", "&7Messaggi inviati: &f{messages_sent}x"));
+		playerInfoGUI.addDefault(path + "lores.english", Arrays.asList("&7UUID: &f{uuid}", "&7Player ID: &f#{player_id}", "&7Version: &f{client_edition} Edition {version} (protocol: {version_protocol})", "&7Language: &f{language_display_name}", "&7Ping: &f{ping_format} ms &f({ping_quality_text}&f)", "&7Time played: &f{time_played}", "&7Last login: &f{last_login} ago", "&7Messages sent: &f{messages_sent}x", "&7Antispam infractions: &f{antispam_infractions}x"));
+		playerInfoGUI.addDefault(path + "lores.italian", Arrays.asList("&7UUID: &f{uuid}", "&7ID giocatore: &f#{player_id}", "&7Versione: &f{client_edition} Edition {version} (protocollo: {version_protocol})", "&7Lingua: &f{language_display_name}", "&7Ping: &f{ping_format} ms &f({ping_quality_text}&f)", "&7Tempo di gioco: &f{time_played}", "&7Ultimo login: &f{last_login} fa", "&7Messaggi inviati: &f{messages_sent}x", "&7Infrazioni antispam: &f{antispam_infractions}x"));
 		
 		if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			playerInfoGUI.addDefault(path + "material", Environment.isBukkit() ? "SKULL_ITEM" : "SKULL");

@@ -1,5 +1,5 @@
 misc:
-  prefix: '&8[&c&lChat&f&lPlugin&8]&r'
+  prefix: '&8[&c&lChat&f&lPlugin&8]&f'
   simple-date-format:
     full: E, dd/MM/yyyy HH:mm
     day: E, dd/MM/yyyy
@@ -182,22 +182,22 @@ commands:
       not-vanished: '&f'
   chatcolor:
     set:
-      self: '{pfx} &aColore predefinito della chat impostato su &r{0}&a.'
-      other: '{pfx} &aColore predefinito della chat di &f{0} &aimpostato su &r{1}&a.'
+      self: '{pfx} &aColore predefinito della chat impostato su &f{0}&a.'
+      other: '{pfx} &aColore predefinito della chat di &f{0} &aimpostato su &f{1}&a.'
     reset:
       self: '{pfx} &aColore predefinito della chat resettato.'
       other: '{pfx} &aColore predefinito della chat di &f{0} &aresettato.'
-    hex-usage: '{pfx} &ePer impostare un colore esadecimale, digita &f/chatcolor #&r{0}&e. Questo codice è solo un esempio: puoi usare qualsiasi colore.'
-    invalid-color: '{pfx} &r{0} &cnon è un colore valido.'
+    hex-usage: '{pfx} &ePer impostare un colore esadecimale, digita &f/chatcolor #&f{0}&e. Questo codice è solo un esempio: puoi usare qualsiasi colore.'
+    invalid-color: '{pfx} &f{0} &cnon è un colore valido.'
     no-permission: '{pfx} &cNon hai il permesso di utilizzare quel colore.'
   emojistone:
     set:
-      self: '{pfx} &aTono predefinito delle emojis impostato sul tono &f#{0} &a(&r{1}&a).'
-      other: '{pfx} &aTono predefinito delle emojis di &f{0} &aimpostato sul tono &f#{1} &a(&r{2}&a).'
+      self: '{pfx} &aTono predefinito delle emojis impostato sul tono &f#{0} &a(&f{1}&a).'
+      other: '{pfx} &aTono predefinito delle emojis di &f{0} &aimpostato sul tono &f#{1} &a(&f{2}&a).'
     reset:
       self: '{pfx} &aTono predefinito delle emojis resettato.'
       other: '{pfx} &aTono predefinito delle emojis di &f{0} &aresettato.'
-    invalid-tone: '{pfx} &r{0} &cnon è un tono valido.'
+    invalid-tone: '{pfx} &f{0} &cnon è un tono valido.'
   staff-chat:
     enabled: '{pfx} &aModalità chat Staff abilitata.'
     disabled: '{pfx} &aModalità chat Staff disabilitata.'
@@ -304,6 +304,7 @@ commands:
     &eDisconnessioni totali: &f{player_kicks}x
     &eMutes totali: &f{player_mutes}x
     &eMessaggi inviati: &f{messages_sent}x
+    &eInfrazioni antispam: &f{antispam_infractions}x
   playerpunishments: |-
     {pfx} &aIDs delle punizioni di &f{0}&a:
     &eBans: &f{1}
@@ -367,15 +368,25 @@ commands:
     disabled: '{pfx} &aModalità spia chat locale disabilitata.'
 chat:
   broadcast-format:
-    local: '&8[&c&lBroadcast&8] &r{0}'
-    global: '&8[&c&lBroadcast&8] &r{0}'
+    local: '&8[&c&lBroadcast&8] &f{0}'
+    global: '&8[&c&lBroadcast&8] &f{0}'
   antispam:
+    notification-format:
+      text: |-
+        {pfx} &f{player} &cin &f{location} &cha provato a dire:
+        &f{message}
+      hover: |-
+        &c&l{player}
+        &7Posizione: &f{location}
+        &7Motivo: &f{reason}
+
+        &e&oClicca per eseguire un /mute!
     no-caps: '{pfx} &cNon puoi usare più del &f{0}% &cdi caps nei messaggi più lunghi di &f{1} &ccaratteri. Acquista un pacchetto &fVIP &cper aggirare questa restrizione.'
     no-flood: '{pfx} &cNon puoi chattare più di una volta ogni &f{0} &csecondi. Acquista un pacchetto &fVIP &cper aggirare questa restrizione.'
     no-spam: '{pfx} &cPuoi scrivere due messaggi identici ogni &f{0} &csecondi. Acquista un pacchetto &fVIP &cper aggirare questa restrizione.'
     no-swear: '{pfx} &cIl tuo messaggio contiene parole non consentite.'
     no-url: '{pfx} &cIl tuo messaggio contiene un URL non consentito.'
-    no-ip: '{pfx} &cIl tuo messaggio contiene un indirizzo IP non consentito.'
+    no-ip-address: '{pfx} &cIl tuo messaggio contiene un indirizzo IP non consentito.'
   deny-chat-notify: |-
     {pfx} &cA &f{0} &cè stato impedito (motivo: &f{1}&c) di inviare:
     &f{2}
@@ -417,13 +428,13 @@ chat:
         'yes': '&4negato &f({deny_chat_reason})'
         'no': '&2permesso'
     page-switcher:
-      footer: '{pfx} &aPagina &f{current_page}/{max_page}&a. Sfoglia: &r{page_switcher}'
+      footer: '{pfx} &aPagina &f{current_page}/{max_page}&a. Sfoglia: &f{page_switcher}'
       invalid: '{pfx} &cPagina &f{current_page} &cnon trovata. Ultima pagina: &f{max_page}&c.'
       previous:
-        text: '&e[« {previous_page}/{max_page}]'
+        text: '&8[&e&l&n« {previous_page}/{max_page}&8]'
         hover: '&9[Clicca qui per tornare alla pagina {previous_page}]'
       next:
-        text: '&e[{next_page}/{max_page} »]'
+        text: '&8[&e&l&n{next_page}/{max_page} »&8]'
         hover: '&9[Clicca qui per andare alla pagina {next_page}]'
 guis:
   no-permission: '{pfx} &cNon hai il permesso di utilizzare quella GUI.'

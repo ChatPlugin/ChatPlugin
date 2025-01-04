@@ -147,8 +147,9 @@ public abstract class Scoreboard {
 	/**
 	 * Gets the list of players this scoreboard is being displayed to.
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned list.
-	 * Use {@link #addPlayer(ChatPluginServerPlayer)} and {@link #removePlayer(ChatPluginServerPlayer)}
+	 * <p>Do <em>not</em> modify the returned list.
+	 * Use {@link #addPlayer(ChatPluginServerPlayer)}
+	 * and {@link #removePlayer(ChatPluginServerPlayer)}
 	 * to interact with it.</p>
 	 * 
 	 * @return Scoreboard's players

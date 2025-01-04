@@ -121,7 +121,7 @@ public class Server extends Thread {
 	/**
 	 * Gets the list of the connected client handlers.
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned list.</p>
+	 * <p>Do <em>not</em> modify the returned list.</p>
 	 * 
 	 * @return Client handlers' list
 	 */

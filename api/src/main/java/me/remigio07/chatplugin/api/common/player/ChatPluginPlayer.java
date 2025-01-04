@@ -95,6 +95,10 @@ public interface ChatPluginPlayer {
 	/**
 	 * Disconnects this player with the specified reason.
 	 * 
+	 * <p>On server (Bukkit/Sponge) implementations, the player will
+	 * be kicked immediately if this method is called by the main
+	 * thread, otherwise it will be executed on the next tick.</p>
+	 * 
 	 * @param reason Reason to kick the player for
 	 */
 	public void disconnect(String reason);

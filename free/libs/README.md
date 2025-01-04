@@ -5,7 +5,7 @@ the only way to interact with them is to add them as local .jar dependencies. Th
 
 Not all plugins' versions are up-to-date because:
 - it is not required - only basic and (mostly) update-proof API methods are called by ChatPlugin
-- some paid plugins (Matrix 🫵🏼) do not even expose API methods for free anymore 🤦🏼
+- some paid plugins (Matrix 🫵🏼) do not even expose convenient and free API methods anymore 🤦🏼
 
 If you are the developer of one of these plugins, please upload the code to a Maven repository and open a new issue or pull request.
-This should apply for every public project, though. Always upload artifacts and use a modern buildtool, like [Gradle](https://gradle.org).
+This should apply to every public project, though. Always upload artifacts and use a modern buildtool, like [Gradle](https://gradle.org).

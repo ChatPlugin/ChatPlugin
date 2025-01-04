@@ -94,7 +94,7 @@ public abstract class PlayerManager implements ChatPluginManager {
 	/**
 	 * Gets the loaded {@link ChatPluginPlayer}s' map.
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned map.</p>
+	 * <p>Do <em>not</em> modify the returned map.</p>
 	 * 
 	 * @return Loaded players' map
 	 * @see ServerPlayerManager#getPlayers()

@@ -139,8 +139,6 @@ public abstract class ProxyMessageManager implements ChatPluginManager {
 	/**
 	 * Gets the packets queued for sending.
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned map.</p>
-	 * 
 	 * @deprecated Internal use only.
 	 * @return Packets' queue
 	 */

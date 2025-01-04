@@ -68,7 +68,7 @@ public abstract class LanguageManager implements ChatPluginManager {
 	/**
 	 * Gets the list of loaded languages.
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned list.</p>
+	 * <p>Do <em>not</em> modify the returned list.</p>
 	 * 
 	 * @return Loaded languages' list
 	 */
@@ -121,8 +121,9 @@ public abstract class LanguageManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets a player's language using {@link ChatPluginServerPlayer#getLanguage()}
-	 * if they are loaded or from the storage if they are offline.
+	 * Gets a player's language using
+	 * {@link ChatPluginServerPlayer#getLanguage()}
+	 * if they are loaded, otherwise from the storage.
 	 * 
 	 * <p>Will return {@link #getMainLanguage()} if they are not stored.</p>
 	 * 
@@ -134,11 +135,14 @@ public abstract class LanguageManager implements ChatPluginManager {
 	
 	/**
 	 * Sets a player's language, updates it in the storage
-	 * and reloads the player if they are loaded.
+	 * and reloads the player if they were loaded.
 	 * 
-	 * <p><strong>Note:</strong> you may need to obtain a new instance of the
-	 * provided player using {@link ServerPlayerManager#getPlayer(java.util.UUID)} as
-	 * they will be unloaded (which invalidates their references) and then reloaded.</p>
+	 * <p><strong>Note:</strong> if you pass a {@link ChatPluginServerPlayer} as <code>player</code>,
+	 * their reference will be invalidated because they will be unloaded. After calling this method, obtain
+	 * a new instance of that player using {@link ServerPlayerManager#getPlayer(java.util.UUID)}.</p>
+	 * 
+	 * <p><strong>Note:</strong> this method might take some
+	 * time to be executed: async calls are recommended.</p>
 	 * 
 	 * @param player Player to set the language for
 	 * @param language Language to set

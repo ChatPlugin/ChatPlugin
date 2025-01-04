@@ -88,7 +88,7 @@ public abstract class GUIManager implements ChatPluginManager {
 	/**
 	 * Gets the loaded GUIs' list.
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned list.</p>
+	 * <p>Do <em>not</em> modify the returned list.</p>
 	 * 
 	 * @return Loaded GUIs' list
 	 */

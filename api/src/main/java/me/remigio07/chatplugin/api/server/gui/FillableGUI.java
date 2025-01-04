@@ -176,7 +176,7 @@ public abstract class FillableGUI<T> extends GUI {
 	/**
 	 * Gets this GUI's generated icons.
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned list.</p>
+	 * <p>Do <em>not</em> modify the returned list.</p>
 	 * 
 	 * @return GUI's generated icons
 	 */
@@ -190,7 +190,7 @@ public abstract class FillableGUI<T> extends GUI {
 	 * 
 	 * <p>Will return <code>null</code> if the page is not present.</p>
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned list.</p>
+	 * <p>Do <em>not</em> modify the returned list.</p>
 	 * 
 	 * @param page GUI's page
 	 * @return GUI's generated icons
@@ -246,7 +246,7 @@ public abstract class FillableGUI<T> extends GUI {
 	/**
 	 * Gets this GUI's viewers.
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned map.</p>
+	 * <p>Do <em>not</em> modify the returned map.</p>
 	 * 
 	 * @return GUI's viewers
 	 */

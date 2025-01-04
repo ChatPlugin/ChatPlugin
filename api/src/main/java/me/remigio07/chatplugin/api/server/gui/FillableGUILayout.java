@@ -109,7 +109,7 @@ public class FillableGUILayout extends GUILayout {
 	/**
 	 * Gets the filling function's icons' layouts.
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned list.
+	 * <p>Do <em>not</em> modify the returned list.
 	 * Use {@link #setIconLayout(IconLayout)} and
 	 * {@link #removeIconLayout(String)} to interact with it.</p>
 	 * 

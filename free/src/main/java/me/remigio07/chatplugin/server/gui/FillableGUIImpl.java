@@ -71,7 +71,7 @@ public class FillableGUIImpl<T> extends FillableGUI<T> {
 	}
 	
 	@Override
-	protected synchronized int load() { // chaos start
+	protected synchronized int load() { // *chaos starts*
 		long ms = System.currentTimeMillis();
 		int pages = 1, fillersPerPage = 0, previousPageIconPosition = -1, nextPageIconPosition = -1;
 		Map<Language, ItemStackAdapter[]> items = new HashMap<>();

@@ -91,7 +91,7 @@ public abstract class ScoreboardNumbers extends TimerTask {
 	/**
 	 * Gets the colors used to create the gradient.
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned list.</p>
+	 * <p>Do <em>not</em> modify the returned list.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "settings.numbers.custom-text.colors.gradient" in {@link Scoreboard#getConfiguration()}</p>
 	 * 
@@ -104,7 +104,7 @@ public abstract class ScoreboardNumbers extends TimerTask {
 	/**
 	 * Gets the colors interpolated using variants of the original colors.
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned list.</p>
+	 * <p>Do <em>not</em> modify the returned list.</p>
 	 * 
 	 * @return Interpolated colors
 	 */

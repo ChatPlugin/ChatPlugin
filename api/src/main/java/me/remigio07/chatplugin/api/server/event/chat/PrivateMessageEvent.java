@@ -36,7 +36,7 @@ public abstract class PrivateMessageEvent implements ChatPluginServerPlayerEvent
 	}
 	
 	/**
-	 * Gets the player involved with this event.
+	 * {@inheritDoc}
 	 * 
 	 * <p>Will return <code>null</code> to indicate the console.</p>
 	 */

@@ -28,7 +28,7 @@ public interface DiscordMessage {
 	 * Checks if this message is enabled and should be sent.
 	 * 
 	 * <p>Will return <code>true</code> if nothing is specified in {@link ConfigurationType#DISCORD_INTEGRATION}
-	 * at path <code>"{@link #getPath()} + enabled"</code>; example: "messages.ban.info.enabled".</p>
+	 * at path <code>{@link #getPath()} + "enabled"</code>; example: "messages.ban.banned.enabled".</p>
 	 * 
 	 * @return Whether this message is enabled
 	 */
@@ -39,7 +39,7 @@ public interface DiscordMessage {
 	/**
 	 * Gets this message's path in {@link ConfigurationType#DISCORD_INTEGRATION}.
 	 * 
-	 * <p>It includes a dot at the end; example: "messages.ban.info.".</p>
+	 * <p>It includes a dot at the end; example: "messages.ban.banned.".</p>
 	 * 
 	 * @return Message's path
 	 * @throws UnsupportedOperationException If this message has no path

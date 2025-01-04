@@ -60,7 +60,7 @@ public abstract class MuteManager extends PunishmentManager implements DenyChatR
 	/**
 	 * Gets the active mutes' list.
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned list.</p>
+	 * <p>Do <em>not</em> modify the returned list.</p>
 	 * 
 	 * @return Active mutes' list
 	 */

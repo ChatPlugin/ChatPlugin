@@ -53,7 +53,7 @@ public class PlayerAdapter {
 	static {
 		try {
 			invokeAdventureMethod = Class.forName("me.remigio07.chatplugin.ChatPluginPremiumImpl$VelocityAdapter", false, JARLibraryLoader.getInstance()).getMethod("invokeAdventureMethod", Object.class, String.class, String.class);
-		} catch (Throwable e) {
+		} catch (Throwable t) {
 			// not on Velocity
 		}
 	}
@@ -367,7 +367,7 @@ public class PlayerAdapter {
 	/**
 	 * Gets the online players' list.
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned list.</p>
+	 * <p>Do <em>not</em> modify the returned list.</p>
 	 * 
 	 * @return Online players' list
 	 */

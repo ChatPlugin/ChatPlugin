@@ -65,7 +65,7 @@ public abstract class WarningManager extends PunishmentManager {
 	/**
 	 * Gets the active warnings' list.
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned list.</p>
+	 * <p>Do <em>not</em> modify the returned list.</p>
 	 * 
 	 * @return Active warnings' list
 	 */

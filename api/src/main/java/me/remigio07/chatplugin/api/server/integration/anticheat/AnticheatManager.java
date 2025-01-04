@@ -59,7 +59,7 @@ public abstract class AnticheatManager implements ChatPluginManager {
 	 * <p>Every entry is composed of a player and
 	 * the list of their {@link Violation}s.</p>
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned map.
+	 * <p>Do <em>not</em> modify the returned map.
 	 * Use {@link #addViolation(OfflinePlayer, IntegrationType, String, String, String, int, int, double, Version, boolean)
 	 * addViolation(OfflinePlayer, IntegrationType, String, String, String, int, int, double, Version, boolean)},
 	 * {@link #removeViolation(OfflinePlayer, IntegrationType, String)} and {@link #clearViolations(OfflinePlayer)}
@@ -77,7 +77,7 @@ public abstract class AnticheatManager implements ChatPluginManager {
 	 * <p>Will return {@link Collections#emptyList()} if
 	 * {@link #getViolations()} does not contain the specified player.</p>
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned list.
+	 * <p>Do <em>not</em> modify the returned list.
 	 * Use {@link #addViolation(OfflinePlayer, IntegrationType, String, String, String, int, int, double, Version, boolean)
 	 * addViolation(OfflinePlayer, IntegrationType, String, String, String, int, int, double, Version, boolean)},
 	 * {@link #removeViolation(OfflinePlayer, IntegrationType, String)} and {@link #clearViolations(OfflinePlayer)}

@@ -28,18 +28,18 @@ public interface TelegramMessage {
 	 * Checks if this message is enabled and should be sent.
 	 * 
 	 * <p>Will return <code>true</code> if nothing is specified in {@link ConfigurationType#TELEGRAM_INTEGRATION}
-	 * at path <code>"{@link #getPath()} + enabled"</code>; example: "messages.ban.info.enabled".</p>
+	 * at path <code>{@link #getPath()} + ".enabled"</code>; example: "messages.ban.banned.enabled".</p>
 	 * 
 	 * @return Whether this message is enabled
 	 */
 	public default boolean isEnabled() {
-		return ConfigurationType.TELEGRAM_INTEGRATION.get().getBoolean(getPath() + "enabled", true);
+		return ConfigurationType.TELEGRAM_INTEGRATION.get().getBoolean(getPath() + ".enabled", true);
 	}
 	
 	/**
 	 * Gets this message's path in {@link ConfigurationType#TELEGRAM_INTEGRATION}.
 	 * 
-	 * <p>It does <strong>not</strong> include a dot at the end; example: "messages.ban.info".</p>
+	 * <p>It does <em>not</em> include a dot at the end; example: "messages.ban.banned".</p>
 	 * 
 	 * @return Message's path
 	 * @throws UnsupportedOperationException If this message has no path

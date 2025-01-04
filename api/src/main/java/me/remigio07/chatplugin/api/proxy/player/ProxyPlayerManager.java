@@ -54,7 +54,7 @@ public abstract class ProxyPlayerManager extends PlayerManager {
 	/**
 	 * Gets the loaded {@link ChatPluginProxyPlayer}s' map.
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned map.</p>
+	 * <p>Do <em>not</em> modify the returned map.</p>
 	 * 
 	 * @return Loaded players' map
 	 */

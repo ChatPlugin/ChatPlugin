@@ -646,23 +646,23 @@ public class Utils {
 					break;
 				}
 			} long time = getTime(years, months, weeks, days, hours, minutes, seconds, addCurrent);
-			return time < 0 || (time == 0 && !allow0s) ? -1 : time;
+			return time < 0 || (time == 0 && (!allow0s || !input.equals("0s"))) ? -1 : time;
 		} catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
 			return -1;
 		}
 	}
 	
 	/**
-	 * Converts the specified years, months, days, hours,
-	 * minutes and seconds to their milliseconds value.
+	 * Converts the specified years, months, weeks, days,
+	 * hours, minutes and seconds to their milliseconds value.
 	 * 
-	 * @param years Years amount
-	 * @param months Months amount
-	 * @param weeks Weeks amount
-	 * @param days Days amount
-	 * @param hours Hours amount
-	 * @param minutes Minutes amount
-	 * @param seconds Seconds amount
+	 * @param years Years' amount
+	 * @param months Months' amount
+	 * @param weeks Weeks' amount
+	 * @param days Days' amount
+	 * @param hours Hours' amount
+	 * @param minutes Minutes' amount
+	 * @param seconds Seconds' amount
 	 * @param addCurrent Whether to add current time
 	 * @return Time in milliseconds
 	 */

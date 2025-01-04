@@ -36,7 +36,7 @@ public class StaffChatEvent extends ChatEvent implements CancellableEvent {
 	 * @param player Player involved
 	 * @param message Message involved
 	 */
-	public StaffChatEvent(ChatPluginServerPlayer player, String message) {
+	public StaffChatEvent(@Nullable(why = "Null to represent the console") ChatPluginServerPlayer player, String message) {
 		super(player, message);
 	}
 	
@@ -51,13 +51,11 @@ public class StaffChatEvent extends ChatEvent implements CancellableEvent {
 	}
 	
 	/**
-	 * Gets the player involved with this event.
+	 * {@inheritDoc}
 	 * 
-	 * <p>Will return <code>null</code> if the message has been sent by the console.</p>
-	 * 
-	 * @return Player involved or <code>null</code> for console
+	 * <p>Will return <code>null</code> to indicate the console.</p>
 	 */
-	@Nullable(why = "Null if the message has been sent by the console")
+	@Nullable(why = "Null to represent the console")
 	@Override
 	public ChatPluginServerPlayer getPlayer() {
 		return player;

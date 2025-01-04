@@ -94,8 +94,8 @@ public class ChatPluginBukkit extends ChatPlugin {
 			}, 0L);
 		} catch (ChatPluginManagerException cpme) {
 			if (LogManager.getInstance() == null)
-				System.err.println(cpme.getLocalizedMessage() + ". Contact support if you are unable to solve the issue.");
-			else LogManager.log("{0}. Contact support if you are unable to solve the issue.", 2, cpme.getLocalizedMessage());
+				System.err.println(cpme.getLocalizedMessage() + ". Do not reload the server; contact support if you are unable to solve the issue.");
+			else LogManager.log("{0}. Do not reload the server; contact support if you are unable to solve the issue.", 2, cpme.getLocalizedMessage());
 			return -1;
 		} LogManager.log("Ready. Plugin loaded successfully in {0} ms.", 0, startupTime = (int) (System.currentTimeMillis() - ms));
 		state.set(ChatPluginState.LOADED);

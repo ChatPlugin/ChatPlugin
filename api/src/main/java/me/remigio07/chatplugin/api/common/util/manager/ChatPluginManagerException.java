@@ -43,7 +43,7 @@ public class ChatPluginManagerException extends Exception {
 	 * @param exception Exception caught by the manager
 	 */
 	public ChatPluginManagerException(ChatPluginManager manager, Exception exception) {
-		super((exception.getCause() == null ? exception : exception.getCause()).getClass().getSimpleName() + " occurred while (un)loading " + Utils.getOriginalClass(manager).getSimpleName() + ": " + exception.getMessage());
+		super((exception.getCause() == null ? exception : exception.getCause()).getClass().getSimpleName() + " occurred while (un)loading " + Utils.getOriginalClass(manager).getSimpleName() + ": " + exception.getLocalizedMessage());
 		this.manager = manager;
 	}
 	
@@ -52,10 +52,10 @@ public class ChatPluginManagerException extends Exception {
 	 * 
 	 * @param manager The manager's instance
 	 * @param message The error message, starting in lowercase
-	 * @param args Optional arguments ({@link Utils#numericPlaceholders(String, Object...)}
+	 * @param args Optional arguments ({@link Utils#replaceNumericPlaceholders(String, Object...)}
 	 */
 	public ChatPluginManagerException(ChatPluginManager manager, String message, Object... args) {
-		super("Error occurred while (un)loading " + Utils.getOriginalClass(manager).getSimpleName() + ": " + Utils.numericPlaceholders(message, args));
+		super("Error occurred while (un)loading " + Utils.getOriginalClass(manager).getSimpleName() + ": " + Utils.replaceNumericPlaceholders(message, args));
 		this.manager = manager;
 	}
 	
@@ -68,7 +68,7 @@ public class ChatPluginManagerException extends Exception {
 	 */
 	@Deprecated
 	public ChatPluginManagerException(String source, Exception exception) {
-		super((exception.getCause() == null ? exception : exception.getCause()).getClass().getSimpleName() + " occurred while (un)loading <" + source + ">: " + exception.getMessage());
+		super((exception.getCause() == null ? exception : exception.getCause()).getClass().getSimpleName() + " occurred while (un)loading <" + source + ">: " + exception.getLocalizedMessage());
 		this.source = source;
 	}
 	
@@ -78,11 +78,11 @@ public class ChatPluginManagerException extends Exception {
 	 * @deprecated Internal use only. You should declare what manager is throwing this exception.
 	 * @param source The exception's source
 	 * @param message The error message
-	 * @param args Optional arguments ({@link Utils#numericPlaceholders(String, Object...)}
+	 * @param args Optional arguments ({@link Utils#replaceNumericPlaceholders(String, Object...)}
 	 */
 	@Deprecated
 	public ChatPluginManagerException(String source, String message, Object... args) {
-		super("Error occurred while (un)loading <" + source + ">: " + Utils.numericPlaceholders(message, args));
+		super("Error occurred while (un)loading <" + source + ">: " + Utils.replaceNumericPlaceholders(message, args));
 		this.source = source;
 	}
 	

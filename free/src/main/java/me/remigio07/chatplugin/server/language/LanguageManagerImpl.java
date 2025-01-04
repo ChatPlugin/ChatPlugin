@@ -118,10 +118,9 @@ public class LanguageManagerImpl extends LanguageManager {
 		try {
 			String id = StorageConnector.getInstance().getPlayerData(PlayersDataType.LANGUAGE, player);
 			Language language = id == null ? mainLanguage : getLanguage(id);
-			
 			return language == null ? mainLanguage : language;
 		} catch (SQLException e) {
-			LogManager.log("SQLException occurred while getting {0}'s language from the database: {1}", 2, player.getName(), e.getMessage());
+			LogManager.log("SQLException occurred while getting {0}'s language from the storage: {1}", 2, player.getName(), e.getMessage());
 			return mainLanguage;
 		}
 	}

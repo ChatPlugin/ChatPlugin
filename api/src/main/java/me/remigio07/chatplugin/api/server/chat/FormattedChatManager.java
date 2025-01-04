@@ -67,12 +67,12 @@ public abstract class FormattedChatManager implements DenyChatReasonHandler {
 	}
 	
 	/**
-	 * Checks if the specified String contains colored or formatted text.
+	 * Checks if the specified String contains '&amp;'-formatted text.
 	 * 
 	 * <p>Specify <code>true</code> as <code>considerURLs</code> to consider the possibility that
 	 * the specified input may also contain URLs which may contain '&amp;' characters (example:
 	 * "<a href="https://duckduckgo.com/?q=jynxzi&va=n">https://duckduckgo.com/?q=jynxzi&amp;va=n</a>").
-	 * In that case, they will not be counted as format characters.</p>
+	 * In that case, they will not be considered format characters.</p>
 	 * 
 	 * @param input Input String
 	 * @param urls URLs contained in the input

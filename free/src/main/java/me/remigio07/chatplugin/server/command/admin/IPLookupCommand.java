@@ -72,7 +72,7 @@ public class IPLookupCommand extends BaseCommand {
 							sender.sendMessage(ipLookup.formatPlaceholders(language.getMessage("commands.iplookup"), language));
 						else sender.sendMessage(language.getMessage("misc.invalid-ip-address", args[0]));
 					} catch (InterruptedException | ExecutionException | TimeoutException e) {
-						LogManager.log("{0} occurred while waiting for IP lookup of {1}: {2}", 2, e.getClass().getSimpleName(), finalIPAddress.getHostAddress(), e.getMessage());
+						LogManager.log("{0} occurred while waiting for IP lookup of {1}: {2}", 2, e.getClass().getSimpleName(), finalIPAddress.getHostAddress(), e.getLocalizedMessage());
 					}
 				}, 0L);
 			} else sender.sendMessage(language.getMessage("misc.at-least-one-online"));

@@ -61,7 +61,7 @@ public abstract class BanManager extends PunishmentManager {
 	/**
 	 * Gets the active bans' list.
 	 * 
-	 * <p>Do <strong>not</strong> modify the returned list.</p>
+	 * <p>Do <em>not</em> modify the returned list.</p>
 	 * 
 	 * @return Active bans' list
 	 */

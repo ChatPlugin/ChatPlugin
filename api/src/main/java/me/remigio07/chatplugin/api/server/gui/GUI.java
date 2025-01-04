@@ -158,7 +158,7 @@ public abstract class GUI {
 	 * Sets this GUI's string placeholders' translator function.
 	 * 
 	 * <p>You can specify <code>null</code> to remove the placeholders' translator.
-	 * Do <strong>not</strong> specify functions that perform color translation.</p>
+	 * Do <em>not</em> specify functions that perform color translation.</p>
 	 * 
 	 * <p>The required value (a <code>String</code>) is set to
 	 * {@link TriFunction#apply(Object, Object, Object)}'s result every time
@@ -241,7 +241,7 @@ public abstract class GUI {
 	 * Sets this GUI's string list placeholders' translator function.
 	 * 
 	 * <p>You can specify <code>null</code> to remove the placeholders' translator.
-	 * Do <strong>not</strong> specify functions that perform color translation.</p>
+	 * Do <em>not</em> specify functions that perform color translation.</p>
 	 * 
 	 * <p>The required value (a <code>List&lt;String&gt;</code>) is set to
 	 * {@link TriFunction#apply(Object, Object, Object)}'s result every time

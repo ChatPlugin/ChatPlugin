@@ -138,7 +138,7 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 				} refreshAnticheatCounters = !refreshAnticheatCounters;
 			}
 		} catch (SQLException sqle) {
-			LogManager.log("SQLException occurred while placeholders for a player or the server: {0}", 2, sqle.getLocalizedMessage());
+			LogManager.log("SQLException occurred while updating placeholders for a player or the server: {0}", 2, sqle.getLocalizedMessage());
 		}
 	}
 	
@@ -225,9 +225,9 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 			output = output.replace("{ping_quality_color}", PingManager.getInstance().getPingQuality(player.getPing()).getColor(language));
 		if (output.contains("{ping_quality_text}"))
 			output = output.replace("{ping_quality_text}", PingManager.getInstance().getPingQuality(player.getPing()).getText(language));
-		if (output.contains("{language_id"))
+		if (output.contains("{language_id}"))
 			output = output.replace("{language_id}", player.getLanguage().getID());
-		if (output.contains("{language_display_name"))
+		if (output.contains("{language_display_name}"))
 			output = output.replace("{language_display_name}", player.getLanguage().getDisplayName());
 		if (output.contains("{locale}")) // maybe add more of its variants in the future
 			output = output.replace("{locale}", player.getLocale().getCountry());

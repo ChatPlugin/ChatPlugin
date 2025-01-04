@@ -25,13 +25,10 @@ import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 public abstract class RankTag {
 	
 	private Rank rank;
-	private String prefix, suffix, nameColor;
+	protected String prefix, suffix, nameColor;
 	
-	protected RankTag(Rank rank, String prefix, String suffix, String nameColor) {
+	protected RankTag(Rank rank) {
 		this.rank = rank;
-		this.prefix = prefix == null || prefix.isEmpty() ? "&f" : prefix;
-		this.suffix = suffix == null || suffix.isEmpty() ? "&f" : suffix;
-		this.nameColor = nameColor == null || nameColor.isEmpty() ? "&f" : nameColor;
 	}
 	
 	/**

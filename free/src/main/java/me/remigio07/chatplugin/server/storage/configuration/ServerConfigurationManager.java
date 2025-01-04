@@ -316,13 +316,13 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("misc.update-notification", "{pfx} &eYou are running an outdated version of ChatPlugin. It is recommended to update to the latest version (&f{0}&e) to avoid bugs and incompatibilities.");
 		
 		messages.addDefault("commands.help.free.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/whisper &8- &eSend a private message to another player.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.\n&f&l/chatcolor &8- &eChange your chat's default color.\n&f&l/emojistone &8- &eChange your emojis' default tone.");
-		messages.addDefault("commands.help.free.admin", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/staffchat &8- &eVery handy cross-server Staff chat.\n&f&l/socialspy &8- &eSpy other players' private messages.\n&f&l/rangedchatspy &8- &eSpy other players' local messages.\n&f&l/iplookup &8- &ePerform a lookup of an IP address.\n&f&l/lastseen &8- &eCheck when a player was last seen.\n&f&l/clearchat &8- &eClear chat to hide last messages.\n&f&l/muteall &8- &eToggle chat for non Staff members.");
+		messages.addDefault("commands.help.free.admin", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/rank &8- &eCreate, remove, edit and view loaded ranks.\n&f&l/staffchat &8- &eVery handy cross-server Staff chat.\n&f&l/socialspy &8- &eSpy other players' private messages.\n&f&l/rangedchatspy &8- &eSpy other players' local messages.\n&f&l/iplookup &8- &ePerform a lookup of an IP address.\n&f&l/lastseen &8- &eCheck when a player was last seen.\n&f&l/clearchat &8- &eClear chat to hide last messages.");
 		messages.addDefault("commands.help.free.vanish", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/vanish &8- &eBecome invisible to non Staff members.");
 		messages.addDefault("commands.help.free.misc", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/tps &8- &eDisplay the server's current ticks per second.\n&f&l/ad &8- &eSend a loaded ad to one or more online players.\n&f&l/broadcast &8- &eSend a message to every online player.\n&f&l/broadcastraw &8- &eLike /broadcast, but without the prefix.");
 		
 		messages.addDefault("commands.help.premium.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/whisper &8- &eSend a private message to another player.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.\n&f&l/chatcolor &8- &eChange your chat's default color.\n&f&l/emojistone &8- &eChange your emojis' default tone.\n&f&l/bossbar &8- &eToggle the bossbar's visibility.\n&f&l/scoreboard &8- &eToggle the scoreboard's visibility.");
-		messages.addDefault("commands.help.premium.admin", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/staffchat &8- &eVery handy cross-server Staff chat.\n&f&l/socialspy &8- &eSpy other players' private messages.\n&f&l/rangedchatspy &8- &eSpy other players' local messages.\n&f&l/iplookup &8- &ePerform a lookup of an IP address.\n&f&l/lastseen &8- &eCheck when a player was last seen.\n&f&l/clearchat &8- &eClear chat to hide last messages.\n&f&l/muteall &8- &eToggle chat for non Staff members.\n&f&l/chatlog &8- &eLook up messages containing certain text.\n&f&l/accountcheck &8- &eCheck a player's alt accounts.");
-		messages.addDefault("commands.help.premium.punishments", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/tempban &8- &eTemporarily ban a player.\n&f&l/unban &8- &eUnban a previously banned player.\n&f&l/warning &8- &eWarn a player for a certain time.\n&f&l/removelastwarning &8- &eRemove a player's last warning.\n&f&l/clearwarnings &8- &eClear a player's active warnings.\n&f&l/kick &8- &eDisconnect a player from the server.\n&f&l/fakekick &8- &eKick using a random error as reason.\n&f&l/mute &8- &eTemporarily mute a player.\n&f&l/unmute &8- &eUnmute a previously muted player.");
+		messages.addDefault("commands.help.premium.admin", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/rank &8- &eCreate, remove, edit and view loaded ranks.\n&f&l/staffchat &8- &eVery handy cross-server Staff chat.\n&f&l/socialspy &8- &eSpy other players' private messages.\n&f&l/rangedchatspy &8- &eSpy other players' local messages.\n&f&l/iplookup &8- &ePerform a lookup of an IP address.\n&f&l/lastseen &8- &eCheck when a player was last seen.\n&f&l/clearchat &8- &eClear chat to hide last messages.\n&f&l/chatlog &8- &eLook up messages containing certain text.\n&f&l/accountcheck &8- &eCheck a player's alt accounts.");
+		messages.addDefault("commands.help.premium.punishments", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/tempban &8- &eTemporarily ban a player.\n&f&l/unban &8- &eUnban a previously banned player.\n&f&l/warning &8- &eWarn a player for a certain time.\n&f&l/removelastwarning &8- &eRemove a player's last warning.\n&f&l/clearwarnings &8- &eClear a player's active warnings.\n&f&l/kick &8- &eDisconnect a player from the server.\n&f&l/fakekick &8- &eKick with a random error as reason.\n&f&l/mute &8- &eTemporarily mute a player.\n&f&l/unmute &8- &eUnmute a previously muted player.");
 		messages.addDefault("commands.help.premium.guis", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/cp status &8- &eDisplay the server's current status\n&f&l/banlist &8- &eDisplay the active bans list.\n&f&l/warnlist &8- &eDisplay the active warnings list.\n&f&l/mutelist &8- &eDisplay the active mutes list.\n&f&l/violations &8- &eDisplay last players' violations.\n&f&l/playerinfo &8- &eShow detailed info about a player.\n&f&l/playerpunishments &8- &eShow a player's punishments list.\n&f&l/playerviolations &8- &eShow a player's last violations.");
 		messages.addDefault("commands.help.premium.vanish", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/vanish &8- &eBecome invisible to non Staff members.\n&f&l/fakejoin &8- &eSend fake join message and disable vanish.\n&f&l/fakequit &8- &eSend fake quit message and enable vanish.\n&f&l/silentteleport &8- &eSilently teleport somewhere else.");
 		messages.addDefault("commands.help.premium.misc", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/tps &8- &eDisplay the server's current ticks per second.\n&f&l/ad &8- &eSend a loaded ad to one or more online players.\n&f&l/broadcast &8- &eSend a message to every online player.\n&f&l/broadcastraw &8- &eLike /broadcast, but without the prefix.\n&f&l/globalbroadcast &8- &eLike /broadcast, but cross-server.\n&f&l/discordmessage &8- &eSend a message to the server.\n&f&l/telegrammessage &8- &eSend a message to the group.");
@@ -337,6 +337,23 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.actionbar.enabled", "{pfx} &aThe actionbar has been enabled.");
 		messages.addDefault("commands.actionbar.disabled", "{pfx} &aThe actionbar has been disabled.");
 		messages.addDefault("commands.rankinfo", "{pfx} &aInformation about &f{player}&a's rank:\n&eRank: &f{rank_display_name}\n&ePrefix: &f{prefix}\n&eSuffix: &f{suffix}\n&eTag: &f{tag_prefix}{tag_name_color}{player}{tag_suffix}\n&eDescription:\n&f{rank_description}");
+		
+		messages.addDefault("commands.rank.luckperms-mode", "{pfx} &cLuckPerms mode is enabled. Use its commands to create or delete ranks, then manually reload ChatPlugin with &f/chatplugin reload&c.");
+		messages.addDefault("commands.rank.info", "{pfx} &aInformation about rank &f{rank_id} &a(&f{rank_display_name}&a):\n&ePrefix: &f{prefix}\n&eSuffix: &f{suffix}\n&eTag: &f{tag_prefix}{tag_name_color}Notch{tag_suffix}\n&eChat color: &f{chat_color}\n&ePosition: &f{rank_position}\n&eDescription (&fEnglish&e):\n&f{rank_description}\n&eMax ban duration: &f{max_ban_duration}\n&eMax mute duration: &f{max_mute_duration}");
+		messages.addDefault("commands.rank.list.header", "{pfx} &aHere are displayed the loaded ranks:");
+		messages.addDefault("commands.rank.list.message-format.text", "&f{rank_id} &e(&f{rank_display_name}&e) &8- &eposition: &f{rank_position}");
+		messages.addDefault("commands.rank.list.message-format.hover", "&a&l{rank_id}\n&7Display name: &f{rank_display_name}\n&7Position: &f{rank_position}\n\n&e&oClick for more info!");
+		messages.addDefault("commands.rank.edit.set", "{pfx} &aThe &f{0} &aproperty of rank &f{1} &ahas been set to &f{2}&a.");
+		messages.addDefault("commands.rank.edit.reset", "{pfx} &aThe &f{0} &aproperty of rank &f{1} &ahas been reset.");
+		messages.addDefault("commands.rank.edit.invalid-property", "{pfx} &cInvalid property. Here are the available properties: &f{0}&c.");
+		messages.addDefault("commands.rank.edit.out-of-sync", "{pfx} &cRank &f{0} &cno longer exists on LuckPerms. It is recommended to reload ChatPlugin.");
+		messages.addDefault("commands.rank.removed.text", "{pfx} &aRank &f{0} &ahas been removed. Click to reload ChatPlugin when you wish to apply changes.");
+		messages.addDefault("commands.rank.removed.hover", "&9[Click here to reload ChatPlugin]");
+		messages.addDefault("commands.rank.add.added.text", "{pfx} &aRank &f{0} &ahas been added. Click to reload ChatPlugin when you wish to apply changes.");
+		messages.addDefault("commands.rank.add.added.hover", "&9[Click here to reload ChatPlugin]");
+		messages.addDefault("commands.rank.add.already-exists", "{pfx} &cA rank with that ID already exists.");
+		messages.addDefault("commands.rank.add.reached-limit", "{pfx} &cPlugin has reached the limit of 99 ranks.");
+		messages.addDefault("commands.rank.add.invalid-position", "{pfx} &cInvalid position. Type a number between &f0 &cand &f{0}&c.");
 		
 		messages.addDefault("commands.playerlist.all.message", "{pfx} &aThere are currently &f{0}/{1} &aplayers online:");
 		messages.addDefault("commands.playerlist.all.no-players-online", "{pfx} &eThere are currently no players online.");
@@ -446,12 +463,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("chat.log.message-format.date-format", "MM/dd hh:mm:ss a");
 		messages.addDefault("chat.log.message-format.denied-format.yes", "&4denied &f({deny_chat_reason})");
 		messages.addDefault("chat.log.message-format.denied-format.no", "&2allowed");
-		messages.addDefault("chat.log.page-switcher.footer", "{pfx} &aPage &f{current_page}/{max_page}&a. Browse: &f{page_switcher}");
-		messages.addDefault("chat.log.page-switcher.invalid", "{pfx} &cPage &f{current_page} &cnot found. Last page: &f{max_page}&c.");
-		messages.addDefault("chat.log.page-switcher.previous.text", "&8[&e&l&n« {previous_page}/{max_page}&8]");
-		messages.addDefault("chat.log.page-switcher.previous.hover", "&9[Click here to go back to page {previous_page}]");
-		messages.addDefault("chat.log.page-switcher.next.text", "&8[&e&l&n{next_page}/{max_page} »&8]");
-		messages.addDefault("chat.log.page-switcher.next.hover", "&9[Click here to go to page {next_page}]");
 		
 		messages.addDefault("guis.no-permission", "{pfx} &cYou do not have the permission to use that GUI.");
 		messages.addDefault("guis.no-permission-icon", "{pfx} &cYou do not have the permission to use that icon.");
@@ -603,6 +614,13 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("languages.detected.text", "{pfx} &eIt seems that your language is {0}&e. Click this message to set it as your default language.");
 		messages.addDefault("languages.detected.hover", "&9[Click here to change your language]");
 		
+		messages.addDefault("page-switcher.footer", "{pfx} &aPage &f{current_page}/{max_page}&a. Browse: &f{page_switcher}");
+		messages.addDefault("page-switcher.invalid", "{pfx} &cPage &f{current_page} &cnot found. Last page: &f{max_page}&c.");
+		messages.addDefault("page-switcher.previous.text", "&8[&e&l&n« {previous_page}/{max_page}&8]");
+		messages.addDefault("page-switcher.previous.hover", "&9[Click here to go back to page {previous_page}]");
+		messages.addDefault("page-switcher.next.text", "&8[&e&l&n{next_page}/{max_page} »&8]");
+		messages.addDefault("page-switcher.next.hover", "&9[Click here to go to page {next_page}]");
+		
 		messages.addDefault("timestamps.invalid", "{pfx} &cInvalid timestamp. Use this format: &f1d,3h,35m,20s&c.");
 		messages.addDefault("timestamps.rank-limitation", "{pfx} &cThe maximum duration allowed for your rank (&f{0}&c) is &f{1}&c.");
 		messages.addDefault("timestamps.now", "now");
@@ -641,20 +659,20 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		else if (!forceAdd)
 			return;
 		
-		ranks.addDefault("ranks.settings.default-rank-id", "user");
-		ranks.addDefault("ranks.settings.permission-format", "chatplugin.ranks.{0}");
+		ranks.addDefault("ranks.settings.luckperms-mode", false);
 		ranks.addDefault("ranks.settings.sorting.enabled", true);
 		ranks.addDefault("ranks.settings.sorting.from-tablist-top", true);
 		
 		if (fileMissing) {
-			ranks.addDefault("ranks.user.display-name", "User");
-			ranks.addDefault("ranks.user.prefix", "&8[&f&lUser&8] ");
-			ranks.addDefault("ranks.user.suffix", "");
-			ranks.addDefault("ranks.user.tag.prefix", "");
-			ranks.addDefault("ranks.user.tag.suffix", "");
-			ranks.addDefault("ranks.user.tag.name-color", "");
-			ranks.addDefault("ranks.user.descriptions.english", "&aRank: &f&lUser\n&aType: &fdefault");
-			ranks.addDefault("ranks.user.descriptions.italian", "&aRank: &f&lUser\n&aTipo: &fpredefinito");
+			ranks.addDefault("ranks.default.display-name", "User");
+			ranks.addDefault("ranks.default.prefix", "&8[&f&lUser&8] ");
+			ranks.addDefault("ranks.default.suffix", "");
+			ranks.addDefault("ranks.default.tag.prefix", "");
+			ranks.addDefault("ranks.default.tag.suffix", "");
+			ranks.addDefault("ranks.default.tag.name-color", "");
+			ranks.addDefault("ranks.default.tag.chat-color", "");
+			ranks.addDefault("ranks.default.descriptions.english", "&aRank: &f&lUser\n&aType: &fdefault");
+			ranks.addDefault("ranks.default.descriptions.italian", "&aRango: &f&lUser\n&aTipo: &fpredefinito");
 			
 			ranks.addDefault("ranks.vip.display-name", "VIP");
 			ranks.addDefault("ranks.vip.prefix", "&8[&d&lVIP&8] ");
@@ -662,20 +680,21 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			ranks.addDefault("ranks.vip.tag.prefix", "&8[&d&lV&8] ");
 			ranks.addDefault("ranks.vip.tag.suffix", " &a[*]");
 			ranks.addDefault("ranks.vip.tag.name-color", "");
+			ranks.addDefault("ranks.vip.tag.chat-color", "");
 			ranks.addDefault("ranks.vip.descriptions.english", "&aRank: &d&lVIP\n&aType: &fpaid &o($4.99)");
-			ranks.addDefault("ranks.vip.descriptions.italian", "&aRank: &d&lVIP\n&aTipo: &fpagato &o($4.99)");
+			ranks.addDefault("ranks.vip.descriptions.italian", "&aRango: &d&lVIP\n&aTipo: &fpagato &o($4.99)");
 			
 			ranks.addDefault("ranks.staff.display-name", "Staff");
 			ranks.addDefault("ranks.staff.prefix", "&8[&b&lStaff&8] ");
 			ranks.addDefault("ranks.staff.suffix", " &4[*]");
 			ranks.addDefault("ranks.staff.tag.prefix", "&8[&b&lS&8] ");
 			ranks.addDefault("ranks.staff.tag.suffix", " &4[*]");
-			ranks.addDefault("ranks.staff.tag.name-color", "&f");
-			ranks.addDefault("ranks.staff.chat-color", "&f");
+			ranks.addDefault("ranks.staff.tag.name-color", "");
+			ranks.addDefault("ranks.staff.chat-color", "");
 			ranks.addDefault("ranks.staff.descriptions.english", "&aRank: &b&lStaff\n&aType: &fadmin.");
-			ranks.addDefault("ranks.staff.descriptions.italian", "&aRank: &b&lStaff\n&aTipo: &famministr.");
+			ranks.addDefault("ranks.staff.descriptions.italian", "&aRango: &b&lStaff\n&aTipo: &famministr.");
 			ranks.addDefault("ranks.staff.max-punishment-durations.ban", "14d");
-			ranks.addDefault("ranks.staff.max-punishment-durations.mute", "14d");
+			ranks.addDefault("ranks.staff.max-punishment-durations.mute", "12h");
 		} ranks.save();
 	}
 	
@@ -689,7 +708,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			return;
 		
 		chat.addDefault("chat.enabled", true);
-		chat.addDefault("chat.color-command-enabled", true);
 		chat.addDefault("chat.event.override", true);
 		chat.addDefault("chat.event.priority", Environment.isBukkit() ? "HIGH" : "LATE");
 		chat.addDefault("chat.format", "&7«&f{prefix}{tag_name_color}{player}{suffix}&7» &f");
@@ -973,7 +991,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			bossbars.addDefault("bossbars.placeholders.titles.italian", "&cI placeholders sono supportati. Ciao, &f{player}&c!");
 			bossbars.addDefault("bossbars.placeholders.value", 50);
 			bossbars.addDefault("bossbars.placeholders.color", "RED");
-			bossbars.addDefault("bossbars.bossbar-command.titles.english", "&5Bossbar can be toggled off using &f/bossbar&5.");
+			bossbars.addDefault("bossbars.bossbar-command.titles.english", "&5Bossbar can be toggled off with &f/bossbar&5.");
 			bossbars.addDefault("bossbars.bossbar-command.titles.italian", "&5La bossbar può essere disattivata con &f/bossbar&5.");
 			bossbars.addDefault("bossbars.bossbar-command.value", 25);
 			bossbars.addDefault("bossbars.bossbar-command.color", "PURPLE");
@@ -1028,8 +1046,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			actionbars.addDefault("actionbars.vote.texts.italian", "&aRicorda di votarci ogni giorno!");
 			actionbars.addDefault("actionbars.welcome.texts.english", "&bWelcome to the server, &f{player}&b!");
 			actionbars.addDefault("actionbars.welcome.texts.italian", "&bBenvenuti nel server, &f{player}&b!");
-			actionbars.addDefault("actionbars.date.texts.english", "&dDate: &f{date_full}&d.");
-			actionbars.addDefault("actionbars.date.texts.italian", "&dData: &f{date_full}&d.");
+			actionbars.addDefault("actionbars.date.texts.english", "&dDate: &f{date_full}");
+			actionbars.addDefault("actionbars.date.texts.italian", "&dData: &f{date_full}");
 			actionbars.addDefault("actionbars.last.texts.english", "&cNext one will not be shown.");
 			actionbars.addDefault("actionbars.last.texts.italian", "&cLa prossima non verrà mostrata.");
 			actionbars.addDefault("actionbars.hidden.texts.english", "&fThis text will not be shown.");
@@ -1124,18 +1142,18 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		joinQuitModules.addDefault("join-quit-modules.join-messages.settings.enabled", true);
 		joinQuitModules.addDefault("join-quit-modules.join-messages.settings.placeholder-types", Arrays.asList("PLAYER"));
-		joinQuitModules.addDefault("join-quit-modules.join-messages.user.english", Arrays.asList("&8[&a&l+&8] &f{prefix}{tag_name_color}{player}{suffix}"));
-		joinQuitModules.addDefault("join-quit-modules.join-messages.user.italian", Arrays.asList("&8[&a&l+&8] &f{prefix}{tag_name_color}{player}{suffix}"));
+		joinQuitModules.addDefault("join-quit-modules.join-messages.default.english", Arrays.asList("&8[&a&l+&8] &f{prefix}{tag_name_color}{player}{suffix}"));
+		joinQuitModules.addDefault("join-quit-modules.join-messages.default.italian", Arrays.asList("&8[&a&l+&8] &f{prefix}{tag_name_color}{player}{suffix}"));
 		
 		joinQuitModules.addDefault("join-quit-modules.quit-messages.settings.enabled", true);
 		joinQuitModules.addDefault("join-quit-modules.quit-messages.settings.placeholder-types", Arrays.asList("PLAYER"));
-		joinQuitModules.addDefault("join-quit-modules.quit-messages.user.english", Arrays.asList("&8[&c&l-&8] &f{prefix}{tag_name_color}{player}{suffix}"));
-		joinQuitModules.addDefault("join-quit-modules.quit-messages.user.italian", Arrays.asList("&8[&c&l-&8] &f{prefix}{tag_name_color}{player}{suffix}"));
+		joinQuitModules.addDefault("join-quit-modules.quit-messages.default.english", Arrays.asList("&8[&c&l-&8] &f{prefix}{tag_name_color}{player}{suffix}"));
+		joinQuitModules.addDefault("join-quit-modules.quit-messages.default.italian", Arrays.asList("&8[&c&l-&8] &f{prefix}{tag_name_color}{player}{suffix}"));
 		
 		joinQuitModules.addDefault("join-quit-modules.switch-messages.settings.enabled", false);
 		joinQuitModules.addDefault("join-quit-modules.switch-messages.settings.placeholder-types", Arrays.asList("PLAYER"));
-		joinQuitModules.addDefault("join-quit-modules.switch-messages.user.english", Arrays.asList("&8[&e&l»&8] &f{prefix}{tag_name_color}{player}{suffix} &e\u27A1 &f{server}"));
-		joinQuitModules.addDefault("join-quit-modules.switch-messages.user.italian", Arrays.asList("&8[&e&l»&8] &f{prefix}{tag_name_color}{player}{suffix} &e\u27A1 &f{server}"));
+		joinQuitModules.addDefault("join-quit-modules.switch-messages.default.english", Arrays.asList("&8[&e&l»&8] &f{prefix}{tag_name_color}{player}{suffix} &e\u27A1 &f{server}"));
+		joinQuitModules.addDefault("join-quit-modules.switch-messages.default.italian", Arrays.asList("&8[&e&l»&8] &f{prefix}{tag_name_color}{player}{suffix} &e\u27A1 &f{server}"));
 		
 		joinQuitModules.addDefault("join-quit-modules.join-titles.settings.enabled", true);
 		joinQuitModules.addDefault("join-quit-modules.join-titles.settings.fade-in-ms", 500L);
@@ -1158,7 +1176,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		joinQuitModules.addDefault("join-quit-modules.suggested-version.version", "{server_version}");
 		joinQuitModules.addDefault("join-quit-modules.suggested-version.delay-ms", 10000L);
 		
-		joinQuitModules.addDefault("join-quit-modules.account-check.enabled", false);
+		joinQuitModules.addDefault("join-quit-modules.account-check.enabled", ChatPlugin.getInstance().isPremium());
 		joinQuitModules.addDefault("join-quit-modules.account-check.perform-on-first-join", false);
 		joinQuitModules.addDefault("join-quit-modules.account-check.timeout-between-checks-ms", 10);
 		joinQuitModules.addDefault("join-quit-modules.account-check.max-time-played", "12h");

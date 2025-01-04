@@ -161,8 +161,7 @@ public abstract class BaseChatManager extends ChatManager {
 		
 		if (denyChatReason == null) {
 			// 7. chat color
-			if (!player.getChatColor().equals(ChatColor.RESET))
-				message = player.getChatColor().toString() + message;
+			message = (player.getChatColor().equals(ChatColor.RESET) ? ChatColor.translate(player.getRank().getChatColor()) : player.getChatColor().toString()) + message;
 			
 			// 8. instant emojis
 			if (InstantEmojisManager.getInstance().isEnabled())

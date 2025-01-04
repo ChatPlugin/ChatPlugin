@@ -56,6 +56,7 @@ import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.server.bossbar.NativeBossbar;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
+import me.remigio07.chatplugin.server.rank.RankManagerImpl;
 import me.remigio07.chatplugin.server.sponge.manager.SpongePlayerManager;
 import me.remigio07.chatplugin.server.util.Utils;
 import net.kyori.adventure.text.Component;
@@ -77,7 +78,7 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 		super(new PlayerAdapter(player));
 		this.player = player;
 		audience = SpongePlayerManager.getAudiences().player(player);
-		rank = RankManager.getInstance().calculateRank(this);
+		rank = ((RankManagerImpl) RankManager.getInstance()).calculateRank(this);
 		version = version == null ? VersionUtils.getVersion() : version;
 		playerConnection = player.getConnection();
 		StorageConnector storage = StorageConnector.getInstance();

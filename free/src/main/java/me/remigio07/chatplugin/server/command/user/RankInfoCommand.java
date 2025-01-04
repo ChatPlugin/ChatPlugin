@@ -39,7 +39,7 @@ public class RankInfoCommand extends BaseCommand {
 	
 	@Override
 	public List<String> getMainArgs() {
-		return Arrays.asList("rankinfo", "rinfo", "rank");
+		return Arrays.asList("rankinfo", "rinfo");
 	}
 	
 	@Override

@@ -22,6 +22,7 @@ import java.util.concurrent.ScheduledFuture;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.scoreboard.Scoreboard;
 import org.spongepowered.api.scoreboard.Team;
 import org.spongepowered.api.scoreboard.critieria.Criteria;
 import org.spongepowered.api.scoreboard.displayslot.DisplaySlots;
@@ -48,7 +49,6 @@ import me.remigio07.chatplugin.api.server.gui.PerPlayerGUI;
 import me.remigio07.chatplugin.api.server.join_quit.QuitMessageManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
-import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
 import me.remigio07.chatplugin.api.server.scoreboard.ScoreboardManager;
 import me.remigio07.chatplugin.api.server.tablist.Tablist;
 import me.remigio07.chatplugin.api.server.tablist.TablistManager;
@@ -115,7 +115,7 @@ public class SpongePlayerManager extends ServerPlayerManager {
 			Team team = Team.builder().name("line_" + i).build();
 			
 			scoreboard.registerTeam(team);
-			team.addMember(Utils.serializeSpongeText(Scoreboard.SCORES[i], false));
+			team.addMember(Utils.serializeSpongeText(me.remigio07.chatplugin.api.server.scoreboard.Scoreboard.SCORES[i], false));
 		} player.spongeValue().setScoreboard(scoreboard);
 		serverPlayer.setObjective(new ObjectiveAdapter(objective));
 		
@@ -144,27 +144,28 @@ public class SpongePlayerManager extends ServerPlayerManager {
 		return (int) ms;
 	}
 	
-	private void setupTeams(ChatPluginServerPlayer player, ChatPluginServerPlayer other) {
-		if (!other.getRank().getTag().toString().isEmpty()) {
-			Team team = Team.builder().name(other.getRank().formatIdentifier(other)).build();
-			String prefix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPrefixFormat(), other, player.getLanguage(), TablistManager.getInstance().getPlaceholderTypes());
-			String suffix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getSuffixFormat(), other, player.getLanguage(), TablistManager.getInstance().getPlaceholderTypes());
+	public void setupTeams(ChatPluginServerPlayer player, ChatPluginServerPlayer other) {
+		Scoreboard scoreboard = Iterables.getFirst(player.getObjective().spongeValue().getScoreboards(), null);
+		Team team = scoreboard.getTeam(other.getRank().formatIdentifier(other)).orElse(Team.builder().name(other.getRank().formatIdentifier(other)).build());
+		String prefix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPrefixFormat(), other, player.getLanguage(), TablistManager.getInstance().getPlaceholderTypes());
+		String suffix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getSuffixFormat(), other, player.getLanguage(), TablistManager.getInstance().getPlaceholderTypes());
+		
+		// not future-proof (Sponge v8/1.13+)
+		if (prefix.contains(" ")) {
+			int index = prefix.lastIndexOf(' ');
 			
-			// not future-proof (Sponge v8/1.13+)
-			if (prefix.contains(" ")) {
-				int index = prefix.lastIndexOf(' ');
+			if (index != prefix.length() - 1) {
+				String str = prefix.substring(index + 1);
 				
-				if (index != prefix.length() - 1) {
-					String str = prefix.substring(index + 1);
-					
-					if (ChatColor.stripColor(ChatColor.translate(str)).isEmpty())
-						prefix = prefix.substring(0, index) + str + " ";
-				}
-			} team.setPrefix(Utils.serializeSpongeText(prefix.length() > 16 ? me.remigio07.chatplugin.common.util.Utils.abbreviate(prefix, 16, false) : prefix, false));
-			team.setSuffix(Utils.serializeSpongeText(suffix.length() > 16 ? me.remigio07.chatplugin.common.util.Utils.abbreviate(suffix, 16, false) : suffix, false));
-			team.addMember(Utils.serializeSpongeText(other.toAdapter().spongeValue().getName(), false));
-			Iterables.getFirst(player.getObjective().spongeValue().getScoreboards(), null).registerTeam(team);
-		}
+				if (ChatColor.stripColor(ChatColor.translate(str)).isEmpty())
+					prefix = prefix.substring(0, index) + str + " ";
+			}
+		} team.setPrefix(Utils.serializeSpongeText(prefix.length() > 16 ? me.remigio07.chatplugin.common.util.Utils.abbreviate(prefix, 16, false) : prefix, false));
+		team.setSuffix(Utils.serializeSpongeText(suffix.length() > 16 ? me.remigio07.chatplugin.common.util.Utils.abbreviate(suffix, 16, false) : suffix, false));
+		team.addMember(Utils.serializeSpongeText(other.toAdapter().spongeValue().getName(), false));
+		
+		if (!team.getScoreboard().isPresent())
+			scoreboard.registerTeam(team);
 	}
 	
 	@SuppressWarnings("deprecation")

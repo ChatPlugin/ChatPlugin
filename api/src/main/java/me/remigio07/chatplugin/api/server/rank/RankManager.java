@@ -19,10 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
-import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
  * Manager that handles {@link Rank}s.
@@ -34,21 +34,33 @@ public abstract class RankManager implements ChatPluginManager {
 	/**
 	 * Pattern representing the allowed rank IDs.
 	 * 
-	 * <p><strong>Regex:</strong> "^[a-zA-Z0-9-_]{2,14}$"</p>
+	 * <p><strong>Regex:</strong> "^(?!settings$)[a-zA-Z0-9-_+]{2,36}$"</p>
 	 * 
 	 * @see #isValidRankID(String)
 	 */
-	public static final Pattern RANK_ID_PATTERN = Pattern.compile("^[a-zA-Z0-9-_]{2,36}$");
+	public static final Pattern RANK_ID_PATTERN = Pattern.compile("^(?!settings$)[a-zA-Z0-9-_+]{2,36}$");
 	protected static RankManager instance;
-	protected boolean enabled, sortingEnabled, sortingFromTablistTop;
-	protected Rank defaultRank;
-	protected String permissionFormat;
+	protected boolean enabled, luckPermsMode, sortingEnabled, sortingFromTablistTop;
 	protected List<Rank> ranks = new ArrayList<>();
 	protected long loadTime;
 	
 	@Override
 	public boolean isEnabled() {
 		return enabled;
+	}
+	
+	/**
+	 * Checks if the {@linkplain IntegrationType#LUCKPERMS LuckPerms} mode is enabled.
+	 * 
+	 * <p>When enabled, ChatPlugin will load {@link Rank}s using its API instead
+	 * of reading them from the {@link ConfigurationType#RANKS} file.</p>
+	 * 
+	 * <p><strong>Found at:</strong> "ranks.settings.luckperms-mode" in {@link ConfigurationType#RANKS}</p>
+	 * 
+	 * @return Whether the LuckPerms mode is enabled
+	 */
+	public boolean isLuckPermsMode() {
+		return luckPermsMode;
 	}
 	
 	/**
@@ -76,33 +88,25 @@ public abstract class RankManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the default rank that those who are not part of any other rank will have.
+	 * Gets the default rank that those who are
+	 * not part of any other rank will have.
 	 * 
-	 * <p><strong>Found at:</strong> "ranks.settings.default-rank-id" in {@link ConfigurationType#RANKS}</p>
+	 * <p>This is always the rank with "default" as
+	 * ID if {@link #isLuckPermsMode()}, otherwise it
+	 * is the first rank in {@link #getRanks()}.</p>
 	 * 
 	 * @return Default rank
 	 */
 	public Rank getDefaultRank() {
-		return defaultRank;
+		return luckPermsMode ? getRank("default") : ranks.get(0);
 	}
 	
 	/**
-	 * Gets the permission format used to check if a player is part of a certain rank.
+	 * Gets the list of loaded ranks, sorted
+	 * by {@link Rank#getPosition()} starting
+	 * from 0, for the highest rank.
 	 * 
-	 * <p>Should contain the placeholder "{0}" which should be replaced with the rank's ID.</p>
-	 * 
-	 * <p><strong>Found at:</strong> "ranks.settings.permission-format" in {@link ConfigurationType#RANKS}</p>
-	 * 
-	 * @return Ranks' permission format
-	 */
-	public String getPermissionFormat() {
-		return permissionFormat;
-	}
-	
-	/**
-	 * Gets the list of loaded ranks.
-	 * 
-	 * <p>Do <strong>not</strong> modify the returned list.</p>
+	 * <p>Do <em>not</em> modify the returned list.</p>
 	 * 
 	 * @return Loaded ranks' list
 	 */
@@ -115,8 +119,8 @@ public abstract class RankManager implements ChatPluginManager {
 	 * 
 	 * <p>Will return <code>null</code> if the rank is not loaded.</p>
 	 * 
-	 * @param id Language's ID, case insensitive
-	 * @return Loaded language
+	 * @param id Rank's ID, case insensitive
+	 * @return Loaded rank
 	 */
 	@Nullable(why = "Specified rank may not be loaded")
 	public Rank getRank(String id) {
@@ -142,13 +146,5 @@ public abstract class RankManager implements ChatPluginManager {
 	public static RankManager getInstance() {
 		return instance;
 	}
-	
-	/**
-	 * Calculates a player's rank by checking every loaded rank's {@link Rank#getPermission()}.
-	 * 
-	 * @param player Player to calculate the rank for
-	 * @return Player's rank
-	 */
-	public abstract Rank calculateRank(ChatPluginServerPlayer player);
 	
 }

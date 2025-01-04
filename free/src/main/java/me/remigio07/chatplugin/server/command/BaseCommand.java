@@ -43,10 +43,11 @@ import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.adapter.user.CommandSenderAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
+import me.remigio07.chatplugin.server.rank.RankManagerImpl;
 
 public abstract class BaseCommand {
 	
-	protected static List<String> numbers = Arrays.asList("10", "20", "30", "40", "50");
+	protected static List<String> numbers = Arrays.asList("1", "2", "3", "4", "5");
 	protected static List<String> players = Arrays.asList("{players}");
 	protected static List<String> servers = Arrays.asList("{servers}");
 	protected static List<String> timestamps = Arrays.asList("1d", "1d,10h", "1d,10h,30m", "1d,10h,30m,5s");
@@ -99,6 +100,9 @@ public abstract class BaseCommand {
 		} if (args.contains("{ranks}")) {
 			args.remove("{ranks}");
 			args.addAll(RankManager.getInstance().getRanks().stream().map(Rank::getID).collect(Collectors.toList()));
+		} if (args.contains("{ranks_properties}")) {
+			args.remove("{ranks_properties}");
+			args.addAll(RankManagerImpl.getProperties());
 		} if (args.contains("{servers}")) {
 			args.remove("{servers}");
 			args.addAll(ProxyManager.getInstance().getServersIDs());

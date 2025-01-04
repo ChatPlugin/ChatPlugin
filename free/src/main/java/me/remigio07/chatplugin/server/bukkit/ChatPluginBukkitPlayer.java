@@ -59,6 +59,7 @@ import me.remigio07.chatplugin.server.bossbar.NativeBossbar;
 import me.remigio07.chatplugin.server.bossbar.ReflectionBossbar;
 import me.remigio07.chatplugin.server.bukkit.manager.BukkitPlayerManager;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
+import me.remigio07.chatplugin.server.rank.RankManagerImpl;
 import me.remigio07.chatplugin.server.util.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
@@ -74,7 +75,7 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 		super(new PlayerAdapter(player));
 		this.player = player;
 		audience = BukkitPlayerManager.getAudiences().player(player);
-		rank = RankManager.getInstance().calculateRank(this);
+		rank = ((RankManagerImpl) RankManager.getInstance()).calculateRank(this);
 		version = version == null ? VersionUtils.getVersion() : version;
 		craftPlayer = BukkitReflection.getLoadedClass("CraftPlayer").cast(player);
 		playerConnection = BukkitReflection.getFieldValue("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", craftPlayer), "playerConnection", "connection", VersionUtils.getVersion().isAtLeast(Version.V1_20) ? "c" : "b");

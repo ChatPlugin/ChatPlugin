@@ -226,21 +226,22 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 	}
 	
 	@SuppressWarnings("deprecation")
-	private void setupTeams(ChatPluginServerPlayer player, ChatPluginServerPlayer other, boolean longTeams) {
-		if (!other.getRank().getTag().toString().isEmpty()) {
-			Team team = player.getObjective().bukkitValue().getScoreboard().registerNewTeam(other.getRank().formatIdentifier(other));
-			String prefix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPrefixFormat(), other, player.getLanguage(), TablistManager.getInstance().getPlaceholderTypes());
-			String suffix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getSuffixFormat(), other, player.getLanguage(), TablistManager.getInstance().getPlaceholderTypes());
+	public void setupTeams(ChatPluginServerPlayer player, ChatPluginServerPlayer other, boolean longTeams) {
+		Scoreboard scoreboard = player.getObjective().bukkitValue().getScoreboard();
+		Team team = scoreboard.getTeam(other.getRank().formatIdentifier(other));
+		String prefix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPrefixFormat(), other, player.getLanguage(), TablistManager.getInstance().getPlaceholderTypes());
+		String suffix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getSuffixFormat(), other, player.getLanguage(), TablistManager.getInstance().getPlaceholderTypes());
+		
+		if (team == null)
+			team = scoreboard.registerNewTeam(other.getRank().formatIdentifier(other));
+		if (VersionUtils.getVersion().isAtLeast(Version.V1_12)) {
+			String lastColors = ChatColor.getLastColors(prefix);
 			
-			if (VersionUtils.getVersion().isAtLeast(Version.V1_12)) {
-				String lastColors = ChatColor.getLastColors(prefix);
-				
-				if (!lastColors.isEmpty())
-					team.setColor((lastColors.startsWith("\u00A7x") ? ChatColor.of(lastColors.substring(3, 14).replace("\u00A7", "")).getClosestDefaultColor() : ChatColor.getByChar(lastColors.charAt(1))).bukkitValue());
-			} team.setPrefix(prefix.length() > (longTeams ? 64 : 16) ? me.remigio07.chatplugin.common.util.Utils.abbreviate(prefix, longTeams ? 64 : 16, false) : prefix);
-			team.setSuffix(suffix.length() > (longTeams ? 64 : 16) ? me.remigio07.chatplugin.common.util.Utils.abbreviate(suffix, longTeams ? 64 : 16, false) : suffix);
-			team.addPlayer(other.toAdapter().bukkitValue());
-		}
+			if (!lastColors.isEmpty())
+				team.setColor((lastColors.startsWith("\u00A7x") ? ChatColor.of(lastColors.substring(3, 14).replace("\u00A7", "")).getClosestDefaultColor() : ChatColor.getByChar(lastColors.charAt(1))).bukkitValue());
+		} team.setPrefix(prefix.length() > (longTeams ? 64 : 16) ? me.remigio07.chatplugin.common.util.Utils.abbreviate(prefix, longTeams ? 64 : 16, false) : prefix);
+		team.setSuffix(suffix.length() > (longTeams ? 64 : 16) ? me.remigio07.chatplugin.common.util.Utils.abbreviate(suffix, longTeams ? 64 : 16, false) : suffix);
+		team.addPlayer(other.toAdapter().bukkitValue());
 	}
 	
 	@SuppressWarnings("deprecation")

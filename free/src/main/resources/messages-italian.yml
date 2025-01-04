@@ -55,13 +55,13 @@ commands:
         &f&l/emojistone &8- &eCambia il tono predefinito delle tue emojis.
       admin: |-
         {pfx} &aAiuto per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
+        &f&l/rank &8- &eCrea, rimuovi, modifica e visualizza i ranghi caricati.
         &f&l/staffchat &8- &eStaff chat cross-server molto utile.
         &f&l/socialspy &8- &eSpia i messaggi privati degli altri giocatori.
         &f&l/rangedchatspy &8- &eSpia i messaggi locali degli altri giocatori.
         &f&l/iplookup &8- &eEsegui il lookup di un indirizzo IP.
         &f&l/lastseen &8- &eControlla l'ultimo login di un giocatore.
         &f&l/clearchat &8- &eCancella la chat e nascondi gli ultimi messaggi.
-        &f&l/muteall &8- &eAttiva/disattiva la chat per gli utenti.
       vanish: |-
         {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/vanish &8- &eDiventa invisibile agli altri utenti.
@@ -85,13 +85,13 @@ commands:
         &f&l/scoreboard &8- &eAttiva/disattiva la visibilità della scoreboard.
       admin: |-
         {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
+        &f&l/rank &8- &eCrea, rimuovi, modifica e visualizza i ranghi caricati.
         &f&l/staffchat &8- &eStaff chat cross-server molto utile.
         &f&l/socialspy &8- &eSpia i messaggi privati degli altri giocatori.
         &f&l/rangedchatspy &8- &eSpia i messaggi locali degli altri giocatori.
         &f&l/iplookup &8- &eEsegui il lookup di un indirizzo IP.
         &f&l/lastseen &8- &eControlla l'ultimo login di un giocatore.
         &f&l/clearchat &8- &eCancella la chat e nascondi gli ultimi messaggi.
-        &f&l/muteall &8- &eAttiva/disattiva la chat per gli utenti.
         &f&l/chatlog &8- &eCerca messaggi che contengono certo testo.
         &f&l/accountcheck &8- &eControlla gli accounts di un giocatore.
       punishments: |-
@@ -169,6 +169,44 @@ commands:
     &eTag: &f{tag_prefix}{tag_name_color}{player}{tag_suffix}
     &eDescrizione:
     &f{rank_description}
+  rank:
+    luckperms-mode: '{pfx} &cLa modalità LuckPerms è abilitata. Usa i suoi comandi per creare o rimuovere ranghi, poi ricarica ChatPlugin manualmente con &f/chatplugin reload&c.'
+    info: |-
+      {pfx} &aInformazioni sul rango &f{rank_id} &a(&f{rank_display_name}&a):
+      &ePrefisso: &f{prefix}
+      &eSuffisso: &f{suffix}
+      &eTag: &f{tag_prefix}{tag_name_color}Notch{tag_suffix}
+      &eColore della chat: &f{chat_color}
+      &ePosizione: &f{rank_position}
+      &eDescrizione (&fitaliano&e):
+      &f{rank_description}
+      &eDurata massima ban: &f{max_ban_duration}
+      &eDurata massima mute: &f{max_mute_duration}
+    list:
+      header: '{pfx} &aQui sono mostrati i ranghi caricati:'
+      message-format:
+        text: '&f{rank_id} &e(&f{rank_display_name}&e) &8- &eposizione: &f{rank_position}'
+        hover: |-
+          &a&l{rank_id}
+          &7Nome visualizzato: &f{rank_display_name}
+          &7Posizione: &f{rank_position}
+
+          &e&oClicca per più info!
+    edit:
+      set: '{pfx} &aLa proprietà &f{0} &adel rango &f{1} &aè stata impostata su &f{2}&a.'
+      reset: '{pfx} &aLa proprietà &f{0} &adel rango &f{1} &aè stata resettata.'
+      invalid-property: '{pfx} &cProprietà invalida. Ecco le proprietà disponibili: &f{0}&c.'
+      out-of-sync: '{pfx} &cIl rango &f{0} &cnon esiste più su LuckPerms. Si consiglia di ricaricare ChatPlugin.'
+    removed:
+      text: '{pfx} &aIl rango &f{0} &aè stato rimosso. Clicca per ricaricare ChatPlugin quando desideri applicare le modifiche.'
+      hover: '&9[Clicca qui per ricaricare ChatPlugin]'
+    add:
+      added:
+        text: '{pfx} &aIl rango &f{0} &aè stato aggiunto. Clicca per ricaricare ChatPlugin quando desideri applicare le modifiche.'
+        hover: '&9[Clicca qui per ricaricare ChatPlugin]'
+      already-exists: '{pfx} &cUn rango con quell''ID esiste già.'
+      reached-limit: '{pfx} &cIl plugin ha raggiunto il limite di 99 ranghi.'
+      invalid-position: '{pfx} &cPosizione invalida. Digita un numero tra &f0 &ce &f{0}&c.'
   playerlist:
     all:
       message: '{pfx} &aAttualmente ci sono &f{0}/{1} &agiocatori online:'
@@ -387,9 +425,6 @@ chat:
     no-swear: '{pfx} &cIl tuo messaggio contiene parole non consentite.'
     no-url: '{pfx} &cIl tuo messaggio contiene un URL non consentito.'
     no-ip-address: '{pfx} &cIl tuo messaggio contiene un indirizzo IP non consentito.'
-  deny-chat-notify: |-
-    {pfx} &cA &f{0} &cè stato impedito (motivo: &f{1}&c) di inviare:
-    &f{2}
   no-format: '{pfx} &cNon puoi scrivere messaggi formattati. Acquista un pacchetto &fVIP &cper aggirare questa restrizione.'
   no-blank-messages: '{pfx} &cNon puoi inviare messaggi vuoti.'
   pinged: '{pfx} &eSiete stati menzionati da &f{0}&e.'
@@ -427,15 +462,6 @@ chat:
       denied-format:
         'yes': '&4negato &f({deny_chat_reason})'
         'no': '&2permesso'
-    page-switcher:
-      footer: '{pfx} &aPagina &f{current_page}/{max_page}&a. Sfoglia: &f{page_switcher}'
-      invalid: '{pfx} &cPagina &f{current_page} &cnon trovata. Ultima pagina: &f{max_page}&c.'
-      previous:
-        text: '&8[&e&l&n« {previous_page}/{max_page}&8]'
-        hover: '&9[Clicca qui per tornare alla pagina {previous_page}]'
-      next:
-        text: '&8[&e&l&n{next_page}/{max_page} »&8]'
-        hover: '&9[Clicca qui per andare alla pagina {next_page}]'
 guis:
   no-permission: '{pfx} &cNon hai il permesso di utilizzare quella GUI.'
   no-permission-icon: '{pfx} &cNon hai il permesso di utilizzare quell''icona.'
@@ -685,8 +711,17 @@ languages:
   set-already: '{pfx} &cLa tua lingua è già impostata su &f{0}&c.'
   invalid: '{pfx} &cLingua invalida. Ecco le lingue caricate: &f{0}&c.'
   detected:
-    text: '{pfx} &eSembra che la tua lingua sia {0}&e. Clicca su questo messaggio per impostarla come lingua predefinita.'
+    text: '{pfx} &eSembra che la tua lingua sia {0}&e. Clicca questo messaggio per impostarla come lingua predefinita.'
     hover: '&9[Fai clic qui per cambiare la tua lingua]'
+page-switcher:
+  footer: '{pfx} &aPagina &f{current_page}/{max_page}&a. Sfoglia: &f{page_switcher}'
+  invalid: '{pfx} &cPagina &f{current_page} &cnon trovata. Ultima pagina: &f{max_page}&c.'
+  previous:
+    text: '&8[&e&l&n« {previous_page}/{max_page}&8]'
+    hover: '&9[Clicca qui per tornare alla pagina {previous_page}]'
+  next:
+    text: '&8[&e&l&n{next_page}/{max_page} »&8]'
+    hover: '&9[Clicca qui per andare alla pagina {next_page}]'
 timestamps:
   invalid: '{pfx} &cTimestamp non valido. Usa questo formato: &f1g,3h,35m,20s&c.'
   rank-limitation: '{pfx} &cLa durata massima consentita per il tuo rango (&f{0}&c) è &f{1}&c.'

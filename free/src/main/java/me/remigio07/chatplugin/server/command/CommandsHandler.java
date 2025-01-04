@@ -38,6 +38,7 @@ import me.remigio07.chatplugin.server.command.admin.IPLookupCommand;
 import me.remigio07.chatplugin.server.command.admin.LastSeenCommand;
 import me.remigio07.chatplugin.server.command.admin.MuteAllCommand;
 import me.remigio07.chatplugin.server.command.admin.RangedChatSpyCommand;
+import me.remigio07.chatplugin.server.command.admin.RankCommand;
 import me.remigio07.chatplugin.server.command.admin.SocialspyCommand;
 import me.remigio07.chatplugin.server.command.admin.StaffChatCommand;
 import me.remigio07.chatplugin.server.command.gui.GUICommand;
@@ -121,6 +122,14 @@ public abstract class CommandsHandler {
 			put(new RangedChatSpyCommand());
 		if (IPLookupManager.getInstance().isEnabled())
 			put(new IPLookupCommand());
+		put(
+				new RankCommand.Add(),
+				new RankCommand.Edit(),
+				new RankCommand.Info(),
+				new RankCommand.List(),
+				new RankCommand.Remove(),
+				new RankCommand()
+				);
 		put(new LastSeenCommand());
 		put(new ClearChatCommand());
 		put(new MuteAllCommand());

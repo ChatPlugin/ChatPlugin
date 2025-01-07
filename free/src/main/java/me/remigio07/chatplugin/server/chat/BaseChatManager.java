@@ -55,6 +55,7 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 import me.remigio07.chatplugin.api.server.util.URLValidator;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
+import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.chat.antispam.AntispamManagerImpl;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
@@ -211,16 +212,21 @@ public abstract class BaseChatManager extends ChatManager {
 			return true;
 		if (ChatLogManager.getInstance().isEnabled())
 			ChatLogManager.getInstance().logPublicMessage(player, message, global, null);
+		int recipients = 0;
+		
 		if (HoverInfoManager.getInstance().isEnabled()) {
 			for (Language language : LanguageManager.getInstance().getLanguages()) {
 				TextComponent text = ((BaseHoverInfoManager) HoverInfoManager.getInstance()).getMessageHoverInfo(player, language, message, rangedChatManager.isEnabled() && global, urls, pingedPlayers, new HashSet<>(instantEmojis));
 				
 				for (ChatPluginServerPlayer other : language.getOnlinePlayers())
 					if (!other.getIgnoredPlayers().contains(player)) {
-						if (rangedChatManager.isEnabled() && !global && ((BaseChatPluginServerPlayer) other).getDistance(player.getWorld(), player.getX(), player.getY(), player.getZ()) > rangedChatManager.getRange()) {
-							if (other.hasRangedChatSpyEnabled())
-								other.sendMessage(PlaceholderManager.getInstance().translatePlaceholders(rangedChatManager.getSpyFormat(), player, language, placeholderTypes) + message);
-							continue;
+						if (rangedChatManager.isEnabled()) {
+							if (!global && ((BaseChatPluginServerPlayer) other).getDistance(player.getWorld(), player.getX(), player.getY(), player.getZ()) > rangedChatManager.getRange()) {
+								if (other.hasRangedChatSpyEnabled())
+									other.sendMessage(PlaceholderManager.getInstance().translatePlaceholders(rangedChatManager.getSpyFormat(), player, language, placeholderTypes) + message);
+								continue;
+							} if (!player.equals(other) && (!other.isVanished() || player.hasPermission(VanishManager.VANISH_PERMISSION)))
+								recipients++;
 						} ((BaseChatPluginServerPlayer) other).sendMessage(text);
 					}
 			}
@@ -233,14 +239,19 @@ public abstract class BaseChatManager extends ChatManager {
 				
 				for (ChatPluginServerPlayer other : language.getOnlinePlayers())
 					if (!other.getIgnoredPlayers().contains(player)) {
-						if (rangedChatManager.isEnabled() && !global && ((BaseChatPluginServerPlayer) other).getDistance(player.getWorld(), player.getX(), player.getY(), player.getZ()) > rangedChatManager.getRange()) {
-							if (other.hasRangedChatSpyEnabled())
-								other.sendMessage(PlaceholderManager.getInstance().translatePlaceholders(rangedChatManager.getSpyFormat(), player, language, placeholderTypes) + message);
-							continue;
+						if (rangedChatManager.isEnabled()) {
+							if (!global && ((BaseChatPluginServerPlayer) other).getDistance(player.getWorld(), player.getX(), player.getY(), player.getZ()) > rangedChatManager.getRange()) {
+								if (other.hasRangedChatSpyEnabled())
+									other.sendMessage(PlaceholderManager.getInstance().translatePlaceholders(rangedChatManager.getSpyFormat(), player, language, placeholderTypes) + message);
+								continue;
+							} if (!player.equals(other) && (!other.isVanished() || player.hasPermission(VanishManager.VANISH_PERMISSION)))
+								recipients++;
 						} other.sendMessage(text);
 					}
 			}
-		} try {
+		} if (rangedChatManager.isEnabled() && recipients == 0)
+			player.sendTranslatedMessage("chat.nobody-nearby");
+		try {
 			StorageConnector.getInstance().incrementPlayerStat(PlayersDataType.MESSAGES_SENT, player);
 		} catch (SQLException | IOException e) {
 			LogManager.log("{0} occurred while incrementing messages sent stat for {1}: {2}", 2, e.getClass().getSimpleName(), player.getName(), e.getLocalizedMessage());

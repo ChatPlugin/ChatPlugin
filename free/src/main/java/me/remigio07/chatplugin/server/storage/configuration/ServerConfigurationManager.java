@@ -450,6 +450,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("chat.no-format", "{pfx} &cYou cannot write formatted messages. Buy a &fVIP package &cto bypass this restriction.");
 		messages.addDefault("chat.no-blank-messages", "{pfx} &cYou cannot send blank messages.");
 		messages.addDefault("chat.pinged", "{pfx} &eYou got pinged by &f{0}&e.");
+		messages.addDefault("chat.nobody-nearby", "{pfx} &eNobody nearby has read your message.");
 		
 		messages.addDefault("chat.log.searching", "{pfx} &eSearching for logged messages...");
 		messages.addDefault("chat.log.found", "{pfx} &aThe following messages were found:");

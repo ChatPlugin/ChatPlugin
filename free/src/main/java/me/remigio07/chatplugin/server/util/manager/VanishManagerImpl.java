@@ -103,6 +103,8 @@ public class VanishManagerImpl extends VanishManager {
 			} else adaptedPlayer = player.toAdapter().bukkitValue();
 			
 			for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
+				if (other.equals(player))
+					continue;
 				if (!other.hasPermission(VANISH_PERMISSION))
 					if (Environment.isBukkit()) {
 						org.bukkit.entity.Player otherBukkitPlayer = other.toAdapter().bukkitValue();
@@ -165,7 +167,9 @@ public class VanishManagerImpl extends VanishManager {
 				}
 			} else adaptedPlayer = player.toAdapter().bukkitValue();
 			
-			for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values())
+			for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
+				if (other.equals(player))
+					continue;
 				if (Environment.isSponge()) {
 					TabList tablist = other.toAdapter().spongeValue().getTabList();
 					
@@ -177,7 +181,7 @@ public class VanishManagerImpl extends VanishManager {
 								.build()
 								);
 				} else other.toAdapter().bukkitValue().showPlayer((org.bukkit.entity.Player) adaptedPlayer); // backward-compatible
-			if (invisibility)
+			} if (invisibility)
 				if (Environment.isBukkit())
 					((org.bukkit.entity.Player) adaptedPlayer).removePotionEffect(PotionEffectType.INVISIBILITY);
 				else ((Player) adaptedPlayer).getOrCreate(PotionEffectData.class).get().remove(PotionEffect.of(org.spongepowered.api.effect.potion.PotionEffectTypes.INVISIBILITY, 0, Integer.MAX_VALUE));
@@ -196,6 +200,8 @@ public class VanishManagerImpl extends VanishManager {
 		ensureSync(() -> {
 			if (!justJoined) {
 				for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
+					if (other.equals(player))
+						continue;
 					if (Environment.isBukkit()) {
 						org.bukkit.entity.Player bukkitPlayer = other.toAdapter().bukkitValue();
 						

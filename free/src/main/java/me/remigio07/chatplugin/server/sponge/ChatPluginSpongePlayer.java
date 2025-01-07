@@ -83,11 +83,7 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 		playerConnection = player.getConnection();
 		StorageConnector storage = StorageConnector.getInstance();
 		
-		try {
-			playerStored = storage.isPlayerStored(this);
-		} catch (SQLException e) {
-			LogManager.log("SQLException occurred while checking if {0} is stored in the database: {1}", 2, name, e.getMessage());
-		} if (playerStored)
+		if (playerStored)
 			language = LanguageManager.getInstance().getLanguage(this);
 		else {
 			LanguageDetector detector = LanguageManager.getInstance().getDetector();

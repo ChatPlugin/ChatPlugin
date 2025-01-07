@@ -28,7 +28,6 @@ import java.util.concurrent.TimeoutException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
@@ -81,11 +80,7 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 		playerConnection = BukkitReflection.getFieldValue("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", craftPlayer), "playerConnection", "connection", VersionUtils.getVersion().isAtLeast(Version.V1_20) ? "c" : "b");
 		StorageConnector storage = StorageConnector.getInstance();
 		
-		try {
-			playerStored = storage.isPlayerStored(this);
-		} catch (SQLException e) {
-			LogManager.log("SQLException occurred while checking if {0} is stored in the database: {1}", 2, name, e.getMessage());
-		} if (playerStored)
+		if (playerStored)
 			language = LanguageManager.getInstance().getLanguage(this);
 		else {
 			LanguageDetector detector = LanguageManager.getInstance().getDetector();
@@ -253,11 +248,12 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public void playSound(SoundAdapter sound) {
-		Sound bukkitValue = sound.bukkitValue();
+		Object bukkitValue = sound.bukkitValue();
 		
-		if (bukkitValue == null)
+		if (bukkitValue != null)
+			BukkitReflection.invokeMethod("Player", "playSound", player, player.getLocation(), bukkitValue, sound.getVolume(), sound.getPitch());
+		else if (sound.isVanillaCompliant())
 			player.playSound(player.getLocation(), sound.getID(), sound.getVolume(), sound.getPitch());
-		else player.playSound(player.getLocation(), bukkitValue, sound.getVolume(), sound.getPitch());
 	}
 	
 	@Override

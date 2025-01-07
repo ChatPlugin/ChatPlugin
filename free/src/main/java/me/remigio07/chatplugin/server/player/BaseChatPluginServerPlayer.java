@@ -24,7 +24,7 @@ import java.util.Collections;
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
-import me.remigio07.chatplugin.api.common.storage.StorageManager;
+import me.remigio07.chatplugin.api.common.storage.StorageConnector;
 import me.remigio07.chatplugin.api.common.storage.database.DatabaseConnector;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
@@ -49,7 +49,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer {
 	
 	protected Audience audience;
-	protected boolean playerStored = false;
+	protected boolean playerStored;
 	
 	public BaseChatPluginServerPlayer(PlayerAdapter player) {
 		super(player);
@@ -65,37 +65,49 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 		ignoredPlayers = PlayerIgnoreManager.getInstance().isEnabled() ? new ArrayList<>(PlayerIgnoreManager.getInstance().getIgnoredPlayers(this)) : Collections.emptyList();
 		
 		try {
-			Integer color = StorageManager.getInstance().getConnector().getPlayerData(PlayersDataType.CHAT_COLOR, this);
-			chatColor = color == null ? ChatColor.RESET : ChatColor.of(new Color(color, true));
-		} catch (SQLException sqle) {
+			playerStored = StorageConnector.getInstance().isPlayerStored(this);
+		} catch (SQLException e) {
+			LogManager.log("SQLException occurred while checking if {0} is stored in the database: {1}", 2, name, e.getMessage());
+		} if (playerStored) {
 			try {
-				if (sqle.getMessage().contains("Column \"CHAT_COLOR\" not found") || sqle.getMessage().contains("(no such column: chat_color)")) // compatibility with older ChatPlugin versions
-					DatabaseConnector.getInstance().executeUpdate("ALTER TABLE " + DataContainer.PLAYERS.getDatabaseTableID() + " ADD `chat_color` INTEGER");
-				else LogManager.log("Unable to get chat's color from database for player {0}: {1}", 2, name, sqle.getLocalizedMessage());
-			} catch (SQLException sqle2) {
-				LogManager.log("Unable to alter database table {0} after version update: {1}", 2, DataContainer.PLAYERS.getDatabaseTableID(), sqle2.getLocalizedMessage());
-			} chatColor = ChatColor.RESET;
-		} try {
-			Integer tone = StorageManager.getInstance().getConnector().getPlayerData(PlayersDataType.EMOJIS_TONE, this);
-			emojisTone = tone == null ? ChatColor.RESET : ChatColor.of(new Color(tone, true));
-		} catch (SQLException sqle) {
-			try {
-				if (sqle.getMessage().contains("Column \"EMOJIS_TONE\" not found") || sqle.getMessage().contains("(no such column: emojis_tone)")) // compatibility with older ChatPlugin versions
-					DatabaseConnector.getInstance().executeUpdate("ALTER TABLE " + DataContainer.PLAYERS.getDatabaseTableID() + " ADD `emojis_tone` INTEGER");
-				else LogManager.log("Unable to get emojis' tone from database for player {0}: {1}", 2, name, sqle.getLocalizedMessage());
-			} catch (SQLException sqle2) {
-				LogManager.log("Unable to alter database table {0} after version update: {1}", 2, DataContainer.PLAYERS.getDatabaseTableID(), sqle2.getLocalizedMessage());
-			} emojisTone = ChatColor.RESET;
-		} try {
-			antispamInfractions = StorageManager.getInstance().getConnector().getPlayerData(PlayersDataType.ANTISPAM_INFRACTIONS, this);
-		} catch (SQLException sqle) {
-			try {
-				if (sqle.getMessage().contains("Column \"ANTISPAM_INFRACTIONS\" not found") || sqle.getMessage().contains("(no such column: antispam_infractions)")) // compatibility with older ChatPlugin versions
-					DatabaseConnector.getInstance().executeUpdate("ALTER TABLE " + DataContainer.PLAYERS.getDatabaseTableID() + " ADD `antispam_infractions` INTEGER DEFAULT 0");
-				else LogManager.log("Unable to get antispam infractions from database for player {0}: {1}", 2, name, sqle.getLocalizedMessage());
-			} catch (SQLException sqle2) {
-				LogManager.log("Unable to alter database table {0} after version update: {1}", 2, DataContainer.PLAYERS.getDatabaseTableID(), sqle2.getLocalizedMessage());
+				Integer color = StorageConnector.getInstance().getPlayerData(PlayersDataType.CHAT_COLOR, this);
+				chatColor = color == null ? ChatColor.RESET : ChatColor.of(new Color(color, true));
+			} catch (SQLException sqle) {
+				try {
+					if (sqle.getMessage().contains("Column \"CHAT_COLOR\" not found") || sqle.getMessage().contains("(no such column: chat_color)")) // compatibility with older ChatPlugin versions
+						DatabaseConnector.getInstance().executeUpdate("ALTER TABLE " + DataContainer.PLAYERS.getDatabaseTableID() + " ADD `chat_color` INTEGER");
+					else LogManager.log("Unable to get chat's color from database for player {0}: {1}", 2, name, sqle.getLocalizedMessage());
+				} catch (SQLException sqle2) {
+					LogManager.log("Unable to alter database table {0} after version update: {1}", 2, DataContainer.PLAYERS.getDatabaseTableID(), sqle2.getLocalizedMessage());
+				} chatColor = ChatColor.RESET;
+			} try {
+				Integer tone = StorageConnector.getInstance().getPlayerData(PlayersDataType.EMOJIS_TONE, this);
+				emojisTone = tone == null ? ChatColor.RESET : ChatColor.of(new Color(tone, true));
+			} catch (SQLException sqle) {
+				try {
+					if (sqle.getMessage().contains("Column \"EMOJIS_TONE\" not found") || sqle.getMessage().contains("(no such column: emojis_tone)")) // compatibility with older ChatPlugin versions
+						DatabaseConnector.getInstance().executeUpdate("ALTER TABLE " + DataContainer.PLAYERS.getDatabaseTableID() + " ADD `emojis_tone` INTEGER");
+					else LogManager.log("Unable to get emojis' tone from database for player {0}: {1}", 2, name, sqle.getLocalizedMessage());
+				} catch (SQLException sqle2) {
+					LogManager.log("Unable to alter database table {0} after version update: {1}", 2, DataContainer.PLAYERS.getDatabaseTableID(), sqle2.getLocalizedMessage());
+				} emojisTone = ChatColor.RESET;
+			} try {
+				Integer antispamInfractions = StorageConnector.getInstance().getPlayerData(PlayersDataType.ANTISPAM_INFRACTIONS, this);
+				
+				if (antispamInfractions != null)
+					this.antispamInfractions = antispamInfractions.intValue();
+			} catch (SQLException sqle) {
+				try {
+					if (sqle.getMessage().contains("Column \"ANTISPAM_INFRACTIONS\" not found") || sqle.getMessage().contains("(no such column: antispam_infractions)")) // compatibility with older ChatPlugin versions
+						DatabaseConnector.getInstance().executeUpdate("ALTER TABLE " + DataContainer.PLAYERS.getDatabaseTableID() + " ADD `antispam_infractions` INTEGER DEFAULT 0");
+					else LogManager.log("Unable to get antispam infractions from database for player {0}: {1}", 2, name, sqle.getLocalizedMessage());
+				} catch (SQLException sqle2) {
+					LogManager.log("Unable to alter database table {0} after version update: {1}", 2, DataContainer.PLAYERS.getDatabaseTableID(), sqle2.getLocalizedMessage());
+				}
 			}
+		} else {
+			chatColor = ChatColor.RESET;
+			emojisTone = ChatColor.RESET;
 		}
 	}
 	
@@ -104,7 +116,7 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 		if (chatColor.isFormatCode())
 			throw new IllegalArgumentException("Unable to set chat's color to a format code");
 		try {
-			StorageManager.getInstance().getConnector().setPlayerData(PlayersDataType.CHAT_COLOR, this, (this.chatColor = chatColor) == ChatColor.RESET ? null : chatColor.getColor().getRGB() & 0xFFFFFF);
+			StorageConnector.getInstance().setPlayerData(PlayersDataType.CHAT_COLOR, this, (this.chatColor = chatColor) == ChatColor.RESET ? null : chatColor.getColor().getRGB() & 0xFFFFFF);
 		} catch (SQLException | IOException e) {
 			LogManager.log("Unable to set chat's color to storage for player {0}: {1}", 2, name, e.getMessage());
 		}
@@ -115,7 +127,7 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 		if (emojisTone.isFormatCode())
 			throw new IllegalArgumentException("Unable to set emojis' tone to a format code");
 		try {
-			StorageManager.getInstance().getConnector().setPlayerData(PlayersDataType.EMOJIS_TONE, this, (this.emojisTone = emojisTone) == ChatColor.RESET ? null : emojisTone.getColor().getRGB() & 0xFFFFFF);
+			StorageConnector.getInstance().setPlayerData(PlayersDataType.EMOJIS_TONE, this, (this.emojisTone = emojisTone) == ChatColor.RESET ? null : emojisTone.getColor().getRGB() & 0xFFFFFF);
 		} catch (SQLException | IOException e) {
 			LogManager.log("Unable to set emojis' tone to storage for player {0}: {1}", 2, name, e.getMessage());
 		}

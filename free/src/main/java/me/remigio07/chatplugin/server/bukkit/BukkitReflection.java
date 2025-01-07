@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import org.bukkit.Location;
+import org.bukkit.attribute.AttributeModifier;
+
 import com.google.common.primitives.Primitives;
 
 import me.remigio07.chatplugin.api.common.util.Utils;
@@ -77,10 +80,28 @@ public class BukkitReflection {
 			putMethod(clazz, "setTitle", Arrays.asList(String.class));
 			putMethod(clazz, "getTopInventory");
 			
-			// HumanEntity - we need this, too
+			// HumanEntity
 			clazz = Class.forName("org.bukkit.entity.HumanEntity");
 			classes.put("HumanEntity", clazz);
 			putMethod(clazz, "getOpenInventory");
+			
+			// Sound - enum until 1.21.2, became interface in 1.21.3
+			clazz = Class.forName("org.bukkit.Sound");
+			classes.put("Sound", clazz);
+			
+			clazz = Class.forName("org.bukkit.entity.Player");
+			classes.put("Player", clazz);
+			putMethod(clazz, "playSound", Arrays.asList(Location.class, classes.get("Sound"), float.class, float.class));
+			
+			// Attribute - enum until 1.21.2, became interface in 1.21.3
+			clazz = Class.forName("org.bukkit.attribute.Attribute");
+			classes.put("Attribute", clazz);
+			
+			// ItemMeta
+			clazz = Class.forName("org.bukkit.inventory.meta.ItemMeta");
+			classes.put("ItemMeta", clazz);
+			putMethod(clazz, "addAttributeModifier", Arrays.asList(classes.get("Attribute"), AttributeModifier.class));
+			putMethod(clazz, "removeAttributeModifier", Arrays.asList(classes.get("Attribute")));
 			
 			if (VersionUtils.getNMSVersion().equals(Utils.NOT_APPLICABLE)) {
 				// EntityPlayer
@@ -332,7 +353,8 @@ public class BukkitReflection {
 	
 	public static Object getFieldValue(String loadedClass, Object instance, String... attempts) {
 		try {
-			return getField(loadedClass, attempts).get(instance);
+			Field field = getField(loadedClass, attempts);
+			return field == null ? null : field.get(instance);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} return null;

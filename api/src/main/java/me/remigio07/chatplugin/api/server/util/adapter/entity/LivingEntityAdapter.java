@@ -17,7 +17,6 @@ package me.remigio07.chatplugin.api.server.util.adapter.entity;
 
 import java.util.UUID;
 
-import org.bukkit.attribute.Attribute;
 import org.spongepowered.api.data.key.Keys;
 
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
@@ -104,8 +103,9 @@ public class LivingEntityAdapter {
 	 * 
 	 * @return Living entity's max health
 	 */
+	@SuppressWarnings("deprecation")
 	public double getMaxHealth() {
-		return Environment.isBukkit() ? bukkitValue().getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() : spongeValue().maxHealth().get();
+		return Environment.isBukkit() ? bukkitValue().getMaxHealth() : spongeValue().maxHealth().get();
 	}
 	
 }

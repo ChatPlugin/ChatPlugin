@@ -197,7 +197,7 @@ public class VersionUtils {
 	}
 	
 	/**
-	 * Represents a Minecraft <i>release</i>.
+	 * Represents a Minecraft <em>release</em>.
 	 */
 	public enum Version { // dates are approximated to the release day's midnight time
 		
@@ -975,7 +975,15 @@ public class VersionUtils {
 		 * <p><strong>Protocol version number:</strong> 768
 		 * <br><strong>Release date:</strong> October 23, 2024</p>
 		 */
-		V1_21_3(768, 1729634400000L, "1.21.2/3");
+		V1_21_3(768, 1729634400000L, "1.21.2/3"),
+		
+		/**
+		 * Version <a href="https://minecraft.wiki/w/Java_Edition_1.21.4">1.21.4</a>.
+		 * 
+		 * <p><strong>Protocol version number:</strong> 769
+		 * <br><strong>Release date:</strong> December 3, 2024</p>
+		 */
+		V1_21_4(769, 1733180400000L, "1.21.4");
 		
 		private int protocol;
 		private long releaseDate;

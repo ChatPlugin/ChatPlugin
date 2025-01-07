@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.server.util.adapter.inventory.item;
 
 import java.awt.Color;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -32,7 +33,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -74,6 +74,7 @@ import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.adapter.block.MaterialAdapter;
 import me.remigio07.chatplugin.bootstrap.Environment;
+import me.remigio07.chatplugin.bootstrap.JARLibraryLoader;
 
 /**
  * Environment indipendent (Bukkit and Sponge) item stack adapter.
@@ -531,7 +532,7 @@ public class ItemStackAdapter implements Cloneable {
 	 * @param itemFlags Item flags to add
 	 * @return This item stack
 	 */
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("removal")
 	public ItemStackAdapter addItemFlags(ItemFlagAdapter... itemFlags) {
 		for (ItemFlagAdapter itemFlag : itemFlags) {
 			if (!this.itemFlags.contains(itemFlag)) {
@@ -541,7 +542,15 @@ public class ItemStackAdapter implements Cloneable {
 					ItemMeta meta = bukkitValue().getItemMeta();
 					
 					if (itemFlag == ItemFlagAdapter.HIDE_ATTRIBUTES && VersionUtils.getVersion().isAtLeast(Version.V1_20_5))
-						meta.addAttributeModifier(Attribute.GENERIC_ARMOR, new AttributeModifier("chatplugin", 0, Operation.ADD_NUMBER));
+						try {
+							Class<?> BukkitReflection = Class.forName("me.remigio07.chatplugin.server.bukkit.BukkitReflection", false, JARLibraryLoader.getInstance());
+							
+							BukkitReflection.getMethod("invokeMethod", String.class, String.class, Object.class, Object[].class).invoke(null, "ItemMeta", "addAttributeModifier", meta, new Object[] {
+									VersionUtils.getVersion().isAtLeast(Version.V1_21_3) ? BukkitReflection.getMethod("getFieldValue", String.class, Object.class, String[].class).invoke(null, "Attribute", null, new String[] { "ARMOR" })
+											: BukkitReflection.getMethod("getEnum", String.class, String[].class).invoke(null, "Attribute", new String[] { "GENERIC_ARMOR" }), new AttributeModifier("chatplugin", 0, Operation.ADD_NUMBER) });
+						} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+							e.printStackTrace();
+						}
 					meta.addItemFlags(itemFlag.bukkitValue());
 					bukkitValue().setItemMeta(meta);
 				} this.itemFlags.add(itemFlag);
@@ -564,7 +573,15 @@ public class ItemStackAdapter implements Cloneable {
 					ItemMeta meta = bukkitValue().getItemMeta();
 					
 					if (itemFlag == ItemFlagAdapter.HIDE_ATTRIBUTES && VersionUtils.getVersion().isAtLeast(Version.V1_20_5))
-						meta.removeAttributeModifier(Attribute.GENERIC_ARMOR);
+						try {
+							Class<?> BukkitReflection = Class.forName("me.remigio07.chatplugin.server.bukkit.BukkitReflection", false, JARLibraryLoader.getInstance());
+							
+							BukkitReflection.getMethod("invokeMethod", String.class, String.class, Object.class, Object[].class).invoke(null, "ItemMeta", "removeAttributeModifier", meta, new Object[] {
+									VersionUtils.getVersion().isAtLeast(Version.V1_21_3) ? BukkitReflection.getMethod("getFieldValue", String.class, Object.class, String[].class).invoke(null, "Attribute", null, new String[] { "ARMOR" })
+											: BukkitReflection.getMethod("getEnum", String.class, String[].class).invoke(null, "Attribute", new String[] { "GENERIC_ARMOR" }) });
+						} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+							e.printStackTrace();
+						}
 					meta.removeItemFlags(itemFlag.bukkitValue());
 					bukkitValue().setItemMeta(meta);
 				} this.itemFlags.remove(itemFlag);

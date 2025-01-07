@@ -15,11 +15,15 @@
 
 package me.remigio07.chatplugin.api.server.util.adapter.user;
 
-import org.bukkit.Sound;
+import java.lang.reflect.InvocationTargetException;
+import java.util.regex.Pattern;
+
 import org.spongepowered.api.effect.sound.SoundType;
 import org.spongepowered.api.effect.sound.SoundTypes;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
+import me.remigio07.chatplugin.api.common.util.VersionUtils;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.bootstrap.Environment;
@@ -32,6 +36,14 @@ import me.remigio07.chatplugin.bootstrap.Environment;
  */
 public class SoundAdapter {
 	
+	/**
+	 * Pattern representing the Vanilla-compliant sound IDs in 1.13+.
+	 * 
+	 * <p><strong>Regex:</strong> "[a-z0-9/._-]"</p>
+	 * 
+	 * @see #isVanillaCompliant()
+	 */
+	public static final Pattern NEW_VANILLA_COMPLIANT_IDS = Pattern.compile("[a-z0-9/._-]");
 	private String id;
 	private float volume, pitch;
 	
@@ -74,26 +86,33 @@ public class SoundAdapter {
 	/**
 	 * Gets the sound adapted for Bukkit environments.
 	 * 
-	 * <p>Will return <code>null</code> if {@link #getID()} is not a valid sound.</p>
+	 * <p>Will return <code>null</code> if {@link #getID()} is not recognized by Bukkit, but
+	 * keep in mind that it may be recognized by mods or different Minecraft versions.</p>
+	 * 
+	 * <p>The <code>org.bukkit.Sound</code> enum became an interface in 1.21.3; cast
+	 * the returned value according to the version you are compiling against.</p>
 	 * 
 	 * @return Bukkit-adapted sound
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBukkit()}
 	 */
 	@Nullable(why = "Sound's ID may be invalid")
-	public Sound bukkitValue() {
+	public Object bukkitValue() {
 		if (Environment.isBukkit())
 			try {
-				return Sound.valueOf(id);
-			} catch (IllegalArgumentException e) {
+				return Class.forName("org.bukkit.Sound").getMethod("valueOf", String.class).invoke(null, id);
+			} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | IllegalArgumentException e) {
 				return null;
 			}
-		else throw new UnsupportedOperationException("Unable to adapt sound to a Bukkit's Sound on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt sound to a Bukkit's Sound on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
 	 * Gets the sound adapted for Sponge environments.
 	 * 
-	 * <p>Will return <code>null</code> if {@link #getID()} is not a valid sound.</p>
+	 * <p>Will return <code>null</code> if {@link #getID()} is not recognized by Sponge, but
+	 * keep in mind that it may be recognized by mods or different Minecraft versions.</p>
+	 * 
+	 * <p>Unlike Bukkit, Sponge does not let you play custom sound IDs unless you register them.</p>
 	 * 
 	 * @param warnIfInvalid Whether to send a warning message if the sound is invalid
 	 * @return Sponge-adapted sound
@@ -106,10 +125,10 @@ public class SoundAdapter {
 				return (SoundType) SoundTypes.class.getField(id).get(null);
 			} catch (NullPointerException | IllegalArgumentException | IllegalAccessException | NoSuchFieldException e) {
 				if (warnIfInvalid)
-					LogManager.log("Unknown sound ID: " + id + ".", 2);
+					LogManager.log("Unknown sound ID: {0}.", 1, id);
 				return null;
 			}
-		else throw new UnsupportedOperationException("Unable to adapt sound to a Sponge's SoundType on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt sound to a Sponge's SoundType on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -119,6 +138,20 @@ public class SoundAdapter {
 	 */
 	public String getID() {
 		return id;
+	}
+	
+	/**
+	 * Checks if this sound is Vanilla-compliant.
+	 * 
+	 * <p>In 1.13, an undocumented check of the ID passed to the Bukkit
+	 * <code>playSound</code> method has been added to the Vanilla server.
+	 * When called, it throws a <code>net.minecraft.util.ResourceLocationException</code>
+	 * if {@link #getID()} does not respect {@link #NEW_VANILLA_COMPLIANT_IDS}.</p>
+	 * 
+	 * @return Whether this sound is Vanilla-compliant
+	 */
+	public boolean isVanillaCompliant() {
+		return VersionUtils.getVersion().isOlderThan(Version.V1_13) || NEW_VANILLA_COMPLIANT_IDS.matcher(id).matches();
 	}
 	
 	/**

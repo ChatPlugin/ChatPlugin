@@ -47,7 +47,7 @@ public class MVdWPlaceholderAPIIntegration extends ChatPluginBukkitIntegration<P
 			return PlaceholderAPI.replacePlaceholders(player.toAdapter().bukkitValue(), input);
 		} catch (Throwable t) {
 			String message = t.getLocalizedMessage();
-			return "\u00A7c" + (message == null ? t.getClass().getSimpleName() : (t.getClass().getSimpleName() + ": " + message)) + "\u00A7r";
+			return "§c" + (message == null ? t.getClass().getSimpleName() : (t.getClass().getSimpleName() + ": " + message)) + "§r";
 		}
 	}
 	
@@ -61,7 +61,7 @@ public class MVdWPlaceholderAPIIntegration extends ChatPluginBukkitIntegration<P
 					if (event.getPlayer() == null)
 						return PlaceholderManager.getInstance().translateServerPlaceholders('{' + event.getPlaceholder() + '}', Language.getMainLanguage());
 					ChatPluginServerPlayer player = (ChatPluginServerPlayer) PlayerManager.getInstance().getPlayer(event.getPlayer().getUniqueId());
-					return player == null ? "\u00A7f" + event.getPlayer().getName() + " \u00A7cis not loaded." : event.isOnline() ? PlaceholderManager.getInstance().translatePlaceholders('{' + event.getPlaceholder() + '}', player, Arrays.asList(PlaceholderType.getPlaceholderType(event.getPlaceholder()))) : "\u00A7f" + player.getName() + " \u00A7cis offline.";
+					return player == null ? "§f" + event.getPlayer().getName() + " §cis not loaded." : event.isOnline() ? PlaceholderManager.getInstance().translatePlaceholders('{' + event.getPlaceholder() + '}', player, Arrays.asList(PlaceholderType.getPlaceholderType(event.getPlaceholder()))) : "§f" + player.getName() + " §cis offline.";
 				}
 			});
 		}

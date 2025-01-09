@@ -40,9 +40,9 @@ public abstract class ScoreboardTitles extends TimerTask {
 	/**
 	 * String containing the "title too long" text indicator.
 	 * 
-	 * <p><strong>Content:</strong> "&sect;cTitle exceeds &sect;f" + {@link #MAX_TITLE_LENGTH} + " &sect;cchars"</p>
+	 * <p><strong>Content:</strong> "§cTitle exceeds §f" + {@link #MAX_TITLE_LENGTH} + " §cchars"</p>
 	 */
-	public static final String TITLE_TOO_LONG = "\u00A7cTitle exceeds \u00A7f" + MAX_TITLE_LENGTH + " \u00A7cchars";
+	public static final String TITLE_TOO_LONG = "§cTitle exceeds §f" + MAX_TITLE_LENGTH + " §cchars";
 	protected Scoreboard scoreboard;
 	protected Map<Language, List<String>> values = new ConcurrentHashMap<>();
 	protected Map<Language, Integer> timerIndexes = new ConcurrentHashMap<>();

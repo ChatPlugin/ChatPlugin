@@ -165,7 +165,7 @@ public class ChatPluginCommand extends BaseCommand {
 		@Override
 		public void execute(CommandSenderAdapter sender, me.remigio07.chatplugin.api.server.language.Language language, String[] args) {
 			if (sender.getName().equals("Remigio07") || sender.hasPermission(super.getPermission()))
-				sender.sendMessage(language.getMessage("commands.version", ChatPlugin.getInstance().isPremium() ? "\u00A76Premium" : "\u00A72Free", ChatPlugin.VERSION, VersionUtils.getImplementationName(), VersionUtils.getVersion().getName()));
+				sender.sendMessage(language.getMessage("commands.version", ChatPlugin.getInstance().isPremium() ? "§6Premium" : "§2Free", ChatPlugin.VERSION, VersionUtils.getImplementationName(), VersionUtils.getVersion().getName()));
 			else sender.sendMessage(language.getMessage("misc.no-permission"));
 		}
 		
@@ -208,7 +208,7 @@ public class ChatPluginCommand extends BaseCommand {
 								player.sendTranslatedMessage("languages.set-already", player.getLanguage().getDisplayName());
 							}
 						}, 0L);
-					} else player.sendTranslatedMessage("misc.cooldown-active"); 
+					} else player.sendTranslatedMessage("misc.cooldown-active");
 				} else player.sendTranslatedMessage("languages.invalid", Utils.getStringFromList(LanguageManager.getInstance().getLanguages().stream().map(me.remigio07.chatplugin.api.server.language.Language::getID).collect(Collectors.toList()), false, true));
 			} else sendUsage(player);
 		}
@@ -249,7 +249,7 @@ public class ChatPluginCommand extends BaseCommand {
 			
 			int ms = ChatPlugin.getInstance().reload();
 			
-			sender.sendMessage(ms == -1 ? "\u00A7cChatPlugin could not reload and will be disabled. Check the console for more information."
+			sender.sendMessage(ms == -1 ? "§cChatPlugin could not reload and will be disabled. Check the console for more information."
 					: (sender.isConsole() ? me.remigio07.chatplugin.api.server.language.Language.getMainLanguage() : LanguageManager.getInstance().getLanguage(new OfflinePlayer(sender.getUUID(), sender.getName()))).getMessage("misc.reload.end", ms));
 		}
 		
@@ -314,8 +314,8 @@ public class ChatPluginCommand extends BaseCommand {
 						logManager.setDebug(true);
 						sender.sendMessage(language.getMessage("misc.debug.enabled"));
 					}
-				} catch (IOException e) {
-					LogManager.log("IOException occurred while toggling the debug mode: {0}", 2, e.getMessage());
+				} catch (IOException ioe) {
+					LogManager.log("IOException occurred while toggling the debug mode: {0}", 2, ioe.getLocalizedMessage());
 				}
 			} else if (args.length == 2) {
 				switch (args[1].toLowerCase()) {
@@ -332,14 +332,14 @@ public class ChatPluginCommand extends BaseCommand {
 					break;
 				default:
 					for (String manager : ChatPluginManagers.getInstance().getManagers().keySet().stream().map(clazz -> clazz.getSimpleName().substring(0, clazz.getSimpleName().indexOf("Manager"))).collect(Collectors.toList())) {
-						if (manager.equalsIgnoreCase(args[1])) {
+						if (manager.equals(args[1])) {
 							if (Debugger.getEnabledManagersNames().contains(manager)) {
 								sender.sendMessage(language.getMessage("misc.debug.manager.info", manager + "Manager"));
 								sender.sendMessage(" " + Debugger.getContent(Utils.getOriginalClass(ChatPluginManagers.getInstance().getManager(manager))).trim().replaceAll(" +", " "));
 							} else sender.sendMessage(language.getMessage("misc.debug.manager.disabled"));
 							return;
 						}
-					} sendUsage(sender, language);
+					} sender.sendMessage(language.getMessage("misc.inexistent-id"));
 					break;
 				}
 			} else sendUsage(sender, language);

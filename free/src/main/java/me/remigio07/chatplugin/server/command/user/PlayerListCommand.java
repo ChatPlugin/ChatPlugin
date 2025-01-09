@@ -63,7 +63,7 @@ public class PlayerListCommand extends BaseCommand {
 						temp.get(player.getRank()).add((player.isVanished() ? vanishedColor : notVanishedColor) + player.getName());
 				for (Entry<Rank, List<String>> rank : temp.entrySet())
 					if (!rank.getValue().isEmpty())
-						sender.sendMessage(rank.getKey().formatPlaceholders(language.getMessage("commands.playerlist.all.rank-format", rank.getValue().size(), String.join(", " + notVanishedColor, rank.getValue().toArray(new String[0])) + "\u00A7r"), language));
+						sender.sendMessage(rank.getKey().formatPlaceholders(language.getMessage("commands.playerlist.all.rank-format", rank.getValue().size(), String.join(", " + notVanishedColor, rank.getValue().toArray(new String[0])) + "§r"), language));
 			} else sender.sendMessage(language.getMessage("commands.playerlist.all.no-players-online"));
 		} else {
 			Rank rank = RankManager.getInstance().getRank(args[0]);
@@ -78,7 +78,7 @@ public class PlayerListCommand extends BaseCommand {
 						players.add((player.isVanished() ? vanishedColor : notVanishedColor) + player.getName());
 				if (players.size() == 0)
 					sender.sendMessage(language.getMessage("commands.playerlist.rank.no-players-online"));
-				else sender.sendMessage(language.getMessage("commands.playerlist.rank.message", players.size(), rank.getDisplayName(), String.join(", " + notVanishedColor, players.toArray(new String[0])) + "\u00A7r"));
+				else sender.sendMessage(language.getMessage("commands.playerlist.rank.message", players.size(), rank.getDisplayName(), String.join(", " + notVanishedColor, players.toArray(new String[0])) + "§r"));
 			} else sender.sendMessage(language.getMessage("misc.invalid-rank", args[0]));
 		}
 	}

@@ -207,7 +207,7 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 		if (recipient != null) {
 			if (advancementsEnabled)
 				Utils.displayAdvancement(recipient, formatPlaceholders(advancementsFormat, placeholders, sender, recipient)
-						+ me.remigio07.chatplugin.common.util.Utils.abbreviate(privateMessage, privateMessage.toLowerCase().contains("\u00A7l") ? advancementsMaxMessageLength - 2 : advancementsMaxMessageLength, true),
+						+ me.remigio07.chatplugin.common.util.Utils.abbreviate(privateMessage, privateMessage.toLowerCase().contains("§l") ? advancementsMaxMessageLength - 2 : advancementsMaxMessageLength, true),
 						advancementsIconMaterial, advancementsIconGlowing);
 			if (soundEnabled)
 				recipient.playSound(sound);

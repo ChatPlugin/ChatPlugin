@@ -51,7 +51,7 @@ public class PlaceholderAPIIntegration extends ChatPluginBukkitIntegration<Place
 			return PlaceholderAPI.setPlaceholders(player.toAdapter().bukkitValue(), input);
 		} catch (Throwable t) {
 			String message = t.getLocalizedMessage();
-			return "\u00A7c" + (message == null ? t.getClass().getSimpleName() : (t.getClass().getSimpleName() + ": " + message)) + "\u00A7r";
+			return "§c" + (message == null ? t.getClass().getSimpleName() : (t.getClass().getSimpleName() + ": " + message)) + "§r";
 		}
 	}
 	
@@ -95,7 +95,7 @@ public class PlaceholderAPIIntegration extends ChatPluginBukkitIntegration<Place
 			if (offlinePlayer == null)
 				return PlaceholderManager.getInstance().translateServerPlaceholders('{' + identifier + '}', Language.getMainLanguage());
 			ChatPluginServerPlayer player = (ChatPluginServerPlayer) PlayerManager.getInstance().getPlayer(offlinePlayer.getUniqueId());
-			return player == null ? "\u00A7f" + offlinePlayer.getName() + " \u00A7cis not loaded." : PlaceholderManager.getInstance().translatePlaceholders('{' + identifier + '}', player, Arrays.asList(PlaceholderType.getPlaceholderType(identifier)));
+			return player == null ? "§f" + offlinePlayer.getName() + " §cis not loaded." : PlaceholderManager.getInstance().translatePlaceholders('{' + identifier + '}', player, Arrays.asList(PlaceholderType.getPlaceholderType(identifier)));
 		}
 		
 	}

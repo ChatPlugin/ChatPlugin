@@ -68,9 +68,9 @@ public abstract class BossbarManager implements ChatPluginManager, Runnable {
 	/**
 	 * String containing the "title too long" text indicator.
 	 * 
-	 * <p><strong>Content:</strong> "&sect;cTitle exceeds &sect;f+" + {@link #MAX_TITLE_LENGTH} + " &sect;cchars"</p>
+	 * <p><strong>Content:</strong> "§cTitle exceeds §f+" + {@link #MAX_TITLE_LENGTH} + " §cchars"</p>
 	 */
-	public static final String TITLE_TOO_LONG = "\u00A7cTitle exceeds \u00A7f64 \u00A7cchars";
+	public static final String TITLE_TOO_LONG = "§cTitle exceeds §f64 §cchars";
 	protected static BossbarManager instance;
 	protected boolean enabled, randomOrder, abbreviateLongTitles, sendFullToLegacyPlayers, loadingBossbarEnabled;
 	protected double reflectionWitherTeleportationDistance;

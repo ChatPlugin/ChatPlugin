@@ -164,7 +164,7 @@ public class AntispamManagerImpl extends AntispamManager {
 					for (char character : new StringBuilder(word).reverse().toString().toCharArray()) {
 						if (Character.isUpperCase(character) && extra < capsLength - maxCapsPercentage / 100F * word.length()) {
 							disallowedText.insert(0, character);
-							highlightedMessage.insert(0, translatedHighlightColor + character + "\u00A7f");
+							highlightedMessage.insert(0, translatedHighlightColor + character + "§f");
 							extra++;
 						} else highlightedMessage.insert(0, character);
 					}
@@ -228,12 +228,12 @@ public class AntispamManagerImpl extends AntispamManager {
 		
 		if (!bypassChecks.contains(DenyChatReason.FLOOD) && !player.hasPermission("chatplugin.antispam.flood")) {
 			if (floodCache.contains(uuid))
-				return new AntispamResultImpl(DenyChatReason.FLOOD, message, translatedHighlightColor + message + "\u00A7f");
+				return new AntispamResultImpl(DenyChatReason.FLOOD, message, translatedHighlightColor + message + "§f");
 			floodCache.add(uuid);
 			TaskManager.runAsync(() -> floodCache.remove(uuid), secondsBetweenMessages * 1000L);
 		} if (!bypassChecks.contains(DenyChatReason.SPAM) && !player.hasPermission("chatplugin.antispam.spam") && !isMessageWhitelisted(message)) {
 			if (spamCache.containsKey(uuid) && spamCache.get(uuid).contains(message))
-				return new AntispamResultImpl(DenyChatReason.SPAM, message, translatedHighlightColor + message + "\u00A7f");
+				return new AntispamResultImpl(DenyChatReason.SPAM, message, translatedHighlightColor + message + "§f");
 			final String finalMessage = message;
 			
 			if (!spamCache.containsKey(uuid))
@@ -252,7 +252,7 @@ public class AntispamManagerImpl extends AntispamManager {
 	
 	private String getHighlightedMessage(String message, String disallowedText) {
 		String[] array = message.split(Pattern.quote(disallowedText), 2);
-		return array[0] + translatedHighlightColor + disallowedText + "\u00A7f" + array[1];
+		return array[0] + translatedHighlightColor + disallowedText + "§f" + array[1];
 	}
 	
 	@Override

@@ -42,9 +42,9 @@ public abstract class ScoreboardLines {
 	/**
 	 * String containing the "line too long" text indicator.
 	 * 
-	 * <p><strong>Content:</strong> "&sect;cLine exceeds &sect;f" + {@link #MAX_LINE_LENGTH} + " &sect;cchars"</p>
+	 * <p><strong>Content:</strong> "§cLine exceeds §f" + {@link #MAX_LINE_LENGTH} + " §cchars"</p>
 	 */
-	public static final String LINE_TOO_LONG = "\u00A7cLine exceeds \u00A7f" + MAX_LINE_LENGTH + " \u00A7cchars";
+	public static final String LINE_TOO_LONG = "§cLine exceeds §f" + MAX_LINE_LENGTH + " §cchars";
 	protected Scoreboard scoreboard;
 	protected List<ScoreboardLine> lines = new ArrayList<>(Collections.nCopies(15, null));
 	

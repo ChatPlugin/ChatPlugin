@@ -616,9 +616,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		messages.addDefault("page-switcher.footer", "{pfx} &aPage &f{current_page}/{max_page}&a. Browse: &f{page_switcher}");
 		messages.addDefault("page-switcher.invalid", "{pfx} &cPage &f{current_page} &cnot found. Last page: &f{max_page}&c.");
-		messages.addDefault("page-switcher.previous.text", "&8[&e&l&n« {previous_page}/{max_page}&8]");
+		messages.addDefault("page-switcher.previous.text", "&8[&e&l&n⬅ {previous_page}/{max_page}&8]");
 		messages.addDefault("page-switcher.previous.hover", "&9[Click here to go back to page {previous_page}]");
-		messages.addDefault("page-switcher.next.text", "&8[&e&l&n{next_page}/{max_page} »&8]");
+		messages.addDefault("page-switcher.next.text", "&8[&e&l&n{next_page}/{max_page} ➡&8]");
 		messages.addDefault("page-switcher.next.hover", "&9[Click here to go to page {next_page}]");
 		
 		messages.addDefault("timestamps.invalid", "{pfx} &cInvalid timestamp. Use this format: &f1d,3h,35m,20s&c.");
@@ -761,11 +761,11 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.player-ping.titles.subtitles.italian", "&eti ha menzionato in chat");
 		
 		chat.addDefault("chat.private-messages.enabled", true);
-		chat.addDefault("chat.private-messages.format.sent.chat", "&7«&8[&b\u270E&8] &fYou &e\u27A1 &f{recipient}&7» &f");
+		chat.addDefault("chat.private-messages.format.sent.chat", "&7«&8[&b✎&8] &fYou &e➡ &f{recipient}&7» &f");
 		chat.addDefault("chat.private-messages.format.sent.terminal", "&7<&8[&b&lPM&8] &fYou &e-> &f{recipient}&7> &f");
-		chat.addDefault("chat.private-messages.format.received.chat", "&7«&8[&b\u270E&8] &f{sender} &e\u27A1 &fYou&7» &f");
+		chat.addDefault("chat.private-messages.format.received.chat", "&7«&8[&b✎&8] &f{sender} &e➡ &fYou&7» &f");
 		chat.addDefault("chat.private-messages.format.received.terminal", "&7<&8[&b&lPM&8] &f{sender} &e-> &fYou&7> &f");
-		chat.addDefault("chat.private-messages.format.socialspy.chat", "&7«&8[&4&lSS&8] &f{sender} &e\u27A1 &f{recipient}&7» &f");
+		chat.addDefault("chat.private-messages.format.socialspy.chat", "&7«&8[&4&lSS&8] &f{sender} &e➡ &f{recipient}&7» &f");
 		chat.addDefault("chat.private-messages.format.socialspy.terminal", "&7<&8[&4&lSS&8] &f{sender} &e-> &f{recipient}&7> &f");
 		chat.addDefault("chat.private-messages.format.placeholder.sender", "{player}");
 		chat.addDefault("chat.private-messages.format.placeholder.recipient", "{player}");
@@ -775,7 +775,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.private-messages.sound.volume", 1F);
 		chat.addDefault("chat.private-messages.sound.pitch", 1F);
 		chat.addDefault("chat.private-messages.advancements.enabled", VersionUtils.getVersion().isAtLeast(Version.V1_13));
-		chat.addDefault("chat.private-messages.advancements.format", "&8[&b\u270E&8] &f{sender_plain}\n&7");
+		chat.addDefault("chat.private-messages.advancements.format", "&8[&b✎&8] &f{sender_plain}\n&7");
 		chat.addDefault("chat.private-messages.advancements.max-message-length", 19);
 		chat.addDefault("chat.private-messages.advancements.icon.material", Environment.isSponge() || VersionUtils.getVersion().isAtLeast(Version.V1_13) ? "WRITABLE_BOOK" : "BOOK_AND_QUILL");
 		chat.addDefault("chat.private-messages.advancements.icon.glowing", true);
@@ -808,35 +808,35 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.instant-emojis.tones", Arrays.asList("#FFFF55", "#F9E0C1", "#E3C29C", "#C6956C", "#A06940", "#5C473C"));
 		
 		if (fileMissing) {
-			chat.addDefault("chat.instant-emojis.values.:)", "{emojis_tone}\u263A");
-			chat.addDefault("chat.instant-emojis.values.<3", "&c\u2764");
-			chat.addDefault("chat.instant-emojis.values.:smile:", "{emojis_tone}\uD83D\uDE03");
-			chat.addDefault("chat.instant-emojis.values.:slight_smile:", "{emojis_tone}\uD83D\uDE42");
-			chat.addDefault("chat.instant-emojis.values.:grin:", "{emojis_tone}\uD83D\uDE01");
-			chat.addDefault("chat.instant-emojis.values.:grinning:", "{emojis_tone}\uD83D\uDE00");
-			chat.addDefault("chat.instant-emojis.values.:sunglasses:", "{emojis_tone}\uD83D\uDE0E");
-			chat.addDefault("chat.instant-emojis.values.:weary:", "{emojis_tone}\uD83D\uDE29");
-			chat.addDefault("chat.instant-emojis.values.:tired:", "{emojis_tone}\uD83D\uDE2B");
-			chat.addDefault("chat.instant-emojis.values.:money:", "&a\uD83E\uDD11");
-			chat.addDefault("chat.instant-emojis.values.:nerd:", "{emojis_tone}\uD83E\uDD13");
-			chat.addDefault("chat.instant-emojis.values.:skull:", "&f\u2620");
-			chat.addDefault("chat.instant-emojis.values.:alien:", "&a\uD83D\uDC7D");
-			chat.addDefault("chat.instant-emojis.values.:thumbs_up:", "{emojis_tone}\uD83D\uDC4D");
-			chat.addDefault("chat.instant-emojis.values.:thumbs_down:", "{emojis_tone}\uD83D\uDC4E");
-			chat.addDefault("chat.instant-emojis.values.:note:", "&9\uD83C\uDFB5");
-			chat.addDefault("chat.instant-emojis.values.:pizza:", "&6\uD83C\uDF55");
-			chat.addDefault("chat.instant-emojis.values.:copyright:", "\u00A9");
-			chat.addDefault("chat.instant-emojis.values.:trademark:", "\u2122");
-			chat.addDefault("chat.instant-emojis.values.:tm:", "\u2122");
-			chat.addDefault("chat.instant-emojis.values.:alpha:", "\u03B1");
-			chat.addDefault("chat.instant-emojis.values.:beta:", "\u03B2");
-			chat.addDefault("chat.instant-emojis.values.:gamma:", "\u03B3");
-			chat.addDefault("chat.instant-emojis.values.:euro:", "\u20AC");
-			chat.addDefault("chat.instant-emojis.values.:pound:", "\u00A3");
-			chat.addDefault("chat.instant-emojis.values.:yen:", "\u00A5");
-			chat.addDefault("chat.instant-emojis.values.:infinity:", "\u221E");
-			chat.addDefault("chat.instant-emojis.values.:pi:", "\u03C0");
-			chat.addDefault("chat.instant-emojis.values.:degree:", "\u00B0");
+			chat.addDefault("chat.instant-emojis.values.:)", "{emojis_tone}☺");
+			chat.addDefault("chat.instant-emojis.values.<3", "&c❤");
+			chat.addDefault("chat.instant-emojis.values.:smile:", "{emojis_tone}😃");
+			chat.addDefault("chat.instant-emojis.values.:slight_smile:", "{emojis_tone}🙂");
+			chat.addDefault("chat.instant-emojis.values.:grin:", "{emojis_tone}😁");
+			chat.addDefault("chat.instant-emojis.values.:grinning:", "{emojis_tone}😀");
+			chat.addDefault("chat.instant-emojis.values.:sunglasses:", "{emojis_tone}😎");
+			chat.addDefault("chat.instant-emojis.values.:weary:", "{emojis_tone}😩");
+			chat.addDefault("chat.instant-emojis.values.:tired:", "{emojis_tone}😫");
+			chat.addDefault("chat.instant-emojis.values.:money:", "&a🤑");
+			chat.addDefault("chat.instant-emojis.values.:nerd:", "{emojis_tone}🤓");
+			chat.addDefault("chat.instant-emojis.values.:skull:", "&f☠");
+			chat.addDefault("chat.instant-emojis.values.:alien:", "&a👽");
+			chat.addDefault("chat.instant-emojis.values.:thumbs_up:", "{emojis_tone}👍");
+			chat.addDefault("chat.instant-emojis.values.:thumbs_down:", "{emojis_tone}👎");
+			chat.addDefault("chat.instant-emojis.values.:note:", "&9🎵");
+			chat.addDefault("chat.instant-emojis.values.:pizza:", "&6🍕");
+			chat.addDefault("chat.instant-emojis.values.:copyright:", "©");
+			chat.addDefault("chat.instant-emojis.values.:trademark:", "™");
+			chat.addDefault("chat.instant-emojis.values.:tm:", "™");
+			chat.addDefault("chat.instant-emojis.values.:alpha:", "α");
+			chat.addDefault("chat.instant-emojis.values.:beta:", "β");
+			chat.addDefault("chat.instant-emojis.values.:gamma:", "γ");
+			chat.addDefault("chat.instant-emojis.values.:euro:", "€");
+			chat.addDefault("chat.instant-emojis.values.:pound:", "£");
+			chat.addDefault("chat.instant-emojis.values.:yen:", "¥");
+			chat.addDefault("chat.instant-emojis.values.:infinity:", "∞");
+			chat.addDefault("chat.instant-emojis.values.:pi:", "π");
+			chat.addDefault("chat.instant-emojis.values.:degree:", "°");
 		}
 		
 		chat.addDefault("chat.staff-chat.enabled", true);
@@ -905,7 +905,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		defaultScoreboard.addDefault("settings.enabled", VersionUtils.getVersion().isAtLeast(Environment.isBukkit() ? Version.V1_5 : Version.V1_8));
 		defaultScoreboard.addDefault("settings.abbreviate-long-text", true);
 		defaultScoreboard.addDefault("settings.numbers.display-mode", VersionUtils.getVersion().isAtLeast(Version.V1_20_3) ? "CUSTOM_TEXT" : "ONLY_ZEROS");
-		defaultScoreboard.addDefault("settings.numbers.custom-text.value", "\u2503");
+		defaultScoreboard.addDefault("settings.numbers.custom-text.value", "┃");
 		defaultScoreboard.addDefault("settings.numbers.custom-text.colors.cycle-timeout", "30s");
 		defaultScoreboard.addDefault("settings.numbers.custom-text.colors.interpolations", 15);
 		defaultScoreboard.addDefault("settings.numbers.custom-text.colors.gradient", Arrays.asList("#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#007FFF", "#0000FF", "#7F00FF"));
@@ -999,8 +999,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			bossbars.addDefault("bossbars.bossbar-command.titles.italian", "&5La bossbar può essere disattivata con &f/bossbar&5.");
 			bossbars.addDefault("bossbars.bossbar-command.value", 25);
 			bossbars.addDefault("bossbars.bossbar-command.color", "PURPLE");
-			bossbars.addDefault("bossbars.5-star-review.titles.english", "&eLeave a &f5x &e\u2B50 review on the plugin's page!");
-			bossbars.addDefault("bossbars.5-star-review.titles.italian", "&eLascia una recensione &f5x &e\u2B50 sulla pagina del plugin!");
+			bossbars.addDefault("bossbars.5-star-review.titles.english", "&eLeave a &f5x &e⭐ review on the plugin's page!");
+			bossbars.addDefault("bossbars.5-star-review.titles.italian", "&eLascia una recensione &f5x &e⭐ sulla pagina del plugin!");
 			bossbars.addDefault("bossbars.5-star-review.value", 0);
 			bossbars.addDefault("bossbars.5-star-review.color", "YELLOW");
 			bossbars.addDefault("bossbars.language-command.titles.english", "&aChange the plugin's language with &f/language&a!");
@@ -1155,8 +1155,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			joinQuitModules.addDefault("join-quit-modules.join-messages.default.italian", Arrays.asList("&8[&a&l+&8] &f{prefix}{tag_name_color}{player}{suffix}"));
 			joinQuitModules.addDefault("join-quit-modules.quit-messages.default.english", Arrays.asList("&8[&c&l-&8] &f{prefix}{tag_name_color}{player}{suffix}"));
 			joinQuitModules.addDefault("join-quit-modules.quit-messages.default.italian", Arrays.asList("&8[&c&l-&8] &f{prefix}{tag_name_color}{player}{suffix}"));
-			joinQuitModules.addDefault("join-quit-modules.switch-messages.default.english", Arrays.asList("&8[&e&l»&8] &f{prefix}{tag_name_color}{player}{suffix} &e\u27A1 &f{server}"));
-			joinQuitModules.addDefault("join-quit-modules.switch-messages.default.italian", Arrays.asList("&8[&e&l»&8] &f{prefix}{tag_name_color}{player}{suffix} &e\u27A1 &f{server}"));
+			joinQuitModules.addDefault("join-quit-modules.switch-messages.default.english", Arrays.asList("&8[&e&l»&8] &f{prefix}{tag_name_color}{player}{suffix} &e➡ &f{server}"));
+			joinQuitModules.addDefault("join-quit-modules.switch-messages.default.italian", Arrays.asList("&8[&e&l»&8] &f{prefix}{tag_name_color}{player}{suffix} &e➡ &f{server}"));
 		}
 		
 		joinQuitModules.addDefault("join-quit-modules.join-titles.settings.enabled", true);
@@ -3115,24 +3115,24 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		telegramIntegration.addDefault("settings.status.value", "Playing with {online_minecraft} other players.");
 		telegramIntegration.addDefault("settings.status.update-timeout-ms", 30000L);
 		
-		telegramIntegration.addDefault("messages.main.help", "\u2754 Help for ChatPlugin\n\nClick <a href=\"https://remigio07.me/chatplugin/wiki/modules/Telegram-integration#commands\">here</a> to visit the wiki with the commands list.");
-		telegramIntegration.addDefault("messages.main.info", "\u2139\uFE0F Info and contacts for ChatPlugin\n\n<strong>Website:</strong> https://remigio07.me/chatplugin\n<strong>GitHub:</strong> https://github.com/ChatPlugin/ChatPlugin\n<strong>Discord:</strong> https://discord.gg/eSnAPhvMTG");
-		telegramIntegration.addDefault("messages.main.status", "\u2139\uFE0F Current server status\n\n<strong>OS:</strong> {os_name} {os_version}, <strong>Java:</strong> {java_version}\n<strong>Environment:</strong> {environment} {environment_version}\n<strong>ChatPlugin:</strong> {chatplugin_version}, <strong>Java Telegram Bot API version:</strong> {java_telegram_bot_api_version}\n<strong>Uptime:</strong> {uptime}\n<strong>Used memory:</strong> {used_memory}/{max_memory} MB\n<strong>Allocated:</strong> {total_memory} MB, <strong>free:</strong> {free_memory} MB\n<strong>Current threads count:</strong> {active_threads}x\n<strong>Used storage:</strong> {used_storage}/{total_storage} GB\n<strong>Free storage:</strong> {free_storage} GB\n<strong>Enabled players:</strong> {enabled_players}x\n<strong>Startup:</strong> {startup_time} ms, <strong>last reload:</strong> {last_reload_time} ms");
-		telegramIntegration.addDefault("messages.main.version", "\u2699\uFE0F Current plugin version\n\n<strong>ChatPlugin version:</strong> {chatplugin_version}\n<strong>Java Telegram Bot API version:</strong> {java_telegram_bot_api_version}");
+		telegramIntegration.addDefault("messages.main.help", "❔ Help for ChatPlugin\n\nClick <a href=\"https://remigio07.me/chatplugin/wiki/modules/Telegram-integration#commands\">here</a> to visit the wiki with the commands list.");
+		telegramIntegration.addDefault("messages.main.info", "ℹ Info and contacts for ChatPlugin\n\n<strong>Website:</strong> https://remigio07.me/chatplugin\n<strong>GitHub:</strong> https://github.com/ChatPlugin/ChatPlugin\n<strong>Discord:</strong> https://discord.gg/eSnAPhvMTG");
+		telegramIntegration.addDefault("messages.main.status", "ℹ Current server status\n\n<strong>OS:</strong> {os_name} {os_version}, <strong>Java:</strong> {java_version}\n<strong>Environment:</strong> {environment} {environment_version}\n<strong>ChatPlugin:</strong> {chatplugin_version}, <strong>Java Telegram Bot API version:</strong> {java_telegram_bot_api_version}\n<strong>Uptime:</strong> {uptime}\n<strong>Used memory:</strong> {used_memory}/{max_memory} MB\n<strong>Allocated:</strong> {total_memory} MB, <strong>free:</strong> {free_memory} MB\n<strong>Current threads count:</strong> {active_threads}x\n<strong>Used storage:</strong> {used_storage}/{total_storage} GB\n<strong>Free storage:</strong> {free_storage} GB\n<strong>Enabled players:</strong> {enabled_players}x\n<strong>Startup:</strong> {startup_time} ms, <strong>last reload:</strong> {last_reload_time} ms");
+		telegramIntegration.addDefault("messages.main.version", "⚙ Current plugin version\n\n<strong>ChatPlugin version:</strong> {chatplugin_version}\n<strong>Java Telegram Bot API version:</strong> {java_telegram_bot_api_version}");
 		
 		path = "messages.ban.";
 		
-		telegramIntegration.addDefault(path + "info", "\u26D4 Ban <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Who unbanned:</strong> {who_unbanned}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Remaining time:</strong> {remaining_time}\n<strong>Unban date:</strong> {unban_date}\n<strong>Type:</strong> {type}\n<strong>Active:</strong> {active}\n<strong>Scope:</strong> {global}");
-		telegramIntegration.addDefault(path + "list", "\u26D4 Banlist\n\n<strong>Active bans' IDs:</strong> {bans}.");
-		telegramIntegration.addDefault(path + "empty-list", "\u2705 Empty list\n\nThere are no active bans.");
+		telegramIntegration.addDefault(path + "info", "⛔ Ban <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Who unbanned:</strong> {who_unbanned}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Remaining time:</strong> {remaining_time}\n<strong>Unban date:</strong> {unban_date}\n<strong>Type:</strong> {type}\n<strong>Active:</strong> {active}\n<strong>Scope:</strong> {global}");
+		telegramIntegration.addDefault(path + "list", "⛔ Banlist\n\n<strong>Active bans' IDs:</strong> {bans}.");
+		telegramIntegration.addDefault(path + "empty-list", "✅ Empty list\n\nThere are no active bans.");
 		telegramIntegration.addDefault(path + "banned.enabled", true);
-		telegramIntegration.addDefault(path + "banned.value", "\u26D4 Ban <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Type:</strong> {type}\n<strong>Scope:</strong> {global}");
+		telegramIntegration.addDefault(path + "banned.value", "⛔ Ban <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Type:</strong> {type}\n<strong>Scope:</strong> {global}");
 		telegramIntegration.addDefault(path + "updated.enabled", true);
-		telegramIntegration.addDefault(path + "updated.value", "\u26D4 Ban <strong>#{id}</strong> updated: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Type:</strong> {type}\n<strong>Scope:</strong> {global}");
+		telegramIntegration.addDefault(path + "updated.value", "⛔ Ban <strong>#{id}</strong> updated: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Type:</strong> {type}\n<strong>Scope:</strong> {global}");
 		telegramIntegration.addDefault(path + "unbanned.enabled", true);
-		telegramIntegration.addDefault(path + "unbanned.value", "\u26D4 Unban <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {who_unbanned}\n<strong>Date:</strong> {date}");
+		telegramIntegration.addDefault(path + "unbanned.value", "⛔ Unban <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {who_unbanned}\n<strong>Date:</strong> {date}");
 		telegramIntegration.addDefault(path + "expired.enabled", true);
-		telegramIntegration.addDefault(path + "expired.value", "\u26D4 Ban <strong>#{id}</strong> expired: {player}\n\n<strong>Date:</strong> {date}");
+		telegramIntegration.addDefault(path + "expired.value", "⛔ Ban <strong>#{id}</strong> expired: {player}\n\n<strong>Date:</strong> {date}");
 		telegramIntegration.addDefault(path + "unspecified-reason", "Reason not specified.");
 		telegramIntegration.addDefault(path + "formats.types.account", "username/UUID");
 		telegramIntegration.addDefault(path + "formats.types.ip", "IP address");
@@ -3145,17 +3145,17 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		path = "messages.warning.";
 		
-		telegramIntegration.addDefault(path + "info", "\u26A0\uFE0F Warning <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Who unwarned:</strong> {who_unwarned}\n<strong>Last reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Remaining time:</strong> {remaining_time}\n<strong>Unwarn date:</strong> {unwarn_date}\n<strong>Warnings:</strong> {warnings_amount}/{max_warnings}\n<strong>Active:</strong> {active}\n<strong>Scope:</strong> {global}");
-		telegramIntegration.addDefault(path + "list", "\u26A0\uFE0F Warnlist\n\n<strong>Active warnings' IDs:</strong> {warnings}.");
-		telegramIntegration.addDefault(path + "empty-list", "\u2705 Empty list\n\nThere are no active warnings.");
+		telegramIntegration.addDefault(path + "info", "⚠ Warning <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Who unwarned:</strong> {who_unwarned}\n<strong>Last reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Remaining time:</strong> {remaining_time}\n<strong>Unwarn date:</strong> {unwarn_date}\n<strong>Warnings:</strong> {warnings_amount}/{max_warnings}\n<strong>Active:</strong> {active}\n<strong>Scope:</strong> {global}");
+		telegramIntegration.addDefault(path + "list", "⚠ Warnlist\n\n<strong>Active warnings' IDs:</strong> {warnings}.");
+		telegramIntegration.addDefault(path + "empty-list", "✅ Empty list\n\nThere are no active warnings.");
 		telegramIntegration.addDefault(path + "warned.enabled", true);
-		telegramIntegration.addDefault(path + "warned.value", "\u26A0\uFE0F Warning <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Last reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Warnings:</strong> {warnings_amount}/{max_warnings}\n<strong>Scope:</strong> {global}");
+		telegramIntegration.addDefault(path + "warned.value", "⚠ Warning <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Last reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Warnings:</strong> {warnings_amount}/{max_warnings}\n<strong>Scope:</strong> {global}");
 		telegramIntegration.addDefault(path + "removed.enabled", true);
-		telegramIntegration.addDefault(path + "removed.value", "\u26A0\uFE0F Warning <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Date:</strong> {date}");
+		telegramIntegration.addDefault(path + "removed.value", "⚠ Warning <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Date:</strong> {date}");
 		telegramIntegration.addDefault(path + "cleared.enabled", true);
-		telegramIntegration.addDefault(path + "cleared.value", "\u26A0\uFE0F Cleared <strong>{player}</strong>'s warnings\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Date:</strong> {date}");
+		telegramIntegration.addDefault(path + "cleared.value", "⚠ Cleared <strong>{player}</strong>'s warnings\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Date:</strong> {date}");
 		telegramIntegration.addDefault(path + "expired.enabled", true);
-		telegramIntegration.addDefault(path + "expired.value", "\u26A0\uFE0F Warning <strong>#{id}</strong> expired: {player}\n\n<strong>Date:</strong> {date}");
+		telegramIntegration.addDefault(path + "expired.value", "⚠ Warning <strong>#{id}</strong> expired: {player}\n\n<strong>Date:</strong> {date}");
 		telegramIntegration.addDefault(path + "unspecified-reason", "Reason not specified.");
 		telegramIntegration.addDefault(path + "formats.active.yes", "active");
 		telegramIntegration.addDefault(path + "formats.active.no", "disactive");
@@ -3166,26 +3166,26 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		path = "messages.kick.";
 		
-		telegramIntegration.addDefault(path + "info", "\u27A1\uFE0F Kick <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Type:</strong> {type}");
+		telegramIntegration.addDefault(path + "info", "➡ Kick <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Type:</strong> {type}");
 		telegramIntegration.addDefault(path + "kicked.enabled", true);
-		telegramIntegration.addDefault(path + "kicked.value", "\u27A1\uFE0F Kick <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}");
+		telegramIntegration.addDefault(path + "kicked.value", "➡ Kick <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}");
 		telegramIntegration.addDefault(path + "unspecified-reason", "Reason not specified.");
 		telegramIntegration.addDefault(path + "formats.silent.yes", "yes");
 		telegramIntegration.addDefault(path + "formats.silent.no", "no");
 		
 		path = "messages.mute.";
 		
-		telegramIntegration.addDefault(path + "info", "\u2709 Mute <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Who unmuted:</strong> {who_unmuted}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Remaining time:</strong> {remaining_time}\n<strong>Unmute date:</strong> {unmute_date}\n<strong>Active:</strong> {active}\n<strong>Scope:</strong> {global}");
-		telegramIntegration.addDefault(path + "list", "\u2709 Mutelist\n\n<strong>Active mutes' IDs:</strong> {mutes}.");
-		telegramIntegration.addDefault(path + "empty-list", "\u2705 Empty list\n\nThere are no active mutes.");
+		telegramIntegration.addDefault(path + "info", "✉ Mute <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Who unmuted:</strong> {who_unmuted}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Remaining time:</strong> {remaining_time}\n<strong>Unmute date:</strong> {unmute_date}\n<strong>Active:</strong> {active}\n<strong>Scope:</strong> {global}");
+		telegramIntegration.addDefault(path + "list", "✉ Mutelist\n\n<strong>Active mutes' IDs:</strong> {mutes}.");
+		telegramIntegration.addDefault(path + "empty-list", "✅ Empty list\n\nThere are no active mutes.");
 		telegramIntegration.addDefault(path + "muted.enabled", true);
-		telegramIntegration.addDefault(path + "muted.value", "\u2709 Mute <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Scope:</strong> {global}");
+		telegramIntegration.addDefault(path + "muted.value", "✉ Mute <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Scope:</strong> {global}");
 		telegramIntegration.addDefault(path + "updated.enabled", true);
-		telegramIntegration.addDefault(path + "updated.value", "\u2709 Mute <strong>#{id}</strong> updated: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Scope:</strong> {global}");
+		telegramIntegration.addDefault(path + "updated.value", "✉ Mute <strong>#{id}</strong> updated: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Reason:</strong> {reason}\n<strong>Server:</strong> {server}\n<strong>Date:</strong> {date}\n<strong>Duration:</strong> {duration}\n<strong>Scope:</strong> {global}");
 		telegramIntegration.addDefault(path + "unmuted.enabled", true);
-		telegramIntegration.addDefault(path + "unmuted.value", "\u2709 Unmute <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Date:</strong> {date}");
+		telegramIntegration.addDefault(path + "unmuted.value", "✉ Unmute <strong>#{id}</strong>: {player}\n\n<strong>Staff member:</strong> {staff_member}\n<strong>Date:</strong> {date}");
 		telegramIntegration.addDefault(path + "expired.enabled", true);
-		telegramIntegration.addDefault(path + "expired.value", "\u2709 Mute <strong>#{id}</strong> expired: {player}\n\n<strong>Date:</strong> {date}");
+		telegramIntegration.addDefault(path + "expired.value", "✉ Mute <strong>#{id}</strong> expired: {player}\n\n<strong>Date:</strong> {date}");
 		telegramIntegration.addDefault(path + "unspecified-reason", "Reason not specified.");
 		telegramIntegration.addDefault(path + "formats.active.yes", "active");
 		telegramIntegration.addDefault(path + "formats.active.no", "disactive");
@@ -3194,15 +3194,15 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		telegramIntegration.addDefault(path + "formats.silent.yes", "yes");
 		telegramIntegration.addDefault(path + "formats.silent.no", "no");
 		
-		telegramIntegration.addDefault("messages.inexistent-id", "\u274C Inexistent ID\n\nThe specified ID does not exist. Try with a different one.");
-		telegramIntegration.addDefault("messages.no-permission", "\u274C No permission\n\nYou do not have the permission to execute this command.");
-		telegramIntegration.addDefault("messages.invalid-number", "\u274C Invalid number\n\nThe specified number is invalid. Try with a different one.");
-		telegramIntegration.addDefault("messages.group-only-action", "\u274C Group only action\n\nThis action can only be performed inside of the configured group.");
-		telegramIntegration.addDefault("messages.wrong-syntax", "\u274C Wrong syntax\n\nThe syntax is wrong. Usage: <strong>{usage}</strong>.");
-		telegramIntegration.addDefault("messages.disabled-feature", "\u274C Disabled feature\n\nThat feature is disabled. Set it up in the server's config files.");
-		telegramIntegration.addDefault("messages.invalid-ip-address", "\u274C Invalid IP address\n\nThe specified IP address is invalid. Try with a different one.");
-		telegramIntegration.addDefault("messages.at-least-one-online", "\u274C No players online\n\nAt least one player online is required to perform this action.");
-		telegramIntegration.addDefault("messages.ip-lookup", "\u2316 IP lookup of <strong>{ip_address}</strong>\n\n<strong>ISP:</strong> {isp}\n<strong>Country:</strong> {country}, {continent}\n<strong>Subdivision(s):</strong> {subdivisions}\n<strong>City:</strong> {city} (postal code: {postal_code})\n<strong>Coords:</strong> {latitude}° {longitude}°\n<strong>Accuracy radius:</strong> ~{accuracy_radius_km} km");
+		telegramIntegration.addDefault("messages.inexistent-id", "❌ Inexistent ID\n\nThe specified ID does not exist. Try with a different one.");
+		telegramIntegration.addDefault("messages.no-permission", "❌ No permission\n\nYou do not have the permission to execute this command.");
+		telegramIntegration.addDefault("messages.invalid-number", "❌ Invalid number\n\nThe specified number is invalid. Try with a different one.");
+		telegramIntegration.addDefault("messages.group-only-action", "❌ Group only action\n\nThis action can only be performed inside of the configured group.");
+		telegramIntegration.addDefault("messages.wrong-syntax", "❌ Wrong syntax\n\nThe syntax is wrong. Usage: <strong>{usage}</strong>.");
+		telegramIntegration.addDefault("messages.disabled-feature", "❌ Disabled feature\n\nThat feature is disabled. Set it up in the server's config files.");
+		telegramIntegration.addDefault("messages.invalid-ip-address", "❌ Invalid IP address\n\nThe specified IP address is invalid. Try with a different one.");
+		telegramIntegration.addDefault("messages.at-least-one-online", "❌ No players online\n\nAt least one player online is required to perform this action.");
+		telegramIntegration.addDefault("messages.ip-lookup", "⌖ IP lookup of <strong>{ip_address}</strong>\n\n<strong>ISP:</strong> {isp}\n<strong>Country:</strong> {country}, {continent}\n<strong>Subdivision(s):</strong> {subdivisions}\n<strong>City:</strong> {city} (postal code: {postal_code})\n<strong>Coords:</strong> {latitude}° {longitude}°\n<strong>Accuracy radius:</strong> ~{accuracy_radius_km} km");
 		
 		telegramIntegration.addDefault("simple-date-format", "E, MM/dd/yyyy hh:mm a");
 		telegramIntegration.addDefault("timestamps.now", "now");

@@ -52,7 +52,7 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 	 */
 	@SuppressWarnings("deprecation")
 	public static TextComponent serializeBungeeCordText(String input) {
-		TextComponent bungeeCordComponent = new TextComponent("\u00A7r");
+		TextComponent bungeeCordComponent = new TextComponent("§r");
 		
 		if (!input.isEmpty())
 			for (BaseComponent component : TextComponent.fromLegacyText(ChatColor.translate(input)))

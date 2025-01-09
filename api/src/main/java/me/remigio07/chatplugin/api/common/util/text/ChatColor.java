@@ -37,7 +37,7 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
- * Environment indipendent (Bukkit, Sponge, BungeeCord and Velocity) chat color API with 1.16+ hex color codes support.
+ * Environment-indipendent (Bukkit, Sponge, BungeeCord and Velocity) chat color API with 1.16+ hex color codes support.
  * 
  * <p>This class is a pseudo-{@link Enum}. It contains the following methods:
  * {@link #name()}, {@link #ordinal()}, {@link #valueOf(String)} and {@link #values()}.</p>
@@ -240,13 +240,6 @@ public class ChatColor {
 	public static final ChatColor RESET = new ChatColor("RESET", 'r');
 	
 	/**
-	 * Minecraft's character used as prefix of color codes.
-	 * 
-	 * <p><strong>Value:</strong> '§' ('\u00A7')</p>
-	 */
-	public static final char SECTION_SIGN = '\u00A7';
-	
-	/**
 	 * String containing all default color codes.
 	 * 
 	 * <p><strong>Content:</strong> "0123456789AaBbCcDdEeFfRr"</p>
@@ -270,9 +263,9 @@ public class ChatColor {
 	/**
 	 * Pattern used to strip color from a string.
 	 * 
-	 * <p><strong>Regex:</strong> "(?i)\u00A7[0-9A-FK-ORX]"</p>
+	 * <p><strong>Regex:</strong> "(?i)§[0-9A-FK-ORX]"</p>
 	 */
-	public static final Pattern STRIP_COLOR = Pattern.compile("(?i)" + SECTION_SIGN + "[0-9A-FK-ORX]");
+	public static final Pattern STRIP_COLOR = Pattern.compile("(?i)§[0-9A-FK-ORX]");
 	
 	/**
 	 * Patterns used to identify hex colors.
@@ -293,7 +286,7 @@ public class ChatColor {
 	private ChatColor(String name, char code, int rgb) {
 		this.name = name;
 		this.code = code;
-		toString = SECTION_SIGN + String.valueOf(code);
+		toString = '§' + String.valueOf(code);
 		color = rgb == -1 ? null : new Color(rgb);
 		
 		BY_CHAR.put(code, this);
@@ -309,8 +302,8 @@ public class ChatColor {
 	/**
 	 * Gets the string representation of this color.
 	 * 
-	 * <p>Will return {@link #SECTION_SIGN}<code> + </code>{@link #getCode()} if {@link #isDefaultColor()} and
-	 * a hex string (example: "&sect;x&sect;f&sect;f&sect;5&sect;5&sect;f&sect;f" - translated) otherwise.</p>
+	 * <p>Will return <code>'§' + </code>{@link #getCode()} if {@link #isDefaultColor()} and
+	 * a hex string (example: "§x§f§f§5§5§f§f" - translated) otherwise.</p>
 	 * 
 	 * @see #getClosestDefaultColor() Pre-1.16 method to safely convert to default colors
 	 */
@@ -546,10 +539,10 @@ public class ChatColor {
 		for (ChatColor defaultColor : VALUES)
 			if (defaultColor.getColor() != null && defaultColor.getColor().getRGB() == rgb)
 				return defaultColor;
-		StringBuilder sb = new StringBuilder(SECTION_SIGN + "x");
+		StringBuilder sb = new StringBuilder("§x");
 		
 		for (char x : hex.substring(1).toCharArray())
-			sb.append(SECTION_SIGN).append(x);
+			sb.append('§').append(x);
 		return new ChatColor(hex.toUpperCase(), sb.toString().toLowerCase(), rgb);
 	}
 	
@@ -586,10 +579,10 @@ public class ChatColor {
 		
 		for (int i = 0; i < array.length - 1; i++) {
 			if (array[i] == '&' && CODES.indexOf(array[i + 1]) != -1) {
-				array[i] = SECTION_SIGN;
+				array[i] = '§';
 				array[i + 1] = Character.toLowerCase(array[i + 1]);
 			}
-		} return retainNewLines ? new String(array) : new String(array).replace("\n", " ").replace("\r\n", " ").replace("\r", " ");
+		} return retainNewLines ? new String(array) : new String(array).replace("\r\n", " ").replace("\n", " ").replace("\r", " ");
 	}
 	
 	/**
@@ -697,7 +690,7 @@ public class ChatColor {
 			if (colorCodeExpected) {
 				if (!isColorCode(string.charAt(index)) && !isFormatCode(string.charAt(index)))
 					return false;
-			} else if (string.charAt(index) != SECTION_SIGN)
+			} else if (string.charAt(index) != '§')
 				return false;
 			colorCodeExpected = !colorCodeExpected;
 			index--;

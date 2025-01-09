@@ -188,7 +188,7 @@ public class ChatPluginBukkit extends ChatPlugin {
 			
 			@Override
 			public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
-				sender.sendMessage("\u00A7cChatPlugin is disabled because an error occurred.");
+				sender.sendMessage("§cChatPlugin is disabled because an error occurred.");
 				return true;
 			}
 			
@@ -204,16 +204,16 @@ public class ChatPluginBukkit extends ChatPlugin {
 					public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
 						if (args.length == 1 && args[0].equalsIgnoreCase("recover")) {
 							if (sender.hasPermission("chatplugin.commands.recover")) {
-								sender.sendMessage("\u00A7eTrying to recover ChatPlugin... Don't get your hopes up.");
-								Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer("\u00A7ePerforming ChatPlugin recovery..."));
+								sender.sendMessage("§eTrying to recover ChatPlugin... Don't get your hopes up.");
+								Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer("§ePerforming ChatPlugin recovery..."));
 								
 								int startupTime = load((Logger) logger, dataFolder);
 								
 								if (startupTime == -1)
-									sendConsoleMessage("\u00A7cFailed to load. Check above for the error message.", false);
-								else sendConsoleMessage("\u00A7aChatPlugin has been loaded successfully in \u00A7f" + startupTime + " ms\u00A7a. You should anyway restart as soon as possible.", false);
-							} else sender.sendMessage("\u00A7cYou do not have the permission to execute this command.");
-						} else sender.sendMessage("\u00A7cThe syntax is wrong. Usage: \u00A7f/chatplugin recover\u00A7c.");
+									sendConsoleMessage("§cFailed to load. Check above for the error message.", false);
+								else sendConsoleMessage("§aChatPlugin has been loaded successfully in §f" + startupTime + " ms§a. You should anyway restart as soon as possible.", false);
+							} else sender.sendMessage("§cYou do not have the permission to execute this command.");
+						} else sender.sendMessage("§cThe syntax is wrong. Usage: §f/chatplugin recover§c.");
 						return true;
 					}
 					
@@ -262,9 +262,9 @@ public class ChatPluginBukkit extends ChatPlugin {
 	public void printStartMessage() {
 		CommandSender console = Bukkit.getConsoleSender();
 		
-		console.sendMessage( "   \u00A7c__  \u00A7f__   ");
-		console.sendMessage( "  \u00A7c/   \u00A7f|__)  \u00A7aRunning \u00A7cChat\u00A7fPlugin \u00A72Free \u00A7aversion \u00A7f" + VERSION + " \u00A7aon \u00A7f" + VersionUtils.getImplementationName());
-		console.sendMessage("  \u00A7c\\__ \u00A7f|     \u00A78Detected server version: " + VersionUtils.getVersion().getName() + " (protocol: " + VersionUtils.getVersion().getProtocol() + ")");
+		console.sendMessage( "   §c__  §f__   ");
+		console.sendMessage( "  §c/   §f|__)  §aRunning §cChat§fPlugin §2Free §aversion §f" + VERSION + " §aon §f" + VersionUtils.getImplementationName());
+		console.sendMessage("  §c\\__ §f|     §8Detected server version: " + VersionUtils.getVersion().getName() + " (protocol: " + VersionUtils.getVersion().getProtocol() + ")");
 		console.sendMessage(" ");
 	}
 	

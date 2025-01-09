@@ -238,7 +238,7 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 			String lastColors = ChatColor.getLastColors(prefix);
 			
 			if (!lastColors.isEmpty())
-				team.setColor((lastColors.startsWith("\u00A7x") ? ChatColor.of(lastColors.substring(3, 14).replace("\u00A7", "")).getClosestDefaultColor() : ChatColor.getByChar(lastColors.charAt(1))).bukkitValue());
+				team.setColor((lastColors.startsWith("§x") ? ChatColor.of(lastColors.substring(3, 14).replace("§", "")).getClosestDefaultColor() : ChatColor.getByChar(lastColors.charAt(1))).bukkitValue());
 		} team.setPrefix(prefix.length() > (longTeams ? 64 : 16) ? me.remigio07.chatplugin.common.util.Utils.abbreviate(prefix, longTeams ? 64 : 16, false) : prefix);
 		team.setSuffix(suffix.length() > (longTeams ? 64 : 16) ? me.remigio07.chatplugin.common.util.Utils.abbreviate(suffix, longTeams ? 64 : 16, false) : suffix);
 		team.addPlayer(other.toAdapter().bukkitValue());

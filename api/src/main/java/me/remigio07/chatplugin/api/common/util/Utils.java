@@ -432,7 +432,7 @@ public class Utils {
 				sb.append(ChatColor.translate(s + "&r, ", retainNewLines));
 			else sb.append(s + ", ");
 		sb.setLength(sb.length() - 2);
-		sb.append(translateColorCodes ? "\u00A7r]" : ']');
+		sb.append(translateColorCodes ? "§r]" : ']');
 		return sb.toString();
 	}
 	

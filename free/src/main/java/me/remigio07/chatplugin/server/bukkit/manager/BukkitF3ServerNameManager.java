@@ -158,7 +158,7 @@ public class BukkitF3ServerNameManager extends F3ServerNameManager {
 				.toArray()
 				);
 		else player.sendPacket(BukkitReflection.getInstance("ClientboundCustomPayloadPacket", new Class<?>[] { BukkitReflection.getLoadedClass("CustomPacketPayload") },
-				BukkitReflection.getInstance("BrandPayload", PlaceholderManager.getInstance().translatePlaceholders(f3ServerName.getText(player.getLanguage(), true), player, placeholderTypes) + "\u00A7r")));
+				BukkitReflection.getInstance("BrandPayload", PlaceholderManager.getInstance().translatePlaceholders(f3ServerName.getText(player.getLanguage(), true), player, placeholderTypes) + "§r")));
 	}
 	
 }

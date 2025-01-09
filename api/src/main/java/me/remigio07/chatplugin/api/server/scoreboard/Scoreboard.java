@@ -54,9 +54,9 @@ public abstract class Scoreboard {
 	static {
 		if (Environment.isBukkit())
 			for (int i = 0; i < 15; i++)
-				SCORES[i] = ChatColor.values()[i].toString() + "\u00A7r";
+				SCORES[i] = ChatColor.values()[i].toString() + "§r";
 		else for (int i = 0; i < 15; i++)
-			SCORES[i] = (i == 0 ? "" : SCORES[i - 1]) + "\u00A7\u00A7";
+			SCORES[i] = (i == 0 ? "" : SCORES[i - 1]) + "§§";
 	}
 	
 	/**

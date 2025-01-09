@@ -57,47 +57,47 @@ public class Debugger {
 		Runtime runtime = Runtime.getRuntime();
 		List<PluginInfo> plugins = Utils.getPluginsInfo();
 		
-		sb.append("Environment: " + VersionUtils.getImplementationName() + " " + VersionUtils.getImplementationVersion() + "\n");
-		sb.append("Minecraft version: " + VersionUtils.getVersion().format() + " (protocol: " + VersionUtils.getVersion().getProtocol() + ")\n");
-		sb.append("ChatPlugin version: " + ChatPlugin.VERSION + " (" + (ChatPlugin.getInstance().isPremium() ? "Premium" : "Free") + ")\n");
-		sb.append("\n");
-		sb.append("OS: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + ", " + System.getProperty("os.arch") + "\n");
-		sb.append("Java version: " + System.getProperty("java.version") + "\n");
-		sb.append("CPU threads: " + runtime.availableProcessors() + "x\n");
-		sb.append("Active threads: " + Thread.activeCount() + "x\n");
-		sb.append("\n");
-		sb.append("Uptime: " + Utils.formatTime(ManagementFactory.getRuntimeMXBean().getUptime()) + "\n");
-		sb.append("Startup time: " + ChatPlugin.getInstance().getStartupTime() + " ms\n");
-		sb.append("Last reload time: " + ChatPlugin.getInstance().getLastReloadTime() + " ms\n");
-		sb.append("\n");
+		sb.append("Environment: ").append(VersionUtils.getImplementationName()).append(' ').append(VersionUtils.getImplementationVersion()).append('\n')
+		.append("Minecraft version: ").append(VersionUtils.getVersion().format()).append(" (protocol: ").append(VersionUtils.getVersion().getProtocol()).append(")\n")
+		.append("ChatPlugin version: ").append(ChatPlugin.VERSION).append(" (").append(ChatPlugin.getInstance().isPremium() ? "Premium" : "Free").append(")\n")
+		.append('\n')
+		.append("OS: ").append(System.getProperty("os.name")).append(' ').append(System.getProperty("os.version")).append(", ").append(System.getProperty("os.arch")).append('\n')
+		.append("Java version: ").append(System.getProperty("java.version")).append('\n')
+		.append("CPU threads: ").append(runtime.availableProcessors()).append("x\n")
+		.append("Active threads: ").append(Thread.activeCount()).append("x\n")
+		.append('\n')
+		.append("Uptime: ").append(Utils.formatTime(ManagementFactory.getRuntimeMXBean().getUptime())).append('\n')
+		.append("Startup time: ").append(ChatPlugin.getInstance().getStartupTime()).append(" ms\n")
+		.append("Last reload time: ").append(ChatPlugin.getInstance().getLastReloadTime()).append(" ms\n")
+		.append('\n');
 		
 		if (!Environment.isProxy()) {
 			double[] tps = TPSManager.getInstance().getRecentTPS();
 			
-			sb.append("TPS: " + Utils.truncate(tps[0], 2) + ", " + Utils.truncate(tps[1], 2) + ", " + Utils.truncate(tps[2], 2) + "\n");
-			sb.append("\n");
+			sb.append("TPS: ").append(Utils.truncate(tps[0], 2)).append(", ").append(Utils.truncate(tps[1], 2)).append(", ").append(Utils.truncate(tps[2], 2)).append('\n');
+			sb.append('\n');
 		} sb.append("Players:\n");
-		sb.append(TWO_SPACES + "online: " + PlayerAdapter.getOnlinePlayers().size() + "/" + Utils.getMaxPlayers() + "\n");
-		sb.append(TWO_SPACES + "loaded: " + PlayerManager.getInstance().getTotalPlayers() + "\n");
-		sb.append("\n");
+		sb.append(TWO_SPACES).append("online: ").append(PlayerAdapter.getOnlinePlayers().size()).append('/').append(Utils.getMaxPlayers()).append('\n');
+		sb.append(TWO_SPACES).append("loaded: ").append(PlayerManager.getInstance().getTotalPlayers()).append('\n');
+		sb.append('\n');
 		sb.append("Memory:\n");
-		sb.append(TWO_SPACES + "used: " + MemoryUtils.formatMemory(runtime.totalMemory() - runtime.freeMemory(), MemoryUtils.MEGABYTE) + "/" + MemoryUtils.formatMemory(runtime.maxMemory(), MemoryUtils.MEGABYTE) + " MB\n");
-		sb.append(TWO_SPACES + "allocated: " + MemoryUtils.formatMemory(runtime.totalMemory(), MemoryUtils.MEGABYTE) + " MB\n");
-		sb.append(TWO_SPACES + "free: " + MemoryUtils.formatMemory(runtime.freeMemory(), MemoryUtils.MEGABYTE) + " MB\n");
-		sb.append("\n");
+		sb.append(TWO_SPACES).append("used: ").append(MemoryUtils.formatMemory(runtime.totalMemory() - runtime.freeMemory(), MemoryUtils.MEGABYTE)).append('/').append(MemoryUtils.formatMemory(runtime.maxMemory(), MemoryUtils.MEGABYTE)).append(" MB\n");
+		sb.append(TWO_SPACES).append("allocated: ").append(MemoryUtils.formatMemory(runtime.totalMemory(), MemoryUtils.MEGABYTE)).append(" MB\n");
+		sb.append(TWO_SPACES).append("free: ").append(MemoryUtils.formatMemory(runtime.freeMemory(), MemoryUtils.MEGABYTE)).append(" MB\n");
+		sb.append('\n');
 		sb.append("Storage:\n");
-		sb.append(TWO_SPACES + "used: " + MemoryUtils.formatMemory(Utils.getTotalStorage() - Utils.getFreeStorage(), MemoryUtils.GIGABYTE) + "/" + MemoryUtils.formatMemory(Utils.getTotalStorage(), MemoryUtils.GIGABYTE) + " GB\n");
-		sb.append(TWO_SPACES + "free: " + MemoryUtils.formatMemory(Utils.getFreeStorage(), MemoryUtils.GIGABYTE) + " GB\n");
-		sb.append("\n");
+		sb.append(TWO_SPACES).append("used: ").append(MemoryUtils.formatMemory(Utils.getTotalStorage() - Utils.getFreeStorage(), MemoryUtils.GIGABYTE)).append('/').append(MemoryUtils.formatMemory(Utils.getTotalStorage(), MemoryUtils.GIGABYTE)).append(" GB\n");
+		sb.append(TWO_SPACES).append("free: ").append(MemoryUtils.formatMemory(Utils.getFreeStorage(), MemoryUtils.GIGABYTE)).append(" GB\n");
+		sb.append('\n');
 		sb.append("Managers:\n");
-		sb.append(TWO_SPACES + "enabled: " + Utils.getStringFromList(getEnabledManagersNames(), false, true) + "\n");
-		sb.append(TWO_SPACES + "amount: " + managers.getEnabledManagers().size() + "/" + managers.getManagers().size() + "\n");
-		sb.append(TWO_SPACES + "values:\n");
-		managers.getManagers().keySet().stream().filter(clazz -> managers.getManager(clazz).isEnabled()).forEach(clazz -> sb.append(FOUR_SPACES + clazz.getSimpleName().substring(0, clazz.getSimpleName().indexOf("Manager")) + ":\n" + getContent(clazz)));
+		sb.append(TWO_SPACES).append("enabled: ").append(Utils.getStringFromList(getEnabledManagersNames(), false, true)).append('\n');
+		sb.append(TWO_SPACES).append("amount: ").append(managers.getEnabledManagers().size()).append('/').append(managers.getManagers().size()).append('\n');
+		sb.append(TWO_SPACES).append("values:\n");
+		managers.getManagers().keySet().stream().filter(clazz -> managers.getManager(clazz).isEnabled()).forEach(clazz -> sb.append(FOUR_SPACES).append(clazz.getSimpleName().substring(0, clazz.getSimpleName().indexOf("Manager"))).append(":\n").append(getContent(clazz)));
 		sb.append("Plugins:\n");
-		sb.append(TWO_SPACES + "amount: " + plugins.size() + "\n");
-		sb.append(TWO_SPACES + "values:\n");
-		plugins.stream().forEach(plugin -> sb.append(FOUR_SPACES + plugin.getName() + (plugin.isEnabled() ? "" : "*") + getSpaces(SPACES - plugin.getName().length() - (plugin.isEnabled() ? 0 : 1)) + plugin.getVersion() + getSpaces(SPACES - plugin.getVersion().length()) + Utils.getStringFromList(plugin.getAuthors(), false, false) + "\n"));
+		sb.append(TWO_SPACES).append("amount: ").append(plugins.size()).append('\n');
+		sb.append(TWO_SPACES).append("values:\n");
+		plugins.stream().forEach(plugin -> sb.append(FOUR_SPACES).append(plugin.getName()).append(plugin.isEnabled() ? "" : "*").append(getSpaces(SPACES - plugin.getName().length() - (plugin.isEnabled() ? 0 : 1))).append(plugin.getVersion()).append(getSpaces(SPACES - plugin.getVersion().length())).append(Utils.getStringFromList(plugin.getAuthors(), false, false)).append('\n'));
 		return ChatColor.stripColor(sb.toString());
 	}
 	
@@ -106,7 +106,7 @@ public class Debugger {
 	}
 	
 	public static String getContent(Class<? extends ChatPluginManager> clazz) {
-		return formatFields(getInstanceFields(clazz, ChatPluginManagers.getInstance().getManager(clazz))) + "\n";
+		return formatFields(getInstanceFields(clazz, ChatPluginManagers.getInstance().getManager(clazz))) + '\n';
 	}
 	
 	public static String writeToFile() {
@@ -133,14 +133,10 @@ public class Debugger {
 		StringBuilder sb = new StringBuilder();
 		
 		for (Entry<String, Object> field : fields.entrySet()) {
-			String type = field.getKey().substring(field.getKey().indexOf(':') + 1);
-			String name = field.getKey().substring(0, field.getKey().indexOf(':'));
+			String type = Utils.abbreviate(field.getKey().substring(field.getKey().indexOf(':') + 1), SPACES, false);
+			String name = Utils.abbreviate(field.getKey().substring(0, field.getKey().indexOf(':')), SPACES, false);
 			
-			if (type.length() > SPACES - 1)
-				type = type.substring(0, SPACES - 4) + "...";
-			if (name.length() > SPACES - 1)
-				name = name.substring(0, SPACES - 4) + "...";
-			sb.append(SIX_SPACES + type + getSpaces(SPACES - type.length()) + "\u00A7e" + name + getSpaces(SPACES - name.length()) + toString(field.getValue()) + "\n");
+			sb.append(SIX_SPACES).append(type).append(getSpaces(SPACES - type.length())).append("§e").append(name).append(getSpaces(SPACES - name.length())).append(toString(field.getValue())).append('\n');
 		} return sb.toString();
 	}
 	
@@ -165,13 +161,14 @@ public class Debugger {
 				if (!accessible)
 					field.setAccessible(true);
 				Object value;
+				
 				try {
 					value = field.get(manager);
 				} catch (NoClassDefFoundError e2) {
 					continue;
 				} catch (IllegalArgumentException | IllegalAccessException e2) {
 					value = null;
-				} fields.put(field.getName() + ":" + (field.getType().isPrimitive() ? "\u00A7c" + (field.getClass().equals(Integer.class) ? "int" : field.getClass().equals(Character.class) ? "char" : field.getType().getSimpleName().toLowerCase()) : field.getType().isEnum() ? "\u00A75" + field.getType().getSimpleName() : "\u00A79" + field.getType().getSimpleName()), field.isAnnotationPresent(SensitiveData.class) ? "<hidden>" : value);
+				} fields.put(field.getName() + ":" + (field.getType().isPrimitive() ? "§c" + (field.getClass().equals(Integer.class) ? "int" : field.getClass().equals(Character.class) ? "char" : field.getType().getSimpleName().toLowerCase()) : field.getType().isEnum() ? "§5" + field.getType().getSimpleName() : "§9" + field.getType().getSimpleName()), field.isAnnotationPresent(SensitiveData.class) ? "<hidden>" : value);
 				
 				if (!accessible)
 					field.setAccessible(false);
@@ -181,37 +178,37 @@ public class Debugger {
 	
 	public static String toString(Object object) {
 		if (object == null)
-			return "\u00A74null";
+			return "§4null";
 		if (object instanceof Boolean)
-			return "\u00A76" + String.valueOf((boolean) object);
+			return "§6" + String.valueOf((boolean) object);
 		if (object instanceof Byte)
-			return "\u00A7d" + String.valueOf((byte) object);
+			return "§d" + String.valueOf((byte) object);
 		if (object instanceof Character)
-			return "\u00A7d" + String.valueOf((char) object);
+			return "§d" + String.valueOf((char) object);
 		if (object instanceof Short)
-			return "\u00A7d" + String.valueOf((short) object);
+			return "§d" + String.valueOf((short) object);
 		if (object instanceof Integer)
-			return "\u00A7d" + String.valueOf((int) object);
+			return "§d" + String.valueOf((int) object);
 		if (object instanceof Long)
-			return "\u00A7d" + String.valueOf((long) object) + "L";
+			return "§d" + String.valueOf((long) object) + "L";
 		if (object instanceof Float)
-			return "\u00A7d" + String.valueOf(Utils.truncate((float) object, 2)) + "F";
+			return "§d" + String.valueOf(Utils.truncate((float) object, 2)) + "F";
 		if (object instanceof Double)
-			return "\u00A7d" + String.valueOf(Utils.truncate((double) object, 2)) + "D";
+			return "§d" + String.valueOf(Utils.truncate((double) object, 2)) + "D";
 		if (object instanceof String)
-			return "\u00A73\"" + ((String) object).replace("\n", "\\n") + "\u00A73\"";
+			return "§3\"" + ((String) object).replace("\n", "\\n") + "§3\"";
 		if (object instanceof Enum)
-			return "\u00A7a" + ((Enum<?>) object).name();
+			return "§a" + ((Enum<?>) object).name();
 		if (object.getClass().isArray()) {
-			return "\u00A7a" + Array.getLength(object) + " elements";
+			return "§a" + Array.getLength(object) + " elements";
 		} if (object instanceof List)
-			return "\u00A7a" + ((List<?>) object).size() + " elements";
+			return "§a" + ((List<?>) object).size() + " elements";
 		if (object instanceof Map)
-			return "\u00A7a" + ((Map<?, ?>) object).size() + " entries";
+			return "§a" + ((Map<?, ?>) object).size() + " entries";
 		try {
-			return "\u00A72" + (String) object.getClass().getDeclaredMethod("toString").invoke(object);
+			return "§2" + (String) object.getClass().getDeclaredMethod("toString").invoke(object);
 		} catch (NoClassDefFoundError | IllegalArgumentException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-			return "\u00A7b" + (object.getClass().isAnonymousClass() ? object.getClass().getTypeName() : object.getClass().getSimpleName()) + " object";
+			return "§b" + (object.getClass().isAnonymousClass() ? object.getClass().getTypeName() : object.getClass().getSimpleName()) + " object";
 		}
 	}
 	

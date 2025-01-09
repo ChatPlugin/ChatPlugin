@@ -16,7 +16,6 @@
 package me.remigio07.chatplugin.api.server.join_quit;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +28,6 @@ import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.rank.Rank;
 import me.remigio07.chatplugin.api.server.rank.RankManager;
-import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 
 /**
  * Manager that handles quit messages.
@@ -41,7 +39,6 @@ public abstract class QuitMessageManager implements ChatPluginManager {
 	
 	protected static QuitMessageManager instance;
 	protected boolean enabled;
-	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
 	protected Map<Rank, Map<Language, List<String>>> quitMessages = new HashMap<>();
 	protected Map<UUID, QuitPacket> quitPackets = new HashMap<>();
 	protected List<UUID> fakeQuits = new ArrayList<>();
@@ -55,18 +52,6 @@ public abstract class QuitMessageManager implements ChatPluginManager {
 	@Override
 	public boolean isEnabled() {
 		return enabled;
-	}
-	
-	/**
-	 * Gets the list of placeholder types used
-	 * to translate {@link #getQuitMessages()}.
-	 * 
-	 * <p><strong>Found at:</strong> "join-quit-modules.quit-messages.settings.placeholder-types" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
-	 * 
-	 * @return Placeholders used to translate quit messages
-	 */
-	public List<PlaceholderType> getPlaceholderTypes() {
-		return placeholderTypes;
 	}
 	
 	/**
@@ -169,11 +154,11 @@ public abstract class QuitMessageManager implements ChatPluginManager {
 		 * Array containing all available placeholders that
 		 * can be translated with a packet's information.
 		 * 
-		 * <p><strong>Content:</strong> ["player", "uuid", "display_name", "player_id", "rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description"]</p>
+		 * <p><strong>Content:</strong> ["pfx", "player", "uuid", "display_name", "player_id", "rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_position", "rank_description", "max_ban_duration", "max_mute_duration"]</p>
 		 * 
 		 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Join-quit#placeholders">ChatPlugin wiki/Modules/Join-quit/Quit messages/Placeholders</a>
 		 */
-		public static final String[] PLACEHOLDERS = new String[] { "player", "uuid", "display_name", "player_id", "rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description" };
+		public static final String[] PLACEHOLDERS = new String[] { "pfx", "player", "uuid", "display_name", "player_id", "rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_position", "rank_description", "max_ban_duration", "max_mute_duration" };
 		protected OfflinePlayer player;
 		protected String displayName;
 		protected Rank rank;
@@ -235,6 +220,17 @@ public abstract class QuitMessageManager implements ChatPluginManager {
 		 * @return Translated placeholders
 		 */
 		public abstract String formatPlaceholders(String input, Language language);
+		
+		/**
+		 * Translates an input string list with this packet's specific placeholders.
+		 * 
+		 * <p>Check {@link #PLACEHOLDERS} to find out the available placeholders.</p>
+		 * 
+		 * @param input Input containing placeholders
+		 * @param language Language used to translate the placeholders
+		 * @return Translated placeholders
+		 */
+		public abstract List<String> formatPlaceholders(List<String> input, Language language);
 		
 	}
 	

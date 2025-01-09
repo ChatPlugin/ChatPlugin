@@ -15,7 +15,6 @@
 
 package me.remigio07.chatplugin.api.server.join_quit;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,6 @@ import me.remigio07.chatplugin.api.server.join_quit.QuitMessageManager.QuitPacke
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.rank.Rank;
 import me.remigio07.chatplugin.api.server.rank.RankManager;
-import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 
 /**
  * Manager that handles switch messages.
@@ -39,7 +37,6 @@ public abstract class SwitchMessageManager implements ChatPluginManager {
 	
 	protected static SwitchMessageManager instance;
 	protected boolean enabled;
-	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
 	protected Map<Rank, Map<Language, List<String>>> switchMessages = new HashMap<>();
 	protected long loadTime;
 	
@@ -51,18 +48,6 @@ public abstract class SwitchMessageManager implements ChatPluginManager {
 	@Override
 	public boolean isEnabled() {
 		return enabled;
-	}
-	
-	/**
-	 * Gets the list of placeholder types used
-	 * to translate {@link #getSwitchMessages()}.
-	 * 
-	 * <p><strong>Found at:</strong> "join-quit-modules.switch-messages.settings.placeholder-types" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
-	 * 
-	 * @return Placeholders used to translate switch messages
-	 */
-	public List<PlaceholderType> getPlaceholderTypes() {
-		return placeholderTypes;
 	}
 	
 	/**

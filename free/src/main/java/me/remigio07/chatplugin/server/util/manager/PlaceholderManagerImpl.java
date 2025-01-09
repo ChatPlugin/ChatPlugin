@@ -30,7 +30,6 @@ import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.discord.DiscordIntegrationManager;
 import me.remigio07.chatplugin.api.common.integration.IntegrationManager;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
-import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.common.punishment.ban.BanManager;
 import me.remigio07.chatplugin.api.common.punishment.kick.KickManager;
 import me.remigio07.chatplugin.api.common.punishment.mute.MuteManager;
@@ -312,9 +311,9 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 		if (output.contains("{date_hour}"))
 			output = output.replace("{date_hour}", Utils.formatDate(System.currentTimeMillis(), language, DateFormat.HOUR));
 		if (output.contains("{enabled_worlds}"))
-			output = output.replace("{enabled_worlds}", String.valueOf(((ServerPlayerManager) PlayerManager.getInstance()).getEnabledWorlds().size()));
+			output = output.replace("{enabled_worlds}", String.valueOf((ServerPlayerManager.getInstance().getEnabledWorlds().contains("*") ? Utils.getWorlds() : ServerPlayerManager.getInstance().getEnabledWorlds()).size()));
 		if (output.contains("{enabled_players}"))
-			output = output.replace("{enabled_players}", String.valueOf(PlayerManager.getInstance().getTotalPlayers()));
+			output = output.replace("{enabled_players}", String.valueOf(ServerPlayerManager.getInstance().getTotalPlayers()));
 		if (output.contains("{enabled_managers}"))
 			output = output.replace("{enabled_managers}", String.valueOf(ChatPluginManagers.getInstance().getEnabledManagers().size()));
 		if (output.contains("{startup_time}"))
@@ -356,7 +355,7 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 		if (output.contains("{active_threads}"))
 			output = output.replace("{active_threads}", String.valueOf(Thread.activeCount()));
 		if (output.contains("{total_players}"))
-			output = output.replace("{total_players}", String.valueOf(((ServerPlayerManager) PlayerManager.getInstance()).getStorageCount()));
+			output = output.replace("{total_players}", String.valueOf(ServerPlayerManager.getInstance().getStorageCount()));
 		if (output.contains("{total_bans}"))
 			output = output.replace("{total_bans}", String.valueOf(BanManager.getInstance().getStorageCount()));
 		if (output.contains("{total_warnings}"))

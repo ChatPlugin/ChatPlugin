@@ -28,6 +28,7 @@ import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.server.integration.placeholder.PlaceholderIntegration;
+import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
@@ -91,9 +92,10 @@ public class PlaceholderAPIIntegration extends ChatPluginBukkitIntegration<Place
 		
 		@Override
 		public String onRequest(org.bukkit.OfflinePlayer offlinePlayer, String identifier) {
+			if (offlinePlayer == null)
+				return PlaceholderManager.getInstance().translateServerPlaceholders('{' + identifier + '}', Language.getMainLanguage());
 			ChatPluginServerPlayer player = (ChatPluginServerPlayer) PlayerManager.getInstance().getPlayer(offlinePlayer.getUniqueId());
-			
-			return player == null ? "\u00A7f" + offlinePlayer.getName() + " \u00A7cis not loaded." : PlaceholderManager.getInstance().translatePlaceholders("{" + identifier + "}", player, Arrays.asList(PlaceholderType.getPlaceholderType(identifier)));
+			return player == null ? "\u00A7f" + offlinePlayer.getName() + " \u00A7cis not loaded." : PlaceholderManager.getInstance().translatePlaceholders('{' + identifier + '}', player, Arrays.asList(PlaceholderType.getPlaceholderType(identifier)));
 		}
 		
 	}

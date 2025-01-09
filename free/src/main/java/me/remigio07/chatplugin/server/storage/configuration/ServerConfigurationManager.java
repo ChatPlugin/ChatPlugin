@@ -670,7 +670,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			ranks.addDefault("ranks.default.tag.prefix", "");
 			ranks.addDefault("ranks.default.tag.suffix", "");
 			ranks.addDefault("ranks.default.tag.name-color", "");
-			ranks.addDefault("ranks.default.tag.chat-color", "");
+			ranks.addDefault("ranks.default.chat-color", "");
 			ranks.addDefault("ranks.default.descriptions.english", "&aRank: &f&lUser\n&aType: &fdefault");
 			ranks.addDefault("ranks.default.descriptions.italian", "&aRango: &f&lUser\n&aTipo: &fpredefinito");
 			
@@ -680,7 +680,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			ranks.addDefault("ranks.vip.tag.prefix", "&8[&d&lV&8] ");
 			ranks.addDefault("ranks.vip.tag.suffix", " &a[*]");
 			ranks.addDefault("ranks.vip.tag.name-color", "");
-			ranks.addDefault("ranks.vip.tag.chat-color", "");
+			ranks.addDefault("ranks.vip.chat-color", "");
 			ranks.addDefault("ranks.vip.descriptions.english", "&aRank: &d&lVIP\n&aType: &fpaid &o($4.99)");
 			ranks.addDefault("ranks.vip.descriptions.italian", "&aRango: &d&lVIP\n&aTipo: &fpagato &o($4.99)");
 			
@@ -1138,26 +1138,26 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	
 	public void addJoinQuitModulesDefaults(boolean forceAdd) throws IOException {
 		Configuration joinQuitModules = configurations.get(ConfigurationType.JOIN_QUIT_MODULES);
+		boolean fileMissing = !joinQuitModules.getFile().exists();
 		
-		if (!joinQuitModules.getFile().exists())
+		if (fileMissing)
 			joinQuitModules.createFile();
 		else if (!forceAdd)
 			return;
 		
 		joinQuitModules.addDefault("join-quit-modules.join-messages.settings.enabled", true);
 		joinQuitModules.addDefault("join-quit-modules.join-messages.settings.placeholder-types", Arrays.asList("PLAYER"));
-		joinQuitModules.addDefault("join-quit-modules.join-messages.default.english", Arrays.asList("&8[&a&l+&8] &f{prefix}{tag_name_color}{player}{suffix}"));
-		joinQuitModules.addDefault("join-quit-modules.join-messages.default.italian", Arrays.asList("&8[&a&l+&8] &f{prefix}{tag_name_color}{player}{suffix}"));
-		
 		joinQuitModules.addDefault("join-quit-modules.quit-messages.settings.enabled", true);
-		joinQuitModules.addDefault("join-quit-modules.quit-messages.settings.placeholder-types", Arrays.asList("PLAYER"));
-		joinQuitModules.addDefault("join-quit-modules.quit-messages.default.english", Arrays.asList("&8[&c&l-&8] &f{prefix}{tag_name_color}{player}{suffix}"));
-		joinQuitModules.addDefault("join-quit-modules.quit-messages.default.italian", Arrays.asList("&8[&c&l-&8] &f{prefix}{tag_name_color}{player}{suffix}"));
-		
 		joinQuitModules.addDefault("join-quit-modules.switch-messages.settings.enabled", false);
-		joinQuitModules.addDefault("join-quit-modules.switch-messages.settings.placeholder-types", Arrays.asList("PLAYER"));
-		joinQuitModules.addDefault("join-quit-modules.switch-messages.default.english", Arrays.asList("&8[&e&l»&8] &f{prefix}{tag_name_color}{player}{suffix} &e\u27A1 &f{server}"));
-		joinQuitModules.addDefault("join-quit-modules.switch-messages.default.italian", Arrays.asList("&8[&e&l»&8] &f{prefix}{tag_name_color}{player}{suffix} &e\u27A1 &f{server}"));
+		
+		if (fileMissing) {
+			joinQuitModules.addDefault("join-quit-modules.join-messages.default.english", Arrays.asList("&8[&a&l+&8] &f{prefix}{tag_name_color}{player}{suffix}"));
+			joinQuitModules.addDefault("join-quit-modules.join-messages.default.italian", Arrays.asList("&8[&a&l+&8] &f{prefix}{tag_name_color}{player}{suffix}"));
+			joinQuitModules.addDefault("join-quit-modules.quit-messages.default.english", Arrays.asList("&8[&c&l-&8] &f{prefix}{tag_name_color}{player}{suffix}"));
+			joinQuitModules.addDefault("join-quit-modules.quit-messages.default.italian", Arrays.asList("&8[&c&l-&8] &f{prefix}{tag_name_color}{player}{suffix}"));
+			joinQuitModules.addDefault("join-quit-modules.switch-messages.default.english", Arrays.asList("&8[&e&l»&8] &f{prefix}{tag_name_color}{player}{suffix} &e\u27A1 &f{server}"));
+			joinQuitModules.addDefault("join-quit-modules.switch-messages.default.italian", Arrays.asList("&8[&e&l»&8] &f{prefix}{tag_name_color}{player}{suffix} &e\u27A1 &f{server}"));
+		}
 		
 		joinQuitModules.addDefault("join-quit-modules.join-titles.settings.enabled", true);
 		joinQuitModules.addDefault("join-quit-modules.join-titles.settings.fade-in-ms", 500L);
@@ -1184,11 +1184,13 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		joinQuitModules.addDefault("join-quit-modules.account-check.perform-on-first-join", false);
 		joinQuitModules.addDefault("join-quit-modules.account-check.timeout-between-checks-ms", 10);
 		joinQuitModules.addDefault("join-quit-modules.account-check.max-time-played", "12h");
-		joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.2.english", Arrays.asList("staffchat &f{player} &cowns multiple (&f{amount}&c) accounts: &f{accounts}&c."));
-		joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.2.italian", Arrays.asList("staffchat &f{player} &cpossiede accounts multipli (&f{amount}&c): &f{accounts}&c."));
-		joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.3.english", Arrays.asList("tempban {player} 30d Multiple ({amount}) accounts detected: {accounts}. This is an automatic ban. -s"));
-		joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.3.italian", Arrays.asList("tempban {player} 30d Accounts multipli ({amount}) rilevati: {accounts}. Questo è un ban automatico. -s"));
-		joinQuitModules.addDefault("join-quit-modules.account-check.ip-lookup.enabled", false);
+		
+		if (fileMissing) {
+			joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.2.english", Arrays.asList("staffchat &f{player} &cowns multiple (&f{amount}&c) accounts: &f{accounts}&c."));
+			joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.2.italian", Arrays.asList("staffchat &f{player} &cpossiede accounts multipli (&f{amount}&c): &f{accounts}&c."));
+			joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.3.english", Arrays.asList("tempban {player} 30d Multiple ({amount}) accounts detected: {accounts}. This is an automatic ban. -s"));
+			joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.3.italian", Arrays.asList("tempban {player} 30d Accounts multipli ({amount}) rilevati: {accounts}. Questo è un ban automatico. -s"));
+		} joinQuitModules.addDefault("join-quit-modules.account-check.ip-lookup.enabled", false);
 		joinQuitModules.addDefault("join-quit-modules.account-check.ip-lookup.max-accuracy-radius-km", 10);
 		joinQuitModules.addDefault("join-quit-modules.account-check.anti-ban-evading-system.enabled", false);
 		joinQuitModules.addDefault("join-quit-modules.account-check.anti-ban-evading-system.commands.english", Arrays.asList("tempban {player} 30d Ban evading of account {account}. This is an automatic ban. -s"));

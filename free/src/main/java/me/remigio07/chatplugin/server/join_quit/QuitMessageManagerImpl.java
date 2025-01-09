@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
@@ -31,8 +32,6 @@ import me.remigio07.chatplugin.api.server.language.LanguageManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.rank.Rank;
 import me.remigio07.chatplugin.api.server.rank.RankManager;
-import me.remigio07.chatplugin.api.server.util.PlaceholderType;
-import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 
 public class QuitMessageManagerImpl extends QuitMessageManager {
 	
@@ -64,9 +63,6 @@ public class QuitMessageManagerImpl extends QuitMessageManager {
 			LogManager.log("Quit messages for default rank {0} not found at \"join-quit-modules.quit-messages.{0}\"; disabling module.", 2, RankManager.getInstance().getDefaultRank().getID());
 			unload();
 			return;
-		} if ((placeholderTypes = PlaceholderType.getPlaceholders(ConfigurationType.JOIN_QUIT_MODULES.get().getStringList("join-quit-modules.quit-messages.settings.placeholder-types"))).contains(PlaceholderType.INTEGRATIONS)) {
-			LogManager.log("The INTEGRATIONS placeholder type specified at \"join-quit-modules.quit-messages.settings.placeholder-types\" in join-quit-modules.yml is not supported; removing it.", 1);
-			placeholderTypes.remove(PlaceholderType.INTEGRATIONS);
 		} enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}
@@ -76,7 +72,6 @@ public class QuitMessageManagerImpl extends QuitMessageManager {
 		enabled = false;
 		
 		quitMessages.clear();
-		placeholderTypes.clear();
 	}
 	
 	@Override
@@ -111,28 +106,19 @@ public class QuitMessageManagerImpl extends QuitMessageManager {
 		
 		@Override
 		public String formatPlaceholders(String input, Language language) {
-			String output = input;
-			
-			if (instance.getPlaceholderTypes().contains(PlaceholderType.JUST_NAME))
-				output = output.replace("{player}", player.getName());
-			if (instance.getPlaceholderTypes().contains(PlaceholderType.SERVER))
-				output = PlaceholderManager.getInstance().translateServerPlaceholders(output, language);
-			if (instance.getPlaceholderTypes().contains(PlaceholderType.PLAYER)) {
-				output = output
-						.replace("{player}", player.getName())
-						.replace("{uuid}", player.getUUID().toString())
-						.replace("{display_name}", displayName)
-						.replace("{player_id}", String.valueOf(playerID))
-						.replace("{rank_id}", rank.getID())
-						.replace("{rank_display_name}", rank.getDisplayName())
-						.replace("{prefix}", rank.getPrefix())
-						.replace("{suffix}", rank.getSuffix())
-						.replace("{tag_prefix}", rank.getTag().getPrefix())
-						.replace("{tag_suffix}", rank.getTag().getSuffix())
-						.replace("{tag_name_color}", rank.getTag().getNameColor())
-						.replace("{chat_color}", rank.getChatColor())
-						.replace("{rank_description}", rank.getDescription(language, true));
-			} return ChatColor.translate(output.replace("{pfx}", language.getMessage("misc.prefix")));
+			return ChatColor.translate(
+					rank.formatPlaceholders(input, language)
+					.replace("{pfx}", language.getMessage("misc.prefix"))
+					.replace("{player}", player.getName())
+					.replace("{uuid}", player.getUUID().toString())
+					.replace("{display_name}", displayName)
+					.replace("{player_id}", String.valueOf(playerID))
+					);
+		}
+		
+		@Override
+		public List<String> formatPlaceholders(List<String> input, Language language) {
+			return input.stream().map(str -> formatPlaceholders(str, language)).collect(Collectors.toList());
 		}
 		
 		public void setVanished(boolean vanished) {

@@ -23,6 +23,7 @@ import be.maximvdw.placeholderapi.PlaceholderReplacer;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.server.integration.placeholder.PlaceholderIntegration;
+import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
@@ -57,8 +58,10 @@ public class MVdWPlaceholderAPIIntegration extends ChatPluginBukkitIntegration<P
 				
 				@Override
 				public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
+					if (event.getPlayer() == null)
+						return PlaceholderManager.getInstance().translateServerPlaceholders('{' + event.getPlaceholder() + '}', Language.getMainLanguage());
 					ChatPluginServerPlayer player = (ChatPluginServerPlayer) PlayerManager.getInstance().getPlayer(event.getPlayer().getUniqueId());
-					return player == null ? "\u00A7f" + event.getPlayer().getName() + " \u00A7cis not loaded." : event.isOnline() ? PlaceholderManager.getInstance().translatePlaceholders("{" + event.getPlaceholder() + "}", player, Arrays.asList(PlaceholderType.getPlaceholderType(event.getPlaceholder()))) : "\u00A7f" + player.getName() + " \u00A7cis offline.";
+					return player == null ? "\u00A7f" + event.getPlayer().getName() + " \u00A7cis not loaded." : event.isOnline() ? PlaceholderManager.getInstance().translatePlaceholders('{' + event.getPlaceholder() + '}', player, Arrays.asList(PlaceholderType.getPlaceholderType(event.getPlaceholder()))) : "\u00A7f" + player.getName() + " \u00A7cis offline.";
 				}
 			});
 		}

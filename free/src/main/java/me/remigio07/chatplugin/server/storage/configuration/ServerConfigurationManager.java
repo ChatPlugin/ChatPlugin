@@ -145,7 +145,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		config.set("version", ChatPlugin.VERSION);
 		
-		config.addDefault("settings.license-id", "");
 		config.addDefault("settings.debug", false);
 		config.addDefault("settings.enable-update-notification", true);
 		config.addDefault("settings.log-command-blocks-commands", true);
@@ -166,7 +165,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("multi-instance-mode.server-id", ProxyManager.DEFAULT_SERVER_ID);
 		config.addDefault("multi-instance-mode.server-display-name", "default-server-name");
 		config.addDefault("multi-instance-mode.server-information-update-timeout", "10s");
-		config.addDefault("multi-instance-mode.log-filtered-packets", Arrays.asList("F3ServerName", "ServerInformation", "IPLookupRequest", "IPLookupResponse", "PlayerJoin", "PlayerQuit", "PlayerSwitch"));
+		config.addDefault("multi-instance-mode.log-filtered-packets", Arrays.asList("F3ServerName", "ServerInformation", "IPLookupRequest", "IPLookupResponse", "PlayerJoin", "PlayerQuit", "PlayerSwitch", "PrivateMessage"));
 		
 		config.addDefault("storage.method", "H2");
 		config.addDefault("storage.folder", "{0}/files");
@@ -768,18 +767,22 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.private-messages.format.received.terminal", "&7<&8[&b&lPM&8] &f{sender} &e-> &fYou&7> &f");
 		chat.addDefault("chat.private-messages.format.socialspy.chat", "&7«&8[&4&lSS&8] &f{sender} &e\u27A1 &f{recipient}&7» &f");
 		chat.addDefault("chat.private-messages.format.socialspy.terminal", "&7<&8[&4&lSS&8] &f{sender} &e-> &f{recipient}&7> &f");
+		chat.addDefault("chat.private-messages.format.placeholder.sender", "{player}");
+		chat.addDefault("chat.private-messages.format.placeholder.recipient", "{player}");
+		chat.addDefault("chat.private-messages.format.placeholder.placeholder-types", Arrays.asList("JUST_NAME"));
 		chat.addDefault("chat.private-messages.sound.enabled", true);
 		chat.addDefault("chat.private-messages.sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "ENTITY_EXPERIENCE_ORB_PICKUP" : "ORB_PICKUP");
 		chat.addDefault("chat.private-messages.sound.volume", 1F);
 		chat.addDefault("chat.private-messages.sound.pitch", 1F);
 		chat.addDefault("chat.private-messages.advancements.enabled", VersionUtils.getVersion().isAtLeast(Version.V1_13));
-		chat.addDefault("chat.private-messages.advancements.format", "&8[&b\u270E&8] &f{sender} &e\u27A1 &fYou\n&7");
+		chat.addDefault("chat.private-messages.advancements.format", "&8[&b\u270E&8] &f{sender_plain}\n&7");
 		chat.addDefault("chat.private-messages.advancements.max-message-length", 19);
 		chat.addDefault("chat.private-messages.advancements.icon.material", Environment.isSponge() || VersionUtils.getVersion().isAtLeast(Version.V1_13) ? "WRITABLE_BOOK" : "BOOK_AND_QUILL");
 		chat.addDefault("chat.private-messages.advancements.icon.glowing", true);
 		chat.addDefault("chat.private-messages.bypass-antispam-checks", Arrays.asList("CAPS", "FLOOD", "SPAM", "SWEAR"));
 		chat.addDefault("chat.private-messages.socialspy-on-join-enabled", true);
 		chat.addDefault("chat.private-messages.muted-players-blocked", false);
+		chat.addDefault("chat.private-messages.reply-to-last-sender", true);
 		
 		chat.addDefault("chat.player-ignore.enabled", true);
 		

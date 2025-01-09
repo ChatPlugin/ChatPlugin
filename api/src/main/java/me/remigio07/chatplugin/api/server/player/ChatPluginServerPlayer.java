@@ -37,6 +37,7 @@ import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.bossbar.PlayerBossbar;
 import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager;
 import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
+import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.rank.Rank;
 import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
@@ -351,10 +352,12 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	}
 	
 	/**
-	 * Gets the last player that has sent a private message to this player.
+	 * Gets this player's last correspondent.
 	 * 
-	 * <p>Will return <code>null</code> if no private messages were sent to this
-	 * player since they have joined or if the correspondent was unloaded.</p>
+	 * <p>Will return <code>null</code> if this player does not have a correspondent.
+	 * Returned value is the last player that has sent a private message to this
+	 * player if {@link PrivateMessagesManager#isReplyToLastSender()}, otherwise
+	 * it is the player to whom this player has last sent a private message.</p>
 	 * 
 	 * <p><strong>Note:</strong> the returned player may be vanished or
 	 * in another server under the proxy and <code>null</code> does not
@@ -362,7 +365,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	 * 
 	 * @return Player's last correspondent
 	 */
-	@Nullable(why = "There may not be a correspondent loaded")
+	@Nullable(why = "There may not be a correspondent")
 	public OfflinePlayer getLastCorrespondent() {
 		return lastCorrespondent;
 	}

@@ -46,9 +46,11 @@ import me.remigio07.chatplugin.api.server.event.chat.PrePrivateMessageEvent;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
+import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 import me.remigio07.chatplugin.api.server.util.URLValidator;
 import me.remigio07.chatplugin.api.server.util.adapter.block.MaterialAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
+import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.bootstrap.Environment;
@@ -72,6 +74,9 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 		receivedTerminalFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.format.received.terminal");
 		socialspyChatFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.format.socialspy.chat");
 		socialspyTerminalFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.format.socialspy.terminal");
+		senderPlaceholderFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.format.placeholder.sender");
+		recipientPlaceholderFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.format.placeholder.recipient");
+		placeholderPlaceholderTypes = PlaceholderType.getPlaceholders(ConfigurationType.CHAT.get().getStringList("chat.private-messages.format.placeholder.placeholder-types"));
 		soundEnabled = ConfigurationType.CHAT.get().getBoolean("chat.private-messages.sound.enabled");
 		sound = new SoundAdapter(ConfigurationType.CHAT.get(), "chat.private-messages.sound");
 		advancementsEnabled = ConfigurationType.CHAT.get().getBoolean("chat.private-messages.advancements.enabled");
@@ -98,17 +103,19 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 				bypassAntispamChecks.add((DenyChatReason<AntispamManager>) check);
 		socialspyOnJoinEnabled = ConfigurationType.CHAT.get().getBoolean("chat.private-messages.socialspy-on-join-enabled");
 		mutedPlayersBlocked = ConfigurationType.CHAT.get().getBoolean("chat.private-messages.muted-players-blocked");
+		replyToLastSender = ConfigurationType.CHAT.get().getBoolean("chat.private-messages.reply-to-last-sender");
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}
 	
 	@Override
 	public void unload() throws ChatPluginManagerException {
-		enabled = soundEnabled = socialspyOnJoinEnabled = mutedPlayersBlocked = advancementsEnabled = advancementsIconGlowing = false;
+		enabled = soundEnabled = advancementsEnabled = advancementsIconGlowing = socialspyOnJoinEnabled = mutedPlayersBlocked = replyToLastSender = false;
 		
+		placeholderPlaceholderTypes.clear();
 		bypassAntispamChecks.clear();
 		
-		sentChatFormat = sentTerminalFormat = receivedChatFormat = receivedTerminalFormat = socialspyChatFormat = socialspyTerminalFormat = advancementsFormat = null;
+		sentChatFormat = sentTerminalFormat = receivedChatFormat = receivedTerminalFormat = socialspyChatFormat = socialspyTerminalFormat = senderPlaceholderFormat = recipientPlaceholderFormat = advancementsFormat = null;
 		sound = null;
 		advancementsMaxMessageLength = 0;
 		advancementsIconMaterial = null;
@@ -123,6 +130,7 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 			throw new IllegalArgumentException("The sender and the recipient correspond");
 		if (privateMessage.length() > 505)
 			throw new IllegalArgumentException("Specified private message is longer than 505 characters");
+		String[] placeholders = new String[] { sender == null ? "" : formatPlaceholder(senderPlaceholderFormat, sender), recipient == null ? "" : formatPlaceholder(recipientPlaceholderFormat, recipient) };
 		Mute mute;
 		
 		if (sender == null) {
@@ -130,17 +138,17 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 				ChatPluginServerPlayer recipientPlayer = recipient.toServerPlayer();
 				
 				if (recipientPlayer != null) {
-					if ((privateMessage = performEvents(null, recipient, privateMessage)) != null) {
-						sendMessageToSender(null, recipient, privateMessage);
-						sendMessageToRecipient(null, recipientPlayer, privateMessage);
+					if ((privateMessage = performEvents(null, recipient, placeholders, privateMessage)) != null) {
+						sendMessageToSender(null, recipient, placeholders, privateMessage);
+						sendMessageToRecipient(null, recipientPlayer, placeholders, privateMessage);
 					}
 				} else ChatPlugin.getInstance().sendConsoleMessage(Language.getMainLanguage().getMessage("misc.disabled-world"), false);
 			} else ChatPlugin.getInstance().sendConsoleMessage(Language.getMainLanguage().getMessage("misc.player-not-found", recipient.getName()), false);
 		} else if (!mutedPlayersBlocked || !MuteManager.getInstance().isEnabled() || (mute = MuteManager.getInstance().getActiveMute(sender, ProxyManager.getInstance().getServerID())) == null) {
 			if (recipient == null) {
-				if ((privateMessage = performEvents(sender, null, privateMessage)) != null) {
-					sendMessageToSender(sender, null, privateMessage);
-					sendMessageToRecipient(sender, null, privateMessage);
+				if ((privateMessage = performEvents(sender, null, placeholders, privateMessage)) != null) {
+					sendMessageToSender(sender, null, placeholders, privateMessage);
+					sendMessageToRecipient(sender, null, placeholders, privateMessage);
 				}
 			} else if (recipient.isOnline()) {
 				ChatPluginServerPlayer recipientPlayer = recipient.toServerPlayer();
@@ -148,12 +156,12 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 				if (recipientPlayer != null) {
 					if (!recipientPlayer.isVanished() || sender.hasPermission(VanishManager.VANISH_PERMISSION)) {
 						if (!recipientPlayer.getIgnoredPlayers().contains(sender)) {
-							if ((privateMessage = performEvents(sender, recipient, privateMessage)) != null) {
+							if ((privateMessage = performEvents(sender, recipient, placeholders, privateMessage)) != null) {
 								if (!ProxyManager.getInstance().isEnabled()) {
 									if (!sender.hasPermission("chatplugin.commands.socialspy") && !recipientPlayer.hasPermission("chatplugin.commands.socialspy"))
-										sendSocialspyNotifications(sender, recipientPlayer, privateMessage);
-									sendMessageToSender(sender, recipient, privateMessage);
-									sendMessageToRecipient(sender, recipientPlayer, privateMessage);
+										sendSocialspyNotifications(sender, recipientPlayer, placeholders, privateMessage);
+									sendMessageToSender(sender, recipient, placeholders, privateMessage);
+									sendMessageToRecipient(sender, recipientPlayer, placeholders, privateMessage);
 								} else ProxyManager.getInstance().sendPluginMessage(Packets.Messages.privateMessage(
 										"ALL",
 										ProxyManager.getInstance().getServerID(),
@@ -163,6 +171,7 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 										recipient.getName(),
 										sender.hasPermission(VanishManager.VANISH_PERMISSION),
 										!sender.hasPermission("chatplugin.commands.socialspy") && !recipientPlayer.hasPermission("chatplugin.commands.socialspy"),
+										placeholders,
 										privateMessage
 										));
 							}
@@ -179,48 +188,57 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 						recipient.getName(),
 						sender.hasPermission(VanishManager.VANISH_PERMISSION),
 						!sender.hasPermission("chatplugin.commands.socialspy"),
+						placeholders,
 						privateMessage
 						));
 			else sender.sendTranslatedMessage("misc.player-not-found", recipient.getName());
 		} else sender.sendMessage(mute.formatPlaceholders(sender.getLanguage().getMessage("mute.no-chat"), sender.getLanguage()));
 	}
 	
-	public void sendMessageToSender(ChatPluginServerPlayer sender, OfflinePlayer recipient, String privateMessage) {
-		if (sender == null)
-			ChatPlugin.getInstance().sendConsoleMessage(formatPlaceholders(sentTerminalFormat, sender, recipient) + privateMessage, false);
-		else sender.sendMessage(formatPlaceholders(sentChatFormat, sender, recipient) + privateMessage);
+	public void sendMessageToSender(ChatPluginServerPlayer sender, OfflinePlayer recipient, String[] placeholders, String privateMessage) {
+		if (sender != null) {
+			if (!replyToLastSender)
+				((BaseChatPluginServerPlayer) sender).setLastCorrespondent(recipient);
+			sender.sendMessage(formatPlaceholders(sentChatFormat, placeholders, sender, recipient) + privateMessage);
+		} else ChatPlugin.getInstance().sendConsoleMessage(formatPlaceholders(sentTerminalFormat, placeholders, sender, recipient) + privateMessage, false);
 	}
 	
-	public void sendMessageToRecipient(OfflinePlayer sender, ChatPluginServerPlayer recipient, String privateMessage) {
+	public void sendMessageToRecipient(OfflinePlayer sender, ChatPluginServerPlayer recipient, String[] placeholders, String privateMessage) {
 		if (recipient != null) {
 			if (advancementsEnabled)
-				Utils.displayAdvancement(recipient, formatPlaceholders(advancementsFormat, sender, recipient)
+				Utils.displayAdvancement(recipient, formatPlaceholders(advancementsFormat, placeholders, sender, recipient)
 						+ me.remigio07.chatplugin.common.util.Utils.abbreviate(privateMessage, privateMessage.toLowerCase().contains("\u00A7l") ? advancementsMaxMessageLength - 2 : advancementsMaxMessageLength, true),
 						advancementsIconMaterial, advancementsIconGlowing);
 			if (soundEnabled)
 				recipient.playSound(sound);
-			recipient.sendMessage(formatPlaceholders(receivedChatFormat, sender, recipient) + privateMessage);
-			((BaseChatPluginServerPlayer) recipient).setLastCorrespondent(sender);
-		} else ChatPlugin.getInstance().sendConsoleMessage(formatPlaceholders(receivedTerminalFormat, sender, recipient) + privateMessage, false);
+			if (replyToLastSender)
+				((BaseChatPluginServerPlayer) recipient).setLastCorrespondent(sender);
+			recipient.sendMessage(formatPlaceholders(receivedChatFormat, placeholders, sender, recipient) + privateMessage);
+		} else ChatPlugin.getInstance().sendConsoleMessage(formatPlaceholders(receivedTerminalFormat, placeholders, sender, recipient) + privateMessage, false);
 	}
 	
-	private static String formatPlaceholders(String input, OfflinePlayer sender, OfflinePlayer recipient) {
+	public void sendSocialspyNotifications(OfflinePlayer sender, OfflinePlayer recipient, String[] placeholders, String privateMessage) {
+		for (ChatPluginServerPlayer staffMember : ServerPlayerManager.getInstance().getPlayers().values())
+			if (staffMember.hasSocialspyEnabled())
+				staffMember.sendMessage(formatPlaceholders(socialspyChatFormat, placeholders, sender, recipient) + privateMessage);
+		ChatPlugin.getInstance().sendConsoleMessage(formatPlaceholders(socialspyTerminalFormat, placeholders, sender, recipient) + privateMessage, false);
+	}
+	
+	private String formatPlaceholders(String input, String[] placeholders, OfflinePlayer sender, OfflinePlayer recipient) {
 		return ChatColor.translate(input
-				.replace("{sender}", sender == null ? "Console" : sender.getName())
-				.replace("{sender_uuid}", (sender == null ? Utils.NIL_UUID : sender.getUUID()).toString())
-				.replace("{recipient}", recipient == null ? "Console" : recipient.getName())
-				.replace("{recipient_uuid}", (recipient == null ? Utils.NIL_UUID : recipient.getUUID()).toString())
+				.replace("{sender}", sender == null ? "Console" : placeholders[0])
+				.replace("{sender_plain}", sender == null ? "Console" : sender.getName())
+				.replace("{recipient}", recipient == null ? "Console" : placeholders[1])
+				.replace("{recipient_plain}", recipient == null ? "Console" : recipient.getName())
 				);
 	}
 	
-	public void sendSocialspyNotifications(OfflinePlayer sender, OfflinePlayer recipient, String privateMessage) {
-		for (ChatPluginServerPlayer staffMember : ServerPlayerManager.getInstance().getPlayers().values())
-			if (staffMember.hasSocialspyEnabled())
-				staffMember.sendMessage(formatPlaceholders(socialspyChatFormat, sender, recipient) + privateMessage);
-		ChatPlugin.getInstance().sendConsoleMessage(formatPlaceholders(socialspyTerminalFormat, sender, recipient) + privateMessage, false);
+	public String formatPlaceholder(String placeholder, OfflinePlayer player) {
+		ChatPluginServerPlayer serverPlayer = player.toServerPlayer();
+		return serverPlayer == null ? placeholder : PlaceholderManager.getInstance().translatePlaceholders(placeholder, serverPlayer, serverPlayer.getLanguage(), placeholderPlaceholderTypes);
 	}
 	
-	public String performEvents(ChatPluginServerPlayer sender, OfflinePlayer recipient, String privateMessage) {
+	public String performEvents(ChatPluginServerPlayer sender, OfflinePlayer recipient, String[] placeholders, String privateMessage) {
 		privateMessage = privateMessage.trim().replaceAll(" +", " ");
 		PrePrivateMessageEvent prePrivateMessageEvent = new PrePrivateMessageEvent(sender, recipient, privateMessage);
 		
@@ -292,7 +310,7 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 				ChatLogManager.getInstance().logPrivateMessage(sender, recipient, privateMessage, null);
 			if (!ChatLogManager.getInstance().isPrintToLogFile())
 				return privateMessage;
-		} LogManager.getInstance().writeToFile(ChatColor.stripColor(formatPlaceholders(socialspyTerminalFormat, sender, recipient) + privateMessage));
+		} LogManager.getInstance().writeToFile(ChatColor.stripColor(formatPlaceholders(socialspyTerminalFormat, placeholders, sender, recipient) + privateMessage));
 		return privateMessage;
 	}
 	

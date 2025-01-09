@@ -29,6 +29,7 @@ import me.remigio07.chatplugin.api.server.event.chat.AllowPrivateMessageEvent;
 import me.remigio07.chatplugin.api.server.event.chat.DenyPrivateMessageEvent;
 import me.remigio07.chatplugin.api.server.event.chat.PrePrivateMessageEvent;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 import me.remigio07.chatplugin.api.server.util.adapter.block.MaterialAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 
@@ -40,8 +41,9 @@ import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 public abstract class PrivateMessagesManager implements ChatPluginManager {
 	
 	protected static PrivateMessagesManager instance;
-	protected boolean enabled, soundEnabled, socialspyOnJoinEnabled, mutedPlayersBlocked, advancementsEnabled, advancementsIconGlowing;
-	protected String sentChatFormat, sentTerminalFormat, receivedChatFormat, receivedTerminalFormat, socialspyChatFormat, socialspyTerminalFormat, advancementsFormat;
+	protected boolean enabled, soundEnabled, advancementsEnabled, advancementsIconGlowing, socialspyOnJoinEnabled, mutedPlayersBlocked, replyToLastSender;
+	protected String sentChatFormat, sentTerminalFormat, receivedChatFormat, receivedTerminalFormat, socialspyChatFormat, socialspyTerminalFormat, senderPlaceholderFormat, recipientPlaceholderFormat, advancementsFormat;
+	protected List<PlaceholderType> placeholderPlaceholderTypes = Collections.emptyList();
 	protected SoundAdapter sound;
 	protected int advancementsMaxMessageLength;
 	protected MaterialAdapter advancementsIconMaterial;
@@ -70,29 +72,6 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Checks if socialspy should be enabled for players who join the
-	 * server and have the permission "chatplugin.commands.socialspy".
-	 * 
-	 * <p><strong>Found at:</strong> "chat.private-messages.socialspy-on-join-enabled" in {@link ConfigurationType#CHAT}</p>
-	 * 
-	 * @return Whether socialspy should be enabled on join
-	 */
-	public boolean isSocialspyOnJoinEnabled() {
-		return socialspyOnJoinEnabled;
-	}
-	
-	/**
-	 * Checks if private messages sent by muted players should be blocked.
-	 * 
-	 * <p><strong>Found at:</strong> "chat.private-messages.muted-players-blocked" in {@link ConfigurationType#CHAT}</p>
-	 * 
-	 * @return Whether to block private messages sent by muted players
-	 */
-	public boolean areMutedPlayersBlocked() {
-		return mutedPlayersBlocked;
-	}
-	
-	/**
 	 * Checks if private messages received by players
 	 * should also be displayed as custom advancements.
 	 * 
@@ -117,10 +96,46 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	}
 	
 	/**
+	 * Checks if socialspy should be enabled for players who join the
+	 * server and have the permission "chatplugin.commands.socialspy".
+	 * 
+	 * <p><strong>Found at:</strong> "chat.private-messages.socialspy-on-join-enabled" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Whether socialspy should be enabled on join
+	 */
+	public boolean isSocialspyOnJoinEnabled() {
+		return socialspyOnJoinEnabled;
+	}
+	
+	/**
+	 * Checks if private messages sent by muted players should be blocked.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.private-messages.muted-players-blocked" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Whether to block private messages sent by muted players
+	 */
+	public boolean areMutedPlayersBlocked() {
+		return mutedPlayersBlocked;
+	}
+	
+	/**
+	 * Checks if <code>/reply</code> should send a message to the last sender.
+	 * 
+	 * <p>Will return <code>false</code> if it should send a message to the last recipient.</p>
+	 * 
+	 * <p><strong>Found at:</strong> "chat.private-messages.reply-to-last-sender" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Whether to reply to the last sender
+	 */
+	public boolean isReplyToLastSender() {
+		return replyToLastSender;
+	}
+	
+	/**
 	 * Gets the chat format displayed to players when
 	 * they send a private message to someone else.
 	 * 
-	 * <p><strong>Found at:</strong> "chat.private-messages.format.sent.chat"</p>
+	 * <p><strong>Found at:</strong> "chat.private-messages.format.sent.chat" in {@link ConfigurationType#CHAT}</p>
 	 * 
 	 * @return Sent messages' chat format
 	 */
@@ -132,7 +147,7 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	 * Gets the chat format displayed in the terminal when
 	 * the console sends a private message to someone else.
 	 * 
-	 * <p><strong>Found at:</strong> "chat.private-messages.format.sent.terminal"</p>
+	 * <p><strong>Found at:</strong> "chat.private-messages.format.sent.terminal" in {@link ConfigurationType#CHAT}</p>
 	 * 
 	 * @return Sent messages' terminal format
 	 */
@@ -144,7 +159,7 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	 * Gets the chat format displayed to players when
 	 * they receive a private message from someone else.
 	 * 
-	 * <p><strong>Found at:</strong> "chat.private-messages.format.received.chat"</p>
+	 * <p><strong>Found at:</strong> "chat.private-messages.format.received.chat" in {@link ConfigurationType#CHAT}</p>
 	 * 
 	 * @return Received messages' chat format
 	 */
@@ -156,7 +171,7 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	 * Gets the chat format displayed in the terminal when
 	 * the console receives a private message from someone else.
 	 * 
-	 * <p><strong>Found at:</strong> "chat.private-messages.format.received.terminal"</p>
+	 * <p><strong>Found at:</strong> "chat.private-messages.format.received.terminal" in {@link ConfigurationType#CHAT}</p>
 	 * 
 	 * @return Received messages' terminal format
 	 */
@@ -168,7 +183,7 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	 * Gets the chat format displayed to Staff members when
 	 * players send a private message to someone else.
 	 * 
-	 * <p><strong>Found at:</strong> "chat.private-messages.format.socialspy.chat"</p>
+	 * <p><strong>Found at:</strong> "chat.private-messages.format.socialspy.chat" in {@link ConfigurationType#CHAT}</p>
 	 * 
 	 * @return Socialspy's chat format
 	 */
@@ -180,7 +195,7 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	 * Gets the chat format displayed in the terminal when
 	 * players send a private message to someone else.
 	 * 
-	 * <p><strong>Found at:</strong> "chat.private-messages.format.socialspy.terminal"</p>
+	 * <p><strong>Found at:</strong> "chat.private-messages.format.socialspy.terminal" in {@link ConfigurationType#CHAT}</p>
 	 * 
 	 * @return Socialspy's terminal format
 	 */
@@ -189,15 +204,50 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	}
 	
 	/**
+	 * Gets the format of the "{sender}" placeholder.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.private-messages.format.placeholder.sender" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Sender placeholder's format
+	 */
+	public String getSenderPlaceholderFormat() {
+		return senderPlaceholderFormat;
+	}
+	
+	/**
+	 * Gets the format of the "{recipient}" placeholder.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.private-messages.format.placeholder.recipient" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Recipient placeholder's format
+	 */
+	public String getRecipientPlaceholderFormat() {
+		return recipientPlaceholderFormat;
+	}
+	
+	/**
 	 * Gets the advancement format displayed to players when
 	 * they receive a private message from someone else.
 	 * 
-	 * <p><strong>Found at:</strong> "chat.private-messages.advancements.format"</p>
+	 * <p><strong>Found at:</strong> "chat.private-messages.advancements.format" in {@link ConfigurationType#CHAT}</p>
 	 * 
 	 * @return Received private messages' advancement format
 	 */
 	public String getAdvancementsFormat() {
 		return advancementsFormat;
+	}
+	
+	/**
+	 * Gets the list of placeholder types used to
+	 * translate {@link #getSenderPlaceholderFormat()}
+	 * and {@link #getRecipientPlaceholderFormat()}.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.private-messages.format.placeholder.placeholder-types" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Placeholders used to translate sender and recipient placeholders
+	 */
+	public List<PlaceholderType> getPlaceholderPlaceholderTypes() {
+		return placeholderPlaceholderTypes;
 	}
 	
 	/**
@@ -228,7 +278,7 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	 * Gets the material of the icon of the advancement displayed to
 	 * players when they receive a private message from someone else.
 	 * 
-	 * <p><strong>Found at:</strong> "chat.private-messages.advancements.icon.material"</p>
+	 * <p><strong>Found at:</strong> "chat.private-messages.advancements.icon.material" in {@link ConfigurationType#CHAT}</p>
 	 * 
 	 * @return Advancements' icon's material
 	 */
@@ -239,6 +289,8 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	/**
 	 * Gets the antispam's checks to bypass
 	 * when checking the private messages.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.private-messages.bypass-antispam-checks" in {@link ConfigurationType#CHAT}</p>
 	 * 
 	 * @return Private messages' antispam's checks
 	 */

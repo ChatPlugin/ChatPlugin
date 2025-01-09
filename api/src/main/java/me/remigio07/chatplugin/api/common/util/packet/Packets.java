@@ -146,6 +146,7 @@ public class Packets {
 		 * @param recipientName Recipient's name
 		 * @param canSeeVanished Whether the sender has {@link VanishManager#VANISH_PERMISSION}
 		 * @param allowSocialspy Whether socialspy notifications will be sent
+		 * @param placeholders Private message's sender and recipient placeholders
 		 * @param privateMessage Private message to send
 		 * @return <code>PrivateMessage</code> packet
 		 */
@@ -160,6 +161,7 @@ public class Packets {
 				@NotNull String recipientName,
 				boolean canSeeVanished,
 				boolean allowSocialspy,
+				@NotNull String[] placeholders,
 				@NotNull String privateMessage
 				) {
 			return new PacketSerializer("PrivateMessage")
@@ -171,6 +173,7 @@ public class Packets {
 					.writeUTF(recipientName)
 					.writeBoolean(canSeeVanished)
 					.writeBoolean(allowSocialspy)
+					.writeUTFArray(placeholders)
 					.writeUTF(privateMessage);
 		}
 		

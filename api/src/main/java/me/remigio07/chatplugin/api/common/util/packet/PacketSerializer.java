@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2024  Remigio07
+ * 	Copyright 2025  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -153,7 +153,7 @@ public class PacketSerializer {
 	 * @param arg Double to write
 	 * @return This packet serializer
 	 */
-	public PacketSerializer	writeDouble(double arg) {
+	public PacketSerializer writeDouble(double arg) {
 		try {
 			output.writeDouble(arg);
 		} catch (IOException e) {

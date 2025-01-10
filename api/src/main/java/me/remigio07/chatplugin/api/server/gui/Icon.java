@@ -1,6 +1,6 @@
 /*
  * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
- * 	Copyright 2024  Remigio07
+ * 	Copyright 2025  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -687,8 +687,9 @@ public class Icon {
 	 * @see #calcIconPosition(int, int)
 	 */
 	public static int[] calcIconCoords(int position) {
+		position = position < 0 ? 0 : position > 53 ? 53 : position;
 		int y = position / 9 + 1;
-		return position < 0 ? new int[] { 0, 0 } : new int[] { position - 9 * (y - 1) + 1, y };
+		return new int[] { position - 9 * (y - 1) + 1, y };
 	}
 	
 }

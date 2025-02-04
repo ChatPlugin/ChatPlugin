@@ -9,7 +9,7 @@ java {
 }
 
 javadoc {
-	title 'ChatPlugin ' + rootProject.version + ' API'
+	title = 'ChatPlugin ' + rootProject.version + ' API'
 	options.docTitle title
 	options.windowTitle title
 	options.header title
@@ -21,9 +21,9 @@ javadoc {
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			groupId rootProject.group
-			artifactId 'api'
-			version rootProject.version
+			groupId = rootProject.group
+			artifactId = 'api'
+			version = rootProject.version
 			from components.java
 			pom {
 				name = 'ChatPlugin'
@@ -66,12 +66,12 @@ publishing {
 	}
 	repositories {
 		maven {
-			name 'OSSRH'
-			url version.endsWith('SNAPSHOT') ? 'https://s01.oss.sonatype.org/content/repositories/snapshots/' : 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+			name = 'OSSRH'
+			url = version.endsWith('SNAPSHOT') ? 'https://s01.oss.sonatype.org/content/repositories/snapshots/' : 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
 			
 			credentials {
-				username ossrhUsername
-				password ossrhPassword
+				username = ossrhUsername
+				password = ossrhPassword
 			}
 		}
 	}

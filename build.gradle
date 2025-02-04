@@ -3,8 +3,8 @@ plugins {
 	id 'eclipse'
 }
 
-group 'me.remigio07.chatplugin'
-version '1.9.10'
+group = 'me.remigio07.chatplugin'
+version = '1.9.10'
 jar.enabled = false
 
 subprojects {
@@ -12,19 +12,20 @@ subprojects {
 	apply plugin: 'eclipse'
 	
 	repositories {
-		maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
-		maven { url 'https://repo.spongepowered.org/repository/maven-public/' }
-		maven { url 'https://repo.papermc.io/repository/maven-public/' }
+		maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots' }
+		maven { url = 'https://repo.spongepowered.org/repository/maven-public' }
+		maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+		maven { url = 'https://repo.papermc.io/repository/maven-public' }
 	}
 	
 	dependencies {
-		compileOnly('org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT') {
+		compileOnly('org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT') {
 			exclude group: 'org.yaml', module: 'snakeyaml'
 		}
 		compileOnly('org.spongepowered:spongeapi:7.4.0') {
 			exclude group: 'org.yaml', module: 'snakeyaml'
 		}
-		compileOnly('io.github.waterfallmc:waterfall-api:1.21-R0.1-SNAPSHOT') {
+		compileOnly('net.md-5:bungeecord-api:1.21-R0.1-SNAPSHOT') {
 			exclude group: 'org.yaml', module: 'snakeyaml'
 		}
 		compileOnly('com.velocitypowered:velocity-api:3.1.1') {

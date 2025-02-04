@@ -3,13 +3,13 @@ plugins {
 }
 
 repositories {
-	maven { url 'https://jitpack.io' }
-	maven { url 'https://repo.viaversion.com' }
-	maven { url 'https://maven.enginehub.org/repo/' }
-	maven { url 'https://repo.essentialsx.net/releases/' }
-	maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
-	maven { url 'https://repo.rosewooddev.io/repository/public/' }
-	maven { url 'https://nexus.scarsz.me/content/groups/public/' }
+	maven { url = 'https://jitpack.io' }
+	maven { url = 'https://repo.viaversion.com' }
+	maven { url = 'https://maven.enginehub.org/repo/' }
+	maven { url = 'https://repo.essentialsx.net/releases/' }
+	maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+	maven { url = 'https://repo.rosewooddev.io/repository/public/' }
+	maven { url = 'https://nexus.scarsz.me/content/groups/public/' }
 }
 
 ext.libsDir = project.projectDir.path + '/libs/'

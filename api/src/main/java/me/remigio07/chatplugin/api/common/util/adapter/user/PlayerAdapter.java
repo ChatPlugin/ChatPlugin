@@ -41,6 +41,7 @@ import me.remigio07.chatplugin.api.proxy.util.Utils;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.bootstrap.JARLibraryLoader;
 import me.remigio07.chatplugin.bootstrap.VelocityBootstrapper;
+import net.md_5.bungee.api.ProxyServer;
 
 /**
  * Environment indipendent (Bukkit, Sponge, BungeeCord and Velocity) player adapter.
@@ -324,7 +325,7 @@ public class PlayerAdapter {
 			player = Sponge.getServer().getPlayer(uuid).orElse(null);
 			break;
 		case BUNGEECORD:
-			player = me.remigio07.chatplugin.api.proxy.util.Utils.invokeBungeeCordMethod("getPlayer", new Class<?>[] { UUID.class }, uuid);
+			player = ProxyServer.getInstance().getPlayer(uuid);
 			break;
 		case VELOCITY:
 			player = VelocityBootstrapper.getInstance().getProxy().getPlayer(uuid).orElse(null);
@@ -356,7 +357,7 @@ public class PlayerAdapter {
 			player = Sponge.getServer().getPlayer(name).orElse(null);
 			break;
 		case BUNGEECORD:
-			player = Utils.invokeBungeeCordMethod("getPlayer", new Class<?>[] { String.class }, name);
+			player = ProxyServer.getInstance().getPlayer(name);
 			break;
 		case VELOCITY:
 			player = VelocityBootstrapper.getInstance().getProxy().getPlayer(name).orElse(null);
@@ -385,7 +386,7 @@ public class PlayerAdapter {
 			players = Sponge.getServer().getOnlinePlayers();
 			break;
 		case BUNGEECORD:
-			players = (Collection<?>) Utils.invokeBungeeCordMethod("getPlayers", null);
+			players = ProxyServer.getInstance().getPlayers();
 			break;
 		case VELOCITY:
 			players = VelocityBootstrapper.getInstance().getProxy().getAllPlayers();

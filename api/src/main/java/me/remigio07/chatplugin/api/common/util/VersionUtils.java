@@ -27,6 +27,7 @@ import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerExceptio
 import me.remigio07.chatplugin.api.proxy.util.Utils;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.bootstrap.VelocityBootstrapper;
+import net.md_5.bungee.api.ProxyServer;
 
 /**
  * Util class used to grab information
@@ -60,8 +61,8 @@ public class VersionUtils {
 			implementationName = "Sponge";
 			break;
 		case BUNGEECORD:
-			version = Version.getVersion((int) Utils.invokeBungeeCordMethod("getProtocolVersion", null), false);
-			implementationVersion = (String) Utils.invokeBungeeCordMethod("getVersion", null);
+			version = Version.getVersion((int) ProxyServer.getInstance().getProtocolVersion(), false); // used to be a byte
+			implementationVersion = ProxyServer.getInstance().getVersion();
 			implementationName = isFlameCord() ? "FlameCord" : isWaterfall() ? "Waterfall" : "BungeeCord";
 			break;
 		case VELOCITY:
@@ -1083,7 +1084,6 @@ public class VersionUtils {
 				format = toString();
 			else format = getName();
 			int dot = format.indexOf('.');
-			
 			return ConfigurationType.CONFIG.get().getBoolean("settings.truncate-version-string") && dot != -1 && format.indexOf('.', dot + 1) != -1 ? format.substring(0, format.indexOf('.', dot + 1)) : format;
 		}
 		

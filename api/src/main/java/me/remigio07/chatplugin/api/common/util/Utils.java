@@ -16,7 +16,6 @@
 package me.remigio07.chatplugin.api.common.util;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -39,6 +38,7 @@ import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagers;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.bootstrap.VelocityBootstrapper;
+import net.md_5.bungee.api.ProxyServer;
 
 /**
  * Common utils class.
@@ -312,12 +312,7 @@ public class Utils {
 		case SPONGE:
 			return Sponge.getServer().getMaxPlayers();
 		case BUNGEECORD:
-			try {
-				return (int) Class.forName("net.md_5.bungee.conf.Configuration").getMethod("getPlayerLimit").invoke(me.remigio07.chatplugin.api.proxy.util.Utils.invokeBungeeCordMethod("getConfig", null));
-			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-				e.printStackTrace();
-				return -1;
-			}
+			return ProxyServer.getInstance().getConfigurationAdapter().getInt("player_limit", -1);
 		case VELOCITY:
 			return VelocityBootstrapper.getInstance().getProxy().getConfiguration().getShowMaxPlayers();
 		} return -1;

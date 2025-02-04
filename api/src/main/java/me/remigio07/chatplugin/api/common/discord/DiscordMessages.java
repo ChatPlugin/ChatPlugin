@@ -167,11 +167,11 @@ public class DiscordMessages {
 		 * @param input Input containing placeholders
 		 * @return Translated placeholders
 		 */
-		public String translateStatus(String input) {
+		public String translateStatus(String input) { // TODO: standardize (PlaceholderManagerImpl)
 			Runtime runtime = Runtime.getRuntime();
 			return input == null ? null : translateVersion(input
 					.replace("{online_minecraft}", String.valueOf(PlayerAdapter.getOnlinePlayers().size()))
-					.replace("{online_discord}", String.valueOf(DiscordBot.getInstance().getOnlineUsers()))
+					.replace("{discord_users}", String.valueOf(DiscordBot.getInstance().getUsers()))
 					.replace("{enabled_players}", String.valueOf(PlayerManager.getInstance().getTotalPlayers()))
 					.replace("{enabled_managers}", String.valueOf(ChatPluginManagers.getInstance().getEnabledManagers().size()))
 					.replace("{max_players}", String.valueOf(Utils.getMaxPlayers()))

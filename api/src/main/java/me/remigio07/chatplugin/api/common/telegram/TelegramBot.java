@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.common.telegram;
 
 import me.remigio07.chatplugin.api.common.event.telegram.MessageSendEvent;
 import me.remigio07.chatplugin.api.common.event.telegram.StatusUpdateEvent;
+import me.remigio07.chatplugin.api.common.util.Utils;
 
 /**
  * Represents the Telegram bot handled by the {@link TelegramIntegrationManager}.
@@ -73,7 +74,17 @@ public interface TelegramBot {
 	 * 
 	 * @return Users' amount
 	 */
-	public int getUsersAmount();
+	public int getUsers();
+	
+	/**
+	 * Gets the title of the specified chat.
+	 * 
+	 * <p>Will return {@link Utils#NOT_APPLICABLE} if it is invalid.</p>
+	 * 
+	 * @param chatID Chat's ID
+	 * @return Chat's title
+	 */
+	public String getChatTitle(long chatID);
 	
 	/**
 	 * Updates the bot's current status.

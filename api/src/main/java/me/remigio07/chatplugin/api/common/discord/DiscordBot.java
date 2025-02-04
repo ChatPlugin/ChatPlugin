@@ -24,6 +24,7 @@ import javax.security.auth.login.LoginException;
 import me.remigio07.chatplugin.api.common.event.discord.EmbedMessageSendEvent;
 import me.remigio07.chatplugin.api.common.event.discord.PlainMessageSendEvent;
 import me.remigio07.chatplugin.api.common.event.discord.StatusUpdateEvent;
+import me.remigio07.chatplugin.api.common.util.Utils;
 
 /**
  * Represents the Discord bot handled by the {@link DiscordIntegrationManager}.
@@ -157,12 +158,21 @@ public interface DiscordBot {
 	public Object getJDA();
 	
 	/**
-	 * Gets the amount of users currently
-	 * online on the Discord server.
+	 * Gets the amount of users in the Discord server.
 	 * 
-	 * @return Online users' amount
+	 * @return Users' amount
 	 */
-	public int getOnlineUsers();
+	public int getUsers();
+	
+	/**
+	 * Gets the name of the specified channel.
+	 * 
+	 * <p>Will return {@link Utils#NOT_APPLICABLE} if it is invalid.</p>
+	 * 
+	 * @param channelID Channel's ID
+	 * @return Channel's name
+	 */
+	public String getChannelName(long channelID);
 	
 	/**
 	 * Gets a new embed message.

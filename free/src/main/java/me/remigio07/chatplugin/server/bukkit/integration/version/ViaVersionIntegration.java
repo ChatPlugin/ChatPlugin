@@ -17,7 +17,7 @@ package me.remigio07.chatplugin.server.bukkit.integration.version;
 
 import org.bukkit.entity.Player;
 
-import com.viaversion.viaversion.ViaVersionPlugin;
+import com.viaversion.viaversion.api.Via;
 import com.viaversion.viaversion.api.ViaAPI;
 
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
@@ -35,7 +35,7 @@ public class ViaVersionIntegration extends ChatPluginBukkitIntegration<VersionIn
 	
 	@Override
 	protected void loadAPI() {
-		api = ((ViaVersionPlugin) plugin).getApi();
+		api = Via.getAPI();
 	}
 	
 	@SuppressWarnings("unchecked")

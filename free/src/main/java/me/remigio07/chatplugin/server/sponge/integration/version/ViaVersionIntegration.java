@@ -17,7 +17,7 @@ package me.remigio07.chatplugin.server.sponge.integration.version;
 
 import org.spongepowered.api.entity.living.player.Player;
 
-import com.viaversion.viaversion.SpongePlugin;
+import com.viaversion.viaversion.api.Via;
 import com.viaversion.viaversion.api.ViaAPI;
 
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
@@ -35,7 +35,7 @@ public class ViaVersionIntegration extends ChatPluginSpongeIntegration<VersionIn
 	
 	@Override
 	protected void loadAPI() {
-		api = ((SpongePlugin) plugin).getApi();
+		api = Via.getAPI();
 	}
 	
 	@SuppressWarnings("unchecked")

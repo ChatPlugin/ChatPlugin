@@ -1,6 +1,5 @@
 plugins {
 	id 'java'
-	id 'eclipse'
 }
 
 group = 'me.remigio07.chatplugin'
@@ -9,7 +8,6 @@ jar.enabled = false
 
 subprojects {
 	apply plugin: 'java'
-	apply plugin: 'eclipse'
 	
 	repositories {
 		maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots' }

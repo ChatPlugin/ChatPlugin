@@ -42,6 +42,7 @@ import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.bootstrap.Environment;
+import me.remigio07.chatplugin.bootstrap.JARLibraryLoader;
 import me.remigio07.chatplugin.bootstrap.VelocityBootstrapper;
 import me.remigio07.chatplugin.common.util.text.ComponentTranslatorImpl;
 import net.md_5.bungee.api.ProxyServer;
@@ -112,6 +113,15 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 		} catch (Exception e) {
 			LogManager.log("Unable to check for updates using SpigotMC's API: {0}", 2, e.getMessage());
 		} return null;
+	}
+	
+	public static boolean isPrivateVersion() {
+		try {
+			Class.forName("me.remigio07.chatplugin.ChatPluginPrivateImpl", false, JARLibraryLoader.getInstance());
+			return true;
+		} catch (ClassNotFoundException cnfe) {
+			return false;
+		}
 	}
 	
 	public static boolean isBedrockPlayer(UUID player) {

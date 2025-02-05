@@ -1,10 +1,6 @@
 rootProject.name = 'chatplugin'
 
-include (
-	'api',
-	'free'
-)
+include ('api', 'free')
 
-if (new File(rootDir.absolutePath + '/premium/').isDirectory()) {
-	include 'premium'
-}
+if (new File(rootDir.absolutePath + '/premium/').isDirectory())
+	include('premium', 'private')

@@ -165,7 +165,7 @@ public class ChatPluginCommand extends BaseCommand {
 		@Override
 		public void execute(CommandSenderAdapter sender, me.remigio07.chatplugin.api.server.language.Language language, String[] args) {
 			if (sender.getName().equals("Remigio07") || sender.hasPermission(super.getPermission()))
-				sender.sendMessage(language.getMessage("commands.version", ChatPlugin.getInstance().isPremium() ? "§6Premium" : "§2Free", ChatPlugin.VERSION, VersionUtils.getImplementationName(), VersionUtils.getVersion().getName()));
+				sender.sendMessage(language.getMessage("commands.version", ChatPlugin.getInstance().isPremium() ? Utils.isPrivateVersion() ? "§5Private" : "§6Premium" : "§2Free", ChatPlugin.VERSION, VersionUtils.getImplementationName(), VersionUtils.getVersion().getName()));
 			else sender.sendMessage(language.getMessage("misc.no-permission"));
 		}
 		
@@ -209,7 +209,7 @@ public class ChatPluginCommand extends BaseCommand {
 							}
 						}, 0L);
 					} else player.sendTranslatedMessage("misc.cooldown-active");
-				} else player.sendTranslatedMessage("languages.invalid", Utils.getStringFromList(LanguageManager.getInstance().getLanguages().stream().map(me.remigio07.chatplugin.api.server.language.Language::getID).collect(Collectors.toList()), false, true));
+				} else player.sendTranslatedMessage("languages.invalid", args[1], Utils.getStringFromList(LanguageManager.getInstance().getLanguages().stream().map(me.remigio07.chatplugin.api.server.language.Language::getID).collect(Collectors.toList()), false, true));
 			} else sendUsage(player);
 		}
 		

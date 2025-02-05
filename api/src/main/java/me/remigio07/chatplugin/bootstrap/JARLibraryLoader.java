@@ -24,10 +24,8 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Class used to load ChatPlugin's libraries from JAR files.
@@ -35,6 +33,7 @@ import java.util.stream.Stream;
 public class JARLibraryLoader extends URLClassLoader {
 	
 	private static JARLibraryLoader instance = new JARLibraryLoader();
+	private static final String[] EDITIONS = new String[] { "", "Premium", "Private"};
 	
 	static {
 		registerAsParallelCapable();
@@ -55,12 +54,12 @@ public class JARLibraryLoader extends URLClassLoader {
 	public void initialize(Object... args) {
 		try {
 			Environment environment = Environment.getCurrent();
-			List<URL> jars = Stream.of(extract(false), extract(true)).filter(Objects::nonNull).collect(Collectors.toList());
+			List<URL> jars = extractJARs();
 			
 			if (instance.getURLs().length == 0)
 				for (URL jar : jars)
 					instance.addURL(jar);
-			Class<?> mainClass = Class.forName("me.remigio07.chatplugin.ChatPlugin" + (jars.size() == 2 ? "Premium" : "") + "Impl", true, instance);
+			Class<?> mainClass = Class.forName("me.remigio07.chatplugin.ChatPlugin" + EDITIONS[jars.size() - 1] + "Impl", true, instance);
 			
 			if (environment == Environment.VELOCITY)
 				mainClass.getMethod("load", Object.class, Object.class, Object.class).invoke(null, args);
@@ -81,19 +80,24 @@ public class JARLibraryLoader extends URLClassLoader {
 		addURL(target.toURI().toURL());
 	}
 	
-	private URL extract(boolean premium) throws IOException {
-		URL url = JARLibraryLoader.class.getClassLoader().getResource("ChatPlugin" + (premium ? "-PREMIUM" : "") + ".jar");
+	private List<URL> extractJARs() throws IOException {
+		List<URL> urls = new ArrayList<>();
 		
-		if (url == null)
-			return null;
-		try (InputStream input = url.openStream()) {
-			Path path = Files.createTempFile("ChatPlugin" + (premium ? "-PREMIUM" : ""), ".jar.tmp");
+		for (String edition : EDITIONS) {
+			String fileName = "ChatPlugin" + (edition.isEmpty() ? "" : '-' + edition.toUpperCase());
+			URL url = JARLibraryLoader.class.getClassLoader().getResource(fileName + ".jar");
 			
-			path.toFile().deleteOnExit();
-			Files.copy(input, path, StandardCopyOption.REPLACE_EXISTING);
-			return path.toUri().toURL();
-		}
+			if (url != null)
+				try (InputStream input = url.openStream()) {
+					Path path = Files.createTempFile(fileName, ".jar.tmp");
+					
+					path.toFile().deleteOnExit();
+					Files.copy(input, path, StandardCopyOption.REPLACE_EXISTING);
+					urls.add(path.toUri().toURL());
+				}
+		} return urls;
 	}
+	
 	
 	/**
 	 * Gets the loader's current instance.

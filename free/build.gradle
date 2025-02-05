@@ -2,6 +2,8 @@ plugins {
 	id 'com.gradleup.shadow' version '8.3.3'
 }
 
+def libsDir = project.projectDir.path + '/libs/'
+
 repositories {
 	maven { url = 'https://jitpack.io' }
 	maven { url = 'https://repo.viaversion.com' }
@@ -12,12 +14,8 @@ repositories {
 	maven { url = 'https://nexus.scarsz.me/content/groups/public/' }
 }
 
-ext.libsDir = project.projectDir.path + '/libs/'
-
 dependencies {
-	implementation project(':api')
-	
-	compileOnly 'org.spongepowered:spongecommon:1.12.2-7.4.7:dev@jar'
+	compileOnly project(':api')
 	
 	compileOnly files(libsDir + 'CombatLogX-11.5.0.0.1242.jar')
 	compileOnly files(libsDir + 'GadgetsMenu-4.15.3.jar')
@@ -27,12 +25,11 @@ dependencies {
 	compileOnly files(libsDir + 'UltraCosmetics-3.8.jar')
 	compileOnly files(libsDir + 'Vulcan-2.9.0.jar')
 	
+	compileOnly 'org.spongepowered:spongecommon:1.12.2-7.4.7:dev@jar'
 	compileOnly 'net.kyori:adventure-platform-bukkit:4.3.0'
 	compileOnly 'net.kyori:adventure-platform-spongeapi:4.3.0'
 	compileOnly 'com.github.cliftonlabs:json-simple:4.0.1'
-	compileOnly 'com.viaversion:viaversion:5.0.0-SNAPSHOT'
-	compileOnly 'com.viaversion:viaversion-bukkit:5.0.0-SNAPSHOT'
-	compileOnly 'com.viaversion:viaversion-sponge:5.0.0-SNAPSHOT'
+	compileOnly 'com.viaversion:viaversion-api:5.2.2-SNAPSHOT'
 	compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.0'
 	compileOnly 'net.essentialsx:EssentialsX:2.19.0'
 	compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
@@ -42,48 +39,32 @@ dependencies {
 	compileOnly 'com.discordsrv:discordsrv:1.27.0'
 }
 
-task assembleFinalJar(type: Jar) {
-	dependsOn shadowJar
-	dependsOn processResources
-	
+task assembleFinalJAR(type: Jar) {
 	archiveFileName = 'ChatPlugin-FREE-' + rootProject.version + '.jar'
-	
-	from sourceSets.main.output
-	
-	exclude 'me/remigio07/chatplugin/common/**'
-	exclude 'me/remigio07/chatplugin/server/**'
-	exclude 'me/remigio07/chatplugin/ChatPluginImpl.class'
-	exclude 'me/remigio07/chatplugin/ChatPluginImpl$1.class'
-	
-	manifest {
-		attributes(["paperweight-mappings-namespace": "mojang"])
-	}
 	
 	from project(':api').sourceSets.main.output
 	from shadowJar.archiveFile
+	from processResources
+	manifest { attributes(['paperweight-mappings-namespace': 'mojang']) }
 }
 
 jar {
 	archiveFileName = 'ChatPlugin-ORIGINAL.jar'
-	from sourceSets.main.output
-	finalizedBy assembleFinalJar
+	
+	finalizedBy assembleFinalJAR
 }
 
 shadowJar {
 	archiveFileName = 'ChatPlugin.jar'
 	
-	dependencies {
-		include(dependency('me.remigio07.chatplugin:.*'))
-	}
-	
+	dependencies { include(dependency('me.remigio07.chatplugin:.*')) }
 	include '**/*.class'
-	
 	relocate 'com.github.cliftonlabs.json_simple', 'me.remigio07.chatplugin.common.lib.com.github.cliftonlabs.json_simple'
 	relocate 'net.kyori.adventure', 'me.remigio07.chatplugin.common.lib.net.kyori.adventure'
 }
 
 processResources {
-	filesMatching(['plugin.yml', 'mcmod.info', 'bungee.yml']) {
+	filesMatching(['plugin.yml', 'mcmod.info']) {
 		expand 'version': rootProject.version
 	}
 }

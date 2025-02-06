@@ -38,7 +38,7 @@ public abstract class Mute extends Punishment {
 	 * 
 	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Punishments#placeholders-4">ChatPlugin wiki/Punishments/Mutes/Placeholders</a>
 	 */
-	public static final String[] PLACEHOLDERS = new String[] { "id",  "player", "player_uuid", "staff_member", "who_unmuted", "reason", "server", "date", "unmute_date", "expiration_date", "duration", "remaining_time", "active", "global", "silent" };
+	public static final String[] PLACEHOLDERS = { "id",  "player", "player_uuid", "staff_member", "who_unmuted", "reason", "server", "date", "unmute_date", "expiration_date", "duration", "remaining_time", "active", "global", "silent" };
 	protected String whoUnmuted;
 	protected long unmuteDate, duration, taskID = -1;
 	protected boolean global;

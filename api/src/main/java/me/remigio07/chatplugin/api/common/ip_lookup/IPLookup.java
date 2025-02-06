@@ -37,7 +37,7 @@ public abstract class IPLookup {
 	 * 
 	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/IP-lookup#placeholders">ChatPlugin wiki/Modules/IP lookup/Placeholders</a>
 	 */
-	public static final String[] PLACEHOLDERS = new String[] { "ip_address", "isp", "continent", "country", "subdivisions", "city", "country_code", "inside_eu", "time_zone", "postal_code", "latitude", "longitude", "accuracy_radius_km", "accuracy_radius_mi", "accuracy_radius_nm", "relative_date_full", "relative_date_day", "relative_date_hour" };
+	public static final String[] PLACEHOLDERS = { "ip_address", "isp", "continent", "country", "subdivisions", "city", "country_code", "inside_eu", "time_zone", "postal_code", "latitude", "longitude", "accuracy_radius_km", "accuracy_radius_mi", "accuracy_radius_nm", "relative_date_full", "relative_date_day", "relative_date_hour" };
 	protected IPLookupMethod method = IPLookupMethod.REMOTE;
 	protected InetAddress ipAddress;
 	protected String json = "{}";

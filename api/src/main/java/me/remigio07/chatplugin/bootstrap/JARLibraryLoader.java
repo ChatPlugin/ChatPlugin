@@ -33,7 +33,7 @@ import java.util.List;
 public class JARLibraryLoader extends URLClassLoader {
 	
 	private static JARLibraryLoader instance = new JARLibraryLoader();
-	private static final String[] EDITIONS = new String[] { "", "Premium", "Private"};
+	private static final String[] EDITIONS = { "", "Premium", "Private"};
 	
 	static {
 		registerAsParallelCapable();

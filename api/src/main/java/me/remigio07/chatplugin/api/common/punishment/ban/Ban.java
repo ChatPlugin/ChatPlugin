@@ -41,7 +41,7 @@ public abstract class Ban extends Punishment {
 	 * 
 	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Punishments#placeholders">ChatPlugin wiki/Punishments/Bans/Placeholders</a>
 	 */
-	public static final String[] PLACEHOLDERS = new String[] { "id", "player", "player_uuid", "ip_address", "staff_member", "who_unbanned", "reason", "server", "type", "date", "unban_date", "expiration_date", "duration", "remaining_time", "active", "global", "silent" };
+	public static final String[] PLACEHOLDERS = { "id", "player", "player_uuid", "ip_address", "staff_member", "who_unbanned", "reason", "server", "type", "date", "unban_date", "expiration_date", "duration", "remaining_time", "active", "global", "silent" };
 	protected InetAddress ipAddress;
 	protected String whoUnbanned;
 	protected BanType type;

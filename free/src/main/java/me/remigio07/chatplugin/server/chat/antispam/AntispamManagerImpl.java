@@ -55,7 +55,7 @@ public class AntispamManagerImpl extends AntispamManager {
 	
 	private static final Pattern DOMAIN_PATTERN = Pattern.compile("((?!-)[A-Za-z0-9-]{1,63}([^A-Za-z0-9\\s\\/]+))+[A-Za-z]{2,6}");
 	private static final Pattern IPV4_PATTERN = Pattern.compile("(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\D+){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)");
-	private static final String[] NOTIFICATION_PLACEHOLDERS = new String[] { "player", "location", "reason", "message" };
+	private static final String[] NOTIFICATION_PLACEHOLDERS = { "player", "location", "reason", "message" };
 	private List<Pattern> wordsBlacklistPatterns = new ArrayList<>();
 	private String translatedHighlightColor;
 	

@@ -38,7 +38,7 @@ public abstract class Warning extends Punishment {
 	 * 
 	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Punishments#placeholders-2">ChatPlugin wiki/Punishments/Warnings/Placeholders</a>
 	 */
-	public static final String[] PLACEHOLDERS = new String[] { "id", "player", "player_uuid", "staff_member", "who_unwarned", "reason", "server", "date", "unwarn_date", "expiration_date", "duration", "remaining_time", "amount", "max_amount", "active", "global", "silent" };
+	public static final String[] PLACEHOLDERS = { "id", "player", "player_uuid", "staff_member", "who_unwarned", "reason", "server", "date", "unwarn_date", "expiration_date", "duration", "remaining_time", "amount", "max_amount", "active", "global", "silent" };
 	protected String whoUnwarned;
 	protected long unwarnDate, duration, taskID = -1;
 	protected boolean global;

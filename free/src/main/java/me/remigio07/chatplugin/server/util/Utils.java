@@ -53,8 +53,8 @@ public class Utils extends me.remigio07.chatplugin.api.server.util.Utils {
 			"The paid version supports exclusive anticheat integrations.",
 			"The paid version supports proxy softwares for networks.",
 	};
+	private static final String[] ATTEMPTS = { "a", "b", "c", "d", "e", "f" };
 	private static boolean isAtLeastV1_20_5 = VersionUtils.getVersion().isAtLeast(Version.V1_20_5); 
-	private static String[] ATTEMPTS = new String[] { "a", "b", "c", "d", "e", "f" };
 	public static Map<UUID, String> inventoryTitles = new HashMap<>();
 	
 	static {

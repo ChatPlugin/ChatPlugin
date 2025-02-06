@@ -57,7 +57,7 @@ public class DiscordMessages {
 	 * 
 	 * <p><strong>Content:</strong> ["title.text", "title.url", "description", "image", "thumbnail", "author.text", "author.url", "author.icon-url", "footer.text", "footer.icon-url", "color"]</p>
 	 */
-	public static final String[] EMBED_OPTIONS = new String[] { "title.text", "title.url", "description", "image", "thumbnail", "author.text", "author.url", "author.icon-url", "footer.text", "footer.icon-url", "color" };
+	public static final String[] EMBED_OPTIONS = { "title.text", "title.url", "description", "image", "thumbnail", "author.text", "author.url", "author.icon-url", "footer.text", "footer.icon-url", "color" };
 	
 	/**
 	 * Represents the main messages.

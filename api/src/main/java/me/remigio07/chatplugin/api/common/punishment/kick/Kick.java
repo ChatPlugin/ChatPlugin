@@ -37,7 +37,7 @@ public abstract class Kick extends Punishment {
 	 * 
 	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Punishments#placeholders-3">ChatPlugin wiki/Punishments/Kicks/Placeholders</a>
 	 */
-	public static final String[] PLACEHOLDERS = new String[] { "id", "player", "player_uuid", "ip_address", "staff_member", "reason", "server", "type", "date", "silent" };
+	public static final String[] PLACEHOLDERS = { "id", "player", "player_uuid", "ip_address", "staff_member", "reason", "server", "type", "date", "silent" };
 	protected InetAddress ipAddress;
 	protected KickType type;
 	

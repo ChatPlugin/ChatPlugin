@@ -106,13 +106,13 @@ public class PlayerPingManagerImpl extends PlayerPingManager {
 				Matcher matcher = EVERYONE_PATTERN.matcher(message);
 				
 				if (matcher.find() && player.hasPermission("chatplugin.player-ping.everyone")) {
-					String[] array = new String[] { message.substring(0, matcher.start()), message.substring(matcher.end(), message.length()) };
+					String[] array = { message.substring(0, matcher.start()), message.substring(matcher.end(), message.length()) };
 					message = array[0] + ChatColor.translate(color) + "@everyone" + ChatColor.getLastColors(str + array[0] + matcher.group()) + array[1];
 				} for (ChatPluginServerPlayer pinged : pingedPlayers) {
 					matcher = pattern(pinged.getName(), atSignRequired).matcher(message);
 					
 					if (matcher.find()) {
-						String[] array = new String[] { message.substring(0, matcher.start()), message.substring(matcher.end(), message.length()) };
+						String[] array = { message.substring(0, matcher.start()), message.substring(matcher.end(), message.length()) };
 						message = array[0] + ChatColor.translate(color) + "@" + pinged.getName() + ChatColor.getLastColors(str + array[0] + matcher.group()) + array[1];
 					} if (!PlayerIgnoreManager.getInstance().isEnabled() || !pinged.getIgnoredPlayers().contains(player)) {
 						if (titlesEnabled)

@@ -33,7 +33,7 @@ public abstract class TPSManager implements ChatPluginManager, Runnable {
 	protected static TPSManager instance;
 	protected boolean enabled;
 	protected List<TPSQuality> qualities = new ArrayList<>();
-	protected double[] recentTPS = new double[] { 20D, 20D, 20D };
+	protected double[] recentTPS = { 20D, 20D, 20D };
 	protected long updateTimeout, timerTaskID = -1, loadTime;
 	
 	@Override

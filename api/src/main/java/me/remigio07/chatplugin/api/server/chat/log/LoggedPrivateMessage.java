@@ -31,7 +31,7 @@ public interface LoggedPrivateMessage extends LoggedMessage {
 	 * 
 	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Chat#placeholders">ChatPlugin wiki/Modules/Chat/Chat log/Placeholders</a>
 	 */
-	public static final String[] PLACEHOLDERS = new String[] { "sender", "sender_uuid", "recipient", "recipient_uuid", "rank_id", "server", "world", "content", "date", "denied", "deny_chat_reason" };
+	public static final String[] PLACEHOLDERS = { "sender", "sender_uuid", "recipient", "recipient_uuid", "rank_id", "server", "world", "content", "date", "denied", "deny_chat_reason" };
 	
 	/**
 	 * Gets this private message's recipient.

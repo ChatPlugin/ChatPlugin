@@ -36,7 +36,7 @@ public abstract class Violation {
 	 * 
 	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Integrations#placeholders-1">ChatPlugin wiki/Modules/Integrations/Anticheats/Placeholders</a>
 	 */
-	public static final String[] PLACEHOLDERS = new String[] { "cheater", "cheater_uuid", "anticheat", "cheat_id", "cheat_display_name", "component", "server", "amount", "ping", "ping_format", "tps", "version", "version_protocol", "client_edition", "last_time" };
+	public static final String[] PLACEHOLDERS = { "cheater", "cheater_uuid", "anticheat", "cheat_id", "cheat_display_name", "component", "server", "amount", "ping", "ping_format", "tps", "version", "version_protocol", "client_edition", "last_time" };
 	protected OfflinePlayer cheater;
 	protected IntegrationType<AnticheatIntegration> anticheat;
 	protected String cheatID, component, server;

@@ -130,7 +130,7 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 			throw new IllegalArgumentException("The sender and the recipient correspond");
 		if (privateMessage.length() > 505)
 			throw new IllegalArgumentException("Specified private message is longer than 505 characters");
-		String[] placeholders = new String[] { sender == null ? "" : formatPlaceholder(senderPlaceholderFormat, sender), recipient == null ? "" : formatPlaceholder(recipientPlaceholderFormat, recipient) };
+		String[] placeholders = { sender == null ? "" : formatPlaceholder(senderPlaceholderFormat, sender), recipient == null ? "" : formatPlaceholder(recipientPlaceholderFormat, recipient) };
 		Mute mute;
 		
 		if (sender == null) {

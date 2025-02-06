@@ -39,7 +39,7 @@ public abstract class Rank {
 	 * 
 	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Ranks#placeholders">ChatPlugin wiki/Modules/Ranks/Placeholders</a>
 	 */
-	public static final String[] PLACEHOLDERS = new String[] { "rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_position", "rank_description", "max_ban_duration", "max_mute_duration" };
+	public static final String[] PLACEHOLDERS = { "rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_position", "rank_description", "max_ban_duration", "max_mute_duration" };
 	protected String id, displayName, prefix, suffix, chatColor;
 	protected RankTag tag;
 	protected int position;

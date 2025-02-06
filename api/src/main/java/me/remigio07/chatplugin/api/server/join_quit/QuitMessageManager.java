@@ -158,7 +158,7 @@ public abstract class QuitMessageManager implements ChatPluginManager {
 		 * 
 		 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Join-quit#placeholders">ChatPlugin wiki/Modules/Join-quit/Quit messages/Placeholders</a>
 		 */
-		public static final String[] PLACEHOLDERS = new String[] { "pfx", "player", "uuid", "display_name", "player_id", "rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_position", "rank_description", "max_ban_duration", "max_mute_duration" };
+		public static final String[] PLACEHOLDERS = { "pfx", "player", "uuid", "display_name", "player_id", "rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_position", "rank_description", "max_ban_duration", "max_mute_duration" };
 		protected OfflinePlayer player;
 		protected String displayName;
 		protected Rank rank;

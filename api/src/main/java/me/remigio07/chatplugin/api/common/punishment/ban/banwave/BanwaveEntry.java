@@ -41,7 +41,7 @@ public abstract class BanwaveEntry {
 	 * 
 	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Punishments#placeholders-1">ChatPlugin wiki/Punishments/Bans/Banwaves/Placeholders</a>
 	 */
-	public static final String[] PLACEHOLDERS = new String[] { "player", "player_uuid", "ip_address", "staff_member", "who_removed", "reason", "server", "type", "date", "removal_date", "duration", "active", "global", "silent" };
+	public static final String[] PLACEHOLDERS = { "player", "player_uuid", "ip_address", "staff_member", "who_removed", "reason", "server", "type", "date", "removal_date", "duration", "active", "global", "silent" };
 	protected OfflinePlayer player;
 	protected InetAddress ipAddress;
 	protected String staffMember, whoRemoved, reason, server;

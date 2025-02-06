@@ -248,7 +248,7 @@ public class BukkitEventManager extends EventManager {
 				((VanishManagerImpl) VanishManager.getInstance()).update(player, false);
 				playerManager.unloadPlayer(player.getUUID());
 			}
-		} else if (playerManager.isWorldEnabled(event.getPlayer().getWorld().getName())) // disabled -> enabled
+		} else if (playerManager.isWorldEnabled(event.getPlayer().getWorld().getName()) && !event.getPlayer().hasMetadata("NPC")) // disabled -> enabled
 			TaskManager.runAsync(() -> playerManager.loadPlayer(new PlayerAdapter(event.getPlayer())), 0L);
 	}
 	

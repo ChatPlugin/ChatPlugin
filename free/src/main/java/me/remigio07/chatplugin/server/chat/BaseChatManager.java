@@ -69,7 +69,6 @@ public abstract class BaseChatManager extends ChatManager {
 		overrideChatEvent = ConfigurationType.CHAT.get().getBoolean("chat.event.override");
 		chatEventPriority = ConfigurationType.CHAT.get().getString("chat.event.priority");
 		format = ConfigurationType.CHAT.get().getString("chat.format");
-		consoleFormat = ConfigurationType.CHAT.get().getString("chat.console-format");
 		recognizedTLDs = ConfigurationType.CHAT.get().getStringList("chat.recognized-tlds").stream().map(String::toLowerCase).collect(Collectors.toCollection(ArrayList::new));
 		placeholderTypes = PlaceholderType.getPlaceholders(ConfigurationType.CHAT.get().getStringList("chat.placeholder-types"));
 		return true;
@@ -82,7 +81,7 @@ public abstract class BaseChatManager extends ChatManager {
 		recognizedTLDs.clear();
 		placeholderTypes.clear();
 		
-		chatEventPriority = format = consoleFormat = null;
+		chatEventPriority = format = null;
 	}
 	
 	@Override
@@ -255,7 +254,7 @@ public abstract class BaseChatManager extends ChatManager {
 			StorageConnector.getInstance().incrementPlayerStat(PlayersDataType.MESSAGES_SENT, player);
 		} catch (SQLException | IOException e) {
 			LogManager.log("{0} occurred while incrementing messages sent stat for {1}: {2}", 2, e.getClass().getSimpleName(), player.getName(), e.getLocalizedMessage());
-		} logMessage(PlaceholderManager.getInstance().translatePlaceholders(consoleFormat, player, placeholderTypes) + message);
+		} logMessage(PlaceholderManager.getInstance().translatePlaceholders(format, player, placeholderTypes) + message);
 		
 		if (overrideChatEvent && IntegrationType.DISCORDSRV.isEnabled())
 			IntegrationType.DISCORDSRV.get().handleChatEvent(player, message);

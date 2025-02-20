@@ -711,7 +711,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.event.override", true);
 		chat.addDefault("chat.event.priority", Environment.isBukkit() ? "HIGH" : "LATE");
 		chat.addDefault("chat.format", "&7«&f{prefix}{tag_name_color}{player}{suffix}&7» &f");
-		chat.addDefault("chat.console-format", "&8{world} &7<{prefix}{tag_name_color}{player}{suffix}&7> &f");
 		chat.addDefault("chat.recognized-tlds", Arrays.asList("com", "net", "org", "me", "io", "edu", "gov", "int", "info", "pro", "xyz", "gg", "dev", "link", "eu", "it", "de", "fr", "es", "br", "jp", "ru", "uk", "co.uk"));
 		chat.addDefault("chat.placeholder-types", Arrays.asList("PLAYER"));
 		
@@ -761,12 +760,9 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.player-ping.titles.subtitles.italian", "&eti ha menzionato in chat");
 		
 		chat.addDefault("chat.private-messages.enabled", true);
-		chat.addDefault("chat.private-messages.format.sent.chat", "&7«&8[&b✎&8] &fYou &e➡ &f{recipient}&7» &f");
-		chat.addDefault("chat.private-messages.format.sent.terminal", "&7<&8[&b&lPM&8] &fYou &e-> &f{recipient}&7> &f");
-		chat.addDefault("chat.private-messages.format.received.chat", "&7«&8[&b✎&8] &f{sender} &e➡ &fYou&7» &f");
-		chat.addDefault("chat.private-messages.format.received.terminal", "&7<&8[&b&lPM&8] &f{sender} &e-> &fYou&7> &f");
-		chat.addDefault("chat.private-messages.format.socialspy.chat", "&7«&8[&4&lSS&8] &f{sender} &e➡ &f{recipient}&7» &f");
-		chat.addDefault("chat.private-messages.format.socialspy.terminal", "&7<&8[&4&lSS&8] &f{sender} &e-> &f{recipient}&7> &f");
+		chat.addDefault("chat.private-messages.format.sent", "&7«&8[&b✎&8] &fYou &e➡ &f{recipient}&7» &f");
+		chat.addDefault("chat.private-messages.format.received", "&7«&8[&b✎&8] &f{sender} &e➡ &fYou&7» &f");
+		chat.addDefault("chat.private-messages.format.socialspy", "&7«&8[&4&lSS&8] &f{sender} &e➡ &f{recipient}&7» &f");
 		chat.addDefault("chat.private-messages.format.placeholder.sender", "{player}");
 		chat.addDefault("chat.private-messages.format.placeholder.recipient", "{player}");
 		chat.addDefault("chat.private-messages.format.placeholder.placeholder-types", Arrays.asList("JUST_NAME"));
@@ -840,10 +836,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		}
 		
 		chat.addDefault("chat.staff-chat.enabled", true);
-		chat.addDefault("chat.staff-chat.format.player.chat", "&7«&8[&6&lSC&8] &f{tag_prefix}{tag_name_color}{player}{tag_suffix}&7» &f");
-		chat.addDefault("chat.staff-chat.format.player.terminal", "&8{server_display_name} &7<&8[&6&lSC&8] &f{tag_prefix}{tag_name_color}{player}{tag_suffix}&7> &f");
-		chat.addDefault("chat.staff-chat.format.console.chat", "&7«&8[&6&lSC&8] &8[&5&lC&8] &fConsole &4[***]&7» &f");
-		chat.addDefault("chat.staff-chat.format.console.terminal", "&8{server_display_name} &7<&8[&6&lSC&8] &8[&5&lC&8] &fConsole &4[***]&7> &f");
+		chat.addDefault("chat.staff-chat.format.player", "&7«&8[&6&lSC&8] &f{tag_prefix}{tag_name_color}{player}{tag_suffix}&7» &f");
+		chat.addDefault("chat.staff-chat.format.console", "&7«&8[&6&lSC&8] &8[&5&lC&8] &fConsole &4[***]&7» &f");
 		chat.addDefault("chat.staff-chat.placeholder-types", Arrays.asList("PLAYER", "SERVER"));
 		
 		chat.addDefault("chat.log.enabled", true);

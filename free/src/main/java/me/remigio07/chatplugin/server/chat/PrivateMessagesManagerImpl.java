@@ -68,12 +68,9 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 		
 		if (!ChatManager.getInstance().isEnabled() || !ConfigurationType.CHAT.get().getBoolean("chat.private-messages.enabled"))
 			return;
-		sentChatFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.format.sent.chat");
-		sentTerminalFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.format.sent.terminal");
-		receivedChatFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.format.received.chat");
-		receivedTerminalFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.format.received.terminal");
-		socialspyChatFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.format.socialspy.chat");
-		socialspyTerminalFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.format.socialspy.terminal");
+		sentFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.format.sent");
+		receivedFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.format.received");
+		socialspyFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.format.socialspy");
 		senderPlaceholderFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.format.placeholder.sender");
 		recipientPlaceholderFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.format.placeholder.recipient");
 		placeholderPlaceholderTypes = PlaceholderType.getPlaceholders(ConfigurationType.CHAT.get().getStringList("chat.private-messages.format.placeholder.placeholder-types"));
@@ -115,7 +112,7 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 		placeholderPlaceholderTypes.clear();
 		bypassAntispamChecks.clear();
 		
-		sentChatFormat = sentTerminalFormat = receivedChatFormat = receivedTerminalFormat = socialspyChatFormat = socialspyTerminalFormat = senderPlaceholderFormat = recipientPlaceholderFormat = advancementsFormat = null;
+		sentFormat = receivedFormat = socialspyFormat = senderPlaceholderFormat = recipientPlaceholderFormat = advancementsFormat = null;
 		sound = null;
 		advancementsMaxMessageLength = 0;
 		advancementsIconMaterial = null;
@@ -199,8 +196,8 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 		if (sender != null) {
 			if (!replyToLastSender)
 				((BaseChatPluginServerPlayer) sender).setLastCorrespondent(recipient);
-			sender.sendMessage(formatPlaceholders(sentChatFormat, placeholders, sender, recipient) + privateMessage);
-		} else ChatPlugin.getInstance().sendConsoleMessage(formatPlaceholders(sentTerminalFormat, placeholders, sender, recipient) + privateMessage, false);
+			sender.sendMessage(formatPlaceholders(sentFormat, placeholders, sender, recipient) + privateMessage);
+		} else ChatPlugin.getInstance().sendConsoleMessage(formatPlaceholders(sentFormat, placeholders, sender, recipient) + privateMessage, false);
 	}
 	
 	public void sendMessageToRecipient(OfflinePlayer sender, ChatPluginServerPlayer recipient, String[] placeholders, String privateMessage) {
@@ -213,15 +210,15 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 				recipient.playSound(sound);
 			if (replyToLastSender)
 				((BaseChatPluginServerPlayer) recipient).setLastCorrespondent(sender);
-			recipient.sendMessage(formatPlaceholders(receivedChatFormat, placeholders, sender, recipient) + privateMessage);
-		} else ChatPlugin.getInstance().sendConsoleMessage(formatPlaceholders(receivedTerminalFormat, placeholders, sender, recipient) + privateMessage, false);
+			recipient.sendMessage(formatPlaceholders(receivedFormat, placeholders, sender, recipient) + privateMessage);
+		} else ChatPlugin.getInstance().sendConsoleMessage(formatPlaceholders(receivedFormat, placeholders, sender, recipient) + privateMessage, false);
 	}
 	
 	public void sendSocialspyNotifications(OfflinePlayer sender, OfflinePlayer recipient, String[] placeholders, String privateMessage) {
 		for (ChatPluginServerPlayer staffMember : ServerPlayerManager.getInstance().getPlayers().values())
 			if (staffMember.hasSocialspyEnabled())
-				staffMember.sendMessage(formatPlaceholders(socialspyChatFormat, placeholders, sender, recipient) + privateMessage);
-		ChatPlugin.getInstance().sendConsoleMessage(formatPlaceholders(socialspyTerminalFormat, placeholders, sender, recipient) + privateMessage, false);
+				staffMember.sendMessage(formatPlaceholders(socialspyFormat, placeholders, sender, recipient) + privateMessage);
+		ChatPlugin.getInstance().sendConsoleMessage(formatPlaceholders(socialspyFormat, placeholders, sender, recipient) + privateMessage, false);
 	}
 	
 	private String formatPlaceholders(String input, String[] placeholders, OfflinePlayer sender, OfflinePlayer recipient) {
@@ -310,7 +307,7 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 				ChatLogManager.getInstance().logPrivateMessage(sender, recipient, privateMessage, null);
 			if (!ChatLogManager.getInstance().isPrintToLogFile())
 				return privateMessage;
-		} LogManager.getInstance().writeToFile(ChatColor.stripColor(formatPlaceholders(socialspyTerminalFormat, placeholders, sender, recipient) + privateMessage));
+		} LogManager.getInstance().writeToFile(ChatColor.stripColor(formatPlaceholders(socialspyFormat, placeholders, sender, recipient) + privateMessage));
 		return privateMessage;
 	}
 	

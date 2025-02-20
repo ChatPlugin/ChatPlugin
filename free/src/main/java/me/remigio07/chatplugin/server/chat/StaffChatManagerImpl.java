@@ -41,10 +41,8 @@ public class StaffChatManagerImpl extends StaffChatManager {
 		
 		if (!ChatManager.getInstance().isEnabled() || !ConfigurationType.CHAT.get().getBoolean("chat.staff-chat.enabled"))
 			return;
-		playerChatFormat = ConfigurationType.CHAT.get().getString("chat.staff-chat.format.player.chat");
-		playerTerminalFormat = ConfigurationType.CHAT.get().getString("chat.staff-chat.format.player.terminal");
-		consoleChatFormat = ConfigurationType.CHAT.get().getString("chat.staff-chat.format.console.chat");
-		consoleTerminalFormat = ConfigurationType.CHAT.get().getString("chat.staff-chat.format.console.terminal");
+		playerFormat = ConfigurationType.CHAT.get().getString("chat.staff-chat.format.player");
+		consoleFormat = ConfigurationType.CHAT.get().getString("chat.staff-chat.format.console");
 		placeholderTypes = PlaceholderType.getPlaceholders(ConfigurationType.CHAT.get().getStringList("chat.staff-chat.placeholder-types"));
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
@@ -57,7 +55,7 @@ public class StaffChatManagerImpl extends StaffChatManager {
 		players.clear();
 		placeholderTypes.clear();
 		
-		playerChatFormat = playerTerminalFormat = consoleChatFormat = consoleTerminalFormat = null;
+		playerFormat = consoleFormat = null;
 	}
 	
 	@Override
@@ -69,39 +67,10 @@ public class StaffChatManagerImpl extends StaffChatManager {
 		if (staffChatEvent.isCancelled())
 			return;
 		if (ProxyManager.getInstance().isEnabled()) {
-			ProxyManager.getInstance().sendPluginMessage(Packets.Messages.playerMessage(
-					"ALL",
-					"ALL LOADED",
-					"chatplugin.commands.staffchat",
-					false,
-					false,
-					ChatColor.translate(PlaceholderManager.getInstance().translatePlaceholders(
-							playerChatFormat,
-							player,
-							player.getLanguage(),
-							placeholderTypes,
-							false
-							) + message)
-					));
-			ProxyManager.getInstance().sendPluginMessage(Packets.Messages.playerMessage(
-					"ALL",
-					"CONSOLE",
-					null,
-					false,
-					false,
-					ChatColor.translate(PlaceholderManager.getInstance().translatePlaceholders(
-							playerTerminalFormat,
-							player,
-							player.getLanguage(),
-							placeholderTypes,
-							false
-							) + message)
-					));
-		} else {
 			for (ChatPluginPlayer other : PlayerManager.getInstance().getPlayers().values())
 				other.sendMessage(ChatColor.translate(
 						PlaceholderManager.getInstance().translatePlaceholders(
-								playerChatFormat,
+								playerFormat,
 								player,
 								player.getLanguage(),
 								placeholderTypes,
@@ -110,19 +79,32 @@ public class StaffChatManagerImpl extends StaffChatManager {
 						));
 			ChatPlugin.getInstance().sendConsoleMessage(ChatColor.translate(
 					PlaceholderManager.getInstance().translatePlaceholders(
-							playerTerminalFormat,
+							playerFormat,
 							player,
 							player.getLanguage(),
 							placeholderTypes,
 							false
 							) + message
 					), false);
-		}
+		} else ProxyManager.getInstance().sendPluginMessage(Packets.Messages.playerMessage(
+				"ALL",
+				"ALL LOADED",
+				"chatplugin.commands.staffchat",
+				true,
+				false,
+				ChatColor.translate(PlaceholderManager.getInstance().translatePlaceholders(
+						playerFormat,
+						player,
+						player.getLanguage(),
+						placeholderTypes,
+						false
+						) + message)
+				));
 	}
 	
 	@Override
 	public void sendConsoleMessage(String message) {
-		if (ProxyManager.getInstance().isEnabled() && PlayerAdapter.getOnlinePlayers().size() == 0)
+		if (ProxyManager.getInstance().isEnabled() && PlayerAdapter.getOnlinePlayers().isEmpty())
 			throw new IllegalStateException("Unable send PlayerMessage plugin message with no players online");
 		StaffChatEvent staffChatEvent = new StaffChatEvent(null, message);
 		
@@ -130,48 +112,34 @@ public class StaffChatManagerImpl extends StaffChatManager {
 		
 		if (staffChatEvent.isCancelled())
 			return;
-		if (ProxyManager.getInstance().isEnabled()) {
-			ProxyManager.getInstance().sendPluginMessage(Packets.Messages.playerMessage(
-					"ALL",
-					"ALL LOADED",
-					"chatplugin.commands.staffchat",
-					false,
-					false,
-					ChatColor.translate(PlaceholderManager.getInstance().translateServerPlaceholders(
-							consoleChatFormat,
-							Language.getMainLanguage(),
-							false
-							) + message)
-					));
-			ProxyManager.getInstance().sendPluginMessage(Packets.Messages.playerMessage(
-					"ALL",
-					"CONSOLE",
-					null,
-					false,
-					false,
-					ChatColor.translate(PlaceholderManager.getInstance().translateServerPlaceholders(
-							consoleTerminalFormat,
-							Language.getMainLanguage(),
-							false
-							) + message)
-					));
-		} else {
+		if (!ProxyManager.getInstance().isEnabled()) {
 			for (ChatPluginPlayer player : PlayerManager.getInstance().getPlayers().values())
 				player.sendMessage(ChatColor.translate(
 						PlaceholderManager.getInstance().translateServerPlaceholders(
-								consoleChatFormat,
+								consoleFormat,
 								Language.getMainLanguage(),
 								false
 								) + message
 						));
 			ChatPlugin.getInstance().sendConsoleMessage(ChatColor.translate(
 					PlaceholderManager.getInstance().translateServerPlaceholders(
-							consoleTerminalFormat,
+							consoleFormat,
 							Language.getMainLanguage(),
 							false
 							) + message
 					), false);
-		}
+		} else ProxyManager.getInstance().sendPluginMessage(Packets.Messages.playerMessage(
+				"ALL",
+				"ALL LOADED",
+				"chatplugin.commands.staffchat",
+				true,
+				false,
+				ChatColor.translate(PlaceholderManager.getInstance().translateServerPlaceholders(
+						consoleFormat,
+						Language.getMainLanguage(),
+						false
+						) + message)
+				));
 	}
 	
 }

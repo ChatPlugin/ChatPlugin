@@ -38,7 +38,7 @@ public abstract class StaffChatManager implements ChatPluginManager {
 	
 	protected static StaffChatManager instance;
 	protected boolean enabled;
-	protected String playerChatFormat, playerTerminalFormat, consoleChatFormat, consoleTerminalFormat;
+	protected String playerFormat, consoleFormat;
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
 	protected List<UUID> players = new CopyOnWriteArrayList<>();
 	protected long loadTime;
@@ -54,51 +54,27 @@ public abstract class StaffChatManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the chat format displayed to Staff members
-	 * when a player sends a message using the Staff chat.
+	 * Gets the chat format displayed to Staff members and the
+	 * console when players send a message using the Staff chat.
 	 * 
-	 * <p><strong>Found at:</strong> "chat.staff-chat.format.player.chat" in {@link ConfigurationType#CHAT}</p>
+	 * <p><strong>Found at:</strong> "chat.staff-chat.format.player" in {@link ConfigurationType#CHAT}</p>
 	 * 
-	 * @return Players' chat format
+	 * @return Players' format
 	 */
-	public String getPlayerChatFormat() {
-		return playerChatFormat;
+	public String getPlayerFormat() {
+		return playerFormat;
 	}
 	
 	/**
-	 * Gets the chat format displayed in the terminal
-	 * when a player sends a message using the Staff chat.
+	 * Gets the chat format displayed to Staff members and the
+	 * console when the console sends a message using the Staff chat.
 	 * 
-	 * <p><strong>Found at:</strong> "chat.staff-chat.format.player.terminal" in {@link ConfigurationType#CHAT}</p>
+	 * <p><strong>Found at:</strong> "chat.staff-chat.format.console" in {@link ConfigurationType#CHAT}</p>
 	 * 
-	 * @return Players' terminal format
+	 * @return Console's format
 	 */
-	public String getPlayerTerminalFormat() {
-		return playerTerminalFormat;
-	}
-	
-	/**
-	 * Gets the chat format displayed to Staff members
-	 * when the console sends a message using the Staff chat.
-	 * 
-	 * <p><strong>Found at:</strong> "chat.staff-chat.format.console.chat" in {@link ConfigurationType#CHAT}</p>
-	 * 
-	 * @return Console's chat format
-	 */
-	public String getConsoleChatFormat() {
-		return consoleChatFormat;
-	}
-	
-	/**
-	 * Gets the chat format displayed in the terminal
-	 * when the console sends a message using the Staff chat.
-	 * 
-	 * <p><strong>Found at:</strong> "chat.staff-chat.format.console.terminal" in {@link ConfigurationType#CHAT}</p>
-	 * 
-	 * @return Console's terminal format
-	 */
-	public String getConsoleTerminalFormat() {
-		return consoleTerminalFormat;
+	public String getConsoleFormat() {
+		return consoleFormat;
 	}
 	
 	/**
@@ -186,7 +162,7 @@ public abstract class StaffChatManager implements ChatPluginManager {
 	 * 
 	 * @param message Message to send
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
-	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 * @see StaffChatEvent
 	 */
 	public abstract void sendConsoleMessage(String message);

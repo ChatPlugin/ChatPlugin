@@ -33,7 +33,7 @@ public abstract class ChatManager implements DenyChatReasonHandler {
 	
 	protected static ChatManager instance;
 	protected boolean enabled, overrideChatEvent, chatMuted;
-	protected String chatEventPriority, format, consoleFormat;
+	protected String chatEventPriority, format;
 	protected List<String> recognizedTLDs = Collections.emptyList();
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
 	protected long loadTime;
@@ -91,17 +91,6 @@ public abstract class ChatManager implements DenyChatReasonHandler {
 	 */
 	public String getFormat() {
 		return format;
-	}
-	
-	/**
-	 * Gets the format used to send messages to the console.
-	 * 
-	 * <p><strong>Found at:</strong> "chat.console-format" in {@link ConfigurationType#CHAT}</p>
-	 * 
-	 * @return Chat's console format
-	 */
-	public String getConsoleFormat() {
-		return consoleFormat;
 	}
 	
 	/**

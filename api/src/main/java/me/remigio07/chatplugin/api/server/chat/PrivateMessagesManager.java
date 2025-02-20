@@ -42,7 +42,7 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	
 	protected static PrivateMessagesManager instance;
 	protected boolean enabled, soundEnabled, advancementsEnabled, advancementsIconGlowing, socialspyOnJoinEnabled, mutedPlayersBlocked, replyToLastSender;
-	protected String sentChatFormat, sentTerminalFormat, receivedChatFormat, receivedTerminalFormat, socialspyChatFormat, socialspyTerminalFormat, senderPlaceholderFormat, recipientPlaceholderFormat, advancementsFormat;
+	protected String sentFormat, receivedFormat, socialspyFormat, senderPlaceholderFormat, recipientPlaceholderFormat, advancementsFormat;
 	protected List<PlaceholderType> placeholderPlaceholderTypes = Collections.emptyList();
 	protected SoundAdapter sound;
 	protected int advancementsMaxMessageLength;
@@ -132,75 +132,39 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the chat format displayed to players when
-	 * they send a private message to someone else.
+	 * Gets the chat format displayed to players and the console
+	 * when they send a private message to someone else.
 	 * 
-	 * <p><strong>Found at:</strong> "chat.private-messages.format.sent.chat" in {@link ConfigurationType#CHAT}</p>
+	 * <p><strong>Found at:</strong> "chat.private-messages.format.sent" in {@link ConfigurationType#CHAT}</p>
 	 * 
-	 * @return Sent messages' chat format
+	 * @return Sent messages' format
 	 */
-	public String getSentChatFormat() {
-		return sentChatFormat;
+	public String getSentFormat() {
+		return sentFormat;
 	}
 	
 	/**
-	 * Gets the chat format displayed in the terminal when
-	 * the console sends a private message to someone else.
+	 * Gets the chat format displayed to players and the console
+	 * when they receive a private message from someone else.
 	 * 
-	 * <p><strong>Found at:</strong> "chat.private-messages.format.sent.terminal" in {@link ConfigurationType#CHAT}</p>
+	 * <p><strong>Found at:</strong> "chat.private-messages.format.received" in {@link ConfigurationType#CHAT}</p>
 	 * 
-	 * @return Sent messages' terminal format
+	 * @return Received messages' format
 	 */
-	public String getSentTerminalFormat() {
-		return sentTerminalFormat;
+	public String getReceivedFormat() {
+		return receivedFormat;
 	}
 	
 	/**
-	 * Gets the chat format displayed to players when
-	 * they receive a private message from someone else.
+	 * Gets the chat format displayed to Staff members and the
+	 * console when players send a private message to someone else.
 	 * 
-	 * <p><strong>Found at:</strong> "chat.private-messages.format.received.chat" in {@link ConfigurationType#CHAT}</p>
+	 * <p><strong>Found at:</strong> "chat.private-messages.format.socialspy" in {@link ConfigurationType#CHAT}</p>
 	 * 
-	 * @return Received messages' chat format
+	 * @return Socialspy's format
 	 */
-	public String getReceivedChatFormat() {
-		return receivedChatFormat;
-	}
-	
-	/**
-	 * Gets the chat format displayed in the terminal when
-	 * the console receives a private message from someone else.
-	 * 
-	 * <p><strong>Found at:</strong> "chat.private-messages.format.received.terminal" in {@link ConfigurationType#CHAT}</p>
-	 * 
-	 * @return Received messages' terminal format
-	 */
-	public String getReceivedTerminalFormat() {
-		return receivedTerminalFormat;
-	}
-	
-	/**
-	 * Gets the chat format displayed to Staff members when
-	 * players send a private message to someone else.
-	 * 
-	 * <p><strong>Found at:</strong> "chat.private-messages.format.socialspy.chat" in {@link ConfigurationType#CHAT}</p>
-	 * 
-	 * @return Socialspy's chat format
-	 */
-	public String getSocialspyChatFormat() {
-		return socialspyChatFormat;
-	}
-	
-	/**
-	 * Gets the chat format displayed in the terminal when
-	 * players send a private message to someone else.
-	 * 
-	 * <p><strong>Found at:</strong> "chat.private-messages.format.socialspy.terminal" in {@link ConfigurationType#CHAT}</p>
-	 * 
-	 * @return Socialspy's terminal format
-	 */
-	public String getSocialspyTerminalFormat() {
-		return socialspyTerminalFormat;
+	public String getSocialspyFormat() {
+		return socialspyFormat;
 	}
 	
 	/**

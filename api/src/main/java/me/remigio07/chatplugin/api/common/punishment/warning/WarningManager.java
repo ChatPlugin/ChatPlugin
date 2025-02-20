@@ -164,7 +164,7 @@ public abstract class WarningManager extends PunishmentManager {
 	 * @param global Whether this warning is global
 	 * @param silent Whether this warning is silent
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
-	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 * @throws UnsupportedOperationException If <code>{@link OfflinePlayer#isOnline()}
 	 * &amp;&amp; !{@link OfflinePlayer#isLoaded()}</code>
 	 * @see WarningEvent
@@ -185,7 +185,7 @@ public abstract class WarningManager extends PunishmentManager {
 	 * @param id Warning's ID
 	 * @param whoUnwarned Who unwarned the player
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
-	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 * @see UnwarnEvent
 	 */
 	public abstract void unwarn(
@@ -202,7 +202,7 @@ public abstract class WarningManager extends PunishmentManager {
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
 	 * @param whoUnwarned Who unwarned the player
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
-	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 * @throws UnsupportedOperationException If <code>{@link OfflinePlayer#isOnline()}
 	 * &amp;&amp; !{@link OfflinePlayer#isLoaded()}</code>
 	 * @see UnwarnEvent
@@ -223,7 +223,7 @@ public abstract class WarningManager extends PunishmentManager {
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
 	 * @param whoUnwarned Who unwarned the player
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
-	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 * @throws UnsupportedOperationException If <code>{@link OfflinePlayer#isOnline()}
 	 * &amp;&amp; !{@link OfflinePlayer#isLoaded()}</code>
 	 * @see UnwarnEvent

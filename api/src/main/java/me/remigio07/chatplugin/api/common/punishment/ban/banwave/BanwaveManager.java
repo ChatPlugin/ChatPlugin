@@ -191,7 +191,7 @@ public abstract class BanwaveManager implements ChatPluginManager, Runnable {
 	 * @param global Whether this ban is global
 	 * @param silent Whether this ban is silent
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
-	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 * @see BanwaveEntryAddEvent
 	 * @see BanwaveEntryUpdateEvent
 	 */
@@ -217,7 +217,7 @@ public abstract class BanwaveManager implements ChatPluginManager, Runnable {
 	 * @param silent Whether this ban is silent
 	 * @throws IllegalArgumentException If <code>!</code>{@link OfflinePlayer#hasPlayedBefore()}
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
-	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 * @see BanwaveEntryAddEvent
 	 * @see BanwaveEntryUpdateEvent
 	 */
@@ -242,7 +242,7 @@ public abstract class BanwaveManager implements ChatPluginManager, Runnable {
 	 * @param global Whether this ban is global
 	 * @param silent Whether this ban is silent
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
-	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 * @see BanwaveEntryAddEvent
 	 * @see BanwaveEntryUpdateEvent
 	 */
@@ -265,7 +265,7 @@ public abstract class BanwaveManager implements ChatPluginManager, Runnable {
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
 	 * @param whoRemoved Who removed the entry
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
-	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 * @see BanwaveEntryRemoveEvent
 	 */
 	public abstract void removeEntry(
@@ -283,7 +283,7 @@ public abstract class BanwaveManager implements ChatPluginManager, Runnable {
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
 	 * @param whoRemoved Who removed the entry
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
-	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 * @see BanwaveEntryRemoveEvent
 	 */
 	public abstract void removeIPEntry(

@@ -199,7 +199,7 @@ public abstract class IPLookupManager implements ChatPluginManager {
 	 * @param ipAddress IP address to check
 	 * @return Lookup for the IP address
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp; {@link ProxyManager#isEnabled()}
-	 * &amp;&amp; {@link #getFromCache(InetAddress)} == null &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * &amp;&amp; {@link #getFromCache(InetAddress)} == null &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 */
 	public CompletableFuture<IPLookup> getIPLookup(InetAddress ipAddress) {
 		return getIPLookup(ipAddress, null);
@@ -228,7 +228,7 @@ public abstract class IPLookupManager implements ChatPluginManager {
 	 * @param requesterName Who requested the IP lookup
 	 * @return Lookup for the IP address
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp; {@link ProxyManager#isEnabled()}
-	 * &amp;&amp; {@link #getFromCache(InetAddress)} == null &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * &amp;&amp; {@link #getFromCache(InetAddress)} == null &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 */
 	public abstract CompletableFuture<IPLookup> getIPLookup(InetAddress ipAddress, @Nullable(why = "Requester may not be specified") String requesterName);
 	

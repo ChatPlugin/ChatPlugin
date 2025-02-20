@@ -76,7 +76,7 @@ public class PlayerListCommand extends BaseCommand {
 				for (ChatPluginServerPlayer player : ServerPlayerManager.getInstance().getPlayers().values())
 					if (player.getRank().equals(rank) && (!hideVanished || !player.isVanished() || player.getUUID().equals(sender.getUUID())))
 						players.add((player.isVanished() ? vanishedColor : notVanishedColor) + player.getName());
-				if (players.size() == 0)
+				if (players.isEmpty())
 					sender.sendMessage(language.getMessage("commands.playerlist.rank.no-players-online"));
 				else sender.sendMessage(language.getMessage("commands.playerlist.rank.message", players.size(), rank.getDisplayName(), String.join(", " + notVanishedColor, players.toArray(new String[0])) + "§r"));
 			} else sender.sendMessage(language.getMessage("misc.invalid-rank", args[0]));

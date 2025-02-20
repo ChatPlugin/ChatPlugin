@@ -113,7 +113,7 @@ public abstract class MuteManager extends PunishmentManager implements DenyChatR
 	 * @param global Whether this mute is global
 	 * @param silent Whether this mute is silent
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
-	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 * @throws UnsupportedOperationException If <code>{@link OfflinePlayer#isOnline()}
 	 * &amp;&amp; !{@link OfflinePlayer#isLoaded()}</code>
 	 * @see MuteEvent
@@ -138,7 +138,7 @@ public abstract class MuteManager extends PunishmentManager implements DenyChatR
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
 	 * @param whoUnmuted Who unmuted the player
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
-	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 * @throws UnsupportedOperationException If <code>{@link OfflinePlayer#isOnline()}
 	 * &amp;&amp; !{@link OfflinePlayer#isLoaded()}</code>
 	 * @see UnmuteEvent
@@ -155,7 +155,7 @@ public abstract class MuteManager extends PunishmentManager implements DenyChatR
 	 * @param id Mute's ID
 	 * @param whoUnmuted Who unmuted the player
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
-	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 * @see UnmuteEvent
 	 */
 	public abstract void unmute(

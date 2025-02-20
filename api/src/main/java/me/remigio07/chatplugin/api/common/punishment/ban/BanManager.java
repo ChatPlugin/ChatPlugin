@@ -127,7 +127,7 @@ public abstract class BanManager extends PunishmentManager {
 	 * @param global Whether this ban is global
 	 * @param silent Whether this ban is silent
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
-	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 * @throws UnsupportedOperationException If <code>{@link OfflinePlayer#isOnline()}
 	 * &amp;&amp; !{@link OfflinePlayer#isLoaded()}</code>
 	 * @see BanEvent
@@ -155,7 +155,7 @@ public abstract class BanManager extends PunishmentManager {
 	 * @param silent Whether this ban is silent
 	 * @throws IllegalArgumentException If <code>!</code>{@link OfflinePlayer#hasPlayedBefore()}
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
-	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 * @throws UnsupportedOperationException If <code>{@link OfflinePlayer#isOnline()}
 	 * &amp;&amp; !{@link OfflinePlayer#isLoaded()}</code>
 	 * @see BanEvent
@@ -182,7 +182,7 @@ public abstract class BanManager extends PunishmentManager {
 	 * @param global Whether this ban is global
 	 * @param silent Whether this ban is silent
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
-	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 * @throws UnsupportedOperationException If <code>{@link OfflinePlayer#isOnline()}
 	 * &amp;&amp; !{@link OfflinePlayer#isLoaded()}</code>
 	 * @see BanEvent
@@ -207,7 +207,7 @@ public abstract class BanManager extends PunishmentManager {
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
 	 * @param whoUnbanned Who unbanned the player
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
-	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 * @throws UnsupportedOperationException If <code>{@link OfflinePlayer#isOnline()}
 	 * &amp;&amp; !{@link OfflinePlayer#isLoaded()}</code>
 	 * @see UnbanEvent
@@ -227,7 +227,7 @@ public abstract class BanManager extends PunishmentManager {
 	 * @param server Origin server ({@link ProxyManager#getServerID()})
 	 * @param whoUnbanned Who unbanned the IP address
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
-	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 * @see UnbanEvent
 	 */
 	public abstract void unbanIP(
@@ -242,7 +242,7 @@ public abstract class BanManager extends PunishmentManager {
 	 * @param id Ban's ID
 	 * @param whoUnbanned Who unbanned the player
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
-	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 * @see UnbanEvent
 	 */
 	public abstract void unban(

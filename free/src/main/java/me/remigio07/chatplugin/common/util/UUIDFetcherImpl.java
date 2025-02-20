@@ -184,7 +184,7 @@ public class UUIDFetcherImpl extends UUIDFetcher {
 					JsonObject json = (JsonObject) Jsoner.deserialize(response.getValue());
 					JsonArray array;
 					
-					if (json.containsKey("properties") && (array = (JsonArray) json.get("properties")).size() > 0 && (json = (JsonObject) array.get(0)).containsKey("value")
+					if (json.containsKey("properties") && !(array = (JsonArray) json.get("properties")).isEmpty() && (json = (JsonObject) array.get(0)).containsKey("value")
 							&& (json = (JsonObject) Jsoner.deserialize(new String(Base64.getDecoder().decode((String) json.get("value")), StandardCharsets.ISO_8859_1))).containsKey("textures")
 							&& (json = (JsonObject) json.get("textures")).containsKey("SKIN") && (json = (JsonObject) json.get("SKIN")).containsKey("url")) {
 						future.complete((String) json.get("url"));
@@ -232,7 +232,7 @@ public class UUIDFetcherImpl extends UUIDFetcher {
 					JsonObject json = (JsonObject) Jsoner.deserialize(response.getValue());
 					JsonArray array;
 					
-					if (json.containsKey("properties") && (array = (JsonArray) json.get("properties")).size() > 0 && (json = (JsonObject) array.get(0)).containsKey("value")
+					if (json.containsKey("properties") && !(array = (JsonArray) json.get("properties")).isEmpty() && (json = (JsonObject) array.get(0)).containsKey("value")
 							&& (json = (JsonObject) Jsoner.deserialize(new String(Base64.getDecoder().decode((String) json.get("value")), StandardCharsets.ISO_8859_1))).containsKey("textures")
 							&& (json = (JsonObject) json.get("textures")).containsKey("CAPE") && (json = (JsonObject) json.get("CAPE")).containsKey("url")) {
 						future.complete((String) json.get("url"));

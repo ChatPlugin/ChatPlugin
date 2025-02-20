@@ -61,7 +61,7 @@ public class IPLookupCommand extends BaseCommand {
 			PlayerAdapter player = PlayerAdapter.getPlayer(args[0], false);
 			ipAddress = player == null ? null : player.getIPAddress();
 		} if (ipAddress != null) {
-			if (!ProxyManager.getInstance().isEnabled() || PlayerAdapter.getOnlinePlayers().size() != 0) {
+			if (!ProxyManager.getInstance().isEnabled() || !PlayerAdapter.getOnlinePlayers().isEmpty()) {
 				final InetAddress finalIPAddress = ipAddress;
 				
 				TaskManager.runAsync(() -> {

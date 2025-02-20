@@ -206,7 +206,7 @@ public class IgnoreCommand extends PlayerCommand {
 			if (PlayerIgnoreManager.getInstance().isEnabled()) {
 				java.util.List<OfflinePlayer> ignoredPlayers = player.getIgnoredPlayers();
 				
-				if (ignoredPlayers.size() != 0) {
+				if (!ignoredPlayers.isEmpty()) {
 					for (OfflinePlayer ignored : new ArrayList<>(ignoredPlayers))
 						if (!PlayerIgnoreManager.getInstance().unignore(player, ignored))
 							return;
@@ -254,9 +254,9 @@ public class IgnoreCommand extends PlayerCommand {
 								} if (target.hasPlayedBefore()) {
 									java.util.List<OfflinePlayer> ignoredPlayers = PlayerIgnoreManager.getInstance().getIgnoredPlayers(target);
 									
-									if (ignoredPlayers.size() != 0)
-										player.sendTranslatedMessage("commands.ignore.list.other", target.getName(), ignoredPlayers.size(), Utils.getStringFromList(ignoredPlayers.stream().map(OfflinePlayer::getName).collect(Collectors.toList()), false, false));
-									else player.sendTranslatedMessage("commands.ignore.no-ignored.other", target.getName());
+									if (ignoredPlayers.isEmpty())
+										player.sendTranslatedMessage("commands.ignore.no-ignored.other", target.getName());
+									else player.sendTranslatedMessage("commands.ignore.list.other", target.getName(), ignoredPlayers.size(), Utils.getStringFromList(ignoredPlayers.stream().map(OfflinePlayer::getName).collect(Collectors.toList()), false, false));
 								} else player.sendTranslatedMessage("misc.player-not-stored", target.getName());
 							} catch (IllegalArgumentException e) {
 								player.sendTranslatedMessage("misc.invalid-player-name");
@@ -270,9 +270,9 @@ public class IgnoreCommand extends PlayerCommand {
 				} else {
 					java.util.List<OfflinePlayer> ignoredPlayers = player.getIgnoredPlayers();
 					
-					if (ignoredPlayers.size() != 0)
-						player.sendTranslatedMessage("commands.ignore.list.self", ignoredPlayers.size(), Utils.getStringFromList(ignoredPlayers.stream().map(OfflinePlayer::getName).collect(Collectors.toList()), false, false));
-					else player.sendTranslatedMessage("commands.ignore.no-ignored.self");
+					if (ignoredPlayers.isEmpty())
+						player.sendTranslatedMessage("commands.ignore.no-ignored.self");
+					else player.sendTranslatedMessage("commands.ignore.list.self", ignoredPlayers.size(), Utils.getStringFromList(ignoredPlayers.stream().map(OfflinePlayer::getName).collect(Collectors.toList()), false, false));
 				}
 			} else player.sendTranslatedMessage("misc.disabled-feature");
 		}

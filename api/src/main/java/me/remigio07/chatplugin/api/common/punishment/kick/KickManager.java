@@ -96,7 +96,7 @@ public abstract class KickManager extends PunishmentManager {
 	 * @param type Kick's type ({@link #getDefaultKickMessageType()})
 	 * @param silent Whether this kick is silent
 	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()} &amp;&amp;
-	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.size() == 0</code>
+	 * {@link ProxyManager#isEnabled()} &amp;&amp; {@link PlayerAdapter#getOnlinePlayers()}.isEmpty()</code>
 	 * @see KickEvent
 	 */
 	public abstract void kick(

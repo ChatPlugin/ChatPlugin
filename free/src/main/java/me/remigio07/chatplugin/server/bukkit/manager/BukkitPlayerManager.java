@@ -119,7 +119,7 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 		List<PlayerAdapter> players = PlayerAdapter.getOnlinePlayers();
 		File file = new File(ChatPlugin.getInstance().getDataFolder(), "online-players-data.yml");
 		
-		if (players.size() != 0) {
+		if (!players.isEmpty()) {
 			if (IntegrationType.VIAVERSION.isEnabled() && IntegrationType.VIAVERSION.get().getVersion(players.get(0)) == Version.UNSUPPORTED) {
 				String reason = ChatColor.translate(Via.getConfig().getReloadDisconnectMsg());
 				

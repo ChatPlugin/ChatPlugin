@@ -48,7 +48,7 @@ public class F3ServerName {
 	 */
 	public F3ServerName(String id, @NotNull Map<Language, String> texts) {
 		if (!F3ServerNameManager.getInstance().isValidF3ServerNameID(id))
-			throw new IllegalArgumentException("F3 server name ID \"" + id + "\" is invalid as it does not respect the following pattern: \"" + F3ServerNameManager.F3_SERVER_NAME_ID_PATTERN.pattern() + "\"");
+			throw new IllegalArgumentException("F3 server name ID \"" + id + "\" does not respect the following pattern: \"" + F3ServerNameManager.F3_SERVER_NAME_ID_PATTERN.pattern() + "\"");
 		if (texts.get(Language.getMainLanguage()) == null)
 			throw new IllegalArgumentException("Specified map does not contain a translation for the main language");
 		this.id = id;

@@ -78,7 +78,7 @@ public class LanguageManagerImpl extends LanguageManager {
 							ConfigurationType.CONFIG.get().translateString("languages." + id + ".display-name"),
 							ConfigurationType.CONFIG.get().getStringList("languages." + id + ".country-codes")
 							));
-				} else LogManager.log("Language ID specified at \"languages.{0}\" in config.yml is invalid as it does not respect the following pattern: \"{1}\"; skipping it.", 2, id, LANGUAGE_ID_PATTERN.pattern());
+				} else LogManager.log("Language ID specified at \"languages.{0}\" in config.yml does not respect the following pattern: \"{1}\"; skipping it.", 2, id, LANGUAGE_ID_PATTERN.pattern());
 			} for (Language language : languages) {
 				if (getMainLanguage() != language)
 					language.getConfiguration().load();

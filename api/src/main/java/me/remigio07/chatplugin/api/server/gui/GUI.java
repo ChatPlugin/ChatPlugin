@@ -69,7 +69,7 @@ public abstract class GUI {
 	 */
 	public synchronized GUI setID(String id) {
 		if (!GUIManager.getInstance().isValidGUIID(id))
-			throw new IllegalArgumentException("GUI ID \"" + id + "\" is invalid as it does not respect the following pattern: \"" + GUIManager.GUI_ID_PATTERN.pattern() + "\"");
+			throw new IllegalArgumentException("GUI ID \"" + id + "\" does not respect the following pattern: \"" + GUIManager.GUI_ID_PATTERN.pattern() + "\"");
 		if (GUIManager.getInstance().getGUIs().contains(this) && GUIManager.getInstance().getGUI(id) != null)
 			throw new IllegalArgumentException("Specified ID (\"" + id + "\") is already in use");
 		this.id = id;

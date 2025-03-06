@@ -67,7 +67,7 @@ public class ActionbarManagerImpl extends ActionbarManager {
 						LogManager.log("Translation for main language (\"{0}\") not found at \"actionbars.{1}.texts.{0}\" in actionbars.yml; skipping it.", 2, Language.getMainLanguage().getID(), id);
 					}
 				} else LogManager.log("An actionbar with ID \"{0}\" already exists in actionbars.yml; skipping it.", 1, id);
-			} else LogManager.log("Actionbar ID specified at \"actionbars.{0}\" in actionbars.yml is invalid as it does not respect the following pattern: \"{1}\"; skipping it.", 2, id, ACTIONBAR_ID_PATTERN.pattern());
+			} else LogManager.log("Actionbar ID specified at \"actionbars.{0}\" in actionbars.yml does not respect the following pattern: \"{1}\"; skipping it.", 2, id, ACTIONBAR_ID_PATTERN.pattern());
 		} timerTaskID = TaskManager.scheduleAsync(this, 0L, sendingTimeout);
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;

@@ -188,7 +188,7 @@ public class Icon {
 			@NotNull Map<EnchantmentAdapter, Integer> enchantments
 			) {
 		if (!isValidIconID(id))
-			throw new IllegalArgumentException("Icon ID \"" + id + "\" is invalid as it does not respect the following pattern: \"" + ICON_ID_PATTERN.pattern() + "\"");
+			throw new IllegalArgumentException("Icon ID \"" + id + "\" does not respect the following pattern: \"" + ICON_ID_PATTERN.pattern() + "\"");
 		this.id = id;
 		this.type = type;
 		this.material = material;

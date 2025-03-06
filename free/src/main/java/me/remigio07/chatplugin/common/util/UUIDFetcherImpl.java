@@ -68,14 +68,14 @@ public class UUIDFetcherImpl extends UUIDFetcher {
 	@Override
 	public CompletableFuture<UUID> getUUID(String name) {
 		if (!Utils.isValidUsername(name))
-			throw new IllegalArgumentException("Username \"" + name + "\" is invalid as it does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
+			throw new IllegalArgumentException("Username \"" + name + "\" does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
 		return ChatPlugin.getInstance().isOnlineMode() ? getOnlineUUID(name) : CompletableFuture.completedFuture(getOfflineUUID(name));
 	}
 	
 	@Override
 	public CompletableFuture<UUID> getOnlineUUID(String name) {
 		if (!Utils.isValidUsername(name))
-			throw new IllegalArgumentException("Username \"" + name + "\" is invalid as it does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
+			throw new IllegalArgumentException("Username \"" + name + "\" does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
 		CompletableFuture<UUID> future = new CompletableFuture<>();
 		
 		TaskManager.runAsync(() -> {
@@ -114,7 +114,7 @@ public class UUIDFetcherImpl extends UUIDFetcher {
 	@Override
 	public UUID getOfflineUUID(String name) {
 		if (!Utils.isValidUsername(name))
-			throw new IllegalArgumentException("Username \"" + name + "\" is invalid as it does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
+			throw new IllegalArgumentException("Username \"" + name + "\" does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
 		return UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(StandardCharsets.UTF_8));
 	}
 	
@@ -158,7 +158,7 @@ public class UUIDFetcherImpl extends UUIDFetcher {
 	@Override
 	public CompletableFuture<String> getSkinTextureURL(String name) {
 		if (!Utils.isValidUsername(name))
-			throw new IllegalArgumentException("Username \"" + name + "\" is invalid as it does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
+			throw new IllegalArgumentException("Username \"" + name + "\" does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
 		CompletableFuture<String> future = new CompletableFuture<>();
 		
 		TaskManager.runAsync(() -> {
@@ -206,7 +206,7 @@ public class UUIDFetcherImpl extends UUIDFetcher {
 	@Override
 	public @Nullable(why = "The specified name may not belong to any premium account or may not have a cape") CompletableFuture<String> getCapeTextureURL(String name) {
 		if (!Utils.isValidUsername(name))
-			throw new IllegalArgumentException("Username \"" + name + "\" is invalid as it does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
+			throw new IllegalArgumentException("Username \"" + name + "\" does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
 		CompletableFuture<String> future = new CompletableFuture<>();
 		
 		TaskManager.runAsync(() -> {

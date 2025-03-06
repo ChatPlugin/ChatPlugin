@@ -346,7 +346,7 @@ public class PlayerAdapter {
 	@Nullable(why = "The specified player may not be online")
 	public static PlayerAdapter getPlayer(String name, boolean checkPattern) {
 		if (checkPattern && !Utils.isValidUsername(name))
-			throw new IllegalArgumentException("Username \"" + name + "\" is invalid as it does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
+			throw new IllegalArgumentException("Username \"" + name + "\" does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
 		Object player = null;
 		
 		switch (Environment.getCurrent()) {

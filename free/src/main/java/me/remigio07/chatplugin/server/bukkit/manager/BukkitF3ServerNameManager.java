@@ -78,7 +78,7 @@ public class BukkitF3ServerNameManager extends F3ServerNameManager {
 						LogManager.log("Translation for main language (\"{0}\") not found at \"f3-server-names.{1}.texts.{0}\" in f3-server-names.yml; skipping it.", 2, Language.getMainLanguage().getID(), id);
 					}
 				} else LogManager.log("An F3 server name with ID \"{0}\" already exists in f3-server-names.yml; skipping it.", 1, id);
-			} else LogManager.log("F3 server name ID specified at \"f3-server-names.{0}\" in f3-server-names.yml is invalid as it does not respect the following pattern: \"{1}\"; skipping it.", 2, id, F3_SERVER_NAME_ID_PATTERN.pattern());
+			} else LogManager.log("F3 server name ID specified at \"f3-server-names.{0}\" in f3-server-names.yml does not respect the following pattern: \"{1}\"; skipping it.", 2, id, F3_SERVER_NAME_ID_PATTERN.pattern());
 		} try {
 			Messenger messenger = Bukkit.getMessenger();
 			Method method = messenger.getClass().getDeclaredMethod("addToOutgoing", new Class[] { Plugin.class, String.class });

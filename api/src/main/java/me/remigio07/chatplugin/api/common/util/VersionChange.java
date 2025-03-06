@@ -65,7 +65,7 @@ public enum VersionChange {
 	}
 	
 	/**
-	 * Gets this version change's index. Example: x.x.X -&#62; 2.
+	 * Gets this version change's index. Example: x.x.X ➝ 2.
 	 * 
 	 * @return Version change's index
 	 */
@@ -83,7 +83,7 @@ public enum VersionChange {
 	}
 	
 	/**
-	 * Checks if this is a major version change.
+	 * Checks if this is a major (X.x.x) version change.
 	 * 
 	 * @return Whether this is a major version change
 	 */
@@ -92,7 +92,7 @@ public enum VersionChange {
 	}
 	
 	/**
-	 * Checks if this is a minor version change.
+	 * Checks if this is a minor (x.X.x) version change.
 	 * 
 	 * @return Whether this is a minor version change
 	 */
@@ -101,7 +101,7 @@ public enum VersionChange {
 	}
 	
 	/**
-	 * Checks if this is a patch version change.
+	 * Checks if this is a patch (x.x.X) version change.
 	 * 
 	 * @return Whether this is a patch version change
 	 */

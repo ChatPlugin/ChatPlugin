@@ -71,7 +71,7 @@ public abstract class ScoreboardManager implements ChatPluginManager {
 	/**
 	 * Gets the list of loaded scoreboards.
 	 * 
-	 * <p>You may modify the returned list.</p>
+	 * <p>Do <em>not</em> modify the returned list.</p>
 	 * 
 	 * @return Loaded scoreboards' list
 	 */

@@ -130,7 +130,7 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	@Override
 	public ChatPluginServerPlayer getPlayer(String name, boolean checkPattern, boolean ignoreCase) {
 		if (checkPattern && !Utils.isValidUsername(name))
-			throw new IllegalArgumentException("Username \"" + name + "\" is invalid as it does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
+			throw new IllegalArgumentException("Username \"" + name + "\" does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
 		for (ChatPluginServerPlayer player : players.values())
 			if (ignoreCase ? player.getName().equalsIgnoreCase(name) : player.getName().equals(name))
 				return player;

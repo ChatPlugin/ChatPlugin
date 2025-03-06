@@ -37,7 +37,7 @@ public abstract class ChatEvent implements ChatPluginServerPlayerEvent {
 	}
 	
 	/**
-	 * Gets the message involved with this event
+	 * Gets the message involved with this event.
 	 * 
 	 * @return Message involved
 	 */

@@ -18,10 +18,8 @@ package me.remigio07.chatplugin.api.server.event.vanish;
 import me.remigio07.chatplugin.api.server.event.player.ChatPluginServerPlayerEvent;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
-/**
- * Represents a vanish-related event.
- */
-abstract class VanishEvent implements ChatPluginServerPlayerEvent { // not public because name might be misleading
+// not public because name might be misleading
+abstract class VanishEvent implements ChatPluginServerPlayerEvent {
 	
 	protected ChatPluginServerPlayer player;
 	

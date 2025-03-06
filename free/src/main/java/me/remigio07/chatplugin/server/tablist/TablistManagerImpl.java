@@ -83,7 +83,7 @@ public class TablistManagerImpl extends TablistManager {
 						LogManager.log("Translation for main language (\"{0}\") not found at \"tablists.{1}.headers.{0}\" or \"tablists.{1}.footers.{0}\" in tablists.yml; skipping it.", 2, Language.getMainLanguage().getID(), id);
 					}
 				} else LogManager.log("A tablist with ID \"{0}\" already exists in tablists.yml; skipping it.", 1, id);
-			} else LogManager.log("Tablist ID specified at \"tablists.{0}\" in tablists.yml is invalid as it does not respect the following pattern: \"{1}\"; skipping it.", 2, id, TABLIST_ID_PATTERN.pattern());
+			} else LogManager.log("Tablist ID specified at \"tablists.{0}\" in tablists.yml does not respect the following pattern: \"{1}\"; skipping it.", 2, id, TABLIST_ID_PATTERN.pattern());
 		} if (Environment.isBukkit() && VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 			Constructor<?>[] constructors = BukkitReflection.getLoadedClass("PacketPlayOutPlayerListHeaderFooter").getConstructors();
 			constructor = constructors[constructors[0].getParameterCount() == 0 ? 0 : 1];

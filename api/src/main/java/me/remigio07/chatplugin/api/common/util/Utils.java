@@ -257,9 +257,9 @@ public class Utils {
 	/**
 	 * Formats the specified balance to a certain approximation like the following:
 	 * 	<ul>
-	 * 		<li>1,500 -&gt; 1.5K</li>
-	 * 		<li>1,500,000 -&gt; 1.5M</li>
-	 * 		<li>1,500,000 -&gt; 1.5B</li>
+	 * 		<li>1,500 ➝ 1.5K</li>
+	 * 		<li>1,500,000 ➝ 1.5M</li>
+	 * 		<li>1,500,000 ➝ 1.5B</li>
 	 * 	</ul>
 	 * 
 	 * @param balance Balance to format
@@ -356,7 +356,7 @@ public class Utils {
 			} catch (UnknownHostException e) {
 				return null; // never called
 			}
-		} else throw new IllegalArgumentException("Specified IPv4 is invalid as it does not respect the following pattern: \"" + IPV4_PATTERN.pattern() + "\"");
+		} else throw new IllegalArgumentException("Specified IPv4 does not respect the following pattern: \"" + IPV4_PATTERN.pattern() + "\"");
 	}
 	
 	/**

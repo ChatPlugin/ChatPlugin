@@ -83,7 +83,7 @@ public abstract class ScoreboardLines {
 	@Nullable(why = "No line may be present for the specified line index")
 	public ScoreboardLine getLine(int lineIndex) {
 		if (lineIndex < 0 || lineIndex > 14)
-			throw new IndexOutOfBoundsException("Specified line index (" + lineIndex + ") is invalid as it is not inside of range 0 - 14");
+			throw new IndexOutOfBoundsException("Specified line index (" + lineIndex + ") is not inside of range 0 - 14");
 		return lines.get(lineIndex);
 	}
 	

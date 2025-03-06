@@ -238,7 +238,7 @@ public abstract class LogManager implements ChatPluginManager {
 		/**
 		 * Gets this log level's prefix.
 		 * 
-		 * <p><strong>Example:</strong> {@link #INFO} -&gt; "[INFO] "</p>
+		 * <p><strong>Example:</strong> {@link #INFO} ➝ "[INFO] "</p>
 		 * 
 		 * @return This log level's prefix
 		 */

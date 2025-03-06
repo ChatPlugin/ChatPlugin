@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -142,7 +143,7 @@ public class RankCommand extends BaseCommand {
 										} catch (IOException ioe) {
 											LogManager.log("IOException occurred while saving ranks.yml: {0}", 2, ioe.getLocalizedMessage());
 										}
-									} else sender.sendMessage(language.getMessage("misc.invalid-rank", args[1]));
+									} else sender.sendMessage(language.getMessage("misc.invalid-rank", args[1], manager.getRanks().stream().map(Rank::getID).collect(Collectors.toList())));
 								} else sender.sendMessage(language.getMessage("commands.rank.add.reached-limit"));
 							} else sender.sendMessage(language.getMessage("commands.rank.add.already-exists"));
 						} else sender.sendMessage(language.getMessage("commands.rank.add.invalid-position", size - 1));
@@ -196,7 +197,7 @@ public class RankCommand extends BaseCommand {
 						} catch (IOException ioe) {
 							LogManager.log("IOException occurred while saving ranks.yml: {0}", 2, ioe.getLocalizedMessage());
 						}
-					} else sender.sendMessage(language.getMessage("misc.invalid-rank", args[1]));
+					} else sender.sendMessage(language.getMessage("misc.invalid-rank", args[1], RankManager.getInstance().getRanks().stream().map(Rank::getID).collect(Collectors.toList())));
 				} else sender.sendMessage(language.getMessage("commands.rank.luckperms-mode"));
 			} else sendUsage(sender, language);
 		}
@@ -322,7 +323,7 @@ public class RankCommand extends BaseCommand {
 					sender.sendMessage(rank.formatPlaceholders(language.getMessage("commands.rank.info")
 							.replace("{chat_color}", rank.getChatColor()), // gets translated otherwise
 							language));
-				else sender.sendMessage(language.getMessage("misc.invalid-rank", args[1]));
+				else sender.sendMessage(language.getMessage("misc.invalid-rank", args[1], RankManager.getInstance().getRanks().stream().map(Rank::getID).collect(Collectors.toList())));
 			} else sendUsage(sender, language);
 		}
 		
@@ -481,11 +482,11 @@ public class RankCommand extends BaseCommand {
 										else ((SpongePlayerManager) ServerPlayerManager.getInstance()).setupTeams(player, player);
 									}
 							}
-						} catch (IllegalStateException e) {
-							sender.sendMessage(language.getMessage("commands.rank.edit.out-of-sync", e.getMessage()));
+						} catch (IllegalStateException ise) {
+							sender.sendMessage(language.getMessage("commands.rank.edit.out-of-sync", ise.getMessage()));
 						}
 					} else sender.sendMessage(language.getMessage("commands.rank.edit.invalid-property", Utils.getStringFromList(RankManagerImpl.getProperties(), false, true)));
-				} else sender.sendMessage(language.getMessage("misc.invalid-rank", args[1]));
+				} else sender.sendMessage(language.getMessage("misc.invalid-rank", args[1], RankManager.getInstance().getRanks().stream().map(Rank::getID).collect(Collectors.toList())));
 			} else sendUsage(sender, language);
 		}
 		

@@ -167,7 +167,7 @@ public enum ScoreboardEvent {
 	 * <p>It is obtained by lowering {@link #name()}'s
 	 * case and replacing '_' with '-'.</p>
 	 * 
-	 * <p><strong>Example:</strong> {@link #BED_ENTER} -&gt; "bed-enter"</p>
+	 * <p><strong>Example:</strong> {@link #BED_ENTER} ➝ "bed-enter"</p>
 	 * 
 	 * @return Event's ID
 	 */

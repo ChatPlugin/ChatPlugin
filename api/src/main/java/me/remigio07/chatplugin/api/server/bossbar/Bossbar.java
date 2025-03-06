@@ -68,7 +68,7 @@ public class Bossbar {
 			boolean hidden
 			) {
 		if (!BossbarManager.getInstance().isValidBossbarID(id))
-			throw new IllegalArgumentException("Bossbar ID \"" + id + "\" is invalid as it does not respect the following pattern: \"" + BossbarManager.BOSSBAR_ID_PATTERN.pattern() + "\"");
+			throw new IllegalArgumentException("Bossbar ID \"" + id + "\" does not respect the following pattern: \"" + BossbarManager.BOSSBAR_ID_PATTERN.pattern() + "\"");
 		if (titles.get(Language.getMainLanguage()) == null)
 			throw new IllegalArgumentException("Specified map does not contain a translation for the main language");
 		this.id = id;

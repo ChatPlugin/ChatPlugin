@@ -74,7 +74,7 @@ public class Configuration {
 		if (file.getName().toLowerCase().endsWith(".yml") || file.getName().toLowerCase().endsWith(".yaml")) {
 			type = ConfigurationType.CUSTOM;
 			this.file = file;
-		} else throw new IllegalArgumentException("File name \"" + file.getName() + "\" is invalid as it does not end with \".yml\" or \".yaml\" (ignoring case)");
+		} else throw new IllegalArgumentException("File name \"" + file.getName() + "\" does not end with \".yml\" or \".yaml\" (ignoring case)");
 	}
 	
 	/**

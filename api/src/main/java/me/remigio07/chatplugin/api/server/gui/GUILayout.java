@@ -46,9 +46,9 @@ public class GUILayout {
 	
 	protected GUILayout(String id, int rows, OpenActions openActions, SoundAdapter clickSound, Map<Language, String> titles) {
 		if (!GUIManager.getInstance().isValidGUIID(id))
-			throw new IllegalArgumentException("GUI ID \"" + id + "\" is invalid as it does not respect the following pattern: \"" + GUIManager.GUI_ID_PATTERN.pattern() + "\"");
+			throw new IllegalArgumentException("GUI ID \"" + id + "\" does not respect the following pattern: \"" + GUIManager.GUI_ID_PATTERN.pattern() + "\"");
 		if (rows < 1 || rows > 6)
-			throw new IndexOutOfBoundsException("Specified GUI's rows (" + rows + ") are invalid as they are not inside of range 1-6");
+			throw new IndexOutOfBoundsException("Specified GUI's rows (" + rows + ") are not inside of range 1-6");
 		if (titles.get(Language.getMainLanguage()) == null)
 			throw new IllegalArgumentException("Specified titles' map does not contain a translation for the main language");
 		this.id = id;
@@ -102,13 +102,12 @@ public class GUILayout {
 	/**
 	 * Gets the configuration associated with this GUI layout.
 	 * 
-	 * <p>Will return <code>null</code> if this GUI was created using
-	 * {@link GUIManager#createSinglePageGUILayoutBuilder(String, int, OpenActions, SoundAdapter, Map)} or
-	 * {@link GUIManager#createFillableGUILayoutBuilder(String, int, OpenActions, SoundAdapter, Map)}.</p>
+	 * <p>Will return <code>null</code> if this GUI layout was <em>not</em>
+	 * created using {@link GUIManager#createGUILayout(Configuration)}.</p>
 	 * 
 	 * @return Associated configuration
 	 */
-	@Nullable(why = "Will return null if this GUI was created using GUIManager#createSinglePageGUILayoutBuilder(String, int, OpenActions, SoundAdapter, Map) or GUIManager#createFillableGUILayoutBuilder(String, int, OpenActions, SoundAdapter, Map)")
+	@Nullable(why = "Will return null if this GUI layout was not created using GUIManager#createGUILayout(Configuration)")
 	public Configuration getConfiguration() {
 		return configuration;
 	}
@@ -197,7 +196,7 @@ public class GUILayout {
 			try {
 				layout.getIcons().set(icon.getPosition(), icon);
 			} catch (IndexOutOfBoundsException e) {
-				throw new IndexOutOfBoundsException("Icon's position (" + icon.getPosition() + ") as it is outside of range 0 - " + (layout.getSize() - 1));
+				throw new IndexOutOfBoundsException("Icon's position (" + icon.getPosition() + ") is outside of range 0 - " + (layout.getSize() - 1));
 			} return this;
 		}
 		
@@ -212,7 +211,7 @@ public class GUILayout {
 			try {
 				layout.getIcons().set(position, null);
 			} catch (IndexOutOfBoundsException e) {
-				throw new IndexOutOfBoundsException("Icon's position (" + position + ") as it is outside of range 0 - " + (layout.getSize() - 1));
+				throw new IndexOutOfBoundsException("Icon's position (" + position + ") is outside of range 0 - " + (layout.getSize() - 1));
 			} return this;
 		}
 		

@@ -135,7 +135,7 @@ public enum DataContainer {
 	 * 
 	 * <p>Will return <code>null</code> if the specified ID is invalid.</p>
 	 * 
-	 * <p><strong>Example:</strong> (with default settings) <code>"chatplugin_mutes"</code> -&gt; {@link #MUTES}</p>
+	 * <p><strong>Example:</strong> <code>"chatplugin_mutes"</code> ➝ {@link #MUTES} (with default settings)</p>
 	 * 
 	 * @param databaseTableID Database table's ID
 	 * @return Corresponding data container

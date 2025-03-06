@@ -61,7 +61,7 @@ public class FillableGUILayout extends GUILayout {
 	 */
 	public void setStartSlot(int startSlot) {
 		if (startSlot < 0 || startSlot > getSize() - 1 || (endSlot != -1 && startSlot > endSlot))
-			throw new IllegalArgumentException("Specified start slot's position (" + startSlot + ") is invalid as it is outside of range 0 - " + (getSize() - 1) + " or bigger than end slot's position (" + endSlot + ")");
+			throw new IllegalArgumentException("Specified start slot's position (" + startSlot + ") is outside of range 0 - " + (getSize() - 1) + " or bigger than end slot's position (" + endSlot + ")");
 		this.startSlot = startSlot;
 	}
 	
@@ -83,7 +83,7 @@ public class FillableGUILayout extends GUILayout {
 	 */
 	public void setEndSlot(int endSlot) {
 		if (endSlot < 0 || endSlot > getSize() - 1 || (startSlot != -1 && startSlot > endSlot))
-			throw new IllegalArgumentException("Specified start slot's position (" + startSlot + ") is invalid as it is outside of range 0 - " + (getSize() - 1) + " or bigger than end slot's position (" + endSlot + ")");
+			throw new IllegalArgumentException("Specified start slot's position (" + startSlot + ") is outside of range 0 - " + (getSize() - 1) + " or bigger than end slot's position (" + endSlot + ")");
 		this.endSlot = endSlot;
 	}
 	

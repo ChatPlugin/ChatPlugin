@@ -64,7 +64,7 @@ public class Ad {
 			List<Rank> disabledRanks
 			) {
 		if (!AdManager.getInstance().isValidAdID(id))
-			throw new IllegalArgumentException("Ad ID \"" + id + "\" is invalid as it does not respect the following pattern: \"" + AdManager.AD_ID_PATTERN.pattern() + "\"");
+			throw new IllegalArgumentException("Ad ID \"" + id + "\" does not respect the following pattern: \"" + AdManager.AD_ID_PATTERN.pattern() + "\"");
 		if (texts.get(Language.getMainLanguage()) == null)
 			throw new IllegalArgumentException("Specified map does not contain a translation for the main language");
 		this.id = id;

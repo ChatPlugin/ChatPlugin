@@ -65,7 +65,7 @@ public class RankManagerImpl extends RankManager {
 						break;
 					} if (isValidRankID(id))
 						ranks.add(new RankImpl(id, ranks.size()));
-					else LogManager.log("Rank ID of LuckPerms' group \"{0}\" is invalid as it does not respect the following pattern: \"{1}\"; skipping it.", 2, id, RANK_ID_PATTERN.pattern());
+					else LogManager.log("Rank ID of LuckPerms' group \"{0}\" does not respect the following pattern: \"{1}\"; skipping it.", 2, id, RANK_ID_PATTERN.pattern());
 				}
 			} catch (NoClassDefFoundError ncdfe) {
 				throw new ChatPluginManagerException(this, "\"ranks.settings.luckperms-mode\" in ranks.yml is set to true but LuckPerms is not installed or running correctly");
@@ -86,7 +86,7 @@ public class RankManagerImpl extends RankManager {
 					if (getRank(id) == null)
 						ranks.add(new RankImpl(id, ranks.size()));
 					else LogManager.log("A rank with ID \"{0}\" already exists in ranks.yml; skipping it.", 1, id);
-				else LogManager.log("Rank ID specified at \"ranks.{0}\" in ranks.yml is invalid as it does not respect the following pattern: \"{1}\"; skipping it.", 2, id, RANK_ID_PATTERN.pattern());
+				else LogManager.log("Rank ID specified at \"ranks.{0}\" in ranks.yml does not respect the following pattern: \"{1}\"; skipping it.", 2, id, RANK_ID_PATTERN.pattern());
 			} if (ranks.isEmpty())
 				throw new ChatPluginManagerException(this, "there are no valid ranks in ranks.yml, at least one is required");
 		} loadRanks();
@@ -128,7 +128,7 @@ public class RankManagerImpl extends RankManager {
 					
 					for (int i = 0; i < 2; i++) {
 						if (rank.getMaxPunishmentDurations()[i] == -2) {
-							LogManager.log("Punishment duration specified through property \"max-punishment-durations.{0}\" of LuckPerms' group \"{1}\" (\"{2}\") is invalid; setting to default value of 0s.", 2, i == 0 ? "ban" : "mute", id, data.getMetaValue("max-punishment-durations." + (i == 0 ? "ban" : "mute")));
+							LogManager.log("Invalid punishment duration specified through property \"max-punishment-durations.{0}\" of LuckPerms' group \"{1}\" (\"{2}\"); setting to default value of 0s.", 2, i == 0 ? "ban" : "mute", id, data.getMetaValue("max-punishment-durations." + (i == 0 ? "ban" : "mute")));
 							
 							rank.getMaxPunishmentDurations()[i] = 0;
 						}
@@ -149,7 +149,7 @@ public class RankManagerImpl extends RankManager {
 				
 				for (int i = 0; i < 2; i++) {
 					if (rank.getMaxPunishmentDurations()[i] == -2) {
-						LogManager.log("Punishment duration specified at \"ranks.{0}.max-punishment-durations.{1}\" in ranks.yml (\"{2}\") is invalid; setting to default value of 0s.", 2, rank.getID(), i == 0 ? "ban" : "mute", ConfigurationType.RANKS.get().getString("ranks." + id + ".max-punishment-durations." + (i == 0 ? "ban" : "mute")));
+						LogManager.log("Invalid punishment duration specified at \"ranks.{0}.max-punishment-durations.{1}\" in ranks.yml (\"{2}\"); setting to default value of 0s.", 2, rank.getID(), i == 0 ? "ban" : "mute", ConfigurationType.RANKS.get().getString("ranks." + id + ".max-punishment-durations." + (i == 0 ? "ban" : "mute")));
 						
 						rank.getMaxPunishmentDurations()[i] = 0;
 					}

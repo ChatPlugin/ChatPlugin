@@ -635,7 +635,7 @@ public class ItemStackAdapter implements Cloneable {
 					bukkitValue().setItemMeta(meta);
 				} else spongeValue().remove(Keys.REPRESENTED_PLAYER);
 			} else if (!Utils.isValidUsername(skullOwner))
-				throw new IllegalArgumentException("Username \"" + skullOwner + "\" is invalid as it does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
+				throw new IllegalArgumentException("Username \"" + skullOwner + "\" does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
 			else if (!skullOwner.equals(this.skullOwner) && !nonPremiumUsernames.contains(skullOwner)) {
 				Object[] cache = skullsCache.get(skullOwner);
 				

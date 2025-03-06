@@ -63,7 +63,7 @@ public class Tablist {
 	 */
 	public Tablist(String id, @NotNull Map<Language, String> headers, @NotNull Map<Language, String> footers) {
 		if (!TablistManager.getInstance().isValidTablistID(id))
-			throw new IllegalArgumentException("Tablist ID \"" + id + "\" is invalid as it does not respect the following pattern: \"" + TablistManager.TABLIST_ID_PATTERN.pattern() + "\"");
+			throw new IllegalArgumentException("Tablist ID \"" + id + "\" does not respect the following pattern: \"" + TablistManager.TABLIST_ID_PATTERN.pattern() + "\"");
 		if (headers.get(Language.getMainLanguage()) == null || footers.get(Language.getMainLanguage()) == null)
 			throw new IllegalArgumentException("Specified map does not contain a translation for the main language");
 		this.id = id;

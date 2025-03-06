@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
@@ -85,7 +86,13 @@ public class AdManagerImpl extends AdManager {
 						Rank rank = RankManager.getInstance().getRank(disabledRank);
 						
 						if (rank == null)
-							LogManager.log("Rank ID specified at \"ads.{0}.disabled-ranks\" in ads.yml (\"{1}\") is invalid as it does not belong to any loaded rank.", 1, id, disabledRank);
+							LogManager.log(
+									"Rank ID (\"{0}\") specified at \"ads.{1}.disabled-ranks\" in ads.yml does not belong to any loaded rank ({2}).",
+									1,
+									disabledRank,
+									id,
+									Utils.getStringFromList(RankManager.getInstance().getRanks().stream().map(Rank::getID).collect(Collectors.toList()), false, true)
+									);
 						else disabledRanks.add(rank);
 					} try {
 						ads.add(new Ad(
@@ -100,7 +107,7 @@ public class AdManagerImpl extends AdManager {
 						LogManager.log("Translation for main language (\"{0}\") not found at \"ads.{1}.texts.{0}\" in ads.yml; skipping it.", 2, Language.getMainLanguage().getID(), id);
 					}
 				} else LogManager.log("An ad with ID \"{0}\" already exists in ads.yml; skipping it.", 1, id);
-			} else LogManager.log("Ad ID specified at \"ads.{0}\" in ads.yml is invalid as it does not respect the following pattern: \"{1}\"; skipping it.", 2, id, AD_ID_PATTERN.pattern());
+			} else LogManager.log("Ad ID specified at \"ads.{0}\" in ads.yml does not respect the following pattern: \"{1}\"; skipping it.", 2, id, AD_ID_PATTERN.pattern());
 		} timerTaskID = TaskManager.scheduleAsync(this, 0L, sendingTimeout);
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;

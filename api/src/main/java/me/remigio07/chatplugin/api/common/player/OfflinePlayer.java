@@ -169,7 +169,7 @@ public class OfflinePlayer {
 	 */
 	public OfflinePlayer(@NotNull String name) throws SQLException, IOException { // I've finally realized why developers hate offline mode - it's just a mess
 		if (!Utils.isValidUsername(name))
-			throw new IllegalArgumentException("Username \"" + name + "\" is invalid as it does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
+			throw new IllegalArgumentException("Username \"" + name + "\" does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
 		PlayerAdapter player = PlayerAdapter.getPlayer(name, false);
 		
 		if (player == null) {

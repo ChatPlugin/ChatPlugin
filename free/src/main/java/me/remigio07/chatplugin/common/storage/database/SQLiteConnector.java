@@ -193,10 +193,10 @@ public class SQLiteConnector extends DatabaseConnector {
 					+ "`rank_id` TEXT NOT NULL, "
 					+ "`server` TEXT NOT NULL, "
 					+ "`world` TEXT NOT NULL, "
+					+ "`channel_id` TEXT, "
 					+ "`content` TEXT NOT NULL, "
 					+ "`date` INTEGER NOT NULL, "
-					+ "`deny_chat_reason` NUMERIC,"
-					+ "`global` NUMERIC NOT NULL"
+					+ "`deny_chat_reason` NUMERIC"
 					+ ")";
 			break;
 		case PRIVATE_MESSAGES:

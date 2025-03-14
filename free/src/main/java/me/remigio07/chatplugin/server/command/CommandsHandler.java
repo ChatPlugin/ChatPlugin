@@ -28,16 +28,16 @@ import me.remigio07.chatplugin.api.server.ad.AdManager;
 import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager;
 import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
 import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
-import me.remigio07.chatplugin.api.server.chat.RangedChatManager;
 import me.remigio07.chatplugin.api.server.chat.StaffChatManager;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannelsManager;
 import me.remigio07.chatplugin.api.server.gui.GUIManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
+import me.remigio07.chatplugin.server.command.admin.ChatChannelSpyCommand;
 import me.remigio07.chatplugin.server.command.admin.ClearChatCommand;
 import me.remigio07.chatplugin.server.command.admin.IPLookupCommand;
 import me.remigio07.chatplugin.server.command.admin.LastSeenCommand;
 import me.remigio07.chatplugin.server.command.admin.MuteAllCommand;
-import me.remigio07.chatplugin.server.command.admin.RangedChatSpyCommand;
 import me.remigio07.chatplugin.server.command.admin.RankCommand;
 import me.remigio07.chatplugin.server.command.admin.SocialspyCommand;
 import me.remigio07.chatplugin.server.command.admin.StaffChatCommand;
@@ -49,6 +49,7 @@ import me.remigio07.chatplugin.server.command.misc.BroadcastCommand;
 import me.remigio07.chatplugin.server.command.misc.BroadcastRawCommand;
 import me.remigio07.chatplugin.server.command.misc.TPSCommand;
 import me.remigio07.chatplugin.server.command.user.ActionbarCommand;
+import me.remigio07.chatplugin.server.command.user.ChatChannelCommand;
 import me.remigio07.chatplugin.server.command.user.ChatColorCommand;
 import me.remigio07.chatplugin.server.command.user.EmojisToneCommand;
 import me.remigio07.chatplugin.server.command.user.IgnoreCommand;
@@ -95,7 +96,16 @@ public abstract class CommandsHandler {
 		if (PrivateMessagesManager.getInstance().isEnabled()) {
 			put(new WhisperCommand());
 			put(new ReplyCommand());
-		} if (PlayerIgnoreManager.getInstance().isEnabled())
+		} if (ChatChannelsManager.getInstance().isEnabled())
+			put(
+					new ChatChannelCommand.Info(),
+					new ChatChannelCommand.Join(),
+					new ChatChannelCommand.Leave(),
+					new ChatChannelCommand.List(),
+					new ChatChannelCommand.Switch(),
+					new ChatChannelCommand()
+					);
+		if (PlayerIgnoreManager.getInstance().isEnabled())
 			put(
 					new IgnoreCommand.Add(),
 					new IgnoreCommand.Clear(),
@@ -114,12 +124,12 @@ public abstract class CommandsHandler {
 			put(new ActionbarCommand());
 		
 		// admin
-		if (StaffChatManager.getInstance().isEnabled())
-			put(new StaffChatCommand());
+		if (ChatChannelsManager.getInstance().isEnabled())
+			put(new ChatChannelSpyCommand());
 		if (PrivateMessagesManager.getInstance().isEnabled())
 			put(new SocialspyCommand());
-		if (RangedChatManager.getInstance().isEnabled())
-			put(new RangedChatSpyCommand());
+		if (StaffChatManager.getInstance().isEnabled())
+			put(new StaffChatCommand());
 		if (IPLookupManager.getInstance().isEnabled())
 			put(new IPLookupCommand());
 		put(

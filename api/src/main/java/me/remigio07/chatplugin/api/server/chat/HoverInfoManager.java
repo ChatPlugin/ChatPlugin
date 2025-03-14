@@ -15,7 +15,6 @@
 
 package me.remigio07.chatplugin.api.server.chat;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +49,6 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	protected String playerClickValue, urlColor;
 	protected List<PlaceholderType> playerPlaceholderTypes = Collections.emptyList();
 	protected Map<Language, String> playerHovers = new HashMap<>(), urlHovers = new HashMap<>(), instantEmojiHovers = new HashMap<>();
-	protected List<String> chatFormat = new ArrayList<>(), globalChatFormat = new ArrayList<>();
 	protected long loadTime;
 	
 	/**
@@ -195,29 +193,6 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	 */
 	public Map<Language, String> getURLHovers() {
 		return urlHovers;
-	}
-	
-	/**
-	 * Gets {@link ChatManager#getFormat()} split
-	 * around placeholders contained in the format.
-	 * 
-	 * @return Chat's format, split up
-	 */
-	public List<String> getChatFormat() {
-		return chatFormat;
-	}
-	
-	/**
-	 * Gets {@link RangedChatManager#getGlobalModeFormat()}
-	 * split around placeholders contained in the format.
-	 * 
-	 * <p>Will always return an empty list when
-	 * <code>!{@link RangedChatManager#isEnabled()} || !{@link RangedChatManager#isGlobalModeEnabled()}</code>.</p>
-	 * 
-	 * @return Global chat's format, split up
-	 */
-	public List<String> getGlobalChatFormat() {
-		return globalChatFormat;
 	}
 	
 	/**

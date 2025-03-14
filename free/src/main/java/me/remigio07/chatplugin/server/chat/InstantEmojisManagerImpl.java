@@ -23,14 +23,15 @@ import java.util.List;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
+import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.chat.ChatManager;
 import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager;
-import me.remigio07.chatplugin.api.server.chat.RangedChatManager;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannel;
+import me.remigio07.chatplugin.api.server.chat.channel.data.ChatChannelData;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
-import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 
 public class InstantEmojisManagerImpl extends InstantEmojisManager {
 	
@@ -71,8 +72,13 @@ public class InstantEmojisManagerImpl extends InstantEmojisManager {
 	}
 	
 	@Override
-	public String translateInstantEmojis(ChatPluginServerPlayer player, String message, boolean globalChat, List<InstantEmoji> instantEmojis) {
-		String format = PlaceholderManager.getInstance().translatePlaceholders(RangedChatManager.getInstance().isEnabled() && globalChat ? RangedChatManager.getInstance().getGlobalModeFormat() : ChatManager.getInstance().getFormat(), player, ChatManager.getInstance().getPlaceholderTypes());
+	public String translateInstantEmojis(
+			ChatPluginServerPlayer player,
+			String message,
+			@Nullable(why = "Null if !ChatChannelsManager#isEnabled()") ChatChannel<? extends ChatChannelData> channel,
+			List<InstantEmoji> instantEmojis
+			) {
+		String format = channel == null ? ChatManager.getInstance().getFormat() : channel.getFormat();
 		ChatColor tone = player.getEmojisTone() == ChatColor.RESET ? getDefaultTone() : player.getEmojisTone();
 		
 		for (InstantEmoji instantEmoji : sort(instantEmojis)) {

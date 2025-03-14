@@ -26,6 +26,9 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.server.chat.antispam.DenyChatReason;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannel;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannelsManager;
+import me.remigio07.chatplugin.api.server.chat.channel.data.ChatChannelData;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
@@ -106,19 +109,21 @@ public abstract class ChatLogManager implements ChatPluginManager {
 	/**
 	 * Logs a player's public message and inserts it into {@link DataContainer#PUBLIC_MESSAGES}.
 	 * 
-	 * <p>Specify <code>null</code> as <code>denyChatReason</code> if the chat
+	 * <p>Specify <code>null</code> as <code>channel</code> if
+	 * <code>!</code>{@link ChatChannelsManager#isEnabled()}.
+	 * Specify <code>null</code> as <code>denyChatReason</code> if the chat
 	 * message has not been blocked by a {@link DenyChatReasonHandler}.</p>
 	 * 
 	 * @param sender Public message's sender
 	 * @param publicMessage Public message to log
-	 * @param global Whether the message is global
+	 * @param channel Channel the public message has been sent on
 	 * @param denyChatReason Public message's deny chat reason
 	 * @throws IllegalArgumentException If the public message's length exceeds 508 characters
 	 */
 	public abstract void logPublicMessage(
 			ChatPluginServerPlayer sender,
 			String publicMessage,
-			boolean global,
+			@Nullable(why = "Null if !ChatChannelsManager#isEnabled()") ChatChannel<? extends ChatChannelData> channel,
 			@Nullable(why = "Public message may not have been blocked") DenyChatReason<?> denyChatReason
 			);
 	

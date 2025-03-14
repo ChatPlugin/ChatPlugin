@@ -40,11 +40,12 @@ public class DatabaseManagerImpl extends DatabaseManager {
 		default:
 			return; // flat-file
 		} try {
+			engine = connector.getEngineName() + " v" + connector.getEngineVersion();
+			
 			for (DataContainer table : connector.getMissingDataContainers())
 				connector.createDataContainer(table);
 			connector.cleanOldPlayers();
-			
-			engine = connector.getEngineName() + " v" + connector.getEngineVersion();
+			ensureCompatibility();
 		} catch (Exception e) {
 			throw new ChatPluginManagerException(this, e);
 		} enabled = true;

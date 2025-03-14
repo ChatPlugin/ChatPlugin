@@ -18,30 +18,30 @@ package me.remigio07.chatplugin.server.command.admin;
 import java.util.Arrays;
 import java.util.List;
 
-import me.remigio07.chatplugin.api.server.chat.RangedChatManager;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannelsManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.server.command.PlayerCommand;
 
-public class RangedChatSpyCommand extends PlayerCommand {
+public class ChatChannelSpyCommand extends PlayerCommand {
 	
-	public RangedChatSpyCommand() {
-		super("/rangedchatspy");
+	public ChatChannelSpyCommand() {
+		super("/chatchannelspy");
 	}
 	
 	@Override
 	public List<String> getMainArgs() {
-		return Arrays.asList("rangedchatspy", "rcs");
+		return Arrays.asList("chatchannelspy", "ccs");
 	}
 	
 	@Override
 	public void execute(ChatPluginServerPlayer player, String[] args) {
-		if (RangedChatManager.getInstance().isEnabled()) {
-			if (player.hasRangedChatSpyEnabled()) {
-				player.setRangedChatSpyEnabled(false);
-				player.sendTranslatedMessage("commands.rangedchatspy.disabled");
+		if (ChatChannelsManager.getInstance().isEnabled()) {
+			if (player.hasChatChannelSpyEnabled()) {
+				player.setChatChannelSpyEnabled(false);
+				player.sendTranslatedMessage("chat.channel.spy.disabled");
 			} else {
-				player.setRangedChatSpyEnabled(true);
-				player.sendTranslatedMessage("commands.rangedchatspy.enabled");
+				player.setChatChannelSpyEnabled(true);
+				player.sendTranslatedMessage("chat.channel.spy.enabled");
 			}
 		} else player.sendTranslatedMessage("misc.disabled-feature");
 	}

@@ -22,6 +22,8 @@ import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.server.chat.antispam.DenyChatReason;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannel;
+import me.remigio07.chatplugin.api.server.chat.channel.data.ChatChannelData;
 import me.remigio07.chatplugin.api.server.chat.log.ChatLogManager;
 import me.remigio07.chatplugin.api.server.chat.log.LoggedPrivateMessage;
 import me.remigio07.chatplugin.api.server.chat.log.LoggedPublicMessage;
@@ -48,7 +50,7 @@ public class DummyChatLogManager extends ChatLogManager {
 	public void logPublicMessage(
 			ChatPluginServerPlayer sender,
 			String message,
-			boolean global,
+			@Nullable(why = "Null if !ChatChannelsManager#isEnabled()") ChatChannel<? extends ChatChannelData> channel,
 			@Nullable(why = "Public message may not have been blocked") DenyChatReason<?> denyChatReason
 			) {
 		

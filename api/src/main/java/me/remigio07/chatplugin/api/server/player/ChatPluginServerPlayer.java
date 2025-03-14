@@ -20,6 +20,7 @@ import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookup;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
@@ -38,6 +39,12 @@ import me.remigio07.chatplugin.api.server.bossbar.PlayerBossbar;
 import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager;
 import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
 import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannel;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannelsManager;
+import me.remigio07.chatplugin.api.server.chat.channel.data.ChatChannelData;
+import me.remigio07.chatplugin.api.server.event.chat.channel.ChatChannelJoinEvent;
+import me.remigio07.chatplugin.api.server.event.chat.channel.ChatChannelLeaveEvent;
+import me.remigio07.chatplugin.api.server.event.chat.channel.ChatChannelSwitchEvent;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.rank.Rank;
 import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
@@ -54,7 +61,7 @@ import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 public abstract class ChatPluginServerPlayer extends OfflinePlayer implements ChatPluginPlayer {
 	
 	protected Version version;
-	protected boolean bedrockPlayer, socialspyEnabled, rangedChatSpyEnabled, actionbarEnabled = true;
+	protected boolean bedrockPlayer, socialspyEnabled, chatChannelSpyEnabled, actionbarEnabled = true;
 	protected Rank rank;
 	protected Language language;
 	protected Scoreboard scoreboard;
@@ -66,8 +73,9 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	protected short bans, anticheatBans, warnings, anticheatWarnings, kicks, anticheatKicks, mutes, anticheatMutes;
 	protected long loginTime;
 	protected OfflinePlayer lastCorrespondent;
-	protected List<OfflinePlayer> ignoredPlayers;
 	protected ChatColor chatColor, emojisTone;
+	protected ChatChannel<? extends ChatChannelData> writingChannel;
+	protected List<OfflinePlayer> ignoredPlayers;
 	
 	protected ChatPluginServerPlayer(PlayerAdapter player) {
 		super(player);
@@ -102,21 +110,21 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	}
 	
 	/**
-	 * Checks if this player has the ranged chat spy enabled.
+	 * Checks if this player has the chat channel spy enabled.
 	 * 
-	 * @return Whether the ranged chat spy is enabled
+	 * @return Whether the chat channel spy is enabled
 	 */
-	public boolean hasRangedChatSpyEnabled() {
-		return rangedChatSpyEnabled;
+	public boolean hasChatChannelSpyEnabled() {
+		return chatChannelSpyEnabled;
 	}
 	
 	/**
-	 * Sets whether this player should have the ranged chat spy enabled.
+	 * Sets whether this player should have the chat channel spy enabled.
 	 * 
-	 * @param rangedChatSpyEnabled Whether the ranged chat spy is enabled
+	 * @param chatChannelSpyEnabled Whether the chat channel spy is enabled
 	 */
-	public void setRangedChatSpyEnabled(boolean rangedChatSpyEnabled) {
-		this.rangedChatSpyEnabled = rangedChatSpyEnabled;
+	public void setChatChannelSpyEnabled(boolean chatChannelSpyEnabled) {
+		this.chatChannelSpyEnabled = chatChannelSpyEnabled;
 	}
 	
 	/**
@@ -371,15 +379,6 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	}
 	
 	/**
-	 * Cached version of {@link PlayerIgnoreManager#getIgnoredPlayers(OfflinePlayer)}.
-	 * 
-	 * @return Ignored players' list
-	 */
-	public List<OfflinePlayer> getIgnoredPlayers() {
-		return ignoredPlayers;
-	}
-	
-	/**
 	 * Gets this player's chat's default color.
 	 * 
 	 * <p>Will return {@link ChatColor#RESET} if
@@ -406,6 +405,111 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	@NotNull
 	public ChatColor getEmojisTone() {
 		return emojisTone;
+	}
+	
+	/**
+	 * Gets the channel this player is writing in.
+	 * 
+	 * <p>Will return <code>null</code> if
+	 * <code>!</code>{@link ChatChannelsManager#isEnabled()}.</p>
+	 * 
+	 * @return Player's writing channel
+	 */
+	@Nullable(why = "Null if !ChatChannelsManager#isEnabled()")
+	public ChatChannel<? extends ChatChannelData> getWritingChannel() {
+		return writingChannel;
+	}
+	
+	/**
+	 * Gets the channels this player is listening to.
+	 * 
+	 * @return Player's channels
+	 */
+	public List<ChatChannel<? extends ChatChannelData>> getChannels() {
+		return ChatChannelsManager.getInstance().getChannels().stream().filter(channel -> channel.getListeners().contains(this)).collect(Collectors.toList());
+	}
+	
+	/**
+	 * Makes this player join the specified channel.
+	 * 
+	 * <p>Will do nothing and return <code>false</code>
+	 * if they are already listening to it.</p>
+	 * 
+	 * @param channel Channel to join
+	 * @return Whether the event has completed
+	 * @see ChatChannelJoinEvent
+	 */
+	public boolean joinChannel(ChatChannel<? extends ChatChannelData> channel) {
+		if (!ChatChannelsManager.getInstance().isEnabled() || channel.getListeners().contains(this))
+			return false;
+		ChatChannelJoinEvent event = new ChatChannelJoinEvent(this, channel);
+		
+		event.call();
+		
+		if (event.isCancelled())
+			return false;
+		channel.getListeners().add(this);
+		return true;
+	}
+	
+	/**
+	 * Makes this player leave the specified channel.
+	 * 
+	 * <p>Will do nothing and return <code>false</code>
+	 * if they are not listening to it.</p>
+	 * 
+	 * @param channel Channel to leave
+	 * @return Whether the event has completed
+	 * @throws IllegalArgumentException If {@link #getWritingChannel()}<code>.equals(channel)</code>
+	 * @see ChatChannelLeaveEvent
+	 */
+	public boolean leaveChannel(ChatChannel<? extends ChatChannelData> channel) {
+		if (getWritingChannel().equals(channel) && isLoaded())
+			throw new IllegalArgumentException("Unable to make player leave their current writing channel");
+		if (!ChatChannelsManager.getInstance().isEnabled() || !channel.getListeners().contains(this))
+			return false;
+		ChatChannelLeaveEvent event = new ChatChannelLeaveEvent(this, channel);
+		
+		event.call();
+		
+		if (event.isCancelled() && isLoaded()) // FIXME in new version
+			return false;
+		channel.getListeners().remove(this);
+		return true;
+	}
+	
+	/**
+	 * Makes this player switch channels for writing.
+	 * 
+	 * <p>Will call {@link #joinChannel(ChatChannel)} if they
+	 * are not listening to it and return <code>false</code>
+	 * before executing {@link ChatChannelSwitchEvent} if
+	 * that method returns <code>false</code>.</p>
+	 * 
+	 * @param channel Channel to switch to
+	 * @return Whether the event has completed
+	 * @see ChatChannelSwitchEvent
+	 */
+	public boolean switchChannel(ChatChannel<? extends ChatChannelData> channel) {
+		if (!ChatChannelsManager.getInstance().isEnabled() || !getChannels().contains(channel) && !joinChannel(channel))
+			return false;
+		ChatChannelSwitchEvent event = new ChatChannelSwitchEvent(this, channel);
+		
+		event.call();
+		
+		if (event.isCancelled())
+			return false;
+		writingChannel = channel;
+		return true;
+	}
+	
+	/**
+	 * Cached version of {@link PlayerIgnoreManager#getIgnoredPlayers(OfflinePlayer)}.
+	 * 
+	 * @return Ignored players' list
+	 */
+	public List<OfflinePlayer> getIgnoredPlayers() {
+		return ignoredPlayers;
 	}
 	
 	/**
@@ -491,7 +595,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	/**
 	 * Makes this player execute a command.
 	 * 
-	 * @param command Command to execute without "/"
+	 * @param command Command to execute without '/'
 	 */
 	public abstract void executeCommand(String command);
 	
@@ -539,6 +643,16 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	 * @return Player's Z coord
 	 */
 	public abstract double getZ();
+	
+	/**
+	 * Gets this player's distance from the specified location.
+	 * 
+	 * @param x X coord
+	 * @param y Y coord
+	 * @param z Z coord
+	 * @return Player's distance
+	 */
+	public abstract double getDistance(double x, double y, double z);
 	
 	/**
 	 * Gets this player's locale set in their game's settings.

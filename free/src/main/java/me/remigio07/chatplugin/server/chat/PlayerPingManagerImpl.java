@@ -17,26 +17,27 @@ package me.remigio07.chatplugin.server.chat;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.chat.ChatManager;
 import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
 import me.remigio07.chatplugin.api.server.chat.PlayerPingManager;
-import me.remigio07.chatplugin.api.server.chat.RangedChatManager;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannel;
+import me.remigio07.chatplugin.api.server.chat.channel.data.ChatChannelData;
+import me.remigio07.chatplugin.api.server.event.chat.PlayerPingEvent;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
-import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 
 public class PlayerPingManagerImpl extends PlayerPingManager {
 	
@@ -99,16 +100,27 @@ public class PlayerPingManagerImpl extends PlayerPingManager {
 	}
 	
 	@Override
-	public String performPing(ChatPluginServerPlayer player, String message, boolean globalChat, List<ChatPluginServerPlayer> pingedPlayers) {
+	public String performPing(
+			ChatPluginServerPlayer player,
+			String message,
+			@Nullable(why = "Null if !ChatChannelsManager#isEnabled()") ChatChannel<? extends ChatChannelData> channel,
+			List<ChatPluginServerPlayer> pingedPlayers
+			) {
 		if (enabled) {
 			if (!pingedPlayers.isEmpty()) {
-				String str = PlaceholderManager.getInstance().translatePlaceholders(RangedChatManager.getInstance().isEnabled() && globalChat ? RangedChatManager.getInstance().getGlobalModeFormat() : ChatManager.getInstance().getFormat(), player, ChatManager.getInstance().getPlaceholderTypes());
+				String str = PlaceholderManager.getInstance().translatePlaceholders(channel == null ? ChatManager.getInstance().getFormat() : channel.getFormat(), player, ChatManager.getInstance().getPlaceholderTypes());
 				Matcher matcher = EVERYONE_PATTERN.matcher(message);
 				
 				if (matcher.find() && player.hasPermission("chatplugin.player-ping.everyone")) {
 					String[] array = { message.substring(0, matcher.start()), message.substring(matcher.end(), message.length()) };
 					message = array[0] + ChatColor.translate(color) + "@everyone" + ChatColor.getLastColors(str + array[0] + matcher.group()) + array[1];
 				} for (ChatPluginServerPlayer pinged : pingedPlayers) {
+					PlayerPingEvent event = new PlayerPingEvent(player, pinged, message);
+					
+					event.call();
+					
+					if (event.isCancelled())
+						continue;
 					matcher = pattern(pinged.getName(), atSignRequired).matcher(message);
 					
 					if (matcher.find()) {
@@ -142,17 +154,16 @@ public class PlayerPingManagerImpl extends PlayerPingManager {
 	}
 	
 	@Override
-	public List<ChatPluginServerPlayer> getPingedPlayers(ChatPluginServerPlayer player, String message, boolean globalChat) {
-		if (!player.hasPermission("chatplugin.player-ping"))
-			return Collections.emptyList();
-		Predicate<ChatPluginServerPlayer> predicate = other -> other != player
-				&& !other.isVanished()
-				&& (globalChat || !(((BaseChatPluginServerPlayer) other).getDistance(player.getWorld(), player.getX(), player.getY(), player.getZ()) > RangedChatManager.getInstance().getRange()));
-		return ServerPlayerManager.getInstance().getPlayers().values()
+	public List<ChatPluginServerPlayer> getPingedPlayers(
+			ChatPluginServerPlayer player,
+			String message,
+			@Nullable(why = "Null if !ChatChannelsManager#isEnabled()") ChatChannel<? extends ChatChannelData> channel
+			) {
+		return player.hasPermission("chatplugin.player-ping") ? (channel == null ? ServerPlayerManager.getInstance().getPlayers().values() : channel.getRecipients(player, true))
 				.stream()
-				.filter(EVERYONE_PATTERN.matcher(message).find() && player.hasPermission("chatplugin.player-ping.everyone")
-						? predicate : other -> predicate.test(other) && pattern(other.getName(), atSignRequired).matcher(message).find())
-				.collect(Collectors.toList());
+				.filter(other -> other != player && !other.isVanished() && ((EVERYONE_PATTERN.matcher(message).find() && player.hasPermission("chatplugin.player-ping.everyone")) || pattern(other.getName(), atSignRequired).matcher(message).find()))
+				.collect(Collectors.toList())
+				: Collections.emptyList();
 	}
 	
 	@Override

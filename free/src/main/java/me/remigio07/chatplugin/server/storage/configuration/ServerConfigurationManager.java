@@ -432,8 +432,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.reply.not-found", "{pfx} &cUnable to find someone to reply to.");
 		messages.addDefault("commands.socialspy.enabled", "{pfx} &aSocialspy mode enabled.");
 		messages.addDefault("commands.socialspy.disabled", "{pfx} &aSocialspy mode disabled.");
-		messages.addDefault("commands.rangedchatspy.enabled", "{pfx} &aRanged chat spy mode enabled.");
-		messages.addDefault("commands.rangedchatspy.disabled", "{pfx} &aRanged chat spy mode disabled.");
 		
 		messages.addDefault("chat.broadcast-format.local", "&8[&c&lBroadcast&8] &f{0}");
 		messages.addDefault("chat.broadcast-format.global", "&8[&c&lBroadcast&8] &f{0}");
@@ -449,13 +447,13 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("chat.no-format", "{pfx} &cYou cannot write formatted messages. Buy a &fVIP package &cto bypass this restriction.");
 		messages.addDefault("chat.no-blank-messages", "{pfx} &cYou cannot send blank messages.");
 		messages.addDefault("chat.pinged", "{pfx} &eYou got pinged by &f{0}&e.");
-		messages.addDefault("chat.nobody-nearby", "{pfx} &eNobody nearby has read your message.");
+		messages.addDefault("chat.nobody-read", "{pfx} &eNobody has read your message.");
 		
 		messages.addDefault("chat.log.searching", "{pfx} &eSearching for logged messages...");
 		messages.addDefault("chat.log.found", "{pfx} &aThe following messages were found:");
 		messages.addDefault("chat.log.not-found", "{pfx} &cNo logged messages were found.");
 		messages.addDefault("chat.log.message-format.public.text", "&e[{date}] &8- &f{content}");
-		messages.addDefault("chat.log.message-format.public.hover", "&aType: &epublic message\n&aSender: &f{sender}\n&aRank: &f{rank_id}\n&aServer: &f{server}\n&aWorld: &f{world}\n&aDate: &f{date}\n&aDenied: &f{denied}\n&aGlobal: &f{global}");
+		messages.addDefault("chat.log.message-format.public.hover", "&aType: &epublic message\n&aSender: &f{sender}\n&aRank: &f{rank_id}\n&aServer: &f{server}\n&aWorld: &f{world}\n&aChannel: &f{channel_id}\n&aDate: &f{date}\n&aDenied: &f{denied}");
 		messages.addDefault("chat.log.message-format.public.global-format.yes", "global");
 		messages.addDefault("chat.log.message-format.public.global-format.no", "local");
 		messages.addDefault("chat.log.message-format.private.text", "&e[{date}] &8- &f&o{content}");
@@ -463,6 +461,35 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("chat.log.message-format.date-format", "MM/dd hh:mm:ss a");
 		messages.addDefault("chat.log.message-format.denied-format.yes", "&4denied &f({deny_chat_reason})");
 		messages.addDefault("chat.log.message-format.denied-format.no", "&2allowed");
+		
+		messages.addDefault("chat.channel.join.already-listening", "{pfx} &cYou are already listening to &f{0}&c. Use &f/channel switch {1} &cto switch to write mode.");
+		messages.addDefault("chat.channel.join.joined", "{pfx} &aNow listening to &f{0}&a. Use &f/channel switch {1} &ato switch to write mode.");
+		messages.addDefault("chat.channel.leave.not-listening", "{pfx} &cYou are not listening to &f{0}&c.");
+		messages.addDefault("chat.channel.leave.left", "{pfx} &aYou are no longer listening to &f{0}&a.");
+		messages.addDefault("chat.channel.leave.cannot-leave", "{pfx} &cYou cannot leave the channel you are writing in (&f{0}&c).");
+		messages.addDefault("chat.channel.switch.not-listening", "{pfx} &cYou are not listening to &f{0}&c. Use &f/channel join {1} &cto join.");
+		messages.addDefault("chat.channel.switch.cannot-write", "{pfx} &cYou do not have the permission to write in &f{0}&c.");
+		messages.addDefault("chat.channel.switch.switched", "{pfx} &aNow writing in &f{0}&a.");
+		messages.addDefault("chat.channel.info.self", "{pfx} &aYou are currently listening to &f{0} &aand writing in &f{1}&a.");
+		messages.addDefault("chat.channel.info.channel", "{pfx} &aInformation about channel &f{channel_id} &a(&f{channel_display_name}&a):\n&eType: &f{channel_type}\n&eAliases: &f{channel_aliases}\n&eLanguages: &f{channel_languages}\n&eAccess: &f{channel_access}\n&eWriting: &f{channel_writing}");
+		messages.addDefault("chat.channel.info.local", "&eRange: &f{channel_range} blocks");
+		messages.addDefault("chat.channel.info.discord", "&eDiscord channel: &f{channel_discord_channel_display_name} ({channel_discord_channel_id})");
+		messages.addDefault("chat.channel.info.telegram", "&eTelegram chat: &f{channel_telegram_chat_display_name} ({channel_telegram_chat_id})");
+		messages.addDefault("chat.channel.list.header", "{pfx} &aHere are displayed the loaded channels:");
+		messages.addDefault("chat.channel.list.message-format.text", "&f{channel_id} &e(&f{channel_display_name}&e) &8- &etype: &f{channel_type}");
+		messages.addDefault("chat.channel.list.message-format.hover", "&a&l{channel_id}\n&7Display name: &f{channel_display_name}\n&7Type: &f{channel_type}\n\n&e&oClick for more info!");
+		messages.addDefault("chat.channel.spy.enabled", "{pfx} &aChat channel spy mode enabled.");
+		messages.addDefault("chat.channel.spy.disabled", "{pfx} &aChat channel spy mode disabled.");
+		messages.addDefault("chat.channel.types.local", "local (ranged)");
+		messages.addDefault("chat.channel.types.world", "world-based");
+		messages.addDefault("chat.channel.types.global", "global (server-wide)");
+		messages.addDefault("chat.channel.types.network", "network (proxy-wide)");
+		messages.addDefault("chat.channel.types.discord", "Discord-linked");
+		messages.addDefault("chat.channel.types.telegram", "Telegram-linked");
+		messages.addDefault("chat.channel.restrictions.restricted", "&4restricted");
+		messages.addDefault("chat.channel.restrictions.free", "&2free");
+		messages.addDefault("chat.channel.invalid", "{pfx} &f{0} &cis not a valid channel.");
+		messages.addDefault("chat.channel.cannot-access", "{pfx} &cYou do not have the permission to access &f{0}&c.");
 		
 		messages.addDefault("guis.no-permission", "{pfx} &cYou do not have the permission to use that GUI.");
 		messages.addDefault("guis.no-permission-icon", "{pfx} &cYou do not have the permission to use that icon.");
@@ -717,13 +744,27 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.formatted-chat.enabled", true);
 		chat.addDefault("chat.formatted-chat.send-anyway", true);
 		
-		chat.addDefault("chat.ranged-chat.enabled", false);
-		chat.addDefault("chat.ranged-chat.range", 50);
-		chat.addDefault("chat.ranged-chat.spy.on-join-enabled", true);
-		chat.addDefault("chat.ranged-chat.spy.format", "&7«&8[&4&lS&8] &f{prefix}{tag_name_color}{player}{suffix}&7» &f");
-		chat.addDefault("chat.ranged-chat.global-mode.enabled", true);
-		chat.addDefault("chat.ranged-chat.global-mode.prefix", "!");
-		chat.addDefault("chat.ranged-chat.global-mode.format", "&7«&8[&2&lG&8] &f{prefix}{tag_name_color}{player}{suffix}&7» &f");
+		chat.addDefault("chat.channels.enabled", false);
+		chat.addDefault("chat.channels.spy.on-join-enabled", true);
+		chat.addDefault("chat.channels.spy.format", "&7«&8[&4&lS&8] &f{prefix}{tag_name_color}{player}{suffix}&7» &f");
+		chat.addDefault("chat.channels.default.listening", Arrays.asList("default", "global"));
+		chat.addDefault("chat.channels.default.writing", "default");
+		chat.addDefault("chat.channels.values.default.display-name", "Default");
+		chat.addDefault("chat.channels.values.default.format", "&7«&f{prefix}{tag_name_color}{player}{suffix}&7» &f");
+		chat.addDefault("chat.channels.values.default.type", "LOCAL");
+		chat.addDefault("chat.channels.values.default.console-included", true);
+		chat.addDefault("chat.channels.values.default.aliases", Arrays.asList("ranged", "local", "l"));
+		chat.addDefault("chat.channels.values.default.languages", Arrays.asList("*"));
+		chat.addDefault("chat.channels.values.default.range", 50);
+		chat.addDefault("chat.channels.values.global.display-name", "Global");
+		chat.addDefault("chat.channels.values.global.prefix", "!");
+		chat.addDefault("chat.channels.values.global.format", "&7«&8[&2&lG&8] &f{prefix}{tag_name_color}{player}{suffix}&7» &f");
+		chat.addDefault("chat.channels.values.global.type", "GLOBAL");
+		chat.addDefault("chat.channels.values.global.access-restricted", false);
+		chat.addDefault("chat.channels.values.global.writing-restricted", true);
+		chat.addDefault("chat.channels.values.global.console-included", true);
+		chat.addDefault("chat.channels.values.global.aliases", Arrays.asList("g"));
+		chat.addDefault("chat.channels.values.global.languages", Arrays.asList("*"));
 		
 		chat.addDefault("chat.antispam.enabled", true);
 		chat.addDefault("chat.antispam.leet-filter-enabled", true);

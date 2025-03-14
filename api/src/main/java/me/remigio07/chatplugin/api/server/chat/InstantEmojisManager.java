@@ -23,6 +23,9 @@ import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationTyp
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannel;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannelsManager;
+import me.remigio07.chatplugin.api.server.chat.channel.data.ChatChannelData;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
@@ -111,13 +114,21 @@ public abstract class InstantEmojisManager implements ChatPluginManager {
 	/**
 	 * Translates every loaded instant emoji contained in <code>instantEmojis</code>.
 	 * 
+	 * <p>Specify <code>null</code> as <code>channel</code> if
+	 * <code>!</code>{@link ChatChannelsManager#isEnabled()}.</p>
+	 * 
 	 * @param player Player involved
 	 * @param message Message involved
-	 * @param globalChat Whether the message has been sent to the global chat
+	 * @param channel Channel the message has been sent on
 	 * @param instantEmojis Instant emojis' list ({@link #getInstantEmojis(ChatPluginServerPlayer, String)})
 	 * @return Translated message
 	 */
-	public abstract String translateInstantEmojis(ChatPluginServerPlayer player, String message, boolean globalChat, List<InstantEmoji> instantEmojis);
+	public abstract String translateInstantEmojis(
+			ChatPluginServerPlayer player,
+			String message,
+			@Nullable(why = "Null if !ChatChannelsManager#isEnabled()") ChatChannel<? extends ChatChannelData> channel,
+			List<InstantEmoji> instantEmojis
+			);
 	
 	/**
 	 * Gets the list of every loaded instant emoji contained in <code>message</code>.

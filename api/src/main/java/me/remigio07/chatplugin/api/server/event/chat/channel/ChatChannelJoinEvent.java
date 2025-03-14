@@ -13,44 +13,27 @@
  * 	<https://remigio07.me/chatplugin>
  */
 
-package me.remigio07.chatplugin.api.server.event.chat;
+package me.remigio07.chatplugin.api.server.event.chat.channel;
 
-import me.remigio07.chatplugin.api.common.event.CancellableEvent;
-import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.chat.channel.ChatChannel;
 import me.remigio07.chatplugin.api.server.chat.channel.data.ChatChannelData;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
- * Represents an event called before a player's message gets processed.
+ * Represents an event called before a player joins a channel.
+ * 
+ * @see ChatPluginServerPlayer#joinChannel(ChatChannel)
  */
-public class PreChatEvent extends PublicMessageEvent implements CancellableEvent {
-	
-	private boolean cancelled;
+public class ChatChannelJoinEvent extends ChatChannelEvent {
 	
 	/**
-	 * Constructs a new pre chat event.
+	 * Constructs a new channel join event.
 	 * 
 	 * @param player Player involved
-	 * @param message Message involved
 	 * @param channel Channel involved
 	 */
-	public PreChatEvent(
-			ChatPluginServerPlayer player,
-			String message,
-			@Nullable(why = "Null if !ChatChannelsManager#isEnabled()") ChatChannel<? extends ChatChannelData> channel
-			) {
-		super(player, message, channel);
-	}
-	
-	@Override
-	public boolean isCancelled() {
-		return cancelled;
-	}
-	
-	@Override
-	public void setCancelled(boolean cancelled) {
-		this.cancelled = cancelled;
+	public ChatChannelJoinEvent(ChatPluginServerPlayer player, ChatChannel<? extends ChatChannelData> channel) {
+		super(player, channel);
 	}
 	
 }

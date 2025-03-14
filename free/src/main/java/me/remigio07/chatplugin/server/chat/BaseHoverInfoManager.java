@@ -21,6 +21,7 @@ import java.util.Set;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.server.chat.HoverInfoManager;
 import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager.InstantEmoji;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannel;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import net.kyori.adventure.text.TextComponent;
@@ -36,11 +37,13 @@ public abstract class BaseHoverInfoManager extends HoverInfoManager {
 			ChatPluginServerPlayer player,
 			Language language,
 			String message,
-			boolean globalChat,
+			ChatChannel<?> channel,
 			List<String> urls,
 			List<ChatPluginServerPlayer> pingedPlayers,
 			Set<InstantEmoji> instantEmojis
 			);
+	
+	public abstract void loadChannelsFormats();
 	
 	public abstract void loadRanksDescriptions();
 	
@@ -51,12 +54,17 @@ public abstract class BaseHoverInfoManager extends HoverInfoManager {
 				ChatPluginServerPlayer player,
 				Language language,
 				String message,
-				boolean globalChat,
+				ChatChannel<?> channel,
 				List<String> urls,
 				List<ChatPluginServerPlayer> pingedPlayers,
 				Set<InstantEmoji> instantEmojis
 				) {
 			return null;
+		}
+		
+		@Override
+		public void loadChannelsFormats() {
+			
 		}
 		
 		@Override

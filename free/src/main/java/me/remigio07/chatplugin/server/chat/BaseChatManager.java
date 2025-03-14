@@ -29,8 +29,10 @@ import me.remigio07.chatplugin.api.common.punishment.mute.MuteManager;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.util.Utils;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
+import me.remigio07.chatplugin.api.common.util.packet.Packets;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.chat.ChatManager;
 import me.remigio07.chatplugin.api.server.chat.FormattedChatManager;
@@ -38,11 +40,12 @@ import me.remigio07.chatplugin.api.server.chat.HoverInfoManager;
 import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager;
 import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager.InstantEmoji;
 import me.remigio07.chatplugin.api.server.chat.PlayerPingManager;
-import me.remigio07.chatplugin.api.server.chat.RangedChatManager;
 import me.remigio07.chatplugin.api.server.chat.StaffChatManager;
 import me.remigio07.chatplugin.api.server.chat.antispam.AntispamManager;
 import me.remigio07.chatplugin.api.server.chat.antispam.AntispamResult;
 import me.remigio07.chatplugin.api.server.chat.antispam.DenyChatReason;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannel;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannelsManager;
 import me.remigio07.chatplugin.api.server.chat.log.ChatLogManager;
 import me.remigio07.chatplugin.api.server.event.chat.AllowChatEvent;
 import me.remigio07.chatplugin.api.server.event.chat.DenyChatEvent;
@@ -56,10 +59,10 @@ import me.remigio07.chatplugin.api.server.util.URLValidator;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
-import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.chat.antispam.AntispamManagerImpl;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 
 public abstract class BaseChatManager extends ChatManager {
 	
@@ -96,22 +99,21 @@ public abstract class BaseChatManager extends ChatManager {
 	}
 	
 	public boolean handleChatEvent(ChatPluginServerPlayer player, String... args) { // *chaos starts*
-		String message = args[0].trim();
-		boolean global = false;
-		RangedChatManager rangedChatManager = RangedChatManager.getInstance();
+		String message = args[0].trim().replaceAll("\\s+", " ");
+		ChatChannel<?> channel = player.getWritingChannel();
 		
-		// 0. ranged-chat
-		if (rangedChatManager.isEnabled()) {
-			if (message.startsWith(rangedChatManager.getGlobalModePrefix())
-					&& message.length() > rangedChatManager.getGlobalModePrefix().length()
-					&& player.hasPermission("chatplugin.global-chat")) {
-				message = message.substring(rangedChatManager.getGlobalModePrefix().length()).trim();
-				global = true;
+		if (channel != null)
+			for (ChatChannel<?> other : player.getChannels()) {
+				String prefix = other.getPrefix();
+				
+				if (prefix != null && message.startsWith(prefix) && message.length() > prefix.length() && other.canWrite(player)) {
+					message = message.substring(prefix.length()).trim();
+					channel = other;
+					break;
+				}
 			}
-		} else global = true;
 		
-		message = message.replaceAll("\\s+", " ");
-		PreChatEvent preChatEvent = new PreChatEvent(player, message, global);
+		PreChatEvent preChatEvent = new PreChatEvent(player, message, channel);
 		
 		preChatEvent.call();
 		
@@ -165,16 +167,15 @@ public abstract class BaseChatManager extends ChatManager {
 			
 			// 8. instant emojis
 			if (InstantEmojisManager.getInstance().isEnabled())
-				message = InstantEmojisManager.getInstance().translateInstantEmojis(player, message, global, instantEmojis = InstantEmojisManager.getInstance().getInstantEmojis(player, message));
+				message = InstantEmojisManager.getInstance().translateInstantEmojis(player, message, channel, instantEmojis = InstantEmojisManager.getInstance().getInstantEmojis(player, message));
 			
 			// 9. player ping
 			if (PlayerPingManager.getInstance().isEnabled())
-				message = PlayerPingManager.getInstance().performPing(player, message, global, pingedPlayers = PlayerPingManager.getInstance().getPingedPlayers(player, message, global));
-			
+				message = PlayerPingManager.getInstance().performPing(player, message, channel, pingedPlayers = PlayerPingManager.getInstance().getPingedPlayers(player, message, channel));
 		} else { // denied
 			String denyMessage = denyChatReason.getMessage(player.getLanguage());
 			
-			new DenyChatEvent(player, message, global, denyChatReason, antispamResult).call();
+			new DenyChatEvent(player, message, channel, denyChatReason, antispamResult).call();
 			
 			switch (denyChatReason.name()) {
 			case "CAPS":
@@ -193,7 +194,7 @@ public abstract class BaseChatManager extends ChatManager {
 				break;
 			} if (denyChatReason != DenyChatReason.MUTEALL && denyChatReason != DenyChatReason.VANISH && denyChatReason != DenyChatReason.BLANK_MESSAGE) {
 				if (ChatLogManager.getInstance().isEnabled())
-					ChatLogManager.getInstance().logPublicMessage(player, message, global, denyChatReason);
+					ChatLogManager.getInstance().logPublicMessage(player, message, channel, denyChatReason);
 				if (denyChatReason.getHandlerClass() == AntispamManager.class)
 					((AntispamManagerImpl) AntispamManager.getInstance()).sendNotification(player, antispamResult);
 			} player.sendMessage(denyMessage);
@@ -203,68 +204,90 @@ public abstract class BaseChatManager extends ChatManager {
 			} catch (SQLException | IOException e) {
 				LogManager.log("{0} occurred while incrementing antispam infractions stat for {1}: {2}", 2, e.getClass().getSimpleName(), player.getName(), e.getLocalizedMessage());
 			} return true;
-		} AllowChatEvent allowChatEvent = new AllowChatEvent(player, message, global);
+		} AllowChatEvent allowChatEvent = new AllowChatEvent(player, message, channel);
 		
 		allowChatEvent.call();
 		
 		if (allowChatEvent.isCancelled())
 			return true;
 		if (ChatLogManager.getInstance().isEnabled())
-			ChatLogManager.getInstance().logPublicMessage(player, message, global, null);
-		int recipients = 0;
+			ChatLogManager.getInstance().logPublicMessage(player, message, channel, null);
+		List<ChatPluginServerPlayer> recipients = channel == null ? null : channel.getRecipients(player, false);
+		String format = channel == null ? this.format : channel.getFormat();
+		boolean somebodyRead = channel == null || channel.getType().isProxyWide();
 		
 		if (HoverInfoManager.getInstance().isEnabled()) {
 			for (Language language : LanguageManager.getInstance().getLanguages()) {
-				TextComponent text = ((BaseHoverInfoManager) HoverInfoManager.getInstance()).getMessageHoverInfo(player, language, message, rangedChatManager.isEnabled() && global, urls, pingedPlayers, new HashSet<>(instantEmojis));
+				TextComponent text = ((BaseHoverInfoManager) HoverInfoManager.getInstance()).getMessageHoverInfo(player, language, message, channel, urls, pingedPlayers, new HashSet<>(instantEmojis));
 				
-				for (ChatPluginServerPlayer other : language.getOnlinePlayers())
+				for (ChatPluginServerPlayer other : language.getOnlinePlayers()) {
 					if (!other.getIgnoredPlayers().contains(player)) {
-						if (rangedChatManager.isEnabled()) {
-							if (!global && ((BaseChatPluginServerPlayer) other).getDistance(player.getWorld(), player.getX(), player.getY(), player.getZ()) > rangedChatManager.getRange()) {
-								if (other.hasRangedChatSpyEnabled())
-									other.sendMessage(PlaceholderManager.getInstance().translatePlaceholders(rangedChatManager.getSpyFormat(), player, language, placeholderTypes) + message);
-								continue;
-							} if (!player.equals(other) && (!other.isVanished() || player.hasPermission(VanishManager.VANISH_PERMISSION)))
-								recipients++;
-						} ((BaseChatPluginServerPlayer) other).sendMessage(text);
+						if (channel != null && !recipients.contains(other)) {
+							if (other.hasChatChannelSpyEnabled())
+								other.sendMessage(PlaceholderManager.getInstance().translatePlaceholders(ChatChannelsManager.getInstance().getSpyFormat(), player, language, placeholderTypes) + message);
+							continue;
+						} if (other != player && (!other.isVanished() || player.hasPermission(VanishManager.VANISH_PERMISSION)))
+							somebodyRead = true;
+						((BaseChatPluginServerPlayer) other).sendMessage(text);
 					}
+				} if (channel != null && channel.getType().isProxyWide() && ProxyManager.getInstance().isEnabled())
+					ProxyManager.getInstance().sendPluginMessage(Packets.Messages.chatChannelMessage(
+							"ALL",
+							ProxyManager.getInstance().getServerID(),
+							player.getUUID(),
+							player.getName(),
+							channel.getID(),
+							language.getID(),
+							true,
+							GsonComponentSerializer.gson().serialize(text)
+							));
 			}
 		} else {
 			if (!overrideChatEvent) {
 				args[0] = message;
 				args[1] = PlaceholderManager.getInstance().translatePlaceholders(format, player, Language.getMainLanguage(), placeholderTypes);
 			} else for (Language language : LanguageManager.getInstance().getLanguages()) {
-				String text = PlaceholderManager.getInstance().translatePlaceholders(rangedChatManager.isEnabled() && global ? rangedChatManager.getGlobalModeFormat() : format, player, language, placeholderTypes) + message;
+				String text = PlaceholderManager.getInstance().translatePlaceholders(format, player, language, placeholderTypes) + message;
 				
-				for (ChatPluginServerPlayer other : language.getOnlinePlayers())
+				for (ChatPluginServerPlayer other : language.getOnlinePlayers()) {
 					if (!other.getIgnoredPlayers().contains(player)) {
-						if (rangedChatManager.isEnabled()) {
-							if (!global && ((BaseChatPluginServerPlayer) other).getDistance(player.getWorld(), player.getX(), player.getY(), player.getZ()) > rangedChatManager.getRange()) {
-								if (other.hasRangedChatSpyEnabled())
-									other.sendMessage(PlaceholderManager.getInstance().translatePlaceholders(rangedChatManager.getSpyFormat(), player, language, placeholderTypes) + message);
-								continue;
-							} if (!player.equals(other) && (!other.isVanished() || player.hasPermission(VanishManager.VANISH_PERMISSION)))
-								recipients++;
-						} other.sendMessage(text);
+						if (channel != null && !recipients.contains(other)) {
+							if (other.hasChatChannelSpyEnabled())
+								other.sendMessage(PlaceholderManager.getInstance().translatePlaceholders(ChatChannelsManager.getInstance().getSpyFormat(), player, language, placeholderTypes) + message);
+							continue;
+						} if (other != player && (!other.isVanished() || player.hasPermission(VanishManager.VANISH_PERMISSION)))
+							somebodyRead = true;
+						other.sendMessage(text);
 					}
+				} if (channel != null && channel.getType().isProxyWide() && ProxyManager.getInstance().isEnabled())
+					ProxyManager.getInstance().sendPluginMessage(Packets.Messages.chatChannelMessage(
+							"ALL",
+							ProxyManager.getInstance().getServerID(),
+							player.getUUID(),
+							player.getName(),
+							channel.getID(),
+							language.getID(),
+							false,
+							text
+							));
 			}
-		} if (rangedChatManager.isEnabled() && recipients == 0)
-			player.sendTranslatedMessage("chat.nobody-nearby");
+		} if (!somebodyRead)
+			player.sendTranslatedMessage("chat.nobody-read");
 		try {
 			StorageConnector.getInstance().incrementPlayerStat(PlayersDataType.MESSAGES_SENT, player);
 		} catch (SQLException | IOException e) {
 			LogManager.log("{0} occurred while incrementing messages sent stat for {1}: {2}", 2, e.getClass().getSimpleName(), player.getName(), e.getLocalizedMessage());
-		} logMessage(PlaceholderManager.getInstance().translatePlaceholders(format, player, placeholderTypes) + message);
+		} logMessage(PlaceholderManager.getInstance().translatePlaceholders(format, player, placeholderTypes) + message, channel);
 		
 		if (overrideChatEvent && IntegrationType.DISCORDSRV.isEnabled())
 			IntegrationType.DISCORDSRV.get().handleChatEvent(player, message);
 		return false;
 	}
 	
-	private void logMessage(String message) {
+	private void logMessage(String message, ChatChannel<?> channel) {
 		if (!ChatLogManager.getInstance().isEnabled() || ChatLogManager.getInstance().isPrintToLogFile())
 			LogManager.getInstance().writeToFile(ChatColor.stripColor(message));
-		if (overrideChatEvent)
+		if (overrideChatEvent && (channel == null || channel.isConsoleIncluded()))
 			ChatPlugin.getInstance().sendConsoleMessage(message, false);
 	}
 	

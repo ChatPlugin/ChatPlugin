@@ -178,6 +178,41 @@ public class Packets {
 		}
 		
 		/**
+		 * Sends a message to the specified chat channel.
+		 * 
+		 * @param server Origin server
+		 * @param targetServer Target server
+		 * @param senderUUID Sender's UUID
+		 * @param senderName Sender's name
+		 * @param chatChannelID Chat channel's ID
+		 * @param languageID Language's ID
+		 * @param json Whether this is an Adventure JSON message
+		 * @param message Message to send
+		 * @return <code>ChannelMessage</code> packet
+		 */
+		@PacketScope(Scope.SERVER_TO_SERVER)
+		public static PacketSerializer chatChannelMessage(
+				@NotNull String server,
+				@NotNull String targetServer,
+				@NotNull UUID senderUUID,
+				@NotNull String senderName,
+				@NotNull String chatChannelID,
+				@NotNull String languageID,
+				boolean json,
+				@NotNull String message
+				) {
+			return new PacketSerializer("ChatChannelMessage")
+					.writeUTF(server)
+					.writeUTF(targetServer)
+					.writeUUID(senderUUID)
+					.writeUTF(senderName)
+					.writeUTF(chatChannelID)
+					.writeUTF(languageID)
+					.writeBoolean(json)
+					.writeUTF(message);
+		}
+		
+		/**
 		 * Updates a player's F3 server name.
 		 * 
 		 * @param server Origin server

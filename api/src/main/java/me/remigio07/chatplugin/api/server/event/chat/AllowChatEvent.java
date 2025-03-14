@@ -16,6 +16,9 @@
 package me.remigio07.chatplugin.api.server.event.chat;
 
 import me.remigio07.chatplugin.api.common.event.CancellableEvent;
+import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannel;
+import me.remigio07.chatplugin.api.server.chat.channel.data.ChatChannelData;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
@@ -30,10 +33,14 @@ public class AllowChatEvent extends PublicMessageEvent implements CancellableEve
 	 * 
 	 * @param player Player involved
 	 * @param message Message involved
-	 * @param global Whether the message is global
+	 * @param channel Channel involved
 	 */
-	public AllowChatEvent(ChatPluginServerPlayer player, String message, boolean global) {
-		super(player, message, global);
+	public AllowChatEvent(
+			ChatPluginServerPlayer player,
+			String message,
+			@Nullable(why = "Null if !ChatChannelsManager#isEnabled()") ChatChannel<? extends ChatChannelData> channel
+			) {
+		super(player, message, channel);
 	}
 	
 	@Override

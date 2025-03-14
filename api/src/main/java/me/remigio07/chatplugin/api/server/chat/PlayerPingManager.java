@@ -23,6 +23,9 @@ import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannel;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannelsManager;
+import me.remigio07.chatplugin.api.server.chat.channel.data.ChatChannelData;
 import me.remigio07.chatplugin.api.server.event.chat.PlayerPingEvent;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
@@ -219,8 +222,8 @@ public abstract class PlayerPingManager implements ChatPluginManager {
 	 * Pings every loaded player contained in <code>pingedPlayers</code> and
 	 * returns the message with their names colored using {@link #getColor()}.
 	 * 
-	 * <p>Specifying "@everyone" will result in all players being pinged if <code>globalChat</code>.
-	 * Otherwise, only players inside of {@link RangedChatManager#getRange()} will be pinged.</p>
+	 * <p>Specify <code>null</code> as <code>channel</code> if
+	 * <code>!</code>{@link ChatChannelsManager#isEnabled()}.</p>
 	 * 
 	 * <p>Will do nothing if the player does not have the permission "chatplugin.player-ping"
 	 * or "chatplugin.player-ping.everyone" if they have tried to ping everyone.</p>
@@ -229,19 +232,24 @@ public abstract class PlayerPingManager implements ChatPluginManager {
 	 * 
 	 * @param player Player involved
 	 * @param message Message involved
-	 * @param globalChat Whether the message has been sent to the global chat
-	 * @param pingedPlayers Pinged players' list ({@link #getPingedPlayers(ChatPluginServerPlayer, String, boolean)})
+	 * @param channel Channel the message has been sent on
+	 * @param pingedPlayers Pinged players' list ({@link #getPingedPlayers(ChatPluginServerPlayer, String, ChatChannel)})
 	 * @return Message adjusted with color
 	 * @see PlayerPingEvent
 	 * @see PlayerIgnoreManager#getIgnoredPlayers(OfflinePlayer)
 	 */
-	public abstract String performPing(ChatPluginServerPlayer player, String message, boolean globalChat, List<ChatPluginServerPlayer> pingedPlayers);
+	public abstract String performPing(
+			ChatPluginServerPlayer player,
+			String message,
+			@Nullable(why = "Null if !ChatChannelsManager#isEnabled()") ChatChannel<? extends ChatChannelData> channel,
+			List<ChatPluginServerPlayer> pingedPlayers
+			);
 	
 	/**
 	 * Gets the list of every loaded player contained in <code>message</code>.
 	 * 
-	 * <p>Specifying "@everyone" will result in all players being pinged if <code>globalChat</code>.
-	 * Otherwise, only players inside of {@link RangedChatManager#getRange()} will be pinged.</p>
+	 * <p>Specify <code>null</code> as <code>channel</code> if
+	 * <code>!</code>{@link ChatChannelsManager#isEnabled()}.</p>
 	 * 
 	 * <p>Will return an empty list if the player does not have the permission "chatplugin.player-ping"
 	 * or "chatplugin.player-ping.everyone" if they have tried to ping everyone.</p>
@@ -251,10 +259,14 @@ public abstract class PlayerPingManager implements ChatPluginManager {
 	 * 
 	 * @param player Player involved
 	 * @param message Message involved
-	 * @param globalChat Whether the message has been sent to the global chat
+	 * @param channel Channel the message has been sent on
 	 * @return Pinged players' list
 	 */
-	public abstract List<ChatPluginServerPlayer> getPingedPlayers(ChatPluginServerPlayer player, String message, boolean globalChat);
+	public abstract List<ChatPluginServerPlayer> getPingedPlayers(
+			ChatPluginServerPlayer player,
+			String message,
+			@Nullable(why = "Null if !ChatChannelsManager#isEnabled()") ChatChannel<? extends ChatChannelData> channel
+			);
 	
 	/**
 	 * Plays {@link #getSound()} to the specified player.

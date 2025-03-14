@@ -15,7 +15,9 @@
 
 package me.remigio07.chatplugin.api.server.chat.log;
 
+import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.chat.ChatManager;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannelsManager;
 
 /**
  * Represents a logged public message handled by the {@link ChatManager}.
@@ -26,18 +28,21 @@ public interface LoggedPublicMessage extends LoggedMessage {
 	 * Array containing all available placeholders that can
 	 * be translated with a logged public message's information.
 	 * 
-	 * <p><strong>Content:</strong> ["sender", "sender_uuid", "rank_id", "server", "world", "content", "date", "denied", "deny_chat_reason", "global"]</p>
+	 * <p><strong>Content:</strong> ["sender", "sender_uuid", "rank_id", "server", "world", "channel_id", "content", "date", "denied", "deny_chat_reason"]</p>
 	 * 
-	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Chat#placeholders">ChatPlugin wiki/Modules/Chat/Chat log/Placeholders</a>
+	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Chat#placeholders-1">ChatPlugin wiki/Modules/Chat/Chat log/Placeholders</a>
 	 */
-	public static final String[] PLACEHOLDERS = { "sender", "sender_uuid", "rank_id", "server", "world", "content", "date", "denied", "deny_chat_reason", "global" };
+	public static final String[] PLACEHOLDERS = { "sender", "sender_uuid", "rank_id", "server", "world", "channel_id", "content", "date", "denied", "deny_chat_reason" };
 	
 	/**
-	 * Checks whether this message has been
-	 * sent using the global chat mode.
+	 * Gets the ID of channel this message was sent to.
 	 * 
-	 * @return Whether this is a global message
+	 * <p>Will return <code>null</code> if {@link ChatChannelsManager}
+	 * was not enabled when this message has been sent.</p>
+	 * 
+	 * @return Message's channel's ID
 	 */
-	public boolean isGlobal();
+	@Nullable(why = "Null if ChatChannelsManager was not enabled")
+	public String getChannelID();
 	
 }

@@ -200,8 +200,8 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	}
 	
 	@Override
-	public double getDistance(String world, double x, double y, double z) {
-		return getWorld().equals(world) ? player.getLocation().distance(new Location(player.getWorld(), x, y, z)) : Double.MAX_VALUE;
+	public double getDistance(double x, double y, double z) {
+		return player.getLocation().distance(new Location(player.getWorld(), x, y, z));
 	}
 	
 	@Override

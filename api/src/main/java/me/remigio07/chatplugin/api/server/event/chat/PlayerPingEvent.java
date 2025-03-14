@@ -19,12 +19,13 @@ import java.util.List;
 
 import me.remigio07.chatplugin.api.common.event.CancellableEvent;
 import me.remigio07.chatplugin.api.server.chat.PlayerPingManager;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannel;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
  * Represents an event called before a player gets pinged by another player in the chat.
  * 
- * @see PlayerPingManager#performPing(ChatPluginServerPlayer, String, boolean, List)
+ * @see PlayerPingManager#performPing(ChatPluginServerPlayer, String, ChatChannel, List)
  */
 public class PlayerPingEvent extends ChatEvent implements CancellableEvent {
 	

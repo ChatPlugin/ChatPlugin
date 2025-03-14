@@ -21,6 +21,8 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.chat.antispam.AntispamManager;
 import me.remigio07.chatplugin.api.server.chat.antispam.AntispamResult;
 import me.remigio07.chatplugin.api.server.chat.antispam.DenyChatReason;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannel;
+import me.remigio07.chatplugin.api.server.chat.channel.data.ChatChannelData;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
@@ -36,18 +38,18 @@ public class DenyChatEvent extends PublicMessageEvent {
 	 * 
 	 * @param player Player involved
 	 * @param message Message involved
-	 * @param global Whether the message is global
+	 * @param channel Channel involved
 	 * @param denyChatReason Reason why the message has been blocked
 	 * @param antispamResult Result of the antispam's check
 	 */
 	public DenyChatEvent(
 			ChatPluginServerPlayer player,
 			String message,
-			boolean global,
+			@Nullable(why = "Null if !ChatChannelsManager#isEnabled()") ChatChannel<? extends ChatChannelData> channel,
 			DenyChatReason<?> denyChatReason,
 			@Nullable(why = "Null if getDenyChatReason().getHandlerClass() != AntispamManager.class") AntispamResult antispamResult
 			) {
-		super(player, message, global);
+		super(player, message, channel);
 		this.denyChatReason = denyChatReason;
 		this.antispamResult = antispamResult;
 	}

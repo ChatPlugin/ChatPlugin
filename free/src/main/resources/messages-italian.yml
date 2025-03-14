@@ -401,9 +401,6 @@ commands:
   socialspy:
     enabled: '{pfx} &aModalità socialspy abilitata'
     disabled: '{pfx} &aModalità socialspy disabilitata.'
-  rangedchatspy:
-    enabled: '{pfx} &aModalità spia chat locale abilitata'
-    disabled: '{pfx} &aModalità spia chat locale disabilitata.'
 chat:
   broadcast-format:
     local: '&8[&c&lBroadcast&8] &f{0}'
@@ -442,9 +439,9 @@ chat:
           &aRango: &f{rank_id}
           &aServer: &f{server}
           &aMondo: &f{world}
+          &aCanale: &f{channel_id}
           &aData: &f{date}
           &aNegato: &f{denied}
-          &aGlobale: &f{global}
         global-format:
           'yes': globale
           'no': locale
@@ -463,6 +460,55 @@ chat:
       denied-format:
         'yes': '&4negato &f({deny_chat_reason})'
         'no': '&2permesso'
+  channel:
+    join:
+      already-listening: '{pfx} &cStai già ascoltando &f{0}&c. Usa &f/channel switch {1} &cper passare alla modalità scrittura.'
+      joined: '{pfx} &aOra stai ascoltando &f{0}&a. Usa &f/channel switch {1} &aper passare alla modalità scrittura.'
+    leave:
+      not-listening: '{pfx} &cNon stai ascoltando &f{0}&c.'
+      left: '{pfx} &aNon stai più ascoltando &f{0}&a.'
+      cannot-leave: '{pfx} &cNon puoi lasciare il canale in cui stai scrivendo (&f{0}&c).'
+    switch:
+      not-listening: '{pfx} &cNon stai ascoltando &f{0}&c. Usa &f/channel join {1} &cper entrare.'
+      cannot-write: '{pfx} &cNon hai il permesso per scrivere in &f{0}&c.'
+      switched: '{pfx} &aOra stai scrivendo in &f{0}&a.'
+    info:
+      self: '{pfx} &aAttualmente stai ascoltando &f{0} &ae scrivendo in &f{1}&a.'
+      channel: |-
+        {pfx} &aInformazioni sul canale &f{channel_id} &a(&f{channel_display_name}&a):
+        &eTipo: &f{channel_type}
+        &eAliases: &f{channel_aliases}
+        &eLingue: &f{channel_languages}
+        &eAccesso: &f{channel_access}
+        &eScrittura: &f{channel_writing}
+      local: '&eRaggio: &f{channel_range} blocchi'
+      discord: '&eCanale Discord: &f{channel_discord_channel_display_name} ({channel_discord_channel_id})'
+      telegram: '&eChat Telegram: &f{channel_telegram_chat_display_name} ({channel_telegram_chat_id})'
+    list:
+      header: '{pfx} &aQui sono mostrati i canali caricati:'
+      message-format:
+        text: '&f{channel_id} &e(&f{channel_display_name}&e) &8- &etipo: &f{channel_type}'
+        hover: |-
+          &a&l{channel_id}
+          &7Nome visualizzato: &f{channel_display_name}
+          &7Tipo: &f{channel_type}
+
+          &e&oClicca per più info!
+    spy:
+      enabled: '{pfx} &aModalità spia dei canali chat abilitata.'
+      disabled: '{pfx} &aModalità spia dei canali chat disabilitata.'
+    types:
+      local: locale (a raggio)
+      world: basato sul mondo
+      global: globale (a livello di server)
+      network: network (a livello di proxy)
+      discord: collegato a Discord
+      telegram: collegato a Telegram
+    restrictions:
+      restricted: '&4limitato/a'
+      free: '&2libero/a'
+    invalid: '{pfx} &f{0} &cnon è un canale valido.'
+    cannot-access: '{pfx} &cNon hai il permesso per accedere a &f{0}&c.'
 guis:
   no-permission: '{pfx} &cNon hai il permesso di utilizzare quella GUI.'
   no-permission-icon: '{pfx} &cNon hai il permesso di utilizzare quell''icona.'

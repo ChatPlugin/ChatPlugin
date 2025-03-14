@@ -15,7 +15,10 @@
 
 package me.remigio07.chatplugin.api.server.event.chat;
 
-import me.remigio07.chatplugin.api.server.chat.RangedChatManager;
+import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannel;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannelsManager;
+import me.remigio07.chatplugin.api.server.chat.channel.data.ChatChannelData;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
@@ -23,24 +26,28 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
  */
 public abstract class PublicMessageEvent extends ChatEvent {
 	
-	protected boolean global;
+	protected ChatChannel<? extends ChatChannelData> channel;
 	
-	protected PublicMessageEvent(ChatPluginServerPlayer player, String message, boolean global) {
+	protected PublicMessageEvent(
+			ChatPluginServerPlayer player,
+			String message,
+			ChatChannel<? extends ChatChannelData> channel
+			) {
 		super(player, message);
-		this.global = global;
+		this.channel = channel;
 	}
 	
 	/**
-	 * Checks whether the message has been
-	 * sent using the global chat mode.
+	 * Gets the channel the message has been sent on.
 	 * 
-	 * <p>Will always return <code>true</code> when
-	 * <code>!</code>{@link RangedChatManager#isEnabled()}.</p>
+	 * <p>Will return <code>null</code> if
+	 * <code>!</code>{@link ChatChannelsManager#isEnabled()}.</p>
 	 * 
-	 * @return Whether the message is global
+	 * @return Channel involved
 	 */
-	public boolean isGlobal() {
-		return global;
+	@Nullable(why = "Null if !ChatChannelsManager#isEnabled()")
+	public ChatChannel<? extends ChatChannelData> getChannel() {
+		return channel;
 	}
 	
 }

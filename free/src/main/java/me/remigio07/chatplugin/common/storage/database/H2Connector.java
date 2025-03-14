@@ -191,13 +191,13 @@ public class H2Connector extends DatabaseConnector {
 			update = "CREATE TABLE IF NOT EXISTS {table_id} ("
 					+ "`sender_uuid` VARCHAR(36) NOT NULL, "
 					+ "`sender_name` VARCHAR(16) NOT NULL, "
-					+ "`rank_id` VARCHAR(14) NOT NULL, "
+					+ "`rank_id` VARCHAR(36) NOT NULL, "
 					+ "`server` VARCHAR(36) NOT NULL, "
 					+ "`world` VARCHAR(248) NOT NULL, "
+					+ "`channel_id` VARCHAR(36), "
 					+ "`content` VARCHAR(508) NOT NULL, "
 					+ "`date` BIGINT NOT NULL, "
-					+ "`deny_chat_reason` ENUM('CAPS', 'FLOOD', 'FORMAT', 'IP_ADDRESS', 'MUTE', 'MUTEALL', 'SPAM', 'SWEAR', 'URL', 'VANISH'), "
-					+ "`global` BOOLEAN NOT NULL"
+					+ "`deny_chat_reason` ENUM('CAPS', 'FLOOD', 'FORMAT', 'IP_ADDRESS', 'MUTE', 'MUTEALL', 'SPAM', 'SWEAR', 'URL', 'VANISH')"
 					+ ")";
 			break;
 		case PRIVATE_MESSAGES:
@@ -206,7 +206,7 @@ public class H2Connector extends DatabaseConnector {
 					+ "`sender_name` VARCHAR(16) NOT NULL, "
 					+ "`recipient_uuid` VARCHAR(36) NOT NULL, "
 					+ "`recipient_name` VARCHAR(16) NOT NULL, "
-					+ "`rank_id` VARCHAR(14) NOT NULL, "
+					+ "`rank_id` VARCHAR(36) NOT NULL, "
 					+ "`server` VARCHAR(36) NOT NULL, "
 					+ "`world` VARCHAR(248) NOT NULL, "
 					+ "`content` VARCHAR(505) NOT NULL, "

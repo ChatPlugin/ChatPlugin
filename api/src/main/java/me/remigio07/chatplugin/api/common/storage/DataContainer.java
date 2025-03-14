@@ -57,7 +57,7 @@ public enum DataContainer {
 	/**
 	 * Represents the public messages' data.
 	 */
-	PUBLIC_MESSAGES("player_uuid", "player_name", "rank_id", "server", "world", "message", "date", "deny_chat_reason", "global"),
+	PUBLIC_MESSAGES("player_uuid", "player_name", "rank_id", "server", "world", "channel_id", "message", "date", "deny_chat_reason"),
 	
 	/**
 	 * Represents the private messages' data.

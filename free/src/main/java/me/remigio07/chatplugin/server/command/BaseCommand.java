@@ -33,6 +33,8 @@ import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.ad.Ad;
 import me.remigio07.chatplugin.api.server.ad.AdManager;
 import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannel;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannelsManager;
 import me.remigio07.chatplugin.api.server.gui.GUI;
 import me.remigio07.chatplugin.api.server.gui.GUIManager;
 import me.remigio07.chatplugin.api.server.language.Language;
@@ -103,6 +105,14 @@ public abstract class BaseCommand {
 		} if (args.contains("{ranks_properties}")) {
 			args.remove("{ranks_properties}");
 			args.addAll(RankManagerImpl.getProperties());
+		} if (args.contains("{channels}")) {
+			args.remove("{channels}");
+			args.addAll((sender.isLoaded() ? ChatChannelsManager.getInstance().getChannels().stream().filter(channel -> channel.canAccess(sender.toServerPlayer()))
+					: ChatChannelsManager.getInstance().getChannels().stream()).map(ChatChannel::getID).collect(Collectors.toList()));
+		} if (args.contains("{joined_channels}")) {
+			if (sender.isLoaded())
+				args.addAll(sender.toServerPlayer().getChannels().stream().map(ChatChannel::getID).collect(Collectors.toList()));
+			args.remove("{joined_channels}");
 		} if (args.contains("{servers}")) {
 			args.remove("{servers}");
 			args.addAll(ProxyManager.getInstance().getServersIDs());

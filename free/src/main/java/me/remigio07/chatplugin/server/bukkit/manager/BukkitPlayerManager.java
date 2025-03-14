@@ -50,6 +50,8 @@ import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.bossbar.BossbarManager;
 import me.remigio07.chatplugin.api.server.chat.StaffChatManager;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannel;
+import me.remigio07.chatplugin.api.server.chat.channel.ChatChannelsManager;
 import me.remigio07.chatplugin.api.server.event.player.ServerPlayerLoadEvent;
 import me.remigio07.chatplugin.api.server.event.player.ServerPlayerUnloadEvent;
 import me.remigio07.chatplugin.api.server.gui.GUIManager;
@@ -207,7 +209,14 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 		}
 		
 		// misc
-		if (QuitMessageManager.getInstance().isEnabled())
+		if (ChatChannelsManager.getInstance().isEnabled()) {
+			for (String id : ChatChannelsManager.getInstance().getDefaultListeningChannelsIDs()) {
+				ChatChannel<?> channel = ChatChannelsManager.getInstance().getChannel(id, false);
+				
+				if (channel != null && channel.canAccess(serverPlayer))
+					serverPlayer.joinChannel(channel);
+			} serverPlayer.switchChannel(ChatChannelsManager.getInstance().getDefaultWritingChannel());
+		} if (QuitMessageManager.getInstance().isEnabled())
 			new QuitPacketImpl(serverPlayer);
 		((VanishManagerImpl) VanishManager.getInstance()).update(serverPlayer, false);
 		players.put(player.getUUID(), serverPlayer);
@@ -266,6 +275,7 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 		StaffChatManager.getInstance().removePlayer(player);
 		TablistManager.getInstance().sendTablist(Tablist.NULL_TABLIST, serverPlayer);
 		((VanishManagerImpl) VanishManager.getInstance()).show(serverPlayer, false);
+		serverPlayer.getChannels().forEach(serverPlayer::leaveChannel);
 		
 		Long taskID = BossbarManager.getInstance().getLoadingBossbarsTasks().remove(serverPlayer);
 		

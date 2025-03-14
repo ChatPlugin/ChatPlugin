@@ -13,34 +13,26 @@
  * 	<https://remigio07.me/chatplugin>
  */
 
-package me.remigio07.chatplugin.api.server.event.chat;
+package me.remigio07.chatplugin.api.server.event.chat.channel;
 
 import me.remigio07.chatplugin.api.common.event.CancellableEvent;
-import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.chat.channel.ChatChannel;
 import me.remigio07.chatplugin.api.server.chat.channel.data.ChatChannelData;
+import me.remigio07.chatplugin.api.server.event.player.ChatPluginServerPlayerEvent;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
- * Represents an event called before a player's message gets processed.
+ * Represents a {@link ChatChannel}-related event.
  */
-public class PreChatEvent extends PublicMessageEvent implements CancellableEvent {
+public abstract class ChatChannelEvent implements CancellableEvent, ChatPluginServerPlayerEvent {
 	
-	private boolean cancelled;
+	protected boolean cancelled;
+	protected ChatPluginServerPlayer player;
+	protected ChatChannel<? extends ChatChannelData> channel;
 	
-	/**
-	 * Constructs a new pre chat event.
-	 * 
-	 * @param player Player involved
-	 * @param message Message involved
-	 * @param channel Channel involved
-	 */
-	public PreChatEvent(
-			ChatPluginServerPlayer player,
-			String message,
-			@Nullable(why = "Null if !ChatChannelsManager#isEnabled()") ChatChannel<? extends ChatChannelData> channel
-			) {
-		super(player, message, channel);
+	protected ChatChannelEvent(ChatPluginServerPlayer player, ChatChannel<? extends ChatChannelData> channel) {
+		this.player = player;
+		this.channel = channel;
 	}
 	
 	@Override
@@ -51,6 +43,20 @@ public class PreChatEvent extends PublicMessageEvent implements CancellableEvent
 	@Override
 	public void setCancelled(boolean cancelled) {
 		this.cancelled = cancelled;
+	}
+	
+	@Override
+	public ChatPluginServerPlayer getPlayer() {
+		return player;
+	}
+	
+	/**
+	 * Gets the channel involved with this event.
+	 * 
+	 * @return Channel involved
+	 */
+	public ChatChannel<? extends ChatChannelData> getChannel() {
+		return channel;
 	}
 	
 }

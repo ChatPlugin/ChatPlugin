@@ -21,9 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.bukkit.Bukkit;
 import org.bukkit.potion.PotionEffectType;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.PotionEffectData;
@@ -43,16 +41,15 @@ import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationTyp
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
-import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.event.vanish.VanishDisableEvent;
 import me.remigio07.chatplugin.api.server.event.vanish.VanishEnableEvent;
 import me.remigio07.chatplugin.api.server.join_quit.QuitMessageManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
-import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.server.join_quit.QuitMessageManagerImpl.QuitPacketImpl;
+import me.remigio07.chatplugin.server.util.Utils;
 
 public class VanishManagerImpl extends VanishManager {
 	
@@ -85,7 +82,7 @@ public class VanishManagerImpl extends VanishManager {
 		if (event.isCancelled())
 			return;
 		vanished.put(player.getWorld(), Utils.addAndGet(getVanishedList(player.getWorld()), Arrays.asList(player)));
-		ensureSync(() -> {
+		Utils.ensureSync(() -> {
 			Object adaptedPlayer = null;
 			
 			if (Environment.isSponge()) {
@@ -150,7 +147,7 @@ public class VanishManagerImpl extends VanishManager {
 		if (event.isCancelled())
 			return;
 		vanished.put(player.getWorld(), Utils.removeAndGet(getVanishedList(player.getWorld()), Arrays.asList(player)));
-		ensureSync(() -> {
+		Utils.ensureSync(() -> {
 			Object adaptedPlayer = null;
 			
 			if (Environment.isSponge()) {
@@ -197,7 +194,7 @@ public class VanishManagerImpl extends VanishManager {
 			return;
 		Object adaptedPlayer = Environment.isBukkit() ? player.toAdapter().bukkitValue() : player.toAdapter().spongeValue();
 		
-		ensureSync(() -> {
+		Utils.ensureSync(() -> {
 			if (!justJoined) {
 				for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
 					if (other.equals(player))
@@ -225,12 +222,6 @@ public class VanishManagerImpl extends VanishManager {
 						((org.bukkit.entity.Player) adaptedPlayer).hidePlayer(vanishedPlayer.toAdapter().bukkitValue());
 					else ((Player) adaptedPlayer).getTabList().removeEntry(vanishedPlayer.getUUID());
 		});
-	}
-	
-	private static void ensureSync(Runnable runnable) {
-		if (Environment.isBukkit() ? Bukkit.isPrimaryThread() : Sponge.getServer().isMainThread())
-			runnable.run();
-		else TaskManager.runSync(runnable, 0L);
 	}
 	
 	@Override

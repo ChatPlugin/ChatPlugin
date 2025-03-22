@@ -115,13 +115,12 @@ public class ReflectionBossbar extends PlayerBossbar {
 	
 	@Override
 	public String getTitle() {
-		Object name = BukkitReflection.invokeMethod("Entity", "getCustomName", wither);
-		return name instanceof String ? (String) name : (String) BukkitReflection.invokeMethod("IChatBaseComponent", VersionUtils.getVersion().getProtocol() < 341 ? "getText" : "getString", name);
+		return (String) BukkitReflection.invokeMethod("Entity", "getCustomName", wither);
 	}
 	
 	@Override
 	public void setTitle(String title) {
-		BukkitReflection.invokeMethod("Entity", "setCustomName", wither, VersionUtils.getVersion().getProtocol() > 340 ? BukkitReflection.invokeMethod("ChatSerializer", "a", null, "\"" + title + "\"") : title);
+		BukkitReflection.invokeMethod("Entity", "setCustomName", wither, title);
 	}
 	
 	@Override

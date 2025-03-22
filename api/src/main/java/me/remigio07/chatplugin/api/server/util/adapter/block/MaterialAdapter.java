@@ -19,6 +19,8 @@ import org.bukkit.Material;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 
+import me.remigio07.chatplugin.api.common.util.VersionUtils;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
@@ -27,9 +29,10 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 public class MaterialAdapter implements Cloneable {
 	
 	/**
-	 * Material adapter with ID "air".
+	 * Material adapter with ID "AIR" or "NONE"
+	 * for pre-1.11 Sponge versions (v6.0.0).
 	 */
-	public static final MaterialAdapter AIR = new MaterialAdapter("air");
+	public static final MaterialAdapter AIR = new MaterialAdapter(Environment.isBukkit() || VersionUtils.getVersion().isAtLeast(Version.V1_11) ? "AIR" : "NONE");
 	private Object material;
 	private String id;
 	

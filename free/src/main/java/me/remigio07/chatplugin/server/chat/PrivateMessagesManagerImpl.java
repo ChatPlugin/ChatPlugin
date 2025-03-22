@@ -49,6 +49,7 @@ import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 import me.remigio07.chatplugin.api.server.util.URLValidator;
 import me.remigio07.chatplugin.api.server.util.adapter.block.MaterialAdapter;
+import me.remigio07.chatplugin.api.server.util.adapter.inventory.item.ItemStackAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
@@ -80,8 +81,8 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 		advancementsFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.advancements.format");
 		advancementsMaxMessageLength = ConfigurationType.CHAT.get().getInt("chat.private-messages.advancements.max-message-length");
 		
-		if (advancementsEnabled && VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
-			LogManager.log("You have enabled advancements for private messages at \"chat.private-messages.advancements.enabled\" in chat.yml, but this feature only works on 1.13+ servers; disabling module.", 2);
+		if (advancementsEnabled && VersionUtils.getVersion().isOlderThan(Version.V1_12)) {
+			LogManager.log("You have enabled advancements for private messages at \"chat.private-messages.advancements.enabled\" in chat.yml, but this feature only works on 1.12+ servers; disabling module.", 2);
 			
 			advancementsEnabled = false;
 		} try {
@@ -205,7 +206,8 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 			if (advancementsEnabled)
 				Utils.displayAdvancement(recipient, formatPlaceholders(advancementsFormat, placeholders, sender, recipient)
 						+ me.remigio07.chatplugin.common.util.Utils.abbreviate(privateMessage, privateMessage.toLowerCase().contains("§l") ? advancementsMaxMessageLength - 2 : advancementsMaxMessageLength, true),
-						advancementsIconMaterial, advancementsIconGlowing);
+						new ItemStackAdapter(advancementsIconMaterial).setGlowing(advancementsIconGlowing)
+						);
 			if (soundEnabled)
 				recipient.playSound(sound);
 			if (replyToLastSender)

@@ -25,6 +25,7 @@ import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationTyp
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.server.chat.ChatManager;
+import me.remigio07.chatplugin.bootstrap.SpongeBootstrapper;
 import me.remigio07.chatplugin.server.chat.BaseChatManager;
 import me.remigio07.chatplugin.server.sponge.manager.SpongeEventManager.SpongeListener;
 
@@ -49,7 +50,7 @@ public class SpongeChatManager extends BaseChatManager {
 			LogManager.log("Invalid event priority ({0}) set at \"settings.chat-event-priority\" in config.yml: only FIRST, EARLY, DEFAULT, LATE and LAST are allowed; setting to default value of LATE.", 2, ConfigurationType.CONFIG.get().getString("settings.chat-event-priority"));
 			
 			chatEventPriority = "LATE";
-		} Sponge.getEventManager().registerListener(instance, MessageChannelEvent.Chat.class, Order.valueOf(ChatManager.getInstance().getChatEventPriority()), listener);
+		} Sponge.getEventManager().registerListener(SpongeBootstrapper.getInstance(), MessageChannelEvent.Chat.class, Order.valueOf(ChatManager.getInstance().getChatEventPriority()), listener);
 		
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;

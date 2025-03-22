@@ -15,6 +15,7 @@
 
 package me.remigio07.chatplugin.server.sponge;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -119,22 +120,25 @@ public class SpongeReflection {
 	}
 	
 	public static Object getInstance(String loadedClass, Object... args) {
-		try {
-			return getLoadedClass(loadedClass).getConstructor(objectsToTypes(args)).newInstance(args);
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-			e.printStackTrace();
-		} return null;
+		return getInstance(loadedClass, objectsToTypes(args), args);
 	}
 	
+	@SuppressWarnings("all") // ...used to avoid "Unnecessary @SuppressWarnings("deprecation")" for the annotation below when using Java 8 on IDEs like Eclipse
 	public static Object getInstance(String loadedClass, Class<?>[] types, Object... args) {
 		try {
-			return getLoadedClass(loadedClass).getConstructor(types).newInstance(args);
+			Constructor<?> constructor = getLoadedClass(loadedClass).getDeclaredConstructor(types);
+			@SuppressWarnings("deprecation")
+			boolean accessible = constructor.isAccessible();
+			
+			if (!accessible)
+				constructor.setAccessible(true);
+			return constructor.newInstance(args);
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
 		} return null;
 	}
 	
-	public static Class<?>[] objectsToTypes(Object... args) throws ClassNotFoundException {
+	public static Class<?>[] objectsToTypes(Object... args) {
 		Class<?>[] array = new Class<?>[args.length];
 		
 		for (int i = 0; i < args.length; i++) {

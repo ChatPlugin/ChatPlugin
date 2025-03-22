@@ -15,14 +15,25 @@
 
 package me.remigio07.chatplugin.server.util;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
-import org.bukkit.advancement.Advancement;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.advancement.Advancement;
+import org.spongepowered.api.advancement.AdvancementTree;
+import org.spongepowered.api.advancement.AdvancementTypes;
+import org.spongepowered.api.advancement.DisplayInfo;
+import org.spongepowered.api.advancement.criteria.AdvancementCriterion;
 
 import com.github.cliftonlabs.json_simple.Jsoner;
 
@@ -33,12 +44,12 @@ import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
-import me.remigio07.chatplugin.api.server.util.adapter.block.MaterialAdapter;
-import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
+import me.remigio07.chatplugin.api.server.util.adapter.inventory.item.ItemStackAdapter;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.server.bukkit.BukkitReflection;
 import me.remigio07.chatplugin.server.bukkit.ChatPluginBukkitPlayer;
 import me.remigio07.chatplugin.server.sponge.SpongeReflection;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
@@ -54,7 +65,9 @@ public class Utils extends me.remigio07.chatplugin.api.server.util.Utils {
 			"The paid version supports proxy softwares for networks.",
 	};
 	private static final String[] ATTEMPTS = { "a", "b", "c", "d", "e", "f" };
-	private static boolean isAtLeastV1_20_5 = VersionUtils.getVersion().isAtLeast(Version.V1_20_5); 
+	private static final String ADVANCEMENTS_EXPLANATION = "ChatPlugin uses custom advancements to display private messages. If you receive a private message while your Advancements tab is open, its advancement will appear here. You can safely ignore this, keep playing!";
+	private static final boolean AT_LEAST_1_20_2 = VersionUtils.getVersion().isAtLeast(Version.V1_20_2);
+	private static final boolean AT_LEAST_1_20_3 = VersionUtils.getVersion().isAtLeast(Version.V1_20_3);
 	public static Map<UUID, String> inventoryTitles = new HashMap<>();
 	
 	static {
@@ -67,7 +80,7 @@ public class Utils extends me.remigio07.chatplugin.api.server.util.Utils {
 		if (Environment.isBukkit()) {
 			if (VersionUtils.getVersion().isOlderThan(Version.V1_20)) {
 				int windowID = (int) BukkitReflection.getFieldValue("Container", BukkitReflection.getFieldValue("EntityHuman", BukkitReflection.invokeMethod("CraftHumanEntity", "getHandle", ((ChatPluginBukkitPlayer) viewer).getCraftPlayer()), VersionUtils.getVersion().isAtLeast(Version.V1_20_2) ? "bS" : VersionUtils.getVersion().isAtLeast(Version.V1_20) ? "bR" : VersionUtils.getVersion().isAtLeast(Version.V1_19_4) ? "bP" : "activeContainer", "bV", "bW", "containerMenu", "bU"), "windowId", "containerId", "j");
-				Object packet, component = BukkitReflection.invokeMethod("ChatSerializer", "a", null, "{\"text\":\"" + title + "\"}");
+				Object packet, component = BukkitReflection.getIChatBaseComponent("{\"text\":\"" + Jsoner.escape(title) + "\"}");
 				
 				if (VersionUtils.getVersion().isOlderThan(Version.V1_14))
 					packet = BukkitReflection.getInstance("PacketPlayOutOpenWindow", new Class[] { int.class, String.class, BukkitReflection.getLoadedClass("IChatBaseComponent"), int.class }, windowID, "minecraft:container", component, rows * 9);
@@ -88,34 +101,80 @@ public class Utils extends me.remigio07.chatplugin.api.server.util.Utils {
 		return inventoryTitles.get(viewer.getUUID());
 	}
 	
-	public static void displayAdvancement(ChatPluginServerPlayer player, String text, MaterialAdapter material, boolean glowing) {
-		TaskManager.runAsync(() -> BukkitAdvancement.displayAdvancement(player, text, material, glowing), 0L);
+	@SuppressWarnings("deprecation")
+	public static void displayAdvancement(ChatPluginServerPlayer player, String text, ItemStackAdapter itemStack) { // :)
+		if (Environment.isBukkit()) {
+			Map<String, Object> criteria = Collections.singletonMap("impossible", AT_LEAST_1_20_2
+					? BukkitReflection.getInstance("Criterion", new Class[] { BukkitReflection.getLoadedClass("CriterionTrigger"), BukkitReflection.getLoadedClass("CriterionInstance") }, BukkitReflection.getInstance("CriterionTriggerImpossible"), BukkitReflection.getInstance("CriterionTriggerImpossible$a"))
+					: BukkitReflection.getInstance("Criterion", new Class[] { BukkitReflection.getLoadedClass("CriterionInstance") }, BukkitReflection.getInstance("CriterionTriggerImpossible$a")));
+			Object key = BukkitReflection.getInstance("MinecraftKey", "chatplugin", "toast_notification");
+			Object progress = BukkitReflection.getInstance("AdvancementProgress");
+			Object requirements = AT_LEAST_1_20_2 ? AT_LEAST_1_20_3
+					? BukkitReflection.getInstance("AdvancementRequirements", new Class[] { List.class }, Collections.singletonList(Collections.singletonList("impossible")))
+					: BukkitReflection.getInstance("AdvancementRequirements", new Class[] { String[][].class }, (Object) new String[][] { new String[] { "impossible" } })
+					: new String[][] { new String[] { "impossible" } };
+			Object display = BukkitReflection.getInstance(
+					"AdvancementDisplay",
+					new Class[] { BukkitReflection.getLoadedClass("ItemStack"), BukkitReflection.getLoadedClass("IChatBaseComponent"), BukkitReflection.getLoadedClass("IChatBaseComponent"), AT_LEAST_1_20_3 ? Optional.class : BukkitReflection.getLoadedClass("MinecraftKey"), BukkitReflection.getLoadedClass("AdvancementFrameType"), boolean.class, boolean.class, boolean.class },
+					BukkitReflection.invokeMethod("CraftItemStack", "asNMSCopy", null, itemStack.bukkitValue()), BukkitReflection.getIChatBaseComponent("{\"text\":\"" + Jsoner.escape(text) + "\"}"), BukkitReflection.getIChatBaseComponent("{\"text\":\"" + ADVANCEMENTS_EXPLANATION + "\"}"), AT_LEAST_1_20_3 ? Optional.empty() : null, BukkitReflection.getEnum("AdvancementFrameType", 2), true, false, true
+					);
+			Object rewards = BukkitReflection.getInstance(
+					"AdvancementRewards",
+					new Class[] { int.class, AT_LEAST_1_20_3 ? List.class : Array.newInstance(BukkitReflection.getLoadedClass("MinecraftKey"), 0).getClass(), AT_LEAST_1_20_3 ? List.class : Array.newInstance(BukkitReflection.getLoadedClass("MinecraftKey"), 0).getClass(), AT_LEAST_1_20_3 ? Optional.class : BukkitReflection.getLoadedClass("CustomFunction$a") },
+					0, AT_LEAST_1_20_3 ? Collections.emptyList() : Array.newInstance(BukkitReflection.getLoadedClass("MinecraftKey"), 0), AT_LEAST_1_20_3 ? Collections.emptyList() : Array.newInstance(BukkitReflection.getLoadedClass("MinecraftKey"), 0), AT_LEAST_1_20_3 ? Optional.empty() : null
+					);
+			Object advancement = VersionUtils.getVersion().isAtLeast(Version.V1_20) ? AT_LEAST_1_20_2 ? BukkitReflection.getInstance(
+					"Advancement",
+					new Class[] { Optional.class, Optional.class, BukkitReflection.getLoadedClass("AdvancementRewards"), Map.class, BukkitReflection.getLoadedClass("AdvancementRequirements"), boolean.class, Optional.class },
+					Optional.empty(), Optional.of(display), rewards, criteria, requirements, false, Optional.empty()
+					) : BukkitReflection.getInstance(
+							"Advancement",
+							new Class[] { BukkitReflection.getLoadedClass("MinecraftKey"), BukkitReflection.getLoadedClass("Advancement"), BukkitReflection.getLoadedClass("AdvancementDisplay"), BukkitReflection.getLoadedClass("AdvancementRewards"), Map.class, String[][].class, boolean.class },
+							key, null, display, rewards, criteria, requirements, false
+							) : BukkitReflection.getInstance(
+									"Advancement",
+									new Class[] { BukkitReflection.getLoadedClass("MinecraftKey"), BukkitReflection.getLoadedClass("Advancement"), BukkitReflection.getLoadedClass("AdvancementDisplay"), BukkitReflection.getLoadedClass("AdvancementRewards"), Map.class, String[][].class },
+									key, null, display, rewards, criteria, requirements
+									);
+			if (AT_LEAST_1_20_2)
+				BukkitReflection.invokeMethod("AdvancementProgress", "update", progress, requirements);
+			else BukkitReflection.invokeMethod("AdvancementProgress", "update", progress, criteria, requirements);
+			
+			BukkitReflection.invokeMethod("CriterionProgress", "grant", BukkitReflection.invokeMethod("AdvancementProgress", "getCriterionProgress", progress, "impossible"));
+			player.sendPacket(BukkitReflection.getInstance("PacketPlayOutAdvancements", new Class[] { boolean.class, Collection.class, Set.class, Map.class }, false, Arrays.asList(AT_LEAST_1_20_2 ? BukkitReflection.getInstance("AdvancementHolder", new Class[] { BukkitReflection.getLoadedClass("MinecraftKey"), BukkitReflection.getLoadedClass("Advancement") }, key, advancement) : advancement), Collections.emptySet(), Collections.singletonMap(key, progress)));
+			player.sendPacket(BukkitReflection.getInstance("PacketPlayOutAdvancements", new Class[] { boolean.class, Collection.class, Set.class, Map.class }, false, Collections.emptyList(), Collections.singleton(key), Collections.emptyMap()));
+		} else SpongeAdvancement.displayAdvancement(player, text, itemStack);
+	}
+	
+	public static void ensureSync(Runnable runnable) {
+		if (Environment.isBukkit() ? Bukkit.isPrimaryThread() : Sponge.getServer().isMainThread())
+			runnable.run();
+		else TaskManager.runSync(runnable, 0L);
 	}
 	
 	public static TextComponent deserializeLegacy(String text, boolean translate) {
 		return LegacyComponentSerializer.legacySection().deserialize(translate ? ChatColor.translate(text) : text);
 	}
 	
-	public static String serializeLegacy(TextComponent text) {
+	public static String serializeLegacy(Component text) {
 		return LegacyComponentSerializer.legacySection().serialize(text);
 	}
 	
-	private static class BukkitAdvancement {
+	private static class SpongeAdvancement {
 		
 		@SuppressWarnings("deprecation")
-		public static void displayAdvancement(ChatPluginServerPlayer player, String text, MaterialAdapter material, boolean glowing) {
-			org.bukkit.UnsafeValues unsafe = Bukkit.getUnsafe();
-			NamespacedKey key = new NamespacedKey(BukkitBootstrapper.getInstance(), UUID.randomUUID().toString());
-			Advancement advancement = unsafe.loadAdvancement(key, "{\"display\":{\"icon\":{\"" + (isAtLeastV1_20_5 ? "id" : "item") + "\":\"" + material.bukkitValue().getKey().getKey() + "\""
-					+ (glowing ? isAtLeastV1_20_5 ? ",\"components\":{\"enchantments\":{\"levels\":{\"unbreaking\":1}}}" : ",\"nbt\":\"{Enchantments:[{id:unbreaking,lvl:1}]}\"" : "")
-					+ "},\"title\":\"" + Jsoner.escape(text) + "\",\"frame\":\"goal\",\"description\":\"ChatPlugin's private message\",\"announce_to_chat\":false,\"show_toast\":true,\"hidden\":true},"
-					+ "\"criteria\":{\"impossible\":{\"trigger\":\"" + (isAtLeastV1_20_5 ? "impossible" : "minecraft:impossible") + "\"}}}"
-					);
-			
-			TaskManager.runSync(() -> {
-				player.toAdapter().bukkitValue().getAdvancementProgress(advancement).awardCriteria("impossible");
-				unsafe.removeAdvancement(key);
-			}, 0L);
+		public static void displayAdvancement(ChatPluginServerPlayer player, String text, ItemStackAdapter itemStack) {
+			ensureSync(() -> {
+				Advancement advancement = Advancement.builder().id("toast_notification").criterion(AdvancementCriterion.DUMMY).displayInfo(DisplayInfo.builder().icon(itemStack.spongeValue()).title(serializeSpongeText(text, false)).description(serializeSpongeText(ADVANCEMENTS_EXPLANATION, false)).type(AdvancementTypes.GOAL).announceToChat(false).hidden(true).build()).build();
+				
+				AdvancementTree.builder().id("toast_notification").rootAdvancement(advancement).build();
+				Sponge.getRegistry().register(Advancement.class, advancement);
+				player.toAdapter().spongeValue().getProgress(advancement).grant();
+				TaskManager.runSync(() -> {
+					if (player.isOnline())
+						player.toAdapter().spongeValue().getProgress(advancement).revoke();
+				}, 0L);
+			});
 		}
 		
 	}

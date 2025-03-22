@@ -811,7 +811,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.private-messages.sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "ENTITY_EXPERIENCE_ORB_PICKUP" : "ORB_PICKUP");
 		chat.addDefault("chat.private-messages.sound.volume", 1F);
 		chat.addDefault("chat.private-messages.sound.pitch", 1F);
-		chat.addDefault("chat.private-messages.advancements.enabled", VersionUtils.getVersion().isAtLeast(Version.V1_13));
+		chat.addDefault("chat.private-messages.advancements.enabled", VersionUtils.getVersion().isAtLeast(Version.V1_12));
 		chat.addDefault("chat.private-messages.advancements.format", "&8[&b✎&8] &f{sender_plain}\n&7");
 		chat.addDefault("chat.private-messages.advancements.max-message-length", 19);
 		chat.addDefault("chat.private-messages.advancements.icon.material", Environment.isSponge() || VersionUtils.getVersion().isAtLeast(Version.V1_13) ? "WRITABLE_BOOK" : "BOOK_AND_QUILL");

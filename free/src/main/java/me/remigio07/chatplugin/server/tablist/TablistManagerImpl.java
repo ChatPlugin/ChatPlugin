@@ -21,12 +21,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.github.cliftonlabs.json_simple.Jsoner;
+
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
+import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.event.tablist.TablistSendEvent;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
@@ -155,8 +158,8 @@ public class TablistManagerImpl extends TablistManager {
 		if (Environment.isBukkit())
 			if (VersionUtils.getVersion().isAtLeast(Version.V1_13))
 				player.toAdapter().bukkitValue().setPlayerListHeaderFooter(
-						tablist.getHeader(language, true) == null ? null : PlaceholderManager.getInstance().translatePlaceholders(tablist.getHeader(language, true), player, placeholderTypes),
-						tablist.getFooter(language, true) == null ? null : PlaceholderManager.getInstance().translatePlaceholders(tablist.getFooter(language, true), player, placeholderTypes)
+						tablist.getHeader(language, true) == null ? null : processText(PlaceholderManager.getInstance().translatePlaceholders(tablist.getHeader(language, true), player, placeholderTypes)),
+						tablist.getFooter(language, true) == null ? null : processText(PlaceholderManager.getInstance().translatePlaceholders(tablist.getFooter(language, true), player, placeholderTypes))
 						);
 			else player.sendPacket(getHeaderFooterPacket(
 					tablist.getHeader(language, true) == null ? null : PlaceholderManager.getInstance().translatePlaceholders(tablist.getHeader(language, true), player, placeholderTypes),
@@ -168,6 +171,17 @@ public class TablistManagerImpl extends TablistManager {
 				);
 	}
 	
+	private String processText(String text) {
+		String[] array = text.split("\n");
+		
+		for (int i = 0; i < array.length; i++) {
+			if (i != 0 && VersionUtils.getVersion().isOlderThan(Version.V1_13)) // prevent off-centered text
+				array[i] = ChatColor.getLastColors(array[i - 1]) + array[i];
+			if (ChatColor.stripColor(array[i]).isEmpty()) // prevent empty lines
+				array[i] += " ";
+		} return String.join("\n", array);
+	}
+	
 	private Object getHeaderFooterPacket(String header, String footer) {
 		if (!enabled)
 			return null;
@@ -176,12 +190,8 @@ public class TablistManagerImpl extends TablistManager {
 		try {
 			packet = constructor.newInstance();
 			
-			if (header == null)
-				header = "";
-			if (footer == null)
-				footer = "";
-			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "a").set(packet, BukkitReflection.invokeMethod("ChatSerializer", "a", null, "{\"text\":\"" + header + "\"}"));
-			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "b").set(packet, BukkitReflection.invokeMethod("ChatSerializer", "a", null, "{\"text\":\"" + footer + "\"}"));
+			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "a").set(packet, BukkitReflection.getIChatBaseComponent("{\"text\":\"" + (header == null ? "" : Jsoner.escape(processText(header))) + "\"}"));
+			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "b").set(packet, BukkitReflection.getIChatBaseComponent("{\"text\":\"" + (footer == null ? "" : Jsoner.escape(processText(footer))) + "\"}"));
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
 			e.printStackTrace();
 		} return packet;

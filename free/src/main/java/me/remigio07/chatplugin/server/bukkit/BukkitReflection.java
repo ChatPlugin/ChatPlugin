@@ -15,6 +15,7 @@
 
 package me.remigio07.chatplugin.server.bukkit;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -28,6 +29,7 @@ import java.util.stream.Stream;
 
 import org.bukkit.Location;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.inventory.ItemStack;
 
 import com.google.common.primitives.Primitives;
 
@@ -41,10 +43,12 @@ public class BukkitReflection {
 	private static String cbPath, nmsPath;
 	private static Map<String, Class<?>> classes = new HashMap<>();
 	private static Map<Class<?>, Map<String, Method>> methods = new HashMap<>();
+	private static Object provider;
 	
 	@SuppressWarnings("deprecation")
 	public static void initReflection() throws ChatPluginManagerException {
 		boolean atLeast1_17 = VersionUtils.getVersion().isAtLeast(Version.V1_17);
+		boolean atLeast1_20_5 = VersionUtils.getVersion().isAtLeast(Version.V1_20_5);
 		Class<?> clazz;
 		cbPath = "org.bukkit.craftbukkit." + (VersionUtils.getNMSVersion().equals(Utils.NOT_APPLICABLE) ? "" : VersionUtils.getNMSVersion() + ".");
 		nmsPath = "net.minecraft.server." + (atLeast1_17 ? "" : VersionUtils.getNMSVersion() + ".");
@@ -93,16 +97,6 @@ public class BukkitReflection {
 			classes.put("Player", clazz);
 			putMethod(clazz, "playSound", Arrays.asList(Location.class, classes.get("Sound"), float.class, float.class));
 			
-			// Attribute - enum until 1.21.2, became interface in 1.21.3
-			clazz = Class.forName("org.bukkit.attribute.Attribute");
-			classes.put("Attribute", clazz);
-			
-			// ItemMeta
-			clazz = Class.forName("org.bukkit.inventory.meta.ItemMeta");
-			classes.put("ItemMeta", clazz);
-			putMethod(clazz, "addAttributeModifier", Arrays.asList(classes.get("Attribute"), AttributeModifier.class));
-			putMethod(clazz, "removeAttributeModifier", Arrays.asList(classes.get("Attribute")));
-			
 			if (VersionUtils.getNMSVersion().equals(Utils.NOT_APPLICABLE)) {
 				// EntityPlayer
 				clazz = getNMSClass("level.ServerPlayer");
@@ -118,11 +112,11 @@ public class BukkitReflection {
 				classes.put("EntityPlayer", clazz);
 					
 					// PlayerConnection
-					clazz = getNMSClass((atLeast1_17 ? "network." : "") + "PlayerConnection");
+					clazz = getNMSClass(atLeast1_17 ? "network.ServerPlayerConnection" : "PlayerConnection");
 					classes.put("PlayerConnection", clazz);
-					putMethod(clazz, "sendPacket", Arrays.asList(classes.get("Packet")), "a");
+					putMethod(clazz, "sendPacket", Arrays.asList(classes.get("Packet")), "b", "a");
 				
-				if (VersionUtils.getVersion().isOlderThan(Version.V1_20)) {
+				if (VersionUtils.getVersion().isOlderThan(Version.V1_20)) { // TODO remove duplicate IChatBaseComponent
 					// IChatBaseComponent
 					clazz = atLeast1_17 ? getNMNClass("chat.IChatBaseComponent") : getNMSClass("IChatBaseComponent");
 					classes.put("IChatBaseComponent", clazz);
@@ -134,7 +128,7 @@ public class BukkitReflection {
 						// ChatSerializer
 						clazz = atLeast1_17 ? getNMNClass("chat.IChatBaseComponent$ChatSerializer") : getNMSClass("IChatBaseComponent$ChatSerializer");
 						classes.put("ChatSerializer", clazz);
-						putMethod(clazz, "a", Arrays.asList(String.class));
+						putMethod(clazz, "fromJson", Arrays.asList(String.class), "a");
 					
 					// PacketPlayOutOpenWindow
 					clazz = atLeast1_17 ? Class.forName("net.minecraft.network.protocol.game.PacketPlayOutOpenWindow") : getNMSClass("PacketPlayOutOpenWindow");
@@ -159,71 +153,161 @@ public class BukkitReflection {
 					clazz = atLeast1_17 ? Class.forName("net.minecraft.world.entity.player.EntityHuman") : getNMSClass("EntityHuman");
 					classes.put("EntityHuman", clazz);
 				}
-			} if (VersionUtils.getVersion().isAtLeast(Version.V1_19)) {
-				// ClientboundSystemChatPacket - > 1.18.2
-				clazz = getNMNClass("protocol.game.ClientboundSystemChatPacket");
-				classes.put("ClientboundSystemChatPacket", clazz);
+			} if (VersionUtils.getVersion().isAtLeast(Version.V1_12)) {
+				// IChatBaseComponent
+				clazz = atLeast1_17 ? getNMNClass("chat." + (atLeast1_20_5 && VersionUtils.isPaper() ? "Component" : "IChatBaseComponent")) : getNMSClass("IChatBaseComponent");
+				classes.put("IChatBaseComponent", clazz);
 				
-				if (VersionUtils.getVersion().isAtLeast(Version.V1_20_3)) {
-					if (!VersionUtils.isPaper()) {
-						// ScoreboardObjective
-						clazz = Class.forName("net.minecraft.world.scores.ScoreboardObjective");
-						classes.put("ScoreboardObjective", clazz);
-						putMethod(clazz, "setNumberFormat", Arrays.asList(getNMNClass("chat.numbers.NumberFormat")), "b");
+					// ChatSerializer
+					clazz = atLeast1_17 ? getNMNClass(atLeast1_20_5 && VersionUtils.isPaper() ? "chat.Component$Serializer" : "chat.IChatBaseComponent$ChatSerializer") : getNMSClass("IChatBaseComponent$ChatSerializer");
+					classes.put("ChatSerializer", clazz);
+					putMethod(clazz, "fromJson", Arrays.asList(String.class), "a");
+				
+				// ChatMessageType
+				clazz = atLeast1_17 ? getNMNClass("chat." + (atLeast1_20_5 && VersionUtils.isPaper() ? "ChatType" : "ChatMessageType")) : getNMSClass("ChatMessageType");
+				classes.put("ChatMessageType", clazz);
+				
+				// PacketPlayOutAdvancements
+				clazz = atLeast1_17 ? getNMNClass("protocol.game." + (atLeast1_20_5 && VersionUtils.isPaper() ? "ClientboundUpdateAdvancementsPacket" : "PacketPlayOutAdvancements")) : getNMSClass("PacketPlayOutAdvancements");
+				classes.put("PacketPlayOutAdvancements", clazz);
+				
+				// AdvancementDisplay
+				clazz = atLeast1_17 ? Class.forName("net.minecraft.advancements." + (atLeast1_20_5 && VersionUtils.isPaper() ? "DisplayInfo" : "AdvancementDisplay")) : getNMSClass("AdvancementDisplay");
+				classes.put("AdvancementDisplay", clazz);
+				
+				// Advancement
+				clazz = atLeast1_17 ? Class.forName("net.minecraft.advancements.Advancement") : getNMSClass("Advancement");
+				classes.put("Advancement", clazz);
+				
+				// AdvancementFrameType
+				clazz = atLeast1_17 ? Class.forName("net.minecraft.advancements." + (atLeast1_20_5 && VersionUtils.isPaper() ? "AdvancementType" : "AdvancementFrameType")) : getNMSClass("AdvancementFrameType");
+				classes.put("AdvancementFrameType", clazz);
+				
+				// AdvancementRewards
+				clazz = atLeast1_17 ? Class.forName("net.minecraft.advancements.AdvancementRewards") : getNMSClass("AdvancementRewards");
+				classes.put("AdvancementRewards", clazz);
+				
+				if (VersionUtils.getVersion().isOlderThan(Version.V1_20_3)) {
+					// CustomFunction$a
+					clazz = atLeast1_17 ? Class.forName("net.minecraft.commands.CustomFunction$a") : getNMSClass("CustomFunction$a");
+					classes.put("CustomFunction$a", clazz);
+				} if (VersionUtils.getVersion().isAtLeast(Version.V1_20_2)) {
+					// AdvancementRequirements
+					clazz = Class.forName("net.minecraft.advancements.AdvancementRequirements");
+					classes.put("AdvancementRequirements", clazz);
+					
+					// AdvancementHolder
+					clazz = Class.forName("net.minecraft.advancements.AdvancementHolder");
+					classes.put("AdvancementHolder", clazz);
+				}
+				
+				// AdvancementProgress
+				clazz = atLeast1_17 ? Class.forName("net.minecraft.advancements.AdvancementProgress") : getNMSClass("AdvancementProgress");
+				classes.put("AdvancementProgress", clazz);
+				putMethod(clazz, "update", VersionUtils.getVersion().isAtLeast(Version.V1_20_2) ? Arrays.asList(classes.get("AdvancementRequirements")) : Arrays.asList(Map.class, String[][].class), "a");
+				putMethod(clazz, "getCriterionProgress", Arrays.asList(String.class), "getCriterion", "c");
+				
+				// CriterionProgress
+				clazz = atLeast1_17 ? Class.forName("net.minecraft.advancements.CriterionProgress") : getNMSClass("CriterionProgress");
+				classes.put("CriterionProgress", clazz);
+				putMethod(clazz, "grant", Collections.emptyList(), "b");
+				
+				// MinecraftKey
+				clazz = atLeast1_17 ? Class.forName("net.minecraft.resources." + (atLeast1_20_5 && VersionUtils.isPaper() ? "ResourceLocation" : "MinecraftKey")) : getNMSClass("MinecraftKey");
+				classes.put("MinecraftKey", clazz);
+				
+				// Criterion
+				clazz = atLeast1_17 ? Class.forName("net.minecraft.advancements.Criterion") : getNMSClass("Criterion");
+				classes.put("Criterion", clazz);
+				
+				// CriterionInstance
+				clazz = atLeast1_17 ? Class.forName("net.minecraft.advancements." + (atLeast1_20_5 && VersionUtils.isPaper() ? "CriterionTriggerInstance" : "CriterionInstance")) : getNMSClass("CriterionInstance");
+				classes.put("CriterionInstance", clazz);
+				
+				// CriterionTriggerImpossible
+				clazz = atLeast1_17 ? Class.forName("net.minecraft.advancements.critereon." + (atLeast1_20_5 && VersionUtils.isPaper() ? "ImpossibleTrigger" : "CriterionTriggerImpossible"))  : getNMSClass("CriterionTriggerImpossible");
+				classes.put("CriterionTriggerImpossible", clazz);
+				
+				// CriterionTriggerImpossible$a
+				clazz = atLeast1_17 ? Class.forName("net.minecraft.advancements.critereon." + (atLeast1_20_5 && VersionUtils.isPaper() ? "ImpossibleTrigger$TriggerInstance" : "CriterionTriggerImpossible$a")) : getNMSClass("CriterionTriggerImpossible$a");
+				classes.put("CriterionTriggerImpossible$a", clazz);
+				
+				// ItemStack
+				clazz = atLeast1_17 ? Class.forName("net.minecraft.world.item.ItemStack") : getNMSClass("ItemStack");
+				classes.put("ItemStack", clazz);
+				
+				// CraftItemStack
+				clazz = getCBClass("inventory.CraftItemStack");
+				classes.put("CraftItemStack", clazz);
+				putMethod(clazz, "asNMSCopy", Arrays.asList(ItemStack.class));
+				
+				if (VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+					// CraftServer
+					clazz = getCBClass("CraftServer");
+					classes.put("CraftServer", clazz);
+					putMethod(clazz, "syncCommands");
+					
+					if (VersionUtils.getVersion().isAtLeast(Version.V1_20_2)) {
+						// AdvancementRequirements
+						clazz = Class.forName("net.minecraft.advancements.AdvancementRequirements");
+						classes.put("AdvancementRequirements", clazz);
 						
-						// HolderLookup$Provider
-						clazz = Class.forName("net.minecraft.core.HolderLookup$a");
-						classes.put("Provider", clazz);
-						putMethod(clazz, "create", Arrays.asList(Stream.class), "of", "a");
+						// CriterionTrigger
+						clazz = Class.forName("net.minecraft.advancements.CriterionTrigger");
+						classes.put("CriterionTrigger", clazz);
 						
-						// IChatBaseComponent
-						clazz = getNMNClass("chat.IChatBaseComponent");
-						classes.put("IChatBaseComponent", clazz);
-						
-							// ChatSerializer
-							clazz = getNMNClass("chat.IChatBaseComponent$ChatSerializer");
-							classes.put("ChatSerializer", clazz);
-							putMethod(clazz, "fromJson", Arrays.asList(String.class, classes.get("Provider")), "a");
-						
-						// FixedFormat
-						clazz = getNMNClass("chat.numbers.FixedFormat");
-						classes.put("FixedFormat", clazz);
-						
-						// CraftObjective
-						clazz = getCBClass("scoreboard.CraftObjective");
-						classes.put("CraftObjective", clazz);
-						putMethod(clazz, "getHandle");
-					} if (VersionUtils.getVersion().isAtLeast(Version.V1_20_5)) {
-						// ClientboundCustomPayloadPacket
-						clazz = getNMNClass("protocol.common.ClientboundCustomPayloadPacket");
-						classes.put("ClientboundCustomPayloadPacket", clazz);
-						
-						// CustomPacketPayload
-						clazz = getNMNClass("protocol.common.custom.CustomPacketPayload");
-						classes.put("CustomPacketPayload", clazz);
-						
-						// BrandPayload
-						clazz = getNMNClass("protocol.common.custom.BrandPayload");
-						classes.put("BrandPayload", clazz);
+						if (VersionUtils.getVersion().isAtLeast(Version.V1_20_3)) {
+							if (!VersionUtils.isPaper()) {
+								// ScoreboardObjective
+								clazz = Class.forName("net.minecraft.world.scores.ScoreboardObjective");
+								classes.put("ScoreboardObjective", clazz);
+								putMethod(clazz, "setNumberFormat", Arrays.asList(getNMNClass("chat.numbers.NumberFormat")), "b");
+								
+								// FixedFormat
+								clazz = getNMNClass("chat.numbers.FixedFormat");
+								classes.put("FixedFormat", clazz);
+								
+								// CraftObjective
+								clazz = getCBClass("scoreboard.CraftObjective");
+								classes.put("CraftObjective", clazz);
+								putMethod(clazz, "getHandle");
+							} if (atLeast1_20_5) {
+								// Provider
+								clazz = Class.forName("net.minecraft.core.HolderLookup$" + (VersionUtils.isPaper() ? "Provider" : "a"));
+								classes.put("Provider", clazz);
+								putMethod(classes.get("ChatSerializer"), "fromJson", Arrays.asList(String.class, clazz), "a");
+								putMethod(clazz, "create", Arrays.asList(Stream.class), "a");
+								provider = invokeMethod("Provider", "create", null, Stream.empty());
+								
+								// ClientboundCustomPayloadPacket
+								clazz = getNMNClass("protocol.common.ClientboundCustomPayloadPacket");
+								classes.put("ClientboundCustomPayloadPacket", clazz);
+								
+								// CustomPacketPayload
+								clazz = getNMNClass("protocol.common.custom.CustomPacketPayload");
+								classes.put("CustomPacketPayload", clazz);
+								
+								// BrandPayload
+								clazz = getNMNClass("protocol.common.custom.BrandPayload");
+								classes.put("BrandPayload", clazz);
+								
+								// Attribute - enum until 1.21.2, became interface in 1.21.3
+								clazz = Class.forName("org.bukkit.attribute.Attribute");
+								classes.put("Attribute", clazz);
+								
+								// ItemMeta
+								clazz = Class.forName("org.bukkit.inventory.meta.ItemMeta");
+								classes.put("ItemMeta", clazz);
+								putMethod(clazz, "addAttributeModifier", Arrays.asList(classes.get("Attribute"), AttributeModifier.class));
+								putMethod(clazz, "removeAttributeModifier", Arrays.asList(classes.get("Attribute")));
+							}
+						}
 					}
 				}
-			} else {
-				// ChatComponentText - < 1.19
-				clazz = atLeast1_17 ? getNMNClass("chat.ChatComponentText") : getNMSClass("ChatComponentText");
-				classes.put("ChatComponentText", clazz);
-				
-				// PacketPlayOutChat
-				clazz = atLeast1_17 ? getNMNClass("protocol.game.PacketPlayOutChat") : getNMSClass("PacketPlayOutChat");
-				classes.put("PacketPlayOutChat", clazz);
 			} if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
 				// PacketPlayOutPlayerListHeaderFooter
-				clazz = atLeast1_17 ? getNMNClass("protocol.game.PacketPlayOutPlayerListHeaderFooter") : getNMSClass("PacketPlayOutPlayerListHeaderFooter");
+				clazz = getNMSClass("PacketPlayOutPlayerListHeaderFooter");
 				classes.put("PacketPlayOutPlayerListHeaderFooter", clazz);
-			} else {
-				// CraftServer
-				clazz = getCBClass("CraftServer");
-				classes.put("CraftServer", clazz);
-				putMethod(clazz, "syncCommands");
 			} if (VersionUtils.getVersion().isAtLeast(Version.V1_9))
 				return;
 			
@@ -325,22 +409,25 @@ public class BukkitReflection {
 	}
 	
 	public static Object getInstance(String loadedClass, Object... args) {
-		try {
-			return getLoadedClass(loadedClass).getConstructor(objectsToTypes(args)).newInstance(args);
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-			e.printStackTrace();
-		} return null;
+		return getInstance(loadedClass, objectsToTypes(args), args);
 	}
 	
+	@SuppressWarnings("all") // ...used to avoid "Unnecessary @SuppressWarnings("deprecation")" for the annotation below when using Java 8 on IDEs like Eclipse
 	public static Object getInstance(String loadedClass, Class<?>[] types, Object... args) {
 		try {
-			return getLoadedClass(loadedClass).getConstructor(types).newInstance(args);
+			Constructor<?> constructor = getLoadedClass(loadedClass).getDeclaredConstructor(types);
+			@SuppressWarnings("deprecation")
+			boolean accessible = constructor.isAccessible();
+			
+			if (!accessible)
+				constructor.setAccessible(true);
+			return constructor.newInstance(args);
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
 		} return null;
 	}
 	
-	public static Class<?>[] objectsToTypes(Object... args) throws ClassNotFoundException {
+	public static Class<?>[] objectsToTypes(Object... args) {
 		Class<?>[] array = new Class<?>[args.length];
 		
 		for (int i = 0; i < args.length; i++) {
@@ -405,6 +492,11 @@ public class BukkitReflection {
 	
 	public static Class<?> getNMNClass(String path) throws ClassNotFoundException {
 		return Class.forName("net.minecraft.network." + path);
+	}
+	
+	public static Object getIChatBaseComponent(String escapedJSON) {
+		return provider == null ? invokeMethod("ChatSerializer", "fromJson", null, escapedJSON)
+				: invokeMethod("ChatSerializer", "fromJson", null, escapedJSON, provider);
 	}
 	
 }

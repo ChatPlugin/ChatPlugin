@@ -745,6 +745,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.formatted-chat.send-anyway", true);
 		
 		chat.addDefault("chat.channels.enabled", false);
+		chat.addDefault("chat.channels.reading-notification-enabled", true);
 		chat.addDefault("chat.channels.spy.on-join-enabled", true);
 		chat.addDefault("chat.channels.spy.format", "&7«&8[&4&lS&8] &f{prefix}{tag_name_color}{player}{suffix}&7» &f");
 		chat.addDefault("chat.channels.default.listening", Arrays.asList("default", "global"));

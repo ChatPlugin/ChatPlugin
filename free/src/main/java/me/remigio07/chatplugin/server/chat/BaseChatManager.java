@@ -271,7 +271,7 @@ public abstract class BaseChatManager extends ChatManager {
 							text
 							));
 			}
-		} if (!somebodyRead)
+		} if (!somebodyRead && ChatChannelsManager.getInstance().isReadingNotificationEnabled())
 			player.sendTranslatedMessage("chat.nobody-read");
 		try {
 			StorageConnector.getInstance().incrementPlayerStat(PlayersDataType.MESSAGES_SENT, player);
@@ -279,7 +279,7 @@ public abstract class BaseChatManager extends ChatManager {
 			LogManager.log("{0} occurred while incrementing messages sent stat for {1}: {2}", 2, e.getClass().getSimpleName(), player.getName(), e.getLocalizedMessage());
 		} logMessage(PlaceholderManager.getInstance().translatePlaceholders(format, player, placeholderTypes) + message, channel);
 		
-		if (overrideChatEvent && IntegrationType.DISCORDSRV.isEnabled())
+		if (overrideChatEvent && IntegrationType.DISCORDSRV.isEnabled() && (channel == null || (channel.getType().ordinal() > 1 && !channel.isAccessRestricted()))) // this will be changed with the introduction of DISCORD-type channels
 			IntegrationType.DISCORDSRV.get().handleChatEvent(player, message);
 		return false;
 	}

@@ -42,7 +42,7 @@ public abstract class ChatChannelsManager implements ChatPluginManager {
 	 */
 	public static final Pattern CHANNEL_ID_PATTERN = Pattern.compile("^[a-zA-Z0-9-_]{2,36}$");
 	protected static ChatChannelsManager instance;
-	protected boolean enabled, spyOnJoinEnabled;
+	protected boolean enabled, readingNotificationEnabled, spyOnJoinEnabled;
 	protected String spyFormat;
 	protected List<String> defaultListeningChannelsIDs = Collections.emptyList();
 	protected ChatChannel<? extends ChatChannelData> defaultWritingChannel;
@@ -69,6 +69,18 @@ public abstract class ChatChannelsManager implements ChatPluginManager {
 	 */
 	public boolean isSpyOnJoinEnabled() {
 		return spyOnJoinEnabled;
+	}
+	
+	/**
+	 * Checks if the "chat.nobody-read" notification should be sent
+	 * to players when they send a message to an empty channel.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.channels.reading-notification-enabled" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Whether the reading notification should be enabled
+	 */
+	public boolean isReadingNotificationEnabled() {
+		return readingNotificationEnabled;
 	}
 	
 	/**

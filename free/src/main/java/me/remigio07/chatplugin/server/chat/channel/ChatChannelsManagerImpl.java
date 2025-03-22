@@ -130,7 +130,8 @@ public class ChatChannelsManagerImpl extends ChatChannelsManager {
 					}
 				} else LogManager.log("A chat channel with ID \"{0}\" already exists at \"chat.channels.values.{0}\" in chat.yml; skipping it.", 1, id);
 			} else LogManager.log("Chat channel ID specified at \"chat.channels.values.{0}\" in chat.yml does not respect the following pattern: \"{1}\"; skipping it.", 2, id, CHANNEL_ID_PATTERN.pattern());
-		} spyOnJoinEnabled = ConfigurationType.CHAT.get().getBoolean("chat.channels.spy.on-join-enabled");
+		} readingNotificationEnabled = ConfigurationType.CHAT.get().getBoolean("chat.channels.reading-notification-enabled");
+		spyOnJoinEnabled = ConfigurationType.CHAT.get().getBoolean("chat.channels.spy.on-join-enabled");
 		spyFormat = ConfigurationType.CHAT.get().getString("chat.channels.spy.format");
 		
 		// some validation checks...
@@ -187,7 +188,7 @@ public class ChatChannelsManagerImpl extends ChatChannelsManager {
 	
 	@Override
 	public void unload() throws ChatPluginManagerException {
-		enabled = spyOnJoinEnabled = false;
+		enabled = readingNotificationEnabled = spyOnJoinEnabled = false;
 		
 		defaultListeningChannelsIDs.clear();
 		channels.clear();

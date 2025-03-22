@@ -401,20 +401,38 @@ public class ItemStackAdapter implements Cloneable {
 	}
 	
 	/**
-	 * Applies the glowing effect to this item (when {@link #isEnchanted()} and
-	 * {@link #getItemFlags()} contains {@link ItemFlagAdapter#HIDE_ENCHANTMENTS}).
+	 * Applies the glowing effect to this item.
 	 * 
 	 * @return This item stack
+	 * @see #isGlowing()
 	 */
 	public ItemStackAdapter setGlowing() {
-		enchant(EnchantmentAdapter.UNBREAKING, 1);
-		addItemFlags(ItemFlagAdapter.HIDE_ENCHANTMENTS);
-		return this;
+		return setGlowing(true);
 	}
 	
 	/**
-	 * Checks if this item has the glowing effect (when {@link #isEnchanted()} and
-	 * {@link #getItemFlags()} contains {@link ItemFlagAdapter#HIDE_ENCHANTMENTS}).
+	 * Applies/removes the glowing effect to/from this item.
+	 * 
+	 * @param glowing Whether this item is glowing
+	 * @return This item stack
+	 * @see #isGlowing()
+	 */
+	public ItemStackAdapter setGlowing(boolean glowing) {
+		if (glowing) {
+			enchant(EnchantmentAdapter.UNBREAKING, 1);
+			addItemFlags(ItemFlagAdapter.HIDE_ENCHANTMENTS);
+		} else {
+			disenchant();
+			removeItemFlags(ItemFlagAdapter.HIDE_ENCHANTMENTS);
+		} return this;
+	}
+	
+	/**
+	 * Checks if this item has the glowing effect.
+	 * 
+	 * <p>An item is glowing when it {@link #isEnchanted()}
+	 * and {@link #getItemFlags()} contains
+	 * {@link ItemFlagAdapter#HIDE_ENCHANTMENTS}).</p>
 	 * 
 	 * @return Whether this item is glowing
 	 */

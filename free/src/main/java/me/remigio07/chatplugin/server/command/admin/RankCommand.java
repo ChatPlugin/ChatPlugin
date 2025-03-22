@@ -163,7 +163,7 @@ public class RankCommand extends BaseCommand {
 		
 		@Override
 		public java.util.List<String> getMainArgs() {
-			return Arrays.asList("remove", "delete", "rem", "del", "r");
+			return Arrays.asList("remove", "delete", "del", "rm", "r");
 		}
 		
 		@Override
@@ -199,131 +199,6 @@ public class RankCommand extends BaseCommand {
 						}
 					} else sender.sendMessage(language.getMessage("misc.invalid-rank", args[1], RankManager.getInstance().getRanks().stream().map(Rank::getID).collect(Collectors.toList())));
 				} else sender.sendMessage(language.getMessage("commands.rank.luckperms-mode"));
-			} else sendUsage(sender, language);
-		}
-		
-	}
-	
-	public static class List extends BaseCommand {
-		
-		public List() {
-			super("/rank list [page]");
-			tabCompletionArgs.put(1, numbers);
-		}
-		
-		@Override
-		public java.util.List<String> getMainArgs() {
-			return Arrays.asList("list", "ls", "l");
-		}
-		
-		@Override
-		public String getPermission() {
-			return "chatplugin.commands.rank.list";
-		}
-		
-		@Override
-		public boolean isSubCommand() {
-			return true;
-		}
-		
-		@Override
-		public void execute(CommandSenderAdapter sender, Language language, String[] args) {
-			int page = 0;
-			
-			if (args.length == 2) {
-				if (!Utils.isPositiveInteger(args[1])) {
-					sender.sendMessage(language.getMessage("misc.invalid-number", args[1]));
-					return;
-				} page = Integer.parseInt(args[1]) - 1;
-			} java.util.List<Rank> ranks = RankManager.getInstance().getRanks();
-			int pages = (ranks.size() - 1) / 8 + 1;
-			
-			if (page > -1 && page < pages) {
-				ranks = ranks.subList(page * 8, page == ranks.size() / 8 ? ranks.size() : (page + 1) * 8);
-				TextComponent[] components = new TextComponent[ranks.size()];
-				String text = language.getMessage("commands.rank.list.message-format.text");
-				String hover = language.getMessage("commands.rank.list.message-format.hover");
-				
-				sender.sendMessage(language.getMessage("commands.rank.list.header"));
-				
-				for (int i = 0; i < ranks.size(); i++) {
-					Rank rank = ranks.get(i);
-					components[i] = Utils.deserializeLegacy(rank.formatPlaceholders(text, language), false)
-							.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(rank.formatPlaceholders(hover, language), false)))
-							.clickEvent(ClickEvent.runCommand("/rank info " + rank.getID()));
-				} sendComponents(sender, components);
-				
-				if (pages > 1) {
-					String[] footer = formatPlaceholders(language.getMessage("page-switcher.footer") + " ", page + 1, pages).split(Pattern.quote("{page_switcher}"));
-					
-					if (footer.length == 2) {
-						TextComponent component = Utils.deserializeLegacy(footer[0], false);
-						TextComponent pageSwitcher = Component.empty();
-						boolean hasPreviousPage = page != 0;
-						
-						if (hasPreviousPage)
-							pageSwitcher = pageSwitcher.append(Utils.deserializeLegacy(formatPlaceholders(language.getMessage("page-switcher.previous.text"), page + 1, pages).replace("{previous_page}", String.valueOf(page)), false)
-									.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(formatPlaceholders(language.getMessage("page-switcher.previous.hover"), page + 1, pages).replace("{previous_page}", String.valueOf(page)), false)))
-									.clickEvent(ClickEvent.runCommand("/rank list " + String.valueOf(page)))
-									);
-						if (page != pages - 1)
-							pageSwitcher = (hasPreviousPage ? pageSwitcher.append(Component.space()) : pageSwitcher).append(Utils.deserializeLegacy(formatPlaceholders(language.getMessage("page-switcher.next.text"), page + 1, pages).replace("{next_page}", String.valueOf(page + 2)), false)
-									.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(formatPlaceholders(language.getMessage("page-switcher.next.hover"), page + 1, pages).replace("{next_page}", String.valueOf(page + 2)), false)))
-									.clickEvent(ClickEvent.runCommand("/rank list " + String.valueOf(page + 2)))
-									);
-						sendComponents(sender, component.append(pageSwitcher).append(Utils.deserializeLegacy(footer[1] == " " ? "" : footer[1], false)));
-					} else sender.sendMessage(language.getMessage("misc.prefix") + ChatColor.translate(" &cMessage specified at &fpage-switcher.footer &cin &f" + language.getConfiguration().getFile().getName() + " &cdoes not contain the &f{page_switcher} &cplaceholder."));
-				}
-			} else sender.sendMessage(formatPlaceholders(language.getMessage("page-switcher.invalid"), page + 1, pages));
-		}
-		
-		private static String formatPlaceholders(String input, int currentPage, int maxPage) {
-			return input
-					.replace("{current_page}", String.valueOf(currentPage))
-					.replace("{max_page}", String.valueOf(maxPage));
-		}
-		
-		private static void sendComponents(CommandSenderAdapter sender, TextComponent... components) {
-			if (sender.isConsole())
-				for (TextComponent component : components)
-					sender.sendMessage(Utils.serializeLegacy(component));
-			else ((BaseChatPluginServerPlayer) sender.toServerPlayer()).sendMessage(components);
-		}
-		
-	}
-	
-	public static class Info extends BaseCommand {
-		
-		public Info() {
-			super("/rank info <ID>");
-			tabCompletionArgs.put(1, Arrays.asList("{ranks}"));
-		}
-		
-		@Override
-		public java.util.List<String> getMainArgs() {
-			return Arrays.asList("info", "information", "i");
-		}
-		
-		@Override
-		public String getPermission() {
-			return "chatplugin.commands.rank.info";
-		}
-		
-		@Override
-		public boolean isSubCommand() {
-			return true;
-		}
-		
-		@Override
-		public void execute(CommandSenderAdapter sender, Language language, String[] args) {
-			if (args.length == 2) {
-				Rank rank = RankManager.getInstance().getRank(args[1]);
-				
-				if (rank != null)
-					sender.sendMessage(rank.formatPlaceholders(language.getMessage("commands.rank.info")
-							.replace("{chat_color}", rank.getChatColor()), // gets translated otherwise
-							language));
-				else sender.sendMessage(language.getMessage("misc.invalid-rank", args[1], RankManager.getInstance().getRanks().stream().map(Rank::getID).collect(Collectors.toList())));
 			} else sendUsage(sender, language);
 		}
 		
@@ -508,6 +383,131 @@ public class RankCommand extends BaseCommand {
 				group.data().add(MetaNode.builder(key, value).build());
 			}
 			
+		}
+		
+	}
+	
+	public static class Info extends BaseCommand {
+		
+		public Info() {
+			super("/rank info <ID>");
+			tabCompletionArgs.put(1, Arrays.asList("{ranks}"));
+		}
+		
+		@Override
+		public java.util.List<String> getMainArgs() {
+			return Arrays.asList("info", "information", "i");
+		}
+		
+		@Override
+		public String getPermission() {
+			return "chatplugin.commands.rank.info";
+		}
+		
+		@Override
+		public boolean isSubCommand() {
+			return true;
+		}
+		
+		@Override
+		public void execute(CommandSenderAdapter sender, Language language, String[] args) {
+			if (args.length == 2) {
+				Rank rank = RankManager.getInstance().getRank(args[1]);
+				
+				if (rank != null)
+					sender.sendMessage(rank.formatPlaceholders(language.getMessage("commands.rank.info")
+							.replace("{chat_color}", rank.getChatColor()), // gets translated otherwise
+							language));
+				else sender.sendMessage(language.getMessage("misc.invalid-rank", args[1], RankManager.getInstance().getRanks().stream().map(Rank::getID).collect(Collectors.toList())));
+			} else sendUsage(sender, language);
+		}
+		
+	}
+	
+	public static class List extends BaseCommand {
+		
+		public List() {
+			super("/rank list [page]");
+			tabCompletionArgs.put(1, numbers);
+		}
+		
+		@Override
+		public java.util.List<String> getMainArgs() {
+			return Arrays.asList("list", "ls", "l");
+		}
+		
+		@Override
+		public String getPermission() {
+			return "chatplugin.commands.rank.list";
+		}
+		
+		@Override
+		public boolean isSubCommand() {
+			return true;
+		}
+		
+		@Override
+		public void execute(CommandSenderAdapter sender, Language language, String[] args) {
+			int page = 0;
+			
+			if (args.length == 2) {
+				if (!Utils.isPositiveInteger(args[1])) {
+					sender.sendMessage(language.getMessage("misc.invalid-number", args[1]));
+					return;
+				} page = Integer.parseInt(args[1]) - 1;
+			} java.util.List<Rank> ranks = RankManager.getInstance().getRanks();
+			int pages = (ranks.size() - 1) / 8 + 1;
+			
+			if (page > -1 && page < pages) {
+				ranks = ranks.subList(page * 8, page == ranks.size() / 8 ? ranks.size() : (page + 1) * 8);
+				TextComponent[] components = new TextComponent[ranks.size()];
+				String text = language.getMessage("commands.rank.list.message-format.text");
+				String hover = language.getMessage("commands.rank.list.message-format.hover");
+				
+				sender.sendMessage(language.getMessage("commands.rank.list.header"));
+				
+				for (int i = 0; i < ranks.size(); i++) {
+					Rank rank = ranks.get(i);
+					components[i] = Utils.deserializeLegacy(rank.formatPlaceholders(text, language), false)
+							.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(rank.formatPlaceholders(hover, language), false)))
+							.clickEvent(ClickEvent.runCommand("/rank info " + rank.getID()));
+				} sendComponents(sender, components);
+				
+				if (pages > 1) {
+					String[] footer = formatPlaceholders(language.getMessage("page-switcher.footer") + " ", page + 1, pages).split(Pattern.quote("{page_switcher}"));
+					
+					if (footer.length == 2) {
+						TextComponent component = Utils.deserializeLegacy(footer[0], false);
+						TextComponent pageSwitcher = Component.empty();
+						boolean hasPreviousPage = page != 0;
+						
+						if (hasPreviousPage)
+							pageSwitcher = pageSwitcher.append(Utils.deserializeLegacy(formatPlaceholders(language.getMessage("page-switcher.previous.text"), page + 1, pages).replace("{previous_page}", String.valueOf(page)), false)
+									.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(formatPlaceholders(language.getMessage("page-switcher.previous.hover"), page + 1, pages).replace("{previous_page}", String.valueOf(page)), false)))
+									.clickEvent(ClickEvent.runCommand("/rank list " + String.valueOf(page)))
+									);
+						if (page != pages - 1)
+							pageSwitcher = (hasPreviousPage ? pageSwitcher.append(Component.space()) : pageSwitcher).append(Utils.deserializeLegacy(formatPlaceholders(language.getMessage("page-switcher.next.text"), page + 1, pages).replace("{next_page}", String.valueOf(page + 2)), false)
+									.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(formatPlaceholders(language.getMessage("page-switcher.next.hover"), page + 1, pages).replace("{next_page}", String.valueOf(page + 2)), false)))
+									.clickEvent(ClickEvent.runCommand("/rank list " + String.valueOf(page + 2)))
+									);
+						sendComponents(sender, component.append(pageSwitcher).append(Utils.deserializeLegacy(footer[1] == " " ? "" : footer[1], false)));
+					} else sender.sendMessage(language.getMessage("misc.prefix") + ChatColor.translate(" &cMessage specified at &fpage-switcher.footer &cin &f" + language.getConfiguration().getFile().getName() + " &cdoes not contain the &f{page_switcher} &cplaceholder."));
+				}
+			} else sender.sendMessage(formatPlaceholders(language.getMessage("page-switcher.invalid"), page + 1, pages));
+		}
+		
+		private static String formatPlaceholders(String input, int currentPage, int maxPage) {
+			return input
+					.replace("{current_page}", String.valueOf(currentPage))
+					.replace("{max_page}", String.valueOf(maxPage));
+		}
+		
+		private static void sendComponents(CommandSenderAdapter sender, TextComponent... components) {
+			if (sender.isConsole())
+				for (TextComponent component : components)
+					sender.sendMessage(Utils.serializeLegacy(component));
+			else ((BaseChatPluginServerPlayer) sender.toServerPlayer()).sendMessage(components);
 		}
 		
 	}

@@ -37,7 +37,7 @@ public class WhisperCommand extends BaseCommand {
 	
 	@Override
 	public List<String> getMainArgs() {
-		return Arrays.asList("whisper", "message", "msg", "tell", "w", "dm");
+		return Arrays.asList("whisper", "message", "msg", "tell", "w", "dm", "m", "t");
 	}
 	
 	@Override

@@ -134,7 +134,7 @@ public class ConfigurationMappings {
 			
 			if (put)
 				mappings.put(root, section);
-		} return (ConfigurationMappings) section;
+		} return section instanceof ConfigurationMappings ? (ConfigurationMappings) section : null;
 	}
 	
 	/**

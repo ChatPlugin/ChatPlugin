@@ -126,7 +126,7 @@ public class IgnoreCommand extends PlayerCommand {
 		
 		@Override
 		public java.util.List<String> getMainArgs() {
-			return Arrays.asList("remove", "r");
+			return Arrays.asList("remove", "rm", "r");
 		}
 		
 		@Override

@@ -15,7 +15,7 @@ misc:
   wrong-args: '{pfx} &cGli argomenti sono errati. Prova &f/chatplugin help&c.'
   wrong-syntax: '{pfx} &cLa sintassi è errata. Utilizzo: &f{0}&c.'
   invalid-number: '{pfx} &f{0} &cnon è un numero valido.'
-  invalid-rank: '{pfx} &f{0} &cnon è un rango valido.'
+  invalid-rank: '{pfx} &f{0} &cnon è un rango valido. Ecco i ranghi caricati: &f{0}&c.'
   reason-required: '{pfx} &cDevi specificare un motivo.'
   debug:
     enabled: '{pfx} &aModalità di debug abilitata.'
@@ -47,18 +47,17 @@ commands:
       user: |-
         {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/language &8- &eCambia la tua lingua attualmente visualizzata.
+        &f&l/ignore &8- &eGestisci i giocatori che stai ignorando.
         &f&l/whisper &8- &eInvia un messaggio privato ad un altro giocatore.
         &f&l/ping &8- &eMostra la latenza tua o di un altro giocatore in ms.
         &f&l/rankinfo &8- &eVisualizza informazioni sul rango di un giocatore.
         &f&l/playerlist &8- &eVisualizza la lista dei giocatori online.
-        &f&l/chatcolor &8- &eCambia il colore predefinito della tua chat.
-        &f&l/emojistone &8- &eCambia il tono predefinito delle tue emojis.
+        &f&l/preferences &8- &eCambia le tue preferenze personali.
       admin: |-
         {pfx} &aAiuto per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/rank &8- &eCrea, rimuovi, modifica e visualizza i ranghi caricati.
         &f&l/staffchat &8- &eStaff chat cross-server molto utile.
         &f&l/socialspy &8- &eSpia i messaggi privati degli altri giocatori.
-        &f&l/rangedchatspy &8- &eSpia i messaggi locali degli altri giocatori.
         &f&l/iplookup &8- &eEsegui il lookup di un indirizzo IP.
         &f&l/lastseen &8- &eControlla l'ultimo login di un giocatore.
         &f&l/clearchat &8- &eCancella la chat e nascondi gli ultimi messaggi.
@@ -75,25 +74,32 @@ commands:
       user: |-
         {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/language &8- &eCambia la tua lingua attualmente visualizzata.
+        &f&l/ignore &8- &eGestisci i giocatori che stai ignorando.
         &f&l/whisper &8- &eInvia un messaggio privato ad un altro giocatore.
         &f&l/ping &8- &eMostra la latenza tua o di un altro giocatore in ms.
         &f&l/rankinfo &8- &eVisualizza informazioni sul rango di un giocatore.
         &f&l/playerlist &8- &eVisualizza la lista dei giocatori online.
-        &f&l/chatcolor &8- &eCambia il colore predefinito della tua chat.
-        &f&l/emojistone &8- &eCambia il tono predefinito delle tue emojis.
-        &f&l/bossbar &8- &eAttiva/disattiva la visibilità della bossbar.
-        &f&l/scoreboard &8- &eAttiva/disattiva la visibilità della scoreboard.
+        &f&l/preferences &8- &eCambia le tue preferenze personali.
       admin: |-
         {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/rank &8- &eCrea, rimuovi, modifica e visualizza i ranghi caricati.
         &f&l/staffchat &8- &eStaff chat cross-server molto utile.
         &f&l/socialspy &8- &eSpia i messaggi privati degli altri giocatori.
-        &f&l/rangedchatspy &8- &eSpia i messaggi locali degli altri giocatori.
         &f&l/iplookup &8- &eEsegui il lookup di un indirizzo IP.
         &f&l/lastseen &8- &eControlla l'ultimo login di un giocatore.
         &f&l/clearchat &8- &eCancella la chat e nascondi gli ultimi messaggi.
         &f&l/chatlog &8- &eCerca messaggi che contengono certo testo.
         &f&l/accountcheck &8- &eControlla gli accounts di un giocatore.
+      guis: |-
+        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
+        &f&l/cp status &8- &eVisualizza lo stato attuale del server.
+        &f&l/banlist &8- &eVisualizza la lista dei bans attivi.
+        &f&l/warnlist &8- &eVisualizza la lista degli avvisi attivi.
+        &f&l/mutelist &8- &eVisualizza la lista dei mutes attivi.
+        &f&l/violations &8- &eMostra le ultime violazioni dei giocatori.
+        &f&l/playerinfo &8- &eMostra informazioni dettagliate di un giocatore.
+        &f&l/playerpunishments &8- &eMostra le punizioni di un giocatore.
+        &f&l/playerviolations &8- &eMostra le violazioni di un giocatore.
       punishments: |-
         {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/tempban &8- &eBanna temporaneamente un giocatore.
@@ -105,16 +111,6 @@ commands:
         &f&l/fakekick &8- &eDisconnetti con un errore casuale come motivo.
         &f&l/mute &8- &eMuta temporaneamente un giocatore.
         &f&l/unmute &8- &eRimuovi il mute ad un giocatore mutato.
-      guis: |-
-        {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
-        &f&l/cp status &8- &eVisualizza lo stato attuale del server.
-        &f&l/banlist &8- &eVisualizza la lista dei bans attivi.
-        &f&l/warnlist &8- &eVisualizza la lista degli avvisi attivi.
-        &f&l/mutelist &8- &eVisualizza la lista dei mutes attivi.
-        &f&l/violations &8- &eMostra le ultime violazioni dei giocatori.
-        &f&l/playerinfo &8- &eMostra informazioni dettagliate di un giocatore.
-        &f&l/playerpunishments &8- &eMostra le punizioni di un giocatore.
-        &f&l/playerviolations &8- &eMostra le violazioni di un giocatore.
       vanish: |-
         {pfx} &aGuida per &c&lChat&f&lPlugin &fv{0} &adi &9Remigio07&a:
         &f&l/vanish &8- &eDiventa invisibile agli altri utenti.

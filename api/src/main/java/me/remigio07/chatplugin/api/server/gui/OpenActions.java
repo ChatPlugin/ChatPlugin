@@ -15,8 +15,8 @@
 
 package me.remigio07.chatplugin.api.server.gui;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -64,7 +64,7 @@ public class OpenActions {
 	 */
 	public OpenActions(Configuration configuration) {
 		this(
-				LanguageManager.getInstance().getLanguages().stream().collect(ConcurrentHashMap::new, (map, language) -> map.put(language, configuration.getString("settings.open-actions.send-messages." + language.getID(), null)), ConcurrentHashMap::putAll),
+				LanguageManager.getInstance().getLanguages().stream().collect(HashMap::new, (map, language) -> map.put(language, configuration.getString("settings.open-actions.send-messages." + language.getID(), null)), HashMap::putAll),
 				new SoundAdapter(configuration, "settings.open-actions.play-sound")
 				);
 	}

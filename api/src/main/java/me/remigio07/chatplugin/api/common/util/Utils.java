@@ -67,7 +67,7 @@ public class Utils {
 	public static final String USER_AGENT = "Mozilla/5.0 +https://remigio07.me/chatplugin ChatPlugin/" + ChatPlugin.VERSION;
 	
 	/**
-	 * UUID representing the <a href=https://wikipedia.org/wiki/Universally_unique_identifier#Special_UUIDs>nil UUID</a>.
+	 * UUID representing the <a href=https://wikipedia.org/wiki/Universally_unique_identifier#Nil_UUID>nil UUID</a>.
 	 * 
 	 * <p><strong>UUID:</strong> "00000000-0000-0000-0000-000000000000"</p>
 	 */

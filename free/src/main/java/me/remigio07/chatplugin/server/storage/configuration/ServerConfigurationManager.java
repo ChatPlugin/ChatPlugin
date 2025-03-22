@@ -290,7 +290,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("misc.wrong-args", "{pfx} &cThe arguments are wrong. Try &f/chatplugin help&c.");
 		messages.addDefault("misc.wrong-syntax", "{pfx} &cThe syntax is wrong. Usage: &f{0}&c.");
 		messages.addDefault("misc.invalid-number", "{pfx} &f{0} &cis not a valid number.");
-		messages.addDefault("misc.invalid-rank", "{pfx} &f{0} &cis not a valid rank.");
+		messages.addDefault("misc.invalid-rank", "{pfx} &f{0} &cis not a valid rank. Here are the loaded ranks: &f{1}&c.");
 		messages.addDefault("misc.reason-required", "{pfx} &cYou have to specify a reason.");
 		messages.addDefault("misc.debug.enabled", "{pfx} &aDebug mode enabled.");
 		messages.addDefault("misc.debug.disabled", "{pfx} &aDebug mode disabled.");
@@ -314,15 +314,15 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("misc.database-error", "{pfx} &f{0} &coccurred while trying to access the database: &f{1}&c.");
 		messages.addDefault("misc.update-notification", "{pfx} &eYou are running an outdated version of ChatPlugin. It is recommended to update to the latest version (&f{0}&e) to avoid bugs and incompatibilities.");
 		
-		messages.addDefault("commands.help.free.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/whisper &8- &eSend a private message to another player.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.\n&f&l/chatcolor &8- &eChange your chat's default color.\n&f&l/emojistone &8- &eChange your emojis' default tone.");
-		messages.addDefault("commands.help.free.admin", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/rank &8- &eCreate, remove, edit and view loaded ranks.\n&f&l/staffchat &8- &eVery handy cross-server Staff chat.\n&f&l/socialspy &8- &eSpy other players' private messages.\n&f&l/rangedchatspy &8- &eSpy other players' local messages.\n&f&l/iplookup &8- &ePerform a lookup of an IP address.\n&f&l/lastseen &8- &eCheck when a player was last seen.\n&f&l/clearchat &8- &eClear chat to hide last messages.");
+		messages.addDefault("commands.help.free.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/whisper &8- &eSend a private message to another player.\n&f&l/ignore &8- &eManage players you are ignoring.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.\n&f&l/preferences &8- &eChange your personal preferences.");
+		messages.addDefault("commands.help.free.admin", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/rank &8- &eCreate, remove, edit and view loaded ranks.\n&f&l/staffchat &8- &eVery handy cross-server Staff chat.\n&f&l/socialspy &8- &eSpy other players' private messages.\n&f&l/iplookup &8- &ePerform a lookup of an IP address.\n&f&l/lastseen &8- &eCheck when a player was last seen.\n&f&l/clearchat &8- &eClear chat to hide last messages.");
 		messages.addDefault("commands.help.free.vanish", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/vanish &8- &eBecome invisible to non Staff members.");
 		messages.addDefault("commands.help.free.misc", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/tps &8- &eDisplay the server's current ticks per second.\n&f&l/ad &8- &eSend a loaded ad to one or more online players.\n&f&l/broadcast &8- &eSend a message to every online player.\n&f&l/broadcastraw &8- &eLike /broadcast, but without the prefix.");
 		
-		messages.addDefault("commands.help.premium.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/whisper &8- &eSend a private message to another player.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.\n&f&l/chatcolor &8- &eChange your chat's default color.\n&f&l/emojistone &8- &eChange your emojis' default tone.\n&f&l/bossbar &8- &eToggle the bossbar's visibility.\n&f&l/scoreboard &8- &eToggle the scoreboard's visibility.");
-		messages.addDefault("commands.help.premium.admin", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/rank &8- &eCreate, remove, edit and view loaded ranks.\n&f&l/staffchat &8- &eVery handy cross-server Staff chat.\n&f&l/socialspy &8- &eSpy other players' private messages.\n&f&l/rangedchatspy &8- &eSpy other players' local messages.\n&f&l/iplookup &8- &ePerform a lookup of an IP address.\n&f&l/lastseen &8- &eCheck when a player was last seen.\n&f&l/clearchat &8- &eClear chat to hide last messages.\n&f&l/chatlog &8- &eLook up messages containing certain text.\n&f&l/accountcheck &8- &eCheck a player's alt accounts.");
-		messages.addDefault("commands.help.premium.punishments", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/tempban &8- &eTemporarily ban a player.\n&f&l/unban &8- &eUnban a previously banned player.\n&f&l/warning &8- &eWarn a player for a certain time.\n&f&l/removelastwarning &8- &eRemove a player's last warning.\n&f&l/clearwarnings &8- &eClear a player's active warnings.\n&f&l/kick &8- &eDisconnect a player from the server.\n&f&l/fakekick &8- &eKick with a random error as reason.\n&f&l/mute &8- &eTemporarily mute a player.\n&f&l/unmute &8- &eUnmute a previously muted player.");
+		messages.addDefault("commands.help.premium.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/whisper &8- &eSend a private message to another player.\n&f&l/ignore &8- &eManage players you are ignoring.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.\n&f&l/preferences &8- &eChange your personal preferences.");
+		messages.addDefault("commands.help.premium.admin", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/rank &8- &eCreate, remove, edit and view loaded ranks.\n&f&l/staffchat &8- &eVery handy cross-server Staff chat.\n&f&l/socialspy &8- &eSpy other players' private messages.\n&f&l/iplookup &8- &ePerform a lookup of an IP address.\n&f&l/lastseen &8- &eCheck when a player was last seen.\n&f&l/clearchat &8- &eClear chat to hide last messages.\n&f&l/chatlog &8- &eLook up messages containing certain text.\n&f&l/accountcheck &8- &eCheck a player's alt accounts.");
 		messages.addDefault("commands.help.premium.guis", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/cp status &8- &eDisplay the server's current status\n&f&l/banlist &8- &eDisplay the active bans list.\n&f&l/warnlist &8- &eDisplay the active warnings list.\n&f&l/mutelist &8- &eDisplay the active mutes list.\n&f&l/violations &8- &eDisplay last players' violations.\n&f&l/playerinfo &8- &eShow detailed info about a player.\n&f&l/playerpunishments &8- &eShow a player's punishments list.\n&f&l/playerviolations &8- &eShow a player's last violations.");
+		messages.addDefault("commands.help.premium.punishments", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/tempban &8- &eTemporarily ban a player.\n&f&l/unban &8- &eUnban a previously banned player.\n&f&l/warning &8- &eWarn a player for a certain time.\n&f&l/removelastwarning &8- &eRemove a player's last warning.\n&f&l/clearwarnings &8- &eClear a player's active warnings.\n&f&l/kick &8- &eDisconnect a player from the server.\n&f&l/fakekick &8- &eKick with a random error as reason.\n&f&l/mute &8- &eTemporarily mute a player.\n&f&l/unmute &8- &eUnmute a previously muted player.");
 		messages.addDefault("commands.help.premium.vanish", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/vanish &8- &eBecome invisible to non Staff members.\n&f&l/fakejoin &8- &eSend fake join message and disable vanish.\n&f&l/fakequit &8- &eSend fake quit message and enable vanish.\n&f&l/silentteleport &8- &eSilently teleport somewhere else.");
 		messages.addDefault("commands.help.premium.misc", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/tps &8- &eDisplay the server's current ticks per second.\n&f&l/ad &8- &eSend a loaded ad to one or more online players.\n&f&l/broadcast &8- &eSend a message to every online player.\n&f&l/broadcastraw &8- &eLike /broadcast, but without the prefix.\n&f&l/globalbroadcast &8- &eLike /broadcast, but cross-server.\n&f&l/discordmessage &8- &eSend a message to the server.\n&f&l/telegrammessage &8- &eSend a message to the group.");
 		
@@ -637,7 +637,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		messages.addDefault("languages.set", "{pfx} &aLanguage set to &f{0}&a.");
 		messages.addDefault("languages.set-already", "{pfx} &cYour language is already set to &f{0}&c.");
-		messages.addDefault("languages.invalid", "{pfx} &cInvalid language. Here are the loaded languages: &f{0}&c.");
+		messages.addDefault("languages.invalid", "{pfx} &f{0} &cis not a valid language. Here are the loaded languages: &f{1}&c.");
 		messages.addDefault("languages.detected.text", "{pfx} &eIt seems that your language is {0}&e. Click this message to set it as your default language.");
 		messages.addDefault("languages.detected.hover", "&9[Click here to change your language]");
 		
@@ -781,7 +781,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.antispam.highlight-color", "&4&n");
 		chat.addDefault("chat.antispam.messages-whitelist", Arrays.asList("hello", "hey", "ok", "ciao"));
 		chat.addDefault("chat.antispam.words-blacklist", Arrays.asList(
-				" arse ", "arsehole", " ass ", "asshole", "bastard", "bitch", "blowjob", "bollock", "bullshit", "cocksucker", " crap", " cum", "cunt", "dick", "faggot", "fuck", "gtfo", "handjob", "kys", "nigga", "nigger", "pussy", " shit", "slut", "twat", " wank", "whore",
+				" arse ", "arsehole", " ass ", "asshole", "bastard", "bitch", "blowjob", "bollock", "bullshit", "cocksucker", " crap", " cum", "cunt", "dick", "dumbass", "faggot", "fuck", "gtfo", "handjob", "kys", "nigga", "nigger", "pussy", " shit", "slut", "twat ", " wank", "whore",
 				"arrap", "bocchin", " caca", "caga", " cazz", "checc", "coglion", "cojon", "culo", "ditalin", "figa", "fotter", "fottut", "froci", "merd", "mignott", "minchi", "negr", "puttan", "pompin", "ricchion", "sborr", "stronz", "troia", " troie ", "zoccola", "zoccole"
 				));
 		
@@ -1035,8 +1035,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			bossbars.addDefault("bossbars.bossbar-command.titles.italian", "&5La bossbar può essere disattivata con &f/bossbar&5.");
 			bossbars.addDefault("bossbars.bossbar-command.value", 25);
 			bossbars.addDefault("bossbars.bossbar-command.color", "PURPLE");
-			bossbars.addDefault("bossbars.5-star-review.titles.english", "&eLeave a &f5x &e⭐ review on the plugin's page!");
-			bossbars.addDefault("bossbars.5-star-review.titles.italian", "&eLascia una recensione &f5x &e⭐ sulla pagina del plugin!");
+			bossbars.addDefault("bossbars.5-star-review.titles.english", "&eLeave a &f5 &e⭐ review on the plugin's page!");
+			bossbars.addDefault("bossbars.5-star-review.titles.italian", "&eLascia una recensione &f5 &e⭐ sulla pagina del plugin!");
 			bossbars.addDefault("bossbars.5-star-review.value", 0);
 			bossbars.addDefault("bossbars.5-star-review.color", "YELLOW");
 			bossbars.addDefault("bossbars.language-command.titles.english", "&aChange the plugin's language with &f/language&a!");
@@ -1216,7 +1216,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		joinQuitModules.addDefault("join-quit-modules.suggested-version.version", "{server_version}");
 		joinQuitModules.addDefault("join-quit-modules.suggested-version.delay-ms", 10000L);
 		
-		joinQuitModules.addDefault("join-quit-modules.account-check.enabled", ChatPlugin.getInstance().isPremium());
+		joinQuitModules.addDefault("join-quit-modules.account-check.enabled", true);
 		joinQuitModules.addDefault("join-quit-modules.account-check.perform-on-first-join", false);
 		joinQuitModules.addDefault("join-quit-modules.account-check.timeout-between-checks-ms", 10);
 		joinQuitModules.addDefault("join-quit-modules.account-check.max-time-played", "12h");

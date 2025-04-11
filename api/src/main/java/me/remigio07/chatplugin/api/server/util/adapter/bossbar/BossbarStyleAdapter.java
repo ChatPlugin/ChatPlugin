@@ -44,28 +44,28 @@ public class BossbarStyleAdapter {
 	/**
 	 * Displays the bossbar split into 6 segments.
 	 * 
-	 * <p><strong>Minimum version:</strong> {@link Version#V1_9}</p>
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
 	 */
 	public static final BossbarStyleAdapter SEGMENTED_6 = new BossbarStyleAdapter("SEGMENTED_6", "NOTCHED_6");
 	
 	/**
 	 * Displays the bossbar split into 10 segments.
 	 * 
-	 * <p><strong>Minimum version:</strong> {@link Version#V1_9}</p>
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
 	 */
 	public static final BossbarStyleAdapter SEGMENTED_10 = new BossbarStyleAdapter("SEGMENTED_10", "NOTCHED_10");
 	
 	/**
 	 * Displays the bossbar split into 12 segments.
 	 * 
-	 * <p><strong>Minimum version:</strong> {@link Version#V1_9}</p>
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
 	 */
 	public static final BossbarStyleAdapter SEGMENTED_12 = new BossbarStyleAdapter("SEGMENTED_12", "NOTCHED_12");
 	
 	/**
 	 * Displays the bossbar split into 20 segments.
 	 * 
-	 * <p><strong>Minimum version:</strong> {@link Version#V1_9}</p>
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
 	 */
 	public static final BossbarStyleAdapter SEGMENTED_20 = new BossbarStyleAdapter("SEGMENTED_20", "NOTCHED_20");
 	
@@ -158,9 +158,9 @@ public class BossbarStyleAdapter {
 	}
 	
 	/**
-	 * Checks if this style is supported on {@link VersionUtils#getVersion()}.
+	 * Checks if this bossbar style is supported on {@link VersionUtils#getVersion()}.
 	 * 
-	 * @return Whether this style is supported
+	 * @return Whether this bossbar style is supported
 	 */
 	public boolean isSupported() {
 		return VersionUtils.getVersion().isAtLeast(Version.V1_9) || this == SOLID || this == RANDOM;

@@ -46,7 +46,7 @@ public enum NumbersDisplayMode {
 	 * Scores will use custom text which may
 	 * contain formatting codes and be animated.
 	 * 
-	 * <p><strong>Requires:</strong> 1.20.3+
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_20_3 1.20.3}
 	 * <br><strong>Found at:</strong> "settings.numbers.custom-text" in {@link Scoreboard#getConfiguration()}</p>
 	 */
 	CUSTOM_TEXT;

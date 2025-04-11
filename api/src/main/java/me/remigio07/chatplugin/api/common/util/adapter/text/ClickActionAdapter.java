@@ -15,6 +15,8 @@
 
 package me.remigio07.chatplugin.api.common.util.adapter.text;
 
+import me.remigio07.chatplugin.api.common.util.VersionUtils;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 
 /**
@@ -28,7 +30,7 @@ public class ClickActionAdapter {
 	/**
 	 * Copies text to the player's clipboard.
 	 * 
-	 * <p>It is only available on 1.15.2+ servers.</p>
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_15_2 1.15.2}</p>
 	 */
 	public static final ClickActionAdapter COPY_TEXT = new ClickActionAdapter("COPY_TEXT", "copy_to_clipboard");
 	
@@ -83,6 +85,15 @@ public class ClickActionAdapter {
 	 */
 	public String getID() {
 		return id;
+	}
+	
+	/**
+	 * Checks if this click action is supported on {@link VersionUtils#getVersion()}.
+	 * 
+	 * @return Whether this click action is supported
+	 */
+	public boolean isSupported() {
+		return this != COPY_TEXT || VersionUtils.getVersion().isAtLeast(Version.V1_15_2);
 	}
 	
 	/**

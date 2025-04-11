@@ -41,9 +41,9 @@ public class ItemFlagAdapter {
 	/**
 	 * Hides trim upgrades applied to an armor.
 	 * 
-	 * <p><strong>Requires:</strong> 1.19.4+</p>
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_19_4 1.19.4}</p>
 	 */
-	public static final ItemFlagAdapter HIDE_ARMOR_TRIM = new ItemFlagAdapter("HIDE_ARMOR_TRIM", new String[] { "HIDE_ARMOR_TRIM", "HIDE_MISCELLANEOUS" });
+	public static final ItemFlagAdapter HIDE_ARMOR_TRIM = new ItemFlagAdapter("HIDE_ARMOR_TRIM", new String[] { "HIDE_ARMOR_TRIM", "HIDE_MISCELLANEOUS" }, Version.V1_19_4);
 	
 	/**
 	 * Hides enchantments applied to an item.
@@ -58,9 +58,9 @@ public class ItemFlagAdapter {
 	/**
 	 * Hides a leather armor's color information.
 	 * 
-	 * <p><strong>Requires:</strong> 1.16.2+</p>
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_16_2 1.16.2}</p>
 	 */
-	public static final ItemFlagAdapter HIDE_DYE = new ItemFlagAdapter("HIDE_DYE", new String[] { "HIDE_DYE", "HIDE_MISCELLANEOUS" });
+	public static final ItemFlagAdapter HIDE_DYE = new ItemFlagAdapter("HIDE_DYE", new String[] { "HIDE_DYE", "HIDE_MISCELLANEOUS" }, Version.V1_16_2);
 	
 	/**
 	 * Hides the "Unbreakable" state of an item.
@@ -85,10 +85,16 @@ public class ItemFlagAdapter {
 	private static final ItemFlagAdapter[] VALUES = new ItemFlagAdapter[] { HIDE_ARMOR_TRIM, HIDE_ENCHANTMENTS, HIDE_ATTRIBUTES, HIDE_DYE, HIDE_UNBREAKABLE, HIDE_CAN_DESTROY, HIDE_CAN_BE_PLACED_ON, HIDE_MISCELLANEOUS };
 	private String name;
 	private String[] ids;
+	private Version minimumVersion;
 	
 	private ItemFlagAdapter(String name, String[] ids) {
+		this(name, ids, null);
+	}
+	
+	private ItemFlagAdapter(String name, String[] ids, Version minimumVersion) {
 		this.name = name;
 		this.ids = ids;
+		this.minimumVersion = minimumVersion;
 	}
 	
 	/**
@@ -125,7 +131,7 @@ public class ItemFlagAdapter {
 			try {
 				return (Key<Value<Boolean>>) Keys.class.getField(ids[1]).get(null);
 			} catch (NullPointerException | IllegalArgumentException | IllegalAccessException | NoSuchFieldException e) {
-				return Keys.HIDE_ATTRIBUTES; // default
+				return Keys.HIDE_ATTRIBUTES;
 			}
 		else throw new UnsupportedOperationException("Unable to adapt item flag to a Sponge's Key<Value<Boolean>> on a " + Environment.getCurrent().getName() + " environment");
 	}
@@ -161,6 +167,27 @@ public class ItemFlagAdapter {
 	 */
 	public String[] getIDs() {
 		return ids;
+	}
+	
+	/**
+	 * Gets the minimum supported version for this item flag.
+	 * 
+	 * <p>Will return <code>null</code> if all versions
+	 * supported by ChatPlugin support this item flag.</p>
+	 * 
+	 * @return Item flag's minimum version
+	 */
+	public @Nullable(why = "Null if all versions support this item flag") Version getMinimumVersion() {
+		return minimumVersion;
+	}
+	
+	/**
+	 * Checks if this item flag is supported on {@link VersionUtils#getVersion()}.
+	 * 
+	 * @return Whether this item flag is supported
+	 */
+	public boolean isSupported() {
+		return minimumVersion == null || VersionUtils.getVersion().isAtLeast(minimumVersion);
 	}
 	
 	/**

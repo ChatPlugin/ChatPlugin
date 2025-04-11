@@ -22,6 +22,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.spongepowered.api.item.enchantment.EnchantmentType;
 import org.spongepowered.api.item.enchantment.EnchantmentTypes;
 
+import me.remigio07.chatplugin.api.common.util.VersionUtils;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
@@ -41,57 +43,65 @@ public class EnchantmentAdapter {
 	/**
 	 * Increases damage against arthropod targets.
 	 */
-	public static final EnchantmentAdapter BANE_OF_ARTHROPODS = new EnchantmentAdapter("BANE_OF_ARTHROPODS", new String[] { "bane_of_arthropods", "art_damage", "bane", "DAMAGE_ARTHROPODS" });
+	public static final EnchantmentAdapter BANE_OF_ARTHROPODS = new EnchantmentAdapter("BANE_OF_ARTHROPODS", new String[] { "bane_of_arthropods", "art_damage", "bane", "DAMAGE_ARTHROPODS" }, 5);
 	
 	/**
 	 * Item cannot be removed.
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_11 1.11}</p>
 	 */
-	public static final EnchantmentAdapter BINDING_CURSE = new EnchantmentAdapter("BINDING_CURSE", new String[] { "binding_curse", "binding" });
+	public static final EnchantmentAdapter BINDING_CURSE = new EnchantmentAdapter("BINDING_CURSE", new String[] { "binding_curse", "binding" }, 1, Version.V1_11);
 	
 	/**
 	 * Provides protection against explosive damage.
 	 */
-	public static final EnchantmentAdapter BLAST_PROTECTION = new EnchantmentAdapter("BLAST_PROTECTION", new String[] { "blast_protection", "blast_protect", "blast_prot", "explosions_protection", "explosions_protect", "explosions_prot", "explosions", "explode", "expl", "PROTECTION_EXPLOSIONS" });
+	public static final EnchantmentAdapter BLAST_PROTECTION = new EnchantmentAdapter("BLAST_PROTECTION", new String[] { "blast_protection", "blast_protect", "blast_prot", "explosions_protection", "explosions_protect", "explosions_prot", "explosions", "explode", "expl", "PROTECTION_EXPLOSIONS" }, 4);
 	
 	/**
 	 * Reduces armor effectiveness against maces.
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_21 1.21}</p>
 	 */
-	public static final EnchantmentAdapter BREACH = new EnchantmentAdapter("BREACH", new String[] { "breach" });
+	public static final EnchantmentAdapter BREACH = new EnchantmentAdapter("BREACH", new String[] { "breach" }, 4, Version.V1_21);
 	
 	/**
 	 * Strikes lightning when a mob is hit with a trident if conditions are stormy.
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_13 1.13}</p>
 	 */
-	public static final EnchantmentAdapter CHANNELING = new EnchantmentAdapter("CHANNELING", new String[] { "channeling" });
+	public static final EnchantmentAdapter CHANNELING = new EnchantmentAdapter("CHANNELING", new String[] { "channeling" }, 1, Version.V1_13);
 	
 	/**
 	 * Increases fall damage of maces.
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_21 1.21}</p>
 	 */
-	public static final EnchantmentAdapter DENSITY = new EnchantmentAdapter("DENSITY", new String[] { "density" });
+	public static final EnchantmentAdapter DENSITY = new EnchantmentAdapter("DENSITY", new String[] { "density" }, 5, Version.V1_21);
 	
 	/**
 	 * Increases walking speed while in water.
 	 */
-	public static final EnchantmentAdapter DEPTH_STRIDER = new EnchantmentAdapter("DEPTH_STRIDER", new String[] { "depth_strider" });
+	public static final EnchantmentAdapter DEPTH_STRIDER = new EnchantmentAdapter("DEPTH_STRIDER", new String[] { "depth_strider" }, 3);
 	
 	/**
 	 * Increases the rate at which you mine/dig.
 	 */
-	public static final EnchantmentAdapter EFFICIENCY = new EnchantmentAdapter("EFFICIENCY", new String[] { "efficiency", "eff", "haste", "dig", "dig_speed" });
+	public static final EnchantmentAdapter EFFICIENCY = new EnchantmentAdapter("EFFICIENCY", new String[] { "efficiency", "eff", "haste", "dig", "dig_speed" }, 5);
 	
 	/**
 	 * Provides protection against fall damage.
 	 */
-	public static final EnchantmentAdapter FEATHER_FALLING = new EnchantmentAdapter("FEATHER_FALLING", new String[] { "feather_falling", "feather", "feather_fall", "fall", "fall_damage", "protection_fall" });
+	public static final EnchantmentAdapter FEATHER_FALLING = new EnchantmentAdapter("FEATHER_FALLING", new String[] { "feather_falling", "feather", "feather_fall", "fall", "fall_damage", "protection_fall" }, 4);
 	
 	/**
 	 * When attacking a target, has a chance to set them on fire.
 	 */
-	public static final EnchantmentAdapter FIRE_ASPECT = new EnchantmentAdapter("FIRE_ASPECT", new String[] { "fire_aspect", "fire" });
+	public static final EnchantmentAdapter FIRE_ASPECT = new EnchantmentAdapter("FIRE_ASPECT", new String[] { "fire_aspect", "fire" }, 2);
 	
 	/**
 	 * Provides protection against fire damage.
 	 */
-	public static final EnchantmentAdapter FIRE_PROTECTION = new EnchantmentAdapter("FIRE_PROTECTION", new String[] { "fire_protection", "fire_protect", "fire_prot", "burn_protection", "burn_protect", "burn_prot", "burn", "protection_fire" });
+	public static final EnchantmentAdapter FIRE_PROTECTION = new EnchantmentAdapter("FIRE_PROTECTION", new String[] { "fire_protection", "fire_protect", "fire_prot", "burn_protection", "burn_protect", "burn_prot", "burn", "protection_fire" }, 4);
 	
 	/**
 	 * Sets entities on fire when hit by arrows shot from a bow.
@@ -101,17 +111,21 @@ public class EnchantmentAdapter {
 	/**
 	 * Provides a chance of gaining extra loot when destroying blocks.
 	 */
-	public static final EnchantmentAdapter FORTUNE = new EnchantmentAdapter("FORTUNE", new String[] { "fortune", "loot_bonus_blocks" });
+	public static final EnchantmentAdapter FORTUNE = new EnchantmentAdapter("FORTUNE", new String[] { "fortune", "loot_bonus_blocks" }, 3);
 	
 	/**
 	 * Freezes any still water adjacent to ice / frost which player is walking on.
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
 	 */
-	public static final EnchantmentAdapter FROST_WALKER = new EnchantmentAdapter("FROST_WALKER", new String[] { "frost_walker", "frost" });
+	public static final EnchantmentAdapter FROST_WALKER = new EnchantmentAdapter("FROST_WALKER", new String[] { "frost_walker", "frost" }, 2, Version.V1_9);
 	
 	/**
 	 * Deals more damage to mobs that live in the ocean.
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_13 1.13}</p>
 	 */
-	public static final EnchantmentAdapter IMPALING = new EnchantmentAdapter("IMPALING", new String[] { "impaling" });
+	public static final EnchantmentAdapter IMPALING = new EnchantmentAdapter("IMPALING", new String[] { "impaling" }, 5, Version.V1_13);
 	
 	/**
 	 * Provides infinite arrows when shooting a bow.
@@ -121,82 +135,94 @@ public class EnchantmentAdapter {
 	/**
 	 * All damage to other targets will knock them back when hit.
 	 */
-	public static final EnchantmentAdapter KNOCKBACK = new EnchantmentAdapter("KNOCKBACK", new String[] { "knockback", "knock", "kback" });
+	public static final EnchantmentAdapter KNOCKBACK = new EnchantmentAdapter("KNOCKBACK", new String[] { "knockback", "knock", "kback" }, 2);
 	
 	/**
 	 * Provides a chance of gaining extra loot when killing monsters.
 	 */
-	public static final EnchantmentAdapter LOOTING = new EnchantmentAdapter("LOOTING", new String[] { "looting", "loot_bonus_mobs" });
+	public static final EnchantmentAdapter LOOTING = new EnchantmentAdapter("LOOTING", new String[] { "looting", "loot_bonus_mobs" }, 3);
 	
 	/**
 	 * Causes a thrown trident to return to the player who threw it.
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_13 1.13}</p>
 	 */
-	public static final EnchantmentAdapter LOYALTY = new EnchantmentAdapter("LOYALTY", new String[] { "loyalty", "loyal" });
+	public static final EnchantmentAdapter LOYALTY = new EnchantmentAdapter("LOYALTY", new String[] { "loyalty", "loyal" }, 3, Version.V1_13);
 	
 	/**
 	 * Decreases odds of catching worthless junk.
 	 */
-	public static final EnchantmentAdapter LUCK_OF_THE_SEA = new EnchantmentAdapter("LUCK_OF_THE_SEA", new String[] { "luck_of_the_sea", "luck_of_sea", "luck_sea", "sea_luck", "luck" });
+	public static final EnchantmentAdapter LUCK_OF_THE_SEA = new EnchantmentAdapter("LUCK_OF_THE_SEA", new String[] { "luck_of_the_sea", "luck_of_sea", "luck_sea", "sea_luck", "luck" }, 3);
 	
 	/**
 	 * Increases rate of fish biting your hook.
 	 */
-	public static final EnchantmentAdapter LURE = new EnchantmentAdapter("LURE", new String[] { "lure" });
+	public static final EnchantmentAdapter LURE = new EnchantmentAdapter("LURE", new String[] { "lure" }, 3);
 	
 	/**
 	 * Allows mending the item using experience orbs.
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
 	 */
-	public static final EnchantmentAdapter MENDING = new EnchantmentAdapter("MENDING", new String[] { "mending", "mend" });
+	public static final EnchantmentAdapter MENDING = new EnchantmentAdapter("MENDING", new String[] { "mending", "mend" }, 1, Version.V1_9);
 	
 	/**
 	 * Shoot multiple arrows from crossbows.
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_14 1.14}</p>
 	 */
-	public static final EnchantmentAdapter MULTISHOT = new EnchantmentAdapter("MULTISHOT", new String[] { "multishot", "mshot" });
+	public static final EnchantmentAdapter MULTISHOT = new EnchantmentAdapter("MULTISHOT", new String[] { "multishot", "mshot" }, 1, Version.V1_14);
 	
 	/**
 	 * Crossbow projectiles pierce entities.
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_14 1.14}</p>
 	 */
-	public static final EnchantmentAdapter PIERCING = new EnchantmentAdapter("PIERCING", new String[] { "piercing" });
+	public static final EnchantmentAdapter PIERCING = new EnchantmentAdapter("PIERCING", new String[] { "piercing" }, 4, Version.V1_14);
 	
 	/**
 	 * Provides extra damage when shooting arrows from bows.
 	 */
-	public static final EnchantmentAdapter POWER = new EnchantmentAdapter("POWER", new String[] { "power", "pow", "arrow_damage" });
+	public static final EnchantmentAdapter POWER = new EnchantmentAdapter("POWER", new String[] { "power", "pow", "arrow_damage" }, 5);
 	
 	/**
 	 * Provides protection against projectile damage.
 	 */
-	public static final EnchantmentAdapter PROJECTILE_PROTECTION = new EnchantmentAdapter("PROJECTILE_PROTECTION", new String[] { "projectile_protection", "projectile_protect", "projectile_prot", "proj_protection", "proj_protect", "proj_prot", "projectiles", "proj", "protection_projectile" });
+	public static final EnchantmentAdapter PROJECTILE_PROTECTION = new EnchantmentAdapter("PROJECTILE_PROTECTION", new String[] { "projectile_protection", "projectile_protect", "projectile_prot", "proj_protection", "proj_protect", "proj_prot", "projectiles", "proj", "protection_projectile" }, 4);
 	
 	/**
 	 * Provides protection against environmental damage.
 	 */
-	public static final EnchantmentAdapter PROTECTION = new EnchantmentAdapter("PROTECTION", new String[] { "protection", "protect", "prot", "protection_environmental" });
+	public static final EnchantmentAdapter PROTECTION = new EnchantmentAdapter("PROTECTION", new String[] { "protection", "protect", "prot", "protection_environmental" }, 4);
 	
 	/**
 	 * Provides a knockback when an entity is hit by an arrow from a bow.
 	 */
-	public static final EnchantmentAdapter PUNCH = new EnchantmentAdapter("PUNCH", new String[] { "punch", "arrow_knockback" });
+	public static final EnchantmentAdapter PUNCH = new EnchantmentAdapter("PUNCH", new String[] { "punch", "arrow_knockback" }, 2);
 	
 	/**
 	 * Charges crossbows quickly.
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_14 1.14}</p>
 	 */
-	public static final EnchantmentAdapter QUICK_CHARGE = new EnchantmentAdapter("QUICK_CHARGE", new String[] { "quick_charge", "quick", "charge" });
+	public static final EnchantmentAdapter QUICK_CHARGE = new EnchantmentAdapter("QUICK_CHARGE", new String[] { "quick_charge", "quick", "charge" }, 3, Version.V1_14);
 	
 	/**
 	 * Decreases the rate of air loss whilst underwater.
 	 */
-	public static final EnchantmentAdapter RESPIRATION = new EnchantmentAdapter("RESPIRATION", new String[] { "respiration", "resp", "o2", "oxygen" });
+	public static final EnchantmentAdapter RESPIRATION = new EnchantmentAdapter("RESPIRATION", new String[] { "respiration", "resp", "o2", "oxygen" }, 3);
 	
 	/**
 	 * When it is rainy, launches the player in the direction their trident is thrown.
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_13 1.13}</p>
 	 */
-	public static final EnchantmentAdapter RIPTIDE = new EnchantmentAdapter("RIPTIDE", new String[] { "riptide", "riptiding" });
+	public static final EnchantmentAdapter RIPTIDE = new EnchantmentAdapter("RIPTIDE", new String[] { "riptide", "riptiding" }, 3, Version.V1_13);
 	
 	/**
 	 * Increases damage against all targets.
 	 */
-	public static final EnchantmentAdapter SHARPNESS = new EnchantmentAdapter("SHARPNESS", new String[] { "sharpness", "sharp", "damage_all" });
+	public static final EnchantmentAdapter SHARPNESS = new EnchantmentAdapter("SHARPNESS", new String[] { "sharpness", "sharp", "damage_all" }, 5);
 	
 	/**
 	 * Allows blocks to drop themselves instead of fragments (for example, stone instead of cobblestone).
@@ -206,49 +232,71 @@ public class EnchantmentAdapter {
 	/**
 	 * Increases damage against undead targets.
 	 */
-	public static final EnchantmentAdapter SMITE = new EnchantmentAdapter("SMITE", new String[] { "smite", "undead", "damage_undead" });
+	public static final EnchantmentAdapter SMITE = new EnchantmentAdapter("SMITE", new String[] { "smite", "undead", "damage_undead" }, 5);
 	
 	/**
 	 * Walk quicker on soul blocks.
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_16 1.16}</p>
 	 */
-	public static final EnchantmentAdapter SOUL_SPEED = new EnchantmentAdapter("SOUL_SPEED", new String[] { "soul_speed", "soul", "soul_sp" });
+	public static final EnchantmentAdapter SOUL_SPEED = new EnchantmentAdapter("SOUL_SPEED", new String[] { "soul_speed", "soul", "soul_sp" }, 3, Version.V1_16);
 	
 	/**
 	 * Increases damage against targets when using a sweep attack.
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_11_1 1.11.1}</p>
 	 */
-	public static final EnchantmentAdapter SWEEPING_EDGE = new EnchantmentAdapter("SWEEPING_EDGE", new String[] { "sweeping_edge", "sweeping" });
+	public static final EnchantmentAdapter SWEEPING_EDGE = new EnchantmentAdapter("SWEEPING_EDGE", new String[] { "sweeping_edge", "sweeping" }, 3, Version.V1_11_1);
 	
 	/**
 	 * Walk quicker while sneaking.
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_19 1.19}</p>
 	 */
-	public static final EnchantmentAdapter SWIFT_SNEAK = new EnchantmentAdapter("SWIFT_SNEAK", new String[] { "swift_sneak", "swift", "sneak" });
+	public static final EnchantmentAdapter SWIFT_SNEAK = new EnchantmentAdapter("SWIFT_SNEAK", new String[] { "swift_sneak", "swift", "sneak" }, 3, Version.V1_19);
 	
 	/**
 	 * Damages the attacker.
 	 */
-	public static final EnchantmentAdapter THORNS = new EnchantmentAdapter("THORNS", new String[] { "thorns" });
+	public static final EnchantmentAdapter THORNS = new EnchantmentAdapter("THORNS", new String[] { "thorns" }, 3);
 	
 	/**
 	 * Decreases the rate at which a tool looses durability.
 	 */
-	public static final EnchantmentAdapter UNBREAKING = new EnchantmentAdapter("UNBREAKING", new String[] { "unbreaking", "durability" });
+	public static final EnchantmentAdapter UNBREAKING = new EnchantmentAdapter("UNBREAKING", new String[] { "unbreaking", "durability" }, 3);
 	
 	/**
 	 * Item disappears instead of dropping.
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_11 1.11}</p>
 	 */
-	public static final EnchantmentAdapter VANISHING_CURSE = new EnchantmentAdapter("VANISHING_CURSE", new String[] { "vanishing_curse", "vanishing", "vanish_curse" });
+	public static final EnchantmentAdapter VANISHING_CURSE = new EnchantmentAdapter("VANISHING_CURSE", new String[] { "vanishing_curse", "vanishing", "vanish_curse" }, 1, Version.V1_11);
 	
 	/**
 	 * Emits wind burst upon hitting enemy.
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_20_5 1.20.5}</p>
 	 */
-	public static final EnchantmentAdapter WIND_BURST = new EnchantmentAdapter("WIND_BURST", new String[] { "wind_burst", "wind" });
-	private static final EnchantmentAdapter[] VALUES = new EnchantmentAdapter[] { AQUA_AFFINITY, BANE_OF_ARTHROPODS, BINDING_CURSE, BLAST_PROTECTION, BREACH, CHANNELING, DENSITY,DEPTH_STRIDER, EFFICIENCY, FEATHER_FALLING, FIRE_ASPECT, FIRE_PROTECTION, FLAME, FORTUNE, FROST_WALKER, IMPALING, INFINITY, KNOCKBACK, LOOTING, LOYALTY, LUCK_OF_THE_SEA, LURE, MENDING, MULTISHOT, PIERCING, POWER, PROJECTILE_PROTECTION, PROTECTION, PUNCH, QUICK_CHARGE, RESPIRATION, RIPTIDE, SHARPNESS, SILK_TOUCH, SMITE, SOUL_SPEED, SWEEPING_EDGE, SWIFT_SNEAK, THORNS, UNBREAKING, VANISHING_CURSE, WIND_BURST };
+	public static final EnchantmentAdapter WIND_BURST = new EnchantmentAdapter("WIND_BURST", new String[] { "wind_burst", "wind" }, 3, Version.V1_20_5);
+	private static final EnchantmentAdapter[] VALUES = new EnchantmentAdapter[] { AQUA_AFFINITY, BANE_OF_ARTHROPODS, BINDING_CURSE, BLAST_PROTECTION, BREACH, CHANNELING, DENSITY, DEPTH_STRIDER, EFFICIENCY, FEATHER_FALLING, FIRE_ASPECT, FIRE_PROTECTION, FLAME, FORTUNE, FROST_WALKER, IMPALING, INFINITY, KNOCKBACK, LOOTING, LOYALTY, LUCK_OF_THE_SEA, LURE, MENDING, MULTISHOT, PIERCING, POWER, PROJECTILE_PROTECTION, PROTECTION, PUNCH, QUICK_CHARGE, RESPIRATION, RIPTIDE, SHARPNESS, SILK_TOUCH, SMITE, SOUL_SPEED, SWEEPING_EDGE, SWIFT_SNEAK, THORNS, UNBREAKING, VANISHING_CURSE, WIND_BURST };
 	private String name;
 	private String[] aliases;
+	private int maximumLevel;
+	private Version minimumVersion;
 	
 	private EnchantmentAdapter(String name, String[] aliases) {
+		this(name, aliases, 1);
+	}
+	
+	private EnchantmentAdapter(String name, String[] aliases, int maximumLevel) {
+		this(name, aliases, maximumLevel, null);
+	}
+	
+	private EnchantmentAdapter(String name, String[] aliases, int maximumLevel, Version minimumVersion) {
 		this.name = name;
 		this.aliases = aliases;
+		this.maximumLevel = maximumLevel;
+		this.minimumVersion = minimumVersion;
 	}
 	
 	/**
@@ -318,6 +366,36 @@ public class EnchantmentAdapter {
 	}
 	
 	/**
+	 * Gets the maximum Vanilla level for this enchantment.
+	 * 
+	 * @return Enchantment's maximum level
+	 */
+	public int getMaximumLevel() {
+		return maximumLevel;
+	}
+	
+	/**
+	 * Gets the minimum supported version for this enchantment.
+	 * 
+	 * <p>Will return <code>null</code> if all versions
+	 * supported by ChatPlugin support this enchantment.</p>
+	 * 
+	 * @return Enchantment's minimum version
+	 */
+	public @Nullable(why = "Null if all versions support this enchantment") Version getMinimumVersion() {
+		return minimumVersion;
+	}
+	
+	/**
+	 * Checks if this enchantment is supported on {@link VersionUtils#getVersion()}.
+	 * 
+	 * @return Whether this enchantment is supported
+	 */
+	public boolean isSupported() {
+		return minimumVersion == null || VersionUtils.getVersion().isAtLeast(minimumVersion);
+	}
+	
+	/**
 	 * Equivalent of <code>Enum#valueOf(String)</code>,
 	 * with the only difference that instead of throwing
 	 * {@link IllegalArgumentException} <code>null</code>
@@ -352,13 +430,15 @@ public class EnchantmentAdapter {
 	/**
 	 * Gets the enchantments' Vanilla names.
 	 * 
+	 * @param onlySupported Whether to only include {@linkplain #isSupported() supported} enchantments
 	 * @return Enchantments' Vanilla names
 	 */
-	public static List<String> getVanillaNames() {
+	public static List<String> getVanillaNames(boolean onlySupported) {
 		List<String> list = new ArrayList<>();
 		
 		for (EnchantmentAdapter enchantment : values())
-			list.add(enchantment.getAliases()[0]);
+			if (!onlySupported || enchantment.isSupported())
+				list.add(enchantment.getAliases()[0]);
 		return list;
 	}
 	

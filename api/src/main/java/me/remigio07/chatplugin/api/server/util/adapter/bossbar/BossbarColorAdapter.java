@@ -44,14 +44,14 @@ public class BossbarColorAdapter {
 	/**
 	 * Displays a blue color.
 	 * 
-	 * <p><strong>Minimum version:</strong> {@link Version#V1_9}</p>
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
 	 */
 	public static final BossbarColorAdapter BLUE = new BossbarColorAdapter("BLUE");
 	
 	/**
 	 * Displays a green color.
 	 * 
-	 * <p><strong>Minimum version:</strong> {@link Version#V1_9}</p>
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
 	 */
 	public static final BossbarColorAdapter GREEN = new BossbarColorAdapter("GREEN");
 	
@@ -63,28 +63,28 @@ public class BossbarColorAdapter {
 	/**
 	 * Displays a purple color.
 	 * 
-	 * <p><strong>Minimum version:</strong> {@link Version#V1_9}</p>
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
 	 */
 	public static final BossbarColorAdapter PURPLE = new BossbarColorAdapter("PURPLE");
 	
 	/**
 	 * Displays a red color.
 	 * 
-	 * <p><strong>Minimum version:</strong> {@link Version#V1_9}</p>
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
 	 */
 	public static final BossbarColorAdapter RED = new BossbarColorAdapter("RED");
 	
 	/**
 	 * Displays a white color.
 	 * 
-	 * <p><strong>Minimum version:</strong> {@link Version#V1_9}</p>
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
 	 */
 	public static final BossbarColorAdapter WHITE = new BossbarColorAdapter("WHITE");
 	
 	/**
 	 * Displays a yellow color.
 	 * 
-	 * <p><strong>Minimum version:</strong> {@link Version#V1_9}</p>
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
 	 */
 	public static final BossbarColorAdapter YELLOW = new BossbarColorAdapter("YELLOW");
 	
@@ -163,9 +163,9 @@ public class BossbarColorAdapter {
 	}
 	
 	/**
-	 * Checks if this color is supported on {@link VersionUtils#getVersion()}.
+	 * Checks if this bossbar color is supported on {@link VersionUtils#getVersion()}.
 	 * 
-	 * @return Whether this color is supported
+	 * @return Whether this bossbar color is supported
 	 */
 	public boolean isSupported() {
 		return VersionUtils.getVersion().isAtLeast(Version.V1_9) || this == PINK || this == RANDOM;

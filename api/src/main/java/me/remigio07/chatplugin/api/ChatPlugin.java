@@ -40,6 +40,8 @@ public abstract class ChatPlugin {
 	/**
 	 * String containing the plugin's current version.
 	 * 
+	 * <p>This string follows <a href="https://semver.org/">Semantic Versioning</a>.</p>
+	 * 
 	 * <p><strong>Content:</strong> 🤷</p>
 	 */
 	public static final String VERSION;
@@ -56,7 +58,7 @@ public abstract class ChatPlugin {
 			scanner.nextLine();
 			
 			String version = scanner.nextLine();
-			VERSION = version.substring(10, version.indexOf('\'', 10));
+			VERSION = version.substring(10, version.length() - 1);
 		}
 	}
 	

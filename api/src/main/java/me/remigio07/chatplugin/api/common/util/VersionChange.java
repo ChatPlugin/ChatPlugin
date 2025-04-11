@@ -113,15 +113,20 @@ public enum VersionChange {
 	 * Gets the version change by comparing
 	 * the specified version to another one.
 	 * 
-	 * <p>Will return {@link #NULL} if the two versions match.</p>
+	 * <p>Will return {@link #NULL} if the two versions match.
+	 * Modifiers (like "-SNAPSHOT") will not be considered.</p>
 	 * 
 	 * @param version Version to compare
 	 * @param newVersion New version to compare
 	 * @return Current version change
-	 * @throws ArrayIndexOutOfBoundsException If specified versions do not follow semantic versioning
-	 * @throws NumberFormatException If specified versions do not follow semantic versioning
+	 * @throws IndexOutOfBoundsException If specified versions do not follow <a href="https://semver.org/">Semantic Versioning</a>
+	 * @throws NumberFormatException If specified versions do not follow <a href="https://semver.org/">Semantic Versioning</a>
 	 */
 	public static VersionChange getVersionChange(String version, String newVersion) {
+		if (version.contains("-"))
+			version = version.substring(0, version.indexOf('-'));
+		if (newVersion.contains("-"))
+			newVersion = newVersion.substring(0, newVersion.indexOf('-'));
 		if (!version.equals(newVersion)) {
 			String[] numbers = version.split("\\.");
 			String[] newNumbers = newVersion.split("\\.");
@@ -143,18 +148,19 @@ public enum VersionChange {
 	 * Gets the version change by comparing the version
 	 * in the specified configuration to another one.
 	 * 
-	 * <p>Will return {@link #NULL} if the two versions match.</p>
+	 * <p>Will return {@link #NULL} if the two versions match.
+	 * Modifiers (like "-SNAPSHOT") will not be considered.</p>
 	 * 
 	 * @param configuration Configuration to check
 	 * @param path Path containing the version to compare
 	 * @param newVersion New version to compare
 	 * @return Current version change
-	 * @throws ArrayIndexOutOfBoundsException If specified versions do not follow semantic versioning
-	 * @throws NumberFormatException If specified versions do not follow semantic versioning
+	 * @throws IndexOutOfBoundsException If specified versions do not follow <a href="https://semver.org/">Semantic Versioning</a>
+	 * @throws NumberFormatException If specified versions do not follow <a href="https://semver.org/">Semantic Versioning</a>
 	 */
 	@NotNull
 	public static VersionChange getVersionChange(Configuration configuration, String path, String newVersion) {
-		return getVersionChange(configuration.getString(path, "0.0.1"), newVersion);
+		return getVersionChange(configuration.getString(path, "0.0.1"), newVersion); // according to SemVer, 0.1.0 should be a program's first version, but here we use 0.0.1 as default just in case
 	}
 	
 }

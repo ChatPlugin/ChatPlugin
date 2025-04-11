@@ -42,11 +42,11 @@ public class BroadcastRawCommand extends BaseCommand {
 		if (args.length == 0) {
 			sendUsage(sender, language);
 			return;
-		} String message = String.join(" ", args);
+		} String message = ChatColor.translate(String.join(" ", args));
 		
 		for (ChatPluginServerPlayer player : ServerPlayerManager.getInstance().getPlayers().values())
-			player.sendMessage(ChatColor.translate(message));
-		ChatPlugin.getInstance().sendConsoleMessage(ChatColor.translate(message), true);
+			player.sendMessage(message);
+		ChatPlugin.getInstance().sendConsoleMessage(message, true);
 	}
 	
 }

@@ -19,9 +19,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
-import me.remigio07.chatplugin.api.common.player.ChatPluginPlayer;
+import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
+import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.util.adapter.user.CommandSenderAdapter;
 import me.remigio07.chatplugin.server.command.BaseCommand;
 
@@ -41,13 +42,13 @@ public class BroadcastCommand extends BaseCommand {
 		if (args.length == 0) {
 			sendUsage(sender, language);
 			return;
-		} String message = String.join(" ", args);
+		} String message = ChatColor.translate(String.join(" ", args));
 		
 		for (Language language2 : LanguageManager.getInstance().getLanguages()) {
-			String msg = language2.getMessage("chat.broadcast-format.local", message);
+			String message2 = language2.getMessage("chat.broadcast-format.local", message);
 			
-			for (ChatPluginPlayer player : language2.getOnlinePlayers())
-				player.sendMessage(msg);
+			for (ChatPluginServerPlayer player : language2.getOnlinePlayers())
+				player.sendMessage(message2);
 		} ChatPlugin.getInstance().sendConsoleMessage(Language.getMainLanguage().getMessage("chat.broadcast-format.local", message), true);
 	}
 	

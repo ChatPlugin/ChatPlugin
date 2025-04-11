@@ -26,10 +26,10 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
-import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.server.integration.placeholder.PlaceholderIntegration;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.server.bukkit.integration.ChatPluginBukkitIntegration;
@@ -78,6 +78,11 @@ public class PlaceholderAPIIntegration extends ChatPluginBukkitIntegration<Place
 		}
 		
 		@Override
+		public boolean persist() {
+			return true;
+		}
+		
+		@Override
 		public List<String> getPlaceholders() {
 			return Stream.concat(
 					Stream.of(PlaceholderType.PLAYER.getPlaceholders()),
@@ -94,8 +99,8 @@ public class PlaceholderAPIIntegration extends ChatPluginBukkitIntegration<Place
 		public String onRequest(org.bukkit.OfflinePlayer offlinePlayer, String identifier) {
 			if (offlinePlayer == null)
 				return PlaceholderManager.getInstance().translateServerPlaceholders('{' + identifier + '}', Language.getMainLanguage());
-			ChatPluginServerPlayer player = (ChatPluginServerPlayer) PlayerManager.getInstance().getPlayer(offlinePlayer.getUniqueId());
-			return player == null ? "§f" + offlinePlayer.getName() + " §cis not loaded." : PlaceholderManager.getInstance().translatePlaceholders('{' + identifier + '}', player, Arrays.asList(PlaceholderType.getPlaceholderType(identifier)));
+			ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(offlinePlayer.getUniqueId());
+			return player == null ? "§f" + offlinePlayer.getName() + " §cis not loaded.§r" : PlaceholderManager.getInstance().translatePlaceholders('{' + identifier + '}', player, Arrays.asList(PlaceholderType.getPlaceholderType(identifier)));
 		}
 		
 	}

@@ -18,6 +18,7 @@ package me.remigio07.chatplugin.api.server.integration.economy;
 import me.remigio07.chatplugin.api.common.integration.ChatPluginIntegration;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
+import me.remigio07.chatplugin.api.common.util.Utils;
 
 /**
  * Represents a {@link ChatPluginIntegration} able to check an {@link OfflinePlayer}'s balance.
@@ -29,12 +30,24 @@ public interface EconomyIntegration extends ChatPluginIntegration {
 	/**
 	 * Gets an offline player's balance.
 	 * 
-	 * <p>Returns {@link Double#MIN_VALUE} if this integration
+	 * <p>Will return {@link Double#MIN_VALUE} if this integration
 	 * is not able to provide the player's balance.</p>
 	 * 
 	 * @param player Offline player to check
 	 * @return Player's balance
 	 */
 	public double getBalance(OfflinePlayer player);
+	
+	/**
+	 * Formats the specified amount of money
+	 * based on this integration's settings.
+	 * 
+	 * <p>Will return {@link Utils#NOT_APPLICABLE} if this
+	 * integration is not able to provide the balance's format.</p>
+	 * 
+	 * @param balance Balance to format
+	 * @return Formatted balance
+	 */
+	public String formatBalance(double balance);
 	
 }

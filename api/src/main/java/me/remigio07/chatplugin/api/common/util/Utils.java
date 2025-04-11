@@ -255,28 +255,6 @@ public class Utils {
 	}
 	
 	/**
-	 * Formats the specified balance to a certain approximation like the following:
-	 * 	<ul>
-	 * 		<li>1,500 ➝ 1.5K</li>
-	 * 		<li>1,500,000 ➝ 1.5M</li>
-	 * 		<li>1,500,000 ➝ 1.5B</li>
-	 * 	</ul>
-	 * 
-	 * @param balance Balance to format
-	 * @param decimalPlaces Decimal places to keep
-	 * @return Formatted balance
-	 */
-	public static String formatBalance(double balance, int decimalPlaces) {
-		if (balance >= 1000000000)
-			return String.valueOf(truncate(balance / 1000000000, decimalPlaces)) + 'B';
-		if (balance >= 1000000)
-			return String.valueOf(truncate(balance / 1000000, decimalPlaces)) + 'M';
-		if (balance >= 1000)
-			return String.valueOf(truncate(balance / 1000, decimalPlaces)) + 'K';
-		return String.valueOf(truncate(balance, decimalPlaces));
-	}
-	
-	/**
 	 * Converts the specified kilometers to miles.
 	 * 
 	 * <p>1 mi = 1609.344 m</p>

@@ -21,10 +21,10 @@ import be.maximvdw.placeholderapi.PlaceholderAPI;
 import be.maximvdw.placeholderapi.PlaceholderReplaceEvent;
 import be.maximvdw.placeholderapi.PlaceholderReplacer;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
-import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.server.integration.placeholder.PlaceholderIntegration;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
@@ -60,8 +60,8 @@ public class MVdWPlaceholderAPIIntegration extends ChatPluginBukkitIntegration<P
 				public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
 					if (event.getPlayer() == null)
 						return PlaceholderManager.getInstance().translateServerPlaceholders('{' + event.getPlaceholder() + '}', Language.getMainLanguage());
-					ChatPluginServerPlayer player = (ChatPluginServerPlayer) PlayerManager.getInstance().getPlayer(event.getPlayer().getUniqueId());
-					return player == null ? "§f" + event.getPlayer().getName() + " §cis not loaded." : event.isOnline() ? PlaceholderManager.getInstance().translatePlaceholders('{' + event.getPlaceholder() + '}', player, Arrays.asList(PlaceholderType.getPlaceholderType(event.getPlaceholder()))) : "§f" + player.getName() + " §cis offline.";
+					ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getPlayer().getUniqueId());
+					return player == null ? "§f" + event.getPlayer().getName() + " §cis not loaded.§r" : event.isOnline() ? PlaceholderManager.getInstance().translatePlaceholders('{' + event.getPlaceholder() + '}', player, Arrays.asList(PlaceholderType.getPlaceholderType(event.getPlaceholder()))) : "§f" + player.getName() + " §cis offline.§r";
 				}
 			});
 		}

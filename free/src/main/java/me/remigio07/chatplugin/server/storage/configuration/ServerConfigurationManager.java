@@ -147,8 +147,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		config.addDefault("settings.debug", false);
 		config.addDefault("settings.enable-update-notification", true);
-		config.addDefault("settings.log-command-blocks-commands", true);
 		config.addDefault("settings.enable-bstats-metrics", Environment.isBukkit());
+		config.addDefault("settings.log-command-blocks-commands", true);
 		config.addDefault("settings.truncate-version-string", true);
 		config.addDefault("settings.use-week-timestamp", false);
 		config.addDefault("settings.anticheat-integration.reasons-start-with", Arrays.asList("[Matrix]", "[Vulcan]"));
@@ -158,7 +158,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("settings.disabled-commands", Arrays.asList());
 		config.addDefault("settings.displayed-memory.unit", "MEGABYTE");
 		config.addDefault("settings.displayed-memory.decimals", 0);
-		config.addDefault("settings.balance-placeholder.decimals", 2);
 		
 		config.addDefault("multi-instance-mode.enabled", false);
 		config.addDefault("multi-instance-mode.proxy-online-mode", false);
@@ -1292,7 +1291,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		mainGUI.addDefault(path + "display-names.italian", "&d&lStato del server");
 		mainGUI.addDefault(path + "lores.english", Arrays.asList("&7OS: &f{server_os_name} {server_os_version}&7, Java: &f{server_java_version}", "&7Server: &f{server_version} (protocol: &f{server_version_protocol})", "&7ChatPlugin version: &f{plugin_version}", "&7Uptime: &f{uptime}", "&7TPS (1m, 5m, 15m): &f{tps_1_min_format}&f, {tps_5_min_format}&f, {tps_15_min_format}", "&7Used memory: &f{used_memory}/{max_memory} MB", "&7Allocated memory: &f{total_memory} MB&7, free: &f{free_memory} MB", "&7Current threads count: &f{active_threads}x", "&7Used storage: &f{used_storage}/{total_storage} GB", "&7Free storage: &f{free_storage} GB", "&7Enabled worlds: &f{enabled_worlds}x&7, &f{enabled_players} &7players", "&7Enabled managers: &f{enabled_managers}x", "&7Startup: &f{startup_time} ms&7, last reload: &f{last_reload_time} ms"));
 		mainGUI.addDefault(path + "lores.italian", Arrays.asList("&7OS: &f{server_os_name} {server_os_version}&7, Java: &f{server_java_version}", "&7Server: &f{server_version} (protocollo: &f{server_version_protocol})", "&7Versione ChatPlugin: &f{plugin_version}", "&7Uptime: &f{uptime}", "&7TPS (1m, 5m, 15m): &f{tps_1_min_format}&f, {tps_5_min_format}&f, {tps_15_min_format}", "&7Utilizzo memoria: &f{used_memory}/{max_memory} MB", "&7Memoria allocata: &f{total_memory} MB&7, libera: &f{free_memory} MB", "&7Conteggio threads attivi: &f{active_threads}x", "&7Storage utilizzato: &f{used_storage}/{total_storage} GB", "&7Storage libero: &f{free_storage} GB", "&7Mondi abilitati: &f{enabled_worlds}x&7, &f{enabled_players} &7giocatori", "&7Managers abilitati: &f{enabled_managers}x", "&7Startup: &f{startup_time} ms&7, ultimo reload: &f{last_reload_time} ms"));
-		mainGUI.addDefault(path + "material", Environment.isSponge() || VersionUtils.getVersion().isAtLeast(Version.V1_13) ? "COMMAND_BLOCK" : "COMMAND");
+		mainGUI.addDefault(path + "material", Environment.isSponge() || VersionUtils.getVersion().isAtLeast(Version.V1_13) ? "ENDER_EYE" : "EYE_OF_ENDER");
 		mainGUI.addDefault(path + "keep-open", true);
 		mainGUI.addDefault(path + "glowing", true);
 		mainGUI.addDefault(path + "x", 5);

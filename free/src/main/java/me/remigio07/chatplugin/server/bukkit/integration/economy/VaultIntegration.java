@@ -21,6 +21,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.integration.permission.PermissionIntegration;
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
+import me.remigio07.chatplugin.api.common.util.Utils;
 import me.remigio07.chatplugin.api.server.integration.economy.EconomyIntegration;
 import me.remigio07.chatplugin.server.bukkit.integration.ChatPluginBukkitIntegration;
 import net.milkbowl.vault.economy.Economy;
@@ -49,6 +50,11 @@ public class VaultIntegration extends ChatPluginBukkitIntegration<EconomyIntegra
 	@Override
 	public double getBalance(OfflinePlayer player) {
 		return api2 == null ? Double.MIN_VALUE : ((Economy) api2).getBalance(player.getName());
+	}
+	
+	@Override
+	public String formatBalance(double balance) {
+		return api2 == null ? Utils.NOT_APPLICABLE : ((Economy) api2).format(balance);
 	}
 	
 	@Override

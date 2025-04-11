@@ -15,10 +15,14 @@
 
 package me.remigio07.chatplugin.server.bukkit.integration.economy;
 
+import java.math.BigDecimal;
+
 import com.earth2me.essentials.Essentials;
+import com.earth2me.essentials.utils.NumberUtil;
 
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
+import me.remigio07.chatplugin.api.common.util.Utils;
 import me.remigio07.chatplugin.api.server.integration.economy.EconomyIntegration;
 import me.remigio07.chatplugin.server.bukkit.integration.ChatPluginBukkitIntegration;
 
@@ -30,7 +34,24 @@ public class EssentialsXIntegration extends ChatPluginBukkitIntegration<EconomyI
 	
 	@Override
 	public double getBalance(OfflinePlayer player) {
-		return ((Essentials) plugin).getUser(player.getUUID()).getMoney().doubleValue();
+		return isEcoDisabled() ? Double.MIN_VALUE : ((Essentials) plugin).getUser(player.getUUID()).getMoney().doubleValue();
+	}
+	
+	@Override
+	public String formatBalance(double balance) {
+		return isEcoDisabled() ? Utils.NOT_APPLICABLE : Bridge.formatBalance(balance, plugin);
+	}
+	
+	private boolean isEcoDisabled() {
+		return ((Essentials) plugin).getSettings().isEcoDisabled();
+	}
+	
+	private static class Bridge {
+		
+		public static String formatBalance(double balance, Object plugin) {
+			return NumberUtil.displayCurrency(BigDecimal.valueOf(balance), (Essentials) plugin);
+		}
+		
 	}
 	
 }

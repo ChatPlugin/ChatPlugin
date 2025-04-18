@@ -95,6 +95,9 @@ public class RankManagerImpl extends RankManager {
 		loadTime = System.currentTimeMillis() - ms;
 	}
 	
+	/**
+	 * @throws IllegalStateException
+	 */
 	public void loadRanks() {
 		long temp;
 		

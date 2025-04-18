@@ -43,6 +43,7 @@ import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.server.bukkit.BukkitReflection;
+import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 
 public class TablistManagerImpl extends TablistManager {
 	
@@ -112,13 +113,11 @@ public class TablistManagerImpl extends TablistManager {
 	
 	@Override
 	public void run() {
-		if (!enabled) // if (!enabled || (constructor == null && !Main.isSponge() && VersionUtils.getVersion().getProtocol() < 48)) TODO
-			return;
 		if (!enabled)
 			return;
 		switch (tablists.size()) {
 		case 0:
-			return;
+			break;
 		case 1:
 			timerIndex = 0;
 			break;
@@ -133,11 +132,13 @@ public class TablistManagerImpl extends TablistManager {
 				timerIndex = 0;
 			else timerIndex++;
 			break;
-		} Tablist tablist = tablists.get(timerIndex);
+		} Tablist tablist = timerIndex == -1 ? null : tablists.get(timerIndex);
 		
 		for (ChatPluginServerPlayer player : ServerPlayerManager.getInstance().getPlayers().values()) {
-			sendTablist(tablist, player);
+			if (tablist != null)
+				sendTablist(tablist, player);
 			CustomSuffixManager.getInstance().updateCustomSuffixes(player);
+			((BaseChatPluginServerPlayer) player).updatePlayerListName();
 		}
 	}
 	

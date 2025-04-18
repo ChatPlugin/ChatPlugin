@@ -29,6 +29,8 @@ import java.util.concurrent.TimeoutException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
@@ -36,11 +38,13 @@ import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector.WhereCondition;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector.WhereCondition.WhereOperator;
+import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
+import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.bossbar.BossbarManager;
 import me.remigio07.chatplugin.api.server.event.player.PlayerFirstJoinEvent;
 import me.remigio07.chatplugin.api.server.f3servername.F3ServerNameManager;
@@ -50,9 +54,12 @@ import me.remigio07.chatplugin.api.server.language.LanguageDetectionMethod;
 import me.remigio07.chatplugin.api.server.language.LanguageDetector;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.rank.RankManager;
+import me.remigio07.chatplugin.api.server.tablist.TablistManager;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.InventoryAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
+import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.server.bossbar.NativeBossbar;
 import me.remigio07.chatplugin.server.bossbar.ReflectionBossbar;
@@ -66,6 +73,7 @@ import net.kyori.adventure.title.Title.Times;
 
 public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
+	private static final int MAX_TEAM_TEXT_LENGTH = VersionUtils.getVersion().isAtLeast(Version.V1_20_1) ? Integer.MAX_VALUE : VersionUtils.getVersion().isAtLeast(Version.V1_13) ? 64 : 16;
 	private Player player;
 	private Object craftPlayer;
 	private Locale lastLocale;
@@ -208,6 +216,42 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	public void sendMessage(Component... components) {
 		for (Component component : components)
 			audience.sendMessage(component);
+	}
+	
+	public void updatePlayerListName() {
+		if (ConfigurationType.CONFIG.get().getBoolean("settings.register-scoreboards")) {
+			for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
+				((ChatPluginBukkitPlayer) other).setupTeams(this);
+				setupTeams(other);
+			} setupTeams(this);
+		} else setPlayerListName(
+				PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPrefixFormat(), this, TablistManager.getInstance().getPlaceholderTypes())
+				+ player.getName()
+				+ PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getSuffixFormat(), this, TablistManager.getInstance().getPlaceholderTypes())
+				);
+	}
+	
+	@SuppressWarnings("deprecation")
+	private void setupTeams(ChatPluginServerPlayer other) {
+		String prefix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPrefixFormat(), other, language, TablistManager.getInstance().getPlaceholderTypes());
+		String suffix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getSuffixFormat(), other, language, TablistManager.getInstance().getPlaceholderTypes());
+		Scoreboard scoreboard = objective.bukkitValue().getScoreboard();
+		Team team = scoreboard.getTeam(other.getRank().formatIdentifier(other));
+		
+		if (team == null)
+			team = scoreboard.registerNewTeam(other.getRank().formatIdentifier(other));
+		if (VersionUtils.getVersion().isAtLeast(Version.V1_12)) {
+			String lastColors = ChatColor.getLastColors(prefix);
+			
+			if (!lastColors.isEmpty())
+				team.setColor((lastColors.startsWith("§x") ? ChatColor.of(lastColors.substring(3, 14).replace("§", "")).getClosestDefaultColor() : ChatColor.getByChar(lastColors.charAt(1))).bukkitValue());
+		} team.setPrefix(prefix.length() > MAX_TEAM_TEXT_LENGTH ? me.remigio07.chatplugin.common.util.Utils.abbreviate(prefix, MAX_TEAM_TEXT_LENGTH, false) : prefix);
+		team.setSuffix(suffix.length() > MAX_TEAM_TEXT_LENGTH ? me.remigio07.chatplugin.common.util.Utils.abbreviate(suffix, MAX_TEAM_TEXT_LENGTH, false) : suffix);
+		team.addPlayer(other.toAdapter().bukkitValue());
+	}
+	
+	public void setPlayerListName(String name) {
+		player.setPlayerListName(name);
 	}
 	
 	@Override

@@ -27,25 +27,17 @@ import com.google.common.collect.ImmutableMap;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationMappings;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
-import me.remigio07.chatplugin.api.common.util.VersionUtils;
-import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.chat.HoverInfoManager;
 import me.remigio07.chatplugin.api.server.language.Language;
-import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
-import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.rank.Rank;
 import me.remigio07.chatplugin.api.server.rank.RankManager;
-import me.remigio07.chatplugin.api.server.tablist.TablistManager;
 import me.remigio07.chatplugin.api.server.util.adapter.user.CommandSenderAdapter;
-import me.remigio07.chatplugin.bootstrap.Environment;
-import me.remigio07.chatplugin.server.bukkit.manager.BukkitPlayerManager;
 import me.remigio07.chatplugin.server.chat.BaseHoverInfoManager;
 import me.remigio07.chatplugin.server.command.BaseCommand;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import me.remigio07.chatplugin.server.rank.RankManagerImpl;
-import me.remigio07.chatplugin.server.sponge.manager.SpongePlayerManager;
 import me.remigio07.chatplugin.server.util.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -331,32 +323,8 @@ public class RankCommand extends BaseCommand {
 									: language.getMessage("commands.rank.edit.set", args[2], rank.getID(), value.isEmpty() ? "\"\"" : args[2].endsWith("-color") ? value : ChatColor.translate(value, false))
 									);
 							
-							// refresh stuff
-							if (args[2].startsWith("descriptions.")) {
-								if (HoverInfoManager.getInstance().isEnabled())
-									((BaseHoverInfoManager) HoverInfoManager.getInstance()).loadRanksDescriptions();
-							} else if (TablistManager.getInstance().isEnabled()) {
-								String placeholder = '{' + (args[2].equals("display-name") ? "rank_" : "") + args[2].replace('.', '_').replace('-', '_') + '}';
-								
-								// this is horrible, but kinda required; maybe I could merge the setupTeams and the logic in loadPlayer(...) (BukkitPlayerManager, SpongePlayerManager)...?
-								if (TablistManager.getInstance().getPrefixFormat().contains(placeholder) || TablistManager.getInstance().getSuffixFormat().contains(placeholder))
-									for (ChatPluginServerPlayer player : ServerPlayerManager.getInstance().getPlayers().values()) {
-										boolean longTeams = VersionUtils.getVersion().isAtLeast(Version.V1_13) && player.getVersion().isAtLeast(Version.V1_13);
-										// also, we could probably update concerned ranks only
-										for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
-											if (!player.equals(other))
-												if (Environment.isBukkit()) {
-													((BukkitPlayerManager) ServerPlayerManager.getInstance()).setupTeams(player, other, longTeams);
-													((BukkitPlayerManager) ServerPlayerManager.getInstance()).setupTeams(other, player, longTeams);
-												} else {
-													((SpongePlayerManager) ServerPlayerManager.getInstance()).setupTeams(player, other);
-													((SpongePlayerManager) ServerPlayerManager.getInstance()).setupTeams(other, player);
-												}
-										} if (Environment.isBukkit())
-											((BukkitPlayerManager) ServerPlayerManager.getInstance()).setupTeams(player, player, longTeams);
-										else ((SpongePlayerManager) ServerPlayerManager.getInstance()).setupTeams(player, player);
-									}
-							}
+							if (HoverInfoManager.getInstance().isEnabled() && args[2].startsWith("descriptions."))
+								((BaseHoverInfoManager) HoverInfoManager.getInstance()).loadRanksDescriptions();
 						} catch (IllegalStateException ise) {
 							sender.sendMessage(language.getMessage("commands.rank.edit.out-of-sync", ise.getMessage()));
 						}

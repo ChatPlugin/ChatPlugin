@@ -51,6 +51,28 @@ public class SpongeReflection {
 			classes.put("NetHandlerPlayServer", clazz);
 			putMethod(clazz, "func_147359_a", Arrays.asList(classes.get("Packet")));
 			
+			// ServerStatusResponse$Version
+			clazz = getClass(VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "network.ServerStatusResponse$Version" : "network.ServerStatusResponse$MinecraftProtocolVersionIdentifier");
+			classes.put("ServerStatusResponse$Version", clazz);
+			
+			// ServerStatusResponse
+			clazz = getClass("network.ServerStatusResponse");
+			classes.put("ServerStatusResponse", clazz);
+			putMethod(clazz, "func_151321_a", Arrays.asList(classes.get("ServerStatusResponse$Version")));
+			
+			// Action
+			clazz = getClass("network.play.server." + (VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "SPacketPlayerListItem" : "S38PacketPlayerListItem") + "$Action");
+			classes.put("Action", clazz);
+			
+			// SpongeTabListEntry
+			clazz = Class.forName("org.spongepowered.common.entity.player.tab.SpongeTabListEntry");
+			classes.put("SpongeTabListEntry", clazz);
+			putMethod(clazz, "sendUpdate", Arrays.asList(classes.get("Action")));
+			
+			// in the end, we didn't even need it, but let's leave it for the future, just in case :)
+			// due to Sponge's code (see SpongeTabListEntry#updateWithoutSend()) sometimes entries are not automatically updated
+			// SpongeReflection.invokeMethod("SpongeTabListEntry", "sendUpdate", entry, SpongeReflection.getEnum("Action", "UPDATE_DISPLAY_NAME"));
+			
 			if (VersionUtils.getVersion().isAtLeast(Version.V1_12)) {
 				// SPacketOpenWindow
 				clazz = getClass("network.play.server.SPacketOpenWindow");
@@ -73,15 +95,6 @@ public class SpongeReflection {
 				classes.put("ITextComponent$Serializer", clazz);
 				putMethod(clazz, "func_150699_a", Arrays.asList(String.class));
 			}
-			
-			// ServerStatusResponse$Version
-			clazz = getClass(VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "network.ServerStatusResponse$Version" : "network.ServerStatusResponse$MinecraftProtocolVersionIdentifier");
-			classes.put("ServerStatusResponse$Version", clazz);
-			
-			// ServerStatusResponse
-			clazz = getClass("network.ServerStatusResponse");
-			classes.put("ServerStatusResponse", clazz);
-			putMethod(clazz, "func_151321_a", Arrays.asList(classes.get("ServerStatusResponse$Version")));
 		} catch (ClassNotFoundException | NoSuchMethodException e) {
 			throw new ChatPluginManagerException("reflection utils", e);
 		}
@@ -99,7 +112,10 @@ public class SpongeReflection {
 		
 		for (String attempt : attempts) {
 			try {
-				map.put(method, clazz.getMethod(attempt, parameters.toArray(new Class<?>[0])));
+				Method declaredMethod = clazz.getDeclaredMethod(attempt, parameters.toArray(new Class<?>[0]));
+				
+				declaredMethod.setAccessible(true);
+				map.put(method, declaredMethod);
 				break;
 			} catch (NoSuchMethodException e) {
 				

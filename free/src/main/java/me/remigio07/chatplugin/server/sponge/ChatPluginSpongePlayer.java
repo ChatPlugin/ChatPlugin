@@ -29,7 +29,12 @@ import org.spongepowered.api.effect.sound.SoundType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.scoreboard.Scoreboard;
+import org.spongepowered.api.scoreboard.Team;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.title.Title;
+
+import com.google.common.collect.Iterables;
 
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
@@ -37,11 +42,13 @@ import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector.WhereCondition;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector.WhereCondition.WhereOperator;
+import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
+import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.bossbar.BossbarManager;
 import me.remigio07.chatplugin.api.server.event.player.PlayerFirstJoinEvent;
 import me.remigio07.chatplugin.api.server.join_quit.AccountCheckManager;
@@ -50,9 +57,12 @@ import me.remigio07.chatplugin.api.server.language.LanguageDetectionMethod;
 import me.remigio07.chatplugin.api.server.language.LanguageDetector;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.rank.RankManager;
+import me.remigio07.chatplugin.api.server.tablist.TablistManager;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.InventoryAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
+import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.server.bossbar.NativeBossbar;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
@@ -197,6 +207,60 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	public void sendMessage(Component... components) {
 		for (Component component : components)
 			audience.sendMessage(component);
+	}
+	
+	@Override
+	public void updatePlayerListName() {
+		if (ConfigurationType.CONFIG.get().getBoolean("settings.register-scoreboards")) {
+			for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
+				((ChatPluginSpongePlayer) other).setupTeams(this);
+				setupTeams(other);
+			} setupTeams(this);
+		} else {
+			for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
+				((ChatPluginSpongePlayer) other).setPlayerListName(this);
+				setPlayerListName(other);
+			} setPlayerListName(this);
+		}
+	}
+	
+	private void setupTeams(ChatPluginServerPlayer other) {
+		String prefix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPrefixFormat(), other, language, TablistManager.getInstance().getPlaceholderTypes());
+		String suffix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getSuffixFormat(), other, language, TablistManager.getInstance().getPlaceholderTypes());
+		Scoreboard scoreboard = Iterables.getFirst(objective.spongeValue().getScoreboards(), null);
+		Team team = scoreboard.getTeam(other.getRank().formatIdentifier(other)).orElse(null);
+		
+		if (team == null) // specifying the following in orElse(...) would build a team every time
+			team = Team.builder().name(other.getRank().formatIdentifier(other)).build();
+		
+		// not future-proof (Sponge v8/1.13+)
+		if (prefix.contains(" ")) {
+			int index = prefix.lastIndexOf(' ');
+			
+			if (index != prefix.length() - 1) {
+				String str = prefix.substring(index + 1);
+				
+				if (ChatColor.stripColor(ChatColor.translate(str)).isEmpty())
+					prefix = prefix.substring(0, index) + str + " ";
+			}
+		} team.setPrefix(Utils.serializeSpongeText(prefix.length() > 16 ? me.remigio07.chatplugin.common.util.Utils.abbreviate(prefix, 16, false) : prefix, false));
+		team.setSuffix(Utils.serializeSpongeText(suffix.length() > 16 ? me.remigio07.chatplugin.common.util.Utils.abbreviate(suffix, 16, false) : suffix, false));
+		team.addMember(Utils.serializeSpongeText(other.toAdapter().spongeValue().getName(), false));
+		
+		if (!team.getScoreboard().isPresent())
+			scoreboard.registerTeam(team);
+	}
+	
+	private void setPlayerListName(ChatPluginServerPlayer other) {
+		setPlayerListName(other, Utils.serializeSpongeText(
+				PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPrefixFormat(), other, language, TablistManager.getInstance().getPlaceholderTypes())
+				+ other.getName()
+				+ PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getSuffixFormat(), other, language, TablistManager.getInstance().getPlaceholderTypes()),
+				false));
+	}
+	
+	public void setPlayerListName(ChatPluginServerPlayer other, Text name) {
+		player.getTabList().getEntry(other.getUUID()).get().setDisplayName(name);
 	}
 	
 	@Override

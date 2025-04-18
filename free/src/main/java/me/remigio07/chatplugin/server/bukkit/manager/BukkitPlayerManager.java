@@ -41,6 +41,7 @@ import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
+import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
@@ -65,7 +66,6 @@ import me.remigio07.chatplugin.api.server.tablist.TablistManager;
 import me.remigio07.chatplugin.api.server.tablist.custom_suffix.CustomSuffixManager;
 import me.remigio07.chatplugin.api.server.tablist.custom_suffix.RenderType;
 import me.remigio07.chatplugin.api.server.util.adapter.scoreboard.ObjectiveAdapter;
-import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07.chatplugin.server.bukkit.BukkitReflection;
@@ -162,53 +162,48 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 		} file.delete();
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public int loadPlayer(PlayerAdapter player) {
 		if (players.containsKey(player.getUUID()))
 			return 0;
 		long ms = System.currentTimeMillis();
-		Player bukkitValue = player.bukkitValue();
-		ChatPluginBukkitPlayer serverPlayer = new ChatPluginBukkitPlayer(bukkitValue);
-		Scoreboard scoreboard = getNewScoreboard();
-		Objective objective = scoreboard.registerNewObjective("scoreboard", "dummy");
-		boolean atLeastV1_9 = VersionUtils.getVersion().isAtLeast(Version.V1_9);
+		ChatPluginBukkitPlayer serverPlayer = new ChatPluginBukkitPlayer(player.bukkitValue());
 		
-		// custom suffix
-		if (CustomSuffixManager.getInstance().isEnabled()) {
-			Objective customSuffix = scoreboard.registerNewObjective("tablist_suffix", CustomSuffixManager.getInstance().getRenderType() == RenderType.HEARTS ? "health" : "dummy");
+		if (ConfigurationType.CONFIG.get().getBoolean("settings.register-scoreboards")) {
+			Scoreboard scoreboard = getNewScoreboard();
+			boolean atLeastV1_9 = VersionUtils.getVersion().isAtLeast(Version.V1_9);
 			
-			if (VersionUtils.getVersion().isAtLeast(Version.V1_13_2))
-				customSuffix.setRenderType(CustomSuffixManager.getInstance().getRenderType().bukkitValue());
-			customSuffix.setDisplaySlot(DisplaySlot.PLAYER_LIST);
-		}
+			serverPlayer.setObjective(new ObjectiveAdapter(registerNewObjective(scoreboard, "chatplugin", "dummy")));
+			player.bukkitValue().setScoreboard(scoreboard);
+			
+			// custom suffix
+			if (CustomSuffixManager.getInstance().isEnabled()) {
+				Objective customSuffix = registerNewObjective(scoreboard, "tablist_suffix", CustomSuffixManager.getInstance().getRenderType() == RenderType.HEARTS ? "health" : "dummy");
+				
+				if (VersionUtils.getVersion().isAtLeast(Version.V1_13_2))
+					customSuffix.setRenderType(CustomSuffixManager.getInstance().getRenderType().bukkitValue());
+				customSuffix.setDisplaySlot(DisplaySlot.PLAYER_LIST);
+			}
+			
+			// scoreboard
+			for (int i = 0; i < 15; i++)
+				if (atLeastV1_9)
+					scoreboard.registerNewTeam("line_" + i).addEntry(me.remigio07.chatplugin.api.server.scoreboard.Scoreboard.SCORES[i]);
+				else BukkitReflection.invokeMethod("Scoreboard", "addPlayerToTeam", BukkitReflection.invokeMethod("CraftScoreboard", "getHandle", scoreboard), me.remigio07.chatplugin.api.server.scoreboard.Scoreboard.SCORES[i], scoreboard.registerNewTeam("line_" + i).getName());
+			if (ScoreboardManager.getInstance().getScoreboard("default") != null)
+				ScoreboardManager.getInstance().getScoreboard("default").addPlayer(serverPlayer);
+			if (!serverPlayer.isPlayerStored() && ScoreboardManager.getInstance().getScoreboard("first-join-event") != null)
+				ScoreboardManager.getInstance().getScoreboard("first-join-event").addPlayer(serverPlayer);
+			else if (ScoreboardManager.getInstance().getScoreboard("join-event") != null)
+				ScoreboardManager.getInstance().getScoreboard("join-event").addPlayer(serverPlayer);
+		} else if (TablistManager.getInstance().isEnabled() && VersionUtils.getVersion().isAtLeast(Version.V1_21_2))
+			serverPlayer.toAdapter().bukkitValue().setPlayerListOrder(getPlayerListOrder(serverPlayer));
 		
-		// scoreboard
-		for (int i = 0; i < 15; i++)
-			if (atLeastV1_9)
-				scoreboard.registerNewTeam("line_" + i).addEntry(me.remigio07.chatplugin.api.server.scoreboard.Scoreboard.SCORES[i]);
-			else BukkitReflection.invokeMethod("Scoreboard", "addPlayerToTeam", BukkitReflection.invokeMethod("CraftScoreboard", "getHandle", scoreboard), me.remigio07.chatplugin.api.server.scoreboard.Scoreboard.SCORES[i], scoreboard.registerNewTeam("line_" + i).getName());
-		bukkitValue.setScoreboard(scoreboard);
-		serverPlayer.setObjective(new ObjectiveAdapter(objective));
+		// ranks (tablist)
+		if (TablistManager.getInstance().isEnabled())
+			serverPlayer.updatePlayerListName();
 		
-		if (ScoreboardManager.getInstance().getScoreboard("default") != null)
-			ScoreboardManager.getInstance().getScoreboard("default").addPlayer(serverPlayer);
-		if (!serverPlayer.isPlayerStored() && ScoreboardManager.getInstance().getScoreboard("first-join-event") != null)
-			ScoreboardManager.getInstance().getScoreboard("first-join-event").addPlayer(serverPlayer);
-		else if (ScoreboardManager.getInstance().getScoreboard("join-event") != null)
-			ScoreboardManager.getInstance().getScoreboard("join-event").addPlayer(serverPlayer);
-		
-		// ranks
-		Boolean longTeams = TablistManager.getInstance().isEnabled() ? VersionUtils.getVersion().isAtLeast(Version.V1_13) && serverPlayer.getVersion().isAtLeast(Version.V1_13) : null;
-		
-		if (longTeams != null) {
-			for (ChatPluginServerPlayer other : players.values()) {
-				setupTeams(serverPlayer, other, longTeams);
-				setupTeams(other, serverPlayer, longTeams);
-			} setupTeams(serverPlayer, serverPlayer, longTeams);
-		}
-		
-		// misc
+		// channels
 		if (ChatChannelsManager.getInstance().isEnabled()) {
 			for (String id : ChatChannelsManager.getInstance().getDefaultListeningChannelsIDs()) {
 				ChatChannel<?> channel = ChatChannelsManager.getInstance().getChannel(id, false);
@@ -216,9 +211,13 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 				if (channel != null && channel.canAccess(serverPlayer))
 					serverPlayer.joinChannel(channel);
 			} serverPlayer.switchChannel(ChatChannelsManager.getInstance().getDefaultWritingChannel());
-		} if (QuitMessageManager.getInstance().isEnabled())
+		}
+		
+		// quit
+		if (QuitMessageManager.getInstance().isEnabled())
 			new QuitPacketImpl(serverPlayer);
 		((VanishManagerImpl) VanishManager.getInstance()).update(serverPlayer, false);
+		
 		players.put(player.getUUID(), serverPlayer);
 		new ServerPlayerLoadEvent(serverPlayer, (int) (ms = System.currentTimeMillis() - ms)).call();
 		LogManager.log("Player {0} has been loaded in {1} ms.", 4, player.getName(), ms);
@@ -235,22 +234,35 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public void setupTeams(ChatPluginServerPlayer player, ChatPluginServerPlayer other, boolean longTeams) {
-		Scoreboard scoreboard = player.getObjective().bukkitValue().getScoreboard();
-		Team team = scoreboard.getTeam(other.getRank().formatIdentifier(other));
-		String prefix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPrefixFormat(), other, player.getLanguage(), TablistManager.getInstance().getPlaceholderTypes());
-		String suffix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getSuffixFormat(), other, player.getLanguage(), TablistManager.getInstance().getPlaceholderTypes());
+	private static Objective registerNewObjective(Scoreboard scoreboard, String name, String criteria) {
+		if (criteria.equals("dummy") || Bukkit.isPrimaryThread())
+			return scoreboard.registerNewObjective(name, criteria);
+		CompletableFuture<Objective> future = new CompletableFuture<>();
 		
-		if (team == null)
-			team = scoreboard.registerNewTeam(other.getRank().formatIdentifier(other));
-		if (VersionUtils.getVersion().isAtLeast(Version.V1_12)) {
-			String lastColors = ChatColor.getLastColors(prefix);
+		TaskManager.runSync(() -> future.complete(registerNewObjective(scoreboard, name, criteria)), 0L);
+		return future.join();
+	}
+	
+	/*
+	 * creates a (non-unique) identifier to sort alphabetically based on the player's rank position and their name's first 3 letters
+	 * we have to produce a 10-digit integer; an extra letter would require a 12-digit integer which is more than Integer#MAX_VALUE
+	 * 
+	 * uses the following ASCII codes:
+	 * - 32 (space)
+	 * - 48-57 (0-9)
+	 * - 65-90 (A-Z)
+	 * - 95 (_)
+	 * - 97-122 (a-z)
+	 */
+	private int getPlayerListOrder(ChatPluginServerPlayer player) {
+		String identifier = player.getRank().formatIdentifier(player).substring(0, 5);
+		StringBuilder sb = new StringBuilder(identifier.substring(0, 2)); // 2 digits
+		
+		for (int i = 2; i < 5; i++) { // 3 letters
+			char letter = identifier.charAt(i);
 			
-			if (!lastColors.isEmpty())
-				team.setColor((lastColors.startsWith("§x") ? ChatColor.of(lastColors.substring(3, 14).replace("§", "")).getClosestDefaultColor() : ChatColor.getByChar(lastColors.charAt(1))).bukkitValue());
-		} team.setPrefix(prefix.length() > (longTeams ? 64 : 16) ? me.remigio07.chatplugin.common.util.Utils.abbreviate(prefix, longTeams ? 64 : 16, false) : prefix);
-		team.setSuffix(suffix.length() > (longTeams ? 64 : 16) ? me.remigio07.chatplugin.common.util.Utils.abbreviate(suffix, longTeams ? 64 : 16, false) : suffix);
-		team.addPlayer(other.toAdapter().bukkitValue());
+			sb.append(letter == ' ' ? "00" : String.valueOf(letter - 23)); // shift so we have 99 for z
+		} return Integer.MAX_VALUE - Integer.valueOf(sb.toString());
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -260,20 +272,31 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 			return 0;
 		long ms = System.currentTimeMillis();
 		ChatPluginServerPlayer serverPlayer = players.get(player);
-		org.bukkit.scoreboard.Scoreboard scoreboard = serverPlayer.getObjective().bukkitValue().getScoreboard();
 		
 		new ServerPlayerUnloadEvent(serverPlayer).call();
 		players.remove(player);
 		
-		if (serverPlayer.getScoreboard() != null)
-			serverPlayer.getScoreboard().removePlayer(serverPlayer);
-		if (serverPlayer.getBossbar() != null)
+		if (ConfigurationType.CONFIG.get().getBoolean("settings.register-scoreboards")) {
+			org.bukkit.scoreboard.Scoreboard scoreboard = serverPlayer.getObjective().bukkitValue().getScoreboard();
+			
+			if (serverPlayer.getScoreboard() != null)
+				serverPlayer.getScoreboard().removePlayer(serverPlayer);
+			scoreboard.getTeams().forEach(Team::unregister);
+			scoreboard.getObjectives().forEach(Objective::unregister);
+			serverPlayer.toAdapter().bukkitValue().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
+			players.values().forEach(other -> other.getObjective().bukkitValue().getScoreboard().getTeams().stream().filter(team -> team.getName().equals(serverPlayer.getRank().formatIdentifier(serverPlayer))).forEach(Team::unregister));
+		} else if (TablistManager.getInstance().isEnabled()) {
+			if (VersionUtils.getVersion().isAtLeast(Version.V1_21_2))
+				serverPlayer.toAdapter().bukkitValue().setPlayerListOrder(0);
+			((ChatPluginBukkitPlayer) serverPlayer).setPlayerListName(null);
+		} if (serverPlayer.getBossbar() != null)
 			serverPlayer.getBossbar().unregister();
 		if (GUIManager.getInstance().getOpenGUI(serverPlayer) != null)
 			serverPlayer.closeInventory();
+		if (TablistManager.getInstance().isEnabled())
+			TablistManager.getInstance().sendTablist(Tablist.NULL_TABLIST, serverPlayer);
 		IPLookupManager.getInstance().removeFromCache(serverPlayer.getIPAddress());
 		StaffChatManager.getInstance().removePlayer(player);
-		TablistManager.getInstance().sendTablist(Tablist.NULL_TABLIST, serverPlayer);
 		((VanishManagerImpl) VanishManager.getInstance()).show(serverPlayer, false);
 		serverPlayer.getChannels().forEach(serverPlayer::leaveChannel);
 		
@@ -284,10 +307,7 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 			
 			if (task != null)
 				((Runnable) task).run();
-		} scoreboard.getTeams().forEach(Team::unregister);
-		scoreboard.getObjectives().forEach(Objective::unregister);
-		players.values().forEach(other -> other.getObjective().bukkitValue().getScoreboard().getTeams().stream().filter(team -> team.getName().equals(serverPlayer.getRank().formatIdentifier(serverPlayer))).forEach(Team::unregister));
-		GUIManager.getInstance().getGUIs().stream().filter(PerPlayerGUI.class::isInstance).map(PerPlayerGUI.class::cast).forEach(gui -> gui.unload(true));
+		} GUIManager.getInstance().getGUIs().stream().filter(PerPlayerGUI.class::isInstance).map(PerPlayerGUI.class::cast).forEach(gui -> gui.unload(true));
 		QuitMessageManager.getInstance().getFakeQuits().remove(player);
 		Utils.inventoryTitles.remove(player);
 		checkState(() -> {

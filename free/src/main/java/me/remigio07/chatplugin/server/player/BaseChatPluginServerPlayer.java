@@ -206,4 +206,6 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 	
 	public abstract void sendMessage(Component... components);
 	
+	public abstract void updatePlayerListName();
+	
 }

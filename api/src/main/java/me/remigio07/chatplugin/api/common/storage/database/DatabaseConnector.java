@@ -204,7 +204,7 @@ public abstract class DatabaseConnector extends StorageConnector {
 			if (Environment.isBukkit())
 				executeUpdate("UPDATE " + DataContainer.PLAYERS.getDatabaseTableID() + " SET time_played = ? WHERE player_uuid = ?", player.toAdapter().bukkitValue().getStatistic(Statistic.valueOf(VersionUtils.getVersion().getProtocol() < 341 ? "PLAY_ONE_TICK" : "PLAY_ONE_MINUTE")) * 50, player.getUUID().toString());
 			else if (Environment.isSponge() && player.toAdapter().spongeValue().getStatisticData().get(Keys.STATISTICS).isPresent())
-				executeUpdate("UPDATE " + DataContainer.PLAYERS.getDatabaseTableID() + " SET time_played = ? WHERE player_uuid = ?", player.toAdapter().spongeValue().getStatisticData().get(Keys.STATISTICS).get().get(Statistics.TIME_PLAYED) * 50, player.getUUID().toString());
+				executeUpdate("UPDATE " + DataContainer.PLAYERS.getDatabaseTableID() + " SET time_played = ? WHERE player_uuid = ?", player.toAdapter().spongeValue().getStatisticData().get(Keys.STATISTICS).get().getOrDefault(Statistics.TIME_PLAYED, 0L) * 50, player.getUUID().toString());
 		}
 	}
 	

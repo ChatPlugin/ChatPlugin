@@ -396,7 +396,7 @@ public class JSONConnector extends FlatFileConnector {
 			if (Environment.isBukkit())
 				map.put("timePlayed", new BigDecimal(player.toAdapter().bukkitValue().getStatistic(Statistic.valueOf(VersionUtils.getVersion().getProtocol() < 341 ? "PLAY_ONE_TICK" : "PLAY_ONE_MINUTE")) * 50));
 			else if (Environment.isSponge())
-				map.put("timePlayed", new BigDecimal(player.toAdapter().spongeValue().getStatisticData().get(Keys.STATISTICS).get().get(Statistics.TIME_PLAYED) * 50));
+				map.put("timePlayed", new BigDecimal(player.toAdapter().spongeValue().getStatisticData().get(Keys.STATISTICS).get().getOrDefault(Statistics.TIME_PLAYED, 0L) * 50));
 		} else map.put("timePlayed", 0L);
 		
 		map.put("messagesSent", 0);

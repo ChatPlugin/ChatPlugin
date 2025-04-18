@@ -341,7 +341,7 @@ public class YAMLConnector extends FlatFileConnector {
 			if (Environment.isBukkit())
 				players.set(id + ".time-played", player.toAdapter().bukkitValue().getStatistic(Statistic.valueOf(VersionUtils.getVersion().getProtocol() < 341 ? "PLAY_ONE_TICK" : "PLAY_ONE_MINUTE")) * 50);
 			else if (Environment.isSponge())
-				players.set(id + ".time-played", player.toAdapter().spongeValue().getStatisticData().get(Keys.STATISTICS).get().get(Statistics.TIME_PLAYED) * 50);
+				players.set(id + ".time-played", player.toAdapter().spongeValue().getStatisticData().get(Keys.STATISTICS).get().getOrDefault(Statistics.TIME_PLAYED, 0L) * 50);
 		} else players.set(id + ".time-played", 0L);
 		
 		players.set(id + ".messages-sent", 0);

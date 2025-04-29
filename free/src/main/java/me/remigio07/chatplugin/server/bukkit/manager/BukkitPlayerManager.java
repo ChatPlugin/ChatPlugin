@@ -111,7 +111,7 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 	}
 	
 	@Override
-	public void unload() throws ChatPluginManagerException {
+	public void unload() {
 		super.unload();
 		TaskManager.cancelAsync(localeChangeTaskID);
 	}

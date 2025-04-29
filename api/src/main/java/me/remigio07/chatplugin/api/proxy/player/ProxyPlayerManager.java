@@ -40,15 +40,19 @@ public abstract class ProxyPlayerManager extends PlayerManager {
 	@Override
 	public void load() throws ChatPluginManagerException {
 		instance = this;
+		
+		super.load();
+		
 		enabled = true;
 	}
 	
 	@Override
-	public void unload() throws ChatPluginManagerException {
+	public void unload() {
 		enabled = false;
 		
 		players.keySet().forEach(this::unloadPlayer);
 		players.clear();
+		super.unload();
 	}
 	
 	/**

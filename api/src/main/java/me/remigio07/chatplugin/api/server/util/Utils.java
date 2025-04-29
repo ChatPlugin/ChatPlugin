@@ -18,6 +18,7 @@ package me.remigio07.chatplugin.api.server.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -26,7 +27,9 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
+import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.bootstrap.Environment;
@@ -64,8 +67,14 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 	 * @param format Format to use
 	 * @return Formatted date
 	 */
-	public static String formatDate(long ms, Language language, DateFormat format) {
-		return new SimpleDateFormat(language.getMessage("misc.simple-date-format." + format.name().toLowerCase())).format(new Date(ms));
+	public static String formatDate(long ms, Language language, DateFormat format) { // TODO: associate a Map<DateFormat, SimpleDateFormat> to every Language; use zoned dates instead
+		try {
+			long now = System.currentTimeMillis();
+			return new SimpleDateFormat(language.getMessage("misc.simple-date-format." + format.name().toLowerCase())).format(new Date(ms + PlayerManager.getInstance().getDisplayedTimeZone().getOffset(now) - TimeZone.getDefault().getOffset(now)));
+		} catch (IllegalArgumentException iae) {
+			LogManager.log("Invalid date format specified at \"{0}\" in {1}: {2}", 2, "misc.simple-date-format." + format.name().toLowerCase(), language.getConfiguration().getFile().getName(), iae.getLocalizedMessage());
+			return "Invalid date format specified at \"misc.simple-date-format.\"" + format.name().toLowerCase();
+		}
 	}
 	
 	/**

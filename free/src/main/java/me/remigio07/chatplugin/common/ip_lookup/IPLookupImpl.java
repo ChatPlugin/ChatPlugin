@@ -123,7 +123,8 @@ public class IPLookupImpl extends IPLookup {
 	@Override
 	public String formatPlaceholders(String input, Language language) {
 		TimeZone tz = TimeZone.getTimeZone(timeZone);
-		long date = tz.getID().equals(timeZone) ? tz.getOffset(System.currentTimeMillis()) - TimeZone.getDefault().getOffset(System.currentTimeMillis()) + System.currentTimeMillis() : -1;
+		long now = System.currentTimeMillis();
+		long date = tz.getID().equals(timeZone) ? tz.getOffset(now) - PlayerManager.getInstance().getDisplayedTimeZone().getOffset(now) + now : -1;
 		return formatPlaceholders(input)
 				.replace("{relative_date_full}", date == -1 ? "unknown relative date" : Utils.formatDate(date, language, DateFormat.FULL))
 				.replace("{relative_date_day}", date == -1 ? "unknown relative date" : Utils.formatDate(date, language, DateFormat.DAY))

@@ -19,13 +19,16 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.common.util.Utils;
+import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
+import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.proxy.player.ProxyPlayerManager;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 
@@ -40,7 +43,19 @@ public abstract class PlayerManager implements ChatPluginManager {
 	
 	protected static PlayerManager instance;
 	protected boolean enabled;
+	protected TimeZone displayedTimeZone;
 	protected long loadTime;
+	
+	@Override
+	public void load() throws ChatPluginManagerException {
+		String tz = ConfigurationType.CONFIG.get().getString("settings.displayed-time-zone");
+		displayedTimeZone = tz.isEmpty() ? TimeZone.getDefault() : TimeZone.getTimeZone(tz); // TODO: add validation
+	}
+	
+	@Override
+	public void unload() {
+		displayedTimeZone = null;
+	}
 	
 	@Override
 	public boolean isEnabled() {
@@ -77,9 +92,18 @@ public abstract class PlayerManager implements ChatPluginManager {
 	 * 
 	 * @return Loaded players' amount
 	 * @see #getPlayers()
+	
+	/**
+	 * Gets the time zone displayed to players in messages.
+	 * 
+	 * <p><strong>Found at:</strong> "settings.displayed-time-zone" in {@link ConfigurationType#CONFIG}</p>
+	 * 
+	 * @return Displayed time zone
 	 */
 	public int getTotalPlayers() {
 		return getPlayers().size();
+	public TimeZone getDisplayedTimeZone() {
+		return displayedTimeZone;
 	}
 	
 	/**

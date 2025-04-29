@@ -19,22 +19,17 @@ import static java.lang.annotation.ElementType.FIELD;
 
 import java.lang.annotation.Target;
 import java.lang.management.ManagementFactory;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
+import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookup;
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
+import me.remigio07.chatplugin.api.common.punishment.ban.BanManager;
+import me.remigio07.chatplugin.api.common.punishment.mute.MuteManager;
 import me.remigio07.chatplugin.api.common.punishment.warning.WarningManager;
-import me.remigio07.chatplugin.api.common.storage.DataContainer;
-import me.remigio07.chatplugin.api.common.storage.StorageConnector;
-import me.remigio07.chatplugin.api.common.storage.StorageConnector.WhereCondition;
-import me.remigio07.chatplugin.api.common.storage.StorageConnector.WhereCondition.WhereOperator;
-import me.remigio07.chatplugin.api.common.storage.StorageManager;
-import me.remigio07.chatplugin.api.common.storage.StorageMethod;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.MemoryUtils;
 import me.remigio07.chatplugin.api.common.util.Utils;
@@ -109,11 +104,10 @@ public class TelegramMessages {
 		 * @return Translated placeholders
 		 */
 		public String translateStatus(String input) { // TODO: standardize (PlaceholderManagerImpl)
-			Runtime runtime = Runtime.getRuntime();
 			return input == null ? null : translateVersion(input
 					.replace("{online_minecraft}", String.valueOf(PlayerAdapter.getOnlinePlayers().size()))
 					.replace("{telegram_users}", String.valueOf(TelegramBot.getInstance().getUsers()))
-					.replace("{enabled_players}", String.valueOf(PlayerManager.getInstance().getTotalPlayers()))
+					.replace("{enabled_players}", String.valueOf(PlayerManager.getInstance().getPlayers().size()))
 					.replace("{enabled_managers}", String.valueOf(ChatPluginManagers.getInstance().getEnabledManagers().size()))
 					.replace("{max_players}", String.valueOf(Utils.getMaxPlayers()))
 					.replace("{date}", formatDate(System.currentTimeMillis()))
@@ -123,10 +117,10 @@ public class TelegramMessages {
 					.replace("{environment}", VersionUtils.getImplementationName())
 					.replace("{environment_version}", VersionUtils.getImplementationVersion())
 					.replace("{uptime}", formatTime(ManagementFactory.getRuntimeMXBean().getUptime(), false, false))
-					.replace("{max_memory}", MemoryUtils.formatMemory(runtime.maxMemory(), MemoryUtils.MEGABYTE))
-					.replace("{total_memory}", MemoryUtils.formatMemory(runtime.totalMemory(), MemoryUtils.MEGABYTE))
-					.replace("{used_memory}", MemoryUtils.formatMemory(runtime.totalMemory() - runtime.freeMemory(), MemoryUtils.MEGABYTE))
-					.replace("{free_memory}", MemoryUtils.formatMemory(runtime.freeMemory(), MemoryUtils.MEGABYTE))
+					.replace("{max_memory}", MemoryUtils.formatMemory(Runtime.getRuntime().maxMemory(), MemoryUtils.MEGABYTE))
+					.replace("{total_memory}", MemoryUtils.formatMemory(Runtime.getRuntime().totalMemory(), MemoryUtils.MEGABYTE))
+					.replace("{used_memory}", MemoryUtils.formatMemory(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(), MemoryUtils.MEGABYTE))
+					.replace("{free_memory}", MemoryUtils.formatMemory(Runtime.getRuntime().freeMemory(), MemoryUtils.MEGABYTE))
 					.replace("{total_storage}", MemoryUtils.formatMemory(Utils.getTotalStorage(), MemoryUtils.GIGABYTE))
 					.replace("{used_storage}", MemoryUtils.formatMemory(Utils.getTotalStorage() - Utils.getFreeStorage(), MemoryUtils.GIGABYTE))
 					.replace("{free_storage}", MemoryUtils.formatMemory(Utils.getFreeStorage(), MemoryUtils.GIGABYTE))
@@ -336,49 +330,32 @@ public class TelegramMessages {
 		
 		@Override
 		public String getValue(Object... args) {
-			String value = getString(this);
-			return name().endsWith("LIST") ? this == LIST ? getBanlistValue() : value : formatValue((me.remigio07.chatplugin.api.common.punishment.ban.Ban) args[0]);
-		}
-		
-		private String getBanlistValue() {
-			List<Number> ids;
-			String value = getString(this);
-			
-			try {
-				ids = StorageConnector.getInstance().getColumnValues(DataContainer.BANS, "id", Number.class, new WhereCondition("active", WhereOperator.EQUAL, 1));
-			} catch (SQLException e) {
-				ids = Collections.emptyList();
-			} if (ids.isEmpty())
-				return value;
-			return value.replace("{bans}", Utils.getStringFromList(Utils.integerListToStringList(Utils.numberListToIntegerList(ids)), false, true));
+			return name().endsWith("LIST")
+					? this == LIST
+					? getString(this).replace("{bans}", Utils.getStringFromList(BanManager.getInstance().getActiveBans().stream().map(me.remigio07.chatplugin.api.common.punishment.ban.Ban::getID).collect(Collectors.toList()), false, true))
+					: getString(this)
+					: formatValue((me.remigio07.chatplugin.api.common.punishment.ban.Ban) args[0]);
 		}
 		
 		private String formatValue(me.remigio07.chatplugin.api.common.punishment.ban.Ban ban) {
-			int id = ban.getID();
-			String value = getString(this);
-			String whoUnbanned = safeSelect(DataContainer.BANS, "who_unbanned", String.class, new WhereCondition("id", WhereOperator.EQUAL, id));
-			Number unbanDate = safeSelect(DataContainer.BANS, "unban_date", Number.class, new WhereCondition("id", WhereOperator.EQUAL, id));
-			Boolean active = safeSelect(DataContainer.BANS, "active", Boolean.class, new WhereCondition("id", WhereOperator.EQUAL, id));
-			long duration = ban.getDuration();
-			
-			return value
-					.replace("{id}", String.valueOf(id))
-					.replace("{player}", ban.getPlayer().getName())
-					.replace("{player_uuid}", ban.getPlayer().getUUID().toString())
+			return getString(this)
+					.replace("{id}", String.valueOf(ban.getID()))
+					.replace("{player}", ban.getPlayer() == null ? getString("placeholders.not-present") : ban.getPlayer().getName())
+					.replace("{player_uuid}", ban.getPlayer() == null ? getString("placeholders.not-present") : ban.getPlayer().getUUID().toString())
 					.replace("{ip_address}", ban.getIPAddress() == null ? getString("placeholders.not-present") : ban.getIPAddress().getHostAddress())
 					.replace("{staff_member}", ban.getStaffMember())
-					.replace("{who_unbanned}", whoUnbanned == null ? getString("placeholders.nobody") : whoUnbanned)
+					.replace("{who_unbanned}", ban.getWhoUnbanned() == null ? getString("placeholders.nobody") : ban.getWhoUnbanned())
 					.replace("{reason}", ban.getReason() == null ? getString("messages.ban.unspecified-reason") : ChatColor.stripColor(ChatColor.translate(ban.getReason())))
 					.replace("{server}", ban.getServer())
 					.replace("{type}", getFormat("types." + ban.getType().name().toLowerCase()))
 					.replace("{date}", formatDate(ban.getDate()))
-					.replace("{unban_date}", unbanDate == null ? getString("placeholders.not-present") : formatDate(unbanDate.longValue()))
-					.replace("{expiration_date}", duration == -1 ? getString("timestamps.never") : formatDate(ban.getDate() + duration))
-					.replace("{duration}", formatTime(duration, true, true))
+					.replace("{unban_date}", formatDate(ban.getUnbanDate()))
+					.replace("{expiration_date}", ban.getDuration() == -1 ? getString("timestamps.never") : formatDate(ban.getDate() + ban.getDuration()))
+					.replace("{duration}", formatTime(ban.getDuration(), true, true))
 					.replace("{remaining_time}", formatTime(ban.getRemainingTime(), true, true))
-					.replace("{active}", getFormat(active == null ? "active.no" : (active ? "active.yes" : "active.no")))
-					.replace("{global}", getFormat(ban.isGlobal() ? "global.yes" : "global.no"))
-					.replace("{silent}", getFormat(ban.isSilent() ? "silent.yes" : "silent.no"));
+					.replace("{active}", getFormat("active." + (ban.isActive() ? "yes" : "no")))
+					.replace("{global}", getFormat("global." + (ban.isGlobal() ? "yes" : "no")))
+					.replace("{silent}", getFormat("silent." + (ban.isSilent() ? "yes" : "no")));
 		}
 		
 		private static String getFormat(String type) {
@@ -457,7 +434,7 @@ public class TelegramMessages {
 		public String getValue(Object... args) {
 			switch (this) {
 			case LIST:
-				return getWarnlistValue();
+				return getString(this).replace("{warnings}", Utils.getStringFromList(WarningManager.getInstance().getActiveWarnings().stream().map(me.remigio07.chatplugin.api.common.punishment.warning.Warning::getID).collect(Collectors.toList()), false, true));
 			case EMPTY_LIST:
 				return getString(this);
 			case CLEARED:
@@ -467,51 +444,31 @@ public class TelegramMessages {
 			}
 		}
 		
-		private String getWarnlistValue() {
-			List<Number> ids;
-			String value = getString(this);
-			
-			try {
-				ids = StorageConnector.getInstance().getColumnValues(DataContainer.WARNINGS, "id", Number.class, new WhereCondition("active", WhereOperator.EQUAL, 1));
-			} catch (SQLException e) {
-				ids = Collections.emptyList();
-			} if (ids.isEmpty())
-				return value;
-			return value.replace("{warnings}", Utils.getStringFromList(Utils .integerListToStringList(Utils.numberListToIntegerList(ids)), false, true));
-		}
-		
 		private String formatValue(me.remigio07.chatplugin.api.common.punishment.warning.Warning warning) {
-			int id = warning.getID();
-			String value = getString(this);
-			String whoUnwarned = safeSelect(DataContainer.WARNINGS, "who_unwarned", String.class, new WhereCondition("id", WhereOperator.EQUAL, id));
-			Number unwarnDate = safeSelect(DataContainer.WARNINGS, "unwarn_date", Number.class, new WhereCondition("id", WhereOperator.EQUAL, id));
-			Boolean active = safeSelect(DataContainer.WARNINGS, "active", Boolean.class, new WhereCondition("id", WhereOperator.EQUAL, id));
-			me.remigio07.chatplugin.api.common.player.OfflinePlayer player = warning.getPlayer();
-			
-			return value
-					.replace("{id}", String.valueOf(id))
-					.replace("{player}", player.getName())
-					.replace("{player_uuid}", player.getUUID().toString())
+			return getString(this)
+					.replace("{id}", String.valueOf(warning.getID()))
+					.replace("{player}", warning.getPlayer().getName())
+					.replace("{player_uuid}", warning.getPlayer().getUUID().toString())
 					.replace("{staff_member}", warning.getStaffMember())
-					.replace("{who_unwarned}", whoUnwarned == null ? getString("placeholders.nobody") : whoUnwarned)
+					.replace("{who_unwarned}", warning.getWhoUnwarned() == null ? getString("placeholders.nobody") : warning.getWhoUnwarned())
 					.replace("{reason}", warning.getReason() == null ? getString("messages.warning.unspecified-reason") : ChatColor.stripColor(ChatColor.translate(warning.getReason())))
 					.replace("{server}", warning.getServer())
 					.replace("{date}", formatDate(warning.getDate()))
-					.replace("{unwarn_date}", unwarnDate == null ? getString("timestamps.never") : formatDate(unwarnDate.longValue()))
+					.replace("{unwarn_date}", formatDate(warning.getUnwarnDate()))
 					.replace("{expiration_date}", formatDate(warning.getDate() + warning.getDuration()))
 					.replace("{duration}", formatTime(warning.getDuration(), true, true))
 					.replace("{remaining_time}", formatTime(warning.getRemainingTime(), true, true))
-					.replace("{amount}", String.valueOf(WarningManager.getInstance().getActiveWarnings(player, warning.getServer()).stream().filter(other -> other.getDate() <= warning.getDate()).count()))
+					.replace("{amount}", String.valueOf(WarningManager.getInstance().getActiveWarnings(warning.getPlayer(), warning.getServer()).stream().filter(other -> other.getDate() <= warning.getDate()).count()))
 					.replace("{max_amount}", String.valueOf(ConfigurationType.CONFIG.get().getInt("warning.max-warnings-placeholder." + warning.getServer())))
-					.replace("{active}", getFormat(active == null ? "active.no" : (active ? "active.yes" : "active.no")))
-					.replace("{global}", getFormat(warning.isSilent() ? "global.yes" : "global.no"))
-					.replace("{silent}", getFormat(warning.isSilent() ? "silent.yes" : "silent.no"));
+					.replace("{active}", getFormat("active." + (warning.isActive() ? "yes" : "no")))
+					.replace("{global}", getFormat("global." + (warning.isGlobal() ? "yes" : "no")))
+					.replace("{silent}", getFormat("silent." + (warning.isSilent() ? "yes" : "no")));
 		}
 		
-		private String getClearWarningsValues(me.remigio07.chatplugin.api.common.player.OfflinePlayer user, String whoUnwarned) {
+		private String getClearWarningsValues(me.remigio07.chatplugin.api.common.player.OfflinePlayer player, String whoUnwarned) {
 			return getString(this)
-					.replace("{player}", user.getName())
-					.replace("{player_uuid}", user.getUUID().toString())
+					.replace("{player}", player.getName())
+					.replace("{player_uuid}", player.getUUID().toString())
 					.replace("{who_unwarned}", whoUnwarned == null ? getString("placeholders.nobody") : whoUnwarned);
 		}
 		
@@ -555,20 +512,17 @@ public class TelegramMessages {
 		}
 		
 		private String formatValue(me.remigio07.chatplugin.api.common.punishment.kick.Kick kick) {
-			String value = getString(this);
-			me.remigio07.chatplugin.api.common.player.OfflinePlayer player = kick.getPlayer();
-			
-			return value
+			return getString(this)
 					.replace("{id}", String.valueOf(kick.getID()))
-					.replace("{player}", player.getName())
-					.replace("{player_uuid}", player.getUUID().toString())
+					.replace("{player}", kick.getPlayer().getName())
+					.replace("{player_uuid}", kick.getPlayer().getUUID().toString())
 					.replace("{ip_address}", kick.getIPAddress() == null ? getString("placeholders.not-present") : kick.getIPAddress().getHostAddress())
 					.replace("{staff_member}", kick.getStaffMember())
 					.replace("{reason}", kick.getReason() == null ? getString("messages.kick.unspecified-reason") : ChatColor.stripColor(ChatColor.translate(kick.getReason())))
 					.replace("{server}", kick.getServer())
 					.replace("{type}", getFormat("types." + kick.getType().name().toLowerCase()))
 					.replace("{date}", formatDate(kick.getDate()))
-					.replace("{silent}", getFormat(kick.isSilent() ? "silent.yes" : "silent.no"));
+					.replace("{silent}", getFormat("silent." + (kick.isSilent() ? "yes" : "no")));
 		}
 		
 		private static String getFormat(String type) {
@@ -645,47 +599,30 @@ public class TelegramMessages {
 		
 		@Override
 		public String getValue(Object... args) {
-			return name().endsWith("LIST") ? this == LIST ? getMutelistValue() : getString(this) : formatValue((me.remigio07.chatplugin.api.common.punishment.mute.Mute) args[0]);
-		}
-		
-		private String getMutelistValue() {
-			List<Number> ids;
-			String value = getString(this);
-			
-			try {
-				ids = StorageConnector.getInstance().getColumnValues(DataContainer.MUTES, "id", Number.class, new WhereCondition("active", WhereOperator.EQUAL, 1));
-			} catch (SQLException e) {
-				ids = Collections.emptyList();
-			} if (ids.isEmpty())
-				return value;
-			return value.replace("{mutes}", Utils.getStringFromList(Utils.integerListToStringList(Utils.numberListToIntegerList(ids)), false, true));
+			return name().endsWith("LIST")
+					? this == LIST
+					? getString(this).replace("{mutes}", Utils.getStringFromList(MuteManager.getInstance().getActiveMutes().stream().map(me.remigio07.chatplugin.api.common.punishment.mute.Mute::getID).collect(Collectors.toList()), false, true))
+					: getString(this)
+					: formatValue((me.remigio07.chatplugin.api.common.punishment.mute.Mute) args[0]);
 		}
 		
 		private String formatValue(me.remigio07.chatplugin.api.common.punishment.mute.Mute mute) {
-			int id = mute.getID();
-			String value = getString(this);
-			String whoUnmuted = safeSelect(DataContainer.WARNINGS, "who_unmuted", String.class, new WhereCondition("id", WhereOperator.EQUAL, id));
-			Number unmuteDate = safeSelect(DataContainer.WARNINGS, "unmute_date", Number.class, new WhereCondition("id", WhereOperator.EQUAL, id));
-			Boolean active = safeSelect(DataContainer.WARNINGS, "active", Boolean.class, new WhereCondition("id", WhereOperator.EQUAL, id));
-			me.remigio07.chatplugin.api.common.player.OfflinePlayer player = mute.getPlayer();
-			long duration = mute.getDuration();
-			
-			return value
-					.replace("{id}", String.valueOf(id))
-					.replace("{player}", player.getName())
-					.replace("{player_uuid}", player.getUUID().toString())
+			return getString(this)
+					.replace("{id}", String.valueOf(mute.getID()))
+					.replace("{player}", mute.getPlayer().getName())
+					.replace("{player_uuid}", mute.getPlayer().getUUID().toString())
 					.replace("{staff_member}", mute.getStaffMember())
-					.replace("{who_unmuted}", whoUnmuted == null ? getString("placeholders.nobody") : whoUnmuted)
+					.replace("{who_unmuted}", mute.getWhoUnmuted() == null ? getString("placeholders.nobody") : mute.getWhoUnmuted())
 					.replace("{reason}", mute.getReason() == null ? getString("messages.mute.unspecified-reason") : ChatColor.stripColor(mute.getReason()))
 					.replace("{server}", mute.getServer())
 					.replace("{date}", formatDate(mute.getDate()))
-					.replace("{unmute_date}", unmuteDate == null ? getString("timestamps.never") : formatDate(unmuteDate.longValue()))
-					.replace("{expiration_date}", duration == -1 ? getString("timestamps.never") : formatDate(mute.getDate() + duration))
-					.replace("{duration}", formatTime(duration, true, true))
+					.replace("{unmute_date}", formatDate(mute.getUnmuteDate()))
+					.replace("{expiration_date}", mute.getDuration() == -1 ? getString("timestamps.never") : formatDate(mute.getDate() + mute.getDuration()))
+					.replace("{duration}", formatTime(mute.getDuration(), true, true))
 					.replace("{remaining_time}", formatTime(mute.getRemainingTime(), true, true))
-					.replace("{active}", getFormat(active == null ? "active.no" : (active ? "active.yes" : "active.no")))
-					.replace("{global}", getFormat(mute.isGlobal() ? "global.yes" : "global.no"))
-					.replace("{silent}", getFormat(mute.isSilent() ? "silent.yes" : "silent.no"));
+					.replace("{active}", getFormat("active." + (mute.isActive() ? "yes" : "no")))
+					.replace("{global}", getFormat("global." + (mute.isGlobal() ? "yes" : "no")))
+					.replace("{silent}", getFormat("silent." + (mute.isSilent() ? "yes" : "no")));
 		}
 		
 		private static String getFormat(String type) {
@@ -760,22 +697,8 @@ public class TelegramMessages {
 	}
 	
 	private static String formatDate(long ms) {
-		return new SimpleDateFormat(getString("simple-date-format")).format(new Date(ms));
-	}
-	
-	@SuppressWarnings("unchecked")
-	private static <T> T safeSelect(DataContainer container, String position, Class<T> def, WhereCondition... conditions) {
-		try {
-			if (StorageManager.getInstance().getMethod() != StorageMethod.SQLITE || def != Boolean.class)
-				return (T) StorageConnector.getInstance().select(container, position, def, conditions);
-			Object data = StorageConnector.getInstance().select(container, position, Number.class, conditions);
-			
-			if (data == null)
-				return null;
-			return (T) (Boolean) (((Number) data).intValue() == 1);
-		} catch (SQLException e) {
-			return null;
-		}
+		long now = System.currentTimeMillis();
+		return ms == -1 ? getString("timestamps.never") : new SimpleDateFormat(getString("simple-date-format")).format(new Date(ms + PlayerManager.getInstance().getDisplayedTimeZone().getOffset(now) - TimeZone.getDefault().getOffset(now)));
 	}
 	
 	/**

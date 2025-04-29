@@ -32,8 +32,8 @@ public abstract class TelegramIntegrationManager implements ChatPluginManager, R
 	 * Array containing all the libraries required for this module to work.
 	 * 
 	 * <p><strong>Content:</strong> [
-	 * {@link Library#JAVA_TELEGRAM_BOT_API}, {@link Library#OKIO}, {@link Library#OKHTTP}, {@link Library#KOTLIN_STDLIB}, {@link Library#LOGGING_INTERCEPTOR},
-	 * {@link Library#GSON}]</p>
+	 * {@link Library#JAVA_TELEGRAM_BOT_API}, {@link Library#OKIO}, {@link Library#OKHTTP},
+	 * {@link Library#KOTLIN_STDLIB}, {@link Library#LOGGING_INTERCEPTOR}, {@link Library#GSON}]</p>
 	 */
 	public static final Library[] LIBRARIES = new Library[] {
 			Library.JAVA_TELEGRAM_BOT_API, Library.OKIO, Library.OKHTTP, Library.KOTLIN_STDLIB, Library.LOGGING_INTERCEPTOR,
@@ -43,7 +43,7 @@ public abstract class TelegramIntegrationManager implements ChatPluginManager, R
 	protected boolean enabled;
 	protected long chatID, statusUpdateTimeout, statusUpdateTaskID = -1;
 	protected String username, statusValue;
-	@SensitiveData(warning = "Discord integration's bot's private token")
+	@SensitiveData(warning = "Telegram integration's bot's private token")
 	protected String token;
 	protected TelegramBot bot;
 	protected long loadTime;

@@ -63,15 +63,17 @@ public abstract class ServerPlayerManager extends PlayerManager {
 		} catch (SQLException e) {
 			throw new ChatPluginManagerException(this, e);
 		} enabledWorlds = new ArrayList<>(ConfigurationType.CONFIG.get().getStringList("settings.enabled-worlds"));
+		super.load();
 	}
 	
 	@Override
-	public void unload() throws ChatPluginManagerException {
+	public void unload() {
 		enabled = false;
 		
 		players.keySet().forEach(this::unloadPlayer);
 		players.clear();
 		enabledWorlds.clear();
+		super.unload();
 		
 		storageCount = 0;
 	}

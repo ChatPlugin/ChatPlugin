@@ -159,6 +159,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("settings.disabled-commands", Arrays.asList());
 		config.addDefault("settings.displayed-memory.unit", "MEGABYTE");
 		config.addDefault("settings.displayed-memory.decimals", 0);
+		config.addDefault("settings.displayed-time-zone", "");
 		
 		config.addDefault("multi-instance-mode.enabled", false);
 		config.addDefault("multi-instance-mode.proxy-online-mode", false);
@@ -3097,7 +3098,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		discordIntegration.addDefault(path + "thumbnail", "https://live.staticflickr.com/65535/53597756269_8e08b3dfb1_o_d.png");
 		discordIntegration.addDefault(path + "color", "5555FF");
 		
-		discordIntegration.addDefault("simple-date-format", "E, MM/dd/yyyy hh:mm a");
 		discordIntegration.addDefault("timestamps.now", "now");
 		discordIntegration.addDefault("timestamps.ever", "ever");
 		discordIntegration.addDefault("timestamps.never", "never");

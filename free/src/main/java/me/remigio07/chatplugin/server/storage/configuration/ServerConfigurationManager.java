@@ -155,6 +155,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("settings.anticheat-integration.reasons-start-with", Arrays.asList("[Matrix]", "[Vulcan]"));
 		config.addDefault("settings.anticheat-integration.violations-expiration-timeout", "1m");
 		config.addDefault("settings.storage-placeholders-update-timeout", "1m");
+		config.addDefault("settings.floodgate-username-prefix", "");
 		config.addDefault("settings.enabled-worlds", Arrays.asList("*"));
 		config.addDefault("settings.disabled-commands", Arrays.asList());
 		config.addDefault("settings.displayed-memory.unit", "MEGABYTE");
@@ -304,15 +305,14 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("misc.disabled-world", "{pfx} &cThat world is not enabled.");
 		messages.addDefault("misc.disabled-feature", "{pfx} &cThat feature is not enabled.");
 		messages.addDefault("misc.inexistent-id", "{pfx} &cThat ID does not exist.");
-		messages.addDefault("misc.inexistent-player", "{pfx} &f{0} &cis not a premium player's name.");
-		messages.addDefault("misc.cannot-fetch", "{pfx} &cUnable to reach the API to fetch &f{0}&c's UUID: &f{1}&c.");
 		messages.addDefault("misc.suggest-version", "{pfx} &eUse Minecraft version &f{suggested_version} &eor higher to enjoy the best experience on the server.");
+		messages.addDefault("misc.inexistent-player", "{pfx} &f{0} &cis not a paid account's name.");
 		messages.addDefault("misc.already-connected", "{pfx} &cYou are already connected to this server.");
 		messages.addDefault("misc.invalid-player-name", "{pfx} &cInvalid player name.");
 		messages.addDefault("misc.invalid-json", "{pfx} &cInvalid JSON: &f{0}&c.");
 		messages.addDefault("misc.invalid-server", "{pfx} &f{0} &cis not a valid server. Is the proxy online with ChatPlugin installed?");
 		messages.addDefault("misc.invalid-ip-address", "{pfx} &f{0} &cis not a valid IP address.");
-		messages.addDefault("misc.database-error", "{pfx} &f{0} &coccurred while trying to access the database: &f{1}&c.");
+		messages.addDefault("misc.error-occurred", "{pfx} &f{0} &coccurred while trying to perform the operation: &f{1}&c.");
 		messages.addDefault("misc.update-notification", "{pfx} &eYou are running an outdated version of ChatPlugin. It is recommended to update to the latest version (&f{0}&e) to avoid bugs and incompatibilities.");
 		
 		messages.addDefault("commands.help.free.user", "{pfx} &aHelp for &c&lChat&f&lPlugin &fv{0} &aby &9Remigio07&a:\n&f&l/language &8- &eChange your currently displayed language.\n&f&l/whisper &8- &eSend a private message to another player.\n&f&l/ignore &8- &eManage players you are ignoring.\n&f&l/ping &8- &eShow yours or another player's latency in ms.\n&f&l/rankinfo &8- &eDisplay info about a player's rank.\n&f&l/playerlist &8- &eDisplay the online players' list.\n&f&l/preferences &8- &eChange your personal preferences.");

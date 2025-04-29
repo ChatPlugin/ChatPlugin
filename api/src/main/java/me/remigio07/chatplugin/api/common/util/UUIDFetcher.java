@@ -16,166 +16,226 @@
 package me.remigio07.chatplugin.api.common.util;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Pattern;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
-import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
+import me.remigio07.chatplugin.api.common.player.PlayerManager;
 
 /**
- * Util class used to calculate and fetch players' UUIDs and names.
- * 
- * <p>Its methods are abstract as some of them use libraries' classes.</p>
+ * Util class used to calculate and fetch
+ * Java and Bedrock players' UUIDs and names.
  */
 public abstract class UUIDFetcher {
 	
+	/**
+	 * Pattern representing the allowed
+	 * <a href="https://learn.microsoft.com/en-us/gaming/gdk/_content/gc/live/features/identity/user-profile/gamertags/live-classic-gamertags-overview">classic gamertags</a>.
+	 * 
+	 * <p><strong>Note:</strong> Microsoft's classic gamertags' documentation is not exhaustive at all:
+	 * 	<ul>
+	 * 		<li>commas (',') should be allowed in gamertags, however, out of ~40M accounts tracked by GeyserMC, none of these contains any; this pattern does not allow commas</li>
+	 * 		<li>it is unclear whether space-only and number-only gamertags are allowed; this pattern does not perform that kind of validation</li>
+	 * 		<li>it is unclear where and how many consecutive spaces are allowed; this pattern does not perform that kind of validation</li>
+	 * 	</ul>
+	 * 
+	 * <p><strong>Regex:</strong> <a href="https://regex101.com/r/fR6ysX/1"><code>^[a-zA-Z0-9 ]{1,15}$</code></a></p>
+	 * 
+	 * @see #isValidClassicGamertag(String)
+	 */
+	public static final Pattern CLASSIC_GAMERTAG_PATTERN = Pattern.compile("^[a-zA-Z0-9 ]{1,15}$");
 	protected static UUIDFetcher instance;
 	
 	/**
-	 * Reads the content at the specified URL.
+	 * Gets a Java or Bedrock player's name based on the input:
+	 * 	<ul>
+	 * 		<li>{@link UUID}v0 for a Bedrock player</li>
+	 * 		<li>{@link UUID}v4 for a Java player</li>
+	 * 	</ul>
 	 * 
-	 * <p>It has a connection timeout of 5 seconds.</p>
+	 * <p>The future throws:
+	 * 	<ul>
+	 * 		<li>{@link NoSuchElementException} if the UUID does not belong to a paid Java or Bedrock account</li>
+	 * 		<li>{@link IOException} if a connection or JSON error occurs</li>
+	 * 	</ul>
 	 * 
-	 * @param url URL to read
-	 * @return URL's response code and content
-	 * @throws URISyntaxException If the URL is invalid
-	 * @throws IOException If a connection error occurrs
+	 * @param uuid Java or Bedrock player's UUID
+	 * @return Java or Bedrock player's name
+	 * @throws IllegalArgumentException If {@link UUID#version()}<code> != 0 &amp;&amp; {@link UUID#version()} != 4</code>
 	 */
-	public abstract Entry<Integer, String> readURL(String url) throws URISyntaxException, IOException;
+	public abstract CompletableFuture<String> getName(UUID uuid);
 	
 	/**
-	 * Calls {@link #getOnlineUUID(String)} or {@link #getOfflineUUID(String)}
-	 * depending on {@link ChatPlugin#isOnlineMode()}.
+	 * Gets a Bedrock player's name.
 	 * 
-	 * <p>The future throws {@link IOException} if a connection or JSON error occurs.</p>
+	 * <p>The future throws:
+	 * 	<ul>
+	 * 		<li>{@link NoSuchElementException} if the XUID does not belong to a paid Bedrock account</li>
+	 * 		<li>{@link IOException} if a connection or JSON error occurs</li>
+	 * 	</ul>
 	 * 
-	 * @param name Player's name
-	 * @return Player's UUID
-	 * @throws IllegalArgumentException If specified name !{@link Utils#isValidUsername(String)}
+	 * @param xuid Bedrock player's XUID
+	 * @return Bedrock player's name
+	 */
+	public abstract CompletableFuture<String> getName(long xuid);
+	
+	/**
+	 * Gets a Java (online or offline) or Bedrock player's UUID based on the input:
+	 * 	<ul>
+	 * 		<li>a name starting with {@link PlayerManager#getFloodgateUsernamePrefix()} for a Bedrock player</li>
+	 * 		<li>any other name while {@link ChatPlugin#isOnlineMode()} for a Java online player</li>
+	 * 		<li>any other name while <code>!</code>{@link ChatPlugin#isOnlineMode()} for a Java offline player</li>
+	 * 	</ul>
+	 * 
+	 * <p>The future is instantly completed and will not throw any exception if specified name
+	 * is not a Bedrock username and <code>!</code>{@link ChatPlugin#isOnlineMode()}.</p>
+	 * 
+	 * <p>The future throws:
+	 * 	<ul>
+	 * 		<li>{@link NoSuchElementException} if the name does not belong to a paid Java (if {@link ChatPlugin#isOnlineMode()}) or Bedrock account</li>
+	 * 		<li>{@link IOException} if a connection or JSON error occurs</li>
+	 * 	</ul>
+	 * 
+	 * @param name Java (online or offline) or Bedrock player's name
+	 * @return Java (online or offline) or Bedrock player's UUID
+	 * @throws IllegalArgumentException If specified name <code>!</code>{@link PlayerManager#isValidUsername(String)}
 	 */
 	public abstract CompletableFuture<UUID> getUUID(String name);
 	
 	/**
-	 * Fetches the specified player's online UUID v4 from Mojang's servers.
+	 * Gets a Java or Bedrock player's UUID based on the input:
+	 * 	<ul>
+	 * 		<li>a name starting with {@link PlayerManager#getFloodgateUsernamePrefix()} for a Bedrock player</li>
+	 * 		<li>any other name for a Java player</li>
+	 * 	</ul>
 	 * 
-	 * <p>Will return {@link Utils#NIL_UUID} if the specified
-	 * name does not belong to a premium account.</p>
+	 * <p>The future throws:
+	 * 	<ul>
+	 * 		<li>{@link NoSuchElementException} if the name does not belong to a paid Java or Bedrock account</li>
+	 * 		<li>{@link IOException} if a connection or JSON error occurs</li>
+	 * 	</ul>
 	 * 
-	 * <p>The future throws {@link IOException} if a connection or JSON error occurs.</p>
-	 * 
-	 * @param name Player's name
-	 * @return Player's online UUID
-	 * @throws IllegalArgumentException If specified name !{@link Utils#isValidUsername(String)}
+	 * @param name Java or Bedrock player's name
+	 * @return Java or Bedrock player's UUID
+	 * @throws IllegalArgumentException If specified name <code>!</code>{@link PlayerManager#isValidUsername(String)}
 	 */
 	public abstract CompletableFuture<UUID> getOnlineUUID(String name);
 	
 	/**
-	 * Calculates the specified player's offline UUID
-	 * v3 using {@link UUID#nameUUIDFromBytes(byte[])}.
+	 * Gets a Bedrock player's UUID.
 	 * 
-	 * @param name Player's name
-	 * @return Player's offline UUID
-	 * @throws IllegalArgumentException If specified name !{@link Utils#isValidUsername(String)}
+	 * <p>This simply converts the specified XUID to its
+	 * corresponding UUIDv0; no validation is performed.</p>
+	 * 
+	 * @param xuid Bedrock player's XUID
+	 * @return Bedrock player's UUID
+	 */
+	public abstract UUID getOnlineUUID(long xuid);
+	
+	/**
+	 * Calculates the specified Java player's offline
+	 * UUIDv3 using {@link UUID#nameUUIDFromBytes(byte[])}.
+	 * 
+	 * @param name Java player's offline name
+	 * @return Java player's offline UUIDv3
+	 * @throws IllegalArgumentException If specified name is a Bedrock
+	 * username or <code>!</code>{@link PlayerManager#isValidUsername(String)}
 	 */
 	public abstract UUID getOfflineUUID(String name);
 	
 	/**
-	 * Fetches the specified player's name from Mojang's servers.
+	 * Gets a Bedrock player's XUID by:
+	 * 	<ul>
+	 * 		<li>their in-game username (a name starting with {@link PlayerManager#getFloodgateUsernamePrefix()} matching {@link PlayerManager#getUsernamePattern()})</li>
+	 * 		<li>their gamertag (any other name)</li>
+	 * 	</ul>
 	 * 
-	 * <p>Will return <code>null</code> if the specified
-	 * UUID does not belong to a premium account.</p>
+	 * <p>The future throws:
+	 * 	<ul>
+	 * 		<li>{@link NoSuchElementException} if the name does not belong to a paid Bedrock account</li>
+	 * 		<li>{@link IOException} if a connection or JSON error occurs</li>
+	 * 	</ul>
 	 * 
-	 * <p>The future throws {@link IOException} if a connection or JSON error occurs.</p>
-	 * 
-	 * @param uuid Player's online UUID
-	 * @return Player's name
+	 * @param name Bedrock player's name or gamertag
+	 * @return Bedrock player's XUID
+	 * @throws IllegalArgumentException If <code>!{@link PlayerManager#isValidUsername(String)} &amp;&amp; !{@link #isValidClassicGamertag(String)}</code>
 	 */
-	@Nullable(why = "The specified UUID may not belong to any premium account")
-	public abstract CompletableFuture<String> getOnlineName(UUID uuid);
+	public abstract CompletableFuture<Long> getXUID(String name);
 	
 	/**
-	 * Gets a premium player's skin's texture's URL.
+	 * Gets a Bedrock player's XUID.
 	 * 
-	 * <p>Will return <code>null</code> if the specified
-	 * name does not belong to a premium account.</p>
+	 * <p>This simply converts the specified UUIDv0 to its corresponding
+	 * XUID; only a check on {@link UUID#version()} is performed.</p>
 	 * 
-	 * <p>The future throws {@link IOException} if a connection or JSON error occurs.</p>
-	 * 
-	 * <p>The URL will point to <code>textures.minecraft.net</code> or to
-	 * <code>api.mineatar.io</code> if a rate limit is encountered.</p>
-	 * 
-	 * @param name Player's name
-	 * @return Player's skin's texture's URL
-	 * @throws IllegalArgumentException If specified name !{@link Utils#isValidUsername(String)}
+	 * @param uuid Bedrock player's UUID
+	 * @return Bedrock player's XUID
+	 * @throws IllegalArgumentException If {@link UUID#version()}<code> != 0</code>
 	 */
-	@Nullable(why = "The specified name may not belong to any premium account")
+	public abstract long getXUID(UUID uuid);
+	
+	/**
+	 * Gets a Java or Bedrock player's skin's texture's URL based on the input:
+	 * 	<ul>
+	 * 		<li>a name starting with {@link PlayerManager#getFloodgateUsernamePrefix()} for a Bedrock player</li>
+	 * 		<li>any other name for a Java player</li>
+	 * 	</ul>
+	 * 
+	 * <p>The future throws:
+	 * 	<ul>
+	 * 		<li>{@link NoSuchElementException} if the name does not belong to a paid Java or Bedrock account <em>with a skin</em></li>
+	 * 		<li>{@link IOException} if a connection or JSON error occurs</li>
+	 * 	</ul>
+	 * 
+	 * <p>All paid Java accounts have a default skin, but Bedrock ones do not.
+	 * Skin texture URLs always point to <code>textures.minecraft.net</code>.</p>
+	 * 
+	 * @param name Java or Bedrock player's name
+	 * @return Java or Bedrock player's skin's texture's URL
+	 * @throws IllegalArgumentException If specified name <code>!</code>{@link PlayerManager#isValidUsername(String)}
+	 */
 	public abstract CompletableFuture<String> getSkinTextureURL(String name);
 	
 	/**
-	 * Gets a premium player's skin's texture's URL.
+	 * Gets a Java or Bedrock player's skin's texture's URL based on the input:
+	 * 	<ul>
+	 * 		<li>{@link UUID}v0 for a Bedrock player</li>
+	 * 		<li>{@link UUID}v4 for a Java player</li>
+	 * 	</ul>
 	 * 
-	 * <p>Will return <code>null</code> if the specified
-	 * UUID does not belong to a premium account.</p>
+	 * <p>The future throws:
+	 * 	<ul>
+	 * 		<li>{@link NoSuchElementException} if the UUID does not belong to a paid Java or Bedrock account <em>with a skin</em></li>
+	 * 		<li>{@link IOException} if a connection or JSON error occurs</li>
+	 * 	</ul>
 	 * 
-	 * <p>The future throws {@link IOException} if a connection or JSON error occurs.</p>
+	 * <p>All paid Java accounts have a default skin, but Bedrock ones do not.
+	 * Skin texture URLs always point to <code>textures.minecraft.net</code>.</p>
 	 * 
-	 * <p>The URL will point to <code>textures.minecraft.net</code> or to
-	 * <code>api.mineatar.io</code> if a rate limit is encountered.</p>
-	 * 
-	 * @param uuid Player's UUID
-	 * @return Player's skin's texture's URL
+	 * @param uuid Java or Bedrock player's UUID
+	 * @return Java or Bedrock player's skin's texture's URL
+	 * @throws IllegalArgumentException If {@link UUID#version()}<code> != 0 &amp;&amp; {@link UUID#version()} != 4</code>
 	 */
-	@Nullable(why = "The specified UUID may not belong to any premium account")
 	public abstract CompletableFuture<String> getSkinTextureURL(UUID uuid);
 	
 	/**
-	 * Gets a premium player's cape's texture's URL.
+	 * Gets a Bedrock player's skin's texture's URL.
 	 * 
-	 * <p>Will return <code>null</code> if the specified name does
-	 * not belong to a premium account or they do not have a cape.</p>
+	 * <p>The future throws:
+	 * 	<ul>
+	 * 		<li>{@link NoSuchElementException} if the XUID does not belong to a paid Bedrock account <em>with a skin</em></li>
+	 * 		<li>{@link IOException} if a connection or JSON error occurs</li>
+	 * 	</ul>
 	 * 
-	 * <p>The future throws {@link IOException} if a connection or JSON error occurs.</p>
+	 * <p>All paid Java accounts have a default skin, but Bedrock ones do not.
+	 * Skin texture URLs always point to <code>textures.minecraft.net</code>.</p>
 	 * 
-	 * <p>The URL will point to <code>textures.minecraft.net</code> or
-	 * to <code>api.capes.dev</code> if a rate limit is encountered.</p>
-	 * 
-	 * @param name Player's name
-	 * @return Player's cape's texture's URL
-	 * @throws IllegalArgumentException If specified name !{@link Utils#isValidUsername(String)}
+	 * @param xuid Bedrock player's XUID
+	 * @return Bedrock player's skin's texture's URL
 	 */
-	@Nullable(why = "The specified name may not belong to any premium account or may not have a cape")
-	public abstract CompletableFuture<String> getCapeTextureURL(String name);
-	
-	/**
-	 * Gets a premium player's cape's texture's URL.
-	 * 
-	 * <p>Will return <code>null</code> if the specified UUID does
-	 * not belong to a premium account or they do not have a cape.</p>
-	 * 
-	 * <p>The future throws {@link IOException} if a connection or JSON error occurs.</p>
-	 * 
-	 * <p>The URL will point to <code>textures.minecraft.net</code> or
-	 * to <code>api.capes.dev</code> if a rate limit is encountered.</p>
-	 * 
-	 * @param uuid Player's UUID
-	 * @return Player's cape's texture's URL
-	 */
-	@Nullable(why = "The specified UUID may not belong to any premium account or may not have a cape")
-	public abstract CompletableFuture<String> getCapeTextureURL(UUID uuid);
-	
-	/**
-	 * Applies dashes to the given UUID. For example,
-	 * "e1b47c83541c4a2a91d0b382279e9017" becomes
-	 * "e1b47c83-541c-4a2a-91d0-b382279e9017".
-	 * 
-	 * @param uuid UUID to dash
-	 * @return UUID with dashes
-	 * @throws NumberFormatException If specified UUID is invalid
-	 * @throws IndexOutOfBoundsException If specified UUID is invalid
-	 */
-	public abstract UUID dash(String uuid);
+	public abstract CompletableFuture<String> getSkinTextureURL(long xuid);
 	
 	/**
 	 * Gets the fetcher's current instance.
@@ -184,6 +244,33 @@ public abstract class UUIDFetcher {
 	 */
 	public static UUIDFetcher getInstance() {
 		return instance;
+	}
+	
+	/**
+	 * Applies dashes to the given UUID.
+	 * 
+	 * <p><strong>Example:</strong> "e1b47c83541c4a2a91d0b382279e9017"
+	 * ➝ "e1b47c83-541c-4a2a-91d0-b382279e9017"</p>
+	 * 
+	 * @param nonDashedUUID UUID to dash
+	 * @return Dashed UUID
+	 * @throws IllegalArgumentException If specified UUID is invalid
+	 */
+	public static UUID dash(String nonDashedUUID) {
+		if (nonDashedUUID.length() == 32)
+			return new UUID(Long.parseUnsignedLong(nonDashedUUID.substring(0, 16), 16), Long.parseUnsignedLong(nonDashedUUID.substring(16), 16));
+		throw new IllegalArgumentException("Specified non-dashed UUID is not 32 characters long");
+	}
+	
+	/**
+	 * Checks if the specified String is a valid classic gamertag.
+	 * 
+	 * @param classicGamertag Classic gamertag to check
+	 * @return Whether the specified classic gamertag is valid
+	 * @see #CLASSIC_GAMERTAG_PATTERN
+	 */
+	public static boolean isValidClassicGamertag(String classicGamertag) {
+		return CLASSIC_GAMERTAG_PATTERN.matcher(classicGamertag).matches();
 	}
 	
 }

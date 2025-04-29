@@ -24,10 +24,12 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
+import me.remigio07.chatplugin.api.common.integration.multiplatform.MultiPlatformIntegration;
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
@@ -37,11 +39,11 @@ import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
+import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.common.util.packet.Packets;
 import me.remigio07.chatplugin.api.server.event.player.ServerPlayerLoadEvent;
 import me.remigio07.chatplugin.api.server.event.player.ServerPlayerUnloadEvent;
-import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 
 /**
@@ -60,10 +62,18 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	public void load() throws ChatPluginManagerException {
 		try {
 			storageCount = StorageConnector.getInstance().count(DataContainer.PLAYERS).intValue();
-		} catch (SQLException e) {
-			throw new ChatPluginManagerException(this, e);
-		} enabledWorlds = new ArrayList<>(ConfigurationType.CONFIG.get().getStringList("settings.enabled-worlds"));
+		} catch (SQLException sqle) {
+			throw new ChatPluginManagerException(this, sqle);
+		} if (IntegrationType.FLOODGATE.isEnabled()) {
+			if ((floodgateUsernamePrefix = IntegrationType.FLOODGATE.get().getUsernamePrefix()).isEmpty())
+				LogManager.log("Floodgate is installed but the username prefix set at \"username-prefix\" in its config.yml is empty: this is not recommended as ChatPlugin will not be able to distinguish Java players from Bedrock ones.", 1);
+			else if (!Pattern.matches("^[^ \\w]$", floodgateUsernamePrefix))
+				throw new ChatPluginManagerException(this, "invalid Floodgate username prefix ({0}) set at \"username-prefix\" in Floodgate's config.yml: it cannot be longer than 1 character and cannot be a letter, a number, a space or an underscore", floodgateUsernamePrefix);
+		} else if (!Pattern.matches("^[^ \\w]?$", floodgateUsernamePrefix = ConfigurationType.CONFIG.get().getString("settings.floodgate-username-prefix")))
+			throw new ChatPluginManagerException(this, "invalid Floodgate username prefix ({0}) set at \"settings.floodgate-username-prefix\" in config.yml: it cannot be longer than 1 character and cannot be a letter, a number, a space or an underscore", floodgateUsernamePrefix);
 		super.load();
+		
+		enabledWorlds = new ArrayList<>(ConfigurationType.CONFIG.get().getStringList("settings.enabled-worlds"));
 	}
 	
 	@Override
@@ -122,17 +132,17 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	 * 
 	 * @deprecated Names should not be used to identify players. Use {@link #getPlayer(UUID)} instead.
 	 * @param name Player to get
-	 * @param checkPattern Whether to check the name against {@link Utils#USERNAME_PATTERN}
+	 * @param checkPattern Whether to check the name against {@link #getUsernamePattern()}
 	 * @param ignoreCase Whether to ignore case when checking online players
 	 * @return Loaded {@link ChatPluginServerPlayer}
-	 * @throws IllegalArgumentException If <code>checkPattern</code> and specified name <code>!{@link Utils#isValidUsername(String)}</code>
+	 * @throws IllegalArgumentException If <code>checkPattern</code> and specified name <code>!{@link #isValidUsername(String)}</code>
 	 */
 	@Nullable(why = "Specified player may not be loaded")
 	@Deprecated
 	@Override
 	public ChatPluginServerPlayer getPlayer(String name, boolean checkPattern, boolean ignoreCase) {
-		if (checkPattern && !Utils.isValidUsername(name))
-			throw new IllegalArgumentException("Username \"" + name + "\" does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
+		if (checkPattern && !isValidUsername(name))
+			throw new IllegalArgumentException("Username \"" + name + "\" does not respect the following pattern: \"" + usernamePattern.pattern() + "\"");
 		for (ChatPluginServerPlayer player : players.values())
 			if (ignoreCase ? player.getName().equalsIgnoreCase(name) : player.getName().equals(name))
 				return player;
@@ -189,7 +199,7 @@ public abstract class ServerPlayerManager extends PlayerManager {
 		this.storageCount = storageCount;
 	}
 	
-	protected void checkState(Runnable runnable) {
+	protected void verifyAndRun(Runnable runnable) {
 		if (ChatPlugin.getState() == ChatPluginState.RELOADING || ChatPlugin.getState() == ChatPluginState.UNLOADING)
 			runnable.run();
 		else TaskManager.runAsync(runnable, 0L);
@@ -250,7 +260,7 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	
 	/**
 	 * Checks if the specified player is connected
-	 * through {@link IntegrationType#GEYSERMC}.
+	 * through a {@link MultiPlatformIntegration}.
 	 * 
 	 * @param player Player's UUID
 	 * @return Whether the player is using the BE

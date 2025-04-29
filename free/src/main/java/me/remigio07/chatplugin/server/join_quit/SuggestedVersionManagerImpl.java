@@ -15,7 +15,6 @@
 
 package me.remigio07.chatplugin.server.join_quit;
 
-import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
@@ -55,7 +54,7 @@ public class SuggestedVersionManagerImpl extends SuggestedVersionManager {
 	
 	@Override
 	public void check(ChatPluginServerPlayer player) {
-		if (!enabled || player.getVersion().isAtLeast(version) || (IntegrationType.GEYSERMC.isEnabled() && IntegrationType.GEYSERMC.get().isBedrockPlayer(player.toAdapter())))
+		if (!enabled || player.getVersion().isAtLeast(version) || player.isBedrockPlayer())
 			return;
 		TaskManager.runAsync(() -> {
 			if (player.isLoaded())

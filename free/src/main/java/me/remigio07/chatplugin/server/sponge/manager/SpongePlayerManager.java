@@ -103,7 +103,7 @@ public class SpongePlayerManager extends ServerPlayerManager {
 			player.spongeValue().setScoreboard(scoreboard);
 			
 			// custom suffix
-			if (CustomSuffixManager.getInstance().isEnabled()) {
+			if (CustomSuffixManager.getInstance().isEnabled() && !serverPlayer.isBedrockPlayer()) {
 				scoreboard.addObjective(Objective.builder().name("tablist_suffix").criterion(CustomSuffixManager.getInstance().getRenderType() == RenderType.HEARTS ? Criteria.HEALTH : Criteria.DUMMY).build());
 				
 				Objective customSuffix = scoreboard.getObjective("tablist_suffix").get();

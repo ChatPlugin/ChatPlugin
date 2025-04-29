@@ -81,15 +81,6 @@ public class Utils {
 	public static final File MAIN_FOLDER = new File(File.separator);
 	
 	/**
-	 * Pattern representing the allowed usernames.
-	 * 
-	 * <p><strong>Regex:</strong> "^[a-zA-Z0-9_]{2,16}$"</p>
-	 * 
-	 * @see #isValidUsername(String)
-	 */
-	public static final Pattern USERNAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{2,16}$");
-	
-	/**
 	 * Pattern representing the allowed IPv4s.
 	 * 
 	 * <p><strong>Regex:</strong> <a href="https://regex101.com/r/d0rZxJ/1"><code>^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$</code></a></p>
@@ -294,17 +285,6 @@ public class Utils {
 		case VELOCITY:
 			return VelocityBootstrapper.getInstance().getProxy().getConfiguration().getShowMaxPlayers();
 		} return -1;
-	}
-	
-	/**
-	 * Checks if the specified String is a valid username.
-	 * 
-	 * @param username Username to check
-	 * @return Whether the specified username is valid
-	 * @see #USERNAME_PATTERN
-	 */
-	public static boolean isValidUsername(String username) {
-		return USERNAME_PATTERN.matcher(username).matches();
 	}
 	
 	/**

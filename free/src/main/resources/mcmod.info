@@ -7,8 +7,9 @@
 		"description": "A lightweight yet complete plugin which handles just too many features!",
 		"authorList": ["Remigio07"],
 		"dependencies": [
-            "negativity@[1.9.0,)",
+			"luckperms@[5.0,5.3]",
+			"negativity@[1.9.0,)",
 			"viaversion@[4.0.0,)"
-        ]
+		]
 	}
 ]

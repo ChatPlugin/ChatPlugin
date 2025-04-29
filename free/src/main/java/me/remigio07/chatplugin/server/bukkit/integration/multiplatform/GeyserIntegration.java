@@ -13,23 +13,29 @@
  * 	<https://remigio07.me/chatplugin>
  */
 
-package me.remigio07.chatplugin.server.sponge.integration.multiplatform;
+package me.remigio07.chatplugin.server.bukkit.integration.multiplatform;
 
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.integration.multiplatform.MultiPlatformIntegration;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
+import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.common.util.Utils;
-import me.remigio07.chatplugin.server.sponge.integration.ChatPluginSpongeIntegration;
+import me.remigio07.chatplugin.server.bukkit.integration.ChatPluginBukkitIntegration;
 
-public class GeyserMCIntegration extends ChatPluginSpongeIntegration<MultiPlatformIntegration> implements MultiPlatformIntegration {
+public class GeyserIntegration extends ChatPluginBukkitIntegration<MultiPlatformIntegration> implements MultiPlatformIntegration {
 	
-	public GeyserMCIntegration() {
-		super(IntegrationType.GEYSERMC);
+	public GeyserIntegration() {
+		super(IntegrationType.GEYSER);
 	}
 	
 	@Override
 	public boolean isBedrockPlayer(PlayerAdapter player) {
-		return Utils.isBedrockPlayer(player.getUUID());
+		return Utils.isGeyserPlayer(player.getUUID());
+	}
+	
+	@Override
+	public @NotNull String getUsernamePrefix() {
+		return "";
 	}
 	
 }

@@ -32,7 +32,8 @@ import me.remigio07.chatplugin.server.bukkit.integration.cosmetic.UltraCosmetics
 import me.remigio07.chatplugin.server.bukkit.integration.cosmetic.gadgetsmenu.GadgetsMenuIntegration;
 import me.remigio07.chatplugin.server.bukkit.integration.economy.EssentialsXIntegration;
 import me.remigio07.chatplugin.server.bukkit.integration.economy.VaultIntegration;
-import me.remigio07.chatplugin.server.bukkit.integration.multiplatform.GeyserMCIntegration;
+import me.remigio07.chatplugin.server.bukkit.integration.multiplatform.FloodgateIntegration;
+import me.remigio07.chatplugin.server.bukkit.integration.multiplatform.GeyserIntegration;
 import me.remigio07.chatplugin.server.bukkit.integration.permission.LuckPermsIntegration;
 import me.remigio07.chatplugin.server.bukkit.integration.placeholder.MVdWPlaceholderAPIIntegration;
 import me.remigio07.chatplugin.server.bukkit.integration.placeholder.PlaceholderAPIIntegration;
@@ -53,8 +54,9 @@ public class BukkitIntegrationManager extends IntegrationManager {
 		putIntegration(new CombatLogXIntegration());
 		putIntegration(new DiscordSRVIntegration());
 		putIntegration(new EssentialsXIntegration());
+		putIntegration(new FloodgateIntegration());
 		putIntegration(new GadgetsMenuIntegration());
-		putIntegration(new GeyserMCIntegration());
+		putIntegration(new GeyserIntegration());
 		putIntegration(new LuckPermsIntegration());
 		putIntegration(new MatrixIntegration());
 		putIntegration(new MVdWPlaceholderAPIIntegration());

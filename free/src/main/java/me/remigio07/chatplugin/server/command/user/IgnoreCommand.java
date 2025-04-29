@@ -15,10 +15,10 @@
 
 package me.remigio07.chatplugin.server.command.user;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
@@ -80,12 +80,9 @@ public class IgnoreCommand extends PlayerCommand {
 				if (args.length == 2) {
 					TaskManager.runAsync(() -> {
 						try {
-							OfflinePlayer target = new OfflinePlayer(args[1]);
+							OfflinePlayer target = OfflinePlayer.get(args[1]).get();
 							
-							if (target.getUUID().equals(Utils.NIL_UUID)) {
-								player.sendTranslatedMessage("misc.inexistent-player", args[1]);
-								return;
-							} if (!target.equals(player)) {
+							if (!target.equals(player)) {
 								if (target.hasPlayedBefore()) {
 									if (!target.hasPermission(getPermission() + ".bypass")) {
 										java.util.List<OfflinePlayer> ignoredPlayers = player.getIgnoredPlayers();
@@ -103,12 +100,12 @@ public class IgnoreCommand extends PlayerCommand {
 									} else player.sendTranslatedMessage("commands.ignore.cannot-ignore.other", target.getName());
 								} else player.sendTranslatedMessage("commands.ignore.cannot-ignore.self");
 							} else player.sendTranslatedMessage("misc.player-not-stored", target.getName());
-						} catch (IllegalArgumentException e) {
+						} catch (IllegalArgumentException iae) {
 							player.sendTranslatedMessage("misc.invalid-player-name");
-						} catch (SQLException e) {
-							player.sendTranslatedMessage("misc.database-error", e.getClass().getSimpleName(), e.getMessage());
-						} catch (IOException e) {
-							player.sendTranslatedMessage("misc.cannot-fetch", args[1], e.getMessage());
+						} catch (InterruptedException | ExecutionException e) {
+							if (e.getCause() instanceof NoSuchElementException)
+								player.sendTranslatedMessage("misc.inexistent-player", args[1]);
+							else player.sendTranslatedMessage("misc.error-occurred", e.getClass().getSimpleName(), e.getLocalizedMessage());
 						}
 					}, 0L);
 				} else sendUsage(player);
@@ -145,12 +142,9 @@ public class IgnoreCommand extends PlayerCommand {
 				if (args.length == 2) {
 					TaskManager.runAsync(() -> {
 						try {
-							OfflinePlayer target = new OfflinePlayer(args[1]);
+							OfflinePlayer target = OfflinePlayer.get(args[1]).get();
 							
-							if (target.getUUID().equals(Utils.NIL_UUID)) {
-								player.sendTranslatedMessage("misc.inexistent-player", args[1]);
-								return;
-							} if (target.hasPlayedBefore()) {
+							if (target.hasPlayedBefore()) {
 								java.util.List<OfflinePlayer> ignoredPlayers = player.getIgnoredPlayers();
 								
 								if (ignoredPlayers.contains(target)) {
@@ -166,12 +160,12 @@ public class IgnoreCommand extends PlayerCommand {
 									} return;
 								} player.sendTranslatedMessage("commands.ignore.removed.not-ignoring", target.getName());
 							} else player.sendTranslatedMessage("misc.player-not-stored", target.getName());
-						} catch (IllegalArgumentException e) {
+						} catch (IllegalArgumentException iae) {
 							player.sendTranslatedMessage("misc.invalid-player-name");
-						} catch (SQLException e) {
-							player.sendTranslatedMessage("misc.database-error", e.getClass().getSimpleName(), e.getMessage());
-						} catch (IOException e) {
-							player.sendTranslatedMessage("misc.cannot-fetch", args[1], e.getMessage());
+						} catch (InterruptedException | ExecutionException e) {
+							if (e.getCause() instanceof NoSuchElementException)
+								player.sendTranslatedMessage("misc.inexistent-player", args[1]);
+							else player.sendTranslatedMessage("misc.error-occurred", e.getClass().getSimpleName(), e.getLocalizedMessage());
 						}
 					}, 0L);
 				} else sendUsage(player);
@@ -246,24 +240,21 @@ public class IgnoreCommand extends PlayerCommand {
 					if (player.hasPermission(getPermission() + ".others")) {
 						TaskManager.runAsync(() -> {
 							try {
-								OfflinePlayer target = new OfflinePlayer(args[1]);
+								OfflinePlayer target = OfflinePlayer.get(args[1]).get();
 								
-								if (target.getUUID().equals(Utils.NIL_UUID)) {
-									player.sendTranslatedMessage("misc.inexistent-player", args[1]);
-									return;
-								} if (target.hasPlayedBefore()) {
+								if (target.hasPlayedBefore()) {
 									java.util.List<OfflinePlayer> ignoredPlayers = PlayerIgnoreManager.getInstance().getIgnoredPlayers(target);
 									
 									if (ignoredPlayers.isEmpty())
 										player.sendTranslatedMessage("commands.ignore.no-ignored.other", target.getName());
 									else player.sendTranslatedMessage("commands.ignore.list.other", target.getName(), ignoredPlayers.size(), Utils.getStringFromList(ignoredPlayers.stream().map(OfflinePlayer::getName).collect(Collectors.toList()), false, false));
 								} else player.sendTranslatedMessage("misc.player-not-stored", target.getName());
-							} catch (IllegalArgumentException e) {
+							} catch (IllegalArgumentException iae) {
 								player.sendTranslatedMessage("misc.invalid-player-name");
-							} catch (SQLException e) {
-								player.sendTranslatedMessage("misc.database-error", e.getClass().getSimpleName(), e.getMessage());
-							} catch (IOException e) {
-								player.sendTranslatedMessage("misc.cannot-fetch", args[1], e.getMessage());
+							} catch (InterruptedException | ExecutionException e) {
+								if (e.getCause() instanceof NoSuchElementException)
+									player.sendTranslatedMessage("misc.inexistent-player", args[1]);
+								else player.sendTranslatedMessage("misc.error-occurred", e.getClass().getSimpleName(), e.getLocalizedMessage());
 							}
 						}, 0L);
 					} else player.sendTranslatedMessage("misc.no-permission");

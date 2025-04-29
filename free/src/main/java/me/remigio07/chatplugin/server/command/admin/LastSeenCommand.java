@@ -15,10 +15,11 @@
 
 package me.remigio07.chatplugin.server.command.admin;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.concurrent.ExecutionException;
 
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
@@ -51,24 +52,22 @@ public class LastSeenCommand extends BaseCommand {
 			if (player == null) {
 				TaskManager.runAsync(() -> {
 					try {
-						OfflinePlayer offlinePlayer = new OfflinePlayer(args[0]);
+						OfflinePlayer offlinePlayer = OfflinePlayer.get(args[0]).get();
 						
-						if (offlinePlayer.getUUID().equals(Utils.NIL_UUID)) {
-							sender.sendMessage(language.getMessage("misc.inexistent-player", args[0]));
-							return;
-						} if (StorageConnector.getInstance().isPlayerStored(offlinePlayer)) {
+						if (StorageConnector.getInstance().isPlayerStored(offlinePlayer)) {
 							Long lastLogout = StorageConnector.getInstance().getPlayerData(PlayersDataType.LAST_LOGOUT, offlinePlayer);
 							
 							if (lastLogout == null)
 								sender.sendMessage(language.getMessage("commands.lastseen.never-joined", offlinePlayer.getName()));
 							else sender.sendMessage(language.getMessage("commands.lastseen.offline", offlinePlayer.getName(), Utils.formatTime(System.currentTimeMillis() - lastLogout, language, false, false), StorageConnector.getInstance().getPlayerData(PlayersDataType.PLAYER_IP, offlinePlayer)));
 						} else sender.sendMessage(language.getMessage("misc.player-not-stored", args[0]));
-					} catch (IllegalArgumentException e) {
+					} catch (IllegalArgumentException iae) {
 						sender.sendMessage(language.getMessage("misc.invalid-player-name"));
-					} catch (IOException e) {
-						sender.sendMessage(language.getMessage("misc.cannot-fetch", args[0], e.getMessage()));
-					} catch (SQLException e) {
-						sender.sendMessage(language.getMessage("misc.database-error", e.getClass().getSimpleName(), e.getMessage()));
+					} catch (InterruptedException | ExecutionException | SQLException e) {
+						sender.sendMessage(e.getCause() instanceof NoSuchElementException
+								? language.getMessage("misc.inexistent-player", args[0])
+								: language.getMessage("misc.error-occurred", e.getClass().getSimpleName(), e.getLocalizedMessage())
+								);
 					}
 				}, 0L);
 			} else if (player.isLoaded()) {

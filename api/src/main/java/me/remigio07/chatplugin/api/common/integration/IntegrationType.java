@@ -60,14 +60,19 @@ public class IntegrationType<T extends ChatPluginIntegration> {
 	public static final IntegrationType<EconomyIntegration> ESSENTIALSX = new IntegrationType<>("Essentials", "com.earth2me.essentials.Essentials", Arrays.asList(Environment.BUKKIT));
 	
 	/**
+	 * Represents the <a href="https://geysermc.org/wiki/floodgate/">Floodgate</a> integration.
+	 */
+	public static final IntegrationType<MultiPlatformIntegration> FLOODGATE = new IntegrationType<>("Floodgate", "org.geysermc.floodgate.api.FloodgateApi", Arrays.asList(Environment.BUKKIT, Environment.BUNGEECORD, Environment.VELOCITY));
+	
+	/**
 	 * Represents the <a href="https://www.gadgetsmenu.net/">GadgetsMenu</a> integration.
 	 */
 	public static final IntegrationType<CosmeticsIntegration> GADGETSMENU = new IntegrationType<>("GadgetsMenu", "com.yapzhenyie.GadgetsMenu.GadgetsMenu", Arrays.asList(Environment.BUKKIT));
 	
 	/**
-	 * Represents the <a href="https://geysermc.org/">GeyserMC</a> integration.
+	 * Represents the <a href="https://geysermc.org/wiki/geyser/">Geyser</a> integration.
 	 */
-	public static final IntegrationType<MultiPlatformIntegration> GEYSERMC = new IntegrationType<>("GeyserMC", "org.geysermc.geyser.GeyserMain", Arrays.asList(Environment.values()));
+	public static final IntegrationType<MultiPlatformIntegration> GEYSER = new IntegrationType<>("Geyser", "org.geysermc.geyser.api.GeyserApi", Arrays.asList(Environment.BUKKIT, Environment.BUNGEECORD, Environment.VELOCITY));
 	
 	/**
 	 * Represents the <a href="https://luckperms.net/">LuckPerms</a> integration.
@@ -130,8 +135,8 @@ public class IntegrationType<T extends ChatPluginIntegration> {
 	/**
 	 * Represents the <a href="https://enginehub.org/worldguard">WorldGuard</a> integration.
 	 */
-	public static final IntegrationType<RegionIntegration> WORLDGUARD = new IntegrationType<>("WorldGuard", "com.sk89q.worldguard.WorldGuard", Arrays.asList(Environment.BUKKIT, Environment.SPONGE));
-	private static final IntegrationType<?>[] VALUES = new IntegrationType[] { COMBATLOGX, DISCORDSRV, ESSENTIALSX, GADGETSMENU, GEYSERMC, LUCKPERMS, MATRIX, MVDWPLACEHOLDERAPI, NEGATIVITY, PLACEHOLDERAPI, PLAYERPARTICLES, PROTOCOLSUPPORT, ULTRACOSMETICS, VAULT, VIAVERSION, VULCAN, WORLDGUARD };
+	public static final IntegrationType<RegionIntegration> WORLDGUARD = new IntegrationType<>("WorldGuard", "com.sk89q.worldguard.WorldGuard", Arrays.asList(Environment.BUKKIT));
+	private static final IntegrationType<?>[] VALUES = new IntegrationType[] { COMBATLOGX, DISCORDSRV, ESSENTIALSX, FLOODGATE, GADGETSMENU, GEYSER, LUCKPERMS, MATRIX, MVDWPLACEHOLDERAPI, NEGATIVITY, PLACEHOLDERAPI, PLAYERPARTICLES, PROTOCOLSUPPORT, ULTRACOSMETICS, VAULT, VIAVERSION, VULCAN, WORLDGUARD };
 	private String plugin, clazz;
 	private List<Environment> supportedEnvironments;
 	

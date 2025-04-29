@@ -19,7 +19,7 @@ import java.net.InetAddress;
 import java.util.UUID;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
-import me.remigio07.chatplugin.api.common.integration.IntegrationType;
+import me.remigio07.chatplugin.api.common.integration.multiplatform.MultiPlatformIntegration;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.proxy.player.ChatPluginProxyPlayer;
@@ -70,8 +70,8 @@ public interface ChatPluginPlayer {
 	public Version getVersion();
 	
 	/**
-	 * Checks if this player is connected
-	 * through {@link IntegrationType#GEYSERMC}.
+	 * Checks if this player is connected through
+	 * a {@link MultiPlatformIntegration}.
 	 * 
 	 * @return Whether this player is using the Bedrock Edition
 	 */

@@ -18,6 +18,7 @@ package me.remigio07.chatplugin.api.server.integration.anticheat;
 import java.util.List;
 
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
+import me.remigio07.chatplugin.api.common.integration.multiplatform.MultiPlatformIntegration;
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
@@ -146,8 +147,8 @@ public abstract class Violation {
 	}
 	
 	/**
-	 * Checks if the cheater is connected
-	 * through {@link IntegrationType#GEYSERMC}.
+	 * Checks if the cheater is connected through
+	 * a {@link MultiPlatformIntegration}.
 	 * 
 	 * @return Whether the cheater is using the Bedrock Edition
 	 */

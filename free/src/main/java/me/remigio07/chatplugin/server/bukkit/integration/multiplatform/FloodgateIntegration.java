@@ -18,18 +18,24 @@ package me.remigio07.chatplugin.server.bukkit.integration.multiplatform;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.integration.multiplatform.MultiPlatformIntegration;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
+import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.bukkit.integration.ChatPluginBukkitIntegration;
 
-public class GeyserMCIntegration extends ChatPluginBukkitIntegration<MultiPlatformIntegration> implements MultiPlatformIntegration {
+public class FloodgateIntegration extends ChatPluginBukkitIntegration<MultiPlatformIntegration> implements MultiPlatformIntegration {
 	
-	public GeyserMCIntegration() {
-		super(IntegrationType.GEYSERMC);
+	public FloodgateIntegration() {
+		super(IntegrationType.FLOODGATE);
 	}
 	
 	@Override
 	public boolean isBedrockPlayer(PlayerAdapter player) {
-		return Utils.isBedrockPlayer(player.getUUID());
+		return Utils.isFloodgatePlayer(player.getUUID());
+	}
+	
+	@Override
+	public @NotNull String getUsernamePrefix() {
+		return Utils.getFloodgateUsernamePrefix();
 	}
 	
 }

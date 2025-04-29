@@ -20,13 +20,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
-import me.remigio07.chatplugin.api.common.util.Utils;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
+import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.proxy.event.player.ProxyPlayerLoadEvent;
 import me.remigio07.chatplugin.api.proxy.event.player.ProxyPlayerUnloadEvent;
 
@@ -41,6 +43,12 @@ public abstract class ProxyPlayerManager extends PlayerManager {
 	public void load() throws ChatPluginManagerException {
 		instance = this;
 		
+		if (IntegrationType.FLOODGATE.isEnabled()) {
+			if ((floodgateUsernamePrefix = IntegrationType.FLOODGATE.get().getUsernamePrefix()).isEmpty())
+				LogManager.log("Floodgate is installed but the username prefix set at \"username-prefix\" in its config.yml is empty: this is not recommended as ChatPlugin will not be able to distinguish Java players from Bedrock ones.", 1);
+			else if (!Pattern.matches("^[^ \\w]$", floodgateUsernamePrefix))
+				throw new ChatPluginManagerException(this, "invalid Floodgate username prefix ({0}) set at \"username-prefix\" in Floodgate's config.yml: it cannot be longer than 1 character and cannot be a letter, a number, a space or an underscore", floodgateUsernamePrefix);
+		} else floodgateUsernamePrefix = "";
 		super.load();
 		
 		enabled = true;
@@ -99,17 +107,17 @@ public abstract class ProxyPlayerManager extends PlayerManager {
 	 * 
 	 * @deprecated Names should not be used to identify players. Use {@link #getPlayer(UUID)} instead.
 	 * @param name Player to get
-	 * @param checkPattern Whether to check the name against {@link Utils#USERNAME_PATTERN}
+	 * @param checkPattern Whether to check the name against {@link #getUsernamePattern()}
 	 * @param ignoreCase Whether to ignore case when checking online players
 	 * @return Loaded {@link ChatPluginProxyPlayer}
-	 * @throws IllegalArgumentException If <code>checkPattern</code> and specified name <code>!{@link Utils#isValidUsername(String)}</code>
+	 * @throws IllegalArgumentException If <code>checkPattern</code> and specified name <code>!{@link #isValidUsername(String)}</code>
 	 */
 	@Nullable(why = "Specified player may not be loaded")
 	@Deprecated
 	@Override
 	public ChatPluginProxyPlayer getPlayer(String name, boolean checkPattern, boolean ignoreCase) {
-		if (!Utils.isValidUsername(name))
-			throw new IllegalArgumentException("Username \"" + name + "\" does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
+		if (!isValidUsername(name))
+			throw new IllegalArgumentException("Username \"" + name + "\" does not respect the following pattern: \"" + usernamePattern.pattern() + "\"");
 		for (ChatPluginProxyPlayer player : getPlayers().values())
 			if (ignoreCase ? player.getName().equalsIgnoreCase(name) : player.getName().equals(name))
 				return player;

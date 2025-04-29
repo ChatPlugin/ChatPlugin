@@ -177,7 +177,7 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 			player.bukkitValue().setScoreboard(scoreboard);
 			
 			// custom suffix
-			if (CustomSuffixManager.getInstance().isEnabled()) {
+			if (CustomSuffixManager.getInstance().isEnabled() && !serverPlayer.isBedrockPlayer()) {
 				Objective customSuffix = registerNewObjective(scoreboard, "tablist_suffix", CustomSuffixManager.getInstance().getRenderType() == RenderType.HEARTS ? "health" : "dummy");
 				
 				if (VersionUtils.getVersion().isAtLeast(Version.V1_13_2))

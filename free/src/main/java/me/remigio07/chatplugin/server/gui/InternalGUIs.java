@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
+import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.punishment.Punishment;
 import me.remigio07.chatplugin.api.common.punishment.ban.Ban;
@@ -331,22 +332,24 @@ public class InternalGUIs {
 		FillableGUI<Punishment> playerPunishments = (FillableGUI<Punishment>) manager().createPerPlayerGUI(playerPunishmentsLayout, player);
 		StorageConnector storage = StorageConnector.getInstance();
 		List<Punishment> punishments = new ArrayList<>();
+		boolean onlineMode = ChatPlugin.getInstance().isOnlineMode();
+		WhereCondition condition = new WhereCondition("player_" + (onlineMode ? "uuid" : "name"), WhereOperator.EQUAL, onlineMode ? player.getUUID().toString() : player.getName());
 		
 		try {
 			if (BanManager.getInstance().isEnabled())
-				for (Number id : storage.getColumnValues(DataContainer.BANS, "id", Number.class, new WhereCondition("player_uuid", WhereOperator.EQUAL, player.getUUID().toString())))
+				for (Number id : storage.getColumnValues(DataContainer.BANS, "id", Number.class, condition))
 					punishments.add(storage.getBan(id.intValue()));
 			if (WarningManager.getInstance().isEnabled())
-				for (Number id : storage.getColumnValues(DataContainer.WARNINGS, "id", Number.class, new WhereCondition("player_uuid", WhereOperator.EQUAL, player.getUUID().toString())))
+				for (Number id : storage.getColumnValues(DataContainer.WARNINGS, "id", Number.class, condition))
 					punishments.add(storage.getWarning(id.intValue()));
 			if (KickManager.getInstance().isEnabled())
-				for (Number id : storage.getColumnValues(DataContainer.KICKS, "id", Number.class, new WhereCondition("player_uuid", WhereOperator.EQUAL, player.getUUID().toString())))
+				for (Number id : storage.getColumnValues(DataContainer.KICKS, "id", Number.class, condition))
 					punishments.add(storage.getKick(id.intValue()));
 			if (MuteManager.getInstance().isEnabled())
-				for (Number id : storage.getColumnValues(DataContainer.MUTES, "id", Number.class, new WhereCondition("player_uuid", WhereOperator.EQUAL, player.getUUID().toString())))
+				for (Number id : storage.getColumnValues(DataContainer.MUTES, "id", Number.class, condition))
 					punishments.add(storage.getMute(id.intValue()));
-		} catch (SQLException e) {
-			
+		} catch (SQLException sqle) {
+			error(sqle, playerPunishments.getID());
 		} playerPunishments.setTitlesTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
 		playerPunishments.setStringPlaceholdersTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, u, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
 		playerPunishments.setFillers(punishments.stream().map(punishment -> new GUIFiller<Punishment>() {

@@ -21,9 +21,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import me.remigio07.chatplugin.api.common.util.Utils;
+import me.remigio07.chatplugin.api.common.integration.multiplatform.MultiPlatformIntegration;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -43,17 +44,22 @@ public abstract class PlayerManager implements ChatPluginManager {
 	
 	protected static PlayerManager instance;
 	protected boolean enabled;
+	protected String floodgateUsernamePrefix;
+	protected Pattern usernamePattern;
 	protected TimeZone displayedTimeZone;
 	protected long loadTime;
 	
 	@Override
 	public void load() throws ChatPluginManagerException {
+		usernamePattern = Pattern.compile("^(?=.{2,16}$)(?:" + Pattern.quote(floodgateUsernamePrefix) + "\\w{1," + (16 - floodgateUsernamePrefix.length()) + "}|\\w{2,})$");
 		String tz = ConfigurationType.CONFIG.get().getString("settings.displayed-time-zone");
 		displayedTimeZone = tz.isEmpty() ? TimeZone.getDefault() : TimeZone.getTimeZone(tz); // TODO: add validation
 	}
 	
 	@Override
 	public void unload() {
+		floodgateUsernamePrefix = null;
+		usernamePattern = null;
 		displayedTimeZone = null;
 	}
 	
@@ -89,9 +95,45 @@ public abstract class PlayerManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the loaded players' amount.
+	 * Gets the prefix added in front of Bedrock
+	 * players' usernames to prevent duplicates.
 	 * 
 	 * @return Loaded players' amount
 	 * @see #getPlayers()
+	 * <p>This method retrieves the prefix using Floodgate's
+	 * {@link MultiPlatformIntegration#getUsernamePrefix()} or from
+	 * "settings.floodgate-username-prefix" in {@link ConfigurationType#CONFIG}
+	 * depending on the current environment.</p>
+	 * 
+	 * @return Bedrock players' prefix
+	 */
+	public String getFloodgateUsernamePrefix() {
+		return floodgateUsernamePrefix;
+	}
+	
+	/**
+	 * Gets the pattern used to verify valid usernames.
+	 * 
+	 * <p>This will consider Bedrock players if Floodgate
+	 * is installed or {@link #getFloodgateUsernamePrefix()}
+	 * depending on the current environment.</p>
+	 * 
+	 * @return Username's pattern
+	 */
+	public Pattern getUsernamePattern() {
+		return usernamePattern;
+	}
+	
+	/**
+	 * Checks if the specified String is a valid username.
+	 * 
+	 * @param username Username to check
+	 * @return Whether the specified username is valid
+	 * @see #getUsernamePattern()
+	 */
+	public boolean isValidUsername(String username) {
+		return usernamePattern.matcher(username).matches();
+	}
 	
 	/**
 	 * Gets the time zone displayed to players in messages.
@@ -157,10 +199,10 @@ public abstract class PlayerManager implements ChatPluginManager {
 	 * 
 	 * @deprecated Names should not be used to identify players. Use {@link #getPlayer(UUID)} instead.
 	 * @param name Player to get
-	 * @param checkPattern Whether to check the name against {@link Utils#USERNAME_PATTERN}
+	 * @param checkPattern Whether to check the name against {@link #getUsernamePattern()}
 	 * @param ignoreCase Whether to ignore case when checking online players
 	 * @return Loaded {@link ChatPluginPlayer}
-	 * @throws IllegalArgumentException If <code>checkPattern</code> and specified name <code>!{@link Utils#isValidUsername(String)}</code>
+	 * @throws IllegalArgumentException If <code>checkPattern</code> and specified name <code>!{@link #isValidUsername(String)}</code>
 	 * @see ServerPlayerManager#getPlayer(String, boolean, boolean)
 	 * @see ProxyPlayerManager#getPlayer(String, boolean, boolean)
 	 */

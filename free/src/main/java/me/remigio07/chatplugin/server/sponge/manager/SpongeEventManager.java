@@ -54,6 +54,7 @@ import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationTyp
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
+import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.bossbar.BossbarManager;
 import me.remigio07.chatplugin.api.server.chat.ChatManager;
@@ -201,11 +202,13 @@ public class SpongeEventManager extends EventManager {
 	public void onClientConnection$Join(ClientConnectionEvent.Join event) {
 		PlayerAdapter player = new PlayerAdapter(event.getTargetEntity());
 		
-		ServerPlayerManager.getPlayersVersions().put(player.getUUID(), IntegrationType.VIAVERSION.isEnabled() ? IntegrationType.VIAVERSION.get().getVersion(player) : IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(player) : VersionUtils.getVersion());
+		if (player.getUUID().version() == 0 && !player.getName().startsWith(ServerPlayerManager.getInstance().getFloodgateUsernamePrefix())) {
+			LogManager.log(FLOODGATE_ERROR_MESSAGE, 2, player.getName(), ServerPlayerManager.getInstance().getFloodgateUsernamePrefix(), IntegrationType.FLOODGATE.isEnabled() ? "username-prefix\" in Floodgate's" : "settings.floodgate-username-prefix\" in");
+			player.disconnect("Invalid ChatPlugin/Floodgate configuration. Please contact this server's Staff to fix the issue.");
+			return;
+		} ServerPlayerManager.getPlayersVersions().put(player.getUUID(), IntegrationType.VIAVERSION.isEnabled() ? IntegrationType.VIAVERSION.get().getVersion(player) : IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(player) : VersionUtils.getVersion());
 		ServerPlayerManager.getPlayersLoginTimes().put(player.getUUID(), System.currentTimeMillis());
 		
-		if (IntegrationType.GEYSERMC.isEnabled() && IntegrationType.GEYSERMC.get().isBedrockPlayer(player))
-			ServerPlayerManager.getBedrockPlayers().add(player.getUUID());
 		if (ServerPlayerManager.getInstance().isWorldEnabled(event.getTargetEntity().getWorld().getName())) {
 			if (JoinMessageManager.getInstance().isEnabled())
 				event.setMessageCancelled(true);

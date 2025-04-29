@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.bukkit.Statistic;
 import org.spongepowered.api.data.key.Keys;
@@ -36,7 +37,6 @@ import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
 import me.remigio07.chatplugin.api.common.storage.StorageManager;
-import me.remigio07.chatplugin.api.common.util.Utils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -137,7 +137,7 @@ public abstract class DatabaseConnector extends StorageConnector {
 	public List<Integer> getIDs(DataContainer table) throws SQLException {
 		if (table == DataContainer.PUBLIC_MESSAGES || table == DataContainer.PRIVATE_MESSAGES)
 			throw new IllegalArgumentException("Unable to get IDs in table " + table.getDatabaseTableID() + " since that table does not have IDs");
-		return Utils.numberListToIntegerList(getColumnValues("SELECT " + table.getIDColumn() + " FROM " + table.getDatabaseTableID(), 1, Number.class));
+		return getColumnValues("SELECT " + table.getIDColumn() + " FROM " + table.getDatabaseTableID(), 1, Number.class).stream().map(Integer.class::cast).collect(Collectors.toList());
 	}
 	
 	@Override
@@ -150,7 +150,8 @@ public abstract class DatabaseConnector extends StorageConnector {
 	@Override
 	@Nullable(why = "Stored data may be SQL NULL")
 	public <T> T getPlayerData(PlayersDataType<T> type, OfflinePlayer player) throws SQLException {
-		return convertNumber(get("SELECT " + type.getDatabaseTableID() + " FROM " + DataContainer.PLAYERS.getDatabaseTableID() + " WHERE player_uuid = ?", type.getDatabaseTableID(), type.getType(), player.getUUID().toString()), type);
+		boolean onlineMode = ChatPlugin.getInstance().isOnlineMode();
+		return convertNumber(get("SELECT " + type.getDatabaseTableID() + " FROM " + DataContainer.PLAYERS.getDatabaseTableID() + " WHERE player_" + (onlineMode ? "uuid" : "name") + " = ?", type.getDatabaseTableID(), type.getType(), onlineMode ? player.getUUID().toString() : player.getName()), type);
 	}
 	
 	@Override
@@ -162,9 +163,11 @@ public abstract class DatabaseConnector extends StorageConnector {
 	public void setPlayerData(PlayersDataType<?> type, OfflinePlayer player, @Nullable(why = "Data will become SQL NULL if null") Object data) throws SQLException {
 		if (type == PlayersDataType.ID)
 			throw new IllegalArgumentException("Unable to change a player's ID");
-		if (isPlayerStored(player))
-			executeUpdate("UPDATE " + DataContainer.PLAYERS.getDatabaseTableID() + " SET " + type.getDatabaseTableID() + " = ? WHERE player_uuid = ?", data, player.getUUID().toString());
-		else LogManager.log("The plugin tried to write data into the database (table: {0}, column: {1}) for a player ({2}) who has never played on the server. Data: \"{3}\".", 2, DataContainer.PLAYERS.getDatabaseTableID(), type.getDatabaseTableID(), player.getName(), String.valueOf(data));
+		if (isPlayerStored(player)) {
+			boolean onlineMode = ChatPlugin.getInstance().isOnlineMode();
+			
+			executeUpdate("UPDATE " + DataContainer.PLAYERS.getDatabaseTableID() + " SET " + type.getDatabaseTableID() + " = ? WHERE player_" + (onlineMode ? "uuid" : "name") + " = ?", data, onlineMode ? player.getUUID().toString() : player.getName());
+		} else LogManager.log("The plugin tried to write data into the database (table: {0}, column: {1}) for a player ({2}) who has never played on the server. Data: \"{3}\".", 2, DataContainer.PLAYERS.getDatabaseTableID(), type.getDatabaseTableID(), player.getName(), String.valueOf(data));
 	}
 	
 	@Override

@@ -341,14 +341,14 @@ public class PlayerAdapter {
 	 * <p>Will return <code>null</code> if they are not online.</p>
 	 * 
 	 * @param name Player's name, case insensitive
-	 * @param checkPattern Whether to check the name against {@link Utils#USERNAME_PATTERN}
+	 * @param checkPattern Whether to check the name against {@link PlayerManager#getUsernamePattern()}
 	 * @return Player if online or <code>null</code> otherwise
-	 * @throws IllegalArgumentException If <code>checkPattern</code> and specified name <code>!{@link Utils#isValidUsername(String)}</code>
+	 * @throws IllegalArgumentException If <code>checkPattern</code> and specified name <code>!{@link PlayerManager#isValidUsername(String)}</code>
 	 */
 	@Nullable(why = "The specified player may not be online")
 	public static PlayerAdapter getPlayer(String name, boolean checkPattern) {
-		if (checkPattern && !Utils.isValidUsername(name))
-			throw new IllegalArgumentException("Username \"" + name + "\" does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
+		if (checkPattern && !PlayerManager.getInstance().isValidUsername(name))
+			throw new IllegalArgumentException("Username \"" + name + "\" does not respect the following pattern: \"" + PlayerManager.getInstance().getUsernamePattern().pattern() + "\"");
 		Object player = null;
 		
 		switch (Environment.getCurrent()) {

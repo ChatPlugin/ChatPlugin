@@ -620,7 +620,7 @@ public class Icon {
 		CompletableFuture<ItemStackAdapter> future = new CompletableFuture<>();
 		
 		try {
-			itemStack.setSkullOwner(skullOwner == null ? null : formatPlaceholders(skullOwner, gui, language, false)).thenAccept(future::complete);
+			itemStack.setSkullOwner(skullOwner == null ? null : formatPlaceholders(skullOwner, gui, language, false), true).thenAccept(future::complete);
 		} catch (IllegalArgumentException e) {
 			future.complete(itemStack);
 		} return future;

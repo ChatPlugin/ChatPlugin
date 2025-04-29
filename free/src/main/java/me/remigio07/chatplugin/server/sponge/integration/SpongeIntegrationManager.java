@@ -24,7 +24,6 @@ import me.remigio07.chatplugin.api.common.integration.IntegrationManager;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.server.sponge.integration.anticheat.negativity.NegativityIntegration;
-import me.remigio07.chatplugin.server.sponge.integration.multiplatform.GeyserMCIntegration;
 import me.remigio07.chatplugin.server.sponge.integration.permission.LuckPermsIntegration;
 import me.remigio07.chatplugin.server.sponge.integration.version.ViaVersionIntegration;
 
@@ -37,7 +36,6 @@ public class SpongeIntegrationManager extends IntegrationManager {
 		Collection<ChatPluginIntegration> integrations = this.integrations.values();
 		List<String> hooked = new ArrayList<>();
 		
-		putIntegration(new GeyserMCIntegration());
 		putIntegration(new LuckPermsIntegration());
 		putIntegration(new NegativityIntegration());
 		putIntegration(new ViaVersionIntegration());

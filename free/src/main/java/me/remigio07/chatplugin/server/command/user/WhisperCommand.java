@@ -15,13 +15,13 @@
 
 package me.remigio07.chatplugin.server.command.user;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.concurrent.ExecutionException;
 
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
-import me.remigio07.chatplugin.api.common.util.Utils;
+import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
 import me.remigio07.chatplugin.api.server.language.Language;
@@ -52,23 +52,20 @@ public class WhisperCommand extends BaseCommand {
 							if (sender.hasPermission(getPermission() + ".console"))
 								PrivateMessagesManager.getInstance().sendPrivateMessage(sender.toServerPlayer(), null, message);
 							else sender.sendMessage(language.getMessage("misc.no-permission"));
-						else if (Utils.isValidUsername(args[0])) {
-							OfflinePlayer recipient = new OfflinePlayer(args[0]);
+						else if (PlayerManager.getInstance().isValidUsername(args[0])) {
+							OfflinePlayer recipient = OfflinePlayer.get(args[0]).get();
 							
-							if (!recipient.getUUID().equals(Utils.NIL_UUID))
-								if (recipient.hasPlayedBefore())
-									PrivateMessagesManager.getInstance().sendPrivateMessage(sender.toServerPlayer(), recipient, message);
-								else sender.sendMessage(language.getMessage("misc.player-not-stored", recipient.getName()));
-							else sender.sendMessage(language.getMessage("misc.inexistent-player", args[0]));
+							if (recipient.hasPlayedBefore())
+								PrivateMessagesManager.getInstance().sendPrivateMessage(sender.toServerPlayer(), recipient, message);
+							else sender.sendMessage(language.getMessage("misc.player-not-stored", recipient.getName()));
 						} else sender.sendMessage(language.getMessage("misc.invalid-player-name"));
-					} catch (IllegalArgumentException e) {
+					} catch (IllegalArgumentException iae) {
 						sender.sendMessage(language.getMessage("commands.whisper.self"));
-					} catch (SQLException e) {
-						sender.sendMessage(language.getMessage("misc.database-error", e.getClass().getSimpleName(), e.getMessage()));
-					} catch (IOException e) {
-						sender.sendMessage(language.getMessage("misc.cannot-fetch", args[0], e.getMessage()));
-					} catch (IllegalStateException e) {
-						sender.sendMessage(language.getMessage("misc.at-least-one-online"));
+					} catch (InterruptedException | ExecutionException e) {
+						sender.sendMessage(e.getCause() instanceof NoSuchElementException
+								? language.getMessage("misc.inexistent-player", args[0])
+								: language.getMessage("misc.error-occurred", e.getClass().getSimpleName(), e.getLocalizedMessage())
+								);
 					}
 				}, 0L);
 			} else sendUsage(sender, language);

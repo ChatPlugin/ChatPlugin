@@ -148,9 +148,12 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 			try {
 				String currentIPAddress = player.getAddress().getAddress().getHostAddress();
 				
-				if (playerStored && !storage.getPlayerData(PlayersDataType.PLAYER_NAME, this).equals(player.getName()))
-					storage.setPlayerData(PlayersDataType.PLAYER_NAME, this, player.getName());
-				if (IPLookupManager.getInstance().isEnabled()) {
+				if (playerStored) {
+					if (!storage.getPlayerData(PlayersDataType.PLAYER_NAME, id).equals(name))
+						storage.setPlayerData(PlayersDataType.PLAYER_NAME, id, name);
+					else if (!storage.getPlayerData(PlayersDataType.PLAYER_UUID, id).equals(uuid.toString()))
+						storage.setPlayerData(PlayersDataType.PLAYER_UUID, id, uuid.toString());
+				} if (IPLookupManager.getInstance().isEnabled()) {
 					if (IPLookupManager.getInstance().isLoadOnJoin() && ipLookup == null)
 						try {
 							ipLookup = IPLookupManager.getInstance().getIPLookup(getIPAddress()).get(5, TimeUnit.SECONDS);

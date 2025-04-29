@@ -17,14 +17,17 @@ package me.remigio07.chatplugin.api.server.util.adapter.inventory.item;
 
 import java.awt.Color;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,8 +36,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
-import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.attribute.AttributeModifier.Operation;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -64,6 +66,7 @@ import com.google.common.collect.Multimap;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
+import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.common.util.UUIDFetcher;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
@@ -74,7 +77,6 @@ import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.adapter.block.MaterialAdapter;
 import me.remigio07.chatplugin.bootstrap.Environment;
-import me.remigio07.chatplugin.bootstrap.JARLibraryLoader;
 
 /**
  * Environment indipendent (Bukkit and Sponge) item stack adapter.
@@ -161,8 +163,8 @@ public class ItemStackAdapter implements Cloneable {
 			if (((org.bukkit.inventory.ItemStack) itemStack).hasItemMeta()) {
 				ItemMeta meta = ((org.bukkit.inventory.ItemStack) itemStack).getItemMeta();
 				
-				meta.getItemFlags().forEach(itemFlag -> itemFlags.add(ItemFlagAdapter.valueOf(itemFlag.name())));
 				meta.getEnchants().forEach((enchantment, level) -> enchantments.put(EnchantmentAdapter.valueOf(enchantment.getName()), level));
+				meta.getItemFlags().stream().map(itemFlag -> ItemFlagAdapter.valueOf(itemFlag.name())).filter(Objects::nonNull).distinct().forEach(itemFlag -> itemFlags.add(itemFlag));
 				
 				if (isPlayerHead())
 					skullOwner = ((SkullMeta) meta).getOwner();
@@ -192,7 +194,7 @@ public class ItemStackAdapter implements Cloneable {
 			enchantments.forEach(itemStack::enchant);
 		if (isPlayerHead()) {
 			if (getSkullOwner() != null)
-				itemStack.setSkullOwner(getSkullOwner());
+				itemStack.setSkullOwner(getSkullOwner(), getSkullTextureURL() != null);
 			else if (getSkullTextureURL() != null)
 				itemStack.setSkullTextureURL(getSkullTextureURL());
 		} else if (isLeatherArmor())
@@ -550,7 +552,6 @@ public class ItemStackAdapter implements Cloneable {
 	 * @param itemFlags Item flags to add
 	 * @return This item stack
 	 */
-	@SuppressWarnings("removal")
 	public ItemStackAdapter addItemFlags(ItemFlagAdapter... itemFlags) {
 		for (ItemFlagAdapter itemFlag : itemFlags) {
 			if (!this.itemFlags.contains(itemFlag)) {
@@ -560,15 +561,7 @@ public class ItemStackAdapter implements Cloneable {
 					ItemMeta meta = bukkitValue().getItemMeta();
 					
 					if (itemFlag == ItemFlagAdapter.HIDE_ATTRIBUTES && VersionUtils.getVersion().isAtLeast(Version.V1_20_5))
-						try {
-							Class<?> BukkitReflection = Class.forName("me.remigio07.chatplugin.server.bukkit.BukkitReflection", false, JARLibraryLoader.getInstance());
-							
-							BukkitReflection.getMethod("invokeMethod", String.class, String.class, Object.class, Object[].class).invoke(null, "ItemMeta", "addAttributeModifier", meta, new Object[] {
-									VersionUtils.getVersion().isAtLeast(Version.V1_21_3) ? BukkitReflection.getMethod("getFieldValue", String.class, Object.class, String[].class).invoke(null, "Attribute", null, new String[] { "ARMOR" })
-											: BukkitReflection.getMethod("getEnum", String.class, String[].class).invoke(null, "Attribute", new String[] { "GENERIC_ARMOR" }), new AttributeModifier("chatplugin", 0, Operation.ADD_NUMBER) });
-						} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-							e.printStackTrace();
-						}
+						meta.setAttributeModifiers(bukkitValue().getType().getDefaultAttributeModifiers(EquipmentSlot.HAND));
 					meta.addItemFlags(itemFlag.bukkitValue());
 					bukkitValue().setItemMeta(meta);
 				} this.itemFlags.add(itemFlag);
@@ -591,15 +584,7 @@ public class ItemStackAdapter implements Cloneable {
 					ItemMeta meta = bukkitValue().getItemMeta();
 					
 					if (itemFlag == ItemFlagAdapter.HIDE_ATTRIBUTES && VersionUtils.getVersion().isAtLeast(Version.V1_20_5))
-						try {
-							Class<?> BukkitReflection = Class.forName("me.remigio07.chatplugin.server.bukkit.BukkitReflection", false, JARLibraryLoader.getInstance());
-							
-							BukkitReflection.getMethod("invokeMethod", String.class, String.class, Object.class, Object[].class).invoke(null, "ItemMeta", "removeAttributeModifier", meta, new Object[] {
-									VersionUtils.getVersion().isAtLeast(Version.V1_21_3) ? BukkitReflection.getMethod("getFieldValue", String.class, Object.class, String[].class).invoke(null, "Attribute", null, new String[] { "ARMOR" })
-											: BukkitReflection.getMethod("getEnum", String.class, String[].class).invoke(null, "Attribute", new String[] { "GENERIC_ARMOR" }) });
-						} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-							e.printStackTrace();
-						}
+						meta.setAttributeModifiers(null);
 					meta.removeItemFlags(itemFlag.bukkitValue());
 					bukkitValue().setItemMeta(meta);
 				} this.itemFlags.remove(itemFlag);
@@ -633,48 +618,46 @@ public class ItemStackAdapter implements Cloneable {
 	/**
 	 * Sets this skull's owner.
 	 * 
-	 * <p>Will do nothing if the specified player name does not belong to a premium
-	 * player. You can specify <code>null</code> to remove the skull's owner.</p>
+	 * <p>Will do nothing if the specified player name does not belong to a premium player.
+	 * Specify <code>null</code> as <code>skullOwner</code> to remove the skull's owner.
+	 * Specify <code>true</code> as <code>snapshot</code> to save a snapshot of the textures.</p>
+	 * 
+	 * <p>The latter forces clients to render the head using the original skin on Mojang servers.
+	 * Useful to prevent some launchers like TLauncher from loading skins from their servers.</p>
 	 * 
 	 * @param skullOwner Skull's owner
+	 * @param snapshot Whether to save a snapshot of the textures
 	 * @return This item stack
-	 * @throws IllegalArgumentException If specified name !{@link Utils#isValidUsername(String)}
+	 * @throws IllegalArgumentException If specified name <code>!</code>{@link PlayerManager#isValidUsername(String)}
 	 */
-	@SuppressWarnings("deprecation")
-	public CompletableFuture<ItemStackAdapter> setSkullOwner(@Nullable(why = "Skull's owner is removed when null") String skullOwner) {
+	public CompletableFuture<ItemStackAdapter> setSkullOwner(@Nullable(why = "Skull's owner is removed when null") String skullOwner, boolean snapshot) {
 		CompletableFuture<ItemStackAdapter> future = new CompletableFuture<>();
 		
 		if (isPlayerHead()) {
-			if (skullOwner == null) {
-				if (Environment.isBukkit()) {
-					ItemMeta meta = bukkitValue().getItemMeta();
-					
-					((SkullMeta) meta).setOwner(null);
-					bukkitValue().setItemMeta(meta);
-				} else spongeValue().remove(Keys.REPRESENTED_PLAYER);
-			} else if (!Utils.isValidUsername(skullOwner))
-				throw new IllegalArgumentException("Username \"" + skullOwner + "\" does not respect the following pattern: \"" + Utils.USERNAME_PATTERN.pattern() + "\"");
-			else if (!skullOwner.equals(this.skullOwner) && !nonPremiumUsernames.contains(skullOwner)) {
-				Object[] cache = skullsCache.get(skullOwner);
+			if (skullOwner == null)
+				setSkullProfile(null, null, null);
+			else if (!PlayerManager.getInstance().isValidUsername(skullOwner))
+				throw new IllegalArgumentException("Username \"" + skullOwner + "\" does not respect the following pattern: \"" + PlayerManager.getInstance().getUsernamePattern().pattern() + "\"");
+			else if (!skullOwner.equalsIgnoreCase(this.skullOwner) && !nonPremiumUsernames.contains(skullOwner.toLowerCase())) {
+				Object[] cache = skullsCache.get(skullOwner.toLowerCase());
 				
 				if (cache == null) {
 					TaskManager.runAsync(() -> {
 						try {
 							UUID uuid = UUIDFetcher.getInstance().getOnlineUUID(skullOwner).get();
+							String onlineName = UUIDFetcher.getInstance().getName(uuid).get();
 							
-							if (uuid.equals(Utils.NIL_UUID)) {
-								nonPremiumUsernames.add(skullOwner);
-								future.complete(this);
-								return;
-							} skullsCache.put(skullOwner, new Object[] { UUIDFetcher.getInstance().getSkinTextureURL(uuid).get(), uuid });
-							setSkullTextureURL((String) skullsCache.get(skullOwner)[0], uuid);
+							skullsCache.put(skullOwner.toLowerCase(), new Object[] { uuid, onlineName, UUIDFetcher.getInstance().getSkinTextureURL(uuid).get() });
+							setSkullProfile(uuid, this.skullOwner = onlineName, snapshot ? (String) skullsCache.get(skullOwner.toLowerCase())[2] : null);
 						} catch (InterruptedException | ExecutionException e) {
-							LogManager.log("{0} occurred while setting a skull's owner for an item stack: {1}", 2, e.getClass().getSimpleName(), e.getMessage());
+							if (e.getCause() instanceof NoSuchElementException)
+								nonPremiumUsernames.add(skullOwner.toLowerCase());
+							else LogManager.log("{0} occurred while setting a skull's owner for an item stack: {1}", 2, e.getClass().getSimpleName(), e.getLocalizedMessage());
 						} future.complete(this);
 					}, 0L);
 					return future;
-				} setSkullTextureURL((String) cache[0], (UUID) cache[1]);
-			}
+				} setSkullProfile((UUID) cache[0], (String) cache[1], snapshot ? (String) cache[2] : null);
+			} this.skullOwner = skullOwner;
 		} future.complete(this);
 		return future;
 	}
@@ -730,10 +713,9 @@ public class ItemStackAdapter implements Cloneable {
 			try {
 				value = new String(Base64.getDecoder().decode(value), StandardCharsets.ISO_8859_1);
 				int index = value.indexOf("\"http") + 1;
-				
 				return value.substring(index, value.indexOf('"', index));
-			} catch (IndexOutOfBoundsException e) {
-				
+			} catch (IndexOutOfBoundsException ioobe) {
+				ioobe.printStackTrace(); // should never happen
 			}
 		return null;
 	}
@@ -741,61 +723,57 @@ public class ItemStackAdapter implements Cloneable {
 	/**
 	 * Sets this skull's texture found at given URL.
 	 * 
-	 * <p>You can specify <code>null</code> to remove the skull's texture's URL.</p>
+	 * <p>Specify <code>null</code> to remove the skull's texture's URL. The URL must point to the Minecraft texture server; example:
+	 * <code>https://textures.minecraft.net/texture/b3fbd454b599df593f57101bfca34e67d292a8861213d2202bb575da7fd091ac</code></p>
 	 * 
 	 * @param skullTextureURL Texture's URL
 	 * @return This item stack
 	 */
 	public ItemStackAdapter setSkullTextureURL(@Nullable(why = "Texture's URL is removed when null") String skullTextureURL) {
-		return setSkullTextureURL(skullTextureURL, UUID.randomUUID());
+		return isPlayerHead() ? setSkullProfile(UUID.randomUUID(), "chatplugin", skullTextureURL) : this;
 	}
 	
-	private ItemStackAdapter setSkullTextureURL(String skullTextureURL, UUID uuid) {
-		if (!isPlayerHead())
-			return this;
+	private ItemStackAdapter setSkullProfile(UUID uuid, String name, String skullTextureURL) {
 		if (Environment.isBukkit()) {
 			ItemMeta meta = bukkitValue().getItemMeta();
 			
 			if (VersionUtils.getVersion().isOlderThan(Version.V1_20_2)) {
-				GameProfile profile = new GameProfile(uuid, null);
-				Class<?> headMeta = meta.getClass();
+				GameProfile profile = uuid == null ? null : new GameProfile(uuid, name);
 				
-				if (skullTextureURL != null) {
+				if (skullTextureURL != null)
 					profile.getProperties().put("textures", new Property("textures", new String(Base64.getEncoder().encode(("{textures:{SKIN:{url:\"" + skullTextureURL + "\"}}}").getBytes()), StandardCharsets.ISO_8859_1)));
+				try {
+					Field field = meta.getClass().getDeclaredField("profile");
 					
-					try {
-						Field field = headMeta.getDeclaredField("profile");
-						
-						field.setAccessible(true);
-						field.set(meta, profile);
-						bukkitValue().setItemMeta(meta);
-					} catch (IllegalAccessException | NoSuchFieldException e) {
-						
-					}
-				} else profile.getProperties().removeAll("textures");
+					field.setAccessible(true);
+					field.set(meta, profile);
+					bukkitValue().setItemMeta(meta);
+				} catch (IllegalAccessException | NoSuchFieldException e) {
+					LogManager.log("{0} occurred while setting a skull's profile for an item stack: {1}", 2, e.getClass().getSimpleName(), e.getLocalizedMessage());
+				}
 			} else {
-				if (skullTextureURL != null) {
-					PlayerProfile profile = Bukkit.createPlayerProfile(uuid, "chatplugin");
-					PlayerTextures textures = profile.getTextures();
-					
-					try {
+				PlayerProfile profile = uuid == null ? null : Bukkit.createPlayerProfile(uuid, name);
+				
+				try {
+					if (skullTextureURL != null) {
+						PlayerTextures textures = profile.getTextures();
+						
 						textures.setSkin(new URI(skullTextureURL).toURL());
 						profile.setTextures(textures);
-						((SkullMeta) meta).setOwnerProfile(profile);
-						bukkitValue().setItemMeta(meta);
-					} catch (Exception e) {
-						LogManager.log("{0} occurred while setting a skull's texture's URL for an item stack: {1}", 2, e.getClass().getSimpleName(), e.getMessage());
-					}
-				} else {
-					((SkullMeta) meta).setOwnerProfile(null);
+					} ((SkullMeta) meta).setOwnerProfile(profile);
 					bukkitValue().setItemMeta(meta);
+				} catch (URISyntaxException | IllegalArgumentException | MalformedURLException e) {
+					LogManager.log("{0} occurred while setting a skull's profile for an item stack: {1}", 2, e.getClass().getSimpleName(), e.getLocalizedMessage());
 				}
 			}
-		} else {
-			if (skullTextureURL == null)
-				spongeValue().get(Keys.REPRESENTED_PLAYER).ifPresent(profile -> profile.getPropertyMap().removeAll("textures"));
-			else spongeValue().offer(Keys.REPRESENTED_PLAYER, Sponge.getServer().getGameProfileManager().createProfile(uuid, null).addProperty("textures", ProfileProperty.of("textures", new String(Base64.getEncoder().encode(("{textures:{SKIN:{url:\"" + skullTextureURL + "\"}}}").getBytes()), StandardCharsets.ISO_8859_1))));
-		} return this;
+		} else if (uuid != null) {
+			org.spongepowered.api.profile.GameProfile profile = Sponge.getServer().getGameProfileManager().createProfile(uuid, name);
+			
+			if (skullTextureURL != null)
+				profile.addProperty("textures", ProfileProperty.of("textures", new String(Base64.getEncoder().encode(("{textures:{SKIN:{url:\"" + skullTextureURL + "\"}}}").getBytes()), StandardCharsets.ISO_8859_1)));
+			spongeValue().offer(Keys.REPRESENTED_PLAYER, profile);
+		} else spongeValue().remove(Keys.REPRESENTED_PLAYER);
+		return this;
 	}
 	
 	/**
@@ -861,7 +839,7 @@ public class ItemStackAdapter implements Cloneable {
 		
 		if (other.getSkullOwner() != null) {
 			if (!getSkullOwner().equals(other.getSkullOwner()))
-				setSkullOwner(other.getSkullOwner());
+				setSkullOwner(other.getSkullOwner(), other.getSkullTextureURL() != null);
 		} else if (other.getSkullTextureURL() != null) {
 			if (!getSkullTextureURL().equals(other.getSkullTextureURL()))
 				setSkullTextureURL(other.getSkullTextureURL());

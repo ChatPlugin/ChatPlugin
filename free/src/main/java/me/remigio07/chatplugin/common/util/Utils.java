@@ -124,13 +124,33 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 		}
 	}
 	
-	public static boolean isBedrockPlayer(UUID player) {
+	public static boolean isGeyserPlayer(UUID player) {
 		try {
 			Class<?> GeyserApi = Class.forName("org.geysermc.geyser.api.GeyserApi");
 			return (boolean) GeyserApi.getMethod("isBedrockPlayer", UUID.class).invoke(GeyserApi.getMethod("api").invoke(null), player);
 		} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
 		} return false;
+	}
+	
+	public static boolean isFloodgatePlayer(UUID player) {
+		try {
+			Class<?> FloodgateApi = Class.forName("org.geysermc.floodgate.api.FloodgateApi");
+			return (boolean) FloodgateApi.getMethod("isFloodgatePlayer", UUID.class).invoke(FloodgateApi.getMethod("getInstance").invoke(null), player);
+		} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public static String getFloodgateUsernamePrefix() {
+		try {
+			Class<?> FloodgateApi = Class.forName("org.geysermc.floodgate.api.FloodgateApi");
+			return (String) FloodgateApi.getMethod("getPlayerPrefix").invoke(FloodgateApi.getMethod("getInstance").invoke(null));
+		} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			e.printStackTrace();
+			return ".";
+		}
 	}
 	
 	public static InputStream download(URL url) throws IOException {

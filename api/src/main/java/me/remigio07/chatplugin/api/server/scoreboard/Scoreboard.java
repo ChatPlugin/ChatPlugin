@@ -120,8 +120,8 @@ public abstract class Scoreboard {
 	
 	/**
 	 * Checks if text (scoreboards' lines and titles)
-	 * should be abbreviated by adding "..." at the
-	 * end when it is too long to be displayed instead
+	 * should be abbreviated by adding '…' at the end
+	 * when it is too long to be displayed instead
 	 * of {@link ScoreboardTitles#TITLE_TOO_LONG}
 	 * or {@link ScoreboardLines#LINE_TOO_LONG}.
 	 * 

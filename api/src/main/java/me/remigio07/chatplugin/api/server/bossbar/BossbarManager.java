@@ -105,8 +105,8 @@ public abstract class BossbarManager implements ChatPluginManager, Runnable {
 	}
 	
 	/**
-	 * Checks if bossbars' titles should be abbreviated by
-	 * adding "..." at the end when they are too long to
+	 * Checks if bossbars' titles should be abbreviated
+	 * by adding '…' at the end when they are too long to
 	 * be displayed instead of {@link #TITLE_TOO_LONG}.
 	 * 
 	 * <p><strong>Found at:</strong> "bossbars.settings.abbreviate-long-titles" in {@link ConfigurationType#BOSSBARS}</p>

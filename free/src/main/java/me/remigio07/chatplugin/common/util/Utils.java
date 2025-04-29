@@ -209,7 +209,7 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 		
 		if ((stripColor ? stripped : input).length() <= length)
 			return input;
-		return input.substring(0, length + (stripColor ? input.length() - stripped.length() : 0) - 3) + "...";
+		return input.substring(0, length + (stripColor ? input.length() - stripped.length() : 0) - 1) + '…';
 	}
 	
 	public static void debugPrint(List<String> list) {

@@ -42,7 +42,7 @@ public class H2Connector extends DatabaseConnector {
 	@Override
 	public void load() throws ChatPluginManagerException {
 		instance = this;
-		long serverModeTask = -1;
+		long serverModeTaskID = -1;
 		
 		try {
 			LibrariesUtils.load(Library.H2_DATABASE_ENGINE);
@@ -50,7 +50,7 @@ public class H2Connector extends DatabaseConnector {
 			boolean serverMode = ConfigurationType.CONFIG.get().getBoolean("storage.database.use-server-mode");
 			
 			if (serverMode)
-				serverModeTask = TaskManager.runAsync(() -> {
+				serverModeTaskID = TaskManager.runAsync(() -> {
 					if (connection == null)
 						LogManager.log("H2 is selected as storage method with the server mode (\"storage.database.use-server-mode\" in config.yml) enabled. This may require extra time to start the database if no connections are open.", 0);
 				}, 1000L);
@@ -67,7 +67,7 @@ public class H2Connector extends DatabaseConnector {
 			
 			executeUpdate("SET IGNORECASE TRUE");
 		} catch (Exception e) {
-			TaskManager.cancelAsync(serverModeTask);
+			TaskManager.cancelAsync(serverModeTaskID);
 			throw new ChatPluginManagerException(DatabaseManager.getInstance(), e);
 		}
 	}
@@ -229,7 +229,7 @@ public class H2Connector extends DatabaseConnector {
 			throw new IllegalArgumentException("Unable to get next ID in table " + table.getDatabaseTableID() + " since that table does not have IDs");
 		if (table == DataContainer.IP_ADDRESSES)
 			table = DataContainer.PLAYERS;
-		Number id = get("SELECT identity_base FROM information_schema.columns WHERE table_name = '" + table.getDatabaseTableID() + "' AND column_name = ?", "identity_base", Number.class, table.getIDColumn());
+		Number id = get("SELECT identity_base FROM information_schema.columns WHERE table_name = ? AND column_name = ?", "identity_base", Number.class, table.getDatabaseTableID().toUpperCase(), table.getIDColumn().toUpperCase());
 		return id == null ? 1 : id.intValue();
 	}
 	

@@ -29,6 +29,7 @@ import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationMan
 import me.remigio07.chatplugin.api.common.util.Library;
 import me.remigio07.chatplugin.api.common.util.Library.Relocation;
 import me.remigio07.chatplugin.api.common.util.MemoryUtils;
+import me.remigio07.chatplugin.api.common.util.VersionChange;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.bootstrap.IsolatedClassLoader;
 import me.remigio07.chatplugin.bootstrap.JARLibraryLoader;
@@ -53,7 +54,7 @@ public class LibrariesUtils {
 				File file = getTarget(library);
 				
 				if (file.exists()) {
-					if (ConfigurationManager.getInstance().getLastVersionChange().isMinor())
+					if (ConfigurationManager.getInstance().getLastVersionChange() != VersionChange.NULL)
 						downloadFreshCopy("Updating {0} library (new plugin version detected)...", 0, library);
 					else if (library.getMD5Hash() != null && !bytesToHexString(MessageDigest.getInstance("MD5").digest(Files.readAllBytes(getTarget(library).toPath()))).equals(library.getMD5Hash()))
 						downloadFreshCopy("The {0} library's file is corrupted; downloading a fresh copy...", 1, library);

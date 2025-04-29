@@ -80,11 +80,9 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 			if (!Environment.isProxy()) {
 				for (Library library : ADVENTURE_LIBS)
 					LibrariesUtils.load(library);
-				if (Environment.isBukkit()) {
+				if (Environment.isBukkit())
 					LibrariesUtils.load(Library.ADVENTURE_PLATFORM_BUKKIT);
-					LibrariesUtils.load(Library.ADVENTURE_PLATFORM_BUNGEECORD);
-					LibrariesUtils.load(Library.ADVENTURE_PLATFORM_VIAVERSION);
-				} else if (Environment.isSponge())
+				else if (Environment.isSponge())
 					LibrariesUtils.load(Library.ADVENTURE_PLATFORM_SPONGEAPI);
 			} LibrariesUtils.load(Library.JSON_SIMPLE);
 		} catch (LibraryException e) {

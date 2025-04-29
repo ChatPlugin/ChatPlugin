@@ -94,12 +94,9 @@ public abstract class PlayerManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the loaded players' amount.
 	 * Gets the prefix added in front of Bedrock
 	 * players' usernames to prevent duplicates.
 	 * 
-	 * @return Loaded players' amount
-	 * @see #getPlayers()
 	 * <p>This method retrieves the prefix using Floodgate's
 	 * {@link MultiPlatformIntegration#getUsernamePrefix()} or from
 	 * "settings.floodgate-username-prefix" in {@link ConfigurationType#CONFIG}
@@ -142,8 +139,6 @@ public abstract class PlayerManager implements ChatPluginManager {
 	 * 
 	 * @return Displayed time zone
 	 */
-	public int getTotalPlayers() {
-		return getPlayers().size();
 	public TimeZone getDisplayedTimeZone() {
 		return displayedTimeZone;
 	}

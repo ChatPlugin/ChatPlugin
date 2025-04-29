@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -96,11 +97,11 @@ public class PlaceholderAPIIntegration extends ChatPluginBukkitIntegration<Place
 		}
 		
 		@Override
-		public String onRequest(org.bukkit.OfflinePlayer offlinePlayer, String identifier) {
+		public String onRequest(OfflinePlayer offlinePlayer, String identifier) {
 			if (offlinePlayer == null)
 				return PlaceholderManager.getInstance().translateServerPlaceholders('{' + identifier + '}', Language.getMainLanguage());
 			ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(offlinePlayer.getUniqueId());
-			return player == null ? "§f" + offlinePlayer.getName() + " §cis not loaded.§r" : PlaceholderManager.getInstance().translatePlaceholders('{' + identifier + '}', player, Arrays.asList(PlaceholderType.getPlaceholderType(identifier)));
+			return player == null ? "§f" + (offlinePlayer.getName() == null ? offlinePlayer.getUniqueId().toString() : offlinePlayer.getName()) + " §cis not loaded.§r" : PlaceholderManager.getInstance().translatePlaceholders('{' + identifier + '}', player, Arrays.asList(PlaceholderType.getPlaceholderType(identifier)));
 		}
 		
 	}

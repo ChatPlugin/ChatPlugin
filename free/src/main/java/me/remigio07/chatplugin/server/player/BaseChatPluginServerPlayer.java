@@ -68,7 +68,7 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 			playerStored = StorageConnector.getInstance().isPlayerStored(this);
 		} catch (SQLException sqle) {
 			LogManager.log("SQLException occurred while checking if {0} is stored in the database: {1}", 2, name, sqle.getLocalizedMessage());
-		} if (playerStored) {
+		} if (playerStored) { // TODO: too many sync storage calls, make it a single one that includes ID, chat color, etc.?
 			try {
 				Integer color = StorageConnector.getInstance().getPlayerData(PlayersDataType.CHAT_COLOR, this);
 				chatColor = color == null ? ChatColor.RESET : ChatColor.of(new Color(color, true));
@@ -116,7 +116,7 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 		if (chatColor.isFormatCode())
 			throw new IllegalArgumentException("Unable to set chat's color to a format code");
 		try {
-			StorageConnector.getInstance().setPlayerData(PlayersDataType.CHAT_COLOR, this, (this.chatColor = chatColor) == ChatColor.RESET ? null : chatColor.getColor().getRGB() & 0xFFFFFF);
+			StorageConnector.getInstance().setPlayerData(PlayersDataType.CHAT_COLOR, id, (this.chatColor = chatColor) == ChatColor.RESET ? null : chatColor.getColor().getRGB() & 0xFFFFFF);
 		} catch (SQLException | IOException e) {
 			LogManager.log("Unable to set chat's color to storage for player {0}: {1}", 2, name, e.getLocalizedMessage());
 		}
@@ -127,7 +127,7 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 		if (emojisTone.isFormatCode())
 			throw new IllegalArgumentException("Unable to set emojis' tone to a format code");
 		try {
-			StorageConnector.getInstance().setPlayerData(PlayersDataType.EMOJIS_TONE, this, (this.emojisTone = emojisTone) == ChatColor.RESET ? null : emojisTone.getColor().getRGB() & 0xFFFFFF);
+			StorageConnector.getInstance().setPlayerData(PlayersDataType.EMOJIS_TONE, id, (this.emojisTone = emojisTone) == ChatColor.RESET ? null : emojisTone.getColor().getRGB() & 0xFFFFFF);
 		} catch (SQLException | IOException e) {
 			LogManager.log("Unable to set emojis' tone to storage for player {0}: {1}", 2, name, e.getLocalizedMessage());
 		}

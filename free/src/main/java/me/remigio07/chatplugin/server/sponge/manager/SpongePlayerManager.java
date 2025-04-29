@@ -76,7 +76,7 @@ public class SpongePlayerManager extends ServerPlayerManager {
 		super.load();
 		
 		if (audiences == null)
-			TaskManager.runSync(() -> audiences = SpongeAudiences.create(Sponge.getPluginManager().getPlugin("chatplugin").get(), Sponge.getGame()), 0L);
+			audiences = SpongeAudiences.create(Sponge.getPluginManager().getPlugin("chatplugin").get(), Sponge.getGame());
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}
@@ -196,10 +196,10 @@ public class SpongePlayerManager extends ServerPlayerManager {
 		} GUIManager.getInstance().getGUIs().stream().filter(PerPlayerGUI.class::isInstance).map(PerPlayerGUI.class::cast).forEach(gui -> gui.unload(true));
 		QuitMessageManager.getInstance().getFakeQuits().remove(player);
 		Utils.inventoryTitles.remove(player);
-		checkState(() -> {
+		verifyAndRun(() -> {
 			try {
-				StorageConnector.getInstance().setPlayerData(PlayersDataType.LAST_LOGOUT, serverPlayer, System.currentTimeMillis()); // this is called on every unload too, not just quits...
-				StorageConnector.getInstance().setPlayerData(PlayersDataType.TIME_PLAYED, serverPlayer, StorageConnector.getInstance().getPlayerData(PlayersDataType.TIME_PLAYED, serverPlayer) + (System.currentTimeMillis() - serverPlayer.getLoginTime()));
+				StorageConnector.getInstance().setPlayerData(PlayersDataType.LAST_LOGOUT, serverPlayer.getID(), System.currentTimeMillis()); // this is called on every unload too, not just quits...
+				StorageConnector.getInstance().setPlayerData(PlayersDataType.TIME_PLAYED, serverPlayer.getID(), StorageConnector.getInstance().getPlayerData(PlayersDataType.TIME_PLAYED, serverPlayer.getID()) + (System.currentTimeMillis() - serverPlayer.getLoginTime()));
 			} catch (SQLException | IOException e) {
 				LogManager.log("{0} occurred while setting {1}'s last logout or time played in the storage: {2}", 2, e.getClass().getSimpleName(), serverPlayer.getName(), e.getLocalizedMessage());
 			}

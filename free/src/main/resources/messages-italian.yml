@@ -31,7 +31,6 @@ misc:
   disabled-world: '{pfx} &cQuel mondo non è abilitato.'
   disabled-feature: '{pfx} &cQuesta funzionalità non è abilitata.'
   inexistent-id: '{pfx} &cQuell''ID non esiste.'
-  suggest-version: '{pfx} &eUsa la versione di Minecraft &f{suggested_version} &eo successiva per godere dell''esperienza migliore sul server.'
   inexistent-player: '{pfx} &f{0} &cnon è il nome di un account pagato.'
   already-connected: '{pfx} &cSiete già connessi a questo server.'
   invalid-player-name: '{pfx} &cNome del giocatore invalido.'
@@ -40,6 +39,7 @@ misc:
   invalid-ip-address: '{pfx} &f{0} &cnon è un indirizzo IP valido.'
   error-occurred: '{pfx} &cSi è verificata una &f{0} &cdurante il tentativo di eseguire l''operazione: &f{1}&c.'
   update-notification: '{pfx} &eStai eseguendo una versione obsoleta di ChatPlugin. Si consiglia aggiornare all''ultima versione (&f{0}&e) per evitare bugs ed incompatibilità.'
+  suggest-version: '{pfx} &eUsa la versione di Minecraft &f{suggested_version} &eo successiva per godere dell''esperienza migliore sul server.'
 commands:
   help:
     free:

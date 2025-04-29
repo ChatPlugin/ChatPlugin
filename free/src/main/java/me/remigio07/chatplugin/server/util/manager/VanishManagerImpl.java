@@ -246,7 +246,7 @@ public class VanishManagerImpl extends VanishManager {
 	
 	@Override
 	public int getOnlineServer() {
-		return PlayerManager.getInstance().getTotalPlayers() - getVanishedAmount();
+		return PlayerManager.getInstance().getPlayers().size() - getVanishedAmount();
 	}
 	
 }

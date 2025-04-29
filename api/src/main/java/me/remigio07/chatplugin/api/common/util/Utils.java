@@ -409,26 +409,6 @@ public class Utils {
 	}
 	
 	/**
-	 * Calls {@link String#valueOf(Object)} for every element in the specified list.
-	 * 
-	 * @param list List to transform
-	 * @return String list
-	 */
-	public static List<String> integerListToStringList(List<Integer> list) {
-		return list.stream().map(String::valueOf).collect(Collectors.toList());
-	}
-	
-	/**
-	 * Calls {@link Number#intValue()} for every element in the specified list.
-	 * 
-	 * @param list List to transform
-	 * @return Integer list
-	 */
-	public static List<Integer> numberListToIntegerList(List<Number> list) {
-		return list.stream().map(Number::intValue).collect(Collectors.toList());
-	}
-	
-	/**
 	 * Reverses the specified char array.
 	 * 
 	 * @param array Array to reverse

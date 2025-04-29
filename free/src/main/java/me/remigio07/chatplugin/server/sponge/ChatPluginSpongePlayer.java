@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.server.sponge;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.InetAddress;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
@@ -180,6 +181,11 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	}
 	
 	@Override
+	public InetAddress getIPAddress() {
+		return player.getConnection().getAddress().getAddress();
+	}
+	
+	@Override
 	public void sendMessage(String message) {
 		if (version.isOlderThan(Version.V1_8)) // https://bugs.mojang.com/browse/MC-39987
 			for (String str : message.split("\n"))
@@ -190,7 +196,7 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	@Override
 	public void connect(String server) {
 		if (!ProxyManager.getInstance().getServersIDs().contains(server))
-			LogManager.log("The plugin tried to connect a player ({0}) to a server which is not under the proxy ({1}). You should fix this immediately, otherwise kicks and bans will not work.", 2, player.getName(), server);
+			LogManager.log("The plugin tried to connect a player ({0}) to a server which is not under the proxy ({1}). You should fix this immediately, otherwise kicks and bans will not work.", 2, name, server);
 		ProxyManager.getInstance().connect(this, server);
 	}
 	

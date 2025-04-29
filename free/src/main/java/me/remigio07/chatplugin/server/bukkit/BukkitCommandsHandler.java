@@ -27,12 +27,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.minecart.CommandMinecart;
 import org.bukkit.plugin.Plugin;
@@ -51,7 +50,7 @@ import me.remigio07.chatplugin.server.command.CommandsHandler;
 import me.remigio07.chatplugin.server.command.PlayerCommand;
 
 @SuppressWarnings("unchecked")
-public class BukkitCommandsHandler extends CommandsHandler implements CommandExecutor, TabCompleter {
+public class BukkitCommandsHandler extends CommandsHandler implements TabExecutor {
 	
 	public static final BukkitCommandsHandler HANDLER = new BukkitCommandsHandler();
 	private static Constructor<PluginCommand> pluginCommandConstructor;

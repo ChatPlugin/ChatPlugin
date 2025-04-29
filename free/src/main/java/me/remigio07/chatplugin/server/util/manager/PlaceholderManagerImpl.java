@@ -68,7 +68,9 @@ import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 public class PlaceholderManagerImpl extends PlaceholderManager {
 	
 	private static StorageConnector storage;
-	private static Runtime runtime = Runtime.getRuntime();
+	private static final Runtime RUNTIME = Runtime.getRuntime();
+	private static final WhereCondition STAFF_MEMBER_EQUAL_CONSOLE = new WhereCondition("staff_member", WhereOperator.EQUAL, "CONSOLE");
+	private static final WhereCondition STAFF_MEMBER_NOT_EQUAL_CONSOLE = new WhereCondition("staff_member", WhereOperator.NOT_EQUAL, "CONSOLE");
 	private boolean refreshAnticheatCounters = false;
 	
 	@Override
@@ -112,8 +114,8 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 					MuteManager.getInstance().setStaffStorageCount(getStaffPunishments(DataContainer.MUTES));
 				}
 			} for (ChatPluginServerPlayer player : ServerPlayerManager.getInstance().getPlayers().values()) {
-				((BaseChatPluginServerPlayer) player).setMessagesSent(storage.getPlayerData(PlayersDataType.MESSAGES_SENT, player));
-				((BaseChatPluginServerPlayer) player).setAntispamInfractions(storage.getPlayerData(PlayersDataType.ANTISPAM_INFRACTIONS, player));
+				((BaseChatPluginServerPlayer) player).setMessagesSent(storage.getPlayerData(PlayersDataType.MESSAGES_SENT, player.getID()));
+				((BaseChatPluginServerPlayer) player).setAntispamInfractions(storage.getPlayerData(PlayersDataType.ANTISPAM_INFRACTIONS, player.getID()));
 				
 				if (ChatPlugin.getInstance().isPremium()) {
 					((BaseChatPluginServerPlayer) player).setBans(getStaffPunishments(player, DataContainer.BANS));
@@ -142,11 +144,11 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 	}
 	
 	private int getStaffPunishments(DataContainer container) throws SQLException {
-		return storage.count(container, new WhereCondition("staff_member", WhereOperator.NOT_EQUAL, "CONSOLE")).intValue();
+		return storage.count(container, STAFF_MEMBER_NOT_EQUAL_CONSOLE).intValue();
 	}
 	
 	private short getStaffPunishments(ChatPluginServerPlayer player, DataContainer container) throws SQLException {
-		return storage.count(container, new WhereCondition("staff_member", WhereOperator.NOT_EQUAL, "CONSOLE"), new WhereCondition("player_name", WhereOperator.EQUAL, player.getName())).shortValue();
+		return storage.count(container, STAFF_MEMBER_NOT_EQUAL_CONSOLE, new WhereCondition("player_name", WhereOperator.EQUAL, player.getName())).shortValue();
 	}
 	
 	private int getAnticheatPunishments(DataContainer container) throws SQLException {
@@ -154,7 +156,7 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 		int count = 0;
 		
 		if (anticheat.isEnabled())
-			for (String reason : storage.getColumnValues(container, "reason", String.class, new WhereCondition("staff_member", WhereOperator.EQUAL, "CONSOLE")))
+			for (String reason : storage.getColumnValues(container, "reason", String.class, STAFF_MEMBER_EQUAL_CONSOLE))
 				if (anticheat.isAnticheatReason(reason))
 					count++;
 		return count;
@@ -165,7 +167,7 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 		short count = 0;
 		
 		if (anticheat.isEnabled())
-			for (String reason : storage.getColumnValues(container, "reason", String.class, new WhereCondition("staff_member", WhereOperator.EQUAL, "CONSOLE"), new WhereCondition("player_name", WhereOperator.EQUAL, player.getName())))
+			for (String reason : storage.getColumnValues(container, "reason", String.class, STAFF_MEMBER_EQUAL_CONSOLE, new WhereCondition("player_name", WhereOperator.EQUAL, player.getName())))
 				if (anticheat.isAnticheatReason(reason))
 					count++;
 		return count;
@@ -307,7 +309,7 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 		if (input.contains("{enabled_worlds}"))
 			input = input.replace("{enabled_worlds}", String.valueOf((ServerPlayerManager.getInstance().getEnabledWorlds().contains("*") ? Utils.getWorlds() : ServerPlayerManager.getInstance().getEnabledWorlds()).size()));
 		if (input.contains("{enabled_players}"))
-			input = input.replace("{enabled_players}", String.valueOf(ServerPlayerManager.getInstance().getTotalPlayers()));
+			input = input.replace("{enabled_players}", String.valueOf(ServerPlayerManager.getInstance().getPlayers().size()));
 		if (input.contains("{enabled_managers}"))
 			input = input.replace("{enabled_managers}", String.valueOf(ChatPluginManagers.getInstance().getEnabledManagers().size()));
 		if (input.contains("{startup_time}"))
@@ -386,11 +388,11 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 					.replace("{tps_15_min_format}", tpsManager.formatTPS(TPSTimeInterval.FIFTEEN_MINUTES, language));
 		} if (input.contains("_memory}") || input.contains("{cpu_threads}")) {
 			input = input
-					.replace("{max_memory}", MemoryUtils.formatMemory(runtime.maxMemory()))
-					.replace("{total_memory}", MemoryUtils.formatMemory(runtime.totalMemory()))
-					.replace("{used_memory}", MemoryUtils.formatMemory(runtime.totalMemory() - runtime.freeMemory()))
-					.replace("{free_memory}", MemoryUtils.formatMemory(runtime.freeMemory()))
-					.replace("{cpu_threads}", String.valueOf(runtime.availableProcessors()));
+					.replace("{max_memory}", MemoryUtils.formatMemory(RUNTIME.maxMemory()))
+					.replace("{total_memory}", MemoryUtils.formatMemory(RUNTIME.totalMemory()))
+					.replace("{used_memory}", MemoryUtils.formatMemory(RUNTIME.totalMemory() - RUNTIME.freeMemory()))
+					.replace("{free_memory}", MemoryUtils.formatMemory(RUNTIME.freeMemory()))
+					.replace("{cpu_threads}", String.valueOf(RUNTIME.availableProcessors()));
 		} if (input.contains("{discord_punishments_channel_id}"))
 			input = input.replace("{discord_punishments_channel_id}", String.valueOf(DiscordIntegrationManager.getInstance().isEnabled() ? DiscordIntegrationManager.getInstance().getPunishmentsChannelID() : -1));
 		if (input.contains("{discord_staff_notifications_channel_id}"))

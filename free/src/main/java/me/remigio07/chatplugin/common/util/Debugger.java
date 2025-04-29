@@ -78,7 +78,7 @@ public class Debugger {
 			sb.append('\n');
 		} sb.append("Players:\n");
 		sb.append(TWO_SPACES).append("online: ").append(PlayerAdapter.getOnlinePlayers().size()).append('/').append(Utils.getMaxPlayers()).append('\n');
-		sb.append(TWO_SPACES).append("loaded: ").append(PlayerManager.getInstance().getTotalPlayers()).append('\n');
+		sb.append(TWO_SPACES).append("loaded: ").append(PlayerManager.getInstance().getPlayers().size()).append('\n');
 		sb.append('\n');
 		sb.append("Memory:\n");
 		sb.append(TWO_SPACES).append("used: ").append(MemoryUtils.formatMemory(runtime.totalMemory() - runtime.freeMemory(), MemoryUtils.MEGABYTE)).append('/').append(MemoryUtils.formatMemory(runtime.maxMemory(), MemoryUtils.MEGABYTE)).append(" MB\n");

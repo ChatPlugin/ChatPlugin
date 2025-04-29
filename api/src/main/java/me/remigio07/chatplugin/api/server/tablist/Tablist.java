@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.server.tablist;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -58,14 +59,14 @@ public class Tablist {
 	 * @param id Tablist's ID
 	 * @param headers Tablist's headers
 	 * @param footers Tablist's footers
-	 * @throws IllegalArgumentException If specified ID <code>!{@link TablistManager#isValidTablistID(String)} ||
-	 * headers.get({@link Language#getMainLanguage()}) == null || footers.get({@link Language#getMainLanguage()}) == null</code>
+	 * @throws IllegalArgumentException If specified ID <code>!</code>{@link TablistManager#isValidTablistID(String)}
+	 * @throws NoSuchElementException If <code>headers.get({@link Language#getMainLanguage()}) == null || footers.get({@link Language#getMainLanguage()}) == null</code>
 	 */
 	public Tablist(String id, @NotNull Map<Language, String> headers, @NotNull Map<Language, String> footers) {
 		if (!TablistManager.getInstance().isValidTablistID(id))
 			throw new IllegalArgumentException("Tablist ID \"" + id + "\" does not respect the following pattern: \"" + TablistManager.TABLIST_ID_PATTERN.pattern() + "\"");
 		if (headers.get(Language.getMainLanguage()) == null || footers.get(Language.getMainLanguage()) == null)
-			throw new IllegalArgumentException("Specified map does not contain a translation for the main language");
+			throw new NoSuchElementException("Specified map does not contain a translation for the main language");
 		this.id = id;
 		this.headers = headers;
 		this.footers = footers;

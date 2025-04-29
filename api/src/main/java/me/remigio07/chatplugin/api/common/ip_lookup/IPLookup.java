@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import me.remigio07.chatplugin.api.common.util.Utils;
+import me.remigio07.chatplugin.api.common.util.annotation.ServerImplementationOnly;
 import me.remigio07.chatplugin.api.server.language.Language;
 
 /**
@@ -396,6 +397,7 @@ public abstract class IPLookup {
 	 * @param language Language used to translate the placeholders
 	 * @return Translated placeholders
 	 */
+	@ServerImplementationOnly(why = ServerImplementationOnly.NO_LANGUAGES)
 	public abstract String formatPlaceholders(String input, Language language);
 	
 	/**
@@ -424,6 +426,7 @@ public abstract class IPLookup {
 	 * @param language Language used to translate the placeholders
 	 * @return Translated placeholders
 	 */
+	@ServerImplementationOnly(why = ServerImplementationOnly.NO_LANGUAGES)
 	public abstract List<String> formatPlaceholders(List<String> input, Language language);
 	
 }

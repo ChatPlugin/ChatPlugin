@@ -19,6 +19,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.github.cliftonlabs.json_simple.Jsoner;
@@ -83,7 +84,7 @@ public class TablistManagerImpl extends TablistManager {
 						else footers.put(language, translatedFooter);
 					} try {
 						tablists.add(new Tablist(id, headers, footers));
-					} catch (IllegalArgumentException e) {
+					} catch (NoSuchElementException nsee) {
 						LogManager.log("Translation for main language (\"{0}\") not found at \"tablists.{1}.headers.{0}\" or \"tablists.{1}.footers.{0}\" in tablists.yml; skipping it.", 2, Language.getMainLanguage().getID(), id);
 					}
 				} else LogManager.log("A tablist with ID \"{0}\" already exists in tablists.yml; skipping it.", 1, id);

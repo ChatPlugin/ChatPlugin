@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.api.server.f3servername;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -43,14 +44,14 @@ public class F3ServerName {
 	 * 
 	 * @param id F3 server name's ID
 	 * @param texts F3 server name's texts
-	 * @throws IllegalArgumentException If specified ID <code>!{@link F3ServerNameManager#isValidF3ServerNameID(String)}
-	 * || texts.get({@link Language#getMainLanguage()}) == null</code>
+	 * @throws IllegalArgumentException If specified ID <code>!</code>{@link F3ServerNameManager#isValidF3ServerNameID(String)}
+	 * @throws NoSuchElementException If <code>texts.get({@link Language#getMainLanguage()}) == null</code>
 	 */
 	public F3ServerName(String id, @NotNull Map<Language, String> texts) {
 		if (!F3ServerNameManager.getInstance().isValidF3ServerNameID(id))
 			throw new IllegalArgumentException("F3 server name ID \"" + id + "\" does not respect the following pattern: \"" + F3ServerNameManager.F3_SERVER_NAME_ID_PATTERN.pattern() + "\"");
 		if (texts.get(Language.getMainLanguage()) == null)
-			throw new IllegalArgumentException("Specified map does not contain a translation for the main language");
+			throw new NoSuchElementException("Specified map does not contain a translation for the main language");
 		this.id = id;
 		this.texts = texts;
 	}

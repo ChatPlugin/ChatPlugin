@@ -95,21 +95,19 @@ public abstract class ChatPluginManagers {
 	 * 
 	 * <p>Will return <code>null</code> if the name is invalid.</p>
 	 * 
-	 * <p><strong>Example:</strong> "Chat" will return the current instance of {@link ChatManager}.
-	 * The check is performed ignoring the string's case.</p>
+	 * <p><strong>Example:</strong> "chat" ➝ {@link ChatManager}</p>
 	 * 
 	 * @deprecated Names should not be used to identify managers. Use {@link #getManager(Class)} instead.
-	 * @param name Manager's name
+	 * @param name Manager's name, case insensitive
 	 * @return Corresponding manager's implementation
-	 * @throws IndexOutOfBoundsException If <code>name</code> does not contain "Manager"
 	 */
 	@Nullable(why = "The specified name may be invalid")
 	@Deprecated
 	public ChatPluginManager getManager(String name) {
 		for (Class<?> clazz : managers.keySet()) {
-			String clazzName = clazz.getSimpleName();
+			String className = clazz.getSimpleName();
 			
-			if (clazzName.contains("Manager") && clazzName.substring(0, clazzName.indexOf("Manager")).equalsIgnoreCase(name))
+			if (className.contains("Manager") && className.substring(0, className.indexOf("Manager")).equalsIgnoreCase(name))
 				return managers.get(clazz);
 		} return null;
 	}
@@ -155,7 +153,7 @@ public abstract class ChatPluginManagers {
 		try {
 			return StorageMethod.valueOf(method.toUpperCase());
 		} catch (IllegalArgumentException e) {
-			throw new ChatPluginManagerException("managers utils", "Invalid storage method (\"{0}\") set at \"storage.method\" in config.yml; only the following are allowed: H2, SQLITE, MYSQL, YAML, JSON.", method);
+			throw new ChatPluginManagerException("managers utils", "Invalid storage method (\"{0}\") set at \"storage.method\" in config.yml; only the following are allowed: H2, SQLITE, MYSQL, YAML and JSON.", method);
 		}
 	}
 	

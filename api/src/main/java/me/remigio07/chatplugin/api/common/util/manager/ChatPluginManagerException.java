@@ -52,7 +52,7 @@ public class ChatPluginManagerException extends Exception {
 	 * 
 	 * @param manager The manager's instance
 	 * @param message The error message, starting in lowercase
-	 * @param args Optional arguments ({@link Utils#replaceNumericPlaceholders(String, Object...)}
+	 * @param args Optional arguments ({@link Utils#replaceNumericPlaceholders(String, Object...)})
 	 */
 	public ChatPluginManagerException(ChatPluginManager manager, String message, Object... args) {
 		super("Error occurred while (un)loading " + Utils.getOriginalClass(manager).getSimpleName() + ": " + Utils.replaceNumericPlaceholders(message, args));
@@ -78,7 +78,7 @@ public class ChatPluginManagerException extends Exception {
 	 * @deprecated Internal use only. You should declare what manager is throwing this exception.
 	 * @param source The exception's source
 	 * @param message The error message
-	 * @param args Optional arguments ({@link Utils#replaceNumericPlaceholders(String, Object...)}
+	 * @param args Optional arguments ({@link Utils#replaceNumericPlaceholders(String, Object...)})
 	 */
 	@Deprecated
 	public ChatPluginManagerException(String source, String message, Object... args) {

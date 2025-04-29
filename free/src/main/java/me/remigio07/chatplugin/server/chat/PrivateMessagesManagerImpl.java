@@ -318,7 +318,7 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 		OfflinePlayer correspondent = sender.getLastCorrespondent();
 		
 		if (correspondent == null)
-			throw new IllegalArgumentException("No correspondent found for " + sender.getName());
+			throw new IllegalStateException("No correspondent found for " + sender.getName());
 		sendPrivateMessage(sender, correspondent, privateMessage);
 	}
 	

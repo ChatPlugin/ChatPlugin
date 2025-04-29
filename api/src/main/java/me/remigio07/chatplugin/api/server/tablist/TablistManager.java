@@ -50,7 +50,7 @@ public abstract class TablistManager implements ChatPluginManager, Runnable {
 	/**
 	 * Pattern representing the allowed tablist IDs.
 	 * 
-	 * <p><strong>Regex:</strong> "^[a-zA-Z0-9-_]{2,36}$"</p>
+	 * <p><strong>Regex:</strong> <a href="https://regex101.com/r/9iSnkI/1"><code>^[a-zA-Z0-9-_]{2,36}$</code></a></p>
 	 * 
 	 * @see #isValidTablistID(String)
 	 */

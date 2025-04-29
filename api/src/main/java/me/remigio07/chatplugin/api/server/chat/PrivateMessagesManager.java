@@ -303,8 +303,8 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	 * 
 	 * @param sender Private message's sender
 	 * @param privateMessage Private message to send.
-	 * @throws IllegalArgumentException If <code>{@link ChatPluginServerPlayer#getLastCorrespondent()} == null</code>
-	 * or if the private message's length exceeds 505 characters
+	 * @throws IllegalStateException If <code>{@link ChatPluginServerPlayer#getLastCorrespondent()} == null</code>
+	 * @throws IllegalArgumentException If the private message's length exceeds 505 characters
 	 * @see PrePrivateMessageEvent
 	 * @see AllowPrivateMessageEvent
 	 * @see DenyPrivateMessageEvent

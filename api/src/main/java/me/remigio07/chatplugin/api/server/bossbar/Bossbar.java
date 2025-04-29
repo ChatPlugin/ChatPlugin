@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.api.server.bossbar;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import me.remigio07.chatplugin.api.common.util.ValueContainer;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
@@ -55,8 +56,8 @@ public class Bossbar {
 	 * @param color Bossbar's color
 	 * @param style Bossbar's style
 	 * @param hidden Whether this bossbar is hidden
-	 * @throws IllegalArgumentException If specified ID <code>!{@link BossbarManager#isValidBossbarID(String)}
-	 * || titles.get({@link Language#getMainLanguage()}) == null</code>
+	 * @throws IllegalArgumentException If specified ID <code>!</code>{@link BossbarManager#isValidBossbarID(String)}
+	 * @throws NoSuchElementException If <code>titles.get({@link Language#getMainLanguage()}) == null</code>
 	 */
 	public Bossbar(
 			String id,
@@ -70,7 +71,7 @@ public class Bossbar {
 		if (!BossbarManager.getInstance().isValidBossbarID(id))
 			throw new IllegalArgumentException("Bossbar ID \"" + id + "\" does not respect the following pattern: \"" + BossbarManager.BOSSBAR_ID_PATTERN.pattern() + "\"");
 		if (titles.get(Language.getMainLanguage()) == null)
-			throw new IllegalArgumentException("Specified map does not contain a translation for the main language");
+			throw new NoSuchElementException("Specified map does not contain a translation for the main language");
 		this.id = id;
 		this.titles = titles;
 		this.value = value;

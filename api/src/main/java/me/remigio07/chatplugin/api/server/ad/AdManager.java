@@ -40,7 +40,7 @@ public abstract class AdManager implements ChatPluginManager, Runnable {
 	/**
 	 * Pattern representing the allowed ad IDs.
 	 * 
-	 * <p><strong>Regex:</strong> "^[a-zA-Z0-9-_]{2,36}$"</p>
+	 * <p><strong>Regex:</strong> <a href="https://regex101.com/r/9iSnkI/1"><code>^[a-zA-Z0-9-_]{2,36}$</code></a></p>
 	 * 
 	 * @see #isValidAdID(String)
 	 */

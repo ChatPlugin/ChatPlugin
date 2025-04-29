@@ -54,8 +54,11 @@ public class Client {
 	 * 
 	 * @param serverAddress Server's address
 	 * @param serverPort Server's port [0 - 65535]
+	 * @throws IllegalArgumentException If port is outside of range [0 - 65535]
 	 */
 	public Client(InetAddress serverAddress, int serverPort) {
+		if (serverPort < 0 || serverPort > 0xFFFF)
+			throw new IllegalArgumentException("Port value out of range: " + serverPort);
 		this.serverAddress = serverAddress;
 		this.serverPort = serverPort;
 	}
@@ -81,7 +84,7 @@ public class Client {
 		new Thread(() -> {
 			try {
 				temp = ConnectionOutcome.valueOf(tempInput.readUTF());
-			} catch (Exception e) { // NPE || IOE || IAE
+			} catch (Exception e) { // NPE | IOE | IAE
 				// handled by the for loop
 			}
 		}).start();
@@ -90,12 +93,12 @@ public class Client {
 			if (temp == null) {
 				try {
 					Thread.sleep(100L);
-				} catch (InterruptedException e) {
-					LogManager.log("[SOCKETS] The identification task for client \"{0}\" has been suddenly interrupted: {1}", 2, id, e.getMessage());
+				} catch (InterruptedException ie) {
+					LogManager.log("[SOCKETS] The identification task for client \"{0}\" has been suddenly interrupted: {1}", 2, id, ie.getLocalizedMessage());
 					socket.close();
 					tempInput.close();
 					tempOutput.close();
-					throw e;
+					throw ie;
 				}
 			} else {
 				if (temp == ConnectionOutcome.SUCCESS) {
@@ -128,7 +131,7 @@ public class Client {
 	 * @throws IOException If something goes wrong
 	 * @see ClientDisconnectionEvent
 	 */
-	public void disconnect() throws IOException {
+	public void disconnect() throws IOException { // TODO: implement reason here, too (see ClientHandler)
 		if (!isConnected())
 			return;
 		output.writeShort(-1);
@@ -161,12 +164,12 @@ public class Client {
 			}
 		} catch (SocketException | EOFException e) {
 			// disconnection
-		} catch (IOException e) {
-			LogManager.log("[SOCKETS] IOException occurred while reading a packet for client \"{0}\": {1}", 2, id, e.getMessage());
+		} catch (IOException ioe) {
+			LogManager.log("[SOCKETS] IOException occurred while reading a packet for client \"{0}\": {1}", 2, id, ioe.getLocalizedMessage());
 		} try {
 			socket.close();
-		} catch (IOException e) {
-			LogManager.log("[SOCKETS] IOException occurred while closing socket for client \"{0}\": {1}", 2, id, e.getMessage());
+		} catch (IOException ioe) {
+			LogManager.log("[SOCKETS] IOException occurred while closing socket for client \"{0}\": {1}", 2, id, ioe.getLocalizedMessage());
 		} new ClientDisconnectionEvent(this).call();
 		LogManager.log("[SOCKETS] Client \"{0}\" has just disconnected from the server{1}", 4, id, disconnectionReason == null ? "." : ": " + disconnectionReason);
 		
@@ -182,6 +185,7 @@ public class Client {
 	 * <p>Will do nothing if <code>!</code>{@link #isConnected()}.</p>
 	 * 
 	 * @param packet Packet to send
+	 * @throws IllegalStateException If {@link PacketSerializer#toArray()} fails
 	 */
 	public void sendPacket(PacketSerializer packet) {
 		if (!isConnected())
@@ -193,8 +197,8 @@ public class Client {
 				output.writeShort(data.length);
 				output.write(data);
 			}
-		} catch (IOException e) {
-			LogManager.log("[SOCKETS] IOException occurred while writing a packet for client \"{0}\": {1}", 2, id, e.getMessage());
+		} catch (IOException ioe) {
+			LogManager.log("[SOCKETS] IOException occurred while writing a packet for client \"{0}\": {1}", 2, id, ioe.getLocalizedMessage());
 		}
 	}
 	

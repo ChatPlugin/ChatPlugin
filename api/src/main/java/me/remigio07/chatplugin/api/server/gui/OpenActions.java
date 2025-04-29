@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.server.gui;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -39,11 +40,11 @@ public class OpenActions {
 	 * 
 	 * @param messages Open actions' messages
 	 * @param sound Open actions' sound
-	 * @throws IllegalArgumentException If <code>messages.get({@link Language#getMainLanguage()}) == null</code>
+	 * @throws NoSuchElementException If <code>messages.get({@link Language#getMainLanguage()}) == null</code>
 	 */
 	public OpenActions(Map<Language, String> messages, SoundAdapter sound) {
 		if (messages.get(Language.getMainLanguage()) == null)
-			throw new IllegalArgumentException("Specified open actions' map does not contain a translation for the main language");
+			throw new NoSuchElementException("Specified open actions' map does not contain a translation for the main language");
 		this.messages = messages;
 		this.sound = sound;
 	}
@@ -59,7 +60,7 @@ public class OpenActions {
 	 * to {@link #OpenActions(Map, SoundAdapter)}.
 	 * 
 	 * @param configuration Configuration to read
-	 * @throws IllegalArgumentException If translation for {@link Language#getMainLanguage()} is not present
+	 * @throws NoSuchElementException If translation for {@link Language#getMainLanguage()} is not present
 	 * @see SoundAdapter#SoundAdapter(Configuration, String)
 	 */
 	public OpenActions(Configuration configuration) {

@@ -202,8 +202,10 @@ public class PlayerAdapter {
 	/**
 	 * Gets this player's IP address.
 	 * 
-	 * <p><strong>Note:</strong> BungeeCord supports connections via <a href="https://en.wikipedia.org/wiki/Unix_domain_socket">Unix domain sockets</a>.
-	 * If this method is called on a player connected through a Unix domain socket, {@link InetAddress#getLoopbackAddress()} is returned.</p>
+	 * <p><strong>Note:</strong> BungeeCord supports connections via
+	 * <a href="https://en.wikipedia.org/wiki/Unix_domain_socket">Unix domain sockets</a>.
+	 * If this method is called on a player connected through a Unix domain socket,
+	 * {@link InetAddress#getLoopbackAddress()} is returned.</p>
 	 * 
 	 * @return Player's IP address
 	 */

@@ -34,7 +34,7 @@ public abstract class RankManager implements ChatPluginManager {
 	/**
 	 * Pattern representing the allowed rank IDs.
 	 * 
-	 * <p><strong>Regex:</strong> "^(?!settings$)[a-zA-Z0-9-_+]{2,36}$"</p>
+	 * <p><strong>Regex:</strong> <a href="https://regex101.com/r/jkpv8K/1"><code>^(?!settings$)[a-zA-Z0-9-_+]{2,36}$</code></a></p>
 	 * 
 	 * @see #isValidRankID(String)
 	 */

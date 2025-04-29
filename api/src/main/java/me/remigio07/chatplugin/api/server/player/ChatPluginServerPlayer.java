@@ -516,8 +516,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	 * Sends a translated message (with numeric placeholders) to this player.
 	 * 
 	 * @param path Message's path
-	 * @param args Optional arguments
-	 * @see Utils#replaceNumericPlaceholders(String, Object...)
+	 * @param args Optional arguments ({@link Utils#replaceNumericPlaceholders(String, Object...)})
 	 */
 	public void sendTranslatedMessage(String path, Object... args) {
 		sendMessage(language.getMessage(path, args));
@@ -528,8 +527,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	 * 
 	 * @param path Message's path
 	 * @param placeholders Message's placeholders
-	 * @param args Optional arguments
-	 * @see Utils#replaceCustomPlaceholders(String, String[], Object...)
+	 * @param args Optional arguments ({@link Utils#replaceCustomPlaceholders(String, String[], Object...)})
 	 */
 	public void sendTranslatedMessage(String path, String[] placeholders, Object... args) {
 		sendMessage(Utils.replaceCustomPlaceholders(language.getMessage(path), placeholders, args));

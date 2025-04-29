@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Bukkit;
@@ -74,7 +75,7 @@ public class BukkitF3ServerNameManager extends F3ServerNameManager {
 						else texts.put(language, translatedText);
 					} try {
 						f3ServerNames.add(new F3ServerName(id, texts));
-					} catch (IllegalArgumentException e) {
+					} catch (NoSuchElementException nsee) {
 						LogManager.log("Translation for main language (\"{0}\") not found at \"f3-server-names.{1}.texts.{0}\" in f3-server-names.yml; skipping it.", 2, Language.getMainLanguage().getID(), id);
 					}
 				} else LogManager.log("An F3 server name with ID \"{0}\" already exists in f3-server-names.yml; skipping it.", 1, id);

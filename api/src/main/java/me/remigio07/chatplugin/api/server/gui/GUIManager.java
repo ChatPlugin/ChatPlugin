@@ -18,6 +18,7 @@ package me.remigio07.chatplugin.api.server.gui;
 import java.awt.Color;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
@@ -53,7 +54,7 @@ public abstract class GUIManager implements ChatPluginManager {
 	/**
 	 * Pattern representing the allowed GUI IDs.
 	 * 
-	 * <p><strong>Regex:</strong> "^[a-zA-Z0-9-_]{2,36}$"</p>
+	 * <p><strong>Regex:</strong> <a href="https://regex101.com/r/9iSnkI/1"><code>^[a-zA-Z0-9-_]{2,36}$</code></a></p>
 	 * 
 	 * @see #isValidGUIID(String)
 	 */
@@ -65,7 +66,7 @@ public abstract class GUIManager implements ChatPluginManager {
 	 * <p>Strings allowed by this one are shorter (2-19 characters) than {@link #GUI_ID_PATTERN}'s ones
 	 * because they have to contain "-" plus a player's name, which might be 16 characters long.</p>
 	 * 
-	 * <p><strong>Regex:</strong> "^[a-zA-Z0-9-_]{2,19}$"</p>
+	 * <p><strong>Regex:</strong> <a href="https://regex101.com/r/IxINYK/1"><code>^[a-zA-Z0-9-_]{2,19}$</code></a></p>
 	 * 
 	 * @see #isValidPerPlayerGUIID(String)
 	 */
@@ -200,9 +201,9 @@ public abstract class GUIManager implements ChatPluginManager {
 	 * @param configuration Configuration to read
 	 * @return New GUI layout
 	 * @throws IllegalArgumentException If GUI layout's ID <code>!</code>{@link #isValidGUIID(String)}
-	 * or translations for {@link Language#getMainLanguage()} are not present
 	 * or an icon's ID {@link Icon#isValidIconID(String)} or an icon's material's ID is invalid
 	 * or an icon's {@link Icon#getPosition()} is outside of valid range
+	 * @throws NoSuchElementException If translations for {@link Language#getMainLanguage()} are not present
 	 * @throws IndexOutOfBoundsException If less than 1 or more than 6 rows are specified
 	 * or {@link IconType#PAGE_SWITCHER} icons' positions are inside of the start and end positions' range
 	 * @throws IllegalStateException If start and end slots positions or the empty list icon

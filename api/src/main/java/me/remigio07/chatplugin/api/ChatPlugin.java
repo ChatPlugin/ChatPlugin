@@ -196,8 +196,8 @@ public abstract class ChatPlugin {
 	 * Checks if the plugin is running on online mode.
 	 * 
 	 * @return Whether online mode is enabled
-	 * @throws IllegalStateException If <code>!{@link Environment#isProxy()}
-	 * &amp;&amp; {@link #getState()} != {@link ChatPluginState#LOADED LOADED}</code>
+	 * @throws IllegalStateException If <code>!</code>{@link Environment#isProxy()}
+	 * and ChatPlugin has not finished loading yet
 	 */
 	public abstract boolean isOnlineMode();
 	

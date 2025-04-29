@@ -15,6 +15,7 @@
 
 package me.remigio07.chatplugin.api.common.discord;
 
+import me.remigio07.chatplugin.api.common.discord.DiscordMessages.MessageArguments;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 
 /**
@@ -46,6 +47,16 @@ public interface DiscordMessage {
 	 */
 	public String getPath();
 	
+//	/**
+//	 * Gets this message's plain value. TODO
+//	 * 
+//	 * @param args Message's specific arguments
+//	 * @return Resulting plain message
+//	 * @throws UnsupportedOperationException If this message has no path
+//	 * @see MessageArguments
+//	 */
+//	public String getPlain(Object... args);
+	
 	/**
 	 * Gets this message's <code>net.dv8tion.jda.api.entities.MessageEmbed</code> value.
 	 * 
@@ -55,6 +66,7 @@ public interface DiscordMessage {
 	 * @param args Message's specific arguments
 	 * @return Resulting embed message
 	 * @throws UnsupportedOperationException If this message has no path
+	 * @see MessageArguments
 	 */
 	public Object getEmbed(Object... args);
 	

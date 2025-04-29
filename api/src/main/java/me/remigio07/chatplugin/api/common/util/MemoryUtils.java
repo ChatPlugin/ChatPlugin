@@ -76,8 +76,9 @@ public enum MemoryUtils {
 	}
 	
 	/**
-	 * Gets the default displayed memory unit, specified at
-	 * <code>settings.displayed-memory.unit</code> in config.yml.
+	 * Gets the default displayed memory unit.
+	 * 
+	 * <p><strong>Found at:</strong> "settings.displayed-memory.unit" in {@link ConfigurationType#CONFIG}</p>
 	 * 
 	 * @return Displayed memory unit
 	 */
@@ -87,8 +88,8 @@ public enum MemoryUtils {
 	
 	/**
 	 * Formats the given bytes amount using {@link #getDisplayedUnit()}
-	 * and cutting to the decimals places specified at
-	 * <code>settings.displayed-memory.decimals</code> in config.yml.
+	 * and truncating to the decimals places specified at
+	 * "settings.displayed-memory.decimals" in {@link ConfigurationType#CONFIG}.
 	 * 
 	 * @param bytes Bytes amount
 	 * @return Formatted memory

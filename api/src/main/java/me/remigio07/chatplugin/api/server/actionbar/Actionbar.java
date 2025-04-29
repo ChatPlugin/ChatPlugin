@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.api.server.actionbar;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -45,14 +46,14 @@ public class Actionbar {
 	 * @param id Actionbar's ID
 	 * @param texts Actionbar's texts
 	 * @param hidden Whether this actionbar is hidden
-	 * @throws IllegalArgumentException If specified ID <code>!{@link ActionbarManager#isValidActionbarID(String)}
-	 * || texts.get({@link Language#getMainLanguage()}) == null</code>
+	 * @throws IllegalArgumentException If specified ID <code>!</code>{@link ActionbarManager#isValidActionbarID(String)}
+	 * @throws NoSuchElementException If <code>texts.get({@link Language#getMainLanguage()}) == null</code>
 	 */
 	public Actionbar(String id, @NotNull Map<Language, String> texts, boolean hidden) {
 		if (!ActionbarManager.getInstance().isValidActionbarID(id))
 			throw new IllegalArgumentException("Actionbar ID \"" + id + "\" does not respect the following pattern: \"" + ActionbarManager.ACTIONBAR_ID_PATTERN.pattern() + "\"");
 		if (texts.get(Language.getMainLanguage()) == null)
-			throw new IllegalArgumentException("Specified map does not contain a translation for the main language");
+			throw new NoSuchElementException("Specified map does not contain a translation for the main language");
 		this.id = id;
 		this.texts = texts;
 		this.hidden = hidden;

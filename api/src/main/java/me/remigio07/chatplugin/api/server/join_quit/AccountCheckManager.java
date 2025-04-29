@@ -15,6 +15,7 @@
 
 package me.remigio07.chatplugin.api.server.join_quit;
 
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,8 @@ public abstract class AccountCheckManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Checks if an account check should be performed the first time a (new) player joins.
+	 * Checks if an account check should be
+	 * performed whenever a new player joins.
 	 * 
 	 * <p><strong>Found at:</strong> "join-quit-modules.account-check.perform-on-join" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
 	 * 
@@ -65,7 +67,8 @@ public abstract class AccountCheckManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Checks if IP lookups of every IP address should be performed when checking accounts.
+	 * Checks if IP lookups of every IP address
+	 * should be performed when checking accounts.
 	 * 
 	 * <p><strong>Found at:</strong> "join-quit-modules.account-check.ip-lookup.enabled" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
 	 * 
@@ -172,10 +175,9 @@ public abstract class AccountCheckManager implements ChatPluginManager {
 	 * 
 	 * @param player Player to check
 	 * @param maxTimePlayed A player's max time played allowed to be considered reliable for a comparison, in milliseconds
-	 * @param useIPLookup Whether to compare every IP address' lookup (requires extra time)
+	 * @param useIPLookup Whether to compare every IP address' lookup (requires extra time and {@link IPLookupManager#isEnabled()})
 	 * @return Player's accounts, including given one
-	 * @throws IllegalStateException If <code>useIPLookup</code> and
-	 * {@link IPLookupManager#getIPLookup(java.net.InetAddress)} throws it
+	 * @throws IllegalStateException If <code>useIPLookup</code> and {@link IPLookupManager#getIPLookup(InetAddress)} fails
 	 */
 	public abstract CompletableFuture<List<OfflinePlayer>> getAccounts(OfflinePlayer player, long maxTimePlayed, boolean useIPLookup);
 	

@@ -37,6 +37,7 @@ import me.remigio07.chatplugin.api.server.chat.log.ChatLogManager;
 import me.remigio07.chatplugin.api.server.chat.log.LoggedMessage;
 import me.remigio07.chatplugin.api.server.chat.log.LoggedPrivateMessage;
 import me.remigio07.chatplugin.api.server.chat.log.LoggedPublicMessage;
+import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
  * Represents the storage connector used by the plugin.
@@ -49,8 +50,7 @@ public abstract class StorageConnector {
 	protected static StorageConnector instance;
 	
 	/**
-	 * Increments a player's statistic using
-	 * {@link #setPlayerData(PlayersDataType, OfflinePlayer, Object)}.
+	 * Increments a player's statistic in the storage.
 	 * 
 	 * @param type Data's type
 	 * @param player Player to set data for
@@ -58,6 +58,8 @@ public abstract class StorageConnector {
 	 * @throws IOException If something goes wrong and {@link StorageMethod#isFlatFile()}
 	 * @throws IllegalArgumentException If <code>type</code> is not one of the following: {@link PlayersDataType#MESSAGES_SENT MESSAGES_SENT}, {@link PlayersDataType#ANTISPAM_INFRACTIONS ANTISPAM_INFRACTIONS},
 	 * {@link PlayersDataType#BANS BANS}, {@link PlayersDataType#WARNINGS WARNINGS}, {@link PlayersDataType#KICKS KICKS}, {@link PlayersDataType#MUTES MUTES}
+	 * @throws IllegalStateException If <code>!</code>{@link Environment#isProxy()}
+	 * and ChatPlugin has not finished loading yet
 	 */
 	public void incrementPlayerStat(PlayersDataType<? extends Number> type, OfflinePlayer player) throws SQLException, IOException {
 		if (type.ordinal() > PlayersDataType.MESSAGES_SENT.ordinal() - 1) {
@@ -73,6 +75,8 @@ public abstract class StorageConnector {
 	 * @param player Player to check
 	 * @return Whether the player is stored
 	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
+	 * @throws IllegalStateException If <code>!</code>{@link Environment#isProxy()}
+	 * and ChatPlugin has not finished loading yet
 	 */
 	public boolean isPlayerStored(OfflinePlayer player) throws SQLException {
 		return getPlayerData(PlayersDataType.PLAYER_NAME, player) != null;
@@ -95,6 +99,8 @@ public abstract class StorageConnector {
 	 * @param player Player to check
 	 * @return Whether the IP is stored
 	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
+	 * @throws IllegalStateException If <code>!</code>{@link Environment#isProxy()}
+	 * and ChatPlugin has not finished loading yet
 	 */
 	public boolean isPlayerIPStored(OfflinePlayer player) throws SQLException {
 		return getPlayerData(PlayersDataType.PLAYER_IP, player) != null;
@@ -555,11 +561,17 @@ public abstract class StorageConnector {
 	 * 
 	 * <p>Will return <code>null</code> if the stored data is a SQL <code>NULL</code>.</p>
 	 * 
+	 * <p>Unlike {@link #setPlayerData(PlayersDataType, int, Object)}, this method gets data
+	 * based on the player's UUID or name depending on {@link ChatPlugin#isOnlineMode()}.
+	 * This method is slightly slower and might throw {@link IllegalStateException}.</p>
+	 * 
 	 * @param <T> Data's type
 	 * @param type Data's type
 	 * @param player Player to get data for
 	 * @return Data if found, <code>null</code> otherwise
 	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
+	 * @throws IllegalStateException If <code>!</code>{@link Environment#isProxy()}
+	 * and ChatPlugin has not finished loading yet
 	 */
 	@Nullable(why = "Stored data may be SQL NULL")
 	public abstract <T> T getPlayerData(PlayersDataType<T> type, OfflinePlayer player) throws SQLException;
@@ -583,12 +595,18 @@ public abstract class StorageConnector {
 	 * 
 	 * <p>You can specify <code>null</code> as <code>data</code>.</p>
 	 * 
+	 * <p>Unlike {@link #setPlayerData(PlayersDataType, int, Object)}, this method sets data
+	 * based on the player's UUID or name depending on {@link ChatPlugin#isOnlineMode()}.
+	 * This method is slightly slower and might throw {@link IllegalStateException}.</p>
+	 * 
 	 * @param type Data's type
 	 * @param player Player to set data for
 	 * @param data Data to set or <code>null</code>
 	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
 	 * @throws IOException If something goes wrong and {@link StorageMethod#isFlatFile()}
 	 * @throws IllegalArgumentException If <code>type == </code>{@link PlayersDataType#ID}
+	 * @throws IllegalStateException If <code>!</code>{@link Environment#isProxy()}
+	 * and ChatPlugin has not finished loading yet
 	 */
 	public abstract void setPlayerData(PlayersDataType<?> type, OfflinePlayer player, @Nullable(why = "Data will become SQL NULL if null") Object data) throws SQLException, IOException;
 	

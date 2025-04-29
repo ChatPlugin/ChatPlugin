@@ -197,6 +197,7 @@ public interface DiscordBot {
 	 * @param footerIconURL Message's footer's icon's URL
 	 * @param color Message's side color
 	 * @return New embed message
+	 * @throws IllegalArgumentException If arguments are invalid
 	 * @see FieldAdapter
 	 */
 	public Object newEmbedMessage(String title, String titleURL, String description, List<FieldAdapter> fields, String imageURL, String thumbnailIconURL, String author, String authorURL, String authorIconURL, String footer, String footerIconURL, Color color);

@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.server.ad;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import me.remigio07.chatplugin.api.common.util.adapter.text.ClickActionAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
@@ -52,8 +53,9 @@ public class Ad {
 	 * @param clickAction Ad's click action
 	 * @param clickValues Ad's click values
 	 * @param disabledRanks Ranks that will not receive the ad
-	 * @throws IllegalArgumentException If specified ID <code>!{@link AdManager#isValidAdID(String)} ||
-	 * texts.get({@link Language#getMainLanguage()}) == null</code> (other two maps may contain <code>null</code>)
+	 * @throws IllegalArgumentException If specified ID <code>!</code>{@link AdManager#isValidAdID(String)}
+	 * @throws NoSuchElementException If <code>texts.get({@link Language#getMainLanguage()}) == null</code>
+	 * (other two maps may contain <code>null</code> values)
 	 */
 	public Ad(
 			String id,
@@ -66,7 +68,7 @@ public class Ad {
 		if (!AdManager.getInstance().isValidAdID(id))
 			throw new IllegalArgumentException("Ad ID \"" + id + "\" does not respect the following pattern: \"" + AdManager.AD_ID_PATTERN.pattern() + "\"");
 		if (texts.get(Language.getMainLanguage()) == null)
-			throw new IllegalArgumentException("Specified map does not contain a translation for the main language");
+			throw new NoSuchElementException("Specified map does not contain a translation for the main language");
 		this.id = id;
 		this.texts = texts;
 		this.hovers = hovers;

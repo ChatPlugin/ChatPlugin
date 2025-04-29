@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -103,7 +104,7 @@ public class AdManagerImpl extends AdManager {
 								clickValues,
 								disabledRanks
 								));
-					} catch (IllegalArgumentException e) {
+					} catch (NoSuchElementException nsee) {
 						LogManager.log("Translation for main language (\"{0}\") not found at \"ads.{1}.texts.{0}\" in ads.yml; skipping it.", 2, Language.getMainLanguage().getID(), id);
 					}
 				} else LogManager.log("An ad with ID \"{0}\" already exists in ads.yml; skipping it.", 1, id);

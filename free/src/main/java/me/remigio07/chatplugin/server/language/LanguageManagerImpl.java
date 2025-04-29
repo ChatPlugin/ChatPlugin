@@ -119,8 +119,8 @@ public class LanguageManagerImpl extends LanguageManager {
 			String id = StorageConnector.getInstance().getPlayerData(PlayersDataType.LANGUAGE, player);
 			Language language = id == null ? mainLanguage : getLanguage(id);
 			return language == null ? mainLanguage : language;
-		} catch (SQLException e) {
-			LogManager.log("SQLException occurred while getting {0}'s language from the storage: {1}", 2, player.getName(), e.getMessage());
+		} catch (SQLException sqle) {
+			LogManager.log("SQLException occurred while getting {0}'s language from the storage: {1}", 2, player.getName(), sqle.getLocalizedMessage());
 			return mainLanguage;
 		}
 	}
@@ -136,9 +136,9 @@ public class LanguageManagerImpl extends LanguageManager {
 				ServerPlayerManager.getInstance().unloadPlayer(player.getUUID());
 				ServerPlayerManager.getInstance().loadPlayer(player.toAdapter());
 			} new LanguageChangeEvent(player, language).call();
-			LogManager.log("{0}'s language has been set to {1}.", 4, player.getName(), language.getID());
+			LogManager.log("The language of {0} has been set to {1}.", 4, player.getName(), language.getID());
 		} catch (SQLException | IOException e) {
-			LogManager.log("{0} occurred while setting {1}'s language to {2}: {3}", 2, e.getClass().getSimpleName(), player.getName(), language.getDisplayName(), e.getMessage());
+			LogManager.log("{0} occurred while setting the language of {1} to {2}: {3}", 2, e.getClass().getSimpleName(), player.getName(), language.getDisplayName(), e.getLocalizedMessage());
 		}
 	}
 	

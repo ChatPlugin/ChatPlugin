@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.api.server.scoreboard;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Timer;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
@@ -47,7 +48,7 @@ public abstract class ScoreboardManager implements ChatPluginManager {
 	/**
 	 * Pattern representing the allowed scoreboard IDs.
 	 * 
-	 * <p><strong>Regex:</strong> "^[a-zA-Z0-9-_]{2,36}$"</p>
+	 * <p><strong>Regex:</strong> <a href="https://regex101.com/r/9iSnkI/1"><code>^[a-zA-Z0-9-_]{2,36}$</code></a></p>
 	 * 
 	 * @see #isValidScoreboardID(String)
 	 */
@@ -161,13 +162,13 @@ public abstract class ScoreboardManager implements ChatPluginManager {
 	 * @throws IllegalArgumentException If at least one of the following is true:
 	 * 	<ul>
 	 * 		<li>scoreboard's ID <code>!</code>{@link #isValidScoreboardID(String)}</li>
-	 * 		<li>translations for {@link Language#getMainLanguage()} are not present</li>
 	 * 		<li>no valid lines have been specified at the "lines" section</li>
 	 * 		<li>the {@link NumbersDisplayMode} at "settings.numbers.display-mode" is invalid</li>
 	 * 		<li>"settings.numbers.custom-text.colors.cycle-timeout" is not positive or invalid</li>
 	 * 		<li>"settings.numbers.custom-text.colors.interpolations" is negative</li>
 	 * 		<li>the list at "settings.numbers.custom-text.colors.gradient" is empty</li>
 	 * 	</ul>
+	 * @throws NoSuchElementException If translations for {@link Language#getMainLanguage()} are not present
 	 * @throws IndexOutOfBoundsException If line indexes outside of range 0 - 14 are specified
 	 * @throws UnsupportedOperationException If <code>!</code>{@link NumbersDisplayMode#isSupported()}
 	 * @throws NumberFormatException If colors of the gradient use an invalid format

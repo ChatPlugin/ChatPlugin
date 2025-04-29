@@ -56,12 +56,12 @@ public class FillableGUILayout extends GUILayout {
 	 * Sets the filling function's start slot's position in this GUI layout.
 	 * 
 	 * @param startSlot Filling function's start slot, inclusive [0 - ({@link #getSize()} - 1)]
-	 * @throws IllegalArgumentException If the position is outside of
-	 * valid range or <code>startSlot &gt; </code>{@link #getEndSlot()}.
+	 * @throws IndexOutOfBoundsException If the position is outside of
+	 * valid range or <code>startSlot &gt; </code>{@link #getEndSlot()}
 	 */
 	public void setStartSlot(int startSlot) {
 		if (startSlot < 0 || startSlot > getSize() - 1 || (endSlot != -1 && startSlot > endSlot))
-			throw new IllegalArgumentException("Specified start slot's position (" + startSlot + ") is outside of range 0 - " + (getSize() - 1) + " or bigger than end slot's position (" + endSlot + ")");
+			throw new IndexOutOfBoundsException("Specified start slot's position (" + startSlot + ") is outside of range 0 - " + (getSize() - 1) + " or bigger than end slot's position (" + endSlot + ")");
 		this.startSlot = startSlot;
 	}
 	
@@ -78,12 +78,12 @@ public class FillableGUILayout extends GUILayout {
 	 * Sets the filling function's end slot's position in this GUI layout.
 	 * 
 	 * @param endSlot Filling function's end slot, inclusive [0 - ({@link #getSize()} - 1)]
-	 * @throws IllegalArgumentException If the position is outside of
-	 * valid range or <code>startSlot &gt; </code>{@link #getEndSlot()}.
+	 * @throws IndexOutOfBoundsException If the position is outside of
+	 * valid range or {@link #getStartSlot()}<code> &gt; endSlot</code>
 	 */
 	public void setEndSlot(int endSlot) {
 		if (endSlot < 0 || endSlot > getSize() - 1 || (startSlot != -1 && startSlot > endSlot))
-			throw new IllegalArgumentException("Specified start slot's position (" + startSlot + ") is outside of range 0 - " + (getSize() - 1) + " or bigger than end slot's position (" + endSlot + ")");
+			throw new IndexOutOfBoundsException("Specified start slot's position (" + startSlot + ") is outside of range 0 - " + (getSize() - 1) + " or bigger than end slot's position (" + endSlot + ")");
 		this.endSlot = endSlot;
 	}
 	
@@ -172,11 +172,11 @@ public class FillableGUILayout extends GUILayout {
 		/**
 		 * Sets the filling function's start and end slots' positions in the GUI layout.
 		 * 
-		 * @param startSlot Filling function's start slot [0 - ({@link GUILayout#getSize()} -1)]
-		 * @param endSlot Filling function's end slot [0 - ({@link GUILayout#getSize()} -1)]
+		 * @param startSlot Filling function's start slot [0 - ({@link GUILayout#getSize()} - 1)]
+		 * @param endSlot Filling function's end slot [0 - ({@link GUILayout#getSize()} - 1)]
 		 * @return This builder
-		 * @throws IllegalArgumentException If a position is outside of
-		 * valid range or <code>startSlot &gt; endSlot</code>.
+		 * @throws IndexOutOfBoundsException If a position is outside
+		 * of valid range or <code>startSlot &gt; endSlot</code>
 		 */
 		public abstract Builder setSlots(int startSlot, int endSlot);
 		

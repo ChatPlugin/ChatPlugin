@@ -419,7 +419,7 @@ public class InternalGUIs {
 //							.setAmount(ConfigurationType.PLAYER_VIOLATIONS_GUI.get().getString("") )
 							.setDamage(ConfigurationType.VIOLATIONS_ICONS.get().getShort(path + "damage"))
 							.setSkullOwner(ConfigurationType.VIOLATIONS_ICONS.get().getString(path + "skull-owner"));
-				} catch (IllegalArgumentException e) {
+				} catch (IllegalArgumentException iae) {
 					LogManager.log("Invalid material ID found at {0} in violations-icons.yml: {1}.", 2, path + "material", ConfigurationType.VIOLATIONS_ICONS.get().getString(path + "material", Utils.STRING_NOT_FOUND));
 					return icon.setMaterial(new MaterialAdapter("BARRIER"));
 				}
@@ -443,7 +443,7 @@ public class InternalGUIs {
 	}
 	
 	private static void error(Exception e, String id) {
-		LogManager.log("{0} occurred while loading GUI \"{1}\": {2}; skipping it.", 2, e.getClass().getSimpleName(), id, e.getMessage() == null ? "<no error message>" : Character.toLowerCase(e.getMessage().charAt(0)) + e.getMessage().substring(1));
+		LogManager.log("{0} occurred while loading GUI \"{1}\": {2}; skipping it.", 2, e.getClass().getSimpleName(), id, e.getLocalizedMessage() == null ? "<no error message>" : Character.toLowerCase(e.getLocalizedMessage().charAt(0)) + e.getLocalizedMessage().substring(1));
 	}
 	
 }

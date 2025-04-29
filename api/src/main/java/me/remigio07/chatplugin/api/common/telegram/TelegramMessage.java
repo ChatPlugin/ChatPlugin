@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.api.common.telegram;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.telegram.TelegramMessages.MessageArguments;
 
 /**
  * Represents a message type sent by the {@link TelegramBot}.
@@ -43,6 +44,7 @@ public interface TelegramMessage {
 	 * 
 	 * @return Message's path
 	 * @throws UnsupportedOperationException If this message has no path
+	 * @see MessageArguments
 	 */
 	public String getPath();
 	
@@ -52,6 +54,7 @@ public interface TelegramMessage {
 	 * @param args Message's specific arguments
 	 * @return Resulting message
 	 * @throws UnsupportedOperationException If this message has no path
+	 * @see MessageArguments
 	 */
 	public String getValue(Object... args);
 	

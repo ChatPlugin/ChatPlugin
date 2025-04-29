@@ -92,7 +92,7 @@ public abstract class Language {
 	 * <p>The "{pfx}" placeholder will be translated with the message found at "misc.prefix".</p>
 	 * 
 	 * @param path Message's path
-	 * @param args Optional arguments (translated using {@link Utils#replaceNumericPlaceholders(String, Object...)})
+	 * @param args Optional arguments ({@link Utils#replaceNumericPlaceholders(String, Object...)})
 	 * @return Translated message
 	 */
 	public String getMessage(String path, Object... args) {

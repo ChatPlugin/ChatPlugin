@@ -92,7 +92,7 @@ public class Utils {
 	/**
 	 * Pattern representing the allowed IPv4s.
 	 * 
-	 * <p><strong>Regex:</strong> "^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$"</p>
+	 * <p><strong>Regex:</strong> <a href="https://regex101.com/r/d0rZxJ/1"><code>^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$</code></a></p>
 	 * 
 	 * @see #isValidIPv4(String)
 	 */

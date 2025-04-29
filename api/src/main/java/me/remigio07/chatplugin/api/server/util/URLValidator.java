@@ -36,7 +36,7 @@ public class URLValidator {
 	/**
 	 * Pattern representing the allowed domains.
 	 * 
-	 * <p><strong>Regex:</strong> "^((?!-)[A-Za-z0-9-]{1,63}(?&lt;!-)\.)+[A-Za-z]{2,6}$"</p>
+	 * <p><strong>Regex:</strong> <a href="https://regex101.com/r/dXmmR1/1"><code>^((?!-)[A-Za-z0-9-]{1,63}(?&lt;!-)\.)+[A-Za-z]{2,6}$</code></a></p>
 	 * 
 	 * @see #getDomainName(String)
 	 */

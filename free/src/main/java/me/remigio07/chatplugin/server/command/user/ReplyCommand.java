@@ -39,7 +39,7 @@ public class ReplyCommand extends PlayerCommand {
 			if (args.length != 0)
 				try {
 					PrivateMessagesManager.getInstance().sendReply(player, String.join(" ", args));
-				} catch (IllegalArgumentException e) {
+				} catch (IllegalStateException ise) {
 					player.sendTranslatedMessage("commands.reply.not-found");
 				}
 			else sendUsage(player);

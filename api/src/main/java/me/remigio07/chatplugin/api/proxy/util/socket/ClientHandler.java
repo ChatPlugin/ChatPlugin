@@ -39,7 +39,7 @@ public class ClientHandler extends Thread {
 	/**
 	 * Pattern representing the allowed client IDs.
 	 * 
-	 * <p><strong>Regex:</strong> "^[a-zA-Z0-9-_]{2,36}$"</p>
+	 * <p><strong>Regex:</strong> <a href="https://regex101.com/r/9iSnkI/1"><code>^[a-zA-Z0-9-_]{2,36}$</code></a></p>
 	 * 
 	 * @see #isValidClientID(String)
 	 */
@@ -80,14 +80,14 @@ public class ClientHandler extends Thread {
 						return;
 					} else try {
 						Thread.sleep(100L);
-					} catch (InterruptedException e) {
-						LogManager.log("[SOCKETS] The identification task for client {0} has been suddenly interrupted: {1}", 2, socket.getInetAddress().getHostAddress() + ":" + socket.getPort(), e.getMessage());
+					} catch (InterruptedException ie) {
+						LogManager.log("[SOCKETS] The identification task for client {0} has been suddenly interrupted: {1}", 2, socket.getInetAddress().getHostAddress() + ":" + socket.getPort(), ie.getLocalizedMessage());
 						break;
 					}
 				} LogManager.log("[SOCKETS] Client {0} did not send its ID within 5000ms so it was disconnected.", 4, socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
 				socket.close();
-			} catch (IOException e) {
-				LogManager.log("[SOCKETS] IOException occurred while closing socket for client \"{0}\": {1}", 2, id, e.getMessage());
+			} catch (IOException ioe) {
+				LogManager.log("[SOCKETS] IOException occurred while closing socket for client \"{0}\": {1}", 2, id, ioe.getLocalizedMessage());
 			}
 		}).start();
 		new Thread(() -> {
@@ -121,12 +121,12 @@ public class ClientHandler extends Thread {
 			}
 		} catch (SocketException | EOFException e) {
 			// disconnection
-		} catch (IOException e) {
-			LogManager.log("[SOCKETS] IOException occurred while reading a packet received from client \"{0}\": {1}", 2, id, e.getMessage());
+		} catch (IOException ioe) {
+			LogManager.log("[SOCKETS] IOException occurred while reading a packet received from client \"{0}\": {1}", 2, id, ioe.getLocalizedMessage());
 		} try {
 			socket.close();
-		} catch (IOException e) {
-			LogManager.log("[SOCKETS] IOException occurred while closing socket for client \"{0}\"): {1}", 2, id, e.getMessage());
+		} catch (IOException ioe) {
+			LogManager.log("[SOCKETS] IOException occurred while closing socket for client \"{0}\"): {1}", 2, id, ioe.getLocalizedMessage());
 		} new ClientDisconnectionEvent(this).call();
 		server.getClientHandlers().remove(this);
 		LogManager.log("[SOCKETS] Client \"{0}\" has just disconnected from the server{1}", 4, id, disconnectionReason == null ? "." : ": " + disconnectionReason);
@@ -136,6 +136,7 @@ public class ClientHandler extends Thread {
 	 * Sends a packet to this client handler.
 	 * 
 	 * @param packet Packet to send
+	 * @throws IllegalStateException If {@link PacketSerializer#toArray()} fails
 	 */
 	public void sendPacket(PacketSerializer packet) {
 		byte[] data = packet.toArray();
@@ -145,8 +146,8 @@ public class ClientHandler extends Thread {
 				output.writeShort(data.length);
 				output.write(data);
 			}
-		} catch (IOException e) {
-			LogManager.log("[SOCKETS] IOException occurred while writing a packet to send to client \"{0}\": {1}", 2, id, e.getMessage());
+		} catch (IOException ioe) {
+			LogManager.log("[SOCKETS] IOException occurred while writing a packet to send to client \"{0}\": {1}", 2, id, ioe.getLocalizedMessage());
 		}
 	}
 	
@@ -155,10 +156,13 @@ public class ClientHandler extends Thread {
 	 * 
 	 * @param reason Disconnection's reason
 	 * @throws IOException If something goes wrong
+	 * @throws IllegalArgumentException If <code>reason.length() &gt; 255</code>
 	 * @see ClientDisconnectionEvent
 	 */
 	@SuppressWarnings("deprecation")
 	public void disconnect(String reason) throws IOException {
+		if (reason.length() > 255)
+			throw new IllegalArgumentException("Specified reason is longer than 255 characters");
 		sendPacket(Packets.Misc.clientDisconnection(disconnectionReason = reason));
 		socket.close();
 	}

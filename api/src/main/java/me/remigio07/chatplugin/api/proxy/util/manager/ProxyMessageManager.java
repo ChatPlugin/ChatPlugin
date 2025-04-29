@@ -164,6 +164,7 @@ public abstract class ProxyMessageManager implements ChatPluginManager {
 	 * 
 	 * @param server Target server, "ALL" for all servers
 	 * @param packet Plugin message to send
+	 * @throws IllegalStateException If {@link PacketSerializer#toArray()} fails
 	 * @see PacketDeserializer
 	 * @see Packets
 	 */
@@ -183,6 +184,7 @@ public abstract class ProxyMessageManager implements ChatPluginManager {
 	 * @param server Target server, "ALL" for all servers
 	 * @param packet Plugin message to send
 	 * @param timeout Max timeout to wait, in milliseconds
+	 * @throws IllegalStateException If {@link PacketSerializer#toArray()} fails
 	 * @see PacketDeserializer
 	 * @see Packets
 	 */

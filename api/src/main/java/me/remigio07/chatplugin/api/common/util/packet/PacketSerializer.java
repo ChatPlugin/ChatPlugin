@@ -44,8 +44,8 @@ public class PacketSerializer {
 	public PacketSerializer(String subchannel) {
 		try {
 			output.writeUTF(subchannel);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 		}
 	}
 	
@@ -58,8 +58,8 @@ public class PacketSerializer {
 	public PacketSerializer writeBoolean(boolean arg) {
 		try {
 			output.writeBoolean(arg);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 		} return this;
 	}
 	
@@ -72,8 +72,8 @@ public class PacketSerializer {
 	public PacketSerializer writeByte(byte arg) {
 		try {
 			output.writeByte(arg);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 		} return this;
 	}
 	
@@ -86,8 +86,8 @@ public class PacketSerializer {
 	public PacketSerializer writeChar(char arg) {
 		try {
 			output.writeChar(arg);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 		} return this;
 	}
 	
@@ -100,8 +100,8 @@ public class PacketSerializer {
 	public PacketSerializer writeShort(short arg) {
 		try {
 			output.writeShort(arg);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 		} return this;
 	}
 	
@@ -114,8 +114,8 @@ public class PacketSerializer {
 	public PacketSerializer writeInt(int arg) {
 		try {
 			output.writeInt(arg);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 		} return this;
 	}
 	
@@ -128,8 +128,8 @@ public class PacketSerializer {
 	public PacketSerializer writeLong(long arg) {
 		try {
 			output.writeLong(arg);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 		} return this;
 	}
 	
@@ -142,8 +142,8 @@ public class PacketSerializer {
 	public PacketSerializer writeFloat(float arg) {
 		try {
 			output.writeFloat(arg);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 		} return this;
 	}
 	
@@ -156,8 +156,8 @@ public class PacketSerializer {
 	public PacketSerializer writeDouble(double arg) {
 		try {
 			output.writeDouble(arg);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 		} return this;
 	}
 	
@@ -172,8 +172,8 @@ public class PacketSerializer {
 	public PacketSerializer writeUTF(@Nullable(why = "Null strings are sent as placeholders but read as null by PacketDeserializer#readUTF()") String arg) {
 		try {
 			output.writeUTF(arg == null ? "${null_string}" : arg);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 		} return this;
 	}
 	
@@ -215,8 +215,8 @@ public class PacketSerializer {
 	public PacketSerializer writeServerID() {
 		try {
 			output.writeUTF(ProxyManager.getInstance().getServerID());
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 		} return this;
 	}
 	
@@ -225,13 +225,13 @@ public class PacketSerializer {
 	 * ready to be sent through the proxy.
 	 * 
 	 * @return Packet's bytes array
-	 * @throws IllegalArgumentException If array's length exceeds {@link Short#MAX_VALUE}
+	 * @throws IllegalStateException If array's length exceeds {@link Short#MAX_VALUE}
 	 */
 	public byte[] toArray() {
 		byte[] array = bytes.toByteArray();
 		
 		if (array.length > Short.MAX_VALUE)
-			throw new IllegalArgumentException("Packet exceeds maximum length of 32767");
+			throw new IllegalStateException("Packet exceeds maximum length of 32767");
 		return array;
 	}
 	

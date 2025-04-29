@@ -18,6 +18,7 @@ package me.remigio07.chatplugin.api.server.scoreboard;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
@@ -187,7 +188,7 @@ public abstract class Scoreboard {
 		 * @param randomOrder Whether to use a random order
 		 * @param sendingTimeout Time between sendings
 		 * @return This builder
-		 * @throws IllegalArgumentException If <code>values.get({@link Language#getMainLanguage()}) == null</code>
+		 * @throws NoSuchElementException If <code>values.get({@link Language#getMainLanguage()}) == null</code>
 		 */
 		public abstract Builder setTitles(Map<Language, List<String>> values, boolean randomOrder, long sendingTimeout);
 		
@@ -199,7 +200,7 @@ public abstract class Scoreboard {
 		 * @param randomOrder Whether to use a random order
 		 * @param sendingTimeout Time between sendings
 		 * @return This builder
-		 * @throws IllegalArgumentException If <code>values.get({@link Language#getMainLanguage()}) == null</code>
+		 * @throws NoSuchElementException If <code>values.get({@link Language#getMainLanguage()}) == null</code>
 		 * @throws IndexOutOfBoundsException If <code>lineIndex &lt; 0 || lineIndex &gt; 14</code>
 		 */
 		public abstract Builder setLine(Map<Language, List<String>> values, int lineIndex, boolean randomOrder, long sendingTimeout);

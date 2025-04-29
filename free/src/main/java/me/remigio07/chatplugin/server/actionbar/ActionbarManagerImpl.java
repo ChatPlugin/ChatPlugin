@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.server.actionbar;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import io.netty.util.internal.ThreadLocalRandom;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
@@ -63,7 +64,7 @@ public class ActionbarManagerImpl extends ActionbarManager {
 						else texts.put(language, translatedText);
 					} try {
 						actionbars.add(new Actionbar(id, texts, ConfigurationType.ACTIONBARS.get().getBoolean("actionbars." + id + ".hidden")));
-					} catch (IllegalArgumentException e) {
+					} catch (NoSuchElementException nsee) {
 						LogManager.log("Translation for main language (\"{0}\") not found at \"actionbars.{1}.texts.{0}\" in actionbars.yml; skipping it.", 2, Language.getMainLanguage().getID(), id);
 					}
 				} else LogManager.log("An actionbar with ID \"{0}\" already exists in actionbars.yml; skipping it.", 1, id);

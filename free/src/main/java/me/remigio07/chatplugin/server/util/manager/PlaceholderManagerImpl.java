@@ -410,9 +410,9 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 			double balance;
 			
 			if (IntegrationType.VAULT.isEnabled() && (balance = IntegrationType.VAULT.get().getBalance(player)) != Double.MIN_VALUE)
-				input.replace("{balance}", IntegrationType.VAULT.get().formatBalance(balance));
+				input = input.replace("{balance}", IntegrationType.VAULT.get().formatBalance(balance));
 			else if (IntegrationType.ESSENTIALSX.isEnabled() && (balance = IntegrationType.ESSENTIALSX.get().getBalance(player)) != Double.MIN_VALUE)
-				input.replace("{balance}", IntegrationType.ESSENTIALSX.get().formatBalance(balance));
+				input = input.replace("{balance}", IntegrationType.ESSENTIALSX.get().formatBalance(balance));
 		} if (IntegrationType.PLACEHOLDERAPI.isEnabled())
 			input = IntegrationType.PLACEHOLDERAPI.get().translatePlaceholders(input, player);
 		if (IntegrationType.MVDWPLACEHOLDERAPI.isEnabled())

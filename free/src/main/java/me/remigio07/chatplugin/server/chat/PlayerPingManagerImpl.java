@@ -22,9 +22,11 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
+import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.chat.ChatManager;
 import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
@@ -52,16 +54,17 @@ public class PlayerPingManagerImpl extends PlayerPingManager {
 			return;
 		atSignRequired = ConfigurationType.CHAT.get().getBoolean("chat.player-ping.at-sign-required");
 		soundEnabled = ConfigurationType.CHAT.get().getBoolean("chat.player-ping.sound.enabled");
+		titlesEnabled = ConfigurationType.CHAT.get().getBoolean("chat.player-ping.titles.enabled");
+		perPlayerCooldown = Utils.getTime(ConfigurationType.CHAT.get().getString("chat.player-ping.per-player-cooldown"), false, true);
+		titlesFadeIn = ConfigurationType.CHAT.get().getLong("chat.player-ping.titles.fade-in-ms");
+		titlesStay = ConfigurationType.CHAT.get().getLong("chat.player-ping.titles.stay-ms");
+		titlesFadeOut = ConfigurationType.CHAT.get().getLong("chat.player-ping.titles.fade-out-ms");
 		color = ConfigurationType.CHAT.get().getString("chat.player-ping.color");
 		sound = new SoundAdapter(
 				ConfigurationType.CHAT.get().getString("chat.player-ping.sound.id"),
 				ConfigurationType.CHAT.get().getFloat("chat.player-ping.sound.volume"),
 				ConfigurationType.CHAT.get().getFloat("chat.player-ping.sound.pitch")
 				);
-		titlesEnabled = ConfigurationType.CHAT.get().getBoolean("chat.player-ping.titles.enabled");
-		titlesFadeIn = ConfigurationType.CHAT.get().getLong("chat.player-ping.titles.fade-in-ms");
-		titlesStay = ConfigurationType.CHAT.get().getLong("chat.player-ping.titles.stay-ms");
-		titlesFadeOut = ConfigurationType.CHAT.get().getLong("chat.player-ping.titles.fade-out-ms");
 		
 		if (titlesEnabled) {
 			for (Language language : LanguageManager.getInstance().getLanguages()) {
@@ -94,9 +97,10 @@ public class PlayerPingManagerImpl extends PlayerPingManager {
 		titles.clear();
 		subtitles.clear();
 		
+		perPlayerCooldown = titlesFadeIn = titlesStay = titlesFadeOut = 0L;
 		color = null;
 		sound = null;
-		titlesFadeIn = titlesStay = titlesFadeOut = 0L;
+		
 	}
 	
 	@Override
@@ -110,6 +114,7 @@ public class PlayerPingManagerImpl extends PlayerPingManager {
 			if (!pingedPlayers.isEmpty()) {
 				String str = PlaceholderManager.getInstance().translatePlaceholders(channel == null ? ChatManager.getInstance().getFormat() : channel.getFormat(), player, ChatManager.getInstance().getPlaceholderTypes());
 				Matcher matcher = EVERYONE_PATTERN.matcher(message);
+				boolean success = false;
 				
 				if (matcher.find() && player.hasPermission("chatplugin.player-ping.everyone")) {
 					String[] array = { message.substring(0, matcher.start()), message.substring(matcher.end(), message.length()) };
@@ -122,6 +127,7 @@ public class PlayerPingManagerImpl extends PlayerPingManager {
 					if (event.isCancelled())
 						continue;
 					matcher = pattern(pinged.getName(), atSignRequired).matcher(message);
+					success = true;
 					
 					if (matcher.find()) {
 						String[] array = { message.substring(0, matcher.start()), message.substring(matcher.end(), message.length()) };
@@ -138,6 +144,9 @@ public class PlayerPingManagerImpl extends PlayerPingManager {
 						pinged.sendTranslatedMessage("chat.pinged", player.getName());
 						playPingSound(pinged);
 					}
+				} if (success && !player.hasPermission("chatplugin.player-ping.bypass")) {
+					playersOnCooldown.add(player.getUUID());
+					TaskManager.runAsync(() -> playersOnCooldown.remove(player.getUUID()), perPlayerCooldown);
 				}
 			}
 		} return message;
@@ -159,11 +168,16 @@ public class PlayerPingManagerImpl extends PlayerPingManager {
 			String message,
 			@Nullable(why = "Null if !ChatChannelsManager#isEnabled()") ChatChannel<? extends ChatChannelData> channel
 			) {
-		return player.hasPermission("chatplugin.player-ping") ? (channel == null ? ServerPlayerManager.getInstance().getPlayers().values() : channel.getRecipients(player, true))
+		List<ChatPluginServerPlayer> pingedPlayers = player.hasPermission("chatplugin.player-ping") ? (channel == null ? ServerPlayerManager.getInstance().getPlayers().values() : channel.getRecipients(player, true))
 				.stream()
 				.filter(other -> other != player && !other.isVanished() && ((EVERYONE_PATTERN.matcher(message).find() && player.hasPermission("chatplugin.player-ping.everyone")) || pattern(other.getName(), atSignRequired).matcher(message).find()))
 				.collect(Collectors.toList())
 				: Collections.emptyList();
+		
+		if (!pingedPlayers.isEmpty() && playersOnCooldown.contains(player.getUUID())) {
+			player.sendTranslatedMessage("chat.cannot-ping", Utils.formatTime(perPlayerCooldown, player.getLanguage(), false, true));
+			return Collections.emptyList();
+		} return pingedPlayers;
 	}
 	
 	@Override

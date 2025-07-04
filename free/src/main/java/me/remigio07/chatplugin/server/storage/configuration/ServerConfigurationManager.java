@@ -448,6 +448,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("chat.no-format", "{pfx} &cYou cannot write formatted messages. Buy a &fVIP package &cto bypass this restriction.");
 		messages.addDefault("chat.no-blank-messages", "{pfx} &cYou cannot send blank messages.");
 		messages.addDefault("chat.pinged", "{pfx} &eYou got pinged by &f{0}&e.");
+		messages.addDefault("chat.cannot-ping", "{pfx} &cYou can ping a player once every &f{0}&c.");
 		messages.addDefault("chat.nobody-read", "{pfx} &eNobody has read your message.");
 		
 		messages.addDefault("chat.log.searching", "{pfx} &eSearching for logged messages...");
@@ -788,6 +789,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		chat.addDefault("chat.player-ping.enabled", true);
 		chat.addDefault("chat.player-ping.at-sign-required", false);
+		chat.addDefault("chat.player-ping.per-player-cooldown", "10s");
 		chat.addDefault("chat.player-ping.color", "&b");
 		chat.addDefault("chat.player-ping.sound.enabled", true);
 		chat.addDefault("chat.player-ping.sound.id", VersionUtils.getVersion().isAtLeast(Version.V1_9) ? "ENTITY_EXPERIENCE_ORB_PICKUP" : "ORB_PICKUP");
@@ -1007,7 +1009,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		bossbars.addDefault("bossbars.settings.random-order", false);
 		bossbars.addDefault("bossbars.settings.abbreviate-long-titles", true);
 		bossbars.addDefault("bossbars.settings.send-full-to-legacy-players", true);
-		bossbars.addDefault("bossbars.settings.reflection-wither-teleportation.distance", 42.0D);
+		bossbars.addDefault("bossbars.settings.reflection-wither-teleportation.distance", 42.0);
 		bossbars.addDefault("bossbars.settings.reflection-wither-teleportation.timeout-ms", 250);
 		bossbars.addDefault("bossbars.settings.sending-timeout-ms", 10000);
 		bossbars.addDefault("bossbars.settings.placeholder-types", Arrays.asList("JUST_NAME"));

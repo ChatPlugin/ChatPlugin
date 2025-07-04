@@ -420,6 +420,7 @@ chat:
   no-format: '{pfx} &cNon puoi scrivere messaggi formattati. Acquista un pacchetto &fVIP &cper aggirare questa restrizione.'
   no-blank-messages: '{pfx} &cNon puoi inviare messaggi vuoti.'
   pinged: '{pfx} &eSiete stati menzionati da &f{0}&e.'
+  cannot-ping: '{pfx} &cPuoi menzionare un giocatore una volta ogni &f{0}&c.'
   nobody-nearby: '{pfx} &eNessuno nelle vicinanze ha letto il messaggio.'
   log:
     searching: '{pfx} &eRicerca dei messaggi registrati...'

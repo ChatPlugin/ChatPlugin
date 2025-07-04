@@ -16,8 +16,11 @@
 package me.remigio07.chatplugin.api.server.chat;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
@@ -40,11 +43,12 @@ public abstract class PlayerPingManager implements ChatPluginManager {
 	
 	protected static PlayerPingManager instance;
 	protected boolean enabled, atSignRequired, soundEnabled, titlesEnabled;
+	protected long perPlayerCooldown, titlesFadeIn, titlesStay, titlesFadeOut;
 	protected String color;
 	protected SoundAdapter sound;
-	protected long titlesFadeIn, titlesStay, titlesFadeOut;
 	protected Map<Language, String> titles = new HashMap<>();
 	protected Map<Language, String> subtitles = new HashMap<>();
+	protected Set<UUID> playersOnCooldown = new HashSet<>();
 	protected long loadTime;
 	
 	/**
@@ -92,25 +96,15 @@ public abstract class PlayerPingManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the color pings in chat will have.
+	 * Gets the timeout a player has to wait
+	 * between two player pings, in milliseconds.
 	 * 
-	 * <p><strong>Found at:</strong> "chat.player-ping.color" in {@link ConfigurationType#CHAT}</p>
+	 * <p><strong>Found at:</strong> "chat.player-ping.per-player-cooldown" in {@link ConfigurationType#CHAT}</p>
 	 * 
-	 * @return Pings' color
+	 * @return Per-player cooldown
 	 */
-	public String getColor() {
-		return color;
-	}
-	
-	/**
-	 * Gets the sound that pings will produce.
-	 * 
-	 * <p><strong>Found at:</strong> "chat.player-ping.sound" in {@link ConfigurationType#CHAT}</p>
-	 * 
-	 * @return Pings' sound
-	 */
-	public SoundAdapter getSound() {
-		return sound;
+	public long getPerPlayerCooldown() {
+		return perPlayerCooldown;
 	}
 	
 	/**
@@ -147,6 +141,28 @@ public abstract class PlayerPingManager implements ChatPluginManager {
 	 */
 	public long getTitlesFadeOut() {
 		return titlesFadeOut;
+	}
+	
+	/**
+	 * Gets the color pings in chat will have.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.player-ping.color" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Pings' color
+	 */
+	public String getColor() {
+		return color;
+	}
+	
+	/**
+	 * Gets the sound that pings will produce.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.player-ping.sound" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Pings' sound
+	 */
+	public SoundAdapter getSound() {
+		return sound;
 	}
 	
 	/**
@@ -210,6 +226,17 @@ public abstract class PlayerPingManager implements ChatPluginManager {
 	}
 	
 	/**
+	 * Gets the cooldown set, whose elements are players' UUIDs.
+	 * 
+	 * <p>Do <em>not</em> modify the returned set.</p>
+	 * 
+	 * @return Players on cooldown
+	 */
+	public Set<UUID> getPlayersOnCooldown() {
+		return playersOnCooldown;
+	}
+	
+	/**
 	 * Gets this manager's instance.
 	 * 
 	 * @return Manager's instance
@@ -225,8 +252,10 @@ public abstract class PlayerPingManager implements ChatPluginManager {
 	 * <p>Specify <code>null</code> as <code>channel</code> if
 	 * <code>!</code>{@link ChatChannelsManager#isEnabled()}.</p>
 	 * 
-	 * <p>Will do nothing if the player does not have the permission "chatplugin.player-ping"
-	 * or "chatplugin.player-ping.everyone" if they have tried to ping everyone.</p>
+	 * <p>Will do nothing if the player does not have the "chatplugin.player-ping" permission
+	 * or "chatplugin.player-ping.everyone" if they have tried to ping <code>@everyone</code>.
+	 * Will temporarily add the player to {@link #getPerPlayerCooldown()} if
+	 * they do not have the "chatplugin.player-ping.bypass" permission.</p>
 	 * 
 	 * <p>This method will consider that some players may be ignored by other players.</p>
 	 * 
@@ -251,8 +280,10 @@ public abstract class PlayerPingManager implements ChatPluginManager {
 	 * <p>Specify <code>null</code> as <code>channel</code> if
 	 * <code>!</code>{@link ChatChannelsManager#isEnabled()}.</p>
 	 * 
-	 * <p>Will return an empty list if the player does not have the permission "chatplugin.player-ping"
-	 * or "chatplugin.player-ping.everyone" if they have tried to ping everyone.</p>
+	 * <p>Will return an empty list if the player does not have the "chatplugin.player-ping"
+	 * permission or "chatplugin.player-ping.everyone" if they have tried to ping
+	 * <code>@everyone</code> or if they are contained in {@link #getPlayersOnCooldown()}.
+	 * In the latter case, </p>
 	 * 
 	 * <p>This method will <em>not</em> consider that some players may be ignored
 	 * by other players but will consider that some players may be vanished.</p>

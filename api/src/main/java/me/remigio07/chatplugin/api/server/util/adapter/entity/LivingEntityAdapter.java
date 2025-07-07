@@ -52,7 +52,7 @@ public class LivingEntityAdapter {
 	public org.bukkit.entity.LivingEntity bukkitValue() {
 		if (Environment.isBukkit())
 			return (org.bukkit.entity.LivingEntity) livingEntity;
-		else throw new UnsupportedOperationException("Unable to adapt living entity to a Bukkit's LivingEntity on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt living entity to a Bukkit's LivingEntity on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -64,7 +64,7 @@ public class LivingEntityAdapter {
 	public org.spongepowered.api.entity.living.Living spongeValue() {
 		if (Environment.isSponge())
 			return (org.spongepowered.api.entity.living.Living) livingEntity;
-		else throw new UnsupportedOperationException("Unable to adapt living entity to a Sponge's Living on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt living entity to a Sponge's Living on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**

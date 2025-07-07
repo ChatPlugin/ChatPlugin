@@ -199,7 +199,7 @@ public class ClickEventAdapter {
 		public ClickType bukkitValue() {
 			if (Environment.isBukkit())
 				return ClickType.valueOf(name);
-			else throw new UnsupportedOperationException("Unable to adapt click type to a Bukkit's ClickType on a " + Environment.getCurrent().getName() + " environment");
+			throw new UnsupportedOperationException("Unable to adapt click type to a Bukkit's ClickType on a " + Environment.getCurrent().getName() + " environment");
 		}
 		
 		/**
@@ -376,7 +376,7 @@ public class ClickEventAdapter {
 		public InventoryAction bukkitValue() {
 			if (Environment.isBukkit())
 				return InventoryAction.valueOf(name);
-			else throw new UnsupportedOperationException("Unable to adapt click action to a Bukkit's InventoryAction on a " + Environment.getCurrent().getName() + " environment");
+			throw new UnsupportedOperationException("Unable to adapt click action to a Bukkit's InventoryAction on a " + Environment.getCurrent().getName() + " environment");
 		}
 		
 		/**

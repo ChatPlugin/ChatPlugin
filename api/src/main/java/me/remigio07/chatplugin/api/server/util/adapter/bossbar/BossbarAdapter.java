@@ -74,7 +74,7 @@ public class BossbarAdapter {
 	public BossBar bukkitValue() {
 		if (Environment.isBukkit())
 			return (BossBar) bossbar;
-		else throw new UnsupportedOperationException("Unable to adapt bossbar to a Bukkit's ServerBossBar on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt bossbar to a Bukkit's ServerBossBar on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -86,7 +86,7 @@ public class BossbarAdapter {
 	public ServerBossBar spongeValue() {
 		if (Environment.isSponge())
 			return (ServerBossBar) bossbar;
-		else throw new UnsupportedOperationException("Unable to adapt bossbar to a Sponge's ServerBossBar on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt bossbar to a Sponge's ServerBossBar on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**

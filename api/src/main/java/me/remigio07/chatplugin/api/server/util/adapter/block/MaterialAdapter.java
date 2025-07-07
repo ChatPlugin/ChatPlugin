@@ -68,7 +68,7 @@ public class MaterialAdapter implements Cloneable {
 	public org.bukkit.Material bukkitValue() {
 		if (Environment.isBukkit())
 			return (Material) material;
-		else throw new UnsupportedOperationException("Unable to adapt material to a Bukkit's Material on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt material to a Bukkit's Material on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -80,7 +80,7 @@ public class MaterialAdapter implements Cloneable {
 	public org.spongepowered.api.item.ItemType spongeValue() {
 		if (Environment.isSponge())
 			return (ItemType) material;
-		else throw new UnsupportedOperationException("Unable to adapt material to a Sponge's ItemType on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt material to a Sponge's ItemType on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**

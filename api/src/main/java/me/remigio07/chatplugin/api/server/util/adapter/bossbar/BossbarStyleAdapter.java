@@ -110,7 +110,7 @@ public class BossbarStyleAdapter {
 	public BarStyle bukkitValue() {
 		if (Environment.isBukkit())
 			return this == RANDOM ? BarStyle.values()[VersionUtils.getVersion().isAtLeast(Version.V1_9) ? ThreadLocalRandom.current().nextInt(BarStyle.values().length) : 4] : BarStyle.valueOf(name()); // .values()[4] = SOLID
-		else throw new UnsupportedOperationException("Unable to adapt bossbar style to a Bukkit's BarStyle on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt bossbar style to a Bukkit's BarStyle on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -124,7 +124,7 @@ public class BossbarStyleAdapter {
 	public BossBarOverlay spongeValue() {
 		if (Environment.isSponge())
 			return (BossBarOverlay) (this == RANDOM ? new ArrayList<>(spongeStyles.values()).get(VersionUtils.getVersion().isAtLeast(Version.V1_9) ? ThreadLocalRandom.current().nextInt(VALUES.length - 1) : 0) : spongeStyles.get(name())); // .values().get(0) = SOLID
-		else throw new UnsupportedOperationException("Unable to adapt bossbar style to a Sponge's BossBarOverlay on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt bossbar style to a Sponge's BossBarOverlay on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**

@@ -48,7 +48,7 @@ public class TeamAdapter {
 	public org.bukkit.scoreboard.Team bukkitValue() {
 		if (Environment.isBukkit())
 			return (org.bukkit.scoreboard.Team) team;
-		else throw new UnsupportedOperationException("Unable to adapt team to a Bukkit's Team on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt team to a Bukkit's Team on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -60,7 +60,7 @@ public class TeamAdapter {
 	public org.spongepowered.api.scoreboard.Team spongeValue() {
 		if (Environment.isSponge())
 			return (org.spongepowered.api.scoreboard.Team) team;
-		else throw new UnsupportedOperationException("Unable to adapt team to a Sponge's Team on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt team to a Sponge's Team on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**

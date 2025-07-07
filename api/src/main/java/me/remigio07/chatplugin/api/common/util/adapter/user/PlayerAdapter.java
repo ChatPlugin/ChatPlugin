@@ -112,7 +112,7 @@ public class PlayerAdapter {
 	public org.bukkit.entity.Player bukkitValue() {
 		if (Environment.isBukkit())
 			return (org.bukkit.entity.Player) player;
-		else throw new UnsupportedOperationException("Unable to adapt player to a Bukkit's Player on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt player to a Bukkit's Player on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -124,7 +124,7 @@ public class PlayerAdapter {
 	public org.spongepowered.api.entity.living.player.Player spongeValue() {
 		if (Environment.isSponge())
 			return (org.spongepowered.api.entity.living.player.Player) player;
-		else throw new UnsupportedOperationException("Unable to adapt text to a Sponge's Player on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt text to a Sponge's Player on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -136,7 +136,7 @@ public class PlayerAdapter {
 	public net.md_5.bungee.api.connection.ProxiedPlayer bungeeCordValue() {
 		if (Environment.isBungeeCord())
 			return (net.md_5.bungee.api.connection.ProxiedPlayer) player;
-		else throw new UnsupportedOperationException("Unable to adapt text to a BungeeCord's TextComponent on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt text to a BungeeCord's TextComponent on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -148,7 +148,7 @@ public class PlayerAdapter {
 	public com.velocitypowered.api.proxy.Player velocityValue() {
 		if (Environment.isVelocity())
 			return (com.velocitypowered.api.proxy.Player) player;
-		else throw new UnsupportedOperationException("Unable to adapt text to a Velocity's Component on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt text to a Velocity's Component on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**

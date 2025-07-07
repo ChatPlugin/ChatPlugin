@@ -113,7 +113,7 @@ public class ItemFlagAdapter {
 			} catch (IllegalArgumentException e) {
 				return ItemFlag.HIDE_ATTRIBUTES;
 			}
-		else throw new UnsupportedOperationException("Unable to adapt item flag to a Bukkit's ItemFlag on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt item flag to a Bukkit's ItemFlag on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -133,7 +133,7 @@ public class ItemFlagAdapter {
 			} catch (NullPointerException | IllegalArgumentException | IllegalAccessException | NoSuchFieldException e) {
 				return Keys.HIDE_ATTRIBUTES;
 			}
-		else throw new UnsupportedOperationException("Unable to adapt item flag to a Sponge's Key<Value<Boolean>> on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt item flag to a Sponge's Key<Value<Boolean>> on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**

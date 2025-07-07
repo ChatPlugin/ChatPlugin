@@ -215,7 +215,7 @@ public class ItemStackAdapter implements Cloneable {
 	public org.bukkit.inventory.ItemStack bukkitValue() {
 		if (Environment.isBukkit())
 			return (org.bukkit.inventory.ItemStack) itemStack;
-		else throw new UnsupportedOperationException("Unable to adapt item stack to a Bukkit's ItemStack on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt item stack to a Bukkit's ItemStack on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -230,7 +230,7 @@ public class ItemStackAdapter implements Cloneable {
 	public org.spongepowered.api.item.inventory.ItemStack spongeValue() {
 		if (Environment.isSponge())
 			return (ItemStack) itemStack;
-		else throw new UnsupportedOperationException("Unable to adapt item stack to a Sponge's ItemStack on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt item stack to a Sponge's ItemStack on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**

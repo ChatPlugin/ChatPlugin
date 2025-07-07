@@ -62,7 +62,7 @@ public class ResourcePackStatusAdapter {
 	public org.bukkit.event.player.PlayerResourcePackStatusEvent.Status bukkitValue() {
 		if (Environment.isBukkit())
 			return org.bukkit.event.player.PlayerResourcePackStatusEvent.Status.valueOf(name);
-		else throw new UnsupportedOperationException("Unable to adapt resource pack status to a Bukkit's PlayerResourcePackStatusEvent.Status on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt resource pack status to a Bukkit's PlayerResourcePackStatusEvent.Status on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -74,7 +74,7 @@ public class ResourcePackStatusAdapter {
 	public org.spongepowered.api.event.entity.living.humanoid.player.ResourcePackStatusEvent.ResourcePackStatus spongeValue() {
 		if (Environment.isSponge())
 			return org.spongepowered.api.event.entity.living.humanoid.player.ResourcePackStatusEvent.ResourcePackStatus.valueOf(name);
-		else throw new UnsupportedOperationException("Unable to adapt resource pack status to a Sponge's ResourcePackStatusEvent.ResourcePackStatus on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt resource pack status to a Sponge's ResourcePackStatusEvent.ResourcePackStatus on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**

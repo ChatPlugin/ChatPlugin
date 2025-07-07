@@ -48,7 +48,7 @@ public class ObjectiveAdapter {
 	public org.bukkit.scoreboard.Objective bukkitValue() {
 		if (Environment.isBukkit())
 			return (org.bukkit.scoreboard.Objective) objective;
-		else throw new UnsupportedOperationException("Unable to adapt objective to a Bukkit's Objective on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt objective to a Bukkit's Objective on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -60,7 +60,7 @@ public class ObjectiveAdapter {
 	public org.spongepowered.api.scoreboard.objective.Objective spongeValue() {
 		if (Environment.isSponge())
 			return (org.spongepowered.api.scoreboard.objective.Objective) objective;
-		else throw new UnsupportedOperationException("Unable to adapt objective to a Sponge's Objective on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt objective to a Sponge's Objective on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**

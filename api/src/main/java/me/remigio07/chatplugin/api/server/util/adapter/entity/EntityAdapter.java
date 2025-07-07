@@ -52,7 +52,7 @@ public class EntityAdapter {
 	public org.bukkit.entity.Entity bukkitValue() {
 		if (Environment.isBukkit())
 			return (org.bukkit.entity.Entity) entity;
-		else throw new UnsupportedOperationException("Unable to adapt entity to a Bukkit's Entity on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt entity to a Bukkit's Entity on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -64,7 +64,7 @@ public class EntityAdapter {
 	public org.spongepowered.api.entity.Entity spongeValue() {
 		if (Environment.isSponge())
 			return (org.spongepowered.api.entity.Entity) entity;
-		else throw new UnsupportedOperationException("Unable to adapt entity to a Sponge's Entity on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt entity to a Sponge's Entity on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**

@@ -313,7 +313,7 @@ public class EnchantmentAdapter {
 		if (Environment.isBukkit()) {
 			Enchantment enchantment = Enchantment.getByName(aliases[aliases.length - 1].toUpperCase());
 			return enchantment == null ? Enchantment.UNBREAKING : enchantment;
-		} else throw new UnsupportedOperationException("Unable to adapt enchantment to a Bukkit's Enchantment on a " + Environment.getCurrent().getName() + " environment");
+		} throw new UnsupportedOperationException("Unable to adapt enchantment to a Bukkit's Enchantment on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -332,7 +332,7 @@ public class EnchantmentAdapter {
 			} catch (NullPointerException | IllegalArgumentException | IllegalAccessException | NoSuchFieldException e) {
 				return EnchantmentTypes.UNBREAKING;
 			}
-		else throw new UnsupportedOperationException("Unable to adapt enchantment to a Sponge's EnchantmentType on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt enchantment to a Sponge's EnchantmentType on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**

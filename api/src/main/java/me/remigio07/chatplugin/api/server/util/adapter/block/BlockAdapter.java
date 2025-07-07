@@ -51,7 +51,7 @@ public class BlockAdapter {
 	public Block bukkitValue() {
 		if (Environment.isBukkit())
 			return (Block) block;
-		else throw new UnsupportedOperationException("Unable to adapt block to a Bukkit's Block on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt block to a Bukkit's Block on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -63,7 +63,7 @@ public class BlockAdapter {
 	public BlockSnapshot spongeValue() {
 		if (Environment.isSponge())
 			return (BlockSnapshot) block;
-		else throw new UnsupportedOperationException("Unable to adapt block to a Sponge's BlockSnapshot on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt block to a Sponge's BlockSnapshot on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**

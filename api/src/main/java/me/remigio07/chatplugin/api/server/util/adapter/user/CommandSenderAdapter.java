@@ -62,7 +62,7 @@ public class CommandSenderAdapter {
 	public org.bukkit.command.CommandSender bukkitValue() {
 		if (Environment.isBukkit())
 			return (CommandSender) commandSender;
-		else throw new UnsupportedOperationException("Unable to adapt command sender to a Bukkit's CommandSender on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt command sender to a Bukkit's CommandSender on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -74,7 +74,7 @@ public class CommandSenderAdapter {
 	public org.spongepowered.api.command.CommandSource spongeValue() {
 		if (Environment.isSponge())
 			return (CommandSource) commandSender;
-		else throw new UnsupportedOperationException("Unable to adapt command sender to a Sponge's CommandSource on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt command sender to a Sponge's CommandSource on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**

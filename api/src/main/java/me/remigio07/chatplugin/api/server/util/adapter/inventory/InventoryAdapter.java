@@ -71,7 +71,7 @@ public class InventoryAdapter {
 	public org.bukkit.inventory.Inventory bukkitValue() {
 		if (Environment.isBukkit())
 			return (org.bukkit.inventory.Inventory) inventory;
-		else throw new UnsupportedOperationException("Unable to adapt inventory to a Bukkit's Inventory on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt inventory to a Bukkit's Inventory on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -83,7 +83,7 @@ public class InventoryAdapter {
 	public org.spongepowered.api.item.inventory.Inventory spongeValue() {
 		if (Environment.isSponge())
 			return (org.spongepowered.api.item.inventory.Inventory) inventory;
-		else throw new UnsupportedOperationException("Unable to adapt inventory to a Sponge's Inventory on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt inventory to a Sponge's Inventory on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -170,7 +170,6 @@ public class InventoryAdapter {
 		
 		public static org.spongepowered.api.item.inventory.Inventory get(int rows, String title) {
 			return org.spongepowered.api.item.inventory.Inventory.builder()
-//					.property(new Identifiable(UUID.randomUUID()))
 					.property(InventoryTitle.of(Utils.serializeSpongeText(title, false))).property(InventoryDimension.of(9, rows)).build(SpongeBootstrapper.getInstance());
 		}
 		

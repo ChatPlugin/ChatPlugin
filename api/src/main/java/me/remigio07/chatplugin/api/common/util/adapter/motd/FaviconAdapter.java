@@ -47,7 +47,7 @@ public class FaviconAdapter {
 	public org.spongepowered.api.network.status.Favicon spongeValue() {
 		if (Environment.isSponge())
 			return (org.spongepowered.api.network.status.Favicon) favicon;
-		else throw new UnsupportedOperationException("Unable to adapt favicon to a Sponge's Favicon on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt favicon to a Sponge's Favicon on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -59,7 +59,7 @@ public class FaviconAdapter {
 	public net.md_5.bungee.api.Favicon bungeeCordValue() {
 		if (Environment.isBungeeCord())
 			return (net.md_5.bungee.api.Favicon) favicon;
-		else throw new UnsupportedOperationException("Unable to adapt favicon to a BungeeCord's Favicon on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt favicon to a BungeeCord's Favicon on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -71,7 +71,7 @@ public class FaviconAdapter {
 	public com.velocitypowered.api.util.Favicon velocityValue() {
 		if (Environment.isVelocity())
 			return (com.velocitypowered.api.util.Favicon) favicon;
-		else throw new UnsupportedOperationException("Unable to adapt favicon to a Velocity's Favicon on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt favicon to a Velocity's Favicon on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 }

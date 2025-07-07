@@ -71,6 +71,8 @@ public class AdManagerImpl extends AdManager {
 				if (getAd(id) == null) {
 					Map<Language, String> texts = new HashMap<>();
 					Map<Language, String> hovers = new HashMap<>();
+					String clickActionID = ConfigurationType.ADS.get().getString("ads." + id + ".click.action");
+					ClickActionAdapter clickAction = null;
 					Map<Language, String> clickValues = new HashMap<>();
 					List<Rank> disabledRanks = new ArrayList<>();
 					
@@ -95,12 +97,33 @@ public class AdManagerImpl extends AdManager {
 									Utils.getStringFromList(RankManager.getInstance().getRanks().stream().map(Rank::getID).collect(Collectors.toList()), false, true)
 									);
 						else disabledRanks.add(rank);
+					} if (!clickActionID.isEmpty()) {
+						if ((clickAction = ClickActionAdapter.valueOf(clickActionID)) == null) {
+							LogManager.log(
+									"Invalid click action (\"{0}\") set at \"ads.{1}.click.action\" in ads.yml: only OPEN_URL, OPEN_FILE, RUN_COMMAND, SUGGEST_COMMAND, CHANGE_PAGE, COPY_TO_CLIPBOARD, SHOW_DIALOG and CUSTOM are allowed; setting to default value of SUGGEST_COMMAND.",
+									2,
+									ConfigurationType.ADS.get().getString("ads." + id + ".click.action"),
+									id
+									);
+							
+							clickAction = ClickActionAdapter.SUGGEST_COMMAND;
+						} else if (!clickAction.isSupported()) {
+							LogManager.log(
+									"Invalid click action (\"{0}\") set at \"ads.{1}.click.action\" in ads.yml: this feature only works on {2}+ servers; setting to default value of SUGGEST_COMMAND.",
+									2,
+									clickAction.name(),
+									id,
+									clickAction.getMinimumVersion().getName()
+									);
+							
+							clickAction = ClickActionAdapter.SUGGEST_COMMAND;
+						}
 					} try {
 						ads.add(new Ad(
 								id,
 								texts,
 								hovers,
-								ClickActionAdapter.valueOf(ConfigurationType.ADS.get().getString("ads." + id + ".click.action")),
+								clickAction,
 								clickValues,
 								disabledRanks
 								));

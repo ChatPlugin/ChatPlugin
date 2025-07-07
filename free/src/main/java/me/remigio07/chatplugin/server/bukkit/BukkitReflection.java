@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import org.bukkit.Location;
 import org.bukkit.attribute.AttributeModifier;
@@ -43,7 +42,6 @@ public class BukkitReflection {
 	private static String cbPath, nmsPath;
 	private static Map<String, Class<?>> classes = new HashMap<>();
 	private static Map<Class<?>, Map<String, Method>> methods = new HashMap<>();
-	private static Object provider;
 	
 	@SuppressWarnings("deprecation")
 	public static void initReflection() throws ChatPluginManagerException {
@@ -67,7 +65,9 @@ public class BukkitReflection {
 			// CraftChatMessage
 			clazz = getCBClass("util.CraftChatMessage");
 			classes.put("CraftChatMessage", clazz);
-			putMethod(clazz, "fromString", Arrays.asList(String.class));
+			
+			if (VersionUtils.getVersion().isAtLeast(Version.V1_16_4))			
+				putMethod(clazz, "fromJSON", Arrays.asList(String.class));
 			
 			// MinecraftServer
 			clazz = getNMSClass("MinecraftServer");
@@ -125,10 +125,13 @@ public class BukkitReflection {
 						putMethod(clazz, "getText");
 					else putMethod(clazz, "getString");
 					
+					
+					if (VersionUtils.getVersion().isOlderThan(Version.V1_16_4)) {
 						// ChatSerializer
 						clazz = atLeast1_17 ? getNMNClass("chat.IChatBaseComponent$ChatSerializer") : getNMSClass("IChatBaseComponent$ChatSerializer");
 						classes.put("ChatSerializer", clazz);
 						putMethod(clazz, "fromJson", Arrays.asList(String.class), "a");
+					}
 					
 					// PacketPlayOutOpenWindow
 					clazz = atLeast1_17 ? Class.forName("net.minecraft.network.protocol.game.PacketPlayOutOpenWindow") : getNMSClass("PacketPlayOutOpenWindow");
@@ -158,10 +161,12 @@ public class BukkitReflection {
 				clazz = atLeast1_17 ? getNMNClass("chat." + (atLeast1_20_5 && VersionUtils.isPaper() ? "Component" : "IChatBaseComponent")) : getNMSClass("IChatBaseComponent");
 				classes.put("IChatBaseComponent", clazz);
 				
+				if (VersionUtils.getVersion().isOlderThan(Version.V1_16_4)) { // TODO remove duplicate and remove useless version check
 					// ChatSerializer
 					clazz = atLeast1_17 ? getNMNClass(atLeast1_20_5 && VersionUtils.isPaper() ? "chat.Component$Serializer" : "chat.IChatBaseComponent$ChatSerializer") : getNMSClass("IChatBaseComponent$ChatSerializer");
 					classes.put("ChatSerializer", clazz);
 					putMethod(clazz, "fromJson", Arrays.asList(String.class), "a");
+				}
 				
 				// ChatMessageType
 				clazz = atLeast1_17 ? getNMNClass("chat." + (atLeast1_20_5 && VersionUtils.isPaper() ? "ChatType" : "ChatMessageType")) : getNMSClass("ChatMessageType");
@@ -272,13 +277,6 @@ public class BukkitReflection {
 								classes.put("CraftObjective", clazz);
 								putMethod(clazz, "getHandle");
 							} if (atLeast1_20_5) {
-								// Provider
-								clazz = Class.forName("net.minecraft.core.HolderLookup$" + (VersionUtils.isPaper() ? "Provider" : "a"));
-								classes.put("Provider", clazz);
-								putMethod(classes.get("ChatSerializer"), "fromJson", Arrays.asList(String.class, clazz), "a");
-								putMethod(clazz, "create", Arrays.asList(Stream.class), "a");
-								provider = invokeMethod("Provider", "create", null, Stream.empty());
-								
 								// ClientboundCustomPayloadPacket
 								clazz = getNMNClass("protocol.common.ClientboundCustomPayloadPacket");
 								classes.put("ClientboundCustomPayloadPacket", clazz);
@@ -495,8 +493,7 @@ public class BukkitReflection {
 	}
 	
 	public static Object getIChatBaseComponent(String escapedJSON) {
-		return provider == null ? invokeMethod("ChatSerializer", "fromJson", null, escapedJSON)
-				: invokeMethod("ChatSerializer", "fromJson", null, escapedJSON, provider);
+		return VersionUtils.getVersion().isAtLeast(Version.V1_16_4) ? invokeMethod("CraftChatMessage", "fromJSON", null, escapedJSON) : invokeMethod("ChatSerializer", "fromJson", null, escapedJSON);
 	}
 	
 }

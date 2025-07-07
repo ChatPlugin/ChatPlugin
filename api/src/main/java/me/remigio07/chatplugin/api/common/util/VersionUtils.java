@@ -992,7 +992,23 @@ public class VersionUtils {
 		 * <p><strong>Protocol version number:</strong> 770
 		 * <br><strong>Release date:</strong> March 25, 2025</p>
 		 */
-		V1_21_5(770, 1742857200000L, "1.21.5");
+		V1_21_5(770, 1742857200000L, "1.21.5"),
+		
+		/**
+		 * Version <a href="https://minecraft.wiki/w/Java_Edition_1.21.6">1.21.6</a>.
+		 * 
+		 * <p><strong>Protocol version number:</strong> 771
+		 * <br><strong>Release date:</strong> June 17, 2025</p>
+		 */
+		V1_21_6(771, 1750111200000L, "1.21.6"),
+		
+		/**
+		 * Version <a href="https://minecraft.wiki/w/Java_Edition_1.21.7">1.21.7</a>.
+		 * 
+		 * <p><strong>Protocol version number:</strong> 772
+		 * <br><strong>Release date:</strong> June 30, 2025</p>
+		 */
+		V1_21_7(772, 1751234400000L, "1.21.7");
 		
 		private int protocol;
 		private long releaseDate;

@@ -18,6 +18,8 @@ package me.remigio07.chatplugin.api.common.util.adapter.text;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
+import me.remigio07.chatplugin.bootstrap.Environment;
+import net.md_5.bungee.api.chat.ClickEvent.Action;
 
 /**
  * Represents an action performed on a click event.
@@ -28,33 +30,80 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 public class ClickActionAdapter {
 	
 	/**
+	 * Opens the specified URL in the player's default web browser.
+	 */
+	public static final ClickActionAdapter OPEN_URL = new ClickActionAdapter("OPEN_URL");
+	
+	/**
+	 * Opens the specified file on the player's computer.
+	 * 
+	 * <p><strong>Note:</strong> this cannot be sent by servers for security reasons.</p>
+	 */
+	public static final ClickActionAdapter OPEN_FILE = new ClickActionAdapter("OPEN_FILE");
+	
+	/**
+	 * Makes the player run the specified command.
+	 */
+	public static final ClickActionAdapter RUN_COMMAND = new ClickActionAdapter("RUN_COMMAND");
+	
+	/**
+	 * Opens chat and fills in the specified text or command.
+	 */
+	public static final ClickActionAdapter SUGGEST_COMMAND = new ClickActionAdapter("SUGGEST_COMMAND");
+	
+	/**
+	 * Changes the player's open book page to the specified page, if it exists.
+	 * 
+	 * <p><strong>Note:</strong> this can only be used in written books.</p>
+	 */
+	public static final ClickActionAdapter CHANGE_PAGE = new ClickActionAdapter("CHANGE_PAGE");
+	
+	/**
 	 * Copies text to the player's clipboard.
 	 * 
-	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_15_2 1.15.2}</p>
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_15 1.15}
+	 * <br><strong>Minimum version (BungeeCord API):</strong> {@linkplain Version#V1_15_2 1.15.2}</p>
 	 */
-	public static final ClickActionAdapter COPY_TEXT = new ClickActionAdapter("COPY_TEXT", "copy_to_clipboard");
+	public static final ClickActionAdapter COPY_TO_CLIPBOARD = new ClickActionAdapter("COPY_TO_CLIPBOARD");
 	
 	/**
-	 * Opens the URL in the player's browser.
+	 * Opens the specified dialog to the player.
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_21_6 1.21.6}</p>
 	 */
-	public static final ClickActionAdapter OPEN_URL = new ClickActionAdapter("OPEN_URL", "open_url");
+	public static final ClickActionAdapter SHOW_DIALOG = new ClickActionAdapter("SHOW_DIALOG");
 	
 	/**
-	 * Makes the player send a message.
+	 * Sends a custom event to the server.
+	 * 
+	 * <p><strong>Note:</strong> this has no effect on Vanilla servers.
+	 * <br><strong>Minimum version:</strong> {@linkplain Version#V1_21_6 1.21.6}</p>
 	 */
-	public static final ClickActionAdapter SEND_MESSAGE = new ClickActionAdapter("SEND_MESSAGE", "run_command");
+	public static final ClickActionAdapter CUSTOM = new ClickActionAdapter("CUSTOM");
+	private static final ClickActionAdapter[] VALUES = new ClickActionAdapter[] { OPEN_URL, OPEN_FILE, RUN_COMMAND, SUGGEST_COMMAND, CHANGE_PAGE, COPY_TO_CLIPBOARD, SHOW_DIALOG, CUSTOM };
+	private String name;
 	
-	/**
-	 * Suggests text in the player's chat.
-	 */
-	public static final ClickActionAdapter SUGGEST_TEXT = new ClickActionAdapter("SUGGEST_TEXT", "suggest_command");
-	
-	private static final ClickActionAdapter[] VALUES = new ClickActionAdapter[] { COPY_TEXT, OPEN_URL, SEND_MESSAGE, SUGGEST_TEXT };
-	private String name, id;
-	
-	private ClickActionAdapter(String name, String id) {
+	private ClickActionAdapter(String name) {
 		this.name = name;
-		this.id = id;
+	}
+	
+	/**
+	 * Gets the click action adapted for BungeeCord environments.
+	 * 
+	 * <p>If the current version does not support this click action, the
+	 * default value of {@link #SUGGEST_COMMAND} will be returned.</p>
+	 * 
+	 * @return BungeeCord-adapted click action
+	 * @throws UnsupportedOperationException If !{@link Environment#isBungeeCord()}
+	 */
+	public net.md_5.bungee.api.chat.ClickEvent.Action bungeeCordValue() {
+		if (Environment.isBungeeCord())
+			try {
+				return Action.valueOf(name);
+			} catch (IllegalArgumentException e) {
+				return Action.SUGGEST_COMMAND;
+			}
+		throw new UnsupportedOperationException("Unable to adapt favicon to a BungeeCord's ClickEvent.Action on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -79,12 +128,24 @@ public class ClickActionAdapter {
 	}
 	
 	/**
-	 * Gets this action's ID.
+	 * Gets this action's Vanilla ID.
 	 * 
 	 * @return Action's ID
 	 */
 	public String getID() {
-		return id;
+		return name.toLowerCase();
+	}
+	
+	/**
+	 * Gets the minimum supported version for this click action.
+	 * 
+	 * <p>Will return <code>null</code> if all versions
+	 * supported by ChatPlugin support this click action.</p>
+	 * 
+	 * @return Click action's minimum version
+	 */
+	public @Nullable(why = "Null if all versions support this click action") Version getMinimumVersion() {
+		return this == COPY_TO_CLIPBOARD ? Environment.isBukkit() || Environment.isBungeeCord() ? Version.V1_15_2 : Version.V1_15 : ordinal() > 5 ? Version.V1_21_6 : null;
 	}
 	
 	/**
@@ -93,7 +154,8 @@ public class ClickActionAdapter {
 	 * @return Whether this click action is supported
 	 */
 	public boolean isSupported() {
-		return this != COPY_TEXT || VersionUtils.getVersion().isAtLeast(Version.V1_15_2);
+		Version minimumVersion = getMinimumVersion();
+		return minimumVersion == null || VersionUtils.getVersion().isAtLeast(minimumVersion);
 	}
 	
 	/**
@@ -102,7 +164,7 @@ public class ClickActionAdapter {
 	 * {@link IllegalArgumentException} <code>null</code>
 	 * is returned if the constant's name is invalid.
 	 * 
-	 * <p>This method recognizes Bukkit's, Sponge's,
+	 * <p>This method recognizes Bukkit's,
 	 * BungeeCord's and Velocity's IDs.</p>
 	 * 
 	 * @param name Constant's name
@@ -110,18 +172,10 @@ public class ClickActionAdapter {
 	 */
 	@Nullable(why = "Instead of throwing IllegalArgumentException null is returned if the constant's name is invalid")
 	public static ClickActionAdapter valueOf(String name) {
-		switch (name) {
-		case "COPY_TEXT":
-			return COPY_TEXT;
-		case "OPEN_URL":
-			return OPEN_URL;
-		case "SEND_MESSAGE":
-			return SEND_MESSAGE;
-		case "SUGGEST_TEXT":
-			return SUGGEST_TEXT;
-		default:
-			return null;
-		}
+		for (ClickActionAdapter clickAction : VALUES)
+			if (clickAction.name().equals(name))
+				return clickAction;
+		return null;
 	}
 	
 	/**

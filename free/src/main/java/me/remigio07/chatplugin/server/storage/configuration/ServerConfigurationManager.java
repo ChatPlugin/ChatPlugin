@@ -830,7 +830,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		chat.addDefault("chat.hover-info.enabled", true);
 		chat.addDefault("chat.hover-info.rank.enabled", true);
 		chat.addDefault("chat.hover-info.player.enabled", true);
-		chat.addDefault("chat.hover-info.player.click.action", "SUGGEST_TEXT");
+		chat.addDefault("chat.hover-info.player.click.action", "SUGGEST_COMMAND");
 		chat.addDefault("chat.hover-info.player.click.value", "/msg {player} ");
 		chat.addDefault("chat.hover-info.player.placeholder-types", Arrays.asList("PLAYER", "SERVER"));
 		chat.addDefault("chat.hover-info.player.hovers.english", "&a&l{player}\n&7Language: &f{language_display_name}\n&7Time: &f{date_hour}\n&7Ping: {ping_format} ms\n\n&e&oClick to send a /msg!");

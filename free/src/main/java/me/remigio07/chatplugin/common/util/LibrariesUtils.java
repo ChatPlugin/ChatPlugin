@@ -56,17 +56,15 @@ public class LibrariesUtils {
 				if (file.exists()) {
 					if (ConfigurationManager.getInstance().getLastVersionChange() != VersionChange.NULL)
 						downloadFreshCopy("Updating {0} library (new plugin version detected)...", 0, library);
-					else if (library.getMD5Hash() != null && !bytesToHexString(MessageDigest.getInstance("MD5").digest(Files.readAllBytes(getTarget(library).toPath()))).equals(library.getMD5Hash()))
-						downloadFreshCopy("The {0} library's file is corrupted; downloading a fresh copy...", 1, library);
 				} else {
 					file.getParentFile().mkdirs();
 					file.createNewFile();
 					download(library);
-				} if (library.getRelocation() == null)
+				} if (library.getRelocation() == null) // only relocation libraries and database engines
 					isolatedClassLoader.load(getTarget(library));
 				else JARLibraryLoader.getInstance().load(getTarget(library));
-			} catch (Throwable e) {
-				throw new LibraryException(e, library);
+			} catch (Throwable t) {
+				throw new LibraryException(t, library);
 			}
 		}
 	}
@@ -93,7 +91,6 @@ public class LibrariesUtils {
 		
 		if (library.getRelocation() != null)
 			new File(jar.getPath() + ".tmp").delete();
-		
 	}
 	
 	public static void download(Library library) throws Throwable {
@@ -108,7 +105,10 @@ public class LibrariesUtils {
 		output.getChannel().transferFrom(Channels.newChannel(Utils.download(library.getURL())), 0, Long.MAX_VALUE);
 		output.close();
 		
-		boolean megabyte = target.length() > Math.pow(1024, 2);
+		if (!bytesToHexString(MessageDigest.getInstance("MD5").digest(Files.readAllBytes(target.toPath()))).equals(library.getMD5Hash())) {
+			target.delete();
+			throw new IllegalArgumentException("The downloaded file was corrupted and has been deleted");
+		} boolean megabyte = target.length() > Math.pow(1024, 2);
 		
 		LogManager.log("{0} library ({1}) downloaded successfully in {2} ms.", 0, library.getName(), MemoryUtils.formatMemory(target.length(), megabyte ? MemoryUtils.MEGABYTE : MemoryUtils.KILOBYTE) + (megabyte ? " MB" : " KB"), System.currentTimeMillis() - ms);
 		relocate(library);

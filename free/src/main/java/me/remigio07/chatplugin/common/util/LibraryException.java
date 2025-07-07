@@ -42,7 +42,7 @@ public class LibraryException extends Exception {
 		String message = getCause().getMessage();
 		return (message.contains("org.objectweb") || message.contains("me.remigio07.jarrelocator")
 				? "a relocation library is not working properly. Stop the server, delete the ChatPlugin/libraries folder and try again"
-				: ("failed to load " + library.getName() + " library")) + " - " + getCause().getClass().getSimpleName()
+				: ("failed to load " + library.getName() + " library; try restarting the server")) + " - " + getCause().getClass().getSimpleName()
 				+ ": " + message;
 	}
 	

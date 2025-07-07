@@ -27,6 +27,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
+import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.server.integration.placeholder.PlaceholderIntegration;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
@@ -52,6 +53,8 @@ public class PlaceholderAPIIntegration extends ChatPluginBukkitIntegration<Place
 			return PlaceholderAPI.setPlaceholders(player.toAdapter().bukkitValue(), input);
 		} catch (Throwable t) {
 			String message = t.getLocalizedMessage();
+			
+			LogManager.log("{0} occurred while translating placeholders using PlaceholderAPI{1}.", 2, t.getClass().getSimpleName(), message == null ? "" : (": " + message));
 			return "§c" + (message == null ? t.getClass().getSimpleName() : (t.getClass().getSimpleName() + ": " + message)) + "§r";
 		}
 	}

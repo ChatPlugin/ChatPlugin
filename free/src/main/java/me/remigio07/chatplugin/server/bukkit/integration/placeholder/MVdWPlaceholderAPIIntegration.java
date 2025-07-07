@@ -21,6 +21,7 @@ import be.maximvdw.placeholderapi.PlaceholderAPI;
 import be.maximvdw.placeholderapi.PlaceholderReplaceEvent;
 import be.maximvdw.placeholderapi.PlaceholderReplacer;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
+import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.server.integration.placeholder.PlaceholderIntegration;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
@@ -47,6 +48,8 @@ public class MVdWPlaceholderAPIIntegration extends ChatPluginBukkitIntegration<P
 			return PlaceholderAPI.replacePlaceholders(player.toAdapter().bukkitValue(), input);
 		} catch (Throwable t) {
 			String message = t.getLocalizedMessage();
+			
+			LogManager.log("{0} occurred while translating placeholders using MVdWPlaceholderAPI{1}.", 2, t.getClass().getSimpleName(), message == null ? "" : (": " + message));
 			return "§c" + (message == null ? t.getClass().getSimpleName() : (t.getClass().getSimpleName() + ": " + message)) + "§r";
 		}
 	}

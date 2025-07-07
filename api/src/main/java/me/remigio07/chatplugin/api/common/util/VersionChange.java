@@ -19,58 +19,66 @@ import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 
 /**
- * Represents a major, minor or patch change in a version (example: 1.8.0 -&gt; 1.9.0).
+ * Represents a major, minor or patch change between two
+ * <a href="https://semver.org/">Semantic Versioning</a>-compliant
+ * versions (example: 1.8.0 ➝ 1.9.0).
  */
 public enum VersionChange {
 	
 	/**
-	 * Represents a major version upgrade (X.x.x).
+	 * Represents a null version change (example: 2.5.1 ➝ 2.5.1).
 	 */
-	MAJOR_UPGRADE(0),
+	NULL,
 	
 	/**
-	 * Represents a major version downgrade (X.x.x).
+	 * Represents a major version upgrade (example: 1.x.x ➝ 4.x.x).
 	 */
-	MAJOR_DOWNGRADE(0),
+	MAJOR_UPGRADE,
 	
 	/**
-	 * Represents a minor version upgrade (x.X.x).
+	 * Represents a major version downgrade (example: 4.x.x ➝ 1.x.x).
 	 */
-	MINOR_UPGRADE(1),
+	MAJOR_DOWNGRADE,
 	
 	/**
-	 * Represents a minor version downgrade (x.X.x).
+	 * Represents a minor version upgrade (example: 1.7.x ➝ 1.9.x).
 	 */
-	MINOR_DOWNGRADE(1),
+	MINOR_UPGRADE,
 	
 	/**
-	 * Represents a patch version upgrade (x.x.X).
+	 * Represents a minor version downgrade (example: 1.9.x ➝ 1.7.x).
 	 */
-	PATCH_UPGRADE(2),
+	MINOR_DOWNGRADE,
 	
 	/**
-	 * Represents a patch version downgrade (x.x.X).
+	 * Represents a patch version upgrade (example: 1.4.6 ➝ 1.4.7).
 	 */
-	PATCH_DOWNGRADE(2),
+	PATCH_UPGRADE,
 	
 	/**
-	 * Represents a null version change (x.x.x).
+	 * Represents a patch version downgrade (example: 1.4.7 ➝ 1.4.6).
 	 */
-	NULL(-1);
+	PATCH_DOWNGRADE,
 	
-	private int index;
+	/**
+	 * Represents a snapshot version upgrade (example: 7.8.3-SNAPSHOT ➝ 7.8.3)
+	 */
+	SNAPSHOT_UPGRADE,
 	
-	private VersionChange(int index) {
-		this.index = index;
-	}
+	/**
+	 * Represents a snapshot version downgrade (example: 7.8.3 ➝ 7.8.3-SNAPSHOT)
+	 */
+	SNAPSHOT_DOWNGRADE;
 	
 	/**
 	 * Gets this version change's index. Example: x.x.X ➝ 2.
 	 * 
+	 * <p>Will return -1 if <code>this == {@link #NULL}</code>.</p>
+	 * 
 	 * @return Version change's index
 	 */
 	public int getIndex() {
-		return index;
+		return (ordinal() + 1) / 2 - 1;
 	}
 	
 	/**
@@ -88,7 +96,7 @@ public enum VersionChange {
 	 * @return Whether this is a major version change
 	 */
 	public boolean isMajor() {
-		return index == 0;
+		return getIndex() == 0;
 	}
 	
 	/**
@@ -97,7 +105,7 @@ public enum VersionChange {
 	 * @return Whether this is a minor version change
 	 */
 	public boolean isMinor() {
-		return index == 1;
+		return getIndex() == 1;
 	}
 	
 	/**
@@ -106,15 +114,24 @@ public enum VersionChange {
 	 * @return Whether this is a patch version change
 	 */
 	public boolean isPatch() {
-		return index == 2;
+		return getIndex() == 2;
+	}
+	
+	/**
+	 * Checks if this is a snapshot (x.x.x-SNAPSHOT) version change.
+	 * 
+	 * @return Whether this is a snapshot version change
+	 */
+	public boolean isSnapshot() {
+		return getIndex() == 3;
 	}
 	
 	/**
 	 * Gets the version change by comparing
 	 * the specified version to another one.
 	 * 
-	 * <p>Will return {@link #NULL} if the two versions match.
-	 * Modifiers (like "-SNAPSHOT") will not be considered.</p>
+	 * <p>Will return {@link #NULL} if the two versions match. "-SNAPSHOT" is the
+	 * only supported <a href="https://semver.org/#spec-item-9">identifier</a>.</p>
 	 * 
 	 * @param version Version to compare
 	 * @param newVersion New version to compare
@@ -123,17 +140,21 @@ public enum VersionChange {
 	 * @throws NumberFormatException If specified versions do not follow <a href="https://semver.org/">Semantic Versioning</a>
 	 */
 	public static VersionChange getVersionChange(String version, String newVersion) {
-		if (version.contains("-"))
-			version = version.substring(0, version.indexOf('-'));
-		if (newVersion.contains("-"))
-			newVersion = newVersion.substring(0, newVersion.indexOf('-'));
 		if (!version.equals(newVersion)) {
+			boolean snapshotUpgrade = false;
+			
+			if (version.endsWith("-SNAPSHOT")) {
+				version = version.substring(0, version.lastIndexOf('-'));
+				snapshotUpgrade = true;
+			} if (newVersion.endsWith("-SNAPSHOT"))
+				newVersion = newVersion.substring(0, newVersion.lastIndexOf('-'));
 			String[] numbers = version.split("\\.");
 			String[] newNumbers = newVersion.split("\\.");
 			
 			for (int i = 0; i < 3; i++)
 				if (!numbers[i].equals(newNumbers[i]))
 					return getVersionChange(i, Integer.valueOf(newNumbers[i]) > Integer.valueOf(numbers[i]));
+			return snapshotUpgrade ? SNAPSHOT_UPGRADE : SNAPSHOT_DOWNGRADE;
 		} return NULL;
 	}
 	
@@ -148,8 +169,8 @@ public enum VersionChange {
 	 * Gets the version change by comparing the version
 	 * in the specified configuration to another one.
 	 * 
-	 * <p>Will return {@link #NULL} if the two versions match.
-	 * Modifiers (like "-SNAPSHOT") will not be considered.</p>
+	 * <p>Will return {@link #NULL} if the two versions match. "-SNAPSHOT" is the
+	 * only supported <a href="https://semver.org/#spec-item-9">identifier</a>.</p>
 	 * 
 	 * @param configuration Configuration to check
 	 * @param path Path containing the version to compare

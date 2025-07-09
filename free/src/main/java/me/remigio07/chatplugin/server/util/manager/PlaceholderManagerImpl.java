@@ -284,7 +284,7 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 		if (input.contains("{isp}") || input.contains("{continent}") || input.contains("{country}") || input.contains("{subdivisions}") || input.contains("{city}")
 				|| input.contains("{country_code}") || input.contains("{inside_eu}") || input.contains("{time_zone}") || input.contains("{country_code}") || input.contains("{postal_code}")
 				|| input.contains("{latitude}") || input.contains("{longitude}") || input.contains("{accuracy_radius_") || input.contains("{relative_date_")) {
-			input = player.getIPLookup(false).formatPlaceholders(input, language);
+			input = player.getIPLookup(false).join().formatPlaceholders(input, language);
 		} return translateColors ? ChatColor.translate(input) : input;
 	}
 	

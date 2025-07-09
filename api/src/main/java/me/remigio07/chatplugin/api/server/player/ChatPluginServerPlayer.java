@@ -15,8 +15,10 @@
 
 package me.remigio07.chatplugin.api.server.player;
 
+import java.net.InetAddress;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -34,6 +36,7 @@ import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
+import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.bossbar.PlayerBossbar;
 import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager;
@@ -190,27 +193,33 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	/**
 	 * Gets an IP lookup for this player's IP address.
 	 * 
-	 * <p>Will return {@link IPLookupManager#getDisabledFeatureConstructor()}
-	 * if <code>!</code>{@link IPLookupManager#isEnabled()} or <code>!generateIfNull</code>
-	 * and there are no cached IP lookups for this player or an error occurrs.</p>
+	 * <p>Will return {@link IPLookupManager#getDisabledFeatureConstructor()} if
+	 * <code>!</code>{@link IPLookupManager#isEnabled()} or if <code>!generateIfNull</code>
+	 * and there are no cached IP lookups for this player or if an error occurrs.</p>
 	 * 
-	 * <p><strong>Note:</strong> this method might take some
-	 * time to be executed: async calls are recommended.</p>
+	 * <p>The future is not instantly completed if it is necessary to call
+	 * {@link IPLookupManager#getIPLookup(InetAddress)}. It will take a
+	 * maximum of 5 seconds and will never be completed exceptionally.</p>
 	 * 
 	 * @param generateIfNull Whether to generate the lookup if it is not cached
 	 * @return Lookup for this player
 	 */
-	@NotNull
-	public IPLookup getIPLookup(boolean generateIfNull) {
+	public CompletableFuture<IPLookup> getIPLookup(boolean generateIfNull) { // at the end, try to rename it
 		if (ipLookup == null) {
 			if (IPLookupManager.getInstance().isEnabled() && generateIfNull) {
-				try {
-					return ipLookup = IPLookupManager.getInstance().getIPLookup(getIPAddress()).get(5L, TimeUnit.SECONDS);
-				} catch (InterruptedException | ExecutionException | TimeoutException e) {
-					LogManager.log("{0} occurred while waiting for {1}'s IP ({2}) lookup: {3}", 2, e.getClass().getSimpleName(), name, getIPAddress().getHostAddress(), e.getLocalizedMessage());
-				}
-			} return IPLookupManager.getInstance().getDisabledFeatureConstructor();
-		} else return ipLookup;
+				CompletableFuture<IPLookup> future = new CompletableFuture<>();
+				
+				TaskManager.runAsync(() -> {
+					try {
+						future.complete(ipLookup = IPLookupManager.getInstance().getIPLookup(getIPAddress()).get(5L, TimeUnit.SECONDS));
+					} catch (InterruptedException | ExecutionException | TimeoutException e) {
+						LogManager.log("{0} occurred while waiting for the IP ({1}) lookup of {2}: {3}", 2, e.getClass().getSimpleName(), getIPAddress().getHostAddress(), name, e.getLocalizedMessage());
+						future.complete(IPLookupManager.getInstance().getDisabledFeatureConstructor());
+					}
+				}, 0L);
+				return future;
+			} return CompletableFuture.completedFuture(IPLookupManager.getInstance().getDisabledFeatureConstructor());
+		} return CompletableFuture.completedFuture(ipLookup);
 	}
 	
 	/**

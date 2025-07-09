@@ -21,9 +21,6 @@ import java.net.InetAddress;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.sound.SoundType;
@@ -81,7 +78,7 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 		try { // Sponge v4.2
 			inventoryCause = (Cause) Class.forName("org.spongepowered.api.event.cause.NamedCause").getMethod("of", String.class, Object.class).invoke(null, "ChatPluginInventories", null);
 		} catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-			
+			// not on Sponge v4.2
 		}
 	}
 	
@@ -97,39 +94,15 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 		if (playerStored)
 			language = LanguageManager.getInstance().getLanguage(this);
 		else {
-			LanguageDetector detector = LanguageManager.getInstance().getDetector();
-			
 			try {
 				storage.insertNewPlayer(this);
 			} catch (SQLException | IOException e) {
-				LogManager.log("{0} occurred while inserting {1} in the storage: {2}", 2, e.getClass().getSimpleName(), name, e.getMessage());
-			} if (detector.isEnabled()) {
-				if (detector.getMethod() == LanguageDetectionMethod.CLIENT_LOCALE) {
-					TaskManager.runAsync(() -> {
-						if (isLoaded()) {
-							Language detected = detector.detectUsingClientLocale(this);
-							
-							if (!detected.equals(Language.getMainLanguage()))
-								sendLanguageDetectedMessage(detected);
-						}
-					}, detector.getDelay());
-				} else {
-					long ms = System.currentTimeMillis();
-					
-					TaskManager.runAsync(() -> {
-						getIPLookup(true);
-						
-						Language detected = detector.detectUsingGeolocalization(ipLookup);
-						
-						if (!detected.equals(Language.getMainLanguage()))
-							TaskManager.runAsync(() -> sendLanguageDetectedMessage(detected), detector.getDelay() - (System.currentTimeMillis() - ms));
-					}, 0L);
-				}
+				LogManager.log("{0} occurred while inserting {1} in the storage: {2}", 2, e.getClass().getSimpleName(), name, e.getLocalizedMessage());
 			} language = Language.getMainLanguage();
 		} try {
 			id = storage.getPlayerData(PlayersDataType.ID, this);
-		} catch (SQLException e) {
-			LogManager.log("SQLException occurred while getting {0}'s ID from the the database: {1}", 2, name, e.getMessage());
+		} catch (SQLException sqle) {
+			LogManager.log("SQLException occurred while getting the ID of {0} from the the database: {1}", 2, name, sqle.getLocalizedMessage());
 		} if (BossbarManager.getInstance().isEnabled() && BossbarManager.getInstance().isWorldEnabled(getWorld())) {
 			bossbar = new NativeBossbar(this);
 			
@@ -138,20 +111,35 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 			else BossbarManager.getInstance().sendBossbar(BossbarManager.getInstance().getBossbars().get(BossbarManager.getInstance().getTimerIndex() == -1 ? 0 : BossbarManager.getInstance().getTimerIndex()), this);
 		} TaskManager.runAsync(() -> {
 			try {
-				String currentIPAddress = player.getConnection().getAddress().getAddress().getHostAddress();
+				String currentIPAddress = getIPAddress().getHostAddress();
 				
-				if (playerStored) {
+				if (playerStored) { // update name and UUID
 					if (!storage.getPlayerData(PlayersDataType.PLAYER_NAME, id).equals(name))
 						storage.setPlayerData(PlayersDataType.PLAYER_NAME, id, name);
 					else if (!storage.getPlayerData(PlayersDataType.PLAYER_UUID, id).equals(uuid.toString()))
 						storage.setPlayerData(PlayersDataType.PLAYER_UUID, id, uuid.toString());
-				} if (IPLookupManager.getInstance().isEnabled()) {
-					if (IPLookupManager.getInstance().isLoadOnJoin() && ipLookup == null)
-						try {
-							ipLookup = IPLookupManager.getInstance().getIPLookup(getIPAddress()).get(5, TimeUnit.SECONDS);
-						} catch (TimeoutException | InterruptedException | ExecutionException e) {
-							LogManager.log("{0} occurred while waiting for {1}'s IP lookup: {2}", 2, e.getClass().getSimpleName(), name, e.getMessage());
-						}
+				} else { // language detection
+					LanguageDetector detector = LanguageManager.getInstance().getDetector();
+					
+					if (detector.getMethod() == LanguageDetectionMethod.CLIENT_LOCALE) {
+						TaskManager.runAsync(() -> {
+							if (isLoaded()) {
+								Language detected = detector.detectUsingClientLocale(this);
+								
+								if (!detected.equals(Language.getMainLanguage()))
+									sendLanguageDetectedMessage(detected);
+							}
+						}, detector.getDelay());
+					} else {
+						long ms = System.currentTimeMillis();
+						Language detected = detector.detectUsingGeolocalization(getIPLookup(true).join());
+						
+						if (!detected.equals(Language.getMainLanguage()))
+							TaskManager.runAsync(() -> sendLanguageDetectedMessage(detected), detector.getDelay() - (System.currentTimeMillis() - ms));
+					}
+				} if (IPLookupManager.getInstance().isEnabled()) { // update IP address(es)
+					if (ipLookup == null && IPLookupManager.getInstance().isLoadOnJoin())
+						getIPLookup(true).join();
 					String lastIPAddress = storage.getPlayerData(PlayersDataType.PLAYER_IP, id);
 					
 					if (currentIPAddress.equals(lastIPAddress))
@@ -171,7 +159,7 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 					}
 				} storage.setPlayerData(PlayersDataType.PLAYER_IP, id, currentIPAddress);
 			} catch (SQLException | IOException e) {
-				LogManager.log("{0} occurred while getting/setting {1}'s name or IP address(es) from/in the storage: {2}", 2, e.getClass().getSimpleName(), name, e.getMessage());
+				LogManager.log("{0} occurred while getting/setting the name or IP address(es) of {1} from/in the storage: {2}", 2, e.getClass().getSimpleName(), name, e.getLocalizedMessage());
 			} if (!playerStored) {
 				if (AccountCheckManager.getInstance().isPerformOnFirstJoin())
 					AccountCheckManager.getInstance().check(this);

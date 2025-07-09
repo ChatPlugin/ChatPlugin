@@ -15,9 +15,14 @@
 
 package me.remigio07.chatplugin.api.server.language;
 
+import java.net.InetAddress;
+import java.util.concurrent.CompletableFuture;
+
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookup;
+import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
+import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
@@ -81,22 +86,26 @@ public abstract class LanguageDetector {
 	 * <p>Will fallback to {@link LanguageManager#getMainLanguage()}
 	 * if was not possible to detect the player's language.</p>
 	 * 
-	 * <p><strong>Note:</strong> this method might take some
-	 * time to be executed: async calls are recommended.</p>
+	 * <p>The future is not instantly completed if it is necessary to call
+	 * {@link IPLookupManager#getIPLookup(InetAddress)}. It will take a
+	 * maximum of 5 seconds and will never be completed exceptionally.</p>
 	 * 
 	 * @param player Target player
 	 * @return Player's language
 	 */
 	@NotNull
-	public Language detect(ChatPluginServerPlayer player) {
+	public CompletableFuture<Language> detect(ChatPluginServerPlayer player) {
 		if (enabled) {
 			switch (method) {
 			case CLIENT_LOCALE:
-				return detectUsingClientLocale(player);
+				return CompletableFuture.completedFuture(detectUsingClientLocale(player));
 			case GEOLOCALIZATION:
-				return detectUsingGeolocalization(player.getIPLookup(true));
+				CompletableFuture<Language> future = new CompletableFuture<>();
+				
+				TaskManager.runAsync(() -> future.complete(detectUsingGeolocalization(player.getIPLookup(true).join())), 0L);
+				return future;
 			}
-		} return Language.getMainLanguage();
+		} return CompletableFuture.completedFuture(Language.getMainLanguage()); // TODO find an universal solution for methods of disabled managers
 	}
 	
 	/**

@@ -46,7 +46,8 @@ public class LanguageDetectorImpl extends LanguageDetector {
 					unload();
 					return;
 				}
-			}
+			} else if (delay < 500)
+				LogManager.log("CLIENT_LOCALE is selected as language detector method but the delay set at \"languages.detector.delay-ms\" in config.yml is less than 500 ms. This is not recommended because the client does not send the language as soon as the player joins.", 1);
 		} catch (IllegalArgumentException e) {
 			LogManager.log(
 					"Invalid language detector method (\"{0}\") set at \"languages.detector.method\" in config.yml: only CLIENT_LOCALE and GEOLOCALIZATION are allowed; setting to default value of CLIENT_LOCALE.",

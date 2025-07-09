@@ -23,9 +23,6 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -75,56 +72,43 @@ import net.kyori.adventure.title.Title.Times;
 public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
 	private static final int MAX_TEAM_TEXT_LENGTH = VersionUtils.getVersion().isAtLeast(Version.V1_20_1) ? Integer.MAX_VALUE : VersionUtils.getVersion().isAtLeast(Version.V1_13) ? 64 : 16;
+	private static Class<?> CraftPlayer = BukkitReflection.getLoadedClass("CraftPlayer");
+	private static Field channels;
 	private Player player;
 	private Object craftPlayer;
 	private Locale lastLocale;
 	
+	static {
+		try {
+			(channels = CraftPlayer.getDeclaredField("channels")).setAccessible(true);
+		} catch (NoSuchFieldException nsfe) {
+			throw new ExceptionInInitializerError(nsfe);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
 	public ChatPluginBukkitPlayer(Player player) {
 		super(new PlayerAdapter(player));
 		this.player = player;
 		audience = BukkitPlayerManager.getAudiences().player(player);
 		rank = ((RankManagerImpl) RankManager.getInstance()).calculateRank(this);
 		version = version == null ? VersionUtils.getVersion() : version;
-		craftPlayer = BukkitReflection.getLoadedClass("CraftPlayer").cast(player);
+		craftPlayer = CraftPlayer.cast(player);
 		playerConnection = BukkitReflection.getFieldValue("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", craftPlayer), "playerConnection", "connection", VersionUtils.getVersion().isAtLeast(Version.V1_20) ? VersionUtils.getVersion().isAtLeast(Version.V1_21_3) ? "f" : "c" : "b");
 		StorageConnector storage = StorageConnector.getInstance();
 		
 		if (playerStored)
 			language = LanguageManager.getInstance().getLanguage(this);
 		else {
-			LanguageDetector detector = LanguageManager.getInstance().getDetector();
-			
 			try {
 				storage.insertNewPlayer(this);
 			} catch (SQLException | IOException e) {
-				LogManager.log("{0} occurred while inserting {1} in the storage: {2}", 2, e.getClass().getSimpleName(), name, e.getMessage());
-			} if (detector.isEnabled()) {
-				if (detector.getMethod() == LanguageDetectionMethod.CLIENT_LOCALE) {
-					TaskManager.runAsync(() -> {
-						if (isLoaded()) {
-							Language detected = detector.detectUsingClientLocale(this);
-							
-							if (!detected.equals(Language.getMainLanguage()))
-								sendLanguageDetectedMessage(detected);
-						}
-					}, detector.getDelay());
-				} else {
-					long ms = System.currentTimeMillis();
-					
-					TaskManager.runAsync(() -> {
-						getIPLookup(true);
-						
-						Language detected = detector.detectUsingGeolocalization(ipLookup);
-						
-						if (!detected.equals(Language.getMainLanguage()))
-							TaskManager.runAsync(() -> sendLanguageDetectedMessage(detected), detector.getDelay() - (System.currentTimeMillis() - ms));
-					}, 0L);
-				}
+				LogManager.log("{0} occurred while inserting {1} in the storage: {2}", 2, e.getClass().getSimpleName(), name, e.getLocalizedMessage());
 			} language = Language.getMainLanguage();
 		} try {
 			id = storage.getPlayerData(PlayersDataType.ID, this);
-		} catch (SQLException e) {
-			LogManager.log("SQLException occurred while getting {0}'s ID from the the database: {1}", 2, name, e.getMessage());
+		} catch (SQLException sqle) {
+			LogManager.log("SQLException occurred while getting the ID of {0} from the the database: {1}", 2, name, sqle.getLocalizedMessage());
 		} if (BossbarManager.getInstance().isEnabled() && BossbarManager.getInstance().isWorldEnabled(getWorld())) {
 			bossbar = VersionUtils.getVersion().isAtLeast(Version.V1_9) ? new NativeBossbar(this) : new ReflectionBossbar(this);
 			
@@ -133,34 +117,41 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 			else BossbarManager.getInstance().sendBossbar(BossbarManager.getInstance().getBossbars().get(BossbarManager.getInstance().getTimerIndex() == -1 ? 0 : BossbarManager.getInstance().getTimerIndex()), this);
 		} if (F3ServerNameManager.getInstance().isEnabled()) {
 			try {
-				Field channels = player.getClass().getDeclaredField("channels");
-				
-				channels.setAccessible(true);
-				
-				@SuppressWarnings("unchecked")
-				Set<String> playerChannels = (Set<String>) channels.get(player);
-				
-				if (!playerChannels.contains(F3ServerNameManager.CHANNEL_ID))
-					playerChannels.add(F3ServerNameManager.CHANNEL_ID);
-			} catch (NoSuchFieldException | IllegalAccessException e) {
-				LogManager.log("{0} occurred while enabling the F3 server names' channels for {1}: {2}", 2, e.getClass().getSimpleName(), name, e.getMessage());
+				((Set<String>) channels.get(player)).add(F3ServerNameManager.CHANNEL_ID);
+			} catch (IllegalAccessException iae) {
+				LogManager.log("IllegalAccessException occurred while enabling the F3 server names' channels of {1}: {2}", 2, name, iae.getLocalizedMessage());
 			}
 		} TaskManager.runAsync(() -> {
 			try {
-				String currentIPAddress = player.getAddress().getAddress().getHostAddress();
+				String currentIPAddress = getIPAddress().getHostAddress();
 				
-				if (playerStored) {
+				if (playerStored) { // update name and UUID
 					if (!storage.getPlayerData(PlayersDataType.PLAYER_NAME, id).equals(name))
 						storage.setPlayerData(PlayersDataType.PLAYER_NAME, id, name);
 					else if (!storage.getPlayerData(PlayersDataType.PLAYER_UUID, id).equals(uuid.toString()))
 						storage.setPlayerData(PlayersDataType.PLAYER_UUID, id, uuid.toString());
-				} if (IPLookupManager.getInstance().isEnabled()) {
-					if (IPLookupManager.getInstance().isLoadOnJoin() && ipLookup == null)
-						try {
-							ipLookup = IPLookupManager.getInstance().getIPLookup(getIPAddress()).get(5, TimeUnit.SECONDS);
-						} catch (TimeoutException | InterruptedException | ExecutionException e) {
-							LogManager.log("{0} occurred while waiting for {1}'s IP lookup: {2}", 2, e.getClass().getSimpleName(), name, e.getMessage());
-						}
+				} else { // language detection
+					LanguageDetector detector = LanguageManager.getInstance().getDetector();
+					
+					if (detector.getMethod() == LanguageDetectionMethod.CLIENT_LOCALE) {
+						TaskManager.runAsync(() -> {
+							if (isLoaded()) {
+								Language detected = detector.detectUsingClientLocale(this);
+								
+								if (!detected.equals(Language.getMainLanguage()))
+									sendLanguageDetectedMessage(detected);
+							}
+						}, detector.getDelay());
+					} else {
+						long ms = System.currentTimeMillis();
+						Language detected = detector.detectUsingGeolocalization(getIPLookup(true).join());
+						
+						if (!detected.equals(Language.getMainLanguage()))
+							TaskManager.runAsync(() -> sendLanguageDetectedMessage(detected), detector.getDelay() - (System.currentTimeMillis() - ms));
+					}
+				} if (IPLookupManager.getInstance().isEnabled()) { // update IP address(es)
+					if (ipLookup == null && IPLookupManager.getInstance().isLoadOnJoin())
+						getIPLookup(true).join();
 					String lastIPAddress = storage.getPlayerData(PlayersDataType.PLAYER_IP, id);
 					
 					if (currentIPAddress.equals(lastIPAddress))
@@ -180,7 +171,7 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 					}
 				} storage.setPlayerData(PlayersDataType.PLAYER_IP, id, currentIPAddress);
 			} catch (SQLException | IOException e) {
-				LogManager.log("{0} occurred while getting/setting {1}'s name or IP address(es) from/in the storage: {2}", 2, e.getClass().getSimpleName(), name, e.getMessage());
+				LogManager.log("{0} occurred while getting/setting the name or IP address(es) of {1} from/in the storage: {2}", 2, e.getClass().getSimpleName(), name, e.getLocalizedMessage());
 			} if (!playerStored) {
 				if (AccountCheckManager.getInstance().isPerformOnFirstJoin())
 					AccountCheckManager.getInstance().check(this);

@@ -302,7 +302,7 @@ public class BukkitReflection {
 						}
 					}
 				}
-			} if (VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
+			} if (VersionUtils.getVersion().isOlderThan(Version.V1_13_2)) {
 				// PacketPlayOutPlayerListHeaderFooter
 				clazz = getNMSClass("PacketPlayOutPlayerListHeaderFooter");
 				classes.put("PacketPlayOutPlayerListHeaderFooter", clazz);

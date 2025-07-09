@@ -30,7 +30,6 @@ import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
-import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.event.tablist.TablistSendEvent;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
@@ -89,7 +88,7 @@ public class TablistManagerImpl extends TablistManager {
 					}
 				} else LogManager.log("A tablist with ID \"{0}\" already exists in tablists.yml; skipping it.", 1, id);
 			} else LogManager.log("Tablist ID specified at \"tablists.{0}\" in tablists.yml does not respect the following pattern: \"{1}\"; skipping it.", 2, id, TABLIST_ID_PATTERN.pattern());
-		} if (Environment.isBukkit() && VersionUtils.getVersion().isOlderThan(Version.V1_13)) {
+		} if (Environment.isBukkit() && VersionUtils.getVersion().isOlderThan(Version.V1_13_2)) { // check comments in sendTablist(...)
 			Constructor<?>[] constructors = BukkitReflection.getLoadedClass("PacketPlayOutPlayerListHeaderFooter").getConstructors();
 			constructor = constructors[constructors[0].getParameterCount() == 0 ? 0 : 1];
 		} timerTaskID = TaskManager.scheduleAsync(this, 0L, sendingTimeout);
@@ -158,14 +157,15 @@ public class TablistManagerImpl extends TablistManager {
 		} Language language = player.getLanguage();
 		
 		if (Environment.isBukkit())
-			if (VersionUtils.getVersion().isAtLeast(Version.V1_13))
-				player.toAdapter().bukkitValue().setPlayerListHeaderFooter(
-						tablist.getHeader(language, true) == null ? null : processText(PlaceholderManager.getInstance().translatePlaceholders(tablist.getHeader(language, true), player, placeholderTypes)),
-						tablist.getFooter(language, true) == null ? null : processText(PlaceholderManager.getInstance().translatePlaceholders(tablist.getFooter(language, true), player, placeholderTypes))
+			if (VersionUtils.getVersion().isAtLeast(Version.V1_13_2)) // https://hub.spigotmc.org/stash/projects/SPIGOT/repos/craftbukkit/commits/39a287b7da8ad52ff94ba70a9a7584a9337d6f3e
+				player.toAdapter().bukkitValue().setPlayerListHeaderFooter( // this method has been added in 1.13 but this bug ^ has been fixed in a 1.13.1 snapshot
+						tablist.getHeader(language, true) == null ? null : PlaceholderManager.getInstance().translatePlaceholders(tablist.getHeader(language, true), player, placeholderTypes),
+						tablist.getFooter(language, true) == null ? null : PlaceholderManager.getInstance().translatePlaceholders(tablist.getFooter(language, true), player, placeholderTypes)
 						);
 			else player.sendPacket(getHeaderFooterPacket(
 					tablist.getHeader(language, true) == null ? null : PlaceholderManager.getInstance().translatePlaceholders(tablist.getHeader(language, true), player, placeholderTypes),
-					tablist.getFooter(language, true) == null ? null : PlaceholderManager.getInstance().translatePlaceholders(tablist.getFooter(language, true), player, placeholderTypes)
+					tablist.getFooter(language, true) == null ? null : PlaceholderManager.getInstance().translatePlaceholders(tablist.getFooter(language, true), player, placeholderTypes),
+					player
 					));
 		else player.toAdapter().spongeValue().getTabList().setHeaderAndFooter(
 				tablist.getHeader(language, true) == null ? null : Utils.serializeSpongeText(PlaceholderManager.getInstance().translatePlaceholders(tablist.getHeader(language, true), player, placeholderTypes), false),
@@ -173,18 +173,7 @@ public class TablistManagerImpl extends TablistManager {
 				);
 	}
 	
-	private String processText(String text) {
-		String[] array = text.split("\n");
-		
-		for (int i = 0; i < array.length; i++) {
-			if (i != 0 && VersionUtils.getVersion().isOlderThan(Version.V1_13)) // prevent off-centered text
-				array[i] = ChatColor.getLastColors(array[i - 1]) + array[i];
-			if (ChatColor.stripColor(array[i]).isEmpty()) // prevent empty lines
-				array[i] += " ";
-		} return String.join("\n", array);
-	}
-	
-	private Object getHeaderFooterPacket(String header, String footer) {
+	private Object getHeaderFooterPacket(String header, String footer, ChatPluginServerPlayer player) {
 		if (!enabled)
 			return null;
 		Object packet = null;
@@ -192,8 +181,9 @@ public class TablistManagerImpl extends TablistManager {
 		try {
 			packet = constructor.newInstance();
 			
-			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "a").set(packet, BukkitReflection.getIChatBaseComponent("{\"text\":\"" + (header == null ? "" : Jsoner.escape(processText(header))) + "\"}"));
-			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "b").set(packet, BukkitReflection.getIChatBaseComponent("{\"text\":\"" + (footer == null ? "" : Jsoner.escape(processText(footer))) + "\"}"));
+			// "a" and "b" need to be attempted before "header" and "footer"
+			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "a", "header").set(packet, BukkitReflection.getIChatBaseComponent("{\"text\":\"" + (header == null ? "" : Jsoner.escape(VersionUtils.getVersion().isAtLeast(Version.V1_13_2) ? header : player.getVersion().isAtLeast(Version.V1_13) ? header : header.replace("\n", "§r\n"))) + "\"}"));
+			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "b", "footer").set(packet, BukkitReflection.getIChatBaseComponent("{\"text\":\"" + (footer == null ? "" : Jsoner.escape(VersionUtils.getVersion().isAtLeast(Version.V1_13_2) ? footer : player.getVersion().isAtLeast(Version.V1_13) ? footer : footer.replace("\n", "§r\n"))) + "\"}"));
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
 			e.printStackTrace();
 		} return packet;

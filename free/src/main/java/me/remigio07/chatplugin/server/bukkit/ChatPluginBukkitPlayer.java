@@ -218,6 +218,7 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 			audience.sendMessage(component);
 	}
 	
+	@Override
 	public void updatePlayerListName() {
 		if (ConfigurationType.CONFIG.get().getBoolean("settings.register-scoreboards")) {
 			for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {

@@ -138,13 +138,6 @@ public class ItemStackAdapter implements Cloneable {
 	}
 	
 	/**
-	 * Constructs an item stack with the given
-	 * {@link org.bukkit.inventory.ItemStack}.
-	 * 
-	 * @param itemStack Bukkit's item stack
-	 */
-	
-	/**
 	 * Constructs an item stack adapter that accepts one of the following specified as input:
 	 * 	<ul>
 	 * 		<li>{@link org.bukkit.inventory.ItemStack} for Bukkit environments</li>
@@ -295,7 +288,7 @@ public class ItemStackAdapter implements Cloneable {
 	}
 	
 	/**
-	 * Sets this item stack's current durability
+	 * Sets this item stack's current durability.
 	 * 
 	 * @param durability Item's durability
 	 * @return This item stack

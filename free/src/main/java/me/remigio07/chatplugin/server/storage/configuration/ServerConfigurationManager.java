@@ -439,12 +439,12 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		messages.addDefault("chat.antispam.notification-format.text", "{pfx} &f{player} &cin &f{location} &chas tried to say:\n&f{message}");
 		messages.addDefault("chat.antispam.notification-format.hover", "&c&l{player}\n&7Location: &f{location}\n&7Reason: &f{reason}\n\n&e&oClick to perform a /mute!");
+		messages.addDefault("chat.antispam.no-url", "{pfx} &cYour message contains a disallowed URL.");
+		messages.addDefault("chat.antispam.no-ip-address", "{pfx} &cYour message contains a disallowed IP address.");
+		messages.addDefault("chat.antispam.no-swear", "{pfx} &cYour message contains disallowed words.");
 		messages.addDefault("chat.antispam.no-caps", "{pfx} &cYou cannot use more than &f{0}% &cof caps in messages longer than &f{1} &ccharacters. Buy a &fVIP package &cto bypass this restriction.");
 		messages.addDefault("chat.antispam.no-flood", "{pfx} &cYou cannot chat more than once every &f{0} &cseconds. Buy a &fVIP package &cto bypass this restriction.");
 		messages.addDefault("chat.antispam.no-spam", "{pfx} &cYou can write two identical messages every &f{0} &cseconds. Buy a &fVIP package &cto bypass this restriction.");
-		messages.addDefault("chat.antispam.no-swear", "{pfx} &cYour message contains disallowed words.");
-		messages.addDefault("chat.antispam.no-url", "{pfx} &cYour message contains a disallowed URL.");
-		messages.addDefault("chat.antispam.no-ip-address", "{pfx} &cYour message contains a disallowed IP address.");
 		messages.addDefault("chat.no-format", "{pfx} &cYou cannot write formatted messages. Buy a &fVIP package &cto bypass this restriction.");
 		messages.addDefault("chat.no-blank-messages", "{pfx} &cYou cannot send blank messages.");
 		messages.addDefault("chat.pinged", "{pfx} &eYou got pinged by &f{0}&e.");

@@ -488,7 +488,7 @@ public class Utils {
 	public static String capitalizeEveryWord(String input) {
 		return Stream
 				.of(input.toLowerCase().split("\\s"))
-				.filter(word -> word.length() > 0)
+				.filter(word -> !word.isEmpty())
 				.map(word -> Character.toUpperCase(word.charAt(0)) + word.substring(1)).collect(Collectors.joining(" "));
 	}
 	

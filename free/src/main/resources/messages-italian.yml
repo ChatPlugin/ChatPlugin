@@ -411,12 +411,12 @@ chat:
         &7Motivo: &f{reason}
 
         &e&oClicca per eseguire un /mute!
+    no-url: '{pfx} &cIl tuo messaggio contiene un URL non consentito.'
+    no-ip-address: '{pfx} &cIl tuo messaggio contiene un indirizzo IP non consentito.'
+    no-swear: '{pfx} &cIl tuo messaggio contiene parole non consentite.'
     no-caps: '{pfx} &cNon puoi usare più del &f{0}% &cdi caps nei messaggi più lunghi di &f{1} &ccaratteri. Acquista un pacchetto &fVIP &cper aggirare questa restrizione.'
     no-flood: '{pfx} &cNon puoi chattare più di una volta ogni &f{0} &csecondi. Acquista un pacchetto &fVIP &cper aggirare questa restrizione.'
     no-spam: '{pfx} &cPuoi scrivere due messaggi identici ogni &f{0} &csecondi. Acquista un pacchetto &fVIP &cper aggirare questa restrizione.'
-    no-swear: '{pfx} &cIl tuo messaggio contiene parole non consentite.'
-    no-url: '{pfx} &cIl tuo messaggio contiene un URL non consentito.'
-    no-ip-address: '{pfx} &cIl tuo messaggio contiene un indirizzo IP non consentito.'
   no-format: '{pfx} &cNon puoi scrivere messaggi formattati. Acquista un pacchetto &fVIP &cper aggirare questa restrizione.'
   no-blank-messages: '{pfx} &cNon puoi inviare messaggi vuoti.'
   pinged: '{pfx} &eSiete stati menzionati da &f{0}&e.'

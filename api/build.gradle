@@ -1,8 +1,3 @@
-plugins {
-	id 'maven-publish'
-	id 'signing'
-}
-
 java {
 	withJavadocJar()
 	withSourcesJar()
@@ -18,65 +13,70 @@ javadoc {
 	options.addStringOption 'Xdoclint:all,-missing', '-public'
 }
 
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			groupId = rootProject.group
-			artifactId = 'api'
-			version = rootProject.version
-			from components.java
-			pom {
-				name = 'ChatPlugin'
-				description = 'A complete yet lightweight plugin which handles just too many features!'
-				url = 'https://remigio07.me/chatplugin'
-				licenses {
-					license {
-						name = 'AGPL-3.0'
-						url = 'https://www.gnu.org/licenses/agpl-3.0.en.html'
+if (project.hasProperty('sonatypeUsername') && project.hasProperty('sonatypePassword')) {
+	apply plugin: 'maven-publish'
+	apply plugin: 'signing'
+	
+	publishing {
+		publications {
+			mavenJava(MavenPublication) {
+				groupId = rootProject.group
+				artifactId = 'api'
+				version = rootProject.version
+				from components.java
+				pom {
+					name = 'ChatPlugin'
+					description = 'A complete yet lightweight plugin which handles just too many features!'
+					url = 'https://remigio07.me/chatplugin'
+					licenses {
+						license {
+							name = 'AGPL-3.0'
+							url = 'https://www.gnu.org/licenses/agpl-3.0.en.html'
+						}
+					}
+					developers {
+						developer {
+							id = 'Remigio07'
+							name = 'Remigio07'
+							email = 'remigio07@outlook.it'
+							url = 'https://remigio07.me'
+							timezone = 'UTC+01:00 (CET)/UTC+02:00 (CEST)'
+							roles = ['Lead Developer']
+						}
+					}
+					contributors {
+						contributor {
+							name = 'Keresael'
+							timezone = 'UTC+01:00 (CET)/UTC+02:00 (CEST)'
+							roles = ['Community Manager']
+						}
+					}
+					scm {
+						connection = 'scm:git:https://github.com/ChatPlugin/ChatPlugin.git'
+						developerConnection = 'scm:git:git@github.com:ChatPlugin/ChatPlugin.git'
+						url = 'https://github.com/ChatPlugin/ChatPlugin'
+					}
+					issueManagement {
+						system = 'GitHub'
+						url = 'https://github.com/ChatPlugin/ChatPlugin/issues'
 					}
 				}
-				developers {
-					developer {
-						id = 'Remigio07'
-						name = 'Remigio07'
-						email = 'remigio07@outlook.it'
-						url = 'https://remigio07.me'
-						timezone = 'UTC+01:00 (CET)/UTC+02:00 (CEST)'
-						roles = ['Lead Developer']
-					}
-				}
-				contributors {
-					contributor {
-						name = 'Keresael'
-						timezone = 'UTC+01:00 (CET)/UTC+02:00 (CEST)'
-						roles = ['Community Manager']
-					}
-				}
-				scm {
-					connection = 'scm:git:https://github.com/ChatPlugin/ChatPlugin.git'
-					developerConnection = 'scm:git:git@github.com:ChatPlugin/ChatPlugin.git'
-					url = 'https://github.com/ChatPlugin/ChatPlugin'
-				}
-				issueManagement {
-					system = 'GitHub'
-					url = 'https://github.com/ChatPlugin/ChatPlugin/issues'
+			}
+		}
+		repositories {
+			maven {
+				name = 'Central'
+				url = 'https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/'
+				
+				credentials {
+					username = sonatypeUsername
+					password = sonatypePassword
 				}
 			}
 		}
 	}
-	repositories {
-		maven {
-			name = 'OSSRH'
-			url = version.endsWith('-SNAPSHOT') ? 'https://s01.oss.sonatype.org/content/repositories/snapshots/' : 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
-			
-			credentials {
-				username = ossrhUsername
-				password = ossrhPassword
-			}
-		}
+	
+	signing {
+		sign publishing.publications.mavenJava
 	}
-}
-
-signing {
-	sign publishing.publications.mavenJava
 }

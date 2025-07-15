@@ -57,6 +57,9 @@ public class BukkitReflection {
 			classes.put("CraftPlayer", clazz);
 			putMethod(clazz, "getHandle");
 			
+			if (VersionUtils.isPaper() && VersionUtils.getVersion().isAtLeast(Version.V1_21_7))
+				putMethod(clazz, "channels");
+			
 			// CraftWorld - < 1.9
 			clazz = getCBClass("CraftWorld");
 			classes.put("CraftWorld", clazz);

@@ -82,7 +82,7 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 		try {
 			(channels = CraftPlayer.getDeclaredField("channels")).setAccessible(true);
 		} catch (NoSuchFieldException nsfe) {
-			throw new ExceptionInInitializerError(nsfe);
+			// Paper 1.21.7+
 		}
 	}
 	
@@ -117,7 +117,7 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 			else BossbarManager.getInstance().sendBossbar(BossbarManager.getInstance().getBossbars().get(BossbarManager.getInstance().getTimerIndex() == -1 ? 0 : BossbarManager.getInstance().getTimerIndex()), this);
 		} if (F3ServerNameManager.getInstance().isEnabled()) {
 			try {
-				((Set<String>) channels.get(player)).add(F3ServerNameManager.CHANNEL_ID);
+				((Set<String>) (channels == null ? BukkitReflection.invokeMethod("CraftPlayer", "channels", player) : channels.get(player))).add(F3ServerNameManager.CHANNEL_ID);
 			} catch (IllegalAccessException iae) {
 				LogManager.log("IllegalAccessException occurred while enabling the F3 server names' channels of {1}: {2}", 2, name, iae.getLocalizedMessage());
 			}

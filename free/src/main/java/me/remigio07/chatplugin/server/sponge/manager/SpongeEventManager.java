@@ -204,7 +204,7 @@ public class SpongeEventManager extends EventManager {
 		
 		if (player.getUUID().version() == 0 && !player.getName().startsWith(ServerPlayerManager.getInstance().getFloodgateUsernamePrefix())) {
 			LogManager.log(FLOODGATE_ERROR_MESSAGE, 2, player.getName(), ServerPlayerManager.getInstance().getFloodgateUsernamePrefix(), IntegrationType.FLOODGATE.isEnabled() ? "username-prefix\" in Floodgate's" : "settings.floodgate-username-prefix\" in");
-			player.disconnect("Invalid ChatPlugin/Floodgate configuration. Please contact this server's Staff to fix the issue.");
+			player.disconnect("Invalid ChatPlugin-Floodgate configuration. Please contact this server's Staff to fix the issue.");
 			return;
 		} ServerPlayerManager.getPlayersVersions().put(player.getUUID(), IntegrationType.VIAVERSION.isEnabled() ? IntegrationType.VIAVERSION.get().getVersion(player) : IntegrationType.PROTOCOLSUPPORT.isEnabled() ? IntegrationType.PROTOCOLSUPPORT.get().getVersion(player) : VersionUtils.getVersion());
 		ServerPlayerManager.getPlayersLoginTimes().put(player.getUUID(), System.currentTimeMillis());

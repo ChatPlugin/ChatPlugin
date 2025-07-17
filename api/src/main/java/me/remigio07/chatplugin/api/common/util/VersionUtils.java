@@ -984,7 +984,7 @@ public class VersionUtils {
 		 * <p><strong>Protocol version number:</strong> 769
 		 * <br><strong>Release date:</strong> December 3, 2024</p>
 		 */
-		V1_21_4(769, 1733180400000L, "1.21.4"),
+		V1_21_4(769, 1733180400000L),
 		
 		/**
 		 * Version <a href="https://minecraft.wiki/w/Java_Edition_1.21.5">1.21.5</a>.
@@ -992,7 +992,7 @@ public class VersionUtils {
 		 * <p><strong>Protocol version number:</strong> 770
 		 * <br><strong>Release date:</strong> March 25, 2025</p>
 		 */
-		V1_21_5(770, 1742857200000L, "1.21.5"),
+		V1_21_5(770, 1742857200000L),
 		
 		/**
 		 * Version <a href="https://minecraft.wiki/w/Java_Edition_1.21.6">1.21.6</a>.
@@ -1000,7 +1000,7 @@ public class VersionUtils {
 		 * <p><strong>Protocol version number:</strong> 771
 		 * <br><strong>Release date:</strong> June 17, 2025</p>
 		 */
-		V1_21_6(771, 1750111200000L, "1.21.6"),
+		V1_21_6(771, 1750111200000L),
 		
 		/**
 		 * Version <a href="https://minecraft.wiki/w/Java_Edition_1.21.7">1.21.7</a>.
@@ -1008,7 +1008,15 @@ public class VersionUtils {
 		 * <p><strong>Protocol version number:</strong> 772
 		 * <br><strong>Release date:</strong> June 30, 2025</p>
 		 */
-		V1_21_7(772, 1751234400000L, "1.21.7");
+		V1_21_7(772, 1751234400000L, "1.21.7/8"),
+		
+		/**
+		 * Version <a href="https://minecraft.wiki/w/Java_Edition_1.21.8">1.21.8</a>.
+		 * 
+		 * <p><strong>Protocol version number:</strong> 772
+		 * <br><strong>Release date:</strong> July 17, 2025</p>
+		 */
+		V1_21_8(772, 1752703200000L, "1.21.7/8");
 		
 		private int protocol;
 		private long releaseDate;

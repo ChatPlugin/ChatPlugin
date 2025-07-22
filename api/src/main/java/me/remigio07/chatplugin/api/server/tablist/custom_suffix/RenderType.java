@@ -33,7 +33,14 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 public class RenderType {
 	
 	/**
-	 * Displays red hearts after the player's name; supports the "{health}" placeholder only.
+	 * Displays hearts after the player's name; supports the "{health}" placeholder only.
+	 * 
+	 * <p>The following colors are used:
+	 * 	<ul>
+	 * 		<li>red: normal hearts</li>
+	 * 		<li>yellow: absorption effect hearts</li>
+	 * 		<li>hollow: missing hearts</li>
+	 * 	</ul>
 	 */
 	public static final RenderType HEARTS = new RenderType("HEARTS");
 	

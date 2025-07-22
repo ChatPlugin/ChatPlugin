@@ -37,7 +37,6 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.tablist.Tablist;
 import me.remigio07.chatplugin.api.server.tablist.TablistManager;
-import me.remigio07.chatplugin.api.server.tablist.custom_suffix.CustomSuffixManager;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
@@ -59,8 +58,9 @@ public class TablistManagerImpl extends TablistManager {
 		enabled = true;
 		randomOrder = ConfigurationType.TABLISTS.get().getBoolean("tablists.settings.random-order");
 		sendingTimeout = ConfigurationType.TABLISTS.get().getLong("tablists.settings.sending-timeout-ms");
-		prefixFormat = ConfigurationType.TABLISTS.get().getString("tablists.settings.format.prefix");
-		suffixFormat = ConfigurationType.TABLISTS.get().getString("tablists.settings.format.suffix");
+		playerNamesUpdateTimeout = ConfigurationType.TABLISTS.get().getLong("tablists.settings.player-names.update-timeout-ms");
+		playerNamesPrefix = ConfigurationType.TABLISTS.get().getString("tablists.settings.player-names.prefix");
+		playerNamesSuffix = ConfigurationType.TABLISTS.get().getString("tablists.settings.player-names.suffix");
 		placeholderTypes = PlaceholderType.getPlaceholders(ConfigurationType.TABLISTS.get().getStringList("tablists.settings.placeholder-types"));
 		
 		for (String id : ConfigurationType.TABLISTS.get().getKeys("tablists")) {
@@ -92,6 +92,11 @@ public class TablistManagerImpl extends TablistManager {
 			Constructor<?>[] constructors = BukkitReflection.getLoadedClass("PacketPlayOutPlayerListHeaderFooter").getConstructors();
 			constructor = constructors[constructors[0].getParameterCount() == 0 ? 0 : 1];
 		} timerTaskID = TaskManager.scheduleAsync(this, 0L, sendingTimeout);
+		playerNamesTimerTaskID = TaskManager.scheduleAsync(playerNamesUpdater = () -> {
+			if (enabled)
+				for (ChatPluginServerPlayer player : ServerPlayerManager.getInstance().getPlayers().values())
+					((BaseChatPluginServerPlayer) player).updatePlayerListName();
+		}, 0L, playerNamesUpdateTimeout);
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}
@@ -101,14 +106,16 @@ public class TablistManagerImpl extends TablistManager {
 		enabled = false;
 		
 		TaskManager.cancelAsync(timerTaskID);
+		TaskManager.cancelAsync(playerNamesTimerTaskID);
 		tablists.clear();
 		placeholderTypes.clear();
 		
 		randomOrder = false;
-		sendingTimeout = 0;
-		prefixFormat = suffixFormat = null;
-		timerTaskID = timerIndex = -1;
+		sendingTimeout = playerNamesUpdateTimeout = 0;
+		playerNamesPrefix = playerNamesSuffix = null;
+		timerTaskID = playerNamesTimerTaskID = timerIndex = -1;
 		constructor = null;
+		playerNamesUpdater = null;
 	}
 	
 	@Override
@@ -134,12 +141,9 @@ public class TablistManagerImpl extends TablistManager {
 			break;
 		} Tablist tablist = timerIndex == -1 ? null : tablists.get(timerIndex);
 		
-		for (ChatPluginServerPlayer player : ServerPlayerManager.getInstance().getPlayers().values()) {
+		for (ChatPluginServerPlayer player : ServerPlayerManager.getInstance().getPlayers().values())
 			if (tablist != null)
 				sendTablist(tablist, player);
-			CustomSuffixManager.getInstance().updateCustomSuffixes(player);
-			((BaseChatPluginServerPlayer) player).updatePlayerListName();
-		}
 	}
 	
 	@SuppressWarnings("deprecation")

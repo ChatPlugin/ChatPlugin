@@ -903,11 +903,13 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		tablists.addDefault("tablists.settings.enabled", VersionUtils.getVersion().isAtLeast(Version.V1_8));
 		tablists.addDefault("tablists.settings.random-order", false);
-		tablists.addDefault("tablists.settings.sending-timeout-ms", 250);
-		tablists.addDefault("tablists.settings.format.prefix", "{tag_prefix}{tag_name_color}");
-		tablists.addDefault("tablists.settings.format.suffix", "{tag_suffix}");
+		tablists.addDefault("tablists.settings.sending-timeout-ms", 250L);
+		tablists.addDefault("tablists.settings.player-names.update-timeout-ms", 10000L);
+		tablists.addDefault("tablists.settings.player-names.prefix", "{tag_prefix}{tag_name_color}");
+		tablists.addDefault("tablists.settings.player-names.suffix", "{tag_suffix}");
 		tablists.addDefault("tablists.settings.placeholder-types", Arrays.asList("SERVER", "PLAYER"));
 		tablists.addDefault("tablists.settings.custom-suffix.enabled", true);
+		tablists.addDefault("tablists.settings.custom-suffix.update-timeout-ms", 5000L);
 		tablists.addDefault("tablists.settings.custom-suffix.displayed-value", "{ping}");
 		tablists.addDefault("tablists.settings.custom-suffix.render-type", "INTEGER");
 		tablists.addDefault("tablists.settings.custom-suffix.placeholder-types", Arrays.asList("PLAYER"));

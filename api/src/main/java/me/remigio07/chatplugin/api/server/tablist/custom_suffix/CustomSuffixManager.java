@@ -21,9 +21,9 @@ import java.util.List;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.ValueContainer;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
+import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.tablist.Tablist;
-import me.remigio07.chatplugin.api.server.tablist.TablistManager;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 
 /**
@@ -36,6 +36,7 @@ public abstract class CustomSuffixManager implements ChatPluginManager, Runnable
 	
 	protected static CustomSuffixManager instance;
 	protected boolean enabled;
+	protected long updateTimeout, timerTaskID = -1;
 	protected ValueContainer<Integer> displayedValue;
 	protected RenderType renderType;
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
@@ -49,6 +50,17 @@ public abstract class CustomSuffixManager implements ChatPluginManager, Runnable
 	@Override
 	public boolean isEnabled() {
 		return enabled;
+	}
+	
+	/**
+	 * Gets the timeout between updates, in milliseconds.
+	 * 
+	 * <p><strong>Found at:</strong> "tablists.settings.custom-suffix.update-timeout-ms" in {@link ConfigurationType#TABLISTS}</p>
+	 * 
+	 * @return Time between updates
+	 */
+	public long getUpdateTimeout() {
+		return updateTimeout;
 	}
 	
 	/**
@@ -86,6 +98,17 @@ public abstract class CustomSuffixManager implements ChatPluginManager, Runnable
 	}
 	
 	/**
+	 * Gets the {@link #run()}'s timer's task's ID.
+	 * 
+	 * <p>You can interact with it using {@link TaskManager}'s methods.</p>
+	 * 
+	 * @return Update task's ID
+	 */
+	public long getTimerTaskID() {
+		return timerTaskID;
+	}
+	
+	/**
 	 * Gets this manager's instance.
 	 * 
 	 * @return Manager's instance
@@ -95,7 +118,8 @@ public abstract class CustomSuffixManager implements ChatPluginManager, Runnable
 	}
 	
 	/**
-	 * Automatic custom suffixes updater, called once every {@link TablistManager#getSendingTimeout()} ms.
+	 * Automatic custom suffixes updater, called
+	 * once every {@link #getUpdateTimeout()} ms.
 	 */
 	@Override
 	public abstract void run();

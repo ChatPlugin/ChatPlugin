@@ -226,29 +226,35 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 				setupTeams(other);
 			} setupTeams(this);
 		} else setPlayerListName(
-				PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPrefixFormat(), this, TablistManager.getInstance().getPlaceholderTypes())
+				PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPlayerNamesPrefix(), this, TablistManager.getInstance().getPlaceholderTypes())
 				+ name
-				+ PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getSuffixFormat(), this, TablistManager.getInstance().getPlaceholderTypes())
+				+ PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPlayerNamesSuffix(), this, TablistManager.getInstance().getPlaceholderTypes())
 				);
 	}
 	
 	@SuppressWarnings("deprecation")
 	private void setupTeams(ChatPluginServerPlayer other) {
-		String prefix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPrefixFormat(), other, language, TablistManager.getInstance().getPlaceholderTypes());
-		String suffix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getSuffixFormat(), other, language, TablistManager.getInstance().getPlaceholderTypes());
+		String prefix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPlayerNamesPrefix(), other, language, TablistManager.getInstance().getPlaceholderTypes());
+		String suffix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPlayerNamesSuffix(), other, language, TablistManager.getInstance().getPlaceholderTypes());
 		Scoreboard scoreboard = objective.bukkitValue().getScoreboard();
 		Team team = scoreboard.getTeam(other.getRank().formatIdentifier(other));
+		final Team finalTeam = team == null ? scoreboard.registerNewTeam(other.getRank().formatIdentifier(other)) : team;
+		boolean isAtLeastV1_12 = VersionUtils.getVersion().isAtLeast(Version.V1_12);
 		
-		if (team == null)
-			team = scoreboard.registerNewTeam(other.getRank().formatIdentifier(other));
-		if (VersionUtils.getVersion().isAtLeast(Version.V1_12)) {
-			String lastColors = ChatColor.getLastColors(prefix);
-			
-			if (!lastColors.isEmpty())
-				team.setColor((lastColors.startsWith("§x") ? ChatColor.of(lastColors.substring(3, 14).replace("§", "")).getClosestDefaultColor() : ChatColor.getByChar(lastColors.charAt(1))).bukkitValue());
-		} team.setPrefix(prefix.length() > MAX_TEAM_TEXT_LENGTH ? me.remigio07.chatplugin.common.util.Utils.abbreviate(prefix, MAX_TEAM_TEXT_LENGTH, false) : prefix);
-		team.setSuffix(suffix.length() > MAX_TEAM_TEXT_LENGTH ? me.remigio07.chatplugin.common.util.Utils.abbreviate(suffix, MAX_TEAM_TEXT_LENGTH, false) : suffix);
-		team.addPlayer(other.toAdapter().bukkitValue());
+		Utils.ensureSync(() -> {
+			try {
+				if (isAtLeastV1_12) {
+					String lastColors = ChatColor.getLastColors(prefix);
+					
+					if (!lastColors.isEmpty())
+						finalTeam.setColor((lastColors.startsWith("§x") ? ChatColor.of(lastColors.substring(3, 14).replace("§", "")).getClosestDefaultColor() : ChatColor.getByChar(lastColors.charAt(1))).bukkitValue());
+				} finalTeam.setPrefix(prefix.length() > MAX_TEAM_TEXT_LENGTH ? me.remigio07.chatplugin.common.util.Utils.abbreviate(prefix, MAX_TEAM_TEXT_LENGTH, false) : prefix);
+				finalTeam.setSuffix(suffix.length() > MAX_TEAM_TEXT_LENGTH ? me.remigio07.chatplugin.common.util.Utils.abbreviate(suffix, MAX_TEAM_TEXT_LENGTH, false) : suffix);
+				finalTeam.addPlayer(other.toAdapter().bukkitValue());
+			} catch (IllegalStateException ise) {
+				// safe to ignore
+			}
+		});
 	}
 	
 	public void setPlayerListName(String name) {

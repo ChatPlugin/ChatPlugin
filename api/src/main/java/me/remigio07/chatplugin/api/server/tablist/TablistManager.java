@@ -57,10 +57,11 @@ public abstract class TablistManager implements ChatPluginManager, Runnable {
 	public static final Pattern TABLIST_ID_PATTERN = Pattern.compile("^[a-zA-Z0-9-_]{2,36}$");
 	protected static TablistManager instance;
 	protected boolean enabled, randomOrder;
-	protected long sendingTimeout, timerTaskID = -1;
-	protected String prefixFormat, suffixFormat;
+	protected long sendingTimeout, playerNamesUpdateTimeout, timerTaskID = -1, playerNamesTimerTaskID = -1;
+	protected String playerNamesPrefix, playerNamesSuffix;
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
 	protected List<Tablist> tablists = new CopyOnWriteArrayList<>();
+	protected Runnable playerNamesUpdater;
 	protected int timerIndex = -1;
 	protected long loadTime;
 	
@@ -97,25 +98,36 @@ public abstract class TablistManager implements ChatPluginManager, Runnable {
 	}
 	
 	/**
+	 * Gets the timeout between player names' updates, in milliseconds.
+	 * 
+	 * <p><strong>Found at:</strong> "tablists.settings.player-names.update-timeout-ms" in {@link ConfigurationType#TABLISTS}</p>
+	 * 
+	 * @return Time between player names' updates
+	 */
+	public long getPlayerNamesUpdateTimeout() {
+		return playerNamesUpdateTimeout;
+	}
+	
+	/**
 	 * Gets the format of the prefix prepended to players' names in the tablist.
 	 * 
-	 * <p><strong>Found at:</strong> "tablists.settings.format.prefix" in {@link ConfigurationType#TABLISTS}</p>
+	 * <p><strong>Found at:</strong> "tablists.settings.player-names.prefix" in {@link ConfigurationType#TABLISTS}</p>
 	 * 
-	 * @return Prefix format
+	 * @return Player names' prefix
 	 */
-	public String getPrefixFormat() {
-		return prefixFormat;
+	public String getPlayerNamesPrefix() {
+		return playerNamesPrefix;
 	}
 	
 	/**
 	 * Gets the format of the suffix appended to players' names in the tablist.
 	 * 
-	 * <p><strong>Found at:</strong> "tablists.settings.format.suffix" in {@link ConfigurationType#TABLISTS}</p>
+	 * <p><strong>Found at:</strong> "tablists.settings.player-names.suffix" in {@link ConfigurationType#TABLISTS}</p>
 	 * 
-	 * @return Suffix format
+	 * @return Player names' suffix
 	 */
-	public String getSuffixFormat() {
-		return suffixFormat;
+	public String getPlayerNamesSuffix() {
+		return playerNamesSuffix;
 	}
 	
 	/**
@@ -155,6 +167,16 @@ public abstract class TablistManager implements ChatPluginManager, Runnable {
 	}
 	
 	/**
+	 * Gets the automatic player names' updater, called
+	 * once every {@link #getPlayerNamesUpdateTimeout()} ms.
+	 * 
+	 * @return Player names' updater
+	 */
+	public Runnable getPlayerNamesUpdater() {
+		return playerNamesUpdater;
+	}
+	
+	/**
 	 * Gets the {@link #run()}'s timer's task's ID.
 	 * 
 	 * <p>You can interact with it using {@link TaskManager}'s methods.</p>
@@ -163,6 +185,17 @@ public abstract class TablistManager implements ChatPluginManager, Runnable {
 	 */
 	public long getTimerTaskID() {
 		return timerTaskID;
+	}
+	
+	/**
+	 * Gets the  {@link #getPlayerNamesUpdater()}'s timer's task's ID.
+	 * 
+	 * <p>You can interact with it using {@link TaskManager}'s methods.</p>
+	 * 
+	 * @return Player names' update task's ID
+	 */
+	public long getPlayerNamesTimerTaskID() {
+		return playerNamesTimerTaskID;
 	}
 	
 	/**

@@ -222,8 +222,8 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	}
 	
 	private void setupTeams(ChatPluginServerPlayer other) {
-		String prefix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPrefixFormat(), other, language, TablistManager.getInstance().getPlaceholderTypes());
-		String suffix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getSuffixFormat(), other, language, TablistManager.getInstance().getPlaceholderTypes());
+		String prefix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPlayerNamesPrefix(), other, language, TablistManager.getInstance().getPlaceholderTypes());
+		String suffix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPlayerNamesSuffix(), other, language, TablistManager.getInstance().getPlaceholderTypes());
 		Scoreboard scoreboard = Iterables.getFirst(objective.spongeValue().getScoreboards(), null);
 		Team team = scoreboard.getTeam(other.getRank().formatIdentifier(other)).orElse(null);
 		
@@ -250,9 +250,9 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	
 	private void setPlayerListName(ChatPluginServerPlayer other) {
 		setPlayerListName(other, Utils.serializeSpongeText(
-				PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPrefixFormat(), other, language, TablistManager.getInstance().getPlaceholderTypes())
+				PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPlayerNamesPrefix(), other, language, TablistManager.getInstance().getPlaceholderTypes())
 				+ other.getName()
-				+ PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getSuffixFormat(), other, language, TablistManager.getInstance().getPlaceholderTypes()),
+				+ PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPlayerNamesSuffix(), other, language, TablistManager.getInstance().getPlaceholderTypes()),
 				false));
 	}
 	

@@ -18,6 +18,7 @@ package me.remigio07.chatplugin.api.common.util.manager;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -27,6 +28,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.bukkit.Bukkit;
 import org.spongepowered.api.Sponge;
 
+import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.bootstrap.SpongeBootstrapper;
@@ -38,7 +40,8 @@ public abstract class TaskManager implements ChatPluginManager {
 	
 	protected static TaskManager instance;
 	protected boolean enabled;
-	protected ScheduledExecutorService executor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+	protected ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+	protected ExecutorService executor = Executors.newCachedThreadPool();
 	protected Map<Long, UUID> syncTasks = new ConcurrentHashMap<>();
 	protected Map<Long, ScheduledFuture<?>> asyncTasks = new ConcurrentHashMap<>();
 	protected AtomicLong currentSpongeID = new AtomicLong(), currentAsyncID = new AtomicLong();
@@ -50,11 +53,20 @@ public abstract class TaskManager implements ChatPluginManager {
 	}
 	
 	/**
+	 * Gets the asynchronous tasks' scheduler.
+	 * 
+	 * @return Async tasks' scheduler
+	 */
+	public ExecutorService getScheduler() {
+		return scheduler;
+	}
+	
+	/**
 	 * Gets the asynchronous tasks' executor.
 	 * 
 	 * @return Async tasks' executor
 	 */
-	public ScheduledExecutorService getExecutor() {
+	public ExecutorService getExecutor() {
 		return executor;
 	}
 	
@@ -110,7 +122,7 @@ public abstract class TaskManager implements ChatPluginManager {
 	 * @return Task's ID
 	 * @throws UnsupportedOperationException If {@link Environment#isProxy()}
 	 */
-	public static long runSync(Runnable runnable, long delay) {
+	public static long runSync(@NotNull Runnable runnable, long delay) {
 		if (Environment.isProxy())
 			throw new UnsupportedOperationException("Synchronous tasks are not available on a " + Environment.getCurrent().getName() + " environment. Bukkit and Sponge only");
 		delay = delay < 0 ? 0 : delay;
@@ -128,19 +140,22 @@ public abstract class TaskManager implements ChatPluginManager {
 	 * @param delay Delay to wait for first execution, in milliseconds
 	 * @return Task's ID
 	 */
-	public static long runAsync(Runnable runnable, long delay) {
+	public static long runAsync(@NotNull Runnable runnable, long delay) {
 		long taskID = instance.currentAsyncID.getAndIncrement();
 		
-		instance.asyncTasks.put(taskID, instance.executor.schedule(() -> {
-			if (runnable != null)
+		instance.asyncTasks.put(taskID, instance.scheduler.schedule(() -> instance.executor.execute(() -> {
+			try {
 				runnable.run();
-			instance.asyncTasks.remove(taskID);
-		}, delay < 0 ? 0 : delay, TimeUnit.MILLISECONDS));
+			} catch (Throwable t) {
+				LogManager.log("{0} occurred while executing an asynchronous task (delay: {1} ms): {2}", 2, t.getClass().getSimpleName(), delay, t.getLocalizedMessage());
+				t.printStackTrace();
+			} instance.asyncTasks.remove(taskID);
+		}), delay < 0 ? 0 : delay, TimeUnit.MILLISECONDS));
 		return taskID;
 	}
 	
 	/**
-	 * Schedules a synchronous task (fixed delay) on the main thread.
+	 * Schedules a synchronous repeating task (fixed delay) on the main thread.
 	 * 
 	 * <p>Might impact performance with heavy tasks: use
 	 * {@link #scheduleAsync(Runnable, long, long)} if possible.</p>
@@ -154,7 +169,7 @@ public abstract class TaskManager implements ChatPluginManager {
 	 * @return Task's ID
 	 * @throws UnsupportedOperationException If {@link Environment#isProxy()}
 	 */
-	public static long scheduleSync(Runnable runnable, long delay, long period) {
+	public static long scheduleSync(@NotNull Runnable runnable, long delay, long period) {
 		if (Environment.isProxy())
 			throw new UnsupportedOperationException("Synchronous tasks are not available on a " + Environment.getCurrent().getName() + " environment. Bukkit and Sponge only");
 		delay = delay < 0 ? 0 : delay;
@@ -166,20 +181,24 @@ public abstract class TaskManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Schedules an asynchronous task (fixed delay) on a new thread.
+	 * Schedules an asynchronous repeating task (fixed delay) on a new thread.
 	 * 
 	 * @param runnable Task to run
 	 * @param delay Delay to wait for first execution, in milliseconds
 	 * @param period Period to wait between executions, in milliseconds
 	 * @return Task's ID
 	 */
-	public static long scheduleAsync(Runnable runnable, long delay, long period) {
+	public static long scheduleAsync(@NotNull Runnable runnable, long delay, long period) {
 		long taskID = instance.currentAsyncID.getAndIncrement();
 		
-		instance.asyncTasks.put(taskID, instance.executor.scheduleWithFixedDelay(() -> {
-			if (runnable != null)
+		instance.asyncTasks.put(taskID, instance.scheduler.scheduleWithFixedDelay(() -> instance.executor.execute(() -> {
+			try {
 				runnable.run();
-		}, delay < 0 ? 0 : delay, period < 1 ? 1 : period, TimeUnit.MILLISECONDS));
+			} catch (Throwable t) {
+				LogManager.log("{0} occurred while executing an asynchronous repeating task (delay: {1} ms, period: {2} ms): {3}", 2, t.getClass().getSimpleName(), delay, period, t.getLocalizedMessage());
+				t.printStackTrace();
+			}
+		}), delay < 0 ? 0 : delay, period < 1 ? 1 : period, TimeUnit.MILLISECONDS));
 		return taskID;
 	}
 	

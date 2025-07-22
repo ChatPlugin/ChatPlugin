@@ -71,6 +71,15 @@ public @interface GameFeature {
 	public boolean spigotRequired();
 	
 	/**
+	 * Checks if Paper is required to run this feature.
+	 * 
+	 * <p>Applies to Bukkit environments only.</p>
+	 * 
+	 * @return Whether Paper is required to run this feature
+	 */
+	public boolean paperRequired();
+	
+	/**
 	 * Gets the minimum Vanilla version required to run this feature on a Bukkit environment.
 	 * 
 	 * @return Minimum Vanilla version required to run on Bukkit

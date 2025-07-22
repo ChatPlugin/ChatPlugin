@@ -44,6 +44,7 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 		availableOnBukkit = true,
 		availableOnSponge = true,
 		spigotRequired = false,
+		paperRequired = false,
 		minimumBukkitVersion = Version.V1_0,
 		minimumSpongeVersion = Version.V1_9
 		)

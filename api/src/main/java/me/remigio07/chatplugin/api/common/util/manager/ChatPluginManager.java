@@ -83,6 +83,7 @@ public interface ChatPluginManager {
 	 * 	<ol>
 	 * 		<li>environment compatibility - whether the feature is available on Bukkit/Sponge</li>
 	 * 		<li>Spigot requirement - whether the feature requires Spigot or a fork; Bukkit only</li>
+	 * 		<li>Paper requirement - whether the feature requires Paper or a fork; Bukkit only</li>
 	 * 		<li>minimum version - the minimum Vanilla version required to run the feature</li>
 	 * 	</ol>
 	 * 
@@ -110,6 +111,8 @@ public interface ChatPluginManager {
 				str = "Bukkit cannot";
 			else if (gameFeature.spigotRequired() && !VersionUtils.isSpigot())
 				str = "Spigot is required to";
+			else if (gameFeature.paperRequired() && !VersionUtils.isPaper())
+				str = "Paper is required to";
 			else if (VersionUtils.getVersion().ordinal() < gameFeature.minimumBukkitVersion().ordinal())
 				str = "At least Minecraft " + gameFeature.minimumBukkitVersion().toString() + " is required to";
 		} else {

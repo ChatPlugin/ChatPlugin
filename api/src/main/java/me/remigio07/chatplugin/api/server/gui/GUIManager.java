@@ -46,6 +46,7 @@ import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 		availableOnBukkit = true,
 		availableOnSponge = true,
 		spigotRequired = false,
+		paperRequired = false,
 		minimumBukkitVersion = Version.V1_8,
 		minimumSpongeVersion = Version.V1_12
 		)

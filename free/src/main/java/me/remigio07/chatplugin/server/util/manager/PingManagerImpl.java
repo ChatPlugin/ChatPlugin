@@ -15,8 +15,12 @@
 
 package me.remigio07.chatplugin.server.util.manager;
 
+import java.util.Collections;
+import java.util.List;
+
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.util.Utils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
@@ -38,23 +42,26 @@ public class PingManagerImpl extends PingManager {
 	public void load() throws ChatPluginManagerException {
 		instance = this;
 		long ms = System.currentTimeMillis();
-		updateTimeout = ConfigurationType.CONFIG.get().getLong("ping.update-timeout-ms");
+		
+		if (!ConfigurationType.CONFIG.get().getBoolean("ping.enabled"))
+			return;
+		updateTimeout = Utils.getTime(ConfigurationType.CONFIG.get().getString("ping.update-timeout"), false, false);
 		Configuration messages = Language.getMainLanguage().getConfiguration();
 		
 		for (String id : ConfigurationType.CONFIG.get().getKeys("ping.qualities")) {
-			int maxMs = ConfigurationType.CONFIG.get().getInt("ping.qualities." + id);
+			int maximumPing = ConfigurationType.CONFIG.get().getInt("ping.qualities." + id);
 			
 			if (messages.contains("ping." + id + ".color") && messages.contains("ping." + id + ".text"))
-				qualities.add(new PingQuality(id, maxMs));
-			else LogManager.log("Missing translation in {0} for ping quality with ID {1}; skipping.", 2, messages.getFile().getName(), id);
-		} PingQuality last = qualities.isEmpty() ? new PingQuality("default-quality", Integer.MAX_VALUE) : qualities.get(0);
-		
-		for (PingQuality maxMs : qualities)
-			if (maxMs.getMaxMs() > last.getMaxMs())
-				last = maxMs;
-		if (qualities.isEmpty())
-			qualities.add(last);
-		last.setMaxMs(Integer.MAX_VALUE);
+				try {
+					qualities.add(new PingQuality(id, maximumPing));
+				} catch (IllegalArgumentException iae) {
+					LogManager.log("Invalid maximum ping ({0}) set at \"ping.qualities.{1}\" in config.yml: the number must be at least 0; skipping it.", 2, maximumPing, id);
+				}
+			else LogManager.log("Missing translation at \"ping.{0}\" in {1}; skipping it.", 2, id, messages.getFile().getName());
+		}  if (qualities.isEmpty()) {
+			qualities.add(new PingQuality("default-quality", 0));
+			LogManager.log("No ping qualities have been found at \"ping.qualities\" in config.yml.", 1);
+		} else Collections.sort(qualities);
 		
 		timerTaskID = TaskManager.scheduleAsync(this, 0L, updateTimeout);
 		enabled = true;
@@ -86,16 +93,34 @@ public class PingManagerImpl extends PingManager {
 	}
 	
 	@Override
-	public PingQuality getPingQuality(int ms) {
+	public PingQuality getPingQuality(int ping) {
+		
+		if (ping < 0)
+			throw new IllegalArgumentException("Specified ping is less than 0");
 		for (PingQuality quality : qualities)
-			if (ms <= quality.getMaxMs())
+			if (quality.getMaximumPing() >= ping)
 				return quality;
 		return qualities.get(qualities.size() - 1);
 	}
 	
 	@Override
-	public String formatPing(int ms, Language language) {
-		return ChatColor.translate(getPingQuality(ms).getColor(language) + String.valueOf(ms));
+	public String formatPing(int ping, Language language) {
+		return ChatColor.translate(getPingQuality(ping).getColor(language) + String.valueOf(ping));
+	}
+	
+	@Override
+	public String formatPlaceholders(String input, int ping, Language language) {
+		PingQuality quality = getPingQuality(ping);
+		return input
+				.replace("{ping_format}", quality.getColor(language) + "{ping}") // :)
+				.replace("{ping}", String.valueOf(ping))
+				.replace("{ping_quality_color}", quality.getColor(language))
+				.replace("{ping_quality_text}", quality.getText(language));
+	}
+	
+	@Override
+	public List<String> formatPlaceholders(List<String> input, int ms, Language language) {
+		return null;
 	}
 	
 }

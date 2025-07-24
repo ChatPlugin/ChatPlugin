@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.api.server.util.manager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
@@ -31,11 +32,25 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
  */
 public abstract class PingManager implements ChatPluginManager, Runnable {
 	
+	/**
+	 * Array containing all available placeholders that
+	 * can be translated with a ping's information.
+	 * 
+	 * <p><strong>Content:</strong> ["ping", "ping_format", "ping_quality_color", "ping_quality_text"]</p>
+	 * 
+	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Ping#placeholders">ChatPlugin wiki/Modules/Ping/Placeholders</a>
+	 */
+	public static final String[] PLACEHOLDERS = { "ping", "ping_format", "ping_quality_color", "ping_quality_text" };
 	protected static PingManager instance;
 	protected boolean enabled;
 	protected List<PingQuality> qualities = new ArrayList<>();
 	protected long updateTimeout, timerTaskID = -1, loadTime;
 	
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * <p><strong>Found at:</strong> "ping.enabled" in {@link ConfigurationType#CONFIG}</p>
+	 */
 	@Override
 	public boolean isEnabled() {
 		return enabled;
@@ -44,8 +59,13 @@ public abstract class PingManager implements ChatPluginManager, Runnable {
 	/**
 	 * Gets the loaded ping qualities list.
 	 * 
+	 * <p>You may modify the returned list, but it needs to be
+	 * sorted using {@link PingQuality#compareTo(PingQuality)}.</p>
+	 * 
+	 * <p><strong>Found at:</strong> "ping.qualities" in {@link ConfigurationType#CONFIG}</p>
+	 * 
 	 * @return Ping qualities
-	 * @see PingQuality
+	 * @see Collections#sort(List)
 	 */
 	public List<PingQuality> getQualities() {
 		return qualities;
@@ -54,7 +74,7 @@ public abstract class PingManager implements ChatPluginManager, Runnable {
 	/**
 	 * Gets the timeout between ping updates, in milliseconds.
 	 * 
-	 * <p><strong>Found at:</strong> "ping.update-timeout-ms" in {@link ConfigurationType#CONFIG}</p>
+	 * <p><strong>Found at:</strong> "ping.update-timeout" in {@link ConfigurationType#CONFIG}</p>
 	 * 
 	 * @return Time between updates
 	 */
@@ -76,28 +96,11 @@ public abstract class PingManager implements ChatPluginManager, Runnable {
 	/**
 	 * Returns a player's cached ping.
 	 * 
-	 * <p>Latencies are cached in a map updated once every {@link #getUpdateTimeout()} ms.
-	 * If you need a real time ping (just a little more precise), you can use
-	 * {@link #getRealTimePing(ChatPluginServerPlayer)}, but it's not recommended,
-	 * as many calls of that method could be heavy to handle.</p>
-	 * 
 	 * @param player Player to get the ping for
 	 * @return Player's cached ping, in milliseconds
 	 */
 	public int getCachedPing(ChatPluginServerPlayer player) {
 		return player.getPing();
-	}
-	
-	/**
-	 * Calls {@link #formatPing(int, Language)} specifying arguments
-	 * {@link ChatPluginServerPlayer#getPing()} and
-	 * {@link ChatPluginServerPlayer#getLanguage()} of given player.
-	 * 
-	 * @param player Player to get the ping for
-	 * @return Formatted ping with colors
-	 */
-	public String formatPing(ChatPluginServerPlayer player) {
-		return formatPing(player.getPing(), player.getLanguage());
 	}
 	
 	/**
@@ -110,7 +113,8 @@ public abstract class PingManager implements ChatPluginManager, Runnable {
 	}
 	
 	/**
-	 * Automatic online players' ping updater, called once every {@link #getUpdateTimeout()} ms.
+	 * Automatic online players' ping updater, called
+	 * once every {@link #getUpdateTimeout()} ms.
 	 */
 	@Override
 	public abstract void run();
@@ -118,35 +122,60 @@ public abstract class PingManager implements ChatPluginManager, Runnable {
 	/**
 	 * Gets a player's real time ping.
 	 * 
-	 * @deprecated This method will return the ping directly from the player's connection class
-	 * using reflection. You should use {@link #getCachedPing(ChatPluginServerPlayer)} instead for
-	 * a cached and less resource demanding ping request if performing multiple calls of this method.
-	 * @param player Player to get the ping for
+	 * @deprecated This method will fetch the ping from the player's
+	 * connection class, using slow reflection methods. If possible, use
+	 * {@link #getCachedPing(ChatPluginServerPlayer)} for cached results.
+	 * @param player Player to get the ping of
 	 * @return Player's real time ping, in milliseconds
 	 */
 	@Deprecated
 	public abstract int getRealTimePing(ChatPluginServerPlayer player);
 	
 	/**
-	 * Establishes what {@link PingQuality} a ping belongs to
-	 * according to the response time, expressed in milliseconds.
+	 * Establishes what {@link PingQuality} a ping
+	 * belongs to according to the response time.
 	 * 
-	 * @param ms Ping to check
+	 * @param ping Ping to check, in milliseconds
 	 * @return Resulting ping quality
+	 * @throws IllegalArgumentException If <code>ping &lt; 0</code>
 	 */
-	public abstract PingQuality getPingQuality(int ms);
+	public abstract PingQuality getPingQuality(int ping);
 	
 	/**
-	 * Returns a string formatted with given ping's {@link PingQuality}'s colors.
+	 * Formats the specified ping using its {@link PingQuality}'s colors.
 	 * 
-	 * <p>If you want just a player's ping in milliseconds,
-	 * use {@link #getCachedPing(ChatPluginServerPlayer)}.</p>
-	 * 
-	 * @param ms Latency, in milliseconds
+	 * @param ping Ping to format, in milliseconds
 	 * @param language Language to get the message for
 	 * @return Formatted ping with colors
+	 * @throws IllegalArgumentException If <code>ping &lt; 0</code>
 	 */
-	public abstract String formatPing(int ms, Language language);
+	public abstract String formatPing(int ping, Language language);
+	
+	/**
+	 * Translates an input string with the ping's specific placeholders.
+	 * 
+	 * <p>Check {@link #PLACEHOLDERS} to know the available placeholders.</p>
+	 * 
+	 * @param input Input containing placeholders
+	 * @param ping Ping to format, in milliseconds
+	 * @param language Language used to translate the placeholders
+	 * @return Translated placeholders
+	 * @throws IllegalArgumentException If <code>ping &lt; 0</code>
+	 */
+	public abstract String formatPlaceholders(String input, int ping, Language language);
+	
+	/**
+	 * Translates an input string list with the ping's specific placeholders.
+	 * 
+	 * <p>Check {@link #PLACEHOLDERS} to know the available placeholders.</p>
+	 * 
+	 * @param input Input containing placeholders
+	 * @param ping Ping to format, in milliseconds
+	 * @param language Language used to translate the placeholders
+	 * @return Translated placeholders
+	 * @throws IllegalArgumentException If <code>ping &lt; 0</code>
+	 */
+	public abstract List<String> formatPlaceholders(List<String> input, int ping, Language language);
 	
 	/**
 	 * Represents a ping quality.
@@ -155,20 +184,32 @@ public abstract class PingManager implements ChatPluginManager, Runnable {
 	 * the config at section <code>ping</code>. Every interval has a
 	 * different color which can be specified in the messages' files.</p>
 	 */
-	public class PingQuality {
+	public class PingQuality implements Comparable<PingQuality> {
 		
 		private String id;
-		private int maxMs;
+		private int maximumPing;
 		
 		/**
 		 * Constructs a new ping quality.
 		 * 
 		 * @param id Quality's ID
-		 * @param maxMs Quality's maximum milliseconds
+		 * @param maximumPing Quality's maximum ping, in milliseconds
+		 * @throws IllegalArgumentException If <code>maximumPing &lt; 0</code>
 		 */
-		public PingQuality(String id, int maxMs) {
+		public PingQuality(String id, int maximumPing) {
+			if (maximumPing < 0)
+				throw new IllegalArgumentException("Specified maximum ping is less than 0");
 			this.id = id;
-			this.maxMs = maxMs;
+			this.maximumPing = maximumPing;
+		}
+		
+		/**
+		 * Compares two ping qualities based on their
+		 * {@link #getMaximumPing()}; lower pings first.
+		 */
+		@Override
+		public int compareTo(PingQuality o) {
+			return maximumPing < o.getMaximumPing() ? -1 : maximumPing == o.getMaximumPing() ? 0 : 1;
 		}
 		
 		/**
@@ -181,21 +222,12 @@ public abstract class PingManager implements ChatPluginManager, Runnable {
 		}
 		
 		/**
-		 * Gets this quality's maximum milliseconds.
+		 * Gets this quality's maximum ping.
 		 * 
-		 * @return Quality's maximum milliseconds
+		 * @return Quality's maximum ping, in milliseconds
 		 */
-		public int getMaxMs() {
-			return maxMs;
-		}
-		
-		/**
-		 * Sets this quality's max milliseconds.
-		 * 
-		 * @param maxMs Quality's max milliseconds
-		 */
-		public void setMaxMs(int maxMs) {
-			this.maxMs = maxMs;
+		public int getMaximumPing() {
+			return maximumPing;
 		}
 		
 		/**

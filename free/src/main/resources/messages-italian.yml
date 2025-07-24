@@ -344,7 +344,12 @@ commands:
     &eAvvisi: &f{2}
     &eDisconnessioni: &f{3}
     &eMutes: &f{4}
-  tps: '{pfx} &eTPS degli ultimi &f1m&e, &f5m&e, &f15m&e: &f{0}&e, &f{1}&e, &f{2}&e.'
+  tps: '{pfx} &eTPS degli ultimi &f1m&e, &f5m&e, &f15m&e: &f{tps_1_min_format}&e, &f{tps_5_min_format}&e, &f{tps_15_min_format}&e.'
+  mspt: |-
+    {pfx} &eMSPT (&fmedi&e/&fminimi&e/&fmassimi&e) degli ultimi:
+    &f&l5 secondi &8- &f{mspt_5_sec_avg_format} ms&e/&f{mspt_5_sec_min_format} ms&e/&f{mspt_5_sec_max_format} ms
+    &f&l10 secondi &8- &f{mspt_10_sec_avg_format} ms&e/&f{mspt_10_sec_min_format} ms&e/&f{mspt_10_sec_max_format} ms
+    &f&l1 minuto &8- &f{mspt_1_min_avg_format} ms&e/&f{mspt_1_min_min_format} ms&e/&f{mspt_1_min_max_format} ms
   ad:
     send:
       one: '{pfx} &aL''annuncio &f{0} &aè stato inviato con successo a &f{1}&a.'
@@ -724,6 +729,13 @@ ping:
     color: '&4'
     text: '&4ingiocabile'
 tps-qualities:
+  excellent: '&2'
+  great: '&a'
+  good: '&e'
+  poor: '&6'
+  bad: '&c'
+  unplayable: '&4'
+mspt-qualities:
   excellent: '&2'
   great: '&a'
   good: '&e'

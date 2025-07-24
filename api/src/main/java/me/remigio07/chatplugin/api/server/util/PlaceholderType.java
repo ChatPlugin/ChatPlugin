@@ -42,8 +42,9 @@ public enum PlaceholderType {
 	 */
 	PLAYER(new String[] {
 			"player", "uuid", "display_name", "ip_address", "health", "max_health", "food", "level", "xp", "gamemode",
-			"ping", "ping_format", "ping_quality_color", "ping_quality_text", "language_id", "language_display_name", "locale", "version", "version_protocol", "client_edition", "last_login", "time_played", "emojis_tone",
+			"language_id", "language_display_name", "locale", "version", "version_protocol", "client_edition", "last_login", "time_played", "emojis_tone",
 			"world", "online_world", "vanished_world",
+			"ping", "ping_format", "ping_quality_color", "ping_quality_text",
 			"player_id", "player_bans", "player_warnings", "player_kicks", "player_mutes", "messages_sent", "player_anticheat_bans", "player_anticheat_warnings", "player_anticheat_kicks", "player_anticheat_mutes",
 			"x", "y", "z", "yaw", "pitch",
 			"rank_id", "rank_display_name", "prefix", "suffix", "tag_prefix", "tag_suffix", "tag_name_color", "chat_color", "rank_description",
@@ -62,6 +63,7 @@ public enum PlaceholderType {
 			"total_players", "total_bans", "total_warnings", "total_kicks", "total_mutes", "total_staff_bans", "total_staff_warnings", "total_staff_kicks", "total_staff_mutes", "total_anticheat_bans", "total_anticheat_warnings", "total_anticheat_kicks", "total_anticheat_mutes",
 			"max_memory", "total_memory", "used_memory", "free_memory", "total_storage", "used_storage", "free_storage",
 			"tps_1_min", "tps_5_min", "tps_15_min", "tps_1_min_format", "tps_5_min_format", "tps_15_min_format",
+			"mspt_5_sec_avg", "mspt_5_sec_min", "mspt_5_sec_max", "mspt_10_sec_avg", "mspt_10_sec_min", "mspt_10_sec_max", "mspt_1_min_avg", "mspt_1_min_min", "mspt_1_min_max", "mspt_5_sec_avg_format", "mspt_5_sec_min_format", "mspt_5_sec_max_format", "mspt_10_sec_avg_format", "mspt_10_sec_min_format", "mspt_10_sec_max_format", "mspt_1_min_avg_format", "mspt_1_min_min_format", "mspt_1_min_max_format",
 			"server_os_name", "server_os_arch", "server_os_version", "cpu_threads", "active_threads",
 			"discord_punishments_channel_id", "discord_staff_notifications_channel_id"
 			}),

@@ -63,6 +63,7 @@ import me.remigio07.chatplugin.api.server.rank.RankManager;
 import me.remigio07.chatplugin.api.server.scoreboard.ScoreboardManager;
 import me.remigio07.chatplugin.api.server.tablist.TablistManager;
 import me.remigio07.chatplugin.api.server.tablist.custom_suffix.CustomSuffixManager;
+import me.remigio07.chatplugin.api.server.util.manager.MSPTManager;
 import me.remigio07.chatplugin.api.server.util.manager.PingManager;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
@@ -156,8 +157,9 @@ public class ChatPluginServerManagers extends ChatPluginManagers {
 		addManager(MuteManager.class, new DummyMuteManager());
 		addManager(PlaceholderManager.class, new PlaceholderManagerImpl());
 		addManager(SuggestedVersionManager.class, new SuggestedVersionManagerImpl());
-		addManager(TPSManager.class, new TPSManagerImpl());
 		addManager(PingManager.class, new PingManagerImpl());
+		addManager(TPSManager.class, new TPSManagerImpl());
+		addManager(MSPTManager.class, new MSPTManagerImpl());
 		addManager(ChatManager.class, Environment.isBukkit() ? new BukkitChatManager() : new SpongeChatManager());
 		addManager(FormattedChatManager.class, new FormattedChatManagerImpl());
 		addManager(ChatChannelsManager.class, new ChatChannelsManagerImpl());

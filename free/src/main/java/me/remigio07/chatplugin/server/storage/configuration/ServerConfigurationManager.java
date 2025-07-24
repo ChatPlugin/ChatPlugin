@@ -241,7 +241,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("mute.allow-mute-not-stored-players", false);
 		config.addDefault("mute.allow-mute-offline", true);
 		
-		config.addDefault("ping.update-timeout-ms", 5000);
+		config.addDefault("ping.enabled", true);
+		config.addDefault("ping.update-timeout", "5s");
 		config.addDefault("ping.qualities.excellent", 20);
 		config.addDefault("ping.qualities.great", 50);
 		config.addDefault("ping.qualities.good", 68);
@@ -251,16 +252,25 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("ping.qualities.bad", 200);
 		config.addDefault("ping.qualities.unplayable", 201);
 		
-		config.addDefault("tps.update-timeout-ms", 5000);
+		config.addDefault("tps.enabled", Environment.isSponge() || VersionUtils.isSpigot());
 		config.addDefault("tps.20-tps-cap.enabled", false);
 		config.addDefault("tps.20-tps-cap.add-wildcard", false);
-		config.addDefault("tps.enable-command", true);
-		config.addDefault("tps.qualities.excellent", 19.5);
-		config.addDefault("tps.qualities.great", 19);
-		config.addDefault("tps.qualities.good", 18);
-		config.addDefault("tps.qualities.poor", 17);
-		config.addDefault("tps.qualities.bad", 16);
-		config.addDefault("tps.qualities.unplayable", 15);
+		config.addDefault("tps.update-timeout", "5s");
+		config.addDefault("tps.qualities.excellent", 19.99);
+		config.addDefault("tps.qualities.great", 19.5);
+		config.addDefault("tps.qualities.good", 19);
+		config.addDefault("tps.qualities.poor", 18);
+		config.addDefault("tps.qualities.bad", 17);
+		config.addDefault("tps.qualities.unplayable", 16);
+		
+		config.addDefault("mspt.enabled", VersionUtils.isPaper() && VersionUtils.getVersion().isAtLeast(Version.V1_16));
+		config.addDefault("mspt.update-timeout", "1s");
+		config.addDefault("mspt.qualities.excellent", 50);
+		config.addDefault("mspt.qualities.great", 51.28);
+		config.addDefault("mspt.qualities.good", 55.55);
+		config.addDefault("mspt.qualities.poor", 58.82);
+		config.addDefault("mspt.qualities.bad", 62.5);
+		config.addDefault("mspt.qualities.unplayable", 66.66);
 		
 		config.addDefault("vanish.enabled", true);
 		config.addDefault("vanish.invisibility", true);
@@ -398,7 +408,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("commands.mutelist.empty", "{pfx} &eThere are no active mutes.");
 		messages.addDefault("commands.playerinfo", "{pfx} &aInformation and data about &f{player}&a:\n&ePlayer ID: &f#{player_id}\n&eUUID: &f{uuid}\n&eVersion: &f{client_edition} Edition {version} (protocol: {version_protocol})\n&eIP address: &f{ip_address}\n&eISP: &f{isp}\n&eLocation: &f{subdivisions}\n&eCity: &f{city} (~{accuracy_radius_km} km)\n&ePing: &f{ping_format} ms\n&eRank: &f{rank_display_name}\n&eTag: &f{tag_prefix}{tag_name_color}{tag_suffix}\n&eLanguage: &f{language_display_name}\n&eLast login: &f{last_login} ago\n&eTime played: &f{time_played}\n&eTotal bans: &f{player_bans}x\n&eTotal warnings: &f{player_warnings}x\n&eTotal kicks: &f{player_kicks}x\n&eTotal mutes: &f{player_mutes}x\n&eMessages sent: &f{messages_sent}x\n&eAntispam infractions: &f{antispam_infractions}x");
 		messages.addDefault("commands.playerpunishments", "{pfx} &f{0}&e's punishments' IDs:\n&eBans: &f{1}\n&eWarnings: &f{2}\n&eKicks: &f{3}\n&eMutes: &f{4}");
-		messages.addDefault("commands.tps", "{pfx} &eTPS from last &f1m&e, &f5m&e, &f15m&e: &f{0}&e, &f{1}&e, &f{2}&e.");
+		messages.addDefault("commands.tps", "{pfx} &eTPS from last &f1m&e, &f5m&e, &f15m&e: &f{tps_1_min_format}&e, &f{tps_5_min_format}&e, &f{tps_15_min_format}&e.");
+		messages.addDefault("commands.mspt", "{pfx} &eMSPT (&faverage&e/&fminimum&e/&fmaximum&e) from last:\n&f&l5 seconds &8- &f{mspt_5_sec_avg_format} ms&e/&f{mspt_5_sec_min_format} ms&e/&f{mspt_5_sec_max_format} ms\n&f&l10 seconds &8- &f{mspt_10_sec_avg_format} ms&e/&f{mspt_10_sec_min_format} ms&e/&f{mspt_10_sec_max_format} ms\n&f&l1 minute &8- &f{mspt_1_min_avg_format} ms&e/&f{mspt_1_min_min_format} ms&e/&f{mspt_1_min_max_format} ms");
 		messages.addDefault("commands.ad.send.one", "{pfx} &aAd &f{0} &ahas been successfully sent to &f{1}&a.");
 		messages.addDefault("commands.ad.send.all", "{pfx} &aAd &f{0} &ahas been successfully sent to &f{1} &aplayers.");
 		messages.addDefault("commands.ad.list", "{pfx} &eLoaded ads' IDs: &f{0}&e.");
@@ -596,8 +607,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("mute.silent-format.yes", "yes");
 		messages.addDefault("mute.silent-format.no", "no");
 		
-		messages.addDefault("ping.self", "{pfx} &eYou have a ping of {0} ms&e. Quality: {1}&e.");
-		messages.addDefault("ping.other", "{pfx} &f{1} &ehas a ping of {0} ms&e. Quality: {2}&e.");
+		messages.addDefault("ping.self", "{pfx} &eYou have a ping of {ping_format} ms&e. Quality: &f{ping_quality_text}&e.");
+		messages.addDefault("ping.other", "{pfx} &f{other} &ehas a ping of {ping_format} ms&e. Quality: &f{ping_quality_text}&e.");
 		messages.addDefault("ping.excellent.color", "&2");
 		messages.addDefault("ping.excellent.text", "&2excellent");
 		messages.addDefault("ping.great.color", "&a");
@@ -621,6 +632,13 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		messages.addDefault("tps-qualities.poor", "&6");
 		messages.addDefault("tps-qualities.bad", "&c");
 		messages.addDefault("tps-qualities.unplayable", "&4");
+		
+		messages.addDefault("mspt-qualities.excellent", "&2");
+		messages.addDefault("mspt-qualities.great", "&a");
+		messages.addDefault("mspt-qualities.good", "&e");
+		messages.addDefault("mspt-qualities.poor", "&6");
+		messages.addDefault("mspt-qualities.bad", "&c");
+		messages.addDefault("mspt-qualities.unplayable", "&4");
 		
 		messages.addDefault("vanish.enabled.self", "{pfx} &aYou are now vanished.");
 		messages.addDefault("vanish.enabled.other", "{pfx} &f{0} &ais now vanished.");

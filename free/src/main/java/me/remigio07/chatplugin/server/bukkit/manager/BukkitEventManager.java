@@ -72,7 +72,9 @@ import me.remigio07.chatplugin.api.server.util.adapter.inventory.ClickEventAdapt
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.ClickEventAdapter.ClickTypeAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.DragEventAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.item.ItemStackAdapter;
+import me.remigio07.chatplugin.api.server.util.manager.MSPTManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
+import me.remigio07.chatplugin.api.server.util.manager.TPSManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07.chatplugin.common.util.Utils;
@@ -80,6 +82,8 @@ import me.remigio07.chatplugin.server.bossbar.NativeBossbar;
 import me.remigio07.chatplugin.server.bossbar.ReflectionBossbar;
 import me.remigio07.chatplugin.server.bukkit.integration.cosmetic.gadgetsmenu.GadgetsMenuIntegration;
 import me.remigio07.chatplugin.server.chat.BaseChatManager;
+import me.remigio07.chatplugin.server.command.CommandsHandler;
+import me.remigio07.chatplugin.server.command.misc.MSPTCommand;
 import me.remigio07.chatplugin.server.command.misc.TPSCommand;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import me.remigio07.chatplugin.server.util.manager.VanishManagerImpl;
@@ -352,14 +356,21 @@ public class BukkitEventManager extends EventManager {
 	}
 	
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-		if (!(event.getMessage().equalsIgnoreCase("/tps") || event.getMessage().toLowerCase().startsWith("/tps ")) || event.isCancelled() || !ConfigurationType.CONFIG.get().getBoolean("tps.enable-command") || ServerPlayerManager.getInstance().getPlayer(event.getPlayer().getUniqueId()) == null)
-			return;
-		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getPlayer().getUniqueId());
+		ChatPluginServerPlayer player;
 		
-		if (player.getName().equals("Remigio07") || player.hasPermission("chatplugin.commands.tps")) { // yeah, I can.
-			player.sendMessage(TPSCommand.getMessage(player.getLanguage()));
-			LogManager.log(player.getName() + " issued command: /tps", 3);
-		} else player.sendTranslatedMessage("misc.no-permission");
+		if (event.isCancelled() || !event.getMessage().startsWith("/") || (player = ServerPlayerManager.getInstance().getPlayer(event.getPlayer().getUniqueId())) == null)
+			return;
+		if (TPSManager.getInstance().isEnabled() && (event.getMessage().equalsIgnoreCase("/tps") || event.getMessage().toLowerCase().startsWith("/tps ")) && !CommandsHandler.getDisabledCommands().contains("tps")) {
+			if (player.getName().equals("Remigio07") || player.hasPermission("chatplugin.commands.tps")) { // yeah, I can.
+				player.sendMessage(TPSCommand.getMessage(player.getLanguage()));
+				LogManager.log(player.getName() + " issued command: /tps", 3);
+			} else player.sendTranslatedMessage("misc.no-permission");
+		} else if (MSPTManager.getInstance().isEnabled() && (event.getMessage().equalsIgnoreCase("/mspt") || event.getMessage().toLowerCase().startsWith("/mspt ")) && !CommandsHandler.getDisabledCommands().contains("mspt")) {
+			if (player.getName().equals("Remigio07") || player.hasPermission("chatplugin.commands.mspt")) { // yeah, I can.
+				player.sendMessage(MSPTCommand.getMessage(player.getLanguage()));
+				LogManager.log(player.getName() + " issued command: /mspt", 3);
+			} else player.sendTranslatedMessage("misc.no-permission");
+		} else return;
 		event.setCancelled(true);
 	}
 	

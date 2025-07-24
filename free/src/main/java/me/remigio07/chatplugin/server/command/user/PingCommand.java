@@ -41,24 +41,27 @@ public class PingCommand extends BaseCommand {
 	
 	@Override
 	public void execute(CommandSenderAdapter sender, Language language, String[] args) {
-		if (args.length == 0) {
-			if (sender.isPlayer()) {
-				ChatPluginServerPlayer player = sender.toServerPlayer();
-				
-				player.sendTranslatedMessage("ping.self", PingManager.getInstance().formatPing(player), PingManager.getInstance().getPingQuality(player.getPing()).getText(language));
-			} else sender.sendMessage(language.getMessage("ping.self", PingManager.getInstance().formatPing(0, language), PingManager.getInstance().getPingQuality(0).getText(language)));
-		} else if (sender.hasPermission(getPermission() + ".others")) {
-			if (PlayerAdapter.getPlayer(args[0], false) != null) {
-				@SuppressWarnings("deprecation")
-				ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(args[0], false, true);
-				
-				if (player != null)
-					if (player.isVanished() && !sender.hasPermission(VanishManager.VANISH_PERMISSION))
-						sender.sendMessage(language.getMessage("misc.player-not-found", args[0]));
-					else sender.sendMessage(language.getMessage("ping.other", PingManager.getInstance().formatPing(player), player.getName(), PingManager.getInstance().getPingQuality(player.getPing()).getText(language)));
-				else sender.sendMessage(language.getMessage("misc.disabled-world"));
-			} else sender.sendMessage(language.getMessage("misc.player-not-found", args[0]));
-		} else sender.sendMessage(language.getMessage("misc.no-permission"));
+		if (PingManager.getInstance().isEnabled()) {
+			if (args.length == 0) {
+				if (sender.isPlayer()) {
+					ChatPluginServerPlayer player = sender.toServerPlayer();
+					
+					// leaving numeric placeholders to support older (pre-1.10.4) ChatPlugin versions
+					player.sendMessage(PingManager.getInstance().formatPlaceholders(language.getMessage("ping.self", PingManager.getInstance().formatPing(player.getPing(), language), PingManager.getInstance().getPingQuality(player.getPing()).getText(language)), player.getPing(), language));
+				} else sender.sendMessage(language.getMessage("ping.self", PingManager.getInstance().formatPing(0, language), PingManager.getInstance().getPingQuality(0).getText(language)));
+			} else if (sender.hasPermission(getPermission() + ".others")) {
+				if (PlayerAdapter.getPlayer(args[0], false) != null) {
+					@SuppressWarnings("deprecation")
+					ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(args[0], false, true);
+					
+					if (player != null)
+						if (!player.isVanished() || sender.hasPermission(VanishManager.VANISH_PERMISSION)) // leaving numeric placeholders to support older (pre-1.10.4) ChatPlugin versions
+							sender.sendMessage(PingManager.getInstance().formatPlaceholders(language.getMessage("ping.other", PingManager.getInstance().formatPing(player.getPing(), language), player.getName(), PingManager.getInstance().getPingQuality(player.getPing()).getText(language)), player.getPing(), language));
+						else sender.sendMessage(language.getMessage("misc.player-not-found", args[0]));
+					else sender.sendMessage(language.getMessage("misc.disabled-world"));
+				} else sender.sendMessage(language.getMessage("misc.player-not-found", args[0]));
+			} else sender.sendMessage(language.getMessage("misc.no-permission"));
+		} else sender.sendMessage(language.getMessage("misc.disabled-feature"));
 	}
 	
 }

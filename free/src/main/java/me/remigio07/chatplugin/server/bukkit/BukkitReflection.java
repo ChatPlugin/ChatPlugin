@@ -77,6 +77,13 @@ public class BukkitReflection {
 			classes.put("MinecraftServer", clazz);
 			putMethod(clazz, "getServer");
 			
+			if (VersionUtils.isPaper() && VersionUtils.getVersion().isAtLeast(Version.V1_16)) {
+				// TickTimes
+				clazz = getNMSClass("MinecraftServer$TickTimes");
+				classes.put("TickTimes", clazz);
+				putMethod(clazz, "getTimes");
+			}
+			
 			// Packet
 			clazz = atLeast1_17 ? getNMNClass("protocol.Packet") : getNMSClass("Packet");
 			classes.put("Packet", clazz);

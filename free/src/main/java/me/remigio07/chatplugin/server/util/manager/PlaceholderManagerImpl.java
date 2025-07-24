@@ -56,11 +56,11 @@ import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.util.DateFormat;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 import me.remigio07.chatplugin.api.server.util.Utils;
+import me.remigio07.chatplugin.api.server.util.manager.MSPTManager;
 import me.remigio07.chatplugin.api.server.util.manager.PingManager;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.api.server.util.manager.TPSManager;
-import me.remigio07.chatplugin.api.server.util.manager.TPSManager.TPSTimeInterval;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
@@ -214,14 +214,8 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 			input = input.replace("{xp}", String.valueOf(Environment.isBukkit() ? player.toAdapter().bukkitValue().getTotalExperience() : player.toAdapter().spongeValue().get(Keys.TOTAL_EXPERIENCE).orElse(0).intValue()));
 		if (input.contains("{gamemode}"))
 			input = input.replace("{gamemode}", Environment.isBukkit() ? player.toAdapter().bukkitValue().getGameMode().name() : player.toAdapter().spongeValue().gameMode().get().getName()).toLowerCase();
-		if (input.contains("{ping}"))
-			input = input.replace("{ping}", String.valueOf(player.getPing()));
-		if (input.contains("{ping_format}"))
-			input = input.replace("{ping_format}", PingManager.getInstance().formatPing(player));
-		if (input.contains("{ping_quality_color}"))
-			input = input.replace("{ping_quality_color}", PingManager.getInstance().getPingQuality(player.getPing()).getColor(language));
-		if (input.contains("{ping_quality_text}"))
-			input = input.replace("{ping_quality_text}", PingManager.getInstance().getPingQuality(player.getPing()).getText(language));
+		if (input.contains("{ping") && PingManager.getInstance().isEnabled())
+			input = PingManager.getInstance().formatPlaceholders(input, player.getPing(), language);
 		if (input.contains("{language_id}"))
 			input = input.replace("{language_id}", player.getLanguage().getID());
 		if (input.contains("{language_display_name}"))
@@ -376,17 +370,11 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 			input = input.replace("{total_anticheat_kicks}", String.valueOf(KickManager.getInstance().getAnticheatStorageCount()));
 		if (input.contains("{total_anticheat_mutes}"))
 			input = input.replace("{total_anticheat_mutes}", String.valueOf(MuteManager.getInstance().getAnticheatStorageCount()));
-		if (input.contains("{tps_")) {
-			TPSManager tpsManager = TPSManager.getInstance();
-			
-			input = input
-					.replace("{tps_1_min}", String.valueOf(Utils.truncate(tpsManager.getTPS(TPSTimeInterval.ONE_MINUTE), 2)))
-					.replace("{tps_5_min}", String.valueOf(Utils.truncate(tpsManager.getTPS(TPSTimeInterval.FIVE_MINUTES), 2)))
-					.replace("{tps_15_min}", String.valueOf(Utils.truncate(tpsManager.getTPS(TPSTimeInterval.FIFTEEN_MINUTES), 2)))
-					.replace("{tps_1_min_format}", tpsManager.formatTPS(TPSTimeInterval.ONE_MINUTE, language))
-					.replace("{tps_5_min_format}", tpsManager.formatTPS(TPSTimeInterval.FIVE_MINUTES, language))
-					.replace("{tps_15_min_format}", tpsManager.formatTPS(TPSTimeInterval.FIFTEEN_MINUTES, language));
-		} if (input.contains("_memory}") || input.contains("{cpu_threads}")) {
+		if (input.contains("{tps_") && TPSManager.getInstance().isEnabled())
+			input = TPSManager.getInstance().formatPlaceholders(input, language);
+		if (input.contains("{mspt_") && MSPTManager.getInstance().isEnabled())
+			input = MSPTManager.getInstance().formatPlaceholders(input, language);
+		if (input.contains("_memory}") || input.contains("{cpu_threads}")) {
 			input = input
 					.replace("{max_memory}", MemoryUtils.formatMemory(RUNTIME.maxMemory()))
 					.replace("{total_memory}", MemoryUtils.formatMemory(RUNTIME.totalMemory()))

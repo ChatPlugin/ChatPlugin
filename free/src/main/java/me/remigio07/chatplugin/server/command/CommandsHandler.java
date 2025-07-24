@@ -32,6 +32,9 @@ import me.remigio07.chatplugin.api.server.chat.StaffChatManager;
 import me.remigio07.chatplugin.api.server.chat.channel.ChatChannelsManager;
 import me.remigio07.chatplugin.api.server.gui.GUIManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.util.manager.MSPTManager;
+import me.remigio07.chatplugin.api.server.util.manager.PingManager;
+import me.remigio07.chatplugin.api.server.util.manager.TPSManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.server.command.admin.ChatChannelSpyCommand;
 import me.remigio07.chatplugin.server.command.admin.ClearChatCommand;
@@ -47,6 +50,7 @@ import me.remigio07.chatplugin.server.command.gui.PreferencesCommand;
 import me.remigio07.chatplugin.server.command.misc.AdCommand;
 import me.remigio07.chatplugin.server.command.misc.BroadcastCommand;
 import me.remigio07.chatplugin.server.command.misc.BroadcastRawCommand;
+import me.remigio07.chatplugin.server.command.misc.MSPTCommand;
 import me.remigio07.chatplugin.server.command.misc.TPSCommand;
 import me.remigio07.chatplugin.server.command.user.ActionbarCommand;
 import me.remigio07.chatplugin.server.command.user.ChatChannelCommand;
@@ -113,7 +117,8 @@ public abstract class CommandsHandler {
 					new IgnoreCommand.Remove(),
 					new IgnoreCommand()
 					);
-		put(new PingCommand());
+		if (PingManager.getInstance().isEnabled())
+			put(new PingCommand());
 		put(new RankInfoCommand());
 		put(new PlayerListCommand());
 		put(new ChatColorCommand());
@@ -159,8 +164,10 @@ public abstract class CommandsHandler {
 			put(new VanishCommand());
 		
 		// misc
-		put(new TPSCommand());
-		
+		if (TPSManager.getInstance().isEnabled())
+			put(new TPSCommand());
+		if (MSPTManager.getInstance().isEnabled())
+			put(new MSPTCommand());
 		if (AdManager.getInstance().isEnabled())
 			put(
 					new AdCommand.List(),
@@ -193,6 +200,10 @@ public abstract class CommandsHandler {
 	
 	public static Map<String, BaseCommand[]> getCommands() {
 		return commands;
+	}
+	
+	public static List<String> getDisabledCommands() {
+		return disabledCommands;
 	}
 	
 	public static boolean shouldLogCommandBlocksCommands() {

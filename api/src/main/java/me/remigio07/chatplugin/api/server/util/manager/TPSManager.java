@@ -15,27 +15,53 @@
 
 package me.remigio07.chatplugin.api.server.util.manager;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.language.Language;
+import me.remigio07.chatplugin.api.server.util.GameFeature;
 
 /**
  * Manager that handles the server's TPS.
  * 
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/TPS">ChatPlugin wiki/Modules/TPS</a>
  */
+@GameFeature(
+		name = "tps",
+		availableOnBukkit = true,
+		availableOnSponge = true,
+		spigotRequired = true,
+		paperRequired = false,
+		minimumBukkitVersion = Version.V1_8,
+		minimumSpongeVersion = Version.V1_8
+		)
 public abstract class TPSManager implements ChatPluginManager, Runnable {
 	
+	/**
+	 * Array containing all available placeholders that
+	 * can be translated with the TPS's information.
+	 * 
+	 * <p><strong>Content:</strong> ["tps_1_min", "tps_5_min", "tps_15_min", "tps_1_min_format", "tps_5_min_format", "tps_15_min_format"]</p>
+	 * 
+	 * @see <a href="https://remigio07.me/chatplugin/wiki/modules/TPS#placeholders">ChatPlugin wiki/Modules/TPS/Placeholders</a>
+	 */
+	public static final String[] PLACEHOLDERS = { "tps_1_min", "tps_5_min", "tps_15_min", "tps_1_min_format", "tps_5_min_format", "tps_15_min_format" };
 	protected static TPSManager instance;
 	protected boolean enabled;
-	protected List<TPSQuality> qualities = new ArrayList<>();
+	protected List<TPSQuality> qualities = new CopyOnWriteArrayList<>();
 	protected double[] recentTPS = { 20D, 20D, 20D };
 	protected long updateTimeout, timerTaskID = -1, loadTime;
 	
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * <p><strong>Found at:</strong> "tps.enabled" in {@link ConfigurationType#CONFIG}</p>
+	 */
 	@Override
 	public boolean isEnabled() {
 		return enabled;
@@ -44,8 +70,13 @@ public abstract class TPSManager implements ChatPluginManager, Runnable {
 	/**
 	 * Gets the loaded TPS qualities list.
 	 * 
+	 * <p>You may modify the returned list, but it needs to be
+	 * sorted using {@link TPSQuality#compareTo(TPSQuality)}.</p>
+	 * 
+	 * <p><strong>Found at:</strong> "tps.qualities" in {@link ConfigurationType#CONFIG}</p>
+	 * 
 	 * @return TPS qualities
-	 * @see TPSQuality
+	 * @see Collections#sort(List)
 	 */
 	public List<TPSQuality> getQualities() {
 		return qualities;
@@ -63,7 +94,7 @@ public abstract class TPSManager implements ChatPluginManager, Runnable {
 	/**
 	 * Gets the timeout between TPS updates, in milliseconds.
 	 * 
-	 * <p><strong>Found at:</strong> "tps.update-timeout-ms" in {@link ConfigurationType#CONFIG}</p>
+	 * <p><strong>Found at:</strong> "tps.update-timeout" in {@link ConfigurationType#CONFIG}</p>
 	 * 
 	 * @return Timeout between updates
 	 */
@@ -110,26 +141,51 @@ public abstract class TPSManager implements ChatPluginManager, Runnable {
 	 * 
 	 * @param tps TPS to check
 	 * @return Resulting TPS quality
+	 * @throws IllegalArgumentException If <code>tps &lt; 0</code>
 	 */
 	public abstract TPSQuality getTPSQuality(double tps);
 	
 	/**
-	 * Returns a string formatted with given time interval's {@link TPSQuality}'s colors. 
+	 * Formats the specified TPS using its {@link TPSQuality}'s colors.
 	 * 
-	 * @param interval Time interval to format
+	 * @param tps TPS to format
+	 * @param language Language to get the message for
+	 * @return Formatted TPS with colors
+	 * @throws IllegalArgumentException If <code>tps &lt; 0</code>
+	 */
+	public abstract String formatTPS(double tps, Language language);
+	
+	/**
+	 * Formats the specified interval's TPS
+	 * using its {@link TPSQuality}'s colors.
+	 * 
+	 * @param interval Time interval to format for
 	 * @param language Language to get the message for
 	 * @return Formatted TPS with colors
 	 */
 	public abstract String formatTPS(TPSTimeInterval interval, Language language);
 	
 	/**
-	 * Returns a string formatted with the given TPS' {@link TPSQuality}'s colors.
+	 * Translates an input string with the TPS's specific placeholders.
 	 * 
-	 * @param tps TPS to format
-	 * @param language Language to get the message for
-	 * @return Formatted TPS with colors
+	 * <p>Check {@link #PLACEHOLDERS} to know the available placeholders.</p>
+	 * 
+	 * @param input Input containing placeholders
+	 * @param language Language used to translate the placeholders
+	 * @return Translated placeholders
 	 */
-	public abstract String formatTPS(double tps, Language language);
+	public abstract String formatPlaceholders(String input, Language language);
+	
+	/**
+	 * Translates an input string list with the TPS's specific placeholders.
+	 * 
+	 * <p>Check {@link #PLACEHOLDERS} to know the available placeholders.</p>
+	 * 
+	 * @param input Input containing placeholders
+	 * @param language Language used to translate the placeholders
+	 * @return Translated placeholders
+	 */
+	public abstract List<String> formatPlaceholders(List<String> input, Language language);
 	
 	/**
 	 * Represents a TPS quality.
@@ -138,20 +194,32 @@ public abstract class TPSManager implements ChatPluginManager, Runnable {
 	 * the config at section <code>tps</code>. Every interval has a
 	 * different color which can be specified in the messages' files.</p>
 	 */
-	public class TPSQuality {
+	public class TPSQuality implements Comparable<TPSQuality> {
 		
 		private String id;
-		private double minTPS;
+		private double minimumTPS;
 		
 		/**
 		 * Constructs a new TPS quality.
 		 * 
 		 * @param id Quality's ID
-		 * @param minTPS Quality's minimum TPS
+		 * @param minimumTPS Quality's minimum TPS
+		 * @throws IllegalArgumentException If <code>minimumTPS &lt; 0</code>
 		 */
-		public TPSQuality(String id, double minTPS) {
+		public TPSQuality(String id, double minimumTPS) {
+			if (minimumTPS < 0)
+				throw new IllegalArgumentException("Specified minimum TPS is less than 0");
 			this.id = id;
-			this.minTPS = minTPS;
+			this.minimumTPS = minimumTPS;
+		}
+		
+		/**
+		 * Compares two TPS qualities based on their
+		 * {@link #getMinimumTPS()}; lower TPS first.
+		 */
+		@Override
+		public int compareTo(TPSQuality o) {
+			return minimumTPS < o.getMinimumTPS() ? -1 : minimumTPS == o.getMinimumTPS() ? 0 : 1;
 		}
 		
 		/**
@@ -168,17 +236,8 @@ public abstract class TPSManager implements ChatPluginManager, Runnable {
 		 * 
 		 * @return Quality's minimum TPS
 		 */
-		public double getMinTPS() {
-			return minTPS;
-		}
-		
-		/**
-		 * Gets this quality's minimum TPS.
-		 * 
-		 * @param minTPS Quality's minimum TPS
-		 */
-		public void setMinTPS(double minTPS) {
-			this.minTPS = minTPS;
+		public double getMinimumTPS() {
+			return minimumTPS;
 		}
 		
 		/**

@@ -20,19 +20,18 @@ import java.util.List;
 
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.util.adapter.user.CommandSenderAdapter;
-import me.remigio07.chatplugin.api.server.util.manager.TPSManager;
-import me.remigio07.chatplugin.api.server.util.manager.TPSManager.TPSTimeInterval;
+import me.remigio07.chatplugin.api.server.util.manager.MSPTManager;
 import me.remigio07.chatplugin.server.command.BaseCommand;
 
-public class TPSCommand extends BaseCommand {
+public class MSPTCommand extends BaseCommand {
 	
-	public TPSCommand() {
-		super("/tps");
+	public MSPTCommand() {
+		super("/mspt");
 	}
 	
 	@Override
 	public List<String> getMainArgs() {
-		return Arrays.asList("tps", "tickspersecond", "ticks", "lag");
+		return Arrays.asList("mspt", "millisecondspertick");
 	}
 	
 	@Override
@@ -43,14 +42,14 @@ public class TPSCommand extends BaseCommand {
 	@Override
 	public void execute(CommandSenderAdapter sender, Language language, String[] args) {
 		if (sender.getName().equals("Remigio07") || sender.hasPermission(super.getPermission())) // yeah, I can.
-			if (TPSManager.getInstance().isEnabled()) // normally the permission check is performed before checking whether the manager is enabled
+			if (MSPTManager.getInstance().isEnabled()) // normally the permission check is performed before checking whether the manager is enabled
 				sender.sendMessage(getMessage(language));
 			else sender.sendMessage(language.getMessage("misc.disabled-feature"));
 		else sender.sendMessage(language.getMessage("misc.no-permission"));
 	}
 	
-	public static String getMessage(Language language) { // leaving numeric placeholders to support older (pre-1.10.4) ChatPlugin versions
-		return TPSManager.getInstance().formatPlaceholders(language.getMessage("commands.tps", TPSManager.getInstance().formatTPS(TPSTimeInterval.ONE_MINUTE, language), TPSManager.getInstance().formatTPS(TPSTimeInterval.FIVE_MINUTES, language), TPSManager.getInstance().formatTPS(TPSTimeInterval.FIFTEEN_MINUTES, language)), language);
+	public static String getMessage(Language language) {
+		return MSPTManager.getInstance().formatPlaceholders(language.getMessage("commands.mspt"), language);
 	}
 	
 }

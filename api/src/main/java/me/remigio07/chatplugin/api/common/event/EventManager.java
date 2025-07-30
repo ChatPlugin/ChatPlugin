@@ -87,9 +87,9 @@ public abstract class EventManager implements ChatPluginManager {
 			subscribers.forEach(subscriber -> {
 				try {
 					((EventSubscriber<E>) subscriber).getConsumer().accept(event);
-				} catch (Throwable e) {
-					LogManager.log("{0} occurred while calling event {1}: {2}", 2, e.getClass().getSimpleName(), event.getClass().getSimpleName(), e.getMessage());
-					e.printStackTrace();
+				} catch (Throwable t) {
+					LogManager.log("{0} occurred while calling event {1}: {2}", 2, t.getClass().getSimpleName(), event.getClass().getSimpleName(), t.getLocalizedMessage());
+					t.printStackTrace();
 				}
 			});
 	}

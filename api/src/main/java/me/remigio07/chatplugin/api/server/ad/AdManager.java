@@ -126,7 +126,7 @@ public abstract class AdManager implements ChatPluginManager, Runnable {
 	/**
 	 * Gets the timeout between sendings, in milliseconds.
 	 * 
-	 * <p><strong>Found at:</strong> "ads.settings.sending-timeout-ms" in {@link ConfigurationType#ADS}</p>
+	 * <p><strong>Found at:</strong> "ads.settings.sending-timeout" in {@link ConfigurationType#ADS}</p>
 	 * 
 	 * @return Time between sendings
 	 */

@@ -23,6 +23,8 @@ import java.util.stream.Stream;
 import org.bukkit.permissions.Permission;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.util.VersionUtils;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.server.language.Language;
@@ -52,7 +54,11 @@ public class RankManagerImpl extends RankManager {
 		sortingEnabled = ConfigurationType.RANKS.get().getBoolean("ranks.settings.sorting.enabled");
 		sortingFromTablistTop = ConfigurationType.RANKS.get().getBoolean("ranks.settings.sorting.from-tablist-top");
 		
-		if (luckPermsMode) {
+		if (sortingEnabled && !ConfigurationType.CONFIG.get().getBoolean("settings.register-scoreboards") && VersionUtils.getVersion().isOlderThan(Version.V1_21_2)) {
+			LogManager.log("The \"ranks.settings.sorting.enabled\" setting in ranks.yml is enabled but \"settings.register-scoreboards\" in config.yml is set to false. This setup is not supported: ChatPlugin needs to register its own scoreboards to sort ranks in versions older than 1.21.2; disabling sorting.", 2);
+			
+			sortingEnabled = false;
+		} if (luckPermsMode) {
 			try {
 				for (Group group : LuckPermsProvider.get().getGroupManager().getLoadedGroups().stream().sorted((o1, o2) -> {
 					int i = Integer.compare(o2.getWeight().orElse(0), o1.getWeight().orElse(0));

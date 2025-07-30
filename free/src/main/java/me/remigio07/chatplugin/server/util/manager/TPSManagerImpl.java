@@ -60,13 +60,29 @@ public class TPSManagerImpl extends TPSManager {
 					LogManager.log("Invalid minimum TPS ({0}) set at \"tps.qualities.{1}\" in config.yml: the number must be at least 0; skipping it.", 2, minimumTPS, id);
 				}
 			else LogManager.log("Missing translation at \"tps-qualities.{0}\" in {1}; skipping it.", 2, id, messages.getFile().getName());
+		} if (updateTimeout == -1) {
+			LogManager.log("Invalid timestamp (\"{0}\") specified at \"tps.update-timeout\" in config.yml; setting to default value of 5 seconds.", 2, ConfigurationType.CONFIG.get().getString("tps.update-timeout"));
+			
+			updateTimeout = 5000L;
+		} if (Environment.isSponge()) {
+			if (updateTimeout > 900000L) {
+				LogManager.log("Invalid timestamp (\"{0}\") specified at \"tps.update-timeout\" in config.yml: it cannot be more than 15 minutes; setting to default value of 5 seconds.", 2, ConfigurationType.CONFIG.get().getString("tps.update-timeout"));
+				
+				updateTimeout = 5000L;
+			} int capacity = 900000 / (int) updateTimeout;
+			
+			if (spongeTPS != null) {
+				if (spongeTPS.remainingCapacity() + spongeTPS.size() != capacity) {
+					spongeTPS.clear();
+					
+					spongeTPS = new ArrayBlockingQueue<>(capacity);
+				}
+			} else spongeTPS = new ArrayBlockingQueue<>(capacity);
 		} if (qualities.isEmpty()) {
 			qualities.add(new TPSQuality("default-quality", 0));
 			LogManager.log("No TPS qualities have been found at \"tps.qualities\" in config.yml.", 1);
 		} else Collections.sort(qualities);
 		
-		if (Environment.isSponge() && spongeTPS == null)
-			spongeTPS = new ArrayBlockingQueue<>(900000 / (int) updateTimeout);
 		timerTaskID = TaskManager.scheduleAsync(this, 0L, updateTimeout);
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;

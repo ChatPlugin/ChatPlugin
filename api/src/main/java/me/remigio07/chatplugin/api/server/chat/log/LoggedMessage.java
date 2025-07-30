@@ -33,7 +33,8 @@ import me.remigio07.chatplugin.api.server.language.Language;
 public interface LoggedMessage extends Comparable<LoggedMessage> {
 	
 	/**
-	 * Compares two logged messages based on their {@link #getDate()}.
+	 * Compares two logged messages based on their
+	 * {@link #getDate()}; older messages first.
 	 */
 	@Override
 	public default int compareTo(LoggedMessage o) {

@@ -52,8 +52,8 @@ public abstract class RankManager implements ChatPluginManager {
 	/**
 	 * Checks if the {@linkplain IntegrationType#LUCKPERMS LuckPerms} mode is enabled.
 	 * 
-	 * <p>When enabled, ChatPlugin will load {@link Rank}s using its API instead
-	 * of reading them from the {@link ConfigurationType#RANKS} file.</p>
+	 * <p>When enabled, ChatPlugin will load {@link Rank}s using its API
+	 * instead of reading them from {@link ConfigurationType#RANKS}.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "ranks.settings.luckperms-mode" in {@link ConfigurationType#RANKS}</p>
 	 * 
@@ -66,6 +66,9 @@ public abstract class RankManager implements ChatPluginManager {
 	/**
 	 * Checks if ranks should be sorted in the tablist.
 	 * 
+	 * <p>Will return <code>false</code> if players should
+	 * be sorted alphabetically, based on their names.</p>
+	 * 
 	 * <p><strong>Found at:</strong> "ranks.settings.sorting.enabled" in {@link ConfigurationType#RANKS}</p>
 	 * 
 	 * @return Whether to sort ranks
@@ -77,7 +80,8 @@ public abstract class RankManager implements ChatPluginManager {
 	/**
 	 * Checks if ranks should be sorted from the top of the tablist.
 	 * 
-	 * <p>Will return <code>false</code> if they should be sorted from the bottom.</p>
+	 * <p>Will return <code>false</code> if they
+	 * should be sorted starting from the bottom.</p>
 	 * 
 	 * <p><strong>Found at:</strong> "ranks.settings.sorting.from-tablist-top" in {@link ConfigurationType#RANKS}</p>
 	 * 

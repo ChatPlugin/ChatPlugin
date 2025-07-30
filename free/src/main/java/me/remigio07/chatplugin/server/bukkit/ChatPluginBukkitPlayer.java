@@ -221,11 +221,17 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	@Override
 	public void updatePlayerListName() {
 		if (ConfigurationType.CONFIG.get().getBoolean("settings.register-scoreboards")) {
-			for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
+			if (TablistManager.getInstance().isPlayerNamesTeamsMode()) {
+				for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
+					((ChatPluginBukkitPlayer) other).setupTeamsFull(this);
+					setupTeamsFull(other);
+				} setupTeamsFull(this);
+				return;
+			} for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
 				((ChatPluginBukkitPlayer) other).setupTeams(this);
 				setupTeams(other);
 			} setupTeams(this);
-		} else setPlayerListName(
+		} setPlayerListName(
 				PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPlayerNamesPrefix(), this, TablistManager.getInstance().getPlaceholderTypes())
 				+ name
 				+ PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPlayerNamesSuffix(), this, TablistManager.getInstance().getPlaceholderTypes())
@@ -233,12 +239,13 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	}
 	
 	@SuppressWarnings("deprecation")
-	private void setupTeams(ChatPluginServerPlayer other) {
+	private void setupTeamsFull(ChatPluginServerPlayer other) {
 		String prefix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPlayerNamesPrefix(), other, language, TablistManager.getInstance().getPlaceholderTypes());
 		String suffix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPlayerNamesSuffix(), other, language, TablistManager.getInstance().getPlaceholderTypes());
+		String identifier = other.getRank().formatIdentifier(other);
 		Scoreboard scoreboard = objective.bukkitValue().getScoreboard();
-		Team team = scoreboard.getTeam(other.getRank().formatIdentifier(other));
-		final Team finalTeam = team == null ? scoreboard.registerNewTeam(other.getRank().formatIdentifier(other)) : team;
+		Team team = scoreboard.getTeam(identifier);
+		final Team finalTeam = team == null ? scoreboard.registerNewTeam(identifier) : team;
 		boolean isAtLeastV1_12 = VersionUtils.getVersion().isAtLeast(Version.V1_12);
 		
 		Utils.ensureSync(() -> {
@@ -250,6 +257,22 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 						finalTeam.setColor((lastColors.startsWith("§x") ? ChatColor.of(lastColors.substring(3, 14).replace("§", "")).getClosestDefaultColor() : ChatColor.getByChar(lastColors.charAt(1))).bukkitValue());
 				} finalTeam.setPrefix(prefix.length() > MAX_TEAM_TEXT_LENGTH ? me.remigio07.chatplugin.common.util.Utils.abbreviate(prefix, MAX_TEAM_TEXT_LENGTH, false) : prefix);
 				finalTeam.setSuffix(suffix.length() > MAX_TEAM_TEXT_LENGTH ? me.remigio07.chatplugin.common.util.Utils.abbreviate(suffix, MAX_TEAM_TEXT_LENGTH, false) : suffix);
+				finalTeam.addPlayer(other.toAdapter().bukkitValue());
+			} catch (IllegalStateException ise) {
+				// safe to ignore
+			}
+		});
+	}
+	
+	@SuppressWarnings("deprecation")
+	private void setupTeams(ChatPluginServerPlayer other) {
+		String identifier = other.getRank().formatIdentifier(other);
+		Scoreboard scoreboard = objective.bukkitValue().getScoreboard();
+		Team team = scoreboard.getTeam(identifier);
+		final Team finalTeam = team == null ? scoreboard.registerNewTeam(identifier) : team;
+		
+		Utils.ensureSync(() -> {
+			try {
 				finalTeam.addPlayer(other.toAdapter().bukkitValue());
 			} catch (IllegalStateException ise) {
 				// safe to ignore

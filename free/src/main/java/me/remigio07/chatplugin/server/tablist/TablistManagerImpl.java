@@ -55,9 +55,9 @@ public class TablistManagerImpl extends TablistManager {
 		
 		if (!ConfigurationType.TABLISTS.get().getBoolean("tablists.settings.enabled"))
 			return;
-		enabled = true;
 		randomOrder = ConfigurationType.TABLISTS.get().getBoolean("tablists.settings.random-order");
 		sendingTimeout = ConfigurationType.TABLISTS.get().getLong("tablists.settings.sending-timeout-ms");
+		playerNamesTeamsMode = ConfigurationType.TABLISTS.get().getBoolean("tablists.settings.player-names.teams-mode");
 		playerNamesUpdateTimeout = ConfigurationType.TABLISTS.get().getLong("tablists.settings.player-names.update-timeout-ms");
 		playerNamesPrefix = ConfigurationType.TABLISTS.get().getString("tablists.settings.player-names.prefix");
 		playerNamesSuffix = ConfigurationType.TABLISTS.get().getString("tablists.settings.player-names.suffix");
@@ -103,14 +103,13 @@ public class TablistManagerImpl extends TablistManager {
 	
 	@Override
 	public void unload() throws ChatPluginManagerException {
-		enabled = false;
+		enabled = randomOrder = playerNamesTeamsMode = false;
 		
 		TaskManager.cancelAsync(timerTaskID);
 		TaskManager.cancelAsync(playerNamesTimerTaskID);
 		tablists.clear();
 		placeholderTypes.clear();
 		
-		randomOrder = false;
 		sendingTimeout = playerNamesUpdateTimeout = 0;
 		playerNamesPrefix = playerNamesSuffix = null;
 		timerTaskID = playerNamesTimerTaskID = timerIndex = -1;

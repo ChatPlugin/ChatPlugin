@@ -922,6 +922,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		tablists.addDefault("tablists.settings.enabled", VersionUtils.getVersion().isAtLeast(Version.V1_8));
 		tablists.addDefault("tablists.settings.random-order", false);
 		tablists.addDefault("tablists.settings.sending-timeout-ms", 250L);
+		tablists.addDefault("tablists.settings.player-names.teams-mode", true);
 		tablists.addDefault("tablists.settings.player-names.update-timeout-ms", 10000L);
 		tablists.addDefault("tablists.settings.player-names.prefix", "{tag_prefix}{tag_name_color}");
 		tablists.addDefault("tablists.settings.player-names.suffix", "{tag_suffix}");

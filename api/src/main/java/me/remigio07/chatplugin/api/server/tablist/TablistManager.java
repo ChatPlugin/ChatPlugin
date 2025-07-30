@@ -57,7 +57,7 @@ public abstract class TablistManager implements ChatPluginManager, Runnable {
 	 */
 	public static final Pattern TABLIST_ID_PATTERN = Pattern.compile("^[a-zA-Z0-9-_]{2,36}$");
 	protected static TablistManager instance;
-	protected boolean enabled, randomOrder;
+	protected boolean enabled, randomOrder, playerNamesTeamsMode;
 	protected long sendingTimeout, playerNamesUpdateTimeout, timerTaskID = -1, playerNamesTimerTaskID = -1;
 	protected String playerNamesPrefix, playerNamesSuffix;
 	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
@@ -85,6 +85,18 @@ public abstract class TablistManager implements ChatPluginManager, Runnable {
 	 */
 	public boolean isRandomOrder() {
 		return randomOrder;
+	}
+	
+	/**
+	 * Checks if teams' prefixes, suffixes and name
+	 * colors should be used to display player names.
+	 * 
+	 * <p><strong>Found at:</strong> "tablists.settings.player-names.teams-mode" in {@link ConfigurationType#TABLISTS}</p>
+	 * 
+	 * @return Whether the teams mode is enabled for player names
+	 */
+	public boolean isPlayerNamesTeamsMode() {
+		return playerNamesTeamsMode;
 	}
 	
 	/**

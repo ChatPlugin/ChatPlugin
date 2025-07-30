@@ -208,28 +208,34 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public void updatePlayerListName() {
-		if (ConfigurationType.CONFIG.get().getBoolean("settings.register-scoreboards")) {
-			for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
+		boolean registerScoreboards = ConfigurationType.CONFIG.get().getBoolean("settings.register-scoreboards");
+		
+		if (registerScoreboards) {
+			if (TablistManager.getInstance().isPlayerNamesTeamsMode()) {
+				for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
+					((ChatPluginSpongePlayer) other).setupTeamsFull(this);
+					setupTeamsFull(other);
+				} setupTeamsFull(this);
+				return;
+			} setupTeams(this);
+		} for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
+			if (registerScoreboards) {
 				((ChatPluginSpongePlayer) other).setupTeams(this);
 				setupTeams(other);
-			} setupTeams(this);
-		} else {
-			for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
-				((ChatPluginSpongePlayer) other).setPlayerListName(this);
-				setPlayerListName(other);
-			} setPlayerListName(this);
-		}
+			} ((ChatPluginSpongePlayer) other).setPlayerListName(this);
+			setPlayerListName(other);
+		} setPlayerListName(this);
 	}
 	
-	private void setupTeams(ChatPluginServerPlayer other) {
+	private void setupTeamsFull(ChatPluginServerPlayer other) {
 		String prefix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPlayerNamesPrefix(), other, language, TablistManager.getInstance().getPlaceholderTypes());
 		String suffix = PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPlayerNamesSuffix(), other, language, TablistManager.getInstance().getPlaceholderTypes());
+		String identifier = other.getRank().formatIdentifier(other);
 		Scoreboard scoreboard = Iterables.getFirst(objective.spongeValue().getScoreboards(), null);
-		Team team = scoreboard.getTeam(other.getRank().formatIdentifier(other)).orElse(null);
+		Team team = scoreboard.getTeam(identifier).orElse(null);
 		
 		if (team == null) // specifying the following in orElse(...) would build a team every time
-			team = Team.builder().name(other.getRank().formatIdentifier(other)).build();
-		
+			team = Team.builder().name(identifier).build();
 		// not future-proof (Sponge v8/1.13+)
 		if (prefix.contains(" ")) {
 			int index = prefix.lastIndexOf(' ');
@@ -242,6 +248,19 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 			}
 		} team.setPrefix(Utils.serializeSpongeText(prefix.length() > 16 ? me.remigio07.chatplugin.common.util.Utils.abbreviate(prefix, 16, false) : prefix, false));
 		team.setSuffix(Utils.serializeSpongeText(suffix.length() > 16 ? me.remigio07.chatplugin.common.util.Utils.abbreviate(suffix, 16, false) : suffix, false));
+		team.addMember(Utils.serializeSpongeText(other.toAdapter().spongeValue().getName(), false));
+		
+		if (!team.getScoreboard().isPresent())
+			scoreboard.registerTeam(team);
+	}
+	
+	private void setupTeams(ChatPluginServerPlayer other) {
+		String identifier = other.getRank().formatIdentifier(other);
+		Scoreboard scoreboard = Iterables.getFirst(objective.spongeValue().getScoreboards(), null);
+		Team team = scoreboard.getTeam(identifier).orElse(null);
+		
+		if (team == null) // specifying the following in orElse(...) would build a team every time
+			team = Team.builder().name(identifier).build();
 		team.addMember(Utils.serializeSpongeText(other.toAdapter().spongeValue().getName(), false));
 		
 		if (!team.getScoreboard().isPresent())

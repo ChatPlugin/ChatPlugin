@@ -51,7 +51,7 @@ public class WorldGuardIntegration extends ChatPluginBukkitIntegration<RegionInt
 	protected void loadAPI() {
 		api = WorldGuard.getInstance().getPlatform().getRegionContainer();
 		
-		Bukkit.getPluginManager().registerEvent(PlayerMoveEvent.class, ((BukkitEventManager) EventManager.getInstance()).getListener(), EventPriority.MONITOR, new EventExecutor() {
+		Bukkit.getPluginManager().registerEvent(PlayerMoveEvent.class, (Listener) EventManager.getInstance(), EventPriority.MONITOR, new EventExecutor() {
 			
 			@Override
 			public void execute(Listener listener, Event event) throws EventException {

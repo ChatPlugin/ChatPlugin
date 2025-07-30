@@ -27,18 +27,12 @@ import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.EventListener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
-import org.spongepowered.api.event.entity.MoveEntityEvent.Teleport;
 import org.spongepowered.api.event.entity.living.humanoid.player.PlayerChangeClientSettingsEvent;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
-import org.spongepowered.api.event.item.inventory.ClickInventoryEvent.Drag;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent.NumberPress;
 import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
-import org.spongepowered.api.event.item.inventory.InteractInventoryEvent.Close;
 import org.spongepowered.api.event.message.MessageChannelEvent;
-import org.spongepowered.api.event.message.MessageChannelEvent.Chat;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
-import org.spongepowered.api.event.network.ClientConnectionEvent.Disconnect;
-import org.spongepowered.api.event.network.ClientConnectionEvent.Join;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
@@ -49,7 +43,6 @@ import com.github.cliftonlabs.json_simple.Jsoner;
 
 import me.remigio07.chatplugin.api.common.event.EventManager;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
-import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
@@ -92,9 +85,7 @@ import me.remigio07.chatplugin.server.chat.BaseChatManager;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import me.remigio07.chatplugin.server.util.manager.VanishManagerImpl;
 
-public class SpongeEventManager extends EventManager {
-	
-	private SpongeListener listener = new SpongeListener();
+public class SpongeEventManager extends EventManager implements EventListener<Event> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -104,78 +95,81 @@ public class SpongeEventManager extends EventManager {
 		SpongeBootstrapper instance = SpongeBootstrapper.getInstance();
 		org.spongepowered.api.event.EventManager manager = Sponge.getEventManager();
 		
-		manager.registerListener(instance, ClientConnectionEvent.Join.class, Order.EARLY, listener);
-		manager.registerListener(instance, ClientConnectionEvent.Disconnect.class, Order.EARLY, listener);
-		manager.registerListener(instance, PlayerChangeClientSettingsEvent.class, Order.POST, listener);
-		manager.registerListener(instance, ClickInventoryEvent.class, Order.DEFAULT, listener);
-		manager.registerListener(instance, InteractInventoryEvent.Close.class, Order.DEFAULT, listener);
+		manager.registerListener(instance, ClientConnectionEvent.Join.class, Order.EARLY, this);
+		manager.registerListener(instance, ClientConnectionEvent.Disconnect.class, Order.EARLY, this);
+		manager.registerListener(instance, PlayerChangeClientSettingsEvent.class, Order.POST, this);
+		manager.registerListener(instance, ClickInventoryEvent.class, Order.DEFAULT, this);
+		manager.registerListener(instance, InteractInventoryEvent.Close.class, Order.DEFAULT, this);
 		
 		try { // Sponge v4.2
-			manager.registerListener(instance, (Class<? extends Event>) Class.forName("org.spongepowered.api.event.entity.DisplaceEntityEvent$Teleport"), Order.EARLY, listener);
+			manager.registerListener(instance, (Class<? extends Event>) Class.forName("org.spongepowered.api.event.entity.DisplaceEntityEvent$Teleport"), Order.EARLY, this);
 		} catch (ClassNotFoundException e) {
-			manager.registerListener(instance, MoveEntityEvent.Teleport.class, Order.EARLY, listener);
+			manager.registerListener(instance, MoveEntityEvent.Teleport.class, Order.EARLY, this);
 		} enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}
 	
-	private void execute(EventListener<Event> listener, Event event) {
-		switch (String.join("", event.getClass().getSimpleName().substring(0, event.getClass().getSimpleName().length() - 5).split("Event"))) {
-		case "MessageChannel$Chat":
-			onMessageChannel$Chat((Chat) event);
+	@Override
+	public void handle(Event event) throws Exception {
+		switch (event.getClass().getSimpleName().replace("$Impl", "")) {
+		case "MessageChannelEvent$Chat":
+			onMessageChannel$Chat((MessageChannelEvent.Chat) event);
 			break;
-		case "ClientConnection$Join":
-			onClientConnection$Join((Join) event);
+		case "ClientConnectionEvent$Join":
+			onClientConnection$Join((ClientConnectionEvent.Join) event);
 			break;
-		case "ClientConnection$Disconnect":
-			onClientConnection$Disconnect((Disconnect) event);
+		case "ClientConnectionEvent$Disconnect":
+			onClientConnection$Disconnect((ClientConnectionEvent.Disconnect) event);
 			break;
-		case "MoveEntity$Teleport":
-			onMoveEntity$Teleport((Teleport) event);
+		case "MoveEntityEvent$Teleport":
+			onMoveEntity$Teleport((MoveEntityEvent.Teleport) event);
 			break;
-		case "PlayerChangeClientSettings":
+		case "PlayerChangeClientSettingsEvent":
 			onPlayerChangeClientSettings((PlayerChangeClientSettingsEvent) event);
 			break;
-		case "ClickInventory$Double":
+		case "ClickInventoryEvent$Double":
 			onClickInventory((ClickInventoryEvent) event, ClickTypeAdapter.DOUBLE_CLICK);
 			break;
-		case "ClickInventory$Drag$Middle":
-		case "ClickInventory$Drag$Primary":
-			onDragInventory((Drag) event, false);
+		case "ClickInventoryEvent$Drag$Middle":
+		case "ClickInventoryEvent$Drag$Primary":
+			onDragInventory((ClickInventoryEvent.Drag) event, false);
 			break;
-		case "ClickInventory$Drag$Secondary":
-			onDragInventory((Drag) event, true);
+		case "ClickInventoryEvent$Drag$Secondary":
+			onDragInventory((ClickInventoryEvent.Drag) event, true);
 			break;
-		case "ClickInventory$Drop$Full":
+		case "ClickInventoryEvent$Drop$Full":
 			onClickInventory((ClickInventoryEvent) event, ClickTypeAdapter.CONTROL_DROP);
 			break;
-		case "ClickInventory$Drop$Single":
+		case "ClickInventoryEvent$Drop$Single":
 			onClickInventory((ClickInventoryEvent) event, ClickTypeAdapter.DROP);
 			break;
-		case "ClickInventory$Middle":
+		case "ClickInventoryEvent$Middle":
 			onClickInventory((ClickInventoryEvent) event, ClickTypeAdapter.MIDDLE);
 			break;
-		case "ClickInventory$NumberPress":
+		case "ClickInventoryEvent$NumberPress":
 			onClickInventory((ClickInventoryEvent) event, ClickTypeAdapter.NUMBER_KEY);
 			break;
-		case "ClickInventory$Primary":
-		case "ClickInventory$Drop$Outside$Primary":
+		case "ClickInventoryEvent$Primary":
+		case "ClickInventoryEvent$Drop$Outside$Primary":
 			onClickInventory((ClickInventoryEvent) event, ClickTypeAdapter.LEFT);
 			break;
-		case "ClickInventory$Secondary":
-		case "ClickInventory$Drop$Outside$Secondary":
+		case "ClickInventoryEvent$Secondary":
+		case "ClickInventoryEvent$Drop$Outside$Secondary":
 			onClickInventory((ClickInventoryEvent) event, ClickTypeAdapter.RIGHT);
 			break;
-		case "ClickInventory$Shift$Primary":
+		case "ClickInventoryEvent$Shift$Primary":
 			onClickInventory((ClickInventoryEvent) event, ClickTypeAdapter.SHIFT_LEFT);
 			break;
-		case "ClickInventory$Shift$Secondary":
+		case "ClickInventoryEvent$Shift$Secondary":
 			onClickInventory((ClickInventoryEvent) event, ClickTypeAdapter.SHIFT_RIGHT);
 			break;
-		case "InteractInventory$Close":
-			onInteractInventory$Close((Close) event);
+		case "InteractInventoryEvent$Close":
+			onInteractInventory$Close((InteractInventoryEvent.Close) event);
 			break;
-		case "DisplaceEntity$Teleport":
+		case "DisplaceEntityEvent$Teleport":
 			onDisplaceEntityEvent$Teleport(event);
+			break;
+		default:
 			break;
 		}
 	}
@@ -487,7 +481,7 @@ public class SpongeEventManager extends EventManager {
 	}
 	
 	public void onPlayerChangeClientSettings(PlayerChangeClientSettingsEvent event) {
-		ChatPluginServerPlayer player = (ChatPluginServerPlayer) PlayerManager.getInstance().getPlayer(event.getTargetEntity().getUniqueId());
+		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getTargetEntity().getUniqueId());
 		
 		if (player != null && System.currentTimeMillis() - player.getLoginTime() > 15000L && !player.getLocale().getLanguage().equals(event.getLocale().getLanguage())) {
 			LanguageDetector detector = LanguageManager.getInstance().getDetector();
@@ -516,19 +510,6 @@ public class SpongeEventManager extends EventManager {
 				scoreboard.addPlayer(serverPlayer);
 			}
 		}
-	}
-	
-	public SpongeListener getListener() {
-		return listener;
-	}
-	
-	public static class SpongeListener implements EventListener<Event> {
-		
-		@Override
-		public void handle(Event event) throws Exception {
-			((SpongeEventManager) EventManager.getInstance()).execute(this, event);
-		}
-		
 	}
 	
 }

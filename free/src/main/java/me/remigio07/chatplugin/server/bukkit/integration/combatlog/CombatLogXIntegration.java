@@ -50,7 +50,7 @@ public class CombatLogXIntegration extends ChatPluginBukkitIntegration<CombatLog
 	
 	@Override
 	protected void loadAPI() {
-		Bukkit.getPluginManager().registerEvent(PlayerPreTagEvent.class, ((BukkitEventManager) EventManager.getInstance()).getListener(), EventPriority.NORMAL, new EventExecutor() {
+		Bukkit.getPluginManager().registerEvent(PlayerPreTagEvent.class, (Listener) EventManager.getInstance(), EventPriority.NORMAL, new EventExecutor() {
 			
 			@Override
 			public void execute(Listener listener, Event event) throws EventException {
@@ -66,7 +66,7 @@ public class CombatLogXIntegration extends ChatPluginBukkitIntegration<CombatLog
 					((BukkitEventManager) EventManager.getInstance()).applyScoreboard(ScoreboardEvent.COMBAT_TAG, playerPreTagEvent.getPlayer(), new LivingEntityAdapter(playerPreTagEvent.getEnemy()));
 			}
 		}, BukkitBootstrapper.getInstance());
-		Bukkit.getPluginManager().registerEvent(PlayerUntagEvent.class, ((BukkitEventManager) EventManager.getInstance()).getListener(), EventPriority.NORMAL, new EventExecutor() {
+		Bukkit.getPluginManager().registerEvent(PlayerUntagEvent.class, (Listener) EventManager.getInstance(), EventPriority.NORMAL, new EventExecutor() {
 			
 			@Override
 			public void execute(Listener listener, Event event) throws EventException {

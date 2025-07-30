@@ -88,9 +88,7 @@ import me.remigio07.chatplugin.server.command.misc.TPSCommand;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import me.remigio07.chatplugin.server.util.manager.VanishManagerImpl;
 
-public class BukkitEventManager extends EventManager {
-	
-	private BukkitListener listener = new BukkitListener();
+public class BukkitEventManager extends EventManager implements EventExecutor, Listener {
 	
 	@Override
 	public void load() throws ChatPluginManagerException {
@@ -99,48 +97,51 @@ public class BukkitEventManager extends EventManager {
 		BukkitBootstrapper instance = BukkitBootstrapper.getInstance();
 		PluginManager manager = instance.getServer().getPluginManager();
 		
-		manager.registerEvent(PlayerJoinEvent.class, listener, EventPriority.LOW, listener, instance);
-		manager.registerEvent(PlayerQuitEvent.class, listener, EventPriority.LOW, listener, instance);
-		manager.registerEvent(PlayerCommandPreprocessEvent.class, listener, EventPriority.NORMAL, listener, instance);
-		manager.registerEvent(PlayerChangedWorldEvent.class, listener, EventPriority.LOW, listener, instance);
-		manager.registerEvent(InventoryClickEvent.class, listener, EventPriority.NORMAL, listener, instance);
-		manager.registerEvent(InventoryDragEvent.class, listener, EventPriority.NORMAL, listener, instance);
-		manager.registerEvent(InventoryCloseEvent.class, listener, EventPriority.NORMAL, listener, instance);
+		manager.registerEvent(PlayerJoinEvent.class, this, EventPriority.LOW, this, instance);
+		manager.registerEvent(PlayerQuitEvent.class, this, EventPriority.LOW, this, instance);
+		manager.registerEvent(PlayerCommandPreprocessEvent.class, this, EventPriority.NORMAL, this, instance);
+		manager.registerEvent(PlayerChangedWorldEvent.class, this, EventPriority.LOW, this, instance);
+		manager.registerEvent(InventoryClickEvent.class, this, EventPriority.NORMAL, this, instance);
+		manager.registerEvent(InventoryDragEvent.class, this, EventPriority.NORMAL, this, instance);
+		manager.registerEvent(InventoryCloseEvent.class, this, EventPriority.NORMAL, this, instance);
 		
 		if (VersionUtils.getVersion().isAtLeast(Version.V1_12))
-			manager.registerEvent(PlayerLocaleChangeEvent.class, listener, EventPriority.MONITOR, listener, instance);
+			manager.registerEvent(PlayerLocaleChangeEvent.class, this, EventPriority.MONITOR, this, instance);
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}
 	
-	private void execute(Event event) throws EventException {
-		switch (event.getEventName().substring(0, event.getEventName().length() - 5)) {
-		case "AsyncPlayerChat":
+	@Override
+	public void execute(Listener listener, Event event) throws EventException {
+		switch (event.getEventName()) {
+		case "AsyncPlayerChatEvent":
 			onAsyncPlayerChat((AsyncPlayerChatEvent) event);
 			break;
-		case "PlayerJoin":
+		case "PlayerJoinEvent":
 			onPlayerJoin((PlayerJoinEvent) event);
 			break;
-		case "PlayerQuit":
+		case "PlayerQuitEvent":
 			onPlayerQuit((PlayerQuitEvent) event);
 			break;
-		case "PlayerCommandPreprocess":
+		case "PlayerCommandPreprocessEvent":
 			onPlayerCommandPreprocess((PlayerCommandPreprocessEvent) event);
 			break;
-		case "PlayerChangedWorld":
+		case "PlayerChangedWorldEvent":
 			onPlayerChangedWorld((PlayerChangedWorldEvent) event);
 			break;
-		case "InventoryClick":
+		case "InventoryClickEvent":
 			onInventoryClick((InventoryClickEvent) event);
 			break;
-		case "InventoryDrag":
+		case "InventoryDragEvent":
 			onInventoryDrag((InventoryDragEvent) event);
 			break;
-		case "InventoryClose":
+		case "InventoryCloseEvent":
 			onInventoryClose((InventoryCloseEvent) event);
 			break;
-		case "PlayerLocaleChange":
+		case "PlayerLocaleChangeEvent":
 			onPlayerLocaleChange((PlayerLocaleChangeEvent) event);
+			break;
+		default:
 			break;
 		}
 	}
@@ -385,19 +386,6 @@ public class BukkitEventManager extends EventManager {
 				scoreboard.addPlayer(serverPlayer);
 			}
 		}
-	}
-	
-	public BukkitListener getListener() {
-		return listener;
-	}
-	
-	public static class BukkitListener implements EventExecutor, Listener {
-		
-		@Override
-		public void execute(Listener listener, Event event) throws EventException {
-			((BukkitEventManager) EventManager.getInstance()).execute(event);
-		}
-		
 	}
 	
 }

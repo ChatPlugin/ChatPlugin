@@ -34,7 +34,6 @@ import me.remigio07.chatplugin.api.server.util.manager.TPSManager;
 import me.remigio07.chatplugin.api.server.util.manager.TPSManager.TPSTimeInterval;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07.chatplugin.server.bukkit.integration.ChatPluginBukkitIntegration;
-import me.remigio07.chatplugin.server.bukkit.manager.BukkitEventManager;
 import me.rerere.matrix.api.HackType;
 import me.rerere.matrix.api.MatrixAPI;
 import me.rerere.matrix.api.MatrixAPIProvider;
@@ -50,7 +49,7 @@ public class MatrixIntegration extends ChatPluginBukkitIntegration<AnticheatInte
 	protected void loadAPI() {
 		api = MatrixAPIProvider.getAPI();
 		
-		Bukkit.getPluginManager().registerEvent(PlayerViolationEvent.class, ((BukkitEventManager) EventManager.getInstance()).getListener(), EventPriority.NORMAL, new EventExecutor() {
+		Bukkit.getPluginManager().registerEvent(PlayerViolationEvent.class, (Listener) EventManager.getInstance(), EventPriority.NORMAL, new EventExecutor() {
 			
 			@Override
 			public void execute(Listener listener, Event event) throws EventException {

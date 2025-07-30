@@ -42,7 +42,6 @@ import me.remigio07.chatplugin.api.server.util.manager.TPSManager;
 import me.remigio07.chatplugin.api.server.util.manager.TPSManager.TPSTimeInterval;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07.chatplugin.server.bukkit.integration.ChatPluginBukkitIntegration;
-import me.remigio07.chatplugin.server.bukkit.manager.BukkitEventManager;
 
 public class VulcanIntegration extends ChatPluginBukkitIntegration<AnticheatIntegration> implements AnticheatIntegration {
 	
@@ -116,7 +115,7 @@ public class VulcanIntegration extends ChatPluginBukkitIntegration<AnticheatInte
 	}
 	
 	private static void registerEvent(Class<? extends Event> clazz, EventExecutor executor) {
-		Bukkit.getPluginManager().registerEvent(clazz, ((BukkitEventManager) EventManager.getInstance()).getListener(), EventPriority.NORMAL, executor, BukkitBootstrapper.getInstance());
+		Bukkit.getPluginManager().registerEvent(clazz, (Listener) EventManager.getInstance(), EventPriority.NORMAL, executor, BukkitBootstrapper.getInstance());
 	}
 	
 	@Override

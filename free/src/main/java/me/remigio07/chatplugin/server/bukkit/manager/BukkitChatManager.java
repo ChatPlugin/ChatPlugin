@@ -17,19 +17,18 @@ package me.remigio07.chatplugin.server.bukkit.manager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.plugin.EventExecutor;
 
+import me.remigio07.chatplugin.api.common.event.EventManager;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
-import me.remigio07.chatplugin.server.bukkit.manager.BukkitEventManager.BukkitListener;
 import me.remigio07.chatplugin.server.chat.BaseChatManager;
 
 public class BukkitChatManager extends BaseChatManager {
-	
-	private BukkitListener listener = new BukkitListener();
 	
 	@Override
 	public void load() throws ChatPluginManagerException {
@@ -44,20 +43,14 @@ public class BukkitChatManager extends BaseChatManager {
 			if (priority == EventPriority.MONITOR)
 				throw new IllegalArgumentException();
 			chatEventPriority = priority.name(); // ensure upper case
-		} catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException iae) {
 			LogManager.log("Invalid event priority ({0}) set at \"settings.chat-event-priority\" in config.yml: only LOWEST, LOW, NORMAL, HIGH and HIGHEST are allowed; setting to default value of HIGH.", 2, ConfigurationType.CONFIG.get().getString("settings.chat-event-priority"));
 			
 			chatEventPriority = "HIGH";
-		} Bukkit.getPluginManager().registerEvent(AsyncPlayerChatEvent.class, listener, EventPriority.valueOf(chatEventPriority), listener, BukkitBootstrapper.getInstance());
+		} Bukkit.getPluginManager().registerEvent(AsyncPlayerChatEvent.class, (Listener) EventManager.getInstance(), EventPriority.valueOf(chatEventPriority), (EventExecutor) EventManager.getInstance(), BukkitBootstrapper.getInstance());
 		
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
-	}
-	
-	@Override
-	public void unload() throws ChatPluginManagerException {
-		HandlerList.unregisterAll(listener);
-		super.unload();
 	}
 	
 }

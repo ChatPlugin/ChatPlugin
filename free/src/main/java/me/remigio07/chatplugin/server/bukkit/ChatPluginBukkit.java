@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -52,12 +53,12 @@ import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.common.util.manager.JavaLogManager;
 import me.remigio07.chatplugin.server.storage.configuration.ServerConfigurationManager;
-import me.remigio07.chatplugin.server.util.bstats.ServerMetrics;
+import me.remigio07.chatplugin.server.util.ServerMetrics;
 import me.remigio07.chatplugin.server.util.manager.ChatPluginServerManagers;
 
 public class ChatPluginBukkit extends ChatPlugin {
 	
-	private ServerMetrics metrics;
+	private Metrics metrics;
 	
 	public ChatPluginBukkit() {
 		instance = this;
@@ -89,8 +90,8 @@ public class ChatPluginBukkit extends ChatPlugin {
 			TaskManager.runAsync(() -> {
 				long ms2 = System.currentTimeMillis();
 				
-				if ((metrics = new BukkitMetrics(BukkitBootstrapper.getInstance(), 12757)).load().areMetricsEnabled());
-					LogManager.log("[ASYNC] Metrics loaded in {0} ms.", 4, System.currentTimeMillis() - ms2);
+				ServerMetrics.load(metrics = new Metrics(BukkitBootstrapper.getInstance(), 12757));
+				LogManager.log("[ASYNC] bStats' metrics loaded in {0} ms.", 4, System.currentTimeMillis() - ms2);
 			}, 0L);
 		} catch (ChatPluginManagerException cpme) {
 			if (LogManager.getInstance() == null)
@@ -280,7 +281,7 @@ public class ChatPluginBukkit extends ChatPlugin {
 		return false; // just for you to know, changing this will not unlock the premium features :)
 	}
 	
-	public ServerMetrics getMetrics() {
+	public Metrics getMetrics() {
 		return metrics;
 	}
 	

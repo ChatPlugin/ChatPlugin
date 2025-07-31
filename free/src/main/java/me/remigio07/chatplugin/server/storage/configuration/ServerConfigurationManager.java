@@ -147,7 +147,6 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		config.addDefault("settings.debug", false);
 		config.addDefault("settings.enable-update-notification", true);
-		config.addDefault("settings.enable-bstats-metrics", Environment.isBukkit());
 		config.addDefault("settings.register-scoreboards", Environment.isSponge() || ChatPlugin.getInstance().isPremium() || VersionUtils.getVersion().isOlderThan(Version.V1_21_2));
 		config.addDefault("settings.log-command-blocks-commands", true);
 		config.addDefault("settings.truncate-version-string", true);

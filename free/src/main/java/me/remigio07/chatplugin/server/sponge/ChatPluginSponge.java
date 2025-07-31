@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.bstats.sponge.Metrics;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
@@ -51,12 +52,11 @@ import me.remigio07.chatplugin.bootstrap.SpongeBootstrapper;
 import me.remigio07.chatplugin.common.util.manager.SLF4JLogManager;
 import me.remigio07.chatplugin.server.command.BaseCommand;
 import me.remigio07.chatplugin.server.storage.configuration.ServerConfigurationManager;
-import me.remigio07.chatplugin.server.util.bstats.ServerMetrics;
 import me.remigio07.chatplugin.server.util.manager.ChatPluginServerManagers;
 
 public class ChatPluginSponge extends ChatPlugin {
 
-	private ServerMetrics metrics;
+	private Metrics metrics;
 	
 	public ChatPluginSponge() {
 		instance = this;
@@ -83,12 +83,12 @@ public class ChatPluginSponge extends ChatPlugin {
 			managers.loadManagers();
 			SpongeCommandsHandler.registerCommands();
 			me.remigio07.chatplugin.common.util.Utils.startUpdateChecker();
-			TaskManager.runAsync(() -> {
-				long ms2 = System.currentTimeMillis();
-				
-				if ((metrics = new SpongeMetrics(Sponge.getPluginManager().getPlugin("chatplugin").get(), 12758)).load().areMetricsEnabled())
-					LogManager.log("[ASYNC] Metrics loaded in {0} ms.", 4, System.currentTimeMillis() - ms2);
-			}, 0L);
+//			TaskManager.runAsync(() -> {
+//				long ms2 = System.currentTimeMillis();
+//				
+//				// ID: 12758; temporarily disabled until v8 support
+//				LogManager.log("[ASYNC] bStats' metrics loaded in {0} ms.", 4, System.currentTimeMillis() - ms2);
+//			}, 0L);
 		} catch (ChatPluginManagerException cpme) {
 			if (LogManager.getInstance() == null)
 				System.err.println(cpme.getLocalizedMessage() + ". Contact support if you are unable to solve the issue.");
@@ -297,7 +297,7 @@ public class ChatPluginSponge extends ChatPlugin {
 		return false; // just for you to know, changing this will not unlock the premium features :)
 	}
 	
-	public ServerMetrics getMetrics() {
+	public Metrics getMetrics() {
 		return metrics;
 	}
 	

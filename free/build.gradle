@@ -1,5 +1,5 @@
 plugins {
-	id 'com.gradleup.shadow' version '8.3.3'
+	id 'com.gradleup.shadow' version '8.3.8'
 }
 
 def libsDir = project.projectDir.path + '/libs/'
@@ -16,7 +16,6 @@ repositories {
 
 dependencies {
 	compileOnly project(':api')
-	
 	compileOnly files(libsDir + 'CombatLogX-11.5.0.0.1242.jar')
 	compileOnly files(libsDir + 'GadgetsMenu-4.15.3.jar')
 	compileOnly files(libsDir + 'Matrix-6.8.19.jar')
@@ -24,7 +23,6 @@ dependencies {
 	compileOnly files(libsDir + 'Negativity-2.7.1.jar')
 	compileOnly files(libsDir + 'UltraCosmetics-3.8.jar')
 	compileOnly files(libsDir + 'Vulcan-2.9.0.jar')
-	
 	compileOnly 'org.spongepowered:spongecommon:1.12.2-7.4.7:dev@jar'
 	compileOnly 'net.kyori:adventure-platform-bukkit:4.3.0'
 	compileOnly 'net.kyori:adventure-platform-spongeapi:4.3.0'
@@ -37,6 +35,8 @@ dependencies {
 	compileOnly 'me.clip:placeholderapi:2.11.3'
 	compileOnly 'dev.esophose:playerparticles:8.0'
 	compileOnly 'com.discordsrv:discordsrv:1.27.0'
+	implementation 'org.bstats:bstats-bukkit:3.1.0'
+	implementation 'org.bstats:bstats-sponge:3.1.0'
 }
 
 task assembleFinalJAR(type: Jar) {
@@ -51,16 +51,19 @@ task assembleFinalJAR(type: Jar) {
 jar {
 	archiveFileName = 'ChatPlugin-ORIGINAL.jar'
 	
+	from configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
 	finalizedBy assembleFinalJAR
 }
 
 shadowJar {
 	archiveFileName = 'ChatPlugin.jar'
 	
-	dependencies { include(dependency('me.remigio07.chatplugin:.*')) }
-	include '**/*.class'
-	relocate 'com.github.cliftonlabs.json_simple', 'me.remigio07.chatplugin.common.lib.com.github.cliftonlabs.json_simple'
+	from project.configurations.runtimeClasspath.collect { it }
+	exclude(['*.yml', 'mcmod.info'])
+	
 	relocate 'net.kyori.adventure', 'me.remigio07.chatplugin.common.lib.net.kyori.adventure'
+	relocate 'com.github.cliftonlabs.json_simple', 'me.remigio07.chatplugin.common.lib.com.github.cliftonlabs.json_simple'
+	relocate 'org.bstats', 'me.remigio07.chatplugin.common.lib.org.bstats'
 }
 
 processResources {

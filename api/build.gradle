@@ -1,3 +1,7 @@
+plugins {
+	id 'io.github.crimix.replace-placeholders' version '3.0'
+}
+
 java {
 	withJavadocJar()
 	withSourcesJar()
@@ -11,6 +15,14 @@ javadoc {
 	options.encoding 'UTF-8'
 	options.charSet 'UTF-8'
 	options.addStringOption 'Xdoclint:all,-missing', '-public'
+}
+
+replaceSourcePlaceholders {
+	version = rootProject.version
+	
+	enabled true
+	filesToExpand 'me/remigio07/chatplugin/api/ChatPlugin.java'
+	extraProperties 'version'
 }
 
 if (project.hasProperty('sonatypeUsername') && project.hasProperty('sonatypePassword')) {

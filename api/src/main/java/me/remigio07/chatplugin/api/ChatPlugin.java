@@ -16,7 +16,6 @@
 package me.remigio07.chatplugin.api;
 
 import java.io.File;
-import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicReference;
 
 import me.remigio07.chatplugin.api.common.event.plugin.ChatPluginCrashEvent;
@@ -44,23 +43,13 @@ public abstract class ChatPlugin {
 	 * 
 	 * <p><strong>Content:</strong> 🤷</p>
 	 */
-	public static final String VERSION;
+	public static final String VERSION = "@version@";
 	protected static ChatPlugin instance;
 	protected static AtomicReference<ChatPluginState> state = new AtomicReference<>(ChatPluginState.NOT_STARTED_YET);
 	protected ChatPluginManagers managers;
 	protected Object logger;
 	protected File dataFolder;
 	protected int startupTime, lastReloadTime = -1;
-	
-	static {
-		try (Scanner scanner = new Scanner(ChatPlugin.class.getResourceAsStream("/plugin.yml"), "UTF-8")) {
-			scanner.nextLine();
-			scanner.nextLine();
-			
-			String version = scanner.nextLine();
-			VERSION = version.substring(10, version.length() - 1);
-		}
-	}
 	
 	/**
 	 * Gets the managers' manager. Yeah...

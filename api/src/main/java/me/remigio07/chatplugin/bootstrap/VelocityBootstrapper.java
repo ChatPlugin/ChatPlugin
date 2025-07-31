@@ -27,13 +27,15 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 
+import me.remigio07.chatplugin.api.ChatPlugin;
+
 /**
  * Represents the Velocity's bootstrapper.
  */
 @Plugin(
 		id = "chatplugin",
 		name = "ChatPlugin",
-		version = "${version}",
+		version = ChatPlugin.VERSION,
 		url = "https://remigio07.me/chatplugin",
 		description = "A lightweight yet complete plugin which handles just too many features!",
 		authors = "Remigio07",

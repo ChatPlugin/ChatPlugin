@@ -153,7 +153,7 @@ public abstract class ChatPluginManagers {
 		try {
 			return StorageMethod.valueOf(method.toUpperCase());
 		} catch (IllegalArgumentException e) {
-			throw new ChatPluginManagerException("managers utils", "Invalid storage method (\"{0}\") set at \"storage.method\" in config.yml; only the following are allowed: H2, SQLITE, MYSQL, YAML and JSON.", method);
+			throw new ChatPluginManagerException("managers utils", "Invalid storage method (\"{0}\") set at \"storage.method\" in config.yml: only H2, SQLITE, MYSQL, YAML and JSON are allowed.", method);
 		}
 	}
 	

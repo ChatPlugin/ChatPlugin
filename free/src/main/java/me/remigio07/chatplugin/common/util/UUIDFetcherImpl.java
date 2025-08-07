@@ -78,8 +78,8 @@ public class UUIDFetcherImpl extends UUIDFetcher {
 					default:
 						throw new IOException("Invalid HTTP code returned by sessionserver.mojang.com: " + response.getKey());
 					}
-				} catch (JsonException je) {
-					future.completeExceptionally(new IOException(je));
+				} catch (JsonException jsone) {
+					future.completeExceptionally(new IOException(jsone));
 				} catch (Exception e) {
 					future.completeExceptionally(e);
 				}
@@ -112,8 +112,8 @@ public class UUIDFetcherImpl extends UUIDFetcher {
 				default:
 					throw new IOException("Invalid HTTP code returned by mcprofile.io: " + response.getKey());
 				}
-			} catch (JsonException je) {
-				future.completeExceptionally(new IOException(je));
+			} catch (JsonException jsone) {
+				future.completeExceptionally(new IOException(jsone));
 			} catch (Exception e) {
 				future.completeExceptionally(e);
 			}
@@ -163,8 +163,8 @@ public class UUIDFetcherImpl extends UUIDFetcher {
 			default:
 				throw new IOException("Invalid HTTP code returned by mcprofile.io: " + response.getKey());
 			}
-		} catch (JsonException je) {
-			future.completeExceptionally(new IOException(je));
+		} catch (JsonException jsone) {
+			future.completeExceptionally(new IOException(jsone));
 		} catch (Exception e) {
 			future.completeExceptionally(e);
 		}
@@ -201,8 +201,8 @@ public class UUIDFetcherImpl extends UUIDFetcher {
 			default:
 				throw new IOException("Invalid HTTP code returned by api.mojang.com: " + response.getKey());
 			}
-		} catch (JsonException je) {
-			future.completeExceptionally(new IOException(je));
+		} catch (JsonException jsone) {
+			future.completeExceptionally(new IOException(jsone));
 		} catch (Exception e) {
 			future.completeExceptionally(e);
 		}
@@ -250,8 +250,8 @@ public class UUIDFetcherImpl extends UUIDFetcher {
 				default:
 					throw new IOException("Invalid HTTP code returned by mcprofile.io: " + response.getKey());
 				}
-			} catch (JsonException je) {
-				future.completeExceptionally(new IOException(je));
+			} catch (JsonException jsone) {
+				future.completeExceptionally(new IOException(jsone));
 			} catch (Exception e) {
 				future.completeExceptionally(e);
 			}
@@ -318,8 +318,8 @@ public class UUIDFetcherImpl extends UUIDFetcher {
 					if (json.containsKey("data") && (json = (JsonObject) json.get("data")).containsKey("player") && (json = (JsonObject) json.get("player")).containsKey("skin_texture"))
 						future.complete((String) json.get("skin_texture"));
 					else throw new IOException("Invalid response returned by playerdb.co: " + json.toJson());
-				} catch (JsonException je) {
-					future.completeExceptionally(new IOException(je));
+				} catch (JsonException jsone) {
+					future.completeExceptionally(new IOException(jsone));
 				} catch (Exception e) {
 					future.completeExceptionally(e);
 				}
@@ -367,8 +367,8 @@ public class UUIDFetcherImpl extends UUIDFetcher {
 					default:
 						throw new IOException("Invalid HTTP code returned by sessionserver.mojang.com: " + response.getKey());
 					}
-				} catch (JsonException je) {
-					future.completeExceptionally(new IOException(je));
+				} catch (JsonException jsone) {
+					future.completeExceptionally(new IOException(jsone));
 				} catch (Exception e) {
 					future.completeExceptionally(e);
 				}
@@ -405,8 +405,8 @@ public class UUIDFetcherImpl extends UUIDFetcher {
 				default:
 					throw new IOException("Invalid HTTP code returned by mcprofile.io: " + response.getKey());
 				} throw new NoSuchElementException("Specified " + arg + " (" + endpointSuffix.substring(endpointSuffix.indexOf('/') + 1) + ") does not belong to a paid Bedrock account with a skin");
-			} catch (JsonException je) {
-				future.completeExceptionally(new IOException(je));
+			} catch (JsonException jsone) {
+				future.completeExceptionally(new IOException(jsone));
 			} catch (Exception e) {
 				future.completeExceptionally(e);
 			}

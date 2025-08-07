@@ -30,7 +30,6 @@ public class ServerMetrics extends CommonMetrics {
 		int ranks = RankManager.getInstance().getRanks().size();
 		
 		charts
-				.add(new SimplePie("pluginEdition", () -> ChatPlugin.getInstance().isPremium() ? "Premium" : "Free"))
 				.add(new SimplePie("languages", () -> String.valueOf(languages > 4 ? languages > 9 ? languages > 14 ? "15+" : "10-14" : "5-9" : "1-4")))
 				.add(new SimplePie("ranks", () -> String.valueOf(ranks > 9 ? ranks > 19 ? ranks > 29 ? ranks > 49 ? ranks > 69 ? "70-99" : "50-69" : "30-49" : "20-29" : "10-19" : "1-9")))
 				.add(new SimplePie("actionbars", () -> range(ActionbarManager.class, ActionbarManager.getInstance().getActionbars().size())))
@@ -39,11 +38,11 @@ public class ServerMetrics extends CommonMetrics {
 				.add(new SimplePie("tablists", () -> range(TablistManager.class, TablistManager.getInstance().getTablists().size())));
 		
 		if (ChatPlugin.getInstance().isPremium()) {
-			if (!multiInstanceMode) {
+			if (!multiInstanceMode)
 				charts
 						.add(new SimplePie("discordIntegration", () -> DiscordIntegrationManager.getInstance().isEnabled() ? "Enabled" : "Disabled"))
 						.add(new SimplePie("telegramIntegration", () -> TelegramIntegrationManager.getInstance().isEnabled() ? "Enabled" : "Disabled"));
-			} charts
+			charts
 					.add(new SimplePie("multiInstanceMode", () -> multiInstanceMode ? "Enabled" : "Disabled"))
 					.add(new SimplePie("bossbars", () -> range(BossbarManager.class, BossbarManager.getInstance().getBossbars().size())))
 					.add(new SimplePie("scoreboards", () -> range(ScoreboardManager.class, ScoreboardManager.getInstance().getScoreboards().size())))

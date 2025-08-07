@@ -106,6 +106,12 @@ public class IPLookupImpl extends IPLookup {
 	}
 	
 	@Override
+	public String formatSubdivisions() {
+		String str = String.join(", ", subdivisions);
+		return str.isEmpty() ? "unknown location" : str;
+	}
+	
+	@Override
 	public String formatPlaceholders(String input) {
 		return input == null ? null : input
 				.replace("{ip_address}", ipAddress.getHostAddress())

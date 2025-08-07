@@ -65,8 +65,8 @@ public class YAMLConnector extends FlatFileConnector {
 				configuration.load();
 				yamls.put(container, configuration);
 			}
-		} catch (IOException e) {
-			throw new ChatPluginManagerException(FlatFileManager.getInstance(), e);
+		} catch (IOException ioe) {
+			throw new ChatPluginManagerException(FlatFileManager.getInstance(), ioe);
 		}
 	}
 	

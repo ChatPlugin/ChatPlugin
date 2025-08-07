@@ -55,7 +55,7 @@ public abstract class IPLookup {
 	protected long accuracyRadius = -1;
 	
 	/**
-	 * Gets the method used to obtain this lookup.
+	 * Gets the method used to obtain this IP lookup.
 	 * 
 	 * @return Method used
 	 */
@@ -64,7 +64,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Sets the method used to obtain this lookup.
+	 * Sets the method used to obtain this IP lookup.
 	 * 
 	 * @param method Method used
 	 */
@@ -73,18 +73,18 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Checks if this lookup is valid.
+	 * Checks if this IP lookup is valid.
 	 * 
-	 * @return Whether this lookup is valid
+	 * @return Whether this IP lookup is valid
 	 */
 	public boolean isValid() {
 		return valid;
 	}
 	
 	/**
-	 * Chooses if this lookup is valid.
+	 * Sets whether this IP lookup is valid.
 	 * 
-	 * @param valid Whether this lookup is valid
+	 * @param valid Whether this IP lookup is valid
 	 */
 	public void setValid(boolean valid) {
 		this.valid = valid;
@@ -104,7 +104,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Gets this lookup's IP address.
+	 * Gets this IP lookup's IP address.
 	 * 
 	 * @return Lookup's IP address
 	 */
@@ -113,7 +113,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Gets this lookup's Internet Service Provider.
+	 * Gets this IP lookup's Internet Service Provider.
 	 * 
 	 * @return Lookup's ISP
 	 */
@@ -122,7 +122,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Sets this lookup's Internet Service Provider.
+	 * Sets this IP lookup's Internet Service Provider.
 	 * 
 	 * @param isp Lookup's ISP
 	 */
@@ -131,7 +131,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Gets this lookup's position's continent.
+	 * Gets this IP lookup's location's continent.
 	 * 
 	 * @return Lookup's continent
 	 */
@@ -140,7 +140,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Sets this lookup's position's continent.
+	 * Sets this IP lookup's location's continent.
 	 * 
 	 * @param continent Lookup's continent
 	 */
@@ -149,7 +149,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Gets this lookup's position's country.
+	 * Gets this IP lookup's location's country.
 	 * 
 	 * @return Lookup's country
 	 */
@@ -158,7 +158,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Sets this lookup's position's country.
+	 * Sets this IP lookup's location's country.
 	 * 
 	 * @param country Lookup's country
 	 */
@@ -167,7 +167,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Gets this lookup's position's city.
+	 * Gets this IP lookup's location's city.
 	 * 
 	 * @return Lookup's city
 	 */
@@ -176,7 +176,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Sets this lookup's position's city.
+	 * Sets this IP lookup's location's city.
 	 * 
 	 * @param city Lookup's city
 	 */
@@ -185,7 +185,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Gets this lookup's position's subdivisions.
+	 * Gets this IP lookup's location's subdivisions.
 	 * 
 	 * <p>A subdivision is a more detailed geographical division of
 	 * a territory. For example, Italian regions and provinces.</p>
@@ -197,7 +197,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Sets this lookup's position's subdivisions.
+	 * Sets this IP lookup's location's subdivisions.
 	 * 
 	 * <p>A subdivision is a more detailed geographical division of
 	 * a territory. For example, Italian regions and provinces.</p>
@@ -209,39 +209,28 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Formats this lookup's position's subdivisions as a single string.
+	 * Checks if this IP lookup's location is inside the European Union.
 	 * 
-	 * <p><strong>Example:</strong> Provincia di Parma, Emilia-Romagna</p>
+	 * <p>This does not always work and may return
+	 * <code>false</code>. MaxMind's issues, sorry.</p>
 	 * 
-	 * @return Subdivisions merged into one string
-	 */
-	public String formatSubdivisions() {
-		String str = String.join(", ", subdivisions);
-		return str.isEmpty() ? "unknown location" : str;
-	}
-	
-	/**
-	 * Checks if this lookup's position is inside the European Union.
-	 * 
-	 * <p>This does not always work (returns <code>false</code>). MaxMind's issues, sorry.</p>
-	 * 
-	 * @return Whether the IP is inside EU
+	 * @return Whether the IP is inside the EU
 	 */
 	public boolean isInsideEU() {
 		return insideEU;
 	}
 	
 	/**
-	 * Sets if this lookup's position is inside the European Union.
+	 * Sets whether this IP lookup's location is inside the European Union.
 	 * 
-	 * @param insideEU Whether the IP is inside EU
+	 * @param insideEU Whether the IP is inside the EU
 	 */
 	public void setInsideEU(boolean insideEU) {
 		this.insideEU = insideEU;
 	}
 	
 	/**
-	 * Gets this lookup's position's <a href="https://en.wikipedia.org/wiki/ISO_3166-2#Current_codes">ISO 3166-2</a> country code.
+	 * Gets this IP lookup's location's <a href="https://en.wikipedia.org/wiki/ISO_3166-2#Current_codes">ISO 3166-2</a> country code.
 	 * 
 	 * @return Lookup's country code
 	 */
@@ -250,7 +239,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Sets this lookup's <a href="https://en.wikipedia.org/wiki/ISO_3166-2#Current_codes">ISO 3166-2</a> country code.
+	 * Sets this IP lookup's <a href="https://en.wikipedia.org/wiki/ISO_3166-2#Current_codes">ISO 3166-2</a> country code.
 	 * 
 	 * @param countryCode Lookup's country code
 	 */
@@ -259,7 +248,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Gets this lookup's <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List">time zone</a>.
+	 * Gets this IP lookup's <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List">time zone</a>.
 	 * 
 	 * @return Lookup's time zone
 	 */
@@ -268,7 +257,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Sets this lookup's <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List">time zone</a>.
+	 * Sets this IP lookup's <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List">time zone</a>.
 	 * 
 	 * @param timeZone Lookup's time zone
 	 */
@@ -277,7 +266,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Gets this lookup's position's postal code.
+	 * Gets this IP lookup's location's postal code.
 	 * 
 	 * <p><strong>Note:</strong> not all countries use postal codes.</p>
 	 * 
@@ -288,7 +277,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Sets this lookup's position's postal code.
+	 * Sets this IP lookup's location's postal code.
 	 * 
 	 * @param postalCode Lookup's postal code
 	 */
@@ -297,7 +286,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Gets this lookup's position's latitude.
+	 * Gets this IP lookup's location's latitude.
 	 * 
 	 * @return Lookup's latitude
 	 */
@@ -306,7 +295,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Sets this lookup's position's latitude.
+	 * Sets this IP lookup's location's latitude.
 	 * 
 	 * @param latitude Lookup's latitude
 	 */
@@ -315,7 +304,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Gets this lookup's position's longitude.
+	 * Gets this IP lookup's location's longitude.
 	 * 
 	 * @return Lookup's longitude
 	 */
@@ -324,7 +313,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Sets this lookup's position's longitude.
+	 * Sets this IP lookup's location's longitude.
 	 * 
 	 * @param longitude Lookup's longitude
 	 */
@@ -333,7 +322,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Gets this lookup's position's accuracy radius, in kilometers.
+	 * Gets this IP lookup's location's accuracy radius, in kilometers.
 	 * 
 	 * @return Lookup's accuracy radius
 	 * @see Utils#kilometersToMiles(long)
@@ -344,7 +333,7 @@ public abstract class IPLookup {
 	}
 	
 	/**
-	 * Sets this lookup's position's accuracy radius, in kilometers.
+	 * Sets this IP lookup's location's accuracy radius, in kilometers.
 	 * 
 	 * @param accuracyRadius Lookup's accuracy radius
 	 */
@@ -370,6 +359,15 @@ public abstract class IPLookup {
 	 * @throws Exception If something goes wrong
 	 */
 	public abstract IPLookup setJSON(String json) throws Exception;
+	
+	/**
+	 * Formats this IP lookup's location's subdivisions as a single string.
+	 * 
+	 * <p><strong>Example:</strong> Provincia di Parma, Emilia-Romagna</p>
+	 * 
+	 * @return Subdivisions merged into one string
+	 */
+	public abstract String formatSubdivisions();
 	
 	/**
 	 * Translates an input string with this IP lookup's specific placeholders.

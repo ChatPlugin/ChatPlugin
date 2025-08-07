@@ -120,7 +120,7 @@ public enum ScoreboardEvent {
 	 * Event triggered when a player changes their resource pack's status.
 	 */
 	@EventArguments(types = String.class, descriptions = "Client's response's status")
-	RESOURCE_PACK_STATUS("resource_pack_status_event_status_short", "resource_pack_status_event_status_long"),
+	RESOURCE_PACK_STATUS("resource_pack_status_event_status"),
 	
 	/**
 	 * Event triggered when a player enters a region.
@@ -170,6 +170,7 @@ public enum ScoreboardEvent {
 	 * <p><strong>Example:</strong> {@link #BED_ENTER} ➝ "bed-enter"</p>
 	 * 
 	 * @return Event's ID
+	 * @see #getEvent(String)
 	 */
 	public String getID() {
 		return name().toLowerCase().replace('_', '-');
@@ -181,13 +182,14 @@ public enum ScoreboardEvent {
 	 * <p>Will return <code>null</code> if specified
 	 * ID does not belong to any event.</p>
 	 * 
-	 * @param id Event's ID ({@link #getID()})
+	 * @param eventID Event's ID
 	 * @return Scoreboard's event
+	 * @see #getID()
 	 */
-	@Nullable(why = "Null if the ID is invalid")
-	public static ScoreboardEvent get(String id) {
+	@Nullable(why = "Specified ID may be invalid")
+	public static ScoreboardEvent getEvent(String eventID) {
 		for (ScoreboardEvent event : values())
-			if (id.equalsIgnoreCase(event.getID()))
+			if (eventID.equals(event.getID()))
 				return event;
 		return null;
 	}

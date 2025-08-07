@@ -63,7 +63,7 @@ public class AdManagerImpl extends AdManager {
 		prefix = ConfigurationType.ADS.get().getString("ads.settings.prefix.format");
 		sound = new SoundAdapter(ConfigurationType.ADS.get(), "ads.settings.sound");
 		sendingTimeout = Utils.getTime(ConfigurationType.ADS.get().getString("ads.settings.sending-timeout"), false, false);
-		placeholderTypes = PlaceholderType.getPlaceholders(ConfigurationType.ADS.get().getStringList("ads.settings.placeholder-types"));
+		placeholderTypes = PlaceholderType.getTypes(ConfigurationType.ADS.get().getStringList("ads.settings.placeholder-types"));
 		
 		for (String id : ConfigurationType.ADS.get().getKeys("ads")) {
 			if (id.equals("settings"))
@@ -99,22 +99,24 @@ public class AdManagerImpl extends AdManager {
 									);
 						else disabledRanks.add(rank);
 					} if (!clickActionID.isEmpty()) {
-						if ((clickAction = ClickActionAdapter.valueOf(clickActionID)) == null) {
+						try {
+							if (!(clickAction = ClickActionAdapter.valueOf(clickActionID)).isSupported()) {
+								LogManager.log(
+										"Invalid click action (\"{0}\") set at \"ads.{1}.click.action\" in ads.yml: this feature only works on {2}+ servers; setting to default value of SUGGEST_COMMAND.",
+										2,
+										clickAction.name(),
+										id,
+										clickAction.getMinimumVersion().getName()
+										);
+								
+								clickAction = ClickActionAdapter.SUGGEST_COMMAND;
+							}
+						} catch (IllegalArgumentException iae) {
 							LogManager.log(
 									"Invalid click action (\"{0}\") set at \"ads.{1}.click.action\" in ads.yml: only OPEN_URL, OPEN_FILE, RUN_COMMAND, SUGGEST_COMMAND, CHANGE_PAGE, COPY_TO_CLIPBOARD, SHOW_DIALOG and CUSTOM are allowed; setting to default value of SUGGEST_COMMAND.",
 									2,
 									ConfigurationType.ADS.get().getString("ads." + id + ".click.action"),
 									id
-									);
-							
-							clickAction = ClickActionAdapter.SUGGEST_COMMAND;
-						} else if (!clickAction.isSupported()) {
-							LogManager.log(
-									"Invalid click action (\"{0}\") set at \"ads.{1}.click.action\" in ads.yml: this feature only works on {2}+ servers; setting to default value of SUGGEST_COMMAND.",
-									2,
-									clickAction.name(),
-									id,
-									clickAction.getMinimumVersion().getName()
 									);
 							
 							clickAction = ClickActionAdapter.SUGGEST_COMMAND;

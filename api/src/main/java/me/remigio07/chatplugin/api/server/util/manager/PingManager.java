@@ -18,6 +18,7 @@ package me.remigio07.chatplugin.api.server.util.manager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.StringJoiner;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
@@ -210,6 +211,14 @@ public abstract class PingManager implements ChatPluginManager, Runnable {
 		@Override
 		public int compareTo(PingQuality o) {
 			return maximumPing < o.getMaximumPing() ? -1 : maximumPing == o.getMaximumPing() ? 0 : 1;
+		}
+		
+		@Override
+		public String toString() {
+			return new StringJoiner(", ", "PingQuality{", "}")
+					.add("id=\"" + id + "\"")
+					.add("maximumPing=" + maximumPing)
+					.toString();
 		}
 		
 		/**

@@ -47,7 +47,7 @@ public class ActionbarManagerImpl extends ActionbarManager {
 		hasPrefix = ConfigurationType.ACTIONBARS.get().getBoolean("actionbars.settings.prefix.enabled");
 		prefix = ConfigurationType.ACTIONBARS.get().getString("actionbars.settings.prefix.format");
 		sendingTimeout = ConfigurationType.ACTIONBARS.get().getLong("actionbars.settings.sending-timeout-ms");
-		placeholderTypes = PlaceholderType.getPlaceholders(ConfigurationType.ACTIONBARS.get().getStringList("actionbars.settings.placeholder-types"));
+		placeholderTypes = PlaceholderType.getTypes(ConfigurationType.ACTIONBARS.get().getStringList("actionbars.settings.placeholder-types"));
 		
 		for (String id : ConfigurationType.ACTIONBARS.get().getKeys("actionbars")) {
 			if (id.equals("settings"))

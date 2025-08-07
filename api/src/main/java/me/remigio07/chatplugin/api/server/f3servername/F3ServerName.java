@@ -56,6 +56,11 @@ public class F3ServerName {
 		this.texts = texts;
 	}
 	
+	@Override
+	public String toString() {
+		return "F3ServerName{id=\"" + id + "\"}";
+	}
+	
 	/**
 	 * Gets this F3 server name's ID.
 	 * 

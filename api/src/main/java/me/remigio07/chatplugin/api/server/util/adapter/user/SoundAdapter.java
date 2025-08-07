@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.api.server.util.adapter.user;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.StringJoiner;
 import java.util.regex.Pattern;
 
 import org.spongepowered.api.effect.sound.SoundType;
@@ -81,6 +82,15 @@ public class SoundAdapter {
 				configuration.getFloat(path + ".volume", 1F),
 				configuration.getFloat(path + ".pitch", 1F)
 				);
+	}
+	
+	@Override
+	public String toString() {
+		return new StringJoiner(", ", "SoundAdapter{", "}")
+				.add("id=\"" + id + "\"")
+				.add("volume=" + volume + "F")
+				.add("pitch=" + pitch + "F")
+				.toString();
 	}
 	
 	/**

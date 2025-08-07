@@ -21,6 +21,7 @@ import java.net.InetAddress;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
+import java.util.StringJoiner;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.sound.SoundType;
@@ -275,10 +276,6 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 				false));
 	}
 	
-	public void setPlayerListName(ChatPluginServerPlayer other, Text name) {
-		player.getTabList().getEntry(other.getUUID()).get().setDisplayName(name);
-	}
-	
 	@Override
 	public boolean hasPermission(String permission) {
 		return player.hasPermission(permission);
@@ -377,6 +374,18 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	@Override
 	public Locale getLocale() {
 		return player.getLocale();
+	}
+	
+	@Override
+	public String toString() {
+		return new StringJoiner(", ", "ChatPluginSpongePlayer{", "}")
+				.add("uuid=" + uuid.toString())
+				.add("name=\"" + name + "\"")
+				.toString();
+	}
+	
+	public void setPlayerListName(ChatPluginServerPlayer other, Text name) {
+		player.getTabList().getEntry(other.getUUID()).get().setDisplayName(name);
 	}
 	
 }

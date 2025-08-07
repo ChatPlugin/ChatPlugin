@@ -156,7 +156,7 @@ public class ItemStackAdapter implements Cloneable {
 			if (((org.bukkit.inventory.ItemStack) itemStack).hasItemMeta()) {
 				ItemMeta meta = ((org.bukkit.inventory.ItemStack) itemStack).getItemMeta();
 				
-				meta.getEnchants().forEach((enchantment, level) -> enchantments.put(EnchantmentAdapter.valueOf(enchantment.getName()), level));
+				meta.getEnchants().forEach((enchantment, level) -> enchantments.put(EnchantmentAdapter.value(enchantment.getName()), level));
 				meta.getItemFlags().stream().map(itemFlag -> ItemFlagAdapter.valueOf(itemFlag.name())).filter(Objects::nonNull).distinct().forEach(itemFlag -> itemFlags.add(itemFlag));
 				
 				if (isPlayerHead())
@@ -169,7 +169,7 @@ public class ItemStackAdapter implements Cloneable {
 				if (((ItemStack) itemStack).getOrElse(itemFlag.spongeValue(), false))
 					itemFlags.add(itemFlag);
 			if (!((ItemStack) itemStack).getOrCreate(EnchantmentData.class).get().enchantments().isEmpty())
-				((ItemStack) itemStack).get(EnchantmentData.class).get().enchantments().get().forEach(enchantment -> enchantments.put(EnchantmentAdapter.valueOf(enchantment.getType().getId().substring(10)), enchantment.getLevel()));
+				((ItemStack) itemStack).get(EnchantmentData.class).get().enchantments().get().forEach(enchantment -> enchantments.put(EnchantmentAdapter.value(enchantment.getType().getId().substring(10)), enchantment.getLevel()));
 			if (isPlayerHead())
 				spongeValue().get(RepresentedPlayerData.class).ifPresent(player -> player.owner().get().getName().ifPresent(name -> skullOwner = name));
 		}

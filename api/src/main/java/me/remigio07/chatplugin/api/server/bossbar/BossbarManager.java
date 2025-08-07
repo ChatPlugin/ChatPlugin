@@ -18,6 +18,7 @@ package me.remigio07.chatplugin.api.server.bossbar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -76,7 +77,7 @@ public abstract class BossbarManager implements ChatPluginManager, Runnable {
 	protected boolean enabled, randomOrder, abbreviateLongTitles, sendFullToLegacyPlayers, loadingBossbarEnabled;
 	protected double reflectionWitherTeleportationDistance;
 	protected long reflectionWitherTeleportationTimeout, sendingTimeout, loadingBossbarSendingTimeout, timerTaskID = -1, reflectionTimerTaskID = -1, lastRunTime = -1;
-	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
+	protected Set<PlaceholderType> placeholderTypes = Collections.emptySet();
 	protected List<String> enabledWorlds = Collections.emptyList();
 	protected List<Bossbar> bossbars = new CopyOnWriteArrayList<>();
 	protected Map<ChatPluginServerPlayer, Long> loadingBossbarsTasks = new ConcurrentHashMap<>();
@@ -188,14 +189,14 @@ public abstract class BossbarManager implements ChatPluginManager, Runnable {
 	}
 	
 	/**
-	 * Gets the list of placeholder types used
+	 * Gets the set of placeholder types used
 	 * to translate {@link Bossbar#getTitles()}.
 	 * 
 	 * <p><strong>Found at:</strong> "bossbars.settings.placeholder-types" in {@link ConfigurationType#BOSSBARS}</p>
 	 * 
 	 * @return Placeholders used to translate titles
 	 */
-	public List<PlaceholderType> getPlaceholderTypes() {
+	public Set<PlaceholderType> getPlaceholderTypes() {
 		return placeholderTypes;
 	}
 	

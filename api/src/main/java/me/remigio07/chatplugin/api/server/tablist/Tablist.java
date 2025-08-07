@@ -72,6 +72,11 @@ public class Tablist {
 		this.footers = footers;
 	}
 	
+	@Override
+	public String toString() {
+		return "Tablist{id=\"" + id + "\"}";
+	}
+	
 	/**
 	 * Gets this tablist's ID.
 	 * 

@@ -26,6 +26,7 @@ import org.bukkit.boss.BarStyle;
 import org.spongepowered.api.boss.BossBarOverlay;
 import org.spongepowered.api.boss.BossBarOverlays;
 
+import me.remigio07.chatplugin.api.common.util.PseudoEnum;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -34,12 +35,9 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 /**
  * Environment indipendent (Bukkit and Sponge) bossbar style adapter.
  * 
- * <p>This class is a pseudo-{@link Enum}. It contains the following methods:
- * {@link #name()}, {@link #ordinal()}, {@link #valueOf(String)} and {@link #values()}.</p>
- * 
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Bossbars#styles">ChatPlugin wiki/Modules/Bossbars/Styles</a>
  */
-public class BossbarStyleAdapter {
+public class BossbarStyleAdapter extends PseudoEnum<BossbarStyleAdapter> {
 	
 	/**
 	 * Displays the bossbar split into 6 segments.
@@ -80,8 +78,9 @@ public class BossbarStyleAdapter {
 	public static final BossbarStyleAdapter RANDOM = new BossbarStyleAdapter("RANDOM", "RANDOM");
 	
 	private static final BossbarStyleAdapter[] VALUES = new BossbarStyleAdapter[] { SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20, SOLID, RANDOM };
+	private static int ordinal = 0;
 	private static Map<String, Object> spongeStyles;
-	private String name, spongeID;
+	private String spongeID;
 	
 	static {
 		if (Environment.isSponge())
@@ -95,7 +94,7 @@ public class BossbarStyleAdapter {
 	}
 	
 	private BossbarStyleAdapter(String name, String spongeID) {
-		this.name = name;
+		super(name, ordinal++);
 		this.spongeID = spongeID;
 	}
 	
@@ -103,6 +102,8 @@ public class BossbarStyleAdapter {
 	 * Gets the bossbar style adapted for Bukkit environments.
 	 * 
 	 * <p>{@link #RANDOM} may only return a style that {@link #isSupported()}.</p>
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
 	 * 
 	 * @return Bukkit-adapted bossbar style
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBukkit()}
@@ -118,6 +119,8 @@ public class BossbarStyleAdapter {
 	 * 
 	 * <p>{@link #RANDOM} may only return a style that {@link #isSupported()}.</p>
 	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
+	 * 
 	 * @return Sponge-adapted bossbar style
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isSponge()}
 	 */
@@ -125,27 +128,6 @@ public class BossbarStyleAdapter {
 		if (Environment.isSponge())
 			return (BossBarOverlay) (this == RANDOM ? new ArrayList<>(spongeStyles.values()).get(VersionUtils.getVersion().isAtLeast(Version.V1_9) ? ThreadLocalRandom.current().nextInt(VALUES.length - 1) : 0) : spongeStyles.get(name())); // .values().get(0) = SOLID
 		throw new UnsupportedOperationException("Unable to adapt bossbar style to a Sponge's BossBarOverlay on a " + Environment.getCurrent().getName() + " environment");
-	}
-	
-	/**
-	 * Equivalent of {@link Enum#name()}.
-	 * 
-	 * @return Constant's name
-	 */
-	public String name() {
-		return name;
-	}
-	
-	/**
-	 * Equivalent of {@link Enum#ordinal()}.
-	 * 
-	 * @return Constant's ordinal
-	 */
-	public int ordinal() {
-		for (int i = 0; i < VALUES.length; i++)
-			if (this == VALUES[i])
-				return i;
-		return -1;
 	}
 	
 	/**
@@ -158,38 +140,59 @@ public class BossbarStyleAdapter {
 	}
 	
 	/**
-	 * Checks if this bossbar style is supported on {@link VersionUtils#getVersion()}.
+	 * Checks if this bossbar style is supported
+	 * on {@link VersionUtils#getVersion()}.
 	 * 
 	 * @return Whether this bossbar style is supported
 	 */
 	public boolean isSupported() {
-		return VersionUtils.getVersion().isAtLeast(Version.V1_9) || this == SOLID || this == RANDOM;
+		return this == SOLID || this == RANDOM || VersionUtils.getVersion().isAtLeast(Version.V1_9);
 	}
 	
 	/**
-	 * Equivalent of <code>Enum#valueOf(String)</code>,
-	 * with the only difference that instead of throwing
-	 * {@link IllegalArgumentException} <code>null</code>
-	 * is returned if the constant's name is invalid.
+	 * Equivalent of <code>valueOf(String)</code>.
 	 * 
 	 * @param name Constant's name
-	 * @return Enum constant
+	 * @return Pseudo-enum's constant
+	 * @throws NullPointerException If <code>name == null</code>
+	 * @throws IllegalArgumentException If {@link #values()}
+	 * does not contain a constant with the specified name
 	 */
-	@Nullable(why = "Instead of throwing IllegalArgumentException null is returned if the constant's name is invalid")
 	public static BossbarStyleAdapter valueOf(String name) {
-		for (BossbarStyleAdapter style : VALUES)
-			if (style.name().equals(name))
-				return style;
-		return null;
+		return valueOf(name, VALUES);
 	}
 	
 	/**
-	 * Equivalent of <code>Enum#values()</code>.
+	 * Equivalent of <code>values()</code>.
 	 * 
-	 * @return Enum constants
+	 * @return Pseudo-enum's constants
 	 */
 	public static BossbarStyleAdapter[] values() {
 		return VALUES;
+	}
+	
+	/**
+	 * Equivalent of {@link #valueOf(String)}, but:
+	 * 	<ul>
+	 * 		<li>case insensitive</li>
+	 * 		<li>returns <code>null</code> instead of throwing {@link IllegalArgumentException}</li>
+	 * 		<li>also recognizes Bukkit- and Sponge-compatible IDs</li>
+	 * 	</ul>
+	 * 
+	 * <p>Will return <code>null</code> if the specified name is invalid.</p>
+	 * 
+	 * @param name Constant's name, case insensitive
+	 * @return Pseudo-enum's constant
+	 * @throws NullPointerException If <code>name == null</code>
+	 */
+	@Nullable(why = "Specified name may be invalid")
+	public static BossbarStyleAdapter value(String name) {
+		name = name.toUpperCase();
+		
+		for (BossbarStyleAdapter value : VALUES)
+			if (value.name().equals(name) || value.getSpongeID().equals(name))
+				return value;
+		return null;
 	}
 	
 }

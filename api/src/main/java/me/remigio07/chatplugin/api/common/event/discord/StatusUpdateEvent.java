@@ -15,10 +15,10 @@
 
 package me.remigio07.chatplugin.api.common.event.discord;
 
-import me.remigio07.chatplugin.api.common.discord.ActivityTypeAdapter;
 import me.remigio07.chatplugin.api.common.discord.DiscordBot;
 import me.remigio07.chatplugin.api.common.event.CancellableEvent;
 import me.remigio07.chatplugin.api.common.event.ChatPluginEvent;
+import me.remigio07.chatplugin.api.common.util.adapter.discord.ActivityTypeAdapter;
 
 /**
  * Represents the event called just before

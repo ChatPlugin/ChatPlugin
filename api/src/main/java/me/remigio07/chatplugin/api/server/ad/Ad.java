@@ -77,6 +77,11 @@ public class Ad {
 		this.disabledRanks = disabledRanks;
 	}
 	
+	@Override
+	public String toString() {
+		return "Ad{id=\"" + id + "\"}";
+	}
+	
 	/**
 	 * Gets this ad's ID.
 	 * 

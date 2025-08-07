@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 import java.util.Map.Entry;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
@@ -283,6 +284,14 @@ public class FillableGUIImpl<T> extends FillableGUI<T> {
 		return ChatColor.translate(formatPagePlaceholders(titlesTranslator == null ? title : titlesTranslator.apply(title, language, page), page));
 	}
 	
+	@Override
+	public String toString() {
+		return new StringJoiner(", ", "FillableGUIImpl{", "}")
+				.add("id=\"" + id + "\"")
+				.add("loaded=" + loaded)
+				.toString();
+	}
+	
 	public static class PerPlayer<T> extends FillableGUIImpl<T> implements PerPlayerGUI {
 		
 		private ChatPluginServerPlayer player;
@@ -310,12 +319,6 @@ public class FillableGUIImpl<T> extends FillableGUI<T> {
 			GUIManager.getInstance().getGUIs().remove(this);
 		}
 		
-		public void refreshUnloadTask() {
-			if (unloadTaskID != -1)
-				TaskManager.cancelSync(unloadTaskID);
-			unloadTaskID = TaskManager.runSync(() -> unload(false), GUIManager.getInstance().getPerPlayerGUIsUnloadTime());
-		}
-		
 		@Override
 		public ChatPluginServerPlayer getPlayer() {
 			return player;
@@ -324,6 +327,21 @@ public class FillableGUIImpl<T> extends FillableGUI<T> {
 		@Override
 		public long getUnloadTaskID() {
 			return unloadTaskID;
+		}
+		
+		@Override
+		public String toString() {
+			return new StringJoiner(", ", "FillableGUIImpl.PerPlayer{", "}")
+					.add("id=\"" + id + "\"")
+					.add("loaded=" + loaded)
+					.add("player=" + player)
+					.toString();
+		}
+		
+		public void refreshUnloadTask() {
+			if (unloadTaskID != -1)
+				TaskManager.cancelSync(unloadTaskID);
+			unloadTaskID = TaskManager.runSync(() -> unload(false), GUIManager.getInstance().getPerPlayerGUIsUnloadTime());
 		}
 		
 	}

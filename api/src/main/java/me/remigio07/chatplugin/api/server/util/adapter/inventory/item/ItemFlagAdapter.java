@@ -15,28 +15,21 @@
 
 package me.remigio07.chatplugin.api.server.util.adapter.inventory.item;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.inventory.ItemFlag;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.value.mutable.Value;
 
-import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
+import me.remigio07.chatplugin.api.common.util.PseudoEnum;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
-import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
  * Environment indipendent (Bukkit and Sponge) item flag adapter.
- * 
- * <p>This class is a pseudo-{@link Enum}. It contains the following methods:
- * {@link #name()}, {@link #ordinal()}, {@link #valueOf(String)} and {@link #values()}.</p>
  */
-public class ItemFlagAdapter {
+public class ItemFlagAdapter extends PseudoEnum<ItemFlagAdapter> {
 	
 	/**
 	 * Hides trim upgrades applied to an armor.
@@ -83,7 +76,7 @@ public class ItemFlagAdapter {
 	 */
 	public static final ItemFlagAdapter HIDE_MISCELLANEOUS = new ItemFlagAdapter("HIDE_MISCELLANEOUS", new String[] { VersionUtils.getVersion().isAtLeast(Version.V1_20_5) ? "HIDE_ADDITIONAL_TOOLTIP" : "HIDE_POTION_EFFECTS", "HIDE_MISCELLANEOUS" });
 	private static final ItemFlagAdapter[] VALUES = new ItemFlagAdapter[] { HIDE_ARMOR_TRIM, HIDE_ENCHANTMENTS, HIDE_ATTRIBUTES, HIDE_DYE, HIDE_UNBREAKABLE, HIDE_CAN_DESTROY, HIDE_CAN_BE_PLACED_ON, HIDE_MISCELLANEOUS };
-	private String name;
+	private static int ordinal = 0;
 	private String[] ids;
 	private Version minimumVersion;
 	
@@ -92,7 +85,7 @@ public class ItemFlagAdapter {
 	}
 	
 	private ItemFlagAdapter(String name, String[] ids, Version minimumVersion) {
-		this.name = name;
+		super(name, ordinal++);
 		this.ids = ids;
 		this.minimumVersion = minimumVersion;
 	}
@@ -137,27 +130,6 @@ public class ItemFlagAdapter {
 	}
 	
 	/**
-	 * Equivalent of {@link Enum#name()}.
-	 * 
-	 * @return Constant's name
-	 */
-	public String name() {
-		return name;
-	}
-	
-	/**
-	 * Equivalent of {@link Enum#ordinal()}.
-	 * 
-	 * @return Constant's ordinal
-	 */
-	public int ordinal() {
-		for (int i = 0; i < VALUES.length; i++)
-			if (this == VALUES[i])
-				return i;
-		return -1;
-	}
-	
-	/**
 	 * Gets this item flag's IDs.
 	 * 
 	 * <p>The first element in the array is the Bukkit-compatible
@@ -191,70 +163,51 @@ public class ItemFlagAdapter {
 	}
 	
 	/**
-	 * Equivalent of <code>Enum#valueOf(String)</code>,
-	 * with the only difference that instead of throwing
-	 * {@link IllegalArgumentException} <code>null</code>
-	 * is returned if the constant's name is invalid.
-	 * 
-	 * <p>This method recognizes both Bukkit's and Sponge's IDs.</p>
+	 * Equivalent of <code>valueOf(String)</code>.
 	 * 
 	 * @param name Constant's name
-	 * @return Enum constant
+	 * @return Pseudo-enum's constant
+	 * @throws NullPointerException If <code>name == null</code>
+	 * @throws IllegalArgumentException If {@link #values()}
+	 * does not contain a constant with the specified name
 	 */
-	@Nullable(why = "Instead of throwing IllegalArgumentException null is returned if the constant's name is invalid")
 	public static ItemFlagAdapter valueOf(String name) {
-		switch (name) {
-		case "HIDE_ARMOR_TRIM":
-			return HIDE_ARMOR_TRIM;
-		case "HIDE_ENCHANTMENTS":
-		case "HIDE_ENCHANTS":
-			return HIDE_ENCHANTMENTS;
-		case "HIDE_ATTRIBUTES":
-			return HIDE_ATTRIBUTES;
-		case "HIDE_DYE":
-			return HIDE_DYE;
-		case "HIDE_UNBREAKABLE":
-			return HIDE_UNBREAKABLE;
-		case "HIDE_CAN_DESTROY":
-		case "HIDE_DESTROYS":
-			return HIDE_CAN_DESTROY;
-		case "HIDE_CAN_BE_PLACED_ON":
-		case "HIDE_PLACED_ON":
-			return HIDE_CAN_BE_PLACED_ON;
-		case "HIDE_POTION_EFFECTS":
-		case "HIDE_ADDITIONAL_TOOLTIP":
-		case "HIDE_MISCELLANEOUS":
-			return HIDE_MISCELLANEOUS;
-		} return null;
+		return valueOf(name, VALUES);
 	}
 	
 	/**
-	 * Equivalent of <code>Enum#values()</code>.
+	 * Equivalent of <code>values()</code>.
 	 * 
-	 * @return Enum constants
+	 * @return Pseudo-enum's constants
 	 */
 	public static ItemFlagAdapter[] values() {
 		return VALUES;
 	}
 	
 	/**
-	 * Util method used to get item flags at the
-	 * specified path inside of a configuration.
+	 * Equivalent of {@link #valueOf(String)}, but:
+	 * 	<ul>
+	 * 		<li>case insensitive</li>
+	 * 		<li>returns <code>null</code> instead of throwing {@link IllegalArgumentException}</li>
+	 * 		<li>also recognizes Bukkit- and Sponge-compatible IDs</li>
+	 * 	</ul>
 	 * 
-	 * @param configuration Configuration containing the values
-	 * @param path Path containing the values
-	 * @return Values specified at given path
+	 * <p>Will return <code>null</code> if the specified name is invalid.</p>
+	 * 
+	 * @param name Constant's name, case insensitive
+	 * @return Pseudo-enum's constant
+	 * @throws NullPointerException If <code>name == null</code>
 	 */
-	public static ItemFlagAdapter[] valuesOf(Configuration configuration, String path) {
-		List<ItemFlagAdapter> values = new ArrayList<>();
+	@Nullable(why = "Specified name may be invalid")
+	public static ItemFlagAdapter value(String name) {
+		name = name.toUpperCase();
 		
-		for (String id : configuration.getStringList(path)) {
-			ItemFlagAdapter flag = valueOf(id.toUpperCase());
+		for (ItemFlagAdapter value : VALUES) {
+			String[] ids;
 			
-			if (flag == null)
-				LogManager.log("Invalid item flag specified at " + path + " in " + configuration.getFile().getName() + ": " + id + "; skipping.", 2);
-			else values.add(flag);
-		} return values.toArray(new ItemFlagAdapter[0]);
+			if (value.name().equals(name) || (ids = value.getIDs())[0].equals(name) || ids[1].equals(name))
+				return value;
+		} return null;
 	}
 	
 }

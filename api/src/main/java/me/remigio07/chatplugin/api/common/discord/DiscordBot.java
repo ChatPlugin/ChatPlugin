@@ -25,6 +25,8 @@ import me.remigio07.chatplugin.api.common.event.discord.EmbedMessageSendEvent;
 import me.remigio07.chatplugin.api.common.event.discord.PlainMessageSendEvent;
 import me.remigio07.chatplugin.api.common.event.discord.StatusUpdateEvent;
 import me.remigio07.chatplugin.api.common.util.Utils;
+import me.remigio07.chatplugin.api.common.util.adapter.discord.ActivityTypeAdapter;
+import me.remigio07.chatplugin.api.common.util.adapter.discord.FieldAdapter;
 
 /**
  * Represents the Discord bot handled by the {@link DiscordIntegrationManager}.

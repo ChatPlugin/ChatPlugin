@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.server.chat;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
@@ -43,7 +44,7 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	protected static PrivateMessagesManager instance;
 	protected boolean enabled, soundEnabled, advancementsEnabled, advancementsIconGlowing, socialspyOnJoinEnabled, mutedPlayersBlocked, replyToLastSender;
 	protected String sentFormat, receivedFormat, socialspyFormat, senderPlaceholderFormat, recipientPlaceholderFormat, advancementsFormat;
-	protected List<PlaceholderType> placeholderPlaceholderTypes = Collections.emptyList();
+	protected Set<PlaceholderType> placeholderPlaceholderTypes = Collections.emptySet();
 	protected SoundAdapter sound;
 	protected int advancementsMaxMessageLength;
 	protected MaterialAdapter advancementsIconMaterial;
@@ -202,7 +203,7 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the list of placeholder types used to
+	 * Gets the set of placeholder types used to
 	 * translate {@link #getSenderPlaceholderFormat()}
 	 * and {@link #getRecipientPlaceholderFormat()}.
 	 * 
@@ -210,7 +211,7 @@ public abstract class PrivateMessagesManager implements ChatPluginManager {
 	 * 
 	 * @return Placeholders used to translate sender and recipient placeholders
 	 */
-	public List<PlaceholderType> getPlaceholderPlaceholderTypes() {
+	public Set<PlaceholderType> getPlaceholderPlaceholderTypes() {
 		return placeholderPlaceholderTypes;
 	}
 	

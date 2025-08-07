@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
@@ -494,7 +495,7 @@ public abstract class StorageConnector {
 	 * @throws SQLException If something goes wrong and {@link StorageMethod#isDatabase()}
 	 */
 	@NotNull
-	public abstract List<DataContainer> getMissingDataContainers() throws SQLException;
+	public abstract Set<DataContainer> getMissingDataContainers() throws SQLException;
 	
 	/**
 	 * Creates the specified data container if it does not exist already.

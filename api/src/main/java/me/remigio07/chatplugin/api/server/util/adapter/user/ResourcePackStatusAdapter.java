@@ -15,16 +15,14 @@
 
 package me.remigio07.chatplugin.api.server.util.adapter.user;
 
+import me.remigio07.chatplugin.api.common.util.PseudoEnum;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
  * Environment indipendent (Bukkit and Sponge) resource pack status adapter.
- * 
- * <p>This class is a pseudo-{@link Enum}. It contains the following methods:
- * {@link #name()}, {@link #ordinal()}, {@link #valueOf(String)} and {@link #values()}.</p>
  */
-public class ResourcePackStatusAdapter {
+public class ResourcePackStatusAdapter extends PseudoEnum<ResourcePackStatusAdapter> {
 	
 	/**
 	 * The client accepted the pack and is beginning a download of it.
@@ -42,15 +40,17 @@ public class ResourcePackStatusAdapter {
 	public static final ResourcePackStatusAdapter FAILED = new ResourcePackStatusAdapter("FAILED");
 	
 	/**
-	 * The pack URI was successfully loaded. This does not necessarily mean that the pack was loaded,
-	 * as the Vanilla client sends this even when encountering a 404 error or similar.
+	 * The pack URI was successfully loaded.
+	 * 
+	 * <p><strong>Note:</strong> This does not necessarily mean that the pack was loaded,
+	 * as the Vanilla client sends this even when encountering a 404 error or similar.</p>
 	 */
 	public static final ResourcePackStatusAdapter SUCCESSFULLY_DOWNLOADED = new ResourcePackStatusAdapter("SUCCESSFULLY_DOWNLOADED");
 	private static final ResourcePackStatusAdapter[] VALUES = new ResourcePackStatusAdapter[] { ACCEPTED, DECLINED, FAILED, SUCCESSFULLY_DOWNLOADED };
-	private String name;
+	private static int ordinal = 0;
 	
 	private ResourcePackStatusAdapter(String name) {
-		this.name = name;
+		super(name, ordinal++);
 	}
 	
 	/**
@@ -78,59 +78,50 @@ public class ResourcePackStatusAdapter {
 	}
 	
 	/**
-	 * Equivalent of {@link Enum#name()}.
-	 * 
-	 * @return Constant's name
-	 */
-	public String name() {
-		return name;
-	}
-	
-	/**
-	 * Equivalent of {@link Enum#ordinal()}.
-	 * 
-	 * @return Constant's ordinal
-	 */
-	public int ordinal() {
-		for (int i = 0; i < VALUES.length; i++)
-			if (this == VALUES[i])
-				return i;
-		return -1;
-	}
-	
-	/**
-	 * Equivalent of <code>Enum#valueOf(String)</code>,
-	 * with the only difference that instead of throwing
-	 * {@link IllegalArgumentException} <code>null</code>
-	 * is returned if the constant's name is invalid.
-	 * 
-	 * <p>This method recognizes both Bukkit's and Sponge's IDs.</p>
+	 * Equivalent of <code>valueOf(String)</code>.
 	 * 
 	 * @param name Constant's name
-	 * @return Enum constant
+	 * @return Pseudo-enum's constant
+	 * @throws NullPointerException If <code>name == null</code>
+	 * @throws IllegalArgumentException If {@link #values()}
+	 * does not contain a constant with the specified name
 	 */
-	@Nullable(why = "Instead of throwing IllegalArgumentException null is returned if the name is invalid")
 	public static ResourcePackStatusAdapter valueOf(String name) {
-		switch (name) {
-		case "ACCEPTED":
-			return ACCEPTED;
-		case "DECLINED":
-			return DECLINED;
-		case "FAILED":
-		case "FAILED_DOWNLOAD":
-			return FAILED;
-		case "SUCCESSFULLY_DOWNLOADED":
-			return SUCCESSFULLY_DOWNLOADED;
-		} return null;
+		return valueOf(name, VALUES);
 	}
 	
 	/**
-	 * Equivalent of <code>Enum#values()</code>.
+	 * Equivalent of <code>values()</code>.
 	 * 
-	 * @return Enum constants
+	 * @return Pseudo-enum's constants
 	 */
 	public static ResourcePackStatusAdapter[] values() {
 		return VALUES;
+	}
+	
+	/**
+	 * Equivalent of {@link #valueOf(String)}, but:
+	 * 	<ul>
+	 * 		<li>case insensitive</li>
+	 * 		<li>returns <code>null</code> instead of throwing {@link IllegalArgumentException}</li>
+	 * 		<li>also recognizes Bukkit- and Sponge-compatible IDs</li>
+	 * 	</ul>
+	 * 
+	 * <p>Will return <code>null</code> if the specified name is invalid.</p>
+	 * 
+	 * @param name Constant's name, case insensitive
+	 * @return Pseudo-enum's constant
+	 * @throws NullPointerException If <code>name == null</code>
+	 */
+	@Nullable(why = "Specified name may be invalid")
+	public static ResourcePackStatusAdapter value(String name) {
+		if (name.equalsIgnoreCase("FAILED_DOWNLOAD"))
+			return FAILED;
+		try {
+			return valueOf(name.toUpperCase());
+		} catch (IllegalArgumentException iae) {
+			return null;
+		}
 	}
 	
 }

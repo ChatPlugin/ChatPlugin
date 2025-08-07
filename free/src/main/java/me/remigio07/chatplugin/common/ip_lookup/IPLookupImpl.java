@@ -65,6 +65,11 @@ public class IPLookupImpl extends IPLookup {
 	}
 	
 	@Override
+	public String toString() {
+		return "IPLookupImpl{ipAddress=" + ipAddress.getHostAddress() + "}";
+	}
+	
+	@Override
 	public IPLookup setJSON(String jsonString) throws Exception {
 		json = jsonString;
 		JsonObject json = (JsonObject) Jsoner.deserialize(jsonString);

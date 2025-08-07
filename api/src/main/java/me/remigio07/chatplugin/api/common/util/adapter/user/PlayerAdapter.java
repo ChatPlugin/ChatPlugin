@@ -23,6 +23,7 @@ import java.net.SocketAddress;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -75,6 +76,21 @@ public class PlayerAdapter {
 	}
 	
 	/**
+	 * Gets this player's hash code.
+	 * 
+	 * <p>Will return {@link #getUUID()}'s (if running on online mode)
+	 * or {@link #getName()}'s (if running on offline mode) hash code
+	 * or -1 if the name is <code>null</code>.</p>
+	 * 
+	 * @return Player's hash code
+	 * @throws IllegalStateException If {@link ChatPlugin#isOnlineMode()} cannot be run yet
+	 */
+	@Override
+	public int hashCode() {
+		return ChatPlugin.getInstance().isOnlineMode() ? getUUID().hashCode() : getName() == null ? -1 : getName().hashCode();
+	}
+	
+	/**
 	 * Checks if another object is an instance of {@link PlayerAdapter} and if this
 	 * player's {@link #getUUID()} (if running on online mode) or {@link #getName()}
 	 * (if running on offline mode) value is equal to the other object's one.
@@ -88,19 +104,12 @@ public class PlayerAdapter {
 		return obj instanceof PlayerAdapter ? ChatPlugin.getInstance().isOnlineMode() ? ((PlayerAdapter) obj).getUUID().equals(getUUID()) : ((PlayerAdapter) obj).getName() == null ? false : ((PlayerAdapter) obj).getName().equalsIgnoreCase(getName()) : false;
 	}
 	
-	/**
-	 * Gets this player's hash code.
-	 * 
-	 * <p>Will return {@link #getUUID()}'s (if running on online mode)
-	 * or {@link #getName()}'s (if running on offline mode) hash code
-	 * or -1 if the name is <code>null</code>.</p>
-	 * 
-	 * @return Player's hash code
-	 * @throws IllegalStateException If {@link ChatPlugin#isOnlineMode()} cannot be run yet
-	 */
 	@Override
-	public int hashCode() {
-		return ChatPlugin.getInstance().isOnlineMode() ? getUUID().hashCode() : getName() == null ? -1 : getName().hashCode();
+	public String toString() {
+		return new StringJoiner(", ", "PlayerAdapter{", "}")
+				.add("uuid=" + getUUID().toString())
+				.add("name=\"" + getName() + "\"")
+				.toString();
 	}
 	
 	/**
@@ -164,24 +173,6 @@ public class PlayerAdapter {
 	}
 	
 	/**
-	 * Gets this player's name.
-	 * 
-	 * @return Player's name
-	 */
-	public String getName() {
-		switch (Environment.getCurrent()) {
-		case BUKKIT:
-			return bukkitValue().getName();
-		case SPONGE:
-			return spongeValue().getName();
-		case BUNGEECORD:
-			return bungeeCordValue().getName();
-		case VELOCITY:
-			return velocityValue().getUsername();
-		} return null;
-	}
-	
-	/**
 	 * Gets this player's UUID.
 	 * 
 	 * @return Player's UUID
@@ -196,6 +187,24 @@ public class PlayerAdapter {
 			return bungeeCordValue().getUniqueId();
 		case VELOCITY:
 			return velocityValue().getUniqueId();
+		} return null;
+	}
+	
+	/**
+	 * Gets this player's name.
+	 * 
+	 * @return Player's name
+	 */
+	public String getName() {
+		switch (Environment.getCurrent()) {
+		case BUKKIT:
+			return bukkitValue().getName();
+		case SPONGE:
+			return spongeValue().getName();
+		case BUNGEECORD:
+			return bungeeCordValue().getName();
+		case VELOCITY:
+			return velocityValue().getUsername();
 		} return null;
 	}
 	

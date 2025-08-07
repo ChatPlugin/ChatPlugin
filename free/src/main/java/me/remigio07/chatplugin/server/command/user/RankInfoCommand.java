@@ -16,7 +16,9 @@
 package me.remigio07.chatplugin.server.command.user;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.server.language.Language;
@@ -30,7 +32,7 @@ import me.remigio07.chatplugin.server.command.BaseCommand;
 
 public class RankInfoCommand extends BaseCommand {
 	
-	private static final List<PlaceholderType> PLACEHOLDERS = Arrays.asList(PlaceholderType.PLAYER);
+	private static final Set<PlaceholderType> PLACEHOLDER_TYPES = EnumSet.of(PlaceholderType.PLAYER);
 	
 	public RankInfoCommand() {
 		super("/rankinfo <player>");
@@ -52,7 +54,7 @@ public class RankInfoCommand extends BaseCommand {
 				if (player != null)
 					if (player.isVanished() && !sender.hasPermission(VanishManager.VANISH_PERMISSION))
 						sender.sendMessage(language.getMessage("misc.player-not-found", args[0]));
-					else sender.sendMessage(PlaceholderManager.getInstance().translatePlaceholders(language.getMessage("commands.rankinfo"), player, language, PLACEHOLDERS));
+					else sender.sendMessage(PlaceholderManager.getInstance().translatePlaceholders(language.getMessage("commands.rankinfo"), player, language, PLACEHOLDER_TYPES));
 				else sender.sendMessage(language.getMessage("misc.disabled-world"));
 			} else sender.sendMessage(language.getMessage("misc.player-not-found", args[0]));
 		} else sendUsage(sender, language);

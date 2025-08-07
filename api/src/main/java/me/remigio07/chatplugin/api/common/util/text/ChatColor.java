@@ -30,6 +30,7 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyle;
 import org.spongepowered.api.text.format.TextStyles;
 
+import me.remigio07.chatplugin.api.common.util.PseudoEnum;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
@@ -37,13 +38,16 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
- * Environment-indipendent (Bukkit, Sponge, BungeeCord and Velocity) chat color API with 1.16+ hex color codes support.
+ * Environment-indipendent (Bukkit, Sponge, BungeeCord and
+ * Velocity) chat color API with 1.16+ hex color codes support.
  * 
- * <p>This class is a pseudo-{@link Enum}. It contains the following methods:
- * {@link #name()}, {@link #ordinal()}, {@link #valueOf(String)} and {@link #values()}.</p>
+ * <p>This class behaves like a special {@link PseudoEnum}, even though
+ * it does not extend it directly, for compatibility reasons. Make sure
+ * to read the documentation of the methods you are going to use.</p>
  */
 public class ChatColor {
 	
+	// these need to stay up here to in order to be initialized before the constants
 	private static final Map<Character, ChatColor> BY_CHAR = new HashMap<>();
 	private static final Map<String, ChatColor> BY_NAME = new HashMap<>();
 	
@@ -300,6 +304,29 @@ public class ChatColor {
 	}
 	
 	/**
+	 * Gets this color's hash code.
+	 * 
+	 * <p>Will return {@link #toString()}'s hash code.</p>
+	 * 
+	 * @return Color's hash code
+	 */
+	@Override
+	public int hashCode() {
+		return toString.hashCode();
+	}
+	
+	/**
+	 * Checks if another object is an instance of {@link ChatColor} and if this
+	 * color's {@link #toString()} value is equal to the other object's one.
+	 * 
+	 * @return Whether the two objects are equal
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof ChatColor && ((ChatColor) obj).toString().equals(toString());
+	}
+	
+	/**
 	 * Gets the string representation of this color.
 	 * 
 	 * <p>Will return <code>'§' + </code>{@link #getCode()} if {@link #isDefaultColor()} and
@@ -310,30 +337,6 @@ public class ChatColor {
 	@Override
 	public String toString() {
 		return toString;
-	}
-	
-	/**
-	 * Checks if another object is an instance of {@link ChatColor} and if this
-	 * color's {@link #toString()} value is equal to the other object's one.
-	 * 
-	 * @param obj Object to compare
-	 * @return Whether the two objects are equal
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		return obj instanceof ChatColor && ((ChatColor) obj).toString().equals(toString());
-	}
-	
-	/**
-	 * Gets this color's hash code.
-	 * 
-	 * <p>Will return {@link #toString()}'s hash code.</p>
-	 * 
-	 * @return Color's hash code
-	 */
-	@Override
-	public int hashCode() {
-		return toString.hashCode();
 	}
 	
 	/**
@@ -348,7 +351,7 @@ public class ChatColor {
 	public org.bukkit.ChatColor bukkitValue() {
 		if (Environment.isBukkit())
 			return org.bukkit.ChatColor.valueOf(isDefaultColor() ? name.equals(OBFUSCATED.name) ? "MAGIC" : name : RESET.name);
-		else throw new UnsupportedOperationException("Unable to adapt chat color to a Bukkit's ChatColor on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt chat color to a Bukkit's ChatColor on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -363,13 +366,14 @@ public class ChatColor {
 	public org.spongepowered.api.text.TextElement spongeValue() {
 		if (Environment.isSponge())
 			return SpongeChatColor.adapt(this);
-		else throw new UnsupportedOperationException("Unable to adapt chat color to a Sponge's TextElement on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt chat color to a Sponge's TextElement on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
 	 * Gets the chat color adapted for BungeeCord environments.
 	 * 
-	 * <p>This method supports hex colors (<code>!</code>{@link #isDefaultColor()}).</p>
+	 * <p>This method supports hex colors
+	 * (<code>!</code>{@link #isDefaultColor()}).</p>
 	 * 
 	 * @return BungeeCord-adapted chat color
 	 * @throws UnsupportedOperationException If !{@link Environment#isBungeeCord()}
@@ -378,13 +382,14 @@ public class ChatColor {
 	public net.md_5.bungee.api.ChatColor bungeeValue() {
 		if (Environment.isBungeeCord())
 			return isDefaultColor() ? net.md_5.bungee.api.ChatColor.valueOf(name) : net.md_5.bungee.api.ChatColor.of(color);
-		else throw new UnsupportedOperationException("Unable to adapt chat color to a BungeeCord's ChatColor on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt chat color to a BungeeCord's ChatColor on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
 	 * Gets the chat color adapted for Velocity environments.
 	 * 
-	 * <p>This method supports hex colors (<code>!</code>{@link #isDefaultColor()}).</p>
+	 * <p>This method supports hex colors
+	 * (<code>!</code>{@link #isDefaultColor()}).</p>
 	 * 
 	 * @return Velocity-adapted chat color
 	 * @throws UnsupportedOperationException If !{@link Environment#isVelocity()}
@@ -392,13 +397,12 @@ public class ChatColor {
 	public net.kyori.adventure.text.format.TextFormat velocityValue() {
 		if (Environment.isVelocity())
 			return AdventureChatColor.adapt(this);
-		else throw new UnsupportedOperationException("Unable to adapt chat color to a Velocity's TextFormat on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt chat color to a Velocity's TextFormat on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
-	 * Equivalent of {@link Enum#name()}.
-	 * 
-	 * <p>Will return a hex string (example: "#FF55FF") if <code>!</code>{@link #isDefaultColor()}.</p>
+	 * Equivalent of {@link Enum#name()}, but will return a hex string
+	 * (example: "#FF55FF") if <code>!</code>{@link #isDefaultColor()}.
 	 * 
 	 * @return Constant's name
 	 */
@@ -407,9 +411,8 @@ public class ChatColor {
 	}
 	
 	/**
-	 * Equivalent of {@link Enum#ordinal()}.
-	 * 
-	 * <p>Will return -1 if <code>!</code>{@link #isDefaultColor()}.</p>
+	 * Equivalent of {@link Enum#ordinal()}, but will return
+	 * -1 if <code>!</code>{@link #isDefaultColor()}.
 	 * 
 	 * @return Constant's ordinal
 	 */
@@ -423,7 +426,8 @@ public class ChatColor {
 	/**
 	 * Gets this color's code.
 	 * 
-	 * <p>Will return <code>null</code> if <code>!</code>{@link #isDefaultColor()}.</p>
+	 * <p>Will return <code>null</code> if
+	 * <code>!</code>{@link #isDefaultColor()}.</p>
 	 * 
 	 * @return Color's code
 	 */
@@ -722,25 +726,28 @@ public class ChatColor {
 	}
 	
 	/**
-	 * Equivalent of <code>Enum#valueOf(String)</code>,
-	 * with the only difference that instead of throwing
-	 * {@link IllegalArgumentException} <code>null</code>
-	 * is returned if the constant's name is invalid.
-	 * 
-	 * <p>This method recognizes Bukkit's, Sponge's BungeeCord's and Velocity's IDs.</p>
+	 * Equivalent of <code>valueOf(String)</code>.
 	 * 
 	 * @param name Constant's name
-	 * @return Enum constant
+	 * @return Pseudo-enum's constant
+	 * @throws NullPointerException If <code>name == null</code>
+	 * @throws IllegalArgumentException If {@link #values()}
+	 * does not contain a constant with the specified name
 	 */
-	@Nullable(why = "Instead of throwing IllegalArgumentException null is returned if the constant's name is invalid")
 	public static ChatColor valueOf(String name) {
-		return BY_NAME.get(name);
+		if (name == null)
+			throw new NullPointerException();
+		ChatColor value = BY_NAME.get(name);
+		
+		if (value == null)
+			throw new IllegalArgumentException("No pseudo-enum constant ChatColor." + name);
+		return value;
 	}
 	
 	/**
-	 * Equivalent of <code>Enum#values()</code>.
+	 * Equivalent of <code>values()</code>.
 	 * 
-	 * @return Enum constants
+	 * @return Pseudo-enum's constants
 	 */
 	public static ChatColor[] values() {
 		return VALUES;

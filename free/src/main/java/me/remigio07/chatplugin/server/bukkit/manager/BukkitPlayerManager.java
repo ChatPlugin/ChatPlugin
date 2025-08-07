@@ -66,7 +66,7 @@ import me.remigio07.chatplugin.api.server.scoreboard.ScoreboardManager;
 import me.remigio07.chatplugin.api.server.tablist.Tablist;
 import me.remigio07.chatplugin.api.server.tablist.TablistManager;
 import me.remigio07.chatplugin.api.server.tablist.custom_suffix.CustomSuffixManager;
-import me.remigio07.chatplugin.api.server.tablist.custom_suffix.RenderType;
+import me.remigio07.chatplugin.api.server.tablist.custom_suffix.RenderTypeAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.scoreboard.ObjectiveAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
@@ -184,7 +184,7 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 			
 			// custom suffix
 			if (CustomSuffixManager.getInstance().isEnabled() && !serverPlayer.isBedrockPlayer()) {
-				Objective customSuffix = registerNewObjective(scoreboard, "tablist_suffix", CustomSuffixManager.getInstance().getRenderType() == RenderType.HEARTS ? "health" : "dummy");
+				Objective customSuffix = registerNewObjective(scoreboard, "tablist_suffix", CustomSuffixManager.getInstance().getRenderType() == RenderTypeAdapter.HEARTS ? "health" : "dummy");
 				
 				if (VersionUtils.getVersion().isAtLeast(Version.V1_13_2))
 					customSuffix.setRenderType(CustomSuffixManager.getInstance().getRenderType().bukkitValue());

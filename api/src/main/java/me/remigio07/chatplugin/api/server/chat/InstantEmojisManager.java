@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.server.chat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.regex.Pattern;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
@@ -165,6 +166,14 @@ public abstract class InstantEmojisManager implements ChatPluginManager {
 			this.id = id;
 			this.string = ChatColor.translate(string);
 			literalPattern = Pattern.quote(id);
+		}
+		
+		@Override
+		public String toString() {
+			return new StringJoiner(", ", "InstantEmoji{", "}")
+					.add("id=\"" + id + "\"")
+					.add("string=\"" + string + "\"")
+					.toString();
 		}
 		
 		/**

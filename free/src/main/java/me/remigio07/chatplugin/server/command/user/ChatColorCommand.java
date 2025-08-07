@@ -100,10 +100,14 @@ public class ChatColorCommand extends BaseCommand {
 		if (arg.length() == 7)
 			try {
 				return ChatColor.of(arg);
-			} catch (NumberFormatException e) {
+			} catch (NumberFormatException nfe) {
 				
 			}
-		return ChatColor.valueOf(arg.toUpperCase());
+		try {
+			return ChatColor.valueOf(arg.toUpperCase());
+		} catch (IllegalArgumentException iae) {
+			return null;
+		}
 	}
 	
 }

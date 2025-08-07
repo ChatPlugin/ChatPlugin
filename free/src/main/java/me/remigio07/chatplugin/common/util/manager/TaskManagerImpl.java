@@ -29,7 +29,9 @@ public class TaskManagerImpl extends TaskManager {
 	@Override
 	public void load() throws ChatPluginManagerException {
 		instance = this;
+		long ms = System.currentTimeMillis();
 		enabled = true;
+		loadTime = System.currentTimeMillis() - ms; // kinda pointless but let's leave it for consistency
 	}
 	
 	@Override

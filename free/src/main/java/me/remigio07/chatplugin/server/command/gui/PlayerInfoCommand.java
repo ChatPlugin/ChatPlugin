@@ -16,7 +16,9 @@
 package me.remigio07.chatplugin.server.command.gui;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
@@ -32,6 +34,8 @@ import me.remigio07.chatplugin.server.command.BaseCommand;
 import me.remigio07.chatplugin.server.gui.InternalGUIs;
 
 public class PlayerInfoCommand extends BaseCommand {
+	
+	private static final Set<PlaceholderType> PLACEHOLDER_TYPES = EnumSet.allOf(PlaceholderType.class);
 	
 	public PlayerInfoCommand() {
 		super("/playerinfo <player> [-chat]");
@@ -70,7 +74,7 @@ public class PlayerInfoCommand extends BaseCommand {
 					if (target != null) {
 						TaskManager.runAsync(() -> {
 							target.getIPLookup(true);
-							sender.sendMessage(PlaceholderManager.getInstance().translatePlaceholders(language.getMessage("commands.playerinfo"), target, language, Arrays.asList(PlaceholderType.values())));
+							sender.sendMessage(PlaceholderManager.getInstance().translatePlaceholders(language.getMessage("commands.playerinfo"), target, language, PLACEHOLDER_TYPES));
 						}, 0L);
 					} else sender.sendMessage(language.getMessage("misc.disabled-world"));
 				} else sender.sendMessage(language.getMessage("misc.player-not-found", args[0]));

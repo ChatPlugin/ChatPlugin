@@ -22,6 +22,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.spongepowered.api.item.enchantment.EnchantmentType;
 import org.spongepowered.api.item.enchantment.EnchantmentTypes;
 
+import me.remigio07.chatplugin.api.common.util.PseudoEnum;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -29,11 +30,8 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
  * Environment indipendent (Bukkit and Sponge) enchantment adapter.
- * 
- * <p>This class is a pseudo-{@link Enum}. It contains the following methods:
- * {@link #name()}, {@link #ordinal()}, {@link #valueOf(String)} and {@link #values()}.</p>
  */
-public class EnchantmentAdapter {
+public class EnchantmentAdapter extends PseudoEnum<EnchantmentAdapter> {
 	
 	/**
 	 * Increases the speed at which a player may mine underwater.
@@ -279,7 +277,7 @@ public class EnchantmentAdapter {
 	 */
 	public static final EnchantmentAdapter WIND_BURST = new EnchantmentAdapter("WIND_BURST", new String[] { "wind_burst", "wind" }, 3, Version.V1_20_5);
 	private static final EnchantmentAdapter[] VALUES = new EnchantmentAdapter[] { AQUA_AFFINITY, BANE_OF_ARTHROPODS, BINDING_CURSE, BLAST_PROTECTION, BREACH, CHANNELING, DENSITY, DEPTH_STRIDER, EFFICIENCY, FEATHER_FALLING, FIRE_ASPECT, FIRE_PROTECTION, FLAME, FORTUNE, FROST_WALKER, IMPALING, INFINITY, KNOCKBACK, LOOTING, LOYALTY, LUCK_OF_THE_SEA, LURE, MENDING, MULTISHOT, PIERCING, POWER, PROJECTILE_PROTECTION, PROTECTION, PUNCH, QUICK_CHARGE, RESPIRATION, RIPTIDE, SHARPNESS, SILK_TOUCH, SMITE, SOUL_SPEED, SWEEPING_EDGE, SWIFT_SNEAK, THORNS, UNBREAKING, VANISHING_CURSE, WIND_BURST };
-	private String name;
+	private static int ordinal = 0;
 	private String[] aliases;
 	private int maximumLevel;
 	private Version minimumVersion;
@@ -293,7 +291,7 @@ public class EnchantmentAdapter {
 	}
 	
 	private EnchantmentAdapter(String name, String[] aliases, int maximumLevel, Version minimumVersion) {
-		this.name = name;
+		super(name, ordinal++);
 		this.aliases = aliases;
 		this.maximumLevel = maximumLevel;
 		this.minimumVersion = minimumVersion;
@@ -336,27 +334,6 @@ public class EnchantmentAdapter {
 	}
 	
 	/**
-	 * Equivalent of {@link Enum#name()}.
-	 * 
-	 * @return Constant's name
-	 */
-	public String name() {
-		return name;
-	}
-	
-	/**
-	 * Equivalent of {@link Enum#ordinal()}.
-	 * 
-	 * @return Constant's ordinal
-	 */
-	public int ordinal() {
-		for (int i = 0; i < VALUES.length; i++)
-			if (this == VALUES[i])
-				return i;
-		return -1;
-	}
-	
-	/**
 	 * Gets this enchantment's aliases.
 	 * 
 	 * @return Enchantment's aliases
@@ -396,35 +373,57 @@ public class EnchantmentAdapter {
 	}
 	
 	/**
-	 * Equivalent of <code>Enum#valueOf(String)</code>,
-	 * with the only difference that instead of throwing
-	 * {@link IllegalArgumentException} <code>null</code>
-	 * is returned if the constant's name is invalid.
-	 * 
-	 * <p>This method recognizes both Bukkit's and Sponge's IDs.</p>
+	 * Equivalent of <code>valueOf(String)</code>.
 	 * 
 	 * @param name Constant's name
-	 * @return Enum constant
+	 * @return Pseudo-enum's constant
+	 * @throws NullPointerException If <code>name == null</code>
+	 * @throws IllegalArgumentException If {@link #values()}
+	 * does not contain a constant with the specified name
 	 */
-	@Nullable(why = "Instead of throwing IllegalArgumentException null is returned if the constant's name is invalid")
 	public static EnchantmentAdapter valueOf(String name) {
+		return valueOf(name, VALUES);
+	}
+	
+	/**
+	 * Equivalent of <code>values()</code>.
+	 * 
+	 * @return Pseudo-enum's constants
+	 */
+	public static EnchantmentAdapter[] values() {
+		return VALUES;
+	}
+	
+	/**
+	 * Equivalent of {@link #valueOf(String)}, but:
+	 * 	<ul>
+	 * 		<li>case insensitive</li>
+	 * 		<li>returns <code>null</code> instead of throwing {@link IllegalArgumentException}</li>
+	 * 		<li>also recognizes Bukkit- and Sponge-compatible IDs</li>
+	 * 	</ul>
+	 * 
+	 * <p>Will return <code>null</code> if the specified name is invalid.</p>
+	 * 
+	 * @param name Constant's name, case insensitive
+	 * @return Pseudo-enum's constant
+	 * @throws NullPointerException If <code>name == null</code>
+	 */
+	@Nullable(why = "Specified name may be invalid")
+	public static EnchantmentAdapter value(String name) {
+		String lowerCase = name.toLowerCase();
+		
 		for (EnchantmentAdapter enchantment : VALUES) {
 			String[] aliases = enchantment.getAliases();
 			
 			for (int i = 0; i < aliases.length; i++) {
-				if (aliases[i].equalsIgnoreCase(name) || lookupWithoutUnderscore(aliases[i], name))
+				if (lowerCase.equals(aliases[i]) || lookupWithoutUnderscore(aliases[i], lowerCase))
 					return enchantment;
 			}
 		} return null;
 	}
 	
-	/**
-	 * Equivalent of <code>Enum#values()</code>.
-	 * 
-	 * @return Enum constants
-	 */
-	public static EnchantmentAdapter[] values() {
-		return VALUES;
+	private static boolean lookupWithoutUnderscore(String alias, String stringToCheck) {
+		return alias.contains("_") && alias.replace("_", "").equals(stringToCheck);
 	}
 	
 	/**
@@ -440,10 +439,6 @@ public class EnchantmentAdapter {
 			if (!onlySupported || enchantment.isSupported())
 				list.add(enchantment.getAliases()[0]);
 		return list;
-	}
-	
-	private static boolean lookupWithoutUnderscore(String alias, String stringToCheck) {
-		return alias.contains("_") && alias.replace("_", "").equalsIgnoreCase(stringToCheck);
 	}
 	
 }

@@ -18,6 +18,8 @@ package me.remigio07.chatplugin.api.server.util.adapter.inventory;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 
+import me.remigio07.chatplugin.api.common.util.PseudoEnum;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.item.ItemStackAdapter;
 import me.remigio07.chatplugin.bootstrap.Environment;
@@ -99,11 +101,8 @@ public class ClickEventAdapter {
 	
 	/**
 	 * Environment indipendent (Bukkit and Sponge) click type adapter.
-	 * 
-	 * <p>This class is a pseudo-{@link Enum}. It contains the following methods:
-	 * {@link #name()}, {@link #ordinal()}, {@link #valueOf(String)} and {@link #values()}.</p>
 	 */
-	public static class ClickTypeAdapter {
+	public static class ClickTypeAdapter extends PseudoEnum<ClickTypeAdapter> {
 		
 		/**
 		 * The left (or primary) mouse button.
@@ -128,14 +127,16 @@ public class ClickEventAdapter {
 		/**
 		 * Clicking the left mouse button on the grey area around the inventory.
 		 * 
-		 * <p><strong>Note:</strong> this does not apply to newer versions.</p>
+		 * <p><strong>Note:</strong> only used by Bukkit pre-1.9 servers.
+		 * <br><strong>Maximum version:</strong> {@linkplain Version#V1_8_9 1.8.9}</p>
 		 */
 		public static final ClickTypeAdapter WINDOW_BORDER_LEFT = new ClickTypeAdapter("WINDOW_BORDER_LEFT");
 		
 		/**
 		 * Clicking the right mouse button on the grey area around the inventory.
 		 * 
-		 * <p><strong>Note:</strong> this does not apply to newer versions.</p>
+		 * <p><strong>Note:</strong> only used by Bukkit pre-1.9 servers.
+		 * <br><strong>Maximum version:</strong> {@linkplain Version#V1_8_9 1.8.9}</p>
 		 */
 		public static final ClickTypeAdapter WINDOW_BORDER_RIGHT = new ClickTypeAdapter("WINDOW_BORDER_RIGHT");
 		
@@ -172,7 +173,7 @@ public class ClickEventAdapter {
 		/**
 		 * The "swap item with offhand" key (defaults to F).
 		 * 
-		 * <p><strong>Note:</strong> this only applies to 1.9+.</p>
+		 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
 		 */
 		public static final ClickTypeAdapter SWAP_OFFHAND = new ClickTypeAdapter("SWAP_OFFHAND");
 		
@@ -184,10 +185,10 @@ public class ClickEventAdapter {
 		 */
 		public static final ClickTypeAdapter UNKNOWN = new ClickTypeAdapter("UNKNOWN");
 		private static final ClickTypeAdapter[] VALUES = new ClickTypeAdapter[] { LEFT, SHIFT_LEFT, RIGHT, SHIFT_RIGHT, WINDOW_BORDER_LEFT, WINDOW_BORDER_RIGHT, MIDDLE, NUMBER_KEY, DOUBLE_CLICK, DROP, CONTROL_DROP, CREATIVE, SWAP_OFFHAND, UNKNOWN };
-		private String name;
+		private static int ordinal = 0;
 		
 		private ClickTypeAdapter(String name) {
-			this.name = name;
+			super(name, ordinal++);
 		}
 		
 		/**
@@ -203,47 +204,22 @@ public class ClickEventAdapter {
 		}
 		
 		/**
-		 * Equivalent of {@link Enum#name()}.
-		 * 
-		 * @return Constant's name
-		 */
-		public String name() {
-			return name;
-		}
-		
-		/**
-		 * Equivalent of {@link Enum#ordinal()}.
-		 * 
-		 * @return Constant's ordinal
-		 */
-		public int ordinal() {
-			for (int i = 0; i < VALUES.length; i++)
-				if (this == VALUES[i])
-					return i;
-			return -1;
-		}
-		
-		/**
-		 * Equivalent of <code>Enum#valueOf(String)</code>,
-		 * with the only difference that instead of throwing
-		 * {@link IllegalArgumentException} <code>null</code>
-		 * is returned if the constant's name is invalid.
+		 * Equivalent of <code>valueOf(String)</code>.
 		 * 
 		 * @param name Constant's name
-		 * @return Enum constant
+		 * @return Pseudo-enum's constant
+		 * @throws NullPointerException If <code>name == null</code>
+		 * @throws IllegalArgumentException If {@link #values()}
+		 * does not contain a constant with the specified name
 		 */
-		@Nullable(why = "Instead of throwing IllegalArgumentException null is returned if the constant's name is invalid")
 		public static ClickTypeAdapter valueOf(String name) {
-			for (ClickTypeAdapter type : VALUES)
-				if (type.name().equals(name))
-					return type;
-			return null;
+			return valueOf(name, VALUES);
 		}
 		
 		/**
-		 * Equivalent of <code>Enum#values()</code>.
+		 * Equivalent of <code>values()</code>.
 		 * 
-		 * @return Enum constants
+		 * @return Pseudo-enum's constants
 		 */
 		public static ClickTypeAdapter[] values() {
 			return VALUES;
@@ -253,11 +229,8 @@ public class ClickEventAdapter {
 	
 	/**
 	 * Environment indipendent (Bukkit and Sponge) click action adapter.
-	 * 
-	 * <p>This class is a pseudo-{@link Enum}. It contains the following methods:
-	 * {@link #name()}, {@link #ordinal()}, {@link #valueOf(String)} and {@link #values()}.</p>
 	 */
-	public static class ClickActionAdapter {
+	public static class ClickActionAdapter extends PseudoEnum<ClickActionAdapter> {
 		
 		/**
 		 * Nothing will happen from the click.
@@ -294,7 +267,8 @@ public class ClickEventAdapter {
 		public static final ClickActionAdapter PLACE_ALL = new ClickActionAdapter("PLACE_ALL");
 		
 		/**
-		 * Some of the items from the cursor are moved to the clicked slot (usually up to the max stack size).
+		 * Some of the items from the cursor are moved to the
+		 * clicked slot (usually up to the max stack size).
 		 */
 		public static final ClickActionAdapter PLACE_SOME = new ClickActionAdapter("PLACE_SOME");
 		
@@ -336,13 +310,15 @@ public class ClickEventAdapter {
 		/**
 		 * The clicked item is moved to the hotbar, and the item
 		 * currently there is re-added to the player's inventory.
-		 * The hotbar includes the player's off hand.
+		 * 
+		 * <p><strong>Note:</strong> the hotbar includes the off hand.</p>
 		 */
 		public static final ClickActionAdapter HOTBAR_MOVE_AND_READD = new ClickActionAdapter("HOTBAR_MOVE_AND_READD");
 		
 		/**
 		 * The clicked slot and the picked hotbar slot are swapped.
-		 * The hotbar includes the player's off hand.
+		 * 
+		 * <p><strong>Note:</strong> the hotbar includes the off hand.</p>
 		 */
 		public static final ClickActionAdapter HOTBAR_SWAP = new ClickActionAdapter("HOTBAR_SWAP");
 		
@@ -352,7 +328,8 @@ public class ClickEventAdapter {
 		public static final ClickActionAdapter CLONE_STACK = new ClickActionAdapter("CLONE_STACK");
 		
 		/**
-		 * The inventory is searched for the same material, and they are put on the cursor up to its max stack size.
+		 * The inventory is searched for the same material, and
+		 * they are put on the cursor up to its max stack size.
 		 */
 		public static final ClickActionAdapter COLLECT_TO_CURSOR = new ClickActionAdapter("COLLECT_TO_CURSOR");
 		
@@ -361,10 +338,10 @@ public class ClickEventAdapter {
 		 */
 		public static final ClickActionAdapter UNKNOWN = new ClickActionAdapter("UNKNOWN");
 		private static final ClickActionAdapter[] VALUES = new ClickActionAdapter[] { NOTHING, PICKUP_ALL, PICKUP_SOME, PICKUP_HALF, PICKUP_ONE, PLACE_ALL, PLACE_SOME, PLACE_ONE, SWAP_WITH_CURSOR, DROP_ALL_CURSOR, DROP_ONE_CURSOR, DROP_ALL_SLOT, DROP_ONE_SLOT, MOVE_TO_OTHER_INVENTORY, HOTBAR_MOVE_AND_READD, HOTBAR_SWAP, CLONE_STACK, COLLECT_TO_CURSOR, UNKNOWN };
-		private String name;
+		private static int ordinal = 0;
 		
 		private ClickActionAdapter(String name) {
-			this.name = name;
+			super(name, ordinal++);
 		}
 		
 		/**
@@ -380,47 +357,22 @@ public class ClickEventAdapter {
 		}
 		
 		/**
-		 * Equivalent of {@link Enum#name()}.
-		 * 
-		 * @return Constant's name
-		 */
-		public String name() {
-			return name;
-		}
-		
-		/**
-		 * Equivalent of {@link Enum#ordinal()}.
-		 * 
-		 * @return Constant's ordinal
-		 */
-		public int ordinal() {
-			for (int i = 0; i < VALUES.length; i++)
-				if (this == VALUES[i])
-					return i;
-			return -1;
-		}
-		
-		/**
-		 * Equivalent of <code>Enum#valueOf(String)</code>,
-		 * with the only difference that instead of throwing
-		 * {@link IllegalArgumentException} <code>null</code>
-		 * is returned if the constant's name is invalid.
+		 * Equivalent of <code>valueOf(String)</code>.
 		 * 
 		 * @param name Constant's name
-		 * @return Enum constant
+		 * @return Pseudo-enum's constant
+		 * @throws NullPointerException If <code>name == null</code>
+		 * @throws IllegalArgumentException If {@link #values()}
+		 * does not contain a constant with the specified name
 		 */
-		@Nullable(why = "Instead of throwing IllegalArgumentException null is returned if the constant's name is invalid")
 		public static ClickActionAdapter valueOf(String name) {
-			for (ClickActionAdapter action : VALUES)
-				if (action.name().equals(name))
-					return action;
-			return null;
+			return valueOf(name, VALUES);
 		}
 		
 		/**
-		 * Equivalent of <code>Enum#values()</code>.
+		 * Equivalent of <code>values()</code>.
 		 * 
-		 * @return Enum constants
+		 * @return Pseudo-enum's constants
 		 */
 		public static ClickActionAdapter[] values() {
 			return VALUES;

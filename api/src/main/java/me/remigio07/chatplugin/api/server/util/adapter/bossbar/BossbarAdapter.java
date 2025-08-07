@@ -55,6 +55,11 @@ public class BossbarAdapter {
 		this.bossbar = bossbar;
 	}
 	
+	@Override
+	public String toString() {
+		return "BossbarAdapter{id=" + (id == null ? id : "\"" + id + "\"") + "}";
+	}
+	
 	/**
 	 * Constructs a bossbar adapter with given ID, color and style.
 	 * 
@@ -172,7 +177,7 @@ public class BossbarAdapter {
 	 */
 	@NotNull
 	public BossbarColorAdapter getColor() {
-		return BossbarColorAdapter.valueOf(Environment.isBukkit() ? bukkitValue().getColor().name() : spongeValue().getColor().getId());
+		return BossbarColorAdapter.value(Environment.isBukkit() ? bukkitValue().getColor().name() : spongeValue().getColor().getId());
 	}
 	
 	/**
@@ -193,7 +198,7 @@ public class BossbarAdapter {
 	 */
 	@NotNull
 	public BossbarStyleAdapter getStyle() {
-		return BossbarStyleAdapter.valueOf(Environment.isBukkit() ? bukkitValue().getStyle().name() : spongeValue().getOverlay().getId());
+		return BossbarStyleAdapter.value(Environment.isBukkit() ? bukkitValue().getStyle().name() : spongeValue().getOverlay().getId());
 	}
 	
 	/**

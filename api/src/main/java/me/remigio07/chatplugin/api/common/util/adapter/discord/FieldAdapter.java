@@ -13,7 +13,7 @@
  * 	<https://remigio07.me/chatplugin>
  */
 
-package me.remigio07.chatplugin.api.common.discord;
+package me.remigio07.chatplugin.api.common.util.adapter.discord;
 
 import java.util.List;
 import java.util.stream.Collectors;

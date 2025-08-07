@@ -45,7 +45,7 @@ public class WelcomeMessageManagerImpl extends WelcomeMessageManager {
 			LogManager.log("Translation for main language (\"{0}\") not found at \"join-quit-modules.welcome-messages.values.{0}\" in join-quit-modules.yml; disabling module.", 2, Language.getMainLanguage().getID());
 			return;
 		} delay = ConfigurationType.JOIN_QUIT_MODULES.get().getLong("join-quit-modules.welcome-messages.settings.delay-ms");
-		placeholderTypes = PlaceholderType.getPlaceholders(ConfigurationType.JOIN_QUIT_MODULES.get().getStringList("join-quit-modules.welcome-messages.settings.placeholder-types"));
+		placeholderTypes = PlaceholderType.getTypes(ConfigurationType.JOIN_QUIT_MODULES.get().getStringList("join-quit-modules.welcome-messages.settings.placeholder-types"));
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}

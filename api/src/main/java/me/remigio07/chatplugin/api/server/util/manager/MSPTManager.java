@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.server.util.manager;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
@@ -280,6 +281,14 @@ public abstract class MSPTManager implements ChatPluginManager, Runnable {
 		@Override
 		public int compareTo(MSPTQuality o) {
 			return maximumMSPT < o.getMaximumMSPT() ? -1 : maximumMSPT == o.getMaximumMSPT() ? 0 : 1;
+		}
+		
+		@Override
+		public String toString() {
+			return new StringJoiner(", ", "MSPTQuality{", "}")
+					.add("id=\"" + id + "\"")
+					.add("maximumMSPT=" + maximumMSPT)
+					.toString();
 		}
 		
 		/**

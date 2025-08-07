@@ -15,6 +15,8 @@
 
 package me.remigio07.chatplugin.api.server.util.adapter.block;
 
+import java.util.StringJoiner;
+
 import org.bukkit.block.Block;
 import org.spongepowered.api.block.BlockSnapshot;
 
@@ -26,7 +28,7 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 public class BlockAdapter {
 	
 	private Object block;
-	private MaterialAdapter material;
+	private MaterialAdapter type;
 	
 	/**
 	 * Constructs a block adapter that accepts one of the following specified as input:
@@ -39,7 +41,17 @@ public class BlockAdapter {
 	 */
 	public BlockAdapter(Object block) {
 		this.block = block;
-		material = new MaterialAdapter(Environment.isBukkit() ? bukkitValue().getType().name() : spongeValue().getState().getType().getItem().get().getId().substring(10)); // spongeValue().getState().getType() // Sponge.getRegistry().getType(ItemType.class, spongeValue().getState().getType().getId()
+		type = new MaterialAdapter(Environment.isBukkit() ? bukkitValue().getType().name() : spongeValue().getState().getType().getItem().get().getId().substring(10));
+	}
+	
+	@Override
+	public String toString() {
+		return new StringJoiner(", ", "BlockAdapter{", "}")
+				.add("type=" + getType())
+				.add("x=" + getX())
+				.add("y=" + getY())
+				.add("z=" + getZ())
+				.toString();
 	}
 	
 	/**
@@ -72,7 +84,7 @@ public class BlockAdapter {
 	 * @return Block's type
 	 */
 	public MaterialAdapter getType() {
-		return material;
+		return type;
 	}
 	
 	/**

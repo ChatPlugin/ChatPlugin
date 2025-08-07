@@ -20,7 +20,7 @@ import java.util.List;
 import me.remigio07.chatplugin.api.common.chat.DenyChatReasonHandler;
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.punishment.mute.MuteManager;
-import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
+import me.remigio07.chatplugin.api.common.util.PseudoEnum;
 import me.remigio07.chatplugin.api.server.chat.ChatManager;
 import me.remigio07.chatplugin.api.server.chat.FormattedChatManager;
 import me.remigio07.chatplugin.api.server.language.Language;
@@ -30,12 +30,9 @@ import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 /**
  * Represents the reason why a message may be prevented from being sent.
  * 
- * <p>This class is a pseudo-{@link Enum}. It contains the following methods:
- * {@link #name()}, {@link #ordinal()}, {@link #valueOf(String)} and {@link #values()}.</p>
- * 
  * @param <H> Reason's handler
  */
-public class DenyChatReason<H extends DenyChatReasonHandler> {
+public class DenyChatReason<H extends DenyChatReasonHandler> extends PseudoEnum<DenyChatReason<H>> {
 	
 	/**
 	 * The message {@link String#isEmpty()} after stripping colors and removing spaces.
@@ -133,34 +130,14 @@ public class DenyChatReason<H extends DenyChatReasonHandler> {
 	 */
 	public static final DenyChatReason<VanishManager> VANISH = new DenyChatReason<>("VANISH", "vanish.no-chat", VanishManager.class);
 	private static final DenyChatReason<?>[] VALUES = new DenyChatReason<?>[] { BLANK_MESSAGE, CAPS, FLOOD, FORMAT, IP_ADDRESS, MUTE, MUTEALL, SPAM, SWEAR, URL, VANISH };
-	private String name, messagePath;
+	private static int ordinal = 0;
+	private String messagePath;
 	private Class<H> handlerClass;
 	
 	private DenyChatReason(String name, String messagePath, Class<H> handlerClass) {
-		this.name = name;
+		super(name, ordinal++);
 		this.messagePath = messagePath;
 		this.handlerClass = handlerClass;
-	}
-	
-	/**
-	 * Equivalent of {@link Enum#name()}.
-	 * 
-	 * @return Constant's name
-	 */
-	public String name() {
-		return name;
-	}
-	
-	/**
-	 * Equivalent of {@link Enum#ordinal()}.
-	 * 
-	 * @return Constant's ordinal
-	 */
-	public int ordinal() {
-		for (int i = 0; i < VALUES.length; i++)
-			if (this == VALUES[i])
-				return i;
-		return -1;
 	}
 	
 	/**
@@ -192,28 +169,24 @@ public class DenyChatReason<H extends DenyChatReasonHandler> {
 	}
 	
 	/**
-	 * Equivalent of <code>Enum#valueOf(String)</code>,
-	 * with the only difference that instead of throwing
-	 * {@link IllegalArgumentException} <code>null</code>
-	 * is returned if the constant's name is invalid.
+	 * Equivalent of <code>valueOf(String)</code>.
 	 * 
 	 * @param name Constant's name
-	 * @return Enum constant
+	 * @return Pseudo-enum's constant
+	 * @throws NullPointerException If <code>name == null</code>
+	 * @throws IllegalArgumentException If {@link #values()}
+	 * does not contain a constant with the specified name
 	 */
-	@Nullable(why = "Instead of throwing IllegalArgumentException null is returned if the constant's name is invalid")
-	public static DenyChatReason<?> valueOf(String name) {
-		for (DenyChatReason<?> reason : VALUES)
-			if (reason.name().equals(name))
-				return reason;
-		return null;
+	public static DenyChatReason<? extends DenyChatReasonHandler> valueOf(String name) {
+		return valueOf(name, VALUES);
 	}
 	
 	/**
-	 * Equivalent of <code>Enum#values()</code>.
+	 * Equivalent of <code>values()</code>.
 	 * 
-	 * @return Enum constants
+	 * @return Pseudo-enum's constants
 	 */
-	public static DenyChatReason<?>[] values() {
+	public static DenyChatReason<? extends DenyChatReasonHandler>[] values() {
 		return VALUES;
 	}
 	

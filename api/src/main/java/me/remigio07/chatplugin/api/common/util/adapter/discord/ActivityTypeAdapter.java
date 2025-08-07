@@ -13,17 +13,16 @@
  * 	<https://remigio07.me/chatplugin>
  */
 
-package me.remigio07.chatplugin.api.common.discord;
+package me.remigio07.chatplugin.api.common.util.adapter.discord;
 
-import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
+import me.remigio07.chatplugin.api.common.util.PseudoEnum;
 
 /**
- * Represents an activity's type. This is an adapter of <code>net.dv8tion.jda.api.entities.Activity.ActivityType</code>.
+ * Represents an activity's type.
  * 
- * <p>This class is a pseudo-{@link Enum}. It contains the following methods:
- * {@link #name()}, {@link #ordinal()}, {@link #valueOf(String)} and {@link #values()}.</p>
+ * <p>This is an adapter of <code>net.dv8tion.jda.api.entities.Activity.ActivityType</code>.</p>
  */
-public class ActivityTypeAdapter {
+public class ActivityTypeAdapter extends PseudoEnum<ActivityTypeAdapter> {
 	
 	/**
 	 * Used to indicate that the activity should display as "Competing in...".
@@ -55,54 +54,29 @@ public class ActivityTypeAdapter {
 	 */
 	public static final ActivityTypeAdapter WATCHING = new ActivityTypeAdapter("WATCHING");
 	private static final ActivityTypeAdapter[] VALUES = new ActivityTypeAdapter[] { COMPETING, CUSTOM_STATUS, LISTENING, PLAYING, STREAMING, WATCHING };
-	private String name;
+	private static int ordinal = 0;
 	
 	private ActivityTypeAdapter(String name) {
-		this.name = name;
+		super(name, ordinal++);
 	}
 	
 	/**
-	 * Equivalent of {@link Enum#name()}.
-	 * 
-	 * @return Constant's name
-	 */
-	public String name() {
-		return name;
-	}
-	
-	/**
-	 * Equivalent of {@link Enum#ordinal()}.
-	 * 
-	 * @return Constant's ordinal
-	 */
-	public int ordinal() {
-		for (int i = 0; i < VALUES.length; i++)
-			if (this == VALUES[i])
-				return i;
-		return -1;
-	}
-	
-	/**
-	 * Equivalent of <code>Enum#valueOf(String)</code>,
-	 * with the only difference that instead of throwing
-	 * {@link IllegalArgumentException} <code>null</code>
-	 * is returned if the constant's name is invalid.
+	 * Equivalent of <code>valueOf(String)</code>.
 	 * 
 	 * @param name Constant's name
-	 * @return Enum constant
+	 * @return Pseudo-enum's constant
+	 * @throws NullPointerException If <code>name == null</code>
+	 * @throws IllegalArgumentException If {@link #values()}
+	 * does not contain a constant with the specified name
 	 */
-	@Nullable(why = "Instead of throwing IllegalArgumentException null is returned if the constant's name is invalid")
 	public static ActivityTypeAdapter valueOf(String name) {
-		for (ActivityTypeAdapter activityType : VALUES)
-			if (activityType.name().equals(name))
-				return activityType;
-		return null;
+		return valueOf(name, VALUES);
 	}
 	
 	/**
-	 * Equivalent of <code>Enum#values()</code>.
+	 * Equivalent of <code>values()</code>.
 	 * 
-	 * @return Enum constants
+	 * @return Pseudo-enum's constants
 	 */
 	public static ActivityTypeAdapter[] values() {
 		return VALUES;

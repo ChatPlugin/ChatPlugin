@@ -17,8 +17,8 @@ package me.remigio07.chatplugin.api.server.chat;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
@@ -48,7 +48,7 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	protected boolean enabled, rankHoverEnabled, playerHoverEnabled, urlHoverEnabled, defaultHTTPS, playerPingHoverEnabled, instantEmojiHoverEnabled;
 	protected ClickActionAdapter playerClickAction;
 	protected String playerClickValue, urlColor;
-	protected List<PlaceholderType> playerPlaceholderTypes = Collections.emptyList();
+	protected Set<PlaceholderType> playerPlaceholderTypes = Collections.emptySet();
 	protected Map<Language, String> playerHovers = new HashMap<>(), urlHovers = new HashMap<>(), instantEmojiHovers = new HashMap<>();
 	protected long loadTime;
 	
@@ -163,14 +163,14 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the list of placeholder types used
+	 * Gets the set of placeholder types used
 	 * to translate players' hovers sent in the chat.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.hover-info.player.placeholder-types" in {@link ConfigurationType#CHAT}</p>
 	 * 
 	 * @return Placeholders used to translate hovers
 	 */
-	public List<PlaceholderType> getPlayerPlaceholderTypes() {
+	public Set<PlaceholderType> getPlayerPlaceholderTypes() {
 		return playerPlaceholderTypes;
 	}
 	

@@ -121,6 +121,11 @@ public class QuitMessageManagerImpl extends QuitMessageManager {
 			return input.stream().map(str -> formatPlaceholders(str, language)).collect(Collectors.toList());
 		}
 		
+		@Override
+		public String toString() {
+			return "QuitPacketImpl{player=" + player + "}";
+		}
+		
 		public void setVanished(boolean vanished) {
 			this.vanished = vanished;
 		}

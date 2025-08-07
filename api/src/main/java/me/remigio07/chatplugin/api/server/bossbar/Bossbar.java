@@ -81,6 +81,11 @@ public class Bossbar {
 		this.hidden = hidden;
 	}
 	
+	@Override
+	public String toString() {
+		return "Bossbar{id=\"" + id + "\"}";
+	}
+	
 	/**
 	 * Gets this bossbar's ID.
 	 * 

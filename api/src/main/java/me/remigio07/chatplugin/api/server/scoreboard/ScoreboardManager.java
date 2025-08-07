@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.server.scoreboard;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.Timer;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
@@ -149,7 +150,7 @@ public abstract class ScoreboardManager implements ChatPluginManager {
 	public abstract Scoreboard.Builder createScoreboardBuilder(
 			String id,
 			boolean abbreviateLongText,
-			List<PlaceholderType> placeholderTypes
+			Set<PlaceholderType> placeholderTypes
 			);
 	
 	/**

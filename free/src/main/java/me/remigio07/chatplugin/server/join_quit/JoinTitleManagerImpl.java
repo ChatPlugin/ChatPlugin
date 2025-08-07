@@ -39,7 +39,7 @@ public class JoinTitleManagerImpl extends JoinTitleManager {
 		stay = ConfigurationType.JOIN_QUIT_MODULES.get().getLong("join-quit-modules.join-titles.settings.stay-ms");
 		fadeOut = ConfigurationType.JOIN_QUIT_MODULES.get().getLong("join-quit-modules.join-titles.settings.fade-out-ms");
 		delay = ConfigurationType.JOIN_QUIT_MODULES.get().getLong("join-quit-modules.join-titles.settings.delay-ms");
-		placeholderTypes = PlaceholderType.getPlaceholders(ConfigurationType.JOIN_QUIT_MODULES.get().getStringList("join-quit-modules.join-titles.settings.placeholder-types"));
+		placeholderTypes = PlaceholderType.getTypes(ConfigurationType.JOIN_QUIT_MODULES.get().getStringList("join-quit-modules.join-titles.settings.placeholder-types"));
 		
 		for (Language language : LanguageManager.getInstance().getLanguages()) {
 			String translatedTitle = ConfigurationType.JOIN_QUIT_MODULES.get().getString("join-quit-modules.join-titles.titles." + language.getID(), null);

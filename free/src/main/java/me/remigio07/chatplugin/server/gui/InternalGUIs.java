@@ -18,7 +18,9 @@ package me.remigio07.chatplugin.server.gui;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -60,6 +62,7 @@ import me.remigio07.chatplugin.common.util.Utils;
 
 public class InternalGUIs {
 	
+	private static final Set<PlaceholderType> PLACEHOLDER_TYPES = EnumSet.of(PlaceholderType.PLAYER, PlaceholderType.SERVER);
 	private static SinglePageGUILayout playerInfoLayout, preferencesLayout;
 	private static FillableGUILayout playerPunishmentsLayout, playerViolationsLayout;
 	private static String[] preferencesPlaceholders;
@@ -280,8 +283,8 @@ public class InternalGUIs {
 		SinglePageGUI playerInfo = manager().createPerPlayerGUI(playerInfoLayout, player);
 		
 		TaskManager.runAsync(() -> player.getIPLookup(true), 0L);
-		playerInfo.setTitlesTranslator((t, u) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
-		playerInfo.setStringPlaceholdersTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, u, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
+		playerInfo.setTitlesTranslator((t, u) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, PLACEHOLDER_TYPES));
+		playerInfo.setStringPlaceholdersTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, u, PLACEHOLDER_TYPES));
 		playerInfo.refresh();
 		return playerInfo;
 	}
@@ -302,8 +305,8 @@ public class InternalGUIs {
 	public static SinglePageGUI createPreferences(ChatPluginServerPlayer player) {
 		SinglePageGUI playerInfo = manager().createPerPlayerGUI(preferencesLayout, player);
 		
-		playerInfo.setTitlesTranslator((t, u) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
-		playerInfo.setStringPlaceholdersTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, u, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER))
+		playerInfo.setTitlesTranslator((t, u) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, PLACEHOLDER_TYPES));
+		playerInfo.setStringPlaceholdersTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, u, PLACEHOLDER_TYPES)
 				.replace("{scoreboard_visibility}", preferencesPlaceholders[player.getScoreboard() == null ? 1 : 0])
 				.replace("{bossbar_visibility}", preferencesPlaceholders[player.getBossbar() == null ? 1 : 0])
 				.replace("{actionbar_visibility}", preferencesPlaceholders[player.hasActionbarEnabled() ? 0 : 1])
@@ -350,8 +353,8 @@ public class InternalGUIs {
 					punishments.add(storage.getMute(id.intValue()));
 		} catch (SQLException sqle) {
 			error(sqle, playerPunishments.getID());
-		} playerPunishments.setTitlesTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
-		playerPunishments.setStringPlaceholdersTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, u, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
+		} playerPunishments.setTitlesTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, PLACEHOLDER_TYPES));
+		playerPunishments.setStringPlaceholdersTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, u, PLACEHOLDER_TYPES));
 		playerPunishments.setFillers(punishments.stream().map(punishment -> new GUIFiller<Punishment>() {
 			
 			@Override
@@ -393,8 +396,8 @@ public class InternalGUIs {
 	public static FillableGUI<Violation> createPlayerViolations(ChatPluginServerPlayer player) {
 		FillableGUI<Violation> playerViolations = manager().createPerPlayerGUI(playerViolationsLayout, player);
 		
-		playerViolations.setTitlesTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
-		playerViolations.setStringPlaceholdersTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, u, Arrays.asList(PlaceholderType.SERVER, PlaceholderType.PLAYER)));
+		playerViolations.setTitlesTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, PLACEHOLDER_TYPES));
+		playerViolations.setStringPlaceholdersTranslator((t, u, v) -> PlaceholderManager.getInstance().translatePlaceholders(t, player, u, PLACEHOLDER_TYPES));
 		playerViolations.setFillers(AnticheatManager.getInstance().getViolations(player).stream().map(violation -> new GUIFiller<Violation>() {
 			
 			@Override

@@ -22,6 +22,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.proxy.event.socket.ClientConnectionEvent;
@@ -88,6 +89,14 @@ public class Server extends Thread {
 		} catch (IOException e) {
 			LogManager.log("[SOCKETS] IOException occurred while waiting for new connections on {0}: {1}", 2, socket.getInetAddress().getHostAddress() + ":" + socket.getLocalPort(), e.getMessage());
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return new StringJoiner(", ", "Server{", "}")
+				.add("address=" + socket.getInetAddress().getHostAddress())
+				.add("port=" + socket.getLocalPort())
+				.toString();
 	}
 	
 	/**

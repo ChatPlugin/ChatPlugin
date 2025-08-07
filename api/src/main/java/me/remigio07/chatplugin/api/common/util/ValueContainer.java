@@ -15,7 +15,8 @@
 
 package me.remigio07.chatplugin.api.common.util;
 
-import java.util.List;
+import java.util.Set;
+import java.util.StringJoiner;
 
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
@@ -45,6 +46,14 @@ public class ValueContainer<T extends Number> {
 		if (value instanceof String)
 			placeholder = (String) value;
 		else this.value = value == null ? null : (T) value;
+	}
+	
+	@Override
+	public String toString() {
+		return new StringJoiner(", ", "ValueContainer{", "}")
+				.add("placeholder=" + (placeholder == null ? placeholder : "\"" + placeholder + "\""))
+				.add("value=" + value)
+				.toString();
 	}
 	
 	/**
@@ -82,7 +91,7 @@ public class ValueContainer<T extends Number> {
 	 * @return Translated value or placeholder
 	 * @throws NumberFormatException If the placeholder is invalid
 	 */
-	public byte byteValue(List<PlaceholderType> placeholderTypes, ChatPluginServerPlayer player) throws NumberFormatException {
+	public byte byteValue(Set<PlaceholderType> placeholderTypes, ChatPluginServerPlayer player) throws NumberFormatException {
 		return value == null ? placeholder == null ? 0 : Byte.valueOf(format(placeholderTypes, player)) : value.byteValue();
 	}
 	
@@ -95,7 +104,7 @@ public class ValueContainer<T extends Number> {
 	 * @return Translated value or placeholder
 	 * @throws NumberFormatException If the placeholder is invalid
 	 */
-	public short shortValue(List<PlaceholderType> placeholderTypes, ChatPluginServerPlayer player) throws NumberFormatException {
+	public short shortValue(Set<PlaceholderType> placeholderTypes, ChatPluginServerPlayer player) throws NumberFormatException {
 		return value == null ? placeholder == null ? 0 : Short.valueOf(format(placeholderTypes, player)) : value.shortValue();
 	}
 	
@@ -108,7 +117,7 @@ public class ValueContainer<T extends Number> {
 	 * @return Translated value or placeholder
 	 * @throws NumberFormatException If the placeholder is invalid
 	 */
-	public int intValue(List<PlaceholderType> placeholderTypes, ChatPluginServerPlayer player) throws NumberFormatException {
+	public int intValue(Set<PlaceholderType> placeholderTypes, ChatPluginServerPlayer player) throws NumberFormatException {
 		return value == null ? placeholder == null ? 0 : Integer.valueOf(format(placeholderTypes, player)) : value.intValue();
 	}
 	
@@ -121,7 +130,7 @@ public class ValueContainer<T extends Number> {
 	 * @return Translated value or placeholder
 	 * @throws NumberFormatException If the placeholder is invalid
 	 */
-	public long longValue(List<PlaceholderType> placeholderTypes, ChatPluginServerPlayer player) throws NumberFormatException {
+	public long longValue(Set<PlaceholderType> placeholderTypes, ChatPluginServerPlayer player) throws NumberFormatException {
 		return value == null ? placeholder == null ? 0L : Long.valueOf(format(placeholderTypes, player)) : value.longValue();
 	}
 	
@@ -134,7 +143,7 @@ public class ValueContainer<T extends Number> {
 	 * @return Translated value or placeholder
 	 * @throws NumberFormatException If the placeholder is invalid
 	 */
-	public float floatValue(List<PlaceholderType> placeholderTypes, ChatPluginServerPlayer player) throws NumberFormatException {
+	public float floatValue(Set<PlaceholderType> placeholderTypes, ChatPluginServerPlayer player) throws NumberFormatException {
 		return value == null ? placeholder == null ? 0F : Float.valueOf(format(placeholderTypes, player)) : value.floatValue();
 	}
 	
@@ -147,11 +156,11 @@ public class ValueContainer<T extends Number> {
 	 * @return Translated value or placeholder
 	 * @throws NumberFormatException If the placeholder is invalid
 	 */
-	public double doubleValue(List<PlaceholderType> placeholderTypes, ChatPluginServerPlayer player) throws NumberFormatException {
+	public double doubleValue(Set<PlaceholderType> placeholderTypes, ChatPluginServerPlayer player) throws NumberFormatException {
 		return value == null ? placeholder == null ? 0D : Double.valueOf(format(placeholderTypes, player)) : value.doubleValue();
 	}
 	
-	private String format(List<PlaceholderType> placeholderTypes, ChatPluginServerPlayer player) {
+	private String format(Set<PlaceholderType> placeholderTypes, ChatPluginServerPlayer player) {
 		return ChatColor.stripColor(PlaceholderManager.getInstance().translatePlaceholders(placeholder, player, placeholderTypes).trim());
 	}
 	

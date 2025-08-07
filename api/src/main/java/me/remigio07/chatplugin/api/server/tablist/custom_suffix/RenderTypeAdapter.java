@@ -18,19 +18,16 @@ package me.remigio07.chatplugin.api.server.tablist.custom_suffix;
 import org.spongepowered.api.scoreboard.objective.displaymode.ObjectiveDisplayMode;
 import org.spongepowered.api.scoreboard.objective.displaymode.ObjectiveDisplayModes;
 
-import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
+import me.remigio07.chatplugin.api.common.util.PseudoEnum;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
- * Represents the tablist's custom suffixes' render type.
- * 
- * <p>This class is a pseudo-{@link Enum}. It contains the following methods:
- * {@link #name()}, {@link #ordinal()}, {@link #valueOf(String)} and {@link #values()}.</p>
+ * Environment indipendent (Bukkit and Sponge) render type adapter.
  * 
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Tablists#render-types">ChatPlugin wiki/Modules/Tablists/Custom suffix/Render types</a>
  * @see CustomSuffixManager
  */
-public class RenderType {
+public class RenderTypeAdapter extends PseudoEnum<RenderTypeAdapter> {
 	
 	/**
 	 * Displays hearts after the player's name; supports the "{health}" placeholder only.
@@ -42,17 +39,17 @@ public class RenderType {
 	 * 		<li>hollow: missing hearts</li>
 	 * 	</ul>
 	 */
-	public static final RenderType HEARTS = new RenderType("HEARTS");
+	public static final RenderTypeAdapter HEARTS = new RenderTypeAdapter("HEARTS");
 	
 	/**
 	 * Displays a yellow {@link Integer} after the player's name.
 	 */
-	public static final RenderType INTEGER = new RenderType("INTEGER");
-	private static final RenderType[] VALUES = new RenderType[] { HEARTS, INTEGER };
-	private String name;
+	public static final RenderTypeAdapter INTEGER = new RenderTypeAdapter("INTEGER");
+	private static final RenderTypeAdapter[] VALUES = new RenderTypeAdapter[] { HEARTS, INTEGER };
+	private static int ordinal = 0;
 	
-	private RenderType(String name) {
-		this.name = name;
+	private RenderTypeAdapter(String name) {
+		super(name, ordinal++);
 	}
 	
 	/**
@@ -64,7 +61,7 @@ public class RenderType {
 	public org.bukkit.scoreboard.RenderType bukkitValue() {
 		if (Environment.isBukkit())
 			return org.bukkit.scoreboard.RenderType.valueOf(name());
-		else throw new UnsupportedOperationException("Unable to adapt render type to a Bukkit's RenderType on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt render type to a Bukkit's RenderType on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -80,56 +77,28 @@ public class RenderType {
 			} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException e) {
 				return null;
 			}
-		else throw new UnsupportedOperationException("Unable to adapt render type to a Sponge's ObjectiveDisplayMode on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt render type to a Sponge's ObjectiveDisplayMode on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
-	 * {@link Enum#name()}'s equivalent.
-	 * 
-	 * @return Type's name
-	 */
-	public String name() {
-		return name;
-	}
-	
-	/**
-	 * Equivalent of {@link Enum#ordinal()}.
-	 * 
-	 * @return Constant's ordinal
-	 */
-	public int ordinal() {
-		return this == HEARTS ? 0 : 1;
-	}
-	
-	/**
-	 * Equivalent of <code>Enum#valueOf(String)</code>,
-	 * with the only difference that instead of throwing
-	 * {@link IllegalArgumentException} <code>null</code>
-	 * is returned if the constant's name is invalid.
-	 * 
-	 * <p>This method recognizes both Bukkit's and Sponge's IDs.</p>
+	 * Equivalent of <code>valueOf(String)</code>.
 	 * 
 	 * @param name Constant's name
-	 * @return Enum constant
+	 * @return Pseudo-enum's constant
+	 * @throws NullPointerException If <code>name == null</code>
+	 * @throws IllegalArgumentException If {@link #values()}
+	 * does not contain a constant with the specified name
 	 */
-	@Nullable(why = "Instead of throwing IllegalArgumentException null is returned if the constant's name is invalid")
-	public static RenderType valueOf(String name) {
-		switch (name) {
-		case "HEARTS":
-			return HEARTS;
-		case "INTEGER":
-			return INTEGER;
-		default:
-			return null;
-		}
+	public static RenderTypeAdapter valueOf(String name) {
+		return valueOf(name, VALUES);
 	}
 	
 	/**
-	 * Equivalent of <code>Enum#values()</code>.
+	 * Equivalent of <code>values()</code>.
 	 * 
-	 * @return Enum constants
+	 * @return Pseudo-enum's constants
 	 */
-	public static RenderType[] values() {
+	public static RenderTypeAdapter[] values() {
 		return VALUES;
 	}
 	

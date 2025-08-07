@@ -235,17 +235,54 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 		} return null;
 	}
 	
-	// https://gist.github.com/jjfiv/2ac5c081e088779f49aa
-	public static String unescapeJSON(String json) {
+	// source of following 2 methods: https://gist.github.com/jjfiv/2ac5c081e088779f49aa - thank you jjfiv!
+	
+	public static String escape(String input, boolean escapeUnicode) {
+		StringBuilder output = new StringBuilder();
+		
+		for (int i = 0; i < input.length(); i++) {
+			char ch = input.charAt(i);
+			int chx = (int) ch;
+			
+			switch (ch) {
+			case '\n':
+				output.append("\\n");
+				break;
+			case '\t':
+				output.append("\\t");
+				break;
+			case '\r':
+				output.append("\\r");
+				break;
+			case '\\':
+				output.append("\\\\");
+				break;
+			case '"':
+				output.append("\\\"");
+				break;
+			case '\b':
+				output.append("\\b");
+				break;
+			case '\f':
+				output.append("\\f");
+				break;
+			default:
+				output.append(escapeUnicode && chx > 127 ? String.format("\\u%04x", chx) : ch);
+				break;
+			}
+		} return output.toString();
+	}
+	
+	public static String unescape(String input) {
 		StringBuilder sb = new StringBuilder();
 		int i = 0;
 		
-		while (i < json.length()) {
-			char delimiter = json.charAt(i);
+		while (i < input.length()) {
+			char delimiter = input.charAt(i);
 			i++;
 			
-			if (delimiter == '\\' && i < json.length()) {
-				char ch = json.charAt(i);
+			if (delimiter == '\\' && i < input.length()) {
+				char ch = input.charAt(i);
 				i++;
 				
 				switch (ch) {
@@ -273,7 +310,7 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 				case 'u':
 					StringBuilder hex = new StringBuilder();
 					
-					for (char x : json.substring(i, i + 4).toCharArray())
+					for (char x : input.substring(i, i + 4).toCharArray())
 						hex.append(Character.toLowerCase(x));
 					i += 4;
 					

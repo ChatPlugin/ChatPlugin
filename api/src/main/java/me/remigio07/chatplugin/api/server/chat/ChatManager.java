@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.server.chat;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import me.remigio07.chatplugin.api.common.chat.DenyChatReasonHandler;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
@@ -35,7 +36,7 @@ public abstract class ChatManager implements DenyChatReasonHandler {
 	protected boolean enabled, overrideChatEvent, chatMuted;
 	protected String chatEventPriority, format;
 	protected List<String> recognizedTLDs = Collections.emptyList();
-	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
+	protected Set<PlaceholderType> placeholderTypes = Collections.emptySet();
 	protected long loadTime;
 	
 	/**
@@ -107,14 +108,14 @@ public abstract class ChatManager implements DenyChatReasonHandler {
 	}
 	
 	/**
-	 * Gets the list of placeholder types used
+	 * Gets the set of placeholder types used
 	 * to translate messages sent in the chat.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.placeholder-types" in {@link ConfigurationType#CHAT}</p>
 	 * 
 	 * @return Placeholders used to translate messages
 	 */
-	public List<PlaceholderType> getPlaceholderTypes() {
+	public Set<PlaceholderType> getPlaceholderTypes() {
 		return placeholderTypes;
 	}
 	

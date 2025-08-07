@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.server.tablist;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
@@ -60,7 +61,7 @@ public abstract class TablistManager implements ChatPluginManager, Runnable {
 	protected boolean enabled, randomOrder, playerNamesTeamsMode;
 	protected long sendingTimeout, playerNamesUpdateTimeout, timerTaskID = -1, playerNamesTimerTaskID = -1;
 	protected String playerNamesPrefix, playerNamesSuffix;
-	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
+	protected Set<PlaceholderType> placeholderTypes = Collections.emptySet();
 	protected List<Tablist> tablists = new CopyOnWriteArrayList<>();
 	protected Runnable playerNamesUpdater;
 	protected int timerIndex = -1;
@@ -144,14 +145,14 @@ public abstract class TablistManager implements ChatPluginManager, Runnable {
 	}
 	
 	/**
-	 * Gets the list of placeholder types used to translate
+	 * Gets the set of placeholder types used to translate
 	 * {@link Tablist#getHeaders()} and {@link Tablist#getFooters()}.
 	 * 
 	 * <p><strong>Found at:</strong> "tablists.settings.placeholder-types" in {@link ConfigurationType#TABLISTS}</p>
 	 * 
 	 * @return Placeholders used to translate texts
 	 */
-	public List<PlaceholderType> getPlaceholderTypes() {
+	public Set<PlaceholderType> getPlaceholderTypes() {
 		return placeholderTypes;
 	}
 	

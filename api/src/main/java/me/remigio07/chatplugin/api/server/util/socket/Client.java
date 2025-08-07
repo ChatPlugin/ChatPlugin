@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.StringJoiner;
 
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
@@ -61,6 +62,15 @@ public class Client {
 			throw new IllegalArgumentException("Port value out of range: " + serverPort);
 		this.serverAddress = serverAddress;
 		this.serverPort = serverPort;
+	}
+	
+	@Override
+	public String toString() {
+		return new StringJoiner(", ", "Client{", "}")
+				.add("serverAddress=" + serverAddress.getHostAddress())
+				.add("serverPort=" + serverPort)
+				.add("id=" + (id == null ? id : "\"" + id + "\""))
+				.toString();
 	}
 	
 	/**
@@ -203,16 +213,6 @@ public class Client {
 	}
 	
 	/**
-	 * Checks if this client is currently
-	 * connected to the server.
-	 * 
-	 * @return Whether this client is connected
-	 */
-	public boolean isConnected() {
-		return socket != null;
-	}
-	
-	/**
 	 * Gets this client's server's address.
 	 * 
 	 * @return Server's address
@@ -280,6 +280,16 @@ public class Client {
 	@Nullable(why = "Client may not be connected")
 	public DataOutputStream getOutput() {
 		return output;
+	}
+	
+	/**
+	 * Checks if this client is currently
+	 * connected to the server.
+	 * 
+	 * @return Whether this client is connected
+	 */
+	public boolean isConnected() {
+		return socket != null;
 	}
 	
 }

@@ -21,6 +21,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.StringJoiner;
 import java.util.regex.Pattern;
 
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
@@ -130,6 +131,14 @@ public class ClientHandler extends Thread {
 		} new ClientDisconnectionEvent(this).call();
 		server.getClientHandlers().remove(this);
 		LogManager.log("[SOCKETS] Client \"{0}\" has just disconnected from the server{1}", 4, id, disconnectionReason == null ? "." : ": " + disconnectionReason);
+	}
+	
+	@Override
+	public String toString() {
+		return new StringJoiner(", ", "ClientHandler{", "}")
+				.add("server=" + server)
+				.add("id=" + (id == null ? id : "\"" + id + "\""))
+				.toString();
 	}
 	
 	/**

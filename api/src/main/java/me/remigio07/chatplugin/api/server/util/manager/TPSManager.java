@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.server.util.manager;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
@@ -220,6 +221,14 @@ public abstract class TPSManager implements ChatPluginManager, Runnable {
 		@Override
 		public int compareTo(TPSQuality o) {
 			return minimumTPS < o.getMinimumTPS() ? -1 : minimumTPS == o.getMinimumTPS() ? 0 : 1;
+		}
+		
+		@Override
+		public String toString() {
+			return new StringJoiner(", ", "TPSQuality{", "}")
+					.add("id=\"" + id + "\"")
+					.add("minimumTPS=" + minimumTPS)
+					.toString();
 		}
 		
 		/**

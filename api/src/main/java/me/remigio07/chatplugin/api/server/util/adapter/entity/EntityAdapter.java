@@ -15,6 +15,7 @@
 
 package me.remigio07.chatplugin.api.server.util.adapter.entity;
 
+import java.util.StringJoiner;
 import java.util.UUID;
 
 import org.spongepowered.api.data.key.Keys;
@@ -28,7 +29,7 @@ import me.remigio07.chatplugin.bootstrap.Environment;
  */
 public class EntityAdapter {
 	
-	private Object entity;
+	protected Object entity;
 	
 	/**
 	 * Constructs an entity adapter that accepts one of the following specified as input:
@@ -41,6 +42,14 @@ public class EntityAdapter {
 	 */
 	public EntityAdapter(Object entity) {
 		this.entity = entity;
+	}
+	
+	@Override
+	public String toString() {
+		return new StringJoiner(", ", "EntityAdapter{", "}")
+				.add("uuid=" + getUUID().toString())
+				.add("name=\"" + getName() + "\"")
+				.toString();
 	}
 	
 	/**
@@ -68,6 +77,16 @@ public class EntityAdapter {
 	}
 	
 	/**
+	 * Gets this entity's UUID.
+	 * 
+	 * @return Entity's UUID
+	 */
+	@NotNull
+	public UUID getUUID() {
+		return Environment.isBukkit() ? bukkitValue().getUniqueId() : spongeValue().getUniqueId();
+	}
+	
+	/**
 	 * Gets this entity's name.
 	 * 
 	 * <p>Will return the entity type's name
@@ -78,16 +97,6 @@ public class EntityAdapter {
 	@NotNull
 	public String getName() {
 		return Environment.isBukkit() ? bukkitValue().getName() : Utils.deserializeSpongeText(spongeValue().getOrElse(Keys.DISPLAY_NAME, Utils.serializeSpongeText(spongeValue().getType().getName(), false)));
-	}
-	
-	/**
-	 * Gets this entity's UUID.
-	 * 
-	 * @return Entity's UUID
-	 */
-	@NotNull
-	public UUID getUUID() {
-		return Environment.isBukkit() ? bukkitValue().getUniqueId() : spongeValue().getUniqueId();
 	}
 	
 }

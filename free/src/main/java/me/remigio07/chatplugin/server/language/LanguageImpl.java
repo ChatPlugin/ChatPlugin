@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.server.language;
 
 import java.io.File;
 import java.util.List;
+import java.util.StringJoiner;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
@@ -28,6 +29,18 @@ public class LanguageImpl extends Language {
 	public LanguageImpl(String id, String displayName, List<String> countryCodes) {
 		super(id, displayName, countryCodes);
 		configuration = id.equals("english") ? ConfigurationType.MESSAGES.get() : new Configuration(ChatPlugin.getInstance().getDataFolder().resolve("custom-messages" + File.separator + "messages-" + id + ".yml"));
+	}
+	
+	@Override
+	public String toString() {
+		StringJoiner sj = new StringJoiner("\", \"", "[\"", "\"]");
+		
+		countryCodes.forEach(countryCode -> sj.add(countryCode));
+		return new StringJoiner(", ", "LanguageImpl{", "}")
+				.add("id=\"" + id + "\"")
+				.add("displayName=\"" + displayName + "\"")
+				.add("countryCodes=" + sj.toString())
+				.toString();
 	}
 	
 }

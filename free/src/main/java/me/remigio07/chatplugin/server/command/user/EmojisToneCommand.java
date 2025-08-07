@@ -57,7 +57,7 @@ public class EmojisToneCommand extends BaseCommand {
 			} else if (args.length == 1) {
 				if (reportOnlyPlayers(sender)) {
 					ChatPluginServerPlayer player = sender.toServerPlayer();
-					ChatColor tone = getColor(args[0]);
+					ChatColor tone = getTone(args[0]);
 					List<ChatColor> tones = InstantEmojisManager.getInstance().getTones();
 					
 					if (tone == ChatColor.RESET || tones.contains(tone)) {
@@ -82,7 +82,7 @@ public class EmojisToneCommand extends BaseCommand {
 						ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(args[1], false, true);
 						
 						if (player != null) {
-							ChatColor tone = getColor(args[0]);
+							ChatColor tone = getTone(args[0]);
 							List<ChatColor> tones = InstantEmojisManager.getInstance().getTones();
 							
 							if (tone == ChatColor.RESET || tones.contains(tone)) {
@@ -106,7 +106,7 @@ public class EmojisToneCommand extends BaseCommand {
 		} else sender.sendMessage(language.getMessage("misc.disabled-feature"));
 	}
 	
-	public static ChatColor getColor(String arg) {
+	public static ChatColor getTone(String arg) {
 		if (arg.equalsIgnoreCase("reset"))
 			return ChatColor.RESET;
 		if (arg.length() == 2 && arg.charAt(0) == '&' && ChatColor.isColorCode(arg.charAt(1)))
@@ -117,10 +117,14 @@ public class EmojisToneCommand extends BaseCommand {
 		} else if (arg.length() == 7)
 			try {
 				return ChatColor.of(arg);
-			} catch (NumberFormatException e) {
+			} catch (NumberFormatException nfe) {
 				
 			}
-		return ChatColor.valueOf(arg.toUpperCase());
+		try {
+			return ChatColor.valueOf(arg.toUpperCase());
+		} catch (IllegalArgumentException iae) {
+			return null;
+		}
 	}
 	
 }

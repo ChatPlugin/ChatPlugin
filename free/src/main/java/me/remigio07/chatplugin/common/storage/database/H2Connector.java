@@ -20,10 +20,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.EnumSet;
+import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
@@ -71,20 +71,16 @@ public class H2Connector extends DatabaseConnector {
 	}
 	
 	@Override
-	public List<DataContainer> getMissingDataContainers() throws SQLException {
-		List<DataContainer> tables = new ArrayList<>(Arrays.asList(DataContainer.values()));
+	public Set<DataContainer> getMissingDataContainers() throws SQLException {
+		Set<DataContainer> tables = EnumSet.allOf(DataContainer.class);
 		
-		try (PreparedStatement statement = prepareStatement("SHOW TABLES")) {
-			statement.execute();
-			
-			ResultSet result = statement.getResultSet();
-			
-			while (result.next()) {
-				DataContainer table = DataContainer.getDataContainer(result.getString(1));
-				
-				if (table != null)
-					tables.remove(table);
-			} return tables;
+		try (
+				PreparedStatement statement = prepareStatement("SHOW TABLES");
+				ResultSet result = statement.executeQuery();
+				) {
+			while (result.next())
+				Optional.ofNullable(DataContainer.getDataContainer(result.getString(1))).ifPresent(tables::remove);
+			return tables;
 		}
 	}
 	

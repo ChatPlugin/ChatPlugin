@@ -15,20 +15,14 @@
 
 package me.remigio07.chatplugin.api.server.util.adapter.entity;
 
-import java.util.UUID;
+import java.util.StringJoiner;
 
-import org.spongepowered.api.data.key.Keys;
-
-import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
-import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
  * Environment indipendent (Bukkit and Sponge) living entity adapter.
  */
-public class LivingEntityAdapter {
-	
-	private Object livingEntity;
+public class LivingEntityAdapter extends EntityAdapter {
 	
 	/**
 	 * Constructs a living entity adapter that accepts one of the following specified as input:
@@ -40,53 +34,31 @@ public class LivingEntityAdapter {
 	 * @param livingEntity Living entity object
 	 */
 	public LivingEntityAdapter(Object livingEntity) {
-		this.livingEntity = livingEntity;
+		super(livingEntity);
 	}
 	
-	/**
-	 * Gets the living entity adapted for Bukkit environments.
-	 * 
-	 * @return Bukkit-adapted living entity
-	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBukkit()}
-	 */
+	@Override
 	public org.bukkit.entity.LivingEntity bukkitValue() {
 		if (Environment.isBukkit())
-			return (org.bukkit.entity.LivingEntity) livingEntity;
+			return (org.bukkit.entity.LivingEntity) entity;
 		throw new UnsupportedOperationException("Unable to adapt living entity to a Bukkit's LivingEntity on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
-	/**
-	 * Gets the living entity adapted for Sponge environments.
-	 * 
-	 * @return Sponge-adapted living entity
-	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isSponge()}
-	 */
+	@Override
 	public org.spongepowered.api.entity.living.Living spongeValue() {
 		if (Environment.isSponge())
-			return (org.spongepowered.api.entity.living.Living) livingEntity;
+			return (org.spongepowered.api.entity.living.Living) entity;
 		throw new UnsupportedOperationException("Unable to adapt living entity to a Sponge's Living on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
-	/**
-	 * Gets this living entity's name.
-	 * 
-	 * <p>Will return the entity type's name
-	 * if a display name is not provided.</p>
-	 * 
-	 * @return Living entity's name
-	 */
-	@NotNull
-	public String getName() {
-		return Environment.isBukkit() ? bukkitValue().getName() : Utils.deserializeSpongeText(spongeValue().getOrElse(Keys.DISPLAY_NAME, Utils.serializeSpongeText(spongeValue().getType().getName(), false)));
-	}
-	
-	/**
-	 * Gets this living entity's UUID.
-	 * 
-	 * @return Living entity's UUID
-	 */
-	public UUID getUUID() {
-		return Environment.isBukkit() ? bukkitValue().getUniqueId() : spongeValue().getUniqueId();
+	@Override
+	public String toString() {
+		return new StringJoiner(", ", "LivingEntityAdapter{", "}")
+				.add("uuid=" + getUUID().toString())
+				.add("name=\"" + getName() + "\"")
+				.add("health=" + getHealth())
+				.add("maxHealth=" + getMaxHealth())
+				.toString();
 	}
 	
 	/**

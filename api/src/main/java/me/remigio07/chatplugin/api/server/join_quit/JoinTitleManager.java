@@ -17,8 +17,8 @@ package me.remigio07.chatplugin.api.server.join_quit;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -37,7 +37,7 @@ public abstract class JoinTitleManager implements ChatPluginManager {
 	protected static JoinTitleManager instance;
 	protected boolean enabled;
 	protected long fadeIn, stay, fadeOut, delay;
-	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
+	protected Set<PlaceholderType> placeholderTypes = Collections.emptySet();
 	protected Map<Language, String> titles = new HashMap<>();
 	protected Map<Language, String> subtitles = new HashMap<>();
 	protected long loadTime;
@@ -101,14 +101,14 @@ public abstract class JoinTitleManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the list of placeholder types used to translate
+	 * Gets the set of placeholder types used to translate
 	 * {@link #getTitles()} and {@link #getSubtitles()}.
 	 * 
 	 * <p><strong>Found at:</strong> "join-quit-modules.join-titles.settings.placeholder-types" in {@link ConfigurationType#JOIN_QUIT_MODULES}</p>
 	 * 
 	 * @return Placeholders used to translate join titles
 	 */
-	public List<PlaceholderType> getPlaceholderTypes() {
+	public Set<PlaceholderType> getPlaceholderTypes() {
 		return placeholderTypes;
 	}
 	

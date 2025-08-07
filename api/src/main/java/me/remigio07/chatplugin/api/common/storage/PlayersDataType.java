@@ -18,23 +18,21 @@ package me.remigio07.chatplugin.api.common.storage;
 import java.util.UUID;
 
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
+import me.remigio07.chatplugin.api.common.util.PseudoEnum;
 import me.remigio07.chatplugin.api.common.util.Utils;
-import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 
 /**
- * Represents the data types of {@link DataContainer#PLAYERS} used to store information.
- * 
- * <p>This class is a pseudo-{@link Enum}. It contains the following methods:
- * {@link #name()}, {@link #ordinal()}, {@link #valueOf(String)} and {@link #values()}.</p>
+ * Represents the data types of {@link DataContainer#PLAYERS}
+ * used to store information.
  * 
  * @param <T> Data's type
  * @see StorageConnector#getPlayerData(PlayersDataType, OfflinePlayer)
  */
-public class PlayersDataType<T> {
+public class PlayersDataType<T> extends PseudoEnum<PlayersDataType<T>> {
 	
 	/**
 	 * Player's ID.
@@ -161,33 +159,12 @@ public class PlayersDataType<T> {
 	 */
 	public static final PlayersDataType<Short> MUTES = new PlayersDataType<>("MUTES", short.class);
 	private static final PlayersDataType<?>[] VALUES = new PlayersDataType[] { ID, PLAYER_UUID, PLAYER_NAME, PLAYER_IP, LANGUAGE, IGNORED_PLAYERS, CHAT_COLOR, EMOJIS_TONE, LAST_LOGOUT, TIME_PLAYED, MESSAGES_SENT, ANTISPAM_INFRACTIONS, BANS, WARNINGS, KICKS, MUTES };
-	private String name;
+	private static int ordinal = 0;
 	private Class<T> type;
 	
 	private PlayersDataType(String name, Class<T> type) {
-		this.name = name;
+		super(name, ordinal++);
 		this.type = type;
-	}
-	
-	/**
-	 * Equivalent of {@link Enum#name()}.
-	 * 
-	 * @return Constant's name
-	 */
-	public String name() {
-		return name;
-	}
-	
-	/**
-	 * Equivalent of {@link Enum#ordinal()}.
-	 * 
-	 * @return Constant's ordinal
-	 */
-	public int ordinal() {
-		for (int i = 0; i < VALUES.length; i++)
-			if (this == VALUES[i])
-				return i;
-		return -1;
 	}
 	
 	/**
@@ -205,7 +182,7 @@ public class PlayersDataType<T> {
 	 * @return Database table's ID
 	 */
 	public String getDatabaseTableID() {
-		return name().toLowerCase();
+		return name.toLowerCase();
 	}
 	
 	/**
@@ -218,26 +195,22 @@ public class PlayersDataType<T> {
 	}
 	
 	/**
-	 * Equivalent of <code>Enum#valueOf(String)</code>,
-	 * with the only difference that instead of throwing
-	 * {@link IllegalArgumentException} <code>null</code>
-	 * is returned if the constant's name is invalid.
+	 * Equivalent of <code>valueOf(String)</code>.
 	 * 
 	 * @param name Constant's name
-	 * @return Enum constant
+	 * @return Pseudo-enum's constant
+	 * @throws NullPointerException If <code>name == null</code>
+	 * @throws IllegalArgumentException If {@link #values()}
+	 * does not contain a constant with the specified name
 	 */
-	@Nullable(why = "Instead of throwing IllegalArgumentException null is returned if the constant's name is invalid")
 	public static PlayersDataType<?> valueOf(String name) {
-		for (PlayersDataType<?> column : VALUES)
-			if (column.name().equals(name))
-				return column;
-		return null;
+		return valueOf(name, VALUES);
 	}
 	
 	/**
-	 * Equivalent of <code>Enum#values()</code>.
+	 * Equivalent of <code>values()</code>.
 	 * 
-	 * @return Enum constants
+	 * @return Pseudo-enum's constants
 	 */
 	public static PlayersDataType<?>[] values() {
 		return VALUES;

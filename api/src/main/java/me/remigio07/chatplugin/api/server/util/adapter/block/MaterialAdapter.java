@@ -59,6 +59,11 @@ public class MaterialAdapter implements Cloneable {
 		return new MaterialAdapter(id);
 	}
 	
+	@Override
+	public String toString() {
+		return "MaterialAdapter{id=\"" + id + "\"}";
+	}
+	
 	/**
 	 * Gets the material adapted for Bukkit environments.
 	 * 

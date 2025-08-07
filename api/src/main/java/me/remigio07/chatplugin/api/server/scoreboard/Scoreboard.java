@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
@@ -49,7 +50,7 @@ public abstract class Scoreboard {
 	protected ScoreboardLines lines;
 	protected ScoreboardNumbers numbers;
 	protected boolean abbreviateLongText;
-	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
+	protected Set<PlaceholderType> placeholderTypes = Collections.emptySet();
 	protected List<ChatPluginServerPlayer> players = new CopyOnWriteArrayList<>();
 	
 	static {
@@ -82,7 +83,7 @@ public abstract class Scoreboard {
 	 * Gets the configuration associated with this scoreboard.
 	 * 
 	 * <p>Will return <code>null</code> if this scoreboard was created using
-	 * {@link ScoreboardManager#createScoreboardBuilder(String, boolean, List)}.</p>
+	 * {@link ScoreboardManager#createScoreboardBuilder(String, boolean, Set)}.</p>
 	 * 
 	 * @return Associated configuration
 	 */
@@ -134,14 +135,14 @@ public abstract class Scoreboard {
 	}
 	
 	/**
-	 * Gets the list of placeholder types used
+	 * Gets the set of placeholder types used
 	 * to translate {@link #getTitles()} and {@link #getLines()}.
 	 * 
 	 * <p><strong>Found at:</strong> "settings.placeholder-types" in {@link #getConfiguration()}</p>
 	 * 
 	 * @return Placeholders used to translate titles and lines
 	 */
-	public List<PlaceholderType> getPlaceholderTypes() {
+	public Set<PlaceholderType> getPlaceholderTypes() {
 		return placeholderTypes;
 	}
 	
@@ -177,7 +178,7 @@ public abstract class Scoreboard {
 	
 	/**
 	 * Represents the builder used to create {@link Scoreboard}s using
-	 * {@link ScoreboardManager#createScoreboardBuilder(String, boolean, List)}.
+	 * {@link ScoreboardManager#createScoreboardBuilder(String, boolean, Set)}.
 	 */
 	public static abstract class Builder {
 		

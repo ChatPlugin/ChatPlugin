@@ -16,10 +16,11 @@
 package me.remigio07.chatplugin.api.common.storage.configuration;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
 import java.nio.file.Path;
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.discord.DiscordIntegrationManager;
@@ -403,8 +404,8 @@ public enum ConfigurationType {
 	 * @return Available configuration types
 	 * @see #isAvailableOnProxy()
 	 */
-	public static List<ConfigurationType> getConfigurationTypes() {
-		return Arrays.asList(values()).stream().filter(type -> !Environment.isProxy() || type.isAvailableOnProxy()).collect(Collectors.toList());
+	public static Set<ConfigurationType> getConfigurationTypes() {
+		return Stream.of(values()).filter(type -> !Environment.isProxy() || type.isAvailableOnProxy()).collect(Collectors.toCollection(() -> EnumSet.noneOf(ConfigurationType.class)));
 	}
 	
 }

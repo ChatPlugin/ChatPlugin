@@ -16,7 +16,7 @@
 package me.remigio07.chatplugin.api.server.tablist.custom_suffix;
 
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.ValueContainer;
@@ -38,8 +38,8 @@ public abstract class CustomSuffixManager implements ChatPluginManager, Runnable
 	protected boolean enabled;
 	protected long updateTimeout, timerTaskID = -1;
 	protected ValueContainer<Integer> displayedValue;
-	protected RenderType renderType;
-	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
+	protected RenderTypeAdapter renderType;
+	protected Set<PlaceholderType> placeholderTypes = Collections.emptySet();
 	protected long loadTime;
 	
 	/**
@@ -81,19 +81,19 @@ public abstract class CustomSuffixManager implements ChatPluginManager, Runnable
 	 * 
 	 * @return Render type of the suffix
 	 */
-	public RenderType getRenderType() {
+	public RenderTypeAdapter getRenderType() {
 		return renderType;
 	}
 	
 	/**
-	 * Gets the list of placeholder types used
+	 * Gets the set of placeholder types used
 	 * to translate {@link #getDisplayedValue()}.
 	 * 
 	 * <p><strong>Found at:</strong> "tablists.settings.custom-suffix.placeholder-types" in {@link ConfigurationType#TABLISTS}</p>
 	 * 
 	 * @return Placeholders used to translate displayed value
 	 */
-	public List<PlaceholderType> getPlaceholderTypes() {
+	public Set<PlaceholderType> getPlaceholderTypes() {
 		return placeholderTypes;
 	}
 	

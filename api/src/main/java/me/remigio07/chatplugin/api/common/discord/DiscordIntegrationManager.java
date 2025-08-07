@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.common.discord;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.Library;
+import me.remigio07.chatplugin.api.common.util.adapter.discord.ActivityTypeAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.annotation.SensitiveData;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;

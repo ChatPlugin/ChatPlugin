@@ -15,7 +15,7 @@
 
 package me.remigio07.chatplugin.server.bukkit.integration.placeholder;
 
-import java.util.Arrays;
+import java.util.EnumSet;
 
 import be.maximvdw.placeholderapi.PlaceholderAPI;
 import be.maximvdw.placeholderapi.PlaceholderReplaceEvent;
@@ -64,7 +64,7 @@ public class MVdWPlaceholderAPIIntegration extends ChatPluginBukkitIntegration<P
 					if (event.getPlayer() == null)
 						return PlaceholderManager.getInstance().translateServerPlaceholders('{' + event.getPlaceholder() + '}', Language.getMainLanguage());
 					ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getPlayer().getUniqueId());
-					return player == null ? "§f" + event.getPlayer().getName() + " §cis not loaded.§r" : event.isOnline() ? PlaceholderManager.getInstance().translatePlaceholders('{' + event.getPlaceholder() + '}', player, Arrays.asList(PlaceholderType.getPlaceholderType(event.getPlaceholder()))) : "§f" + player.getName() + " §cis offline.§r";
+					return player == null ? "§f" + event.getPlayer().getName() + " §cis not loaded.§r" : event.isOnline() ? PlaceholderManager.getInstance().translatePlaceholders('{' + event.getPlaceholder() + '}', player, EnumSet.of(PlaceholderType.getType(event.getPlaceholder()))) : "§f" + player.getName() + " §cis offline.§r";
 				}
 			});
 		}

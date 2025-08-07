@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.server.rank;
 
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import org.bukkit.permissions.Permission;
@@ -61,6 +62,14 @@ public class RankImpl extends Rank {
 	@Override
 	public List<String> formatPlaceholders(List<String> input, Language language) {
 		return input.stream().map(str -> formatPlaceholders(str, language)).collect(Collectors.toList());
+	}
+	
+	@Override
+	public String toString() {
+		return new StringJoiner(", ", "RankImpl{", "}")
+				.add("id=\"" + id + "\"")
+				.add("position=" + position)
+				.toString();
 	}
 	
 	public void setDisplayName(String displayName) { // default: id

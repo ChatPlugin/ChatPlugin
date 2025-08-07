@@ -59,6 +59,11 @@ public class Actionbar {
 		this.hidden = hidden;
 	}
 	
+	@Override
+	public String toString() {
+		return "Actionbar{id=\"" + id + "\"}";
+	}
+	
 	/**
 	 * Gets this actionbar's ID.
 	 * 

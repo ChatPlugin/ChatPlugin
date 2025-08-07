@@ -15,6 +15,7 @@
 
 package me.remigio07.chatplugin.api.server.util.adapter.user;
 
+import java.util.StringJoiner;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -51,6 +52,40 @@ public class CommandSenderAdapter {
 	 */
 	public CommandSenderAdapter(Object commandSender) {
 		this.commandSender = commandSender;
+	}
+	
+	/**
+	 * Gets this sender's hash code.
+	 * 
+	 * <p>Will return the hash code of the
+	 * sender specified by the constructor.</p>
+	 * 
+	 * @return Sender's hash code
+	 */
+	@Override
+	public int hashCode() {
+		return commandSender.hashCode();
+	}
+	
+	/**
+	 * Checks if another object is an instance of {@link CommandSenderAdapter} and
+	 * if the sender specified by the constructor is equal to the other object's one.
+	 * 
+	 * @param obj Object to compare
+	 * @return Whether the two objects are equal
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof CommandSenderAdapter ? ((CommandSenderAdapter) obj).commandSender.equals(commandSender) : false;
+	}
+	
+	@Override
+	public String toString() {
+		return new StringJoiner(", ", "CommandSenderAdapter{", "}")
+				.add("uuid=" + getUUID().toString())
+				.add("name=\"" + getName() + "\"")
+				.add("isConsole=" + isConsole())
+				.toString();
 	}
 	
 	/**
@@ -156,31 +191,6 @@ public class CommandSenderAdapter {
 	@Nullable(why = "Player may not be loaded")
 	public ChatPluginServerPlayer toServerPlayer() {
 		return isConsole() ? null : ServerPlayerManager.getInstance().getPlayer(getUUID());
-	}
-	
-	/**
-	 * Checks if another object is an instance of {@link CommandSenderAdapter} and
-	 * if the sender specified by the constructor is equal to the other object's one.
-	 * 
-	 * @param obj Object to compare
-	 * @return Whether the two objects are equal
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		return obj instanceof CommandSenderAdapter ? ((CommandSenderAdapter) obj).commandSender.equals(commandSender) : false;
-	}
-	
-	/**
-	 * Gets this sender's hash code.
-	 * 
-	 * <p>Will return the hash code of the
-	 * sender specified by the constructor.</p>
-	 * 
-	 * @return Sender's hash code
-	 */
-	@Override
-	public int hashCode() {
-		return commandSender.hashCode();
 	}
 	
 }

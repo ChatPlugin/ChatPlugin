@@ -16,8 +16,10 @@
 package me.remigio07.chatplugin.api.server.util.manager;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
@@ -64,9 +66,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * @param player Player whose placeholders need to be translated
 	 * @param placeholderTypes Placeholder types present in the input
 	 * @return Translated placeholders
-	 * @see PlaceholderType
 	 */
-	public String translatePlaceholders(String input, ChatPluginServerPlayer player, List<PlaceholderType> placeholderTypes) {
+	public String translatePlaceholders(String input, ChatPluginServerPlayer player, Set<PlaceholderType> placeholderTypes) {
 		return translatePlaceholders(input, player, player.getLanguage(), placeholderTypes);
 	}
 	
@@ -82,9 +83,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * @param language Language used to translate the placeholders
 	 * @param placeholderTypes Placeholder types present in the input
 	 * @return Translated placeholders
-	 * @see PlaceholderType
 	 */
-	public String translatePlaceholders(String input, ChatPluginServerPlayer player, Language language, List<PlaceholderType> placeholderTypes) {
+	public String translatePlaceholders(String input, ChatPluginServerPlayer player, Language language, Set<PlaceholderType> placeholderTypes) {
 		return translatePlaceholders(input, player, language, placeholderTypes, true);
 	}
 	
@@ -99,9 +99,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * @param player Player whose placeholders need to be translated
 	 * @param placeholderTypes Placeholder types present in the input
 	 * @return Translated placeholders
-	 * @see PlaceholderType
 	 */
-	public List<String> translatePlaceholders(List<String> input, ChatPluginServerPlayer player, List<PlaceholderType> placeholderTypes) {
+	public List<String> translatePlaceholders(List<String> input, ChatPluginServerPlayer player, Set<PlaceholderType> placeholderTypes) {
 		return translatePlaceholders(input, player, player.getLanguage(), placeholderTypes);
 	}
 	
@@ -117,9 +116,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * @param language Language used to translate the placeholders
 	 * @param placeholderTypes Placeholder types present in the input
 	 * @return Translated placeholders
-	 * @see PlaceholderType
 	 */
-	public List<String> translatePlaceholders(List<String> input, ChatPluginServerPlayer player, Language language, List<PlaceholderType> placeholderTypes) {
+	public List<String> translatePlaceholders(List<String> input, ChatPluginServerPlayer player, Language language, Set<PlaceholderType> placeholderTypes) {
 		return input.stream().map(string -> translatePlaceholders(string, player, language, placeholderTypes)).collect(Collectors.toList());
 	}
 	
@@ -132,7 +130,6 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated
 	 * @return Translated placeholders
-	 * @see PlaceholderType#PLAYER
 	 */
 	public String translatePlayerPlaceholders(String input, ChatPluginServerPlayer player) {
 		return translatePlayerPlaceholders(input, player, player.getLanguage());
@@ -148,7 +145,6 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * @param player Player whose placeholders need to be translated
 	 * @param language Language used to translate the placeholders
 	 * @return Translated placeholders
-	 * @see PlaceholderType#PLAYER
 	 */
 	public String translatePlayerPlaceholders(String input, ChatPluginServerPlayer player, Language language) {
 		return translatePlayerPlaceholders(input, player, language, true);
@@ -163,7 +159,6 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated
 	 * @return Translated placeholders
-	 * @see PlaceholderType#PLAYER
 	 */
 	public List<String> translatePlayerPlaceholders(List<String> input, ChatPluginServerPlayer player) {
 		return translatePlayerPlaceholders(input, player, player.getLanguage());
@@ -179,7 +174,6 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * @param player Player whose placeholders need to be translated
 	 * @param language Language used to translate the placeholders
 	 * @return Translated placeholders
-	 * @see PlaceholderType#PLAYER
 	 */
 	public List<String> translatePlayerPlaceholders(List<String> input, ChatPluginServerPlayer player, Language language) {
 		return input.stream().map(string -> translatePlayerPlaceholders(string, player, language)).collect(Collectors.toList());
@@ -194,7 +188,6 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * @param input Input containing placeholders
 	 * @param language Language used to translate the placeholders
 	 * @return Translated placeholders
-	 * @see PlaceholderType#SERVER
 	 */
 	public String translateServerPlaceholders(String input, Language language) {
 		return translateServerPlaceholders(input, language, true);
@@ -209,7 +202,6 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * @param input Input containing placeholders
 	 * @param language Language used to translate the placeholders
 	 * @return Translated placeholders
-	 * @see PlaceholderType#SERVER
 	 */
 	public List<String> translateServerPlaceholders(List<String> input, Language language) {
 		return input.stream().map(string -> translateServerPlaceholders(string, language)).collect(Collectors.toList());
@@ -224,7 +216,6 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated
 	 * @return Translated placeholders
-	 * @see PlaceholderType#INTEGRATIONS
 	 */
 	public String translateIntegrationsPlaceholders(String input, ChatPluginServerPlayer player) {
 		return translateIntegrationsPlaceholders(input, player, player.getLanguage());
@@ -240,7 +231,6 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * @param player Player whose placeholders need to be translated
 	 * @param language Language used to translate the placeholders
 	 * @return Translated placeholders
-	 * @see PlaceholderType#INTEGRATIONS
 	 */
 	public String translateIntegrationsPlaceholders(String input, ChatPluginServerPlayer player, Language language) {
 		return translateIntegrationsPlaceholders(input, player, player.getLanguage(), true);
@@ -255,7 +245,6 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * @param input Input containing placeholders
 	 * @param player Player whose placeholders need to be translated
 	 * @return Translated placeholders
-	 * @see PlaceholderType#INTEGRATIONS
 	 */
 	public List<String> translateIntegrationsPlaceholders(List<String> input, ChatPluginServerPlayer player) {
 		return translateIntegrationsPlaceholders(input, player, player.getLanguage());
@@ -271,7 +260,6 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * @param player Player whose placeholders need to be translated
 	 * @param language Language used to translate the placeholders
 	 * @return Translated placeholders
-	 * @see PlaceholderType#INTEGRATIONS
 	 */
 	public List<String> translateIntegrationsPlaceholders(List<String> input, ChatPluginServerPlayer player, Language language) {
 		return input.stream().map(string -> translateIntegrationsPlaceholders(string, player, language)).collect(Collectors.toList());
@@ -288,7 +276,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	
 	/**
 	 * Storage's placeholders updater, called once every
-	 * <code>settings.storage-placeholders-update-timeout</code> in config.yml.
+	 * <code>settings.storage-placeholders-update-timeout</code>
+	 * in {@link ConfigurationType#CONFIG}.
 	 */
 	@Override
 	public abstract void run();
@@ -305,9 +294,8 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * @param placeholderTypes Placeholder types present in the input
 	 * @param translateColors Whether to {@link ChatColor#translate(String)} the output
 	 * @return Translated placeholders
-	 * @see PlaceholderType
 	 */
-	public abstract String translatePlaceholders(String input, ChatPluginServerPlayer player, Language language, List<PlaceholderType> placeholderTypes, boolean translateColors);
+	public abstract String translatePlaceholders(String input, ChatPluginServerPlayer player, Language language, Set<PlaceholderType> placeholderTypes, boolean translateColors);
 	
 	/**
 	 * Translates an input string with {@link PlaceholderType#PLAYER} placeholders,
@@ -318,7 +306,6 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * @param language Language used to translate the placeholders
 	 * @param translateColors Whether to {@link ChatColor#translate(String)} the output
 	 * @return Translated placeholders
-	 * @see PlaceholderType#PLAYER
 	 */
 	public abstract String translatePlayerPlaceholders(String input, ChatPluginServerPlayer player, Language language, boolean translateColors);
 	
@@ -330,7 +317,6 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * @param language Language used to translate the placeholders
 	 * @param translateColors Whether to {@link ChatColor#translate(String)} the output
 	 * @return Translated placeholders
-	 * @see PlaceholderType#SERVER
 	 */
 	public abstract String translateServerPlaceholders(String input, Language language, boolean translateColors);
 	
@@ -343,7 +329,6 @@ public abstract class PlaceholderManager implements ChatPluginManager, Runnable 
 	 * @param language Language used to translate the placeholders
 	 * @param translateColors Whether to {@link ChatColor#translate(String)} the output
 	 * @return Translated placeholders
-	 * @see PlaceholderType#INTEGRATIONS
 	 */
 	public abstract String translateIntegrationsPlaceholders(String input, ChatPluginServerPlayer player, Language language, boolean translateColors);
 	

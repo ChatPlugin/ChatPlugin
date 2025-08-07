@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
+import java.util.StringJoiner;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -102,13 +103,18 @@ public class OfflinePlayer {
 	}
 	
 	/**
-	 * Checks if this player corresponds
-	 * to a paid Java or Bedrock account.
+	 * Gets this player's hash code.
 	 * 
-	 * @return Whether this is a paid account
+	 * <p>Will return {@link #getUUID()}'s (if running on online mode)
+	 * or {@link #getName()}'s (if running on offline mode) hash code
+	 * or -1 if the name is <code>null</code>.</p>
+	 * 
+	 * @return Player's hash code
+	 * @throws IllegalStateException If {@link ChatPlugin#isOnlineMode()} cannot be run yet
 	 */
-	public boolean isPaidAccount() {
-		return uuid.version() == 4 || uuid.version() == 0;
+	@Override
+	public int hashCode() {
+		return ChatPlugin.getInstance().isOnlineMode() ? uuid.hashCode() : name == null ? -1 : name.hashCode();
 	}
 	
 	/**
@@ -125,19 +131,22 @@ public class OfflinePlayer {
 		return obj instanceof OfflinePlayer ? ChatPlugin.getInstance().isOnlineMode() ? ((OfflinePlayer) obj).getUUID().equals(uuid) : ((OfflinePlayer) obj).getName() == null ? false : ((OfflinePlayer) obj).getName().equalsIgnoreCase(name) : false;
 	}
 	
-	/**
-	 * Gets this player's hash code.
-	 * 
-	 * <p>Will return {@link #getUUID()}'s (if running on online mode)
-	 * or {@link #getName()}'s (if running on offline mode) hash code
-	 * or -1 if the name is <code>null</code>.</p>
-	 * 
-	 * @return Player's hash code
-	 * @throws IllegalStateException If {@link ChatPlugin#isOnlineMode()} cannot be run yet
-	 */
 	@Override
-	public int hashCode() {
-		return ChatPlugin.getInstance().isOnlineMode() ? uuid.hashCode() : name == null ? -1 : name.hashCode();
+	public String toString() {
+		return new StringJoiner(", ", "OfflinePlayer{", "}")
+				.add("uuid=" + uuid.toString())
+				.add("name=\"" + name + "\"")
+				.toString();
+	}
+	
+	/**
+	 * Checks if this player corresponds
+	 * to a paid Java or Bedrock account.
+	 * 
+	 * @return Whether this is a paid account
+	 */
+	public boolean isPaidAccount() {
+		return uuid.version() == 4 || uuid.version() == 0;
 	}
 	
 	/**

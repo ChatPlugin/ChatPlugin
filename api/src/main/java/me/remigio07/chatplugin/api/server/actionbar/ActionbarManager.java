@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.server.actionbar;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
@@ -59,7 +60,7 @@ public abstract class ActionbarManager implements ChatPluginManager, Runnable {
 	protected boolean enabled, randomOrder, hasPrefix;
 	protected String prefix;
 	protected long sendingTimeout, timerTaskID = -1;
-	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
+	protected Set<PlaceholderType> placeholderTypes = Collections.emptySet();
 	protected List<Actionbar> actionbars = new CopyOnWriteArrayList<>();
 	protected int timerIndex = -1;
 	protected long loadTime;
@@ -120,14 +121,14 @@ public abstract class ActionbarManager implements ChatPluginManager, Runnable {
 	}
 	
 	/**
-	 * Gets the list of placeholder types used
+	 * Gets the set of placeholder types used
 	 * to translate {@link Actionbar#getTexts()}.
 	 * 
 	 * <p><strong>Found at:</strong> "actionbars.settings.placeholder-types" in {@link ConfigurationType#ACTIONBARS}</p>
 	 * 
 	 * @return Placeholders used to translate texts
 	 */
-	public List<PlaceholderType> getPlaceholderTypes() {
+	public Set<PlaceholderType> getPlaceholderTypes() {
 		return placeholderTypes;
 	}
 	

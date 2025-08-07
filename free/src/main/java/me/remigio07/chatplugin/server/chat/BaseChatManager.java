@@ -73,7 +73,7 @@ public abstract class BaseChatManager extends ChatManager {
 		chatEventPriority = ConfigurationType.CHAT.get().getString("chat.event.priority");
 		format = ConfigurationType.CHAT.get().getString("chat.format");
 		recognizedTLDs = ConfigurationType.CHAT.get().getStringList("chat.recognized-tlds").stream().map(String::toLowerCase).collect(Collectors.toCollection(ArrayList::new));
-		placeholderTypes = PlaceholderType.getPlaceholders(ConfigurationType.CHAT.get().getStringList("chat.placeholder-types"));
+		placeholderTypes = PlaceholderType.getTypes(ConfigurationType.CHAT.get().getStringList("chat.placeholder-types"));
 		return true;
 	}
 	

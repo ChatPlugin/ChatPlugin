@@ -15,6 +15,7 @@
 
 package me.remigio07.chatplugin.api.common.util.adapter.text;
 
+import me.remigio07.chatplugin.api.common.util.PseudoEnum;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -23,11 +24,8 @@ import net.md_5.bungee.api.chat.ClickEvent.Action;
 
 /**
  * Represents an action performed on a click event.
- * 
- * <p>This class is a pseudo-{@link Enum}. It contains the following methods:
- * {@link #name()}, {@link #ordinal()}, {@link #valueOf(String)} and {@link #values()}.</p>
  */
-public class ClickActionAdapter {
+public class ClickActionAdapter extends PseudoEnum<ClickActionAdapter> {
 	
 	/**
 	 * Opens the specified URL in the player's default web browser.
@@ -81,10 +79,10 @@ public class ClickActionAdapter {
 	 */
 	public static final ClickActionAdapter CUSTOM = new ClickActionAdapter("CUSTOM");
 	private static final ClickActionAdapter[] VALUES = new ClickActionAdapter[] { OPEN_URL, OPEN_FILE, RUN_COMMAND, SUGGEST_COMMAND, CHANGE_PAGE, COPY_TO_CLIPBOARD, SHOW_DIALOG, CUSTOM };
-	private String name;
+	private static int ordinal = 0;
 	
 	private ClickActionAdapter(String name) {
-		this.name = name;
+		super(name, ordinal++);
 	}
 	
 	/**
@@ -100,31 +98,10 @@ public class ClickActionAdapter {
 		if (Environment.isBungeeCord())
 			try {
 				return Action.valueOf(name);
-			} catch (IllegalArgumentException e) {
+			} catch (IllegalArgumentException iae) {
 				return Action.SUGGEST_COMMAND;
 			}
 		throw new UnsupportedOperationException("Unable to adapt favicon to a BungeeCord's ClickEvent.Action on a " + Environment.getCurrent().getName() + " environment");
-	}
-	
-	/**
-	 * Equivalent of {@link Enum#name()}.
-	 * 
-	 * @return Constant's name
-	 */
-	public String name() {
-		return name;
-	}
-	
-	/**
-	 * Equivalent of {@link Enum#ordinal()}.
-	 * 
-	 * @return Constant's ordinal
-	 */
-	public int ordinal() {
-		for (int i = 0; i < VALUES.length; i++)
-			if (this == VALUES[i])
-				return i;
-		return -1;
 	}
 	
 	/**
@@ -159,29 +136,22 @@ public class ClickActionAdapter {
 	}
 	
 	/**
-	 * Equivalent of <code>Enum#valueOf(String)</code>,
-	 * with the only difference that instead of throwing
-	 * {@link IllegalArgumentException} <code>null</code>
-	 * is returned if the constant's name is invalid.
-	 * 
-	 * <p>This method recognizes Bukkit's,
-	 * BungeeCord's and Velocity's IDs.</p>
+	 * Equivalent of <code>valueOf(String)</code>.
 	 * 
 	 * @param name Constant's name
-	 * @return Enum constant
+	 * @return Pseudo-enum's constant
+	 * @throws NullPointerException If <code>name == null</code>
+	 * @throws IllegalArgumentException If {@link #values()}
+	 * does not contain a constant with the specified name
 	 */
-	@Nullable(why = "Instead of throwing IllegalArgumentException null is returned if the constant's name is invalid")
 	public static ClickActionAdapter valueOf(String name) {
-		for (ClickActionAdapter clickAction : VALUES)
-			if (clickAction.name().equals(name))
-				return clickAction;
-		return null;
+		return valueOf(name, VALUES);
 	}
 	
 	/**
-	 * Equivalent of <code>Enum#values()</code>.
+	 * Equivalent of <code>values()</code>.
 	 * 
-	 * @return Enum constants
+	 * @return Pseudo-enum's constants
 	 */
 	public static ClickActionAdapter[] values() {
 		return VALUES;

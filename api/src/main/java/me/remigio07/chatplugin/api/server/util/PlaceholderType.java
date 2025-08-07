@@ -15,10 +15,9 @@
 
 package me.remigio07.chatplugin.api.server.util;
 
-import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -93,50 +92,43 @@ public enum PlaceholderType {
 	}
 	
 	/**
-	 * Gets a placeholder type from an input String.
+	 * Gets the type of the specified placeholder.
 	 * 
-	 * <p>The input should be equals (ignoring case) to one of this
-	 * enum's constants. If not, <code>null</code> will be returned.</p>
+	 * <p>Will return <code>null</code> if the
+	 * placeholder is not handled by ChatPlugin.</p>
 	 * 
-	 * @param input {@link #name()}, ignoring case
-	 * @return Requested placeholder type or <code>null</code> if the input is invalid
+	 * @param placeholder Placeholder to check, without {brackets} or %percentages%
+	 * @return Placeholder's type
 	 */
-	@Nullable(why = "Input may not correspond to any placeholder type")
-	public static PlaceholderType getPlaceholder(String input) {
-		for (PlaceholderType placeholders : values())
-			if (placeholders.name().equalsIgnoreCase(input))
-				return placeholders;
-		return null;
-	}
-	
-	/**
-	 * Gets a placeholder types list from an input String list.
-	 * 
-	 * @param input Input list containing {@link #name()}s, ignoring case
-	 * @return Requested placeholder types
-	 * @see #getPlaceholder(String)
-	 */
-	@NotNull
-	public static List<PlaceholderType> getPlaceholders(List<String> input) {
-		return input.stream().map(PlaceholderType::getPlaceholder).filter(Objects::nonNull).collect(Collectors.toCollection(ArrayList::new));
-	}
-	
-	/**
-	 * Gets the placeholder type that contains the given identifier.
-	 * 
-	 * <p>Will return <code>null</code> if no placeholder
-	 * types contain the specified identifier.</p>
-	 * 
-	 * @param identifierWithoutBrackets Identifier to check
-	 * @return Requested placeholder type
-	 */
-	@Nullable(why = "Identifier may not belong to any placeholder type")
-	public static PlaceholderType getPlaceholderType(String identifierWithoutBrackets) {
+	@Nullable(why = "Specified placeholder may be invalid")
+	public static PlaceholderType getType(String placeholder) {
+		if (placeholder.startsWith("online@") || placeholder.startsWith("vanished@"))
+			return SERVER;
 		for (PlaceholderType type : values())
 			for (String identifier : type.getPlaceholders())
-				if (identifierWithoutBrackets.equalsIgnoreCase(identifier))
+				if (placeholder.equals(identifier))
 					return type;
 		return null;
+	}
+	
+	/**
+	 * Gets placeholder types from an input
+	 * String list, ignoring invalid ones.
+	 * 
+	 * @param types Placeholder types' {@link #name()}s, ignoring case
+	 * @return Placeholder types
+	 */
+	@NotNull
+	public static Set<PlaceholderType> getTypes(List<String> types) {
+		Set<PlaceholderType> set = EnumSet.noneOf(PlaceholderType.class);
+		
+		for (String type : types)
+			try {
+				set.add(valueOf(type.toUpperCase()));
+			} catch (IllegalArgumentException iae) {
+				
+			}
+		return set;
 	}
 	
 	/**

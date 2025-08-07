@@ -26,6 +26,7 @@ import org.bukkit.boss.BarColor;
 import org.spongepowered.api.boss.BossBarColor;
 import org.spongepowered.api.boss.BossBarColors;
 
+import me.remigio07.chatplugin.api.common.util.PseudoEnum;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -34,12 +35,9 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 /**
  * Environment indipendent (Bukkit and Sponge) bossbar color adapter.
  * 
- * <p>This class is a pseudo-{@link Enum}. It contains the following methods:
- * {@link #name()}, {@link #ordinal()}, {@link #valueOf(String)} and {@link #values()}.</p>
- * 
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Bossbars#colors">ChatPlugin wiki/Modules/Bossbars/Colors</a>
  */
-public class BossbarColorAdapter {
+public class BossbarColorAdapter extends PseudoEnum<BossbarColorAdapter> {
 	
 	/**
 	 * Displays a blue color.
@@ -93,8 +91,8 @@ public class BossbarColorAdapter {
 	 */
 	public static final BossbarColorAdapter RANDOM = new BossbarColorAdapter("RANDOM");
 	private static final BossbarColorAdapter[] VALUES = new BossbarColorAdapter[] { BLUE, GREEN, PINK, PURPLE, RED, WHITE, YELLOW, RANDOM };
+	private static int ordinal = 0;
 	private static Map<String, Object> spongeColors;
-	private String name;
 	
 	static {
 		if (Environment.isSponge())
@@ -110,13 +108,15 @@ public class BossbarColorAdapter {
 	}
 	
 	private BossbarColorAdapter(String name) {
-		this.name = name;
+		super(name, ordinal++);
 	}
 	
 	/**
 	 * Gets the bossbar color adapted for Bukkit environments.
 	 * 
 	 * <p>{@link #RANDOM} may only return a color that {@link #isSupported()}.</p>
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
 	 * 
 	 * @return Bukkit-adapted bossbar color
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBukkit()}
@@ -132,6 +132,8 @@ public class BossbarColorAdapter {
 	 * 
 	 * <p>{@link #RANDOM} may only return a color that {@link #isSupported()}.</p>
 	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
+	 * 
 	 * @return Sponge-adapted bossbar color
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isSponge()}
 	 */
@@ -142,59 +144,58 @@ public class BossbarColorAdapter {
 	}
 	
 	/**
-	 * Equivalent of {@link Enum#name()}.
-	 * 
-	 * @return Constant's name
-	 */
-	public String name() {
-		return name;
-	}
-	
-	/**
-	 * Equivalent of {@link Enum#ordinal()}.
-	 * 
-	 * @return Constant's ordinal
-	 */
-	public int ordinal() {
-		for (int i = 0; i < VALUES.length; i++)
-			if (this == VALUES[i])
-				return i;
-		return -1;
-	}
-	
-	/**
-	 * Checks if this bossbar color is supported on {@link VersionUtils#getVersion()}.
+	 * Checks if this bossbar color is supported
+	 * on {@link VersionUtils#getVersion()}.
 	 * 
 	 * @return Whether this bossbar color is supported
 	 */
 	public boolean isSupported() {
-		return VersionUtils.getVersion().isAtLeast(Version.V1_9) || this == PINK || this == RANDOM;
+		return this == PINK || this == RANDOM || VersionUtils.getVersion().isAtLeast(Version.V1_9);
 	}
 	
 	/**
-	 * Equivalent of <code>Enum#valueOf(String)</code>,
-	 * with the only difference that instead of throwing
-	 * {@link IllegalArgumentException} <code>null</code>
-	 * is returned if the constant's name is invalid.
+	 * Equivalent of <code>valueOf(String)</code>.
 	 * 
 	 * @param name Constant's name
-	 * @return Enum constant
+	 * @return Pseudo-enum's constant
+	 * @throws NullPointerException If <code>name == null</code>
+	 * @throws IllegalArgumentException If {@link #values()}
+	 * does not contain a constant with the specified name
 	 */
-	@Nullable(why = "Instead of throwing IllegalArgumentException null is returned if the constant's name is invalid")
 	public static BossbarColorAdapter valueOf(String name) {
-		for (BossbarColorAdapter color : VALUES)
-			if (color.name().equals(name))
-				return color;
-		return null;
+		return valueOf(name, VALUES);
 	}
 	
 	/**
-	 * Equivalent of <code>Enum#values()</code>.
+	 * Equivalent of <code>values()</code>.
 	 * 
-	 * @return Enum constants
+	 * @return Pseudo-enum's constants
 	 */
 	public static BossbarColorAdapter[] values() {
 		return VALUES;
+	}
+	
+	/**
+	 * Equivalent of {@link #valueOf(String)}, but:
+	 * 	<ul>
+	 * 		<li>case insensitive</li>
+	 * 		<li>returns <code>null</code> instead of throwing {@link IllegalArgumentException}</li>
+	 * 		<li>also recognizes Bukkit- and Sponge-compatible IDs</li>
+	 * 	</ul>
+	 * 
+	 * <p>Will return <code>null</code> if the specified name is invalid.</p>
+	 * 
+	 * @param name Constant's name, case insensitive
+	 * @return Pseudo-enum's constant
+	 * @throws NullPointerException If <code>name == null</code>
+	 */
+	@Nullable(why = "Specified name may be invalid")
+	public static BossbarColorAdapter value(String name) {
+		try {
+			return valueOf(name.toUpperCase());
+		} catch (IllegalArgumentException iae) {
+			return null;
+		}
 	}
 	
 }

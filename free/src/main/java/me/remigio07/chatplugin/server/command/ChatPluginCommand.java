@@ -249,7 +249,7 @@ public class ChatPluginCommand extends BaseCommand {
 			
 			int ms = ChatPlugin.getInstance().reload();
 			
-			sender.sendMessage(ms == -1 ? "§cChatPlugin could not reload and will be disabled. Check the console for more information."
+			sender.sendMessage(ms == -1 ? "§cChatPlugin could not reload and will be disabled." + (sender.isConsole() ? "" : " Check the console for more information.")
 					: (sender.isConsole() ? me.remigio07.chatplugin.api.server.language.Language.getMainLanguage() : LanguageManager.getInstance().getLanguage(new OfflinePlayer(sender.getUUID(), sender.getName()))).getMessage("misc.reload.end", ms));
 		}
 		
@@ -335,7 +335,7 @@ public class ChatPluginCommand extends BaseCommand {
 						if (manager.equals(args[1])) {
 							if (Debugger.getEnabledManagersNames().contains(manager)) {
 								sender.sendMessage(language.getMessage("misc.debug.manager.info", manager + "Manager"));
-								sender.sendMessage(" " + Debugger.getContent(Utils.getOriginalClass(ChatPluginManagers.getInstance().getManager(manager))).trim().replaceAll(" +", " "));
+								sender.sendMessage(Debugger.getChatContent(Utils.getOriginalClass(ChatPluginManagers.getInstance().getManager(manager))));
 							} else sender.sendMessage(language.getMessage("misc.debug.manager.disabled"));
 							return;
 						}

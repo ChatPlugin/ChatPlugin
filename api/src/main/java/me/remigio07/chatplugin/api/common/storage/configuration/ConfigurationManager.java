@@ -16,7 +16,7 @@
 package me.remigio07.chatplugin.api.common.storage.configuration;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 import me.remigio07.chatplugin.api.common.util.VersionChange;
@@ -33,7 +33,7 @@ public abstract class ConfigurationManager implements ChatPluginManager {
 	
 	protected static ConfigurationManager instance;
 	protected boolean enabled;
-	protected Map<ConfigurationType, Configuration> configurations = new HashMap<>();
+	protected Map<ConfigurationType, Configuration> configurations = new EnumMap<>(ConfigurationType.class);
 	protected VersionChange lastVersionChange;
 	protected String path; // temp path string
 	protected long loadTime;

@@ -58,7 +58,7 @@ public class BukkitF3ServerNameManager extends F3ServerNameManager {
 			return;
 		randomOrder = ConfigurationType.F3_SERVER_NAMES.get().getBoolean("f3-server-names.settings.random-order");
 		sendingTimeout = ConfigurationType.F3_SERVER_NAMES.get().getLong("f3-server-names.settings.sending-timeout-ms");
-		placeholderTypes = PlaceholderType.getPlaceholders(ConfigurationType.F3_SERVER_NAMES.get().getStringList("f3-server-names.settings.placeholder-types"));
+		placeholderTypes = PlaceholderType.getTypes(ConfigurationType.F3_SERVER_NAMES.get().getStringList("f3-server-names.settings.placeholder-types"));
 		
 		for (String id : ConfigurationType.F3_SERVER_NAMES.get().getKeys("f3-server-names")) {
 			if (id.equals("settings"))

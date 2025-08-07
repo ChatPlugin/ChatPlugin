@@ -180,10 +180,10 @@ public class GUIManagerImpl extends GUIManager {
 				configuration.contains(path + ".leather-armor-color") ? Color.decode(configuration.getString(path + ".leather-armor-color")) : null,
 				configuration.getString(path + ".permission", null),
 				new ArrayList<>(configuration.getList(path + ".commands", Collections.emptyList())),
-				configuration.getStringList(path + ".item-flags").stream().map(ItemFlagAdapter::valueOf).filter(Objects::nonNull).collect(Collectors.toCollection(ArrayList::new)),
+				configuration.getStringList(path + ".item-flags").stream().map(ItemFlagAdapter::value).filter(Objects::nonNull).collect(Collectors.toCollection(ArrayList::new)),
 				LanguageManager.getInstance().getLanguages().stream().collect(HashMap::new, (map, language) -> map.put(language, configuration.getString(path + ".display-names." + language.getID(), null)), HashMap::putAll),
 				LanguageManager.getInstance().getLanguages().stream().collect(HashMap::new, (map, language) -> map.put(language, configuration.getList(path + ".lores." + language.getID(), null)), HashMap::putAll),
-				new HashMap<>(configuration.getKeys(path + ".enchantments").stream().filter(enchantment -> EnchantmentAdapter.valueOf(enchantment) != null).collect(Collectors.toMap(EnchantmentAdapter::valueOf, enchantment -> configuration.getInt(path + ".enchantments." + enchantment), (first, second) -> first)))
+				new HashMap<>(configuration.getKeys(path + ".enchantments").stream().filter(enchantment -> EnchantmentAdapter.value(enchantment) != null).collect(Collectors.toMap(EnchantmentAdapter::value, enchantment -> configuration.getInt(path + ".enchantments." + enchantment), (first, second) -> first)))
 				);
 		return icon;
 	}

@@ -15,7 +15,7 @@
 
 package me.remigio07.chatplugin.server.scoreboard;
 
-import java.util.List;
+import java.util.Set;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
@@ -31,7 +31,7 @@ public class DummyScoreboardManager extends ScoreboardManager {
 	}
 	
 	@Override
-	public Scoreboard.Builder createScoreboardBuilder(String id, boolean abbreviateTooLongText, List<PlaceholderType> placeholderTypes) {
+	public Scoreboard.Builder createScoreboardBuilder(String id, boolean abbreviateTooLongText, Set<PlaceholderType> placeholderTypes) {
 		return null;
 	}
 	

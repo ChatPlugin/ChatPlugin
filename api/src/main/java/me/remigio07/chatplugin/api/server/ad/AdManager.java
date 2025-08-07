@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.server.ad;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
@@ -50,7 +51,7 @@ public abstract class AdManager implements ChatPluginManager, Runnable {
 	protected String prefix;
 	protected SoundAdapter sound;
 	protected long sendingTimeout, timerTaskID = -1;
-	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
+	protected Set<PlaceholderType> placeholderTypes = Collections.emptySet();
 	protected List<Ad> ads = new CopyOnWriteArrayList<>();
 	protected int timerIndex = -1;
 	protected long loadTime;
@@ -135,14 +136,14 @@ public abstract class AdManager implements ChatPluginManager, Runnable {
 	}
 	
 	/**
-	 * Gets the list of placeholder types used
-	 * to translate {@link Ad#getTexts()}, {@link Ad#getHovers()} and {@link Ad#getClickValues()}.
+	 * Gets the set of placeholder types used to translate {@link Ad#getTexts()},
+	 * {@link Ad#getHovers()} and {@link Ad#getClickValues()}.
 	 * 
 	 * <p><strong>Found at:</strong> "ads.settings.placeholder-types" in {@link ConfigurationType#ADS}</p>
 	 * 
 	 * @return Placeholders used to translate texts, hovers and click values
 	 */
-	public List<PlaceholderType> getPlaceholderTypes() {
+	public Set<PlaceholderType> getPlaceholderTypes() {
 		return placeholderTypes;
 	}
 	

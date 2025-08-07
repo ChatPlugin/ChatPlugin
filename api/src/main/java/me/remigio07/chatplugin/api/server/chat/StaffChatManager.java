@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.server.chat;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -39,7 +40,7 @@ public abstract class StaffChatManager implements ChatPluginManager {
 	protected static StaffChatManager instance;
 	protected boolean enabled;
 	protected String playerFormat, consoleFormat;
-	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
+	protected Set<PlaceholderType> placeholderTypes = Collections.emptySet();
 	protected List<UUID> players = new CopyOnWriteArrayList<>();
 	protected long loadTime;
 	
@@ -78,14 +79,14 @@ public abstract class StaffChatManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the list of placeholder types used
+	 * Gets the set of placeholder types used
 	 * to translate messages sent using the Staff chat.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.staff-chat.placeholder-types" in {@link ConfigurationType#CHAT}</p>
 	 * 
 	 * @return Placeholders used to translate messages
 	 */
-	public List<PlaceholderType> getPlaceholderTypes() {
+	public Set<PlaceholderType> getPlaceholderTypes() {
 		return placeholderTypes;
 	}
 	

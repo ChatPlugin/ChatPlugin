@@ -43,7 +43,7 @@ public class StaffChatManagerImpl extends StaffChatManager {
 			return;
 		playerFormat = ConfigurationType.CHAT.get().getString("chat.staff-chat.format.player");
 		consoleFormat = ConfigurationType.CHAT.get().getString("chat.staff-chat.format.console");
-		placeholderTypes = PlaceholderType.getPlaceholders(ConfigurationType.CHAT.get().getStringList("chat.staff-chat.placeholder-types"));
+		placeholderTypes = PlaceholderType.getTypes(ConfigurationType.CHAT.get().getStringList("chat.staff-chat.placeholder-types"));
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}

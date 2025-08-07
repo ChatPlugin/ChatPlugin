@@ -15,6 +15,7 @@
 
 package me.remigio07.chatplugin.server.gui;
 
+import java.util.StringJoiner;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -175,6 +176,14 @@ public class SinglePageGUIImpl extends SinglePageGUI {
 		return ChatColor.translate(titlesTranslator == null ? title : titlesTranslator.apply(title, language));
 	}
 	
+	@Override
+	public String toString() {
+		return new StringJoiner(", ", "SinglePageGUIImpl{", "}")
+				.add("id=\"" + id + "\"")
+				.add("loaded=" + loaded)
+				.toString();
+	}
+	
 	public static class PerPlayer extends SinglePageGUIImpl implements PerPlayerGUI {
 		
 		private ChatPluginServerPlayer player;
@@ -210,6 +219,15 @@ public class SinglePageGUIImpl extends SinglePageGUI {
 			} skullOwnerFutures.forEach(future -> future.cancel(false));
 			TaskManager.cancelSync(unloadTaskID);
 			GUIManager.getInstance().getGUIs().remove(this);
+		}
+		
+		@Override
+		public String toString() {
+			return new StringJoiner(", ", "SinglePageGUIImpl.PerPlayer{", "}")
+					.add("id=\"" + id + "\"")
+					.add("loaded=" + loaded)
+					.add("player=" + player)
+					.toString();
 		}
 		
 		public void refreshUnloadTask() {

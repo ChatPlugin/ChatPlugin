@@ -15,6 +15,8 @@
 
 package me.remigio07.chatplugin.server.language;
 
+import java.util.StringJoiner;
+
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookup;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookupManager;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
@@ -67,6 +69,15 @@ public class LanguageDetectorImpl extends LanguageDetector {
 	@Override
 	public Language detectUsingGeolocalization(IPLookup ipLookup) {
 		return detect(ipLookup.getCountryCode());
+	}
+	
+	@Override
+	public String toString() {
+		return new StringJoiner(", ", "LanguageDetectorImpl{", "}")
+				.add("enabled=" + enabled)
+				.add("method=" + method)
+				.add("delay=" + delay)
+				.toString();
 	}
 	
 	private Language detect(String countryCode) {

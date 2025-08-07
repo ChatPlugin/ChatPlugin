@@ -15,6 +15,8 @@
 
 package me.remigio07.chatplugin.api.common.util;
 
+import java.util.StringJoiner;
+
 /**
  * Holds information about a server under the proxy.
  */
@@ -35,6 +37,15 @@ public class ServerInformation {
 		this.id = id;
 		this.onlinePlayers = onlinePlayers;
 		this.vanishedPlayers = vanishedPlayers;
+	}
+	
+	@Override
+	public String toString() {
+		return new StringJoiner(", ", "ServerInformation{", "}")
+				.add("id=\"" + id + "\"")
+				.add("onlinePlayers=" + onlinePlayers)
+				.add("vanishedPlayers=" + vanishedPlayers)
+				.toString();
 	}
 	
 	/**

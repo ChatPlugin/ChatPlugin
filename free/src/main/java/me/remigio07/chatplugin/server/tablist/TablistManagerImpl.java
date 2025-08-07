@@ -61,7 +61,7 @@ public class TablistManagerImpl extends TablistManager {
 		playerNamesUpdateTimeout = ConfigurationType.TABLISTS.get().getLong("tablists.settings.player-names.update-timeout-ms");
 		playerNamesPrefix = ConfigurationType.TABLISTS.get().getString("tablists.settings.player-names.prefix");
 		playerNamesSuffix = ConfigurationType.TABLISTS.get().getString("tablists.settings.player-names.suffix");
-		placeholderTypes = PlaceholderType.getPlaceholders(ConfigurationType.TABLISTS.get().getStringList("tablists.settings.placeholder-types"));
+		placeholderTypes = PlaceholderType.getTypes(ConfigurationType.TABLISTS.get().getStringList("tablists.settings.placeholder-types"));
 		
 		for (String id : ConfigurationType.TABLISTS.get().getKeys("tablists")) {
 			if (id.equals("settings"))

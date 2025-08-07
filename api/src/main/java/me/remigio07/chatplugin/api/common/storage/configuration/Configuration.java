@@ -77,6 +77,10 @@ public class Configuration {
 			this.path = path;
 		} else throw new IllegalArgumentException("Path " + (path.getNameCount() == 0 ? "<empty path>" : "\"" + path.getFileName().toString() + "\"") + " does not end with \".yml\" or \".yaml\" (ignoring case)");
 	}
+	
+	@Override
+	public String toString() {
+		return "Configuration{path=" + path.toString() + "}";
 	}
 	
 	/**

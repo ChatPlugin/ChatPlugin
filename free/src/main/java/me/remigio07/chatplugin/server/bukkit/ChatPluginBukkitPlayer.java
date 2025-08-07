@@ -23,6 +23,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.StringJoiner;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -280,10 +281,6 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 		});
 	}
 	
-	public void setPlayerListName(String name) {
-		player.setPlayerListName(name);
-	}
-	
 	@Override
 	public boolean hasPermission(String permission) {
 		return player.hasPermission(permission);
@@ -378,6 +375,14 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 		} return Locale.US;
 	}
 	
+	@Override
+	public String toString() {
+		return new StringJoiner(", ", "ChatPluginBukkitPlayer{", "}")
+				.add("uuid=" + uuid.toString())
+				.add("name=\"" + name + "\"")
+				.toString();
+	}
+	
 	public Object getCraftPlayer() {
 		return craftPlayer;
 	}
@@ -388,6 +393,10 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
 	public void setLastLocale(Locale lastLocale) {
 		this.lastLocale = lastLocale;
+	}
+	
+	public void setPlayerListName(String name) {
+		player.setPlayerListName(name);
 	}
 	
 }

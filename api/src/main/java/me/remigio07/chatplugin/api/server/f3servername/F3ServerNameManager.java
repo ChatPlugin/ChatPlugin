@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.api.server.f3servername;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
@@ -65,7 +66,7 @@ public abstract class F3ServerNameManager implements ChatPluginManager, Runnable
 	protected static F3ServerNameManager instance;
 	protected boolean enabled, randomOrder;
 	protected long sendingTimeout, timerTaskID = -1;
-	protected List<PlaceholderType> placeholderTypes = Collections.emptyList();
+	protected Set<PlaceholderType> placeholderTypes = Collections.emptySet();
 	protected List<F3ServerName> f3ServerNames = new CopyOnWriteArrayList<>();
 	protected int timerIndex = -1;
 	protected long loadTime;
@@ -103,14 +104,14 @@ public abstract class F3ServerNameManager implements ChatPluginManager, Runnable
 	}
 	
 	/**
-	 * Gets the list of placeholder types used
+	 * Gets the set of placeholder types used
 	 * to translate {@link F3ServerName#getTexts()}.
 	 * 
 	 * <p><strong>Found at:</strong> "f3-server-names.settings.placeholder-types" in {@link ConfigurationType#F3_SERVER_NAMES}</p>
 	 * 
 	 * @return Placeholders used to translate texts
 	 */
-	public List<PlaceholderType> getPlaceholderTypes() {
+	public Set<PlaceholderType> getPlaceholderTypes() {
 		return placeholderTypes;
 	}
 	

@@ -17,8 +17,6 @@ package me.remigio07.chatplugin.server.chat;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
@@ -74,7 +72,7 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 		socialspyFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.format.socialspy");
 		senderPlaceholderFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.format.placeholder.sender");
 		recipientPlaceholderFormat = ConfigurationType.CHAT.get().getString("chat.private-messages.format.placeholder.recipient");
-		placeholderPlaceholderTypes = PlaceholderType.getPlaceholders(ConfigurationType.CHAT.get().getStringList("chat.private-messages.format.placeholder.placeholder-types"));
+		placeholderPlaceholderTypes = PlaceholderType.getTypes(ConfigurationType.CHAT.get().getStringList("chat.private-messages.format.placeholder.placeholder-types"));
 		soundEnabled = ConfigurationType.CHAT.get().getBoolean("chat.private-messages.sound.enabled");
 		sound = new SoundAdapter(ConfigurationType.CHAT.get(), "chat.private-messages.sound");
 		advancementsEnabled = ConfigurationType.CHAT.get().getBoolean("chat.private-messages.advancements.enabled");
@@ -87,7 +85,7 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 			advancementsEnabled = false;
 		} try {
 			advancementsIconMaterial = new MaterialAdapter(ConfigurationType.CHAT.get().getString("chat.private-messages.advancements.icon.material").toUpperCase());
-		} catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException iae) {
 			String material = Environment.isSponge() || VersionUtils.getVersion().isAtLeast(Version.V1_13) ? "WRITABLE_BOOK" : "BOOK_AND_QUILL";
 			
 			LogManager.log("Invalid material (\"{0}\") set at \"chat.private-messages.advancements.icon.material\" in chat.yml; setting to default value of {1}.", 2, ConfigurationType.CHAT.get().getString("chat.private-messages.advancements.icon.material"), material);
@@ -96,10 +94,18 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 		} advancementsIconGlowing = ConfigurationType.CHAT.get().getBoolean("chat.private-messages.advancements.icon.glowing");
 		bypassAntispamChecks = new ArrayList<>();
 		
-		for (DenyChatReason<?> check : ConfigurationType.CHAT.get().getStringList("chat.private-messages.bypass-antispam-checks").stream().map(DenyChatReason::valueOf).filter(Objects::nonNull).collect(Collectors.toList()))
-			if (check.getHandlerClass() == AntispamManager.class)
-				bypassAntispamChecks.add((DenyChatReason<AntispamManager>) check);
-		socialspyOnJoinEnabled = ConfigurationType.CHAT.get().getBoolean("chat.private-messages.socialspy-on-join-enabled");
+		for (String check : ConfigurationType.CHAT.get().getStringList("chat.private-messages.bypass-antispam-checks")) {
+			try {
+				DenyChatReason<?> reason = DenyChatReason.valueOf(check);
+				
+				if (reason.getHandlerClass() == AntispamManager.class) {
+					bypassAntispamChecks.add((DenyChatReason<AntispamManager>) reason);
+					continue;
+				}
+			} catch (IllegalArgumentException iae) {
+				
+			} LogManager.log("Invalid deny chat reason (\"{0}\") specified at \"chat.private-messages.bypass-antispam-checks\" in chat.yml: only CAPS, FLOOD, IP_ADDRESS, SPAM, SWEAR and URL are allowed; skipping it.", 2, check);
+		} socialspyOnJoinEnabled = ConfigurationType.CHAT.get().getBoolean("chat.private-messages.socialspy-on-join-enabled");
 		mutedPlayersBlocked = ConfigurationType.CHAT.get().getBoolean("chat.private-messages.muted-players-blocked");
 		replyToLastSender = ConfigurationType.CHAT.get().getBoolean("chat.private-messages.reply-to-last-sender");
 		enabled = true;

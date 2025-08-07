@@ -55,7 +55,7 @@ import me.remigio07.chatplugin.api.server.scoreboard.ScoreboardManager;
 import me.remigio07.chatplugin.api.server.tablist.Tablist;
 import me.remigio07.chatplugin.api.server.tablist.TablistManager;
 import me.remigio07.chatplugin.api.server.tablist.custom_suffix.CustomSuffixManager;
-import me.remigio07.chatplugin.api.server.tablist.custom_suffix.RenderType;
+import me.remigio07.chatplugin.api.server.tablist.custom_suffix.RenderTypeAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.scoreboard.ObjectiveAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.server.join_quit.QuitMessageManagerImpl.QuitPacketImpl;
@@ -104,7 +104,7 @@ public class SpongePlayerManager extends ServerPlayerManager {
 			
 			// custom suffix
 			if (CustomSuffixManager.getInstance().isEnabled() && !serverPlayer.isBedrockPlayer()) {
-				scoreboard.addObjective(Objective.builder().name("tablist_suffix").criterion(CustomSuffixManager.getInstance().getRenderType() == RenderType.HEARTS ? Criteria.HEALTH : Criteria.DUMMY).build());
+				scoreboard.addObjective(Objective.builder().name("tablist_suffix").criterion(CustomSuffixManager.getInstance().getRenderType() == RenderTypeAdapter.HEARTS ? Criteria.HEALTH : Criteria.DUMMY).build());
 				
 				Objective customSuffix = scoreboard.getObjective("tablist_suffix").get();
 				
@@ -171,7 +171,7 @@ public class SpongePlayerManager extends ServerPlayerManager {
 			scoreboard.getScores().forEach(score -> scoreboard.removeScores(score.getName()));
 			scoreboard.getTeams().forEach(Team::unregister);
 			scoreboard.getObjectives().forEach(scoreboard::removeObjective);
-			serverPlayer.toAdapter().spongeValue().setScoreboard(Sponge.getServer().getServerScoreboard().get());
+			Sponge.getServer().getServerScoreboard().ifPresent(serverScoreboard -> serverPlayer.toAdapter().spongeValue().setScoreboard(serverScoreboard));
 			players.values().forEach(other -> Iterables.getFirst(other.getObjective().spongeValue().getScoreboards(), null).getTeam(serverPlayer.getRank().formatIdentifier(serverPlayer)).ifPresent(Team::unregister));
 		} else if (TablistManager.getInstance().isEnabled()) {
 			((ChatPluginSpongePlayer) serverPlayer).setPlayerListName(serverPlayer, null);

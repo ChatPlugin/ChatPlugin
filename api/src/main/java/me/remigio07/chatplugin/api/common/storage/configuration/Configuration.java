@@ -15,15 +15,12 @@
 
 package me.remigio07.chatplugin.api.common.storage.configuration;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.FileAttribute;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -48,33 +45,38 @@ public class Configuration {
 	protected ConfigurationType type;
 	protected Yaml yaml;
 	protected ConfigurationMappings mappings;
-	protected File file;
+	protected Path path;
 	
 	/**
 	 * Constructs an internal configuration of ChatPlugin.
 	 * 
-	 * @deprecated Internal use only. Use {@link #Configuration(File)} instead.
+	 * @deprecated Internal use only. Use {@link #Configuration(Path)} instead.
 	 * @param type Configuration's type
 	 */
 	@Deprecated
 	public Configuration(ConfigurationType type) {
 		this.type = type;
-		file = type.getFile();
+		path = type.toPath();
 	}
 	
 	/**
-	 * Constructs a new configuration of type {@link ConfigurationType#CUSTOM}.
+	 * Constructs a new {@link ConfigurationType#CUSTOM} configuration.
 	 * 
-	 * <p>You may want to {@link #load()} this configuration after calling {@link #createFile()}.</p>
+	 * <p>You may want to {@link #load()} this configuration
+	 * after calling {@link #createFile(FileAttribute...)}.</p>
 	 * 
-	 * @param file Configuration's file
-	 * @throws IllegalArgumentException If file's name does not end with ".yml" or ".yaml" (ignoring case)
+	 * @param path Configuration's path
+	 * @throws IllegalArgumentException If the path does
+	 * not end with ".yml" or ".yaml" (ignoring case)
 	 */
-	public Configuration(File file) {
-		if (file.getName().toLowerCase().endsWith(".yml") || file.getName().toLowerCase().endsWith(".yaml")) {
+	public Configuration(Path path) {
+		String str = path.toString().toLowerCase();
+		
+		if (str.endsWith(".yml") || str.endsWith(".yaml")) {
 			type = ConfigurationType.CUSTOM;
-			this.file = file;
-		} else throw new IllegalArgumentException("File name \"" + file.getName() + "\" does not end with \".yml\" or \".yaml\" (ignoring case)");
+			this.path = path;
+		} else throw new IllegalArgumentException("Path " + (path.getNameCount() == 0 ? "<empty path>" : "\"" + path.getFileName().toString() + "\"") + " does not end with \".yml\" or \".yaml\" (ignoring case)");
+	}
 	}
 	
 	/**
@@ -109,34 +111,34 @@ public class Configuration {
 	}
 	
 	/**
-	 * Gets this configuration's file.
+	 * Gets this configuration's path.
 	 * 
-	 * @return Configuration's file
+	 * @return Configuration's path
 	 */
 	@NotNull
-	public File getFile() {
-		return file;
+	public Path getPath() {
+		return path;
 	}
 	
 	/**
-	 * Creates {@link #getFile()} if it does not exist.
+	 * Creates this configuration's file if it does not exist.
 	 * 
+	 * @param attributes File's optional attributes
 	 * @throws IOException If something goes wrong
 	 */
-	public void createFile() throws IOException {
-		if (!file.exists()) {
-			if (file.getParentFile() != null)
-				file.getParentFile().mkdirs();
-			file.createNewFile();
+	public void createFile(FileAttribute<?>... attributes) throws IOException {
+		if (!Files.exists(path)) {
+			if (path.getParent() != null)
+				Files.createDirectories(path.getParent());
+			Files.createFile(path, attributes);
 		}
 	}
 	
 	/**
-	 * Loads {@link #getMappings()} from {@link #getFile()}.
+	 * Loads mappings from this configuration's file.
 	 * 
-	 * @throws FileNotFoundException If {@link #getFile()} does not exist
 	 * @throws IOException If something goes wrong
-	 * @see #createFile()
+	 * @see #createFile(FileAttribute...)
 	 */
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	public void load() throws IOException {
@@ -158,7 +160,7 @@ public class Configuration {
 					
 				});
 			}};
-		} catch (NoSuchMethodError e) { // compatible with older SnakeYAML versions
+		} catch (NoSuchMethodError nsme) { // compatible with older SnakeYAML versions
 			representer = new Representer() {{
 				representers.put(ConfigurationMappings.class, new Represent() {
 					
@@ -171,17 +173,17 @@ public class Configuration {
 			}};
 		} yaml = new Yaml(representer, options);
 		
-		if (!file.exists())
+		if (!Files.exists(path))
 			map = yaml.loadAs("", LinkedHashMap.class);
-		else try (InputStream input = new FileInputStream(file)) {
+		else try (InputStream input = Files.newInputStream(path)) {
 			map = yaml.loadAs(input, LinkedHashMap.class);
-		} catch (YAMLException e) {
-			throw new IOException("failed to load " + file.getName() + " " + e.getMessage(), e);
+		} catch (YAMLException yamle) {
+			throw new IOException("failed to load " + (path.getNameCount() == 0 ? "<empty path>" : "\"" + path.getFileName().toString() + "\"") + ": " + yamle.getLocalizedMessage(), yamle);
 		} mappings = new ConfigurationMappings(map == null ? new LinkedHashMap<>() : map);
 	}
 	
 	/**
-	 * Saves {@link #getMappings()} into {@link #getFile()}.
+	 * Saves mappings into this configuration's file.
 	 * 
 	 * @throws IOException If something goes wrong
 	 * @throws IllegalStateException If {@link #load()} has not been called yet
@@ -189,7 +191,7 @@ public class Configuration {
 	public void save() throws IOException {
 		if (yaml == null)
 			throw new IllegalStateException("Configuration#load() must be called at least once before saving");
-		try (Writer writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
+		try (Writer writer = Files.newBufferedWriter(path)) {
 			yaml.dump(mappings.getMappings(), writer);
 		}
 	}

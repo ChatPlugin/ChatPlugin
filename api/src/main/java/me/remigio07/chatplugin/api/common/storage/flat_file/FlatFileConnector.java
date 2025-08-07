@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.nio.file.Files;
 import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
@@ -37,9 +38,9 @@ public abstract class FlatFileConnector extends StorageConnector {
 	}
 	
 	@Override
-	public void createDataContainer(DataContainer container) throws SQLException, IOException {
-		LogManager.log("Creating default data container \"{0}\"...", 0, container.getFlatFile().getName());
-		container.getFlatFile().createNewFile();
+	public void createDataContainer(DataContainer container) throws IOException {
+		LogManager.log("Creating default data container \"{0}\"...", 0, container.getFlatFile().getFileName().toString());
+		Files.createFile(container.getFlatFile());
 	}
 	
 }

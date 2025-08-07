@@ -194,7 +194,7 @@ public abstract class GUIManager implements ChatPluginManager {
 	/**
 	 * Reads a GUI layout from the specified configuration.
 	 * 
-	 * <p>The GUI layout's ID is obtained by removing {@link Configuration#getFile()}'s
+	 * <p>The GUI layout's ID is obtained by removing {@link Configuration#getPath()}'s
 	 * extension and has to match {@link #GUI_ID_PATTERN}.
 	 * The returned GUI layout is a {@link FillableGUILayout} if <code>configuration</code> contains
 	 * mappings for "settings.filling-function" or {@link SinglePageGUILayout} otherwise.</p>

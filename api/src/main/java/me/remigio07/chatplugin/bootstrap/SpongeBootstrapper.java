@@ -15,6 +15,7 @@
 
 package me.remigio07.chatplugin.bootstrap;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 import org.slf4j.Logger;
@@ -70,7 +71,7 @@ public class SpongeBootstrapper {
 		instance = this;
 		Environment.currentEnvironment = Environment.SPONGE;
 		
-		JARLibraryLoader.getInstance().initialize(logger, dataFolder);
+		JARLibraryLoader.getInstance().open(logger, dataFolder);
 	}
 	
 	/**
@@ -82,6 +83,13 @@ public class SpongeBootstrapper {
 	@Listener
 	public void onGameStoppedServer(GameStoppedServerEvent event) {
 		ChatPlugin.getInstance().unload();
+		
+		try {
+			JARLibraryLoader.getInstance().close();
+			IsolatedClassLoader.getInstance().close();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
 	}
 	
 	/**

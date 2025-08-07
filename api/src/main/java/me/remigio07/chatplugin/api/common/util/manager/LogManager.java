@@ -15,11 +15,10 @@
 
 package me.remigio07.chatplugin.api.common.util.manager;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -41,28 +40,23 @@ public abstract class LogManager implements ChatPluginManager {
 	protected boolean enabled;
 	protected Boolean debug = null;
 	protected LoggerType loggerType;
-	protected File file;
+	protected Path file;
 	protected SimpleDateFormat dateFormat = new SimpleDateFormat("[MM-dd HH:mm:ss]: ");
 	protected long loadTime;
 	
 	@Override
 	public void load() throws ChatPluginManagerException {
-		if (!(file = new File(ChatPlugin.getInstance().getDataFolder(), "chatplugin.log")).exists())
-			try {
-				boolean freshInstallation = !file.getParentFile().exists();
-				
-				if (freshInstallation)
-					file.getParentFile().mkdirs();
-				file.createNewFile();
-				
-				if (freshInstallation)
+		try {
+			if (!Files.exists(file = ChatPlugin.getInstance().getDataFolder().resolve("chatplugin.log"))) {
+				if (!Files.exists(file.getParent())) {
+					Files.createDirectories(file.getParent());
 					logMessage("Fresh installation? Welcome! Generating default files for you. Follow this guide for proper installation: https://remigio07.me/chatplugin/wiki/getting-started/Installation", LogLevel.WARNING);
-			} catch (IOException e) {
-				throw new ChatPluginManagerException(this, e);
-			}
-		else if (file.length() > 10 * MemoryUtils.MEGABYTE.getToBytesRatio())
-			logMessage("Log file chatplugin.log's size is over 10 MB (currently " + MemoryUtils.formatMemory(file.length(), MemoryUtils.MEGABYTE) + " MB). This might impact performance. It is recommended to stop the server and rename or delete the file before starting again.", LogLevel.WARNING);
-		enabled = true;
+				}
+			} else if (Files.size(file) > 10 * MemoryUtils.MEGABYTE.getToBytesRatio())
+				logMessage("Log file chatplugin.log's size is over 10 MB (currently " + MemoryUtils.formatMemory(Files.size(file), MemoryUtils.MEGABYTE) + " MB). This might impact performance. It is recommended to stop the server and rename or delete the file before starting again.", LogLevel.WARNING);
+		} catch (IOException ioe) {
+			throw new ChatPluginManagerException(this, ioe);
+		} enabled = true;
 	}
 	
 	@Override
@@ -126,11 +120,11 @@ public abstract class LogManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the log file.
+	 * Gets the log file's path.
 	 * 
-	 * @return Log file
+	 * @return Log file's path
 	 */
-	public File getFile() {
+	public Path getFile() {
 		return file;
 	}
 	
@@ -153,10 +147,10 @@ public abstract class LogManager implements ChatPluginManager {
 	public void writeToFile(String message) {
 		if (file == null)
 			return;
-		try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file, true), StandardCharsets.UTF_8)) {
+		try (BufferedWriter writer = Files.newBufferedWriter(file)) {
 			writer.write(dateFormat.format(new Date()) + ChatColor.stripColor(message) + "\n");
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 		}
 	}
 	

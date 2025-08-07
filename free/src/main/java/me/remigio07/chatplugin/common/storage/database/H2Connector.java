@@ -15,7 +15,6 @@
 
 package me.remigio07.chatplugin.common.storage.database;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -56,8 +55,7 @@ public class H2Connector extends DatabaseConnector {
 				}, 1000L);
 			connection = (Connection) IsolatedClassLoader.getInstance().loadClass("org.h2.jdbc.JdbcConnection").getConstructor(String.class, Properties.class, String.class, Object.class, boolean.class).newInstance(
 					"jdbc:h2:file:"
-					+ DatabaseManager.getInstance().getFolder().getAbsolutePath()
-					+ File.separator + ConfigurationType.CONFIG.get().getString("storage.database.file-name")
+					+ DatabaseManager.getInstance().getFolder().resolve(ConfigurationType.CONFIG.get().getString("storage.database.file-name")).toAbsolutePath().toString()
 					+ ";LOCK_MODE=2;AUTO_RECONNECT=TRUE;MODE=MySQL" + (serverMode ? ";AUTO_SERVER=TRUE" : ""),
 					new Properties(),
 					null,

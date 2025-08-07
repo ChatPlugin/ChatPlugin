@@ -57,7 +57,7 @@ public class PingManagerImpl extends PingManager {
 				} catch (IllegalArgumentException iae) {
 					LogManager.log("Invalid maximum ping ({0}) set at \"ping.qualities.{1}\" in config.yml: the number must be at least 0; skipping it.", 2, maximumPing, id);
 				}
-			else LogManager.log("Missing translation at \"ping.{0}\" in {1}; skipping it.", 2, id, messages.getFile().getName());
+			else LogManager.log("Missing translation at \"ping.{0}\" in {1}; skipping it.", 2, id, messages.getPath().getFileName().toString());
 		}  if (qualities.isEmpty()) {
 			qualities.add(new PingQuality("default-quality", 0));
 			LogManager.log("No ping qualities have been found at \"ping.qualities\" in config.yml.", 1);

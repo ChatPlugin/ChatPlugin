@@ -15,7 +15,7 @@
 
 package me.remigio07.chatplugin.api.common.storage;
 
-import java.io.File;
+import java.nio.file.Path;
 
 import me.remigio07.chatplugin.api.common.storage.database.DatabaseManager;
 import me.remigio07.chatplugin.api.common.util.Utils;
@@ -119,14 +119,14 @@ public enum DataContainer {
 	/**
 	 * Gets this data container's flat-file.
 	 * 
-	 * @return Data container's file
+	 * @return Data container's path
 	 * @throws UnsupportedOperationException If {@link StorageMethod#isDatabase()}
 	 */
-	public File getFlatFile() {
+	public Path getFlatFile() {
 		StorageMethod method = StorageManager.getInstance().getMethod();
 		
 		if (method.isFlatFile())
-			return new File(StorageManager.getInstance().getFolder(), getName() + (method == StorageMethod.YAML ? ".yml" : ".json"));
+			return StorageManager.getInstance().getFolder().resolve(getName() + (method == StorageMethod.YAML ? ".yml" : ".json"));
 		throw new UnsupportedOperationException("Unable to obtain a data container's file when using " + method.getName() + " as storage method.");
 	}
 	

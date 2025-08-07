@@ -15,12 +15,9 @@
 
 package me.remigio07.chatplugin.api.server.language;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.ip_lookup.IPLookup;
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
@@ -35,15 +32,14 @@ import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
  */
 public abstract class Language {
 	
-	private String id, displayName;
-	private List<String> countryCodes;
-	private Configuration configuration;
+	protected String id, displayName;
+	protected List<String> countryCodes;
+	protected Configuration configuration;
 	
-	protected Language(String id, String displayName, List<String> countryCodes) throws IOException {
+	protected Language(String id, String displayName, List<String> countryCodes) {
 		this.id = id;
 		this.displayName = displayName;
 		this.countryCodes = countryCodes;
-		configuration = id.equals("english") ? ConfigurationType.MESSAGES.get() : new Configuration(new File(ChatPlugin.getInstance().getDataFolder().getAbsolutePath() + File.separator + "custom-messages", "messages-" + id + ".yml"));
 	}
 	
 	/**

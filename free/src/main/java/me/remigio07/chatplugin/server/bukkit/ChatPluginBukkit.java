@@ -17,6 +17,8 @@ package me.remigio07.chatplugin.server.bukkit;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -65,7 +67,7 @@ public class ChatPluginBukkit extends ChatPlugin {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public int load(Logger logger, File dataFolder) {
+	public int load(Logger logger, Path dataFolder) {
 		state.set(ChatPluginState.STARTING);
 		
 		long ms = System.currentTimeMillis();
@@ -144,21 +146,19 @@ public class ChatPluginBukkit extends ChatPlugin {
 			
 			if (reload)
 				try {
-					File file = new File(getDataFolder(), "online-players-data.yml");
+					Path path = dataFolder.resolve("files" + File.separator + "online-players-data.yml");
+					Configuration onlinePlayersData = new Configuration(path);
 					
-					if (file.exists())
-						file.delete();
-					Configuration onlinePlayersData = new Configuration(file);
-					
-					file.deleteOnExit();
+					Files.deleteIfExists(path);
+					path.toFile().deleteOnExit();
 					onlinePlayersData.load();
 					
 					for (UUID player : ServerPlayerManager.getPlayersVersions().keySet()) {
-						String path = player.toString() + ".";
+						String path2 = player.toString() + ".";
 						
-						onlinePlayersData.set(path + "version", ServerPlayerManager.getPlayerVersion(player).getName());
-						onlinePlayersData.set(path + "login-time", ServerPlayerManager.getPlayerLoginTime(player).longValue());
-						onlinePlayersData.set(path + "bedrock", ServerPlayerManager.isBedrockPlayer(player));
+						onlinePlayersData.set(path2 + "version", ServerPlayerManager.getPlayerVersion(player).getName());
+						onlinePlayersData.set(path2 + "login-time", ServerPlayerManager.getPlayerLoginTime(player).longValue());
+						onlinePlayersData.set(path2 + "bedrock", ServerPlayerManager.isBedrockPlayer(player));
 					} onlinePlayersData.save();
 				} catch (IOException ioe) {
 					LogManager.log("IOException occurred while saving online players' data during server reload: {0}; players will be kicked.", 2, ioe.getLocalizedMessage());

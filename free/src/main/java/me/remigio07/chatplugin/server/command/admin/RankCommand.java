@@ -460,7 +460,7 @@ public class RankCommand extends BaseCommand {
 									.clickEvent(ClickEvent.runCommand("/rank list " + String.valueOf(page + 2)))
 									);
 						sendComponents(sender, component.append(pageSwitcher).append(Utils.deserializeLegacy(footer[1] == " " ? "" : footer[1], false)));
-					} else sender.sendMessage(language.getMessage("misc.prefix") + ChatColor.translate(" &cMessage specified at &fpage-switcher.footer &cin &f" + language.getConfiguration().getFile().getName() + " &cdoes not contain the &f{page_switcher} &cplaceholder."));
+					} else sender.sendMessage(language.getMessage("misc.prefix") + ChatColor.translate(" &cMessage specified at &fpage-switcher.footer &cin &f" + language.getConfiguration().getPath().getFileName().toString() + " &cdoes not contain the &f{page_switcher} &cplaceholder."));
 				}
 			} else sender.sendMessage(formatPlaceholders(language.getMessage("page-switcher.invalid"), page + 1, pages));
 		}

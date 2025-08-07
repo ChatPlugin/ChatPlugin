@@ -164,8 +164,8 @@ public class ChatPluginCommand extends BaseCommand {
 		
 		@Override
 		public void execute(CommandSenderAdapter sender, me.remigio07.chatplugin.api.server.language.Language language, String[] args) {
-			if (sender.getName().equals("Remigio07") || sender.hasPermission(super.getPermission()))
-				sender.sendMessage(language.getMessage("commands.version", ChatPlugin.getInstance().isPremium() ? Utils.isPrivateVersion() ? "§5Private" : "§6Premium" : "§2Free", ChatPlugin.VERSION, VersionUtils.getImplementationName(), VersionUtils.getVersion().getName()));
+			if (sender.getName().equals("Remigio07") || sender.hasPermission(super.getPermission())) // yeah, I can.
+				sender.sendMessage(language.getMessage("commands.version", ChatPlugin.getInstance().isPremium() ? Utils.isPrivateEdition() ? "§5Private" : "§6Premium" : "§2Free", ChatPlugin.VERSION, VersionUtils.getImplementationName(), VersionUtils.getVersion().getName()));
 			else sender.sendMessage(language.getMessage("misc.no-permission"));
 		}
 		

@@ -15,6 +15,7 @@
 
 package me.remigio07.chatplugin.api.common.storage.configuration;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -41,7 +42,7 @@ public class ConfigurationMappings {
 	/**
 	 * Creates new mappings for a configuration.
 	 * 
-	 * @deprecated Internal use only. Use {@link Configuration#Configuration(java.io.File)}
+	 * @deprecated Internal use only. Use {@link Configuration#Configuration(Path)}
 	 * to create custom configurations and {@link Configuration#load()} to load them.
 	 * @param mappings Configuration's mappings
 	 */

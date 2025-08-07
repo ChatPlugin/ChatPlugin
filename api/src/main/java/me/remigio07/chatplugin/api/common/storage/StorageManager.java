@@ -15,8 +15,11 @@
 
 package me.remigio07.chatplugin.api.common.storage;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
@@ -40,9 +43,9 @@ public abstract class StorageManager implements ChatPluginManager {
 	protected StorageConnector connector;
 	protected boolean enabled;
 	protected StorageMethod method;
-	protected File folder;
+	protected Path folder;
 	protected long playersAutoCleanerPeriod = -1, loadTime;
-	protected String engine; // not used - here to be read by the debugger
+	protected String engine; // unused: here to be read by the debugger
 	
 	@Override
 	public boolean isEnabled() {
@@ -51,8 +54,11 @@ public abstract class StorageManager implements ChatPluginManager {
 	
 	@Override
 	public void load() throws ChatPluginManagerException {
-		method = StorageMethod.valueOf(ConfigurationType.CONFIG.get().getString("storage.method").toUpperCase());
-		(folder = new File(ConfigurationType.CONFIG.get().getString("storage.folder").replace("{0}", ChatPlugin.getInstance().getDataFolder().getAbsolutePath()))).mkdirs();
+		try {
+			Files.createDirectories(folder = Paths.get(ConfigurationType.CONFIG.get().getString("storage.folder").replace("{0}", ChatPlugin.getInstance().getDataFolder().toAbsolutePath().toString())));
+		} catch (InvalidPathException | IOException e) {
+			throw new ChatPluginManagerException(this, e);
+		} method = StorageMethod.valueOf(ConfigurationType.CONFIG.get().getString("storage.method").toUpperCase());
 		playersAutoCleanerPeriod = Utils.getTime(ConfigurationType.CONFIG.get().getString("storage.players-auto-cleaner-period"), false, false);
 	}
 	
@@ -98,7 +104,7 @@ public abstract class StorageManager implements ChatPluginManager {
 	 * 
 	 * @return Storage's folder
 	 */
-	public File getFolder() {
+	public Path getFolder() {
 		return folder;
 	}
 	

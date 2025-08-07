@@ -59,7 +59,7 @@ public class TPSManagerImpl extends TPSManager {
 				} catch (IllegalArgumentException iae) {
 					LogManager.log("Invalid minimum TPS ({0}) set at \"tps.qualities.{1}\" in config.yml: the number must be at least 0; skipping it.", 2, minimumTPS, id);
 				}
-			else LogManager.log("Missing translation at \"tps-qualities.{0}\" in {1}; skipping it.", 2, id, messages.getFile().getName());
+			else LogManager.log("Missing translation at \"tps-qualities.{0}\" in {1}; skipping it.", 2, id, messages.getPath().getFileName().toString());
 		} if (updateTimeout == -1) {
 			LogManager.log("Invalid timestamp (\"{0}\") specified at \"tps.update-timeout\" in config.yml; setting to default value of 5 seconds.", 2, ConfigurationType.CONFIG.get().getString("tps.update-timeout"));
 			

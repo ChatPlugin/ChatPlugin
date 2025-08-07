@@ -15,14 +15,14 @@
 
 package me.remigio07.chatplugin.bootstrap;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Path;
 
 /**
  * Class used to load ChatPlugin's libraries that
- * require to be isolated from the server's code.
+ * require to be isolated from the server's classes.
  */
 public class IsolatedClassLoader extends URLClassLoader {
 	
@@ -37,14 +37,16 @@ public class IsolatedClassLoader extends URLClassLoader {
 	}
 	
 	/**
-	 * Loads a library contained in the specified JAR file.
+	 * Loads a JAR library.
 	 * 
-	 * @param target Library to load
-	 * @throws IOException If <code>target</code> is not a valid JAR file or an I/O error occurrs
-	 * @throws SecurityException If the {@link SecurityManager} denies the access to <code>target</code>
+	 * @param library Library to load
+	 * @throws IOException If <code>library</code> does not
+	 * represent a valid JAR file or an I/O error occurs
+	 * @throws SecurityException If the {@link SecurityManager}
+	 * denies access to <code>library</code>
 	 */
-	public void load(File target) throws IOException {
-		addURL(target.toURI().toURL());
+	public void load(Path library) throws IOException {
+		addURL(library.toUri().toURL());
 	}
 	
 	/**

@@ -15,13 +15,14 @@
 
 package me.remigio07.chatplugin.common.util;
 
-import java.io.File;
-import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -38,6 +39,7 @@ import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.SensitiveData;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagers;
+import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.util.manager.TPSManager;
 import me.remigio07.chatplugin.bootstrap.Environment;
@@ -110,34 +112,21 @@ public class Debugger {
 	}
 	
 	public static String writeToFile() {
-		File file = new File(ChatPlugin.getInstance().getDataFolder().getAbsolutePath() + File.separator + "debug", DATE_FORMAT.format(new Date()) + ".txt");
+		Path folder = ChatPlugin.getInstance().getDataFolder().resolve("debug");
+		Path path = folder.resolve(DATE_FORMAT.format(new Date()) + ".txt");
 		
-		if (file.exists())
-			return Utils.NOT_APPLICABLE;
 		try {
-			if (file.getParentFile() != null)
-				file.getParentFile().mkdirs();
-			file.createNewFile();
-		} catch (IOException e) {
-			e.printStackTrace();
+			if (Files.exists(path))
+				return Utils.NOT_APPLICABLE;
+			else if (!Files.exists(folder))
+				Files.createDirectories(folder);
+			try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+				writer.write(getFileContent());
+			} return path.getFileName().toString();
+		} catch (IOException ioe) {
+			LogManager.log("IOException occurred while creating or writing to debug file \"{0}\": {1}", 2, path.getFileName().toString(), ioe.getLocalizedMessage());
 			return Utils.NOT_APPLICABLE;
-		} try (FileWriter writer = new FileWriter(file) ) {
-			file.createNewFile();
-			writer.write(getFileContent());
-		} catch (IOException e) {
-			e.printStackTrace();
-		} return file.getName();
-	}
-	
-	public static String formatFields(LinkedHashMap<String, Object> fields) {
-		StringBuilder sb = new StringBuilder();
-		
-		for (Entry<String, Object> field : fields.entrySet()) {
-			String type = Utils.abbreviate(field.getKey().substring(field.getKey().indexOf(':') + 1), SPACES, false);
-			String name = Utils.abbreviate(field.getKey().substring(0, field.getKey().indexOf(':')), SPACES, false);
-			
-			sb.append(SIX_SPACES).append(type).append(getSpaces(SPACES - type.length())).append("§e").append(name).append(getSpaces(SPACES - name.length())).append(toString(field.getValue())).append('\n');
-		} return sb.toString();
+		}
 	}
 	
 	@SuppressWarnings("all") // ...used to avoid "Unnecessary @SuppressWarnings("deprecation")" for the annotation below when using Java 8 on IDEs like Eclipse

@@ -113,9 +113,9 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 		} return null;
 	}
 	
-	public static boolean isPrivateVersion() {
+	public static boolean isPrivateEdition() {
 		try {
-			Class.forName("me.remigio07.chatplugin.ChatPluginPrivateImpl", false, JARLibraryLoader.getInstance());
+			Class.forName("me.remigio07.chatplugin.ChatPluginPrivate", false, JARLibraryLoader.getInstance());
 			return true;
 		} catch (ClassNotFoundException cnfe) {
 			return false;

@@ -56,7 +56,7 @@ jar {
 }
 
 shadowJar {
-	archiveFileName = 'ChatPlugin.jar'
+	archiveFileName = 'ChatPlugin-FREE.jar'
 	
 	from project.configurations.runtimeClasspath.collect { it }
 	exclude(['*.yml', 'mcmod.info'])

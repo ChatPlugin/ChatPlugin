@@ -17,7 +17,7 @@ package me.remigio07.chatplugin.server.util.manager;
 
 import java.lang.management.ManagementFactory;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Statistic;
 import org.spongepowered.api.data.key.Keys;
@@ -174,7 +174,7 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 	}
 	
 	@Override
-	public String translatePlaceholders(String input, ChatPluginServerPlayer player, Language language, List<PlaceholderType> placeholders, boolean translateColors) {
+	public String translatePlaceholders(String input, ChatPluginServerPlayer player, Language language, Set<PlaceholderType> placeholders, boolean translateColors) {
 		if (input == null)
 			return null;
 		if (placeholders.contains(PlaceholderType.JUST_NAME))
@@ -336,6 +336,8 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 			input = input.replace("{used_storage}", MemoryUtils.formatMemory(Utils.getTotalStorage() - Utils.getFreeStorage(), MemoryUtils.GIGABYTE));
 		if (input.contains("{free_storage}"))
 			input = input.replace("{free_storage}", MemoryUtils.formatMemory(Utils.getFreeStorage(), MemoryUtils.GIGABYTE));
+		if (input.contains("{unallocated_storage}"))
+			input = input.replace("{unallocated_storage}", MemoryUtils.formatMemory(Utils.getUnallocatedStorage(), MemoryUtils.GIGABYTE));
 		if (input.contains("{server_os_name}"))
 			input = input.replace("{server_os_name}", System.getProperty("os.name"));
 		if (input.contains("{server_os_arch}"))

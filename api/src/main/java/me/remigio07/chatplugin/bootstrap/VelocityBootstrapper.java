@@ -80,7 +80,7 @@ public class VelocityBootstrapper {
 	public void onProxyInitialize(ProxyInitializeEvent event) {
 		Environment.currentEnvironment = Environment.VELOCITY;
 		
-		JARLibraryLoader.getInstance().initialize(proxy, logger, dataFolder);
+		JARLibraryLoader.getInstance().open(proxy, logger, dataFolder);
 	}
 	
 	/**

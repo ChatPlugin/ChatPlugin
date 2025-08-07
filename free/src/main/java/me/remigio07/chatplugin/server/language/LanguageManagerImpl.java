@@ -15,9 +15,9 @@
 
 package me.remigio07.chatplugin.server.language;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,22 +49,18 @@ public class LanguageManagerImpl extends LanguageManager {
 		instance = this;
 		long ms = System.currentTimeMillis();
 		commandCooldown = Utils.getTime(ConfigurationType.CONFIG.get().getString("languages.command.cooldown"), false, false);
-		File customMessagesFolder = new File(ChatPlugin.getInstance().getDataFolder(), "custom-messages");
-		File messagesItalian = new File(customMessagesFolder, "messages-italian.yml");
+		Path customMessagesFolder = ChatPlugin.getInstance().getDataFolder().resolve("custom-messages");
+		Path messagesItalian = customMessagesFolder.resolve("messages-italian.yml");
 		
 		if (commandCooldown == -1) {
 			commandCooldown = 300000L;
 			
 			LogManager.log("Invalid timestamp (\"{0}\") specified at \"languages.command.cooldown\" in config.yml; setting to default value of 5 minutes.", 2, ConfigurationType.CONFIG.get().getString("languages.command.cooldown"));
-		} customMessagesFolder.mkdirs();
-		
-		if (!messagesItalian.exists())
-			try {
-				Files.copy(ChatPlugin.class.getResourceAsStream("/messages-italian.yml"), messagesItalian.toPath());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		try {
+		} try {
+			Files.createDirectories(customMessagesFolder);
+			
+			if (!Files.exists(messagesItalian))
+				Files.copy(ChatPlugin.class.getResourceAsStream("/messages-italian.yml"), messagesItalian);
 			List<String> ids = ConfigurationType.CONFIG.get().getKeys("languages");
 			
 			if (!ids.contains("english"))
@@ -83,8 +79,8 @@ public class LanguageManagerImpl extends LanguageManager {
 				if (getMainLanguage() != language)
 					language.getConfiguration().load();
 			}
-		} catch (IOException e) {
-			throw new ChatPluginManagerException(this, e);
+		} catch (IOException ioe) {
+			throw new ChatPluginManagerException(this, ioe);
 		} mainLanguage = getLanguage(ConfigurationType.CONFIG.get().getString("languages.main-language-id"));
 		
 		if (mainLanguage == null)

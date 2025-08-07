@@ -15,9 +15,9 @@
 
 package me.remigio07.chatplugin.api.common.ip_lookup;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
 
 import me.remigio07.chatplugin.api.common.util.Library;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
@@ -44,7 +44,7 @@ public abstract class LocalIPLookupManager implements ChatPluginManager {
 			};
 	protected static LocalIPLookupManager instance;
 	protected boolean enabled;
-	protected File cityDatabase, asnDatabase, lockFile;
+	protected Path cityDatabase, asnDatabase, lock;
 	protected long loadTime;
 	
 	@Override
@@ -53,30 +53,30 @@ public abstract class LocalIPLookupManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the MaxMind's city local database file.
+	 * Gets the MaxMind's city local database's path.
 	 * 
-	 * @return City database file
+	 * @return City database's path
 	 */
-	public File getCityDatabaseFile() {
+	public Path getCityDatabase() {
 		return cityDatabase;
 	}
 	
 	/**
-	 * Gets the MaxMind's ASN local database file.
+	 * Gets the MaxMind's ASN local database's path.
 	 * 
-	 * @return ASN database file
+	 * @return ASN database's path
 	 */
-	public File getASNDatabaseFile() {
+	public Path getASNDatabase() {
 		return asnDatabase;
 	}
 	
 	/**
-	 * Gets the .lock file associated with this server's databases.
+	 * Gets the path of the .lock file associated with this server's databases.
 	 * 
-	 * @return Databases' .lock file
+	 * @return .lock file's path
 	 */
-	public File getLockFile() {
-		return lockFile;
+	public Path getLock() {
+		return lock;
 	}
 	
 	/**

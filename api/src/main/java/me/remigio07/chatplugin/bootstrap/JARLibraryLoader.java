@@ -15,17 +15,19 @@
 
 package me.remigio07.chatplugin.bootstrap;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Class used to load ChatPlugin's libraries from JAR files.
@@ -33,7 +35,7 @@ import java.util.List;
 public class JARLibraryLoader extends URLClassLoader {
 	
 	private static JARLibraryLoader instance = new JARLibraryLoader();
-	private static final String[] EDITIONS = { "", "Premium", "Private"};
+	private static final List<String> EDITIONS = Arrays.asList("Free", "Premium", "Private");
 	
 	static {
 		registerAsParallelCapable();
@@ -43,61 +45,50 @@ public class JARLibraryLoader extends URLClassLoader {
 		super(new URL[0], JARLibraryLoader.class.getClassLoader());
 	}
 	
-	/**
-	 * Initializes ChatPlugin.
-	 * 
-	 * <p>Uses {@link Environment#getCurrent()}'s
-	 * {@link Environment#getEnableMethodArgsTypes()}.</p>
-	 * 
-	 * @param args Enable method's args
-	 */
-	public void initialize(Object... args) {
+	void open(Object... args) {
 		try {
-			Environment environment = Environment.getCurrent();
-			List<URL> jars = extractJARs();
+			Path files = ((Path) args[args.length - 1]).resolve("files");
+			List<URL> jars = getJARs();
 			
-			if (instance.getURLs().length == 0)
-				for (URL jar : jars)
-					instance.addURL(jar);
-			Class<?> mainClass = Class.forName("me.remigio07.chatplugin.ChatPlugin" + EDITIONS[jars.size() - 1] + "Impl", true, instance);
-			
-			if (environment == Environment.VELOCITY)
-				mainClass.getMethod("load", Object.class, Object.class, Object.class).invoke(null, args);
-			else mainClass.getMethod("load", Object.class, Object.class).invoke(null, args);
-		} catch (IOException | ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException  e) {
+			try (DirectoryStream<Path> stream = Files.newDirectoryStream(files)) {
+				for (Path file : stream)
+					if (file.getFileName().toString().endsWith(".jar.tmp"))
+						Files.delete(file);
+			} for (int i = 0; i < jars.size(); i++) {
+				URL jar = jars.get(i);
+				
+				try (InputStream input = jar.openStream()) {
+					Path path = Files.createTempFile(files, EDITIONS.get(i).toLowerCase() + "-", ".jar.tmp");
+					
+					Files.copy(input, path, StandardCopyOption.REPLACE_EXISTING);
+					path.toFile().deleteOnExit();
+					addURL(path.toUri().toURL());
+				}
+			} (Environment.isVelocity()
+					? Class.forName("me.remigio07.chatplugin.ChatPlugin" + EDITIONS.get(jars.size() - 1), true, this).getMethod("load", Object.class, Object.class, Path.class)
+					: Class.forName("me.remigio07.chatplugin.ChatPlugin" + EDITIONS.get(jars.size() - 1), true, this).getMethod("load", Object.class, Path.class)
+					).invoke(null, args);
+		} catch (IOException | ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
 		}
 	}
 	
+	private List<URL> getJARs() throws IOException {
+		return EDITIONS.stream().map(edition -> getClass().getClassLoader().getResource("ChatPlugin-" + edition.toUpperCase() + ".jar")).filter(Objects::nonNull).collect(Collectors.toList());
+	}
+	
 	/**
-	 * Loads a library contained in the specified JAR file.
+	 * Loads a JAR library.
 	 * 
-	 * @param target Library to load
-	 * @throws IOException If <code>target</code> is not a valid JAR file or an I/O error occurrs
-	 * @throws SecurityException If the {@link SecurityManager} denies the access to <code>target</code>
+	 * @param library Library to load
+	 * @throws IOException If <code>library</code> does not
+	 * represent a valid JAR file or an I/O error occurs
+	 * @throws SecurityException If the {@link SecurityManager}
+	 * denies access to <code>library</code>
 	 */
-	public void load(File target) throws IOException {
-		addURL(target.toURI().toURL());
+	public void load(Path library) throws IOException {
+		addURL(library.toUri().toURL());
 	}
-	
-	private List<URL> extractJARs() throws IOException {
-		List<URL> urls = new ArrayList<>();
-		
-		for (String edition : EDITIONS) {
-			String fileName = "ChatPlugin" + (edition.isEmpty() ? "" : '-' + edition.toUpperCase());
-			URL url = JARLibraryLoader.class.getClassLoader().getResource(fileName + ".jar");
-			
-			if (url != null)
-				try (InputStream input = url.openStream()) {
-					Path path = Files.createTempFile(fileName, ".jar.tmp");
-					
-					path.toFile().deleteOnExit();
-					Files.copy(input, path, StandardCopyOption.REPLACE_EXISTING);
-					urls.add(path.toUri().toURL());
-				}
-		} return urls;
-	}
-	
 	
 	/**
 	 * Gets the loader's current instance.

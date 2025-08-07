@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.server.storage.configuration;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
@@ -91,6 +92,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 			enabled = true;
 			loadTime = System.currentTimeMillis() - ms;
 		} catch (IOException e) {
+			e.printStackTrace();
 			throw new ChatPluginManagerException(this, e);
 		}
 	}
@@ -138,7 +140,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	public void addConfigDefaults(boolean forceAdd) throws IOException {
 		Configuration config = configurations.get(ConfigurationType.CONFIG);
 		
-		if (!config.getFile().exists())
+		if (!Files.exists(config.getPath()))
 			config.createFile();
 		else if (!forceAdd)
 			return;
@@ -280,7 +282,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	public void addMessagesDefaults(boolean forceAdd) throws IOException {
 		Configuration messages = configurations.get(ConfigurationType.MESSAGES);
 		
-		if (!messages.getFile().exists())
+		if (!Files.exists(messages.getPath()))
 			messages.createFile();
 		else if (!forceAdd)
 			return;
@@ -698,7 +700,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	
 	public void addRanksDefaults(boolean forceAdd) throws IOException {
 		Configuration ranks = configurations.get(ConfigurationType.RANKS);
-		boolean fileMissing = !ranks.getFile().exists();
+		boolean fileMissing = !Files.exists(ranks.getPath());
 		
 		if (fileMissing)
 			ranks.createFile();
@@ -746,7 +748,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	
 	public void addChatDefaults(boolean forceAdd) throws IOException {
 		Configuration chat = configurations.get(ConfigurationType.CHAT);
-		boolean fileMissing = !chat.getFile().exists();
+		boolean fileMissing = !Files.exists(chat.getPath());
 		
 		if (fileMissing)
 			chat.createFile();
@@ -911,7 +913,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	
 	public void addTablistsDefaults(boolean forceAdd) throws IOException {
 		Configuration tablists = configurations.get(ConfigurationType.TABLISTS);
-		boolean fileMissing = !tablists.getFile().exists();
+		boolean fileMissing = !Files.exists(tablists.getPath());
 		
 		if (fileMissing)
 			tablists.createFile();
@@ -954,7 +956,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	
 	public void addDefaultScoreboardDefaults(boolean forceAdd) throws IOException {
 		Configuration defaultScoreboard = configurations.get(ConfigurationType.DEFAULT_SCOREBOARD);
-		boolean fileMissing = !defaultScoreboard.getFile().exists();
+		boolean fileMissing = !Files.exists(defaultScoreboard.getPath());
 		
 		if (fileMissing)
 			defaultScoreboard.createFile();
@@ -1018,7 +1020,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	
 	public void addBossbarsDefaults(boolean forceAdd) throws IOException {
 		Configuration bossbars = configurations.get(ConfigurationType.BOSSBARS);
-		boolean fileMissing = !bossbars.getFile().exists();
+		boolean fileMissing = !Files.exists(bossbars.getPath());
 		
 		if (fileMissing)
 			bossbars.createFile();
@@ -1086,7 +1088,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	
 	public void addActionbarsDefaults(boolean forceAdd) throws IOException {
 		Configuration actionbars = configurations.get(ConfigurationType.ACTIONBARS);
-		boolean fileMissing = !actionbars.getFile().exists();
+		boolean fileMissing = !Files.exists(actionbars.getPath());
 		
 		if (fileMissing)
 			actionbars.createFile();
@@ -1121,7 +1123,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	
 	public void addAdsDefaults(boolean forceAdd) throws IOException {
 		Configuration ads = configurations.get(ConfigurationType.ADS);
-		boolean fileMissing = !ads.getFile().exists();
+		boolean fileMissing = !Files.exists(ads.getPath());
 		
 		if (fileMissing)
 			ads.createFile();
@@ -1161,7 +1163,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	
 	public void addF3ServerNamesDefaults(boolean forceAdd) throws IOException {
 		Configuration f3ServerNames = configurations.get(ConfigurationType.F3_SERVER_NAMES);
-		boolean fileMissing = !f3ServerNames.getFile().exists();
+		boolean fileMissing = !Files.exists(f3ServerNames.getPath());
 		
 		if (fileMissing)
 			f3ServerNames.createFile();
@@ -1197,7 +1199,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	
 	public void addJoinQuitModulesDefaults(boolean forceAdd) throws IOException {
 		Configuration joinQuitModules = configurations.get(ConfigurationType.JOIN_QUIT_MODULES);
-		boolean fileMissing = !joinQuitModules.getFile().exists();
+		boolean fileMissing = !Files.exists(joinQuitModules.getPath());
 		
 		if (fileMissing)
 			joinQuitModules.createFile();
@@ -1261,7 +1263,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	public void addMainGUIDefaults(boolean forceAdd) throws IOException {
 		Configuration mainGUI = configurations.get(ConfigurationType.MAIN_GUI);
 		
-		if (!mainGUI.getFile().exists())
+		if (!Files.exists(mainGUI.getPath()))
 			mainGUI.createFile();
 		else if (!forceAdd)
 			return;
@@ -1358,7 +1360,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	public void addLanguagesGUIDefaults(boolean forceAdd) throws IOException {
 		Configuration languagesGUI = configurations.get(ConfigurationType.LANGUAGES_GUI);
 		
-		if (!languagesGUI.getFile().exists())
+		if (!Files.exists(languagesGUI.getPath()))
 			languagesGUI.createFile();
 		else if (!forceAdd)
 			return;
@@ -1418,7 +1420,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	public void addChatColorGUIDefaults(boolean forceAdd) throws IOException {
 		Configuration chatColorGUI = configurations.get(ConfigurationType.CHAT_COLOR_GUI);
 		
-		if (!chatColorGUI.getFile().exists())
+		if (!Files.exists(chatColorGUI.getPath()))
 			chatColorGUI.createFile();
 		else if (!forceAdd)
 			return;
@@ -1697,7 +1699,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	public void addEmojisToneGUIDefaults(boolean forceAdd) throws IOException {
 		Configuration emojisToneGUI = configurations.get(ConfigurationType.EMOJIS_TONE_GUI);
 		
-		if (!emojisToneGUI.getFile().exists())
+		if (!Files.exists(emojisToneGUI.getPath()))
 			emojisToneGUI.createFile();
 		else if (!forceAdd)
 			return;
@@ -1813,7 +1815,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	public void addBanlistGUIDefaults(boolean forceAdd) throws IOException {
 		Configuration banlistGUI = configurations.get(ConfigurationType.BANLIST_GUI);
 		
-		if (!banlistGUI.getFile().exists())
+		if (!Files.exists(banlistGUI.getPath()))
 			banlistGUI.createFile();
 		else if (!forceAdd)
 			return;
@@ -1908,7 +1910,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	public void addWarnlistGUIDefaults(boolean forceAdd) throws IOException {
 		Configuration warnlistGUI = configurations.get(ConfigurationType.WARNLIST_GUI);
 		
-		if (!warnlistGUI.getFile().exists())
+		if (!Files.exists(warnlistGUI.getPath()))
 			warnlistGUI.createFile();
 		else if (!forceAdd)
 			return;
@@ -1996,7 +1998,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	public void addMutelistGUIDefaults(boolean forceAdd) throws IOException {
 		Configuration mutelistGUI = configurations.get(ConfigurationType.MUTELIST_GUI);
 		
-		if (!mutelistGUI.getFile().exists())
+		if (!Files.exists(mutelistGUI.getPath()))
 			mutelistGUI.createFile();
 		else if (!forceAdd)
 			return;
@@ -2084,7 +2086,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	public void addViolationsGUIDefaults(boolean forceAdd) throws IOException {
 		Configuration violationsGUI = configurations.get(ConfigurationType.VIOLATIONS_GUI);
 		
-		if (!violationsGUI.getFile().exists())
+		if (!Files.exists(violationsGUI.getPath()))
 			violationsGUI.createFile();
 		else if (!forceAdd)
 			return;
@@ -2174,7 +2176,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	public void addPlayerInfoGUIDefaults(boolean forceAdd) throws IOException {
 		Configuration playerInfoGUI = configurations.get(ConfigurationType.PLAYER_INFO_GUI);
 		
-		if (!playerInfoGUI.getFile().exists())
+		if (!Files.exists(playerInfoGUI.getPath()))
 			playerInfoGUI.createFile();
 		else if (!forceAdd)
 			return;
@@ -2263,7 +2265,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	public void addPreferencesGUIDefaults(boolean forceAdd) throws IOException {
 		Configuration preferencesGUI = configurations.get(ConfigurationType.PREFERENCES_GUI);
 		
-		if (!preferencesGUI.getFile().exists())
+		if (!Files.exists(preferencesGUI.getPath()))
 			preferencesGUI.createFile();
 		else if (!forceAdd)
 			return;
@@ -2383,7 +2385,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	public void addPlayerPunishmentsGUIDefaults(boolean forceAdd) throws IOException {
 		Configuration playerPunishmentsGUI = configurations.get(ConfigurationType.PLAYER_PUNISHMENTS_GUI);
 		
-		if (!playerPunishmentsGUI.getFile().exists())
+		if (!Files.exists(playerPunishmentsGUI.getPath()))
 			playerPunishmentsGUI.createFile();
 		else if (!forceAdd)
 			return;
@@ -2503,7 +2505,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	public void addPlayerViolationsGUIDefaults(boolean forceAdd) throws IOException {
 		Configuration playerViolationsGUI = configurations.get(ConfigurationType.PLAYER_VIOLATIONS_GUI);
 		
-		if (!playerViolationsGUI.getFile().exists())
+		if (!Files.exists(playerViolationsGUI.getPath()))
 			playerViolationsGUI.createFile();
 		else if (!forceAdd)
 			return;
@@ -2588,7 +2590,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	public void addViolationsIconsDefaults(boolean forceAdd) throws IOException {
 		Configuration violationsIcons = configurations.get(ConfigurationType.VIOLATIONS_ICONS);
 		
-		if (!violationsIcons.getFile().exists())
+		if (!Files.exists(violationsIcons.getPath()))
 			violationsIcons.createFile();
 		else if (!forceAdd)
 			return;
@@ -2823,7 +2825,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	public void addMoTDDefaults(boolean forceAdd) throws IOException {
 		Configuration motd = configurations.get(ConfigurationType.MOTD);
 		
-		if (!motd.getFile().exists())
+		if (!Files.exists(motd.getPath()))
 			motd.createFile();
 		else if (!forceAdd)
 			return;
@@ -2885,7 +2887,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	public void addDiscordIntegrationDefaults(boolean forceAdd) throws IOException {
 		Configuration discordIntegration = configurations.get(ConfigurationType.DISCORD_INTEGRATION);
 		
-		if (!discordIntegration.getFile().exists())
+		if (!Files.exists(discordIntegration.getPath()))
 			discordIntegration.createFile();
 		else if (!forceAdd)
 			return;
@@ -3161,7 +3163,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 	public void addTelegramIntegrationDefaults(boolean forceAdd) throws IOException {
 		Configuration telegramIntegration = configurations.get(ConfigurationType.TELEGRAM_INTEGRATION);
 		
-		if (!telegramIntegration.getFile().exists())
+		if (!Files.exists(telegramIntegration.getPath()))
 			telegramIntegration.createFile();
 		else if (!forceAdd)
 			return;

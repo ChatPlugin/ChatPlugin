@@ -68,7 +68,7 @@ public class ChatPluginSponge extends ChatPlugin {
 		
 		long ms = System.currentTimeMillis();
 		this.logger = logger;
-		this.dataFolder = dataFolder.toFile();
+		this.dataFolder = dataFolder;
 		
 		try {
 			VersionUtils.initVersionUtils();
@@ -210,7 +210,7 @@ public class ChatPluginSponge extends ChatPlugin {
 								sender.sendMessage(Utils.serializeSpongeText("&eTrying to recover ChatPlugin... Don't get your hopes up.", true));
 								Sponge.getServer().getOnlinePlayers().forEach(player -> player.kick(Utils.serializeSpongeText("&ePerforming ChatPlugin recovery...", true)));
 								
-								int startupTime = load((Logger) logger, dataFolder.toPath());
+								int startupTime = load((Logger) logger, dataFolder);
 								
 								if (startupTime == -1)
 									sendConsoleMessage("&cFailed to load. Check above for the error message.", false);

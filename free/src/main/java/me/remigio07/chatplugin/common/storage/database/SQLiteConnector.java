@@ -15,7 +15,6 @@
 
 package me.remigio07.chatplugin.common.storage.database;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -48,8 +47,7 @@ public class SQLiteConnector extends DatabaseConnector {
 		try {
 			LibrariesUtils.load(Library.SQLITE_JDBC);
 			
-			String dbName = ConfigurationType.CONFIG.get().getString("storage.database.file-name") + ".db";
-			String file = StorageManager.getInstance().getFolder().getAbsolutePath() + File.separator + dbName;
+			String file = StorageManager.getInstance().getFolder().resolve(ConfigurationType.CONFIG.get().getString("storage.database.file-name") + ".db").toAbsolutePath().toString();
 			boolean serverMode = ConfigurationType.CONFIG.get().getBoolean("storage.database.use-server-mode");
 			
 			if (serverMode)

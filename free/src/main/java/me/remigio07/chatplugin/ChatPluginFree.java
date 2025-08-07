@@ -15,22 +15,21 @@
 
 package me.remigio07.chatplugin;
 
-import java.io.File;
 import java.nio.file.Path;
 
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.server.bukkit.ChatPluginBukkit;
 import me.remigio07.chatplugin.server.sponge.ChatPluginSponge;
 
-public class ChatPluginImpl {
+public class ChatPluginFree {
 	
-	public static void load(Object logger, Object dataFolder) {
+	public static void load(Object logger, Path dataFolder) {
 		switch (Environment.getCurrent()) {
 		case BUKKIT:
-			new ChatPluginBukkit().load((java.util.logging.Logger) logger, (File) dataFolder);
+			new ChatPluginBukkit().load((java.util.logging.Logger) logger, dataFolder);
 			break;
 		case SPONGE:
-			new ChatPluginSponge().load((org.slf4j.Logger) logger, (Path) dataFolder);
+			new ChatPluginSponge().load((org.slf4j.Logger) logger, dataFolder);
 			break;
 		default:
 			throw new UnsupportedOperationException("Unable load the proxy plugin on the free version");

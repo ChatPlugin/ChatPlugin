@@ -15,7 +15,7 @@
 
 package me.remigio07.chatplugin.api;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicReference;
 
 import me.remigio07.chatplugin.api.common.event.plugin.ChatPluginCrashEvent;
@@ -48,7 +48,7 @@ public abstract class ChatPlugin {
 	protected static AtomicReference<ChatPluginState> state = new AtomicReference<>(ChatPluginState.NOT_STARTED_YET);
 	protected ChatPluginManagers managers;
 	protected Object logger;
-	protected File dataFolder;
+	protected Path dataFolder;
 	protected int startupTime, lastReloadTime = -1;
 	
 	/**
@@ -82,7 +82,7 @@ public abstract class ChatPlugin {
 	 * 
 	 * @return Plugin's data folder
 	 */
-	public File getDataFolder() {
+	public Path getDataFolder() {
 		return dataFolder;
 	}
 	

@@ -18,6 +18,7 @@ package me.remigio07.chatplugin.api.common.storage.configuration;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.nio.file.Path;
 import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
@@ -58,7 +59,7 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 public enum ConfigurationType {
 	
 	/**
-	 * Main configuration file.
+	 * Main configuration.
 	 * 
 	 * <p>Common to both proxy and server implementations.</p>
 	 * 
@@ -67,7 +68,7 @@ public enum ConfigurationType {
 	CONFIG,
 	
 	/**
-	 * Default language's messages' file.
+	 * Default language's messages.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/messages.yml</p>
 	 * 
@@ -76,7 +77,7 @@ public enum ConfigurationType {
 	MESSAGES,
 	
 	/**
-	 * Ranks' configuration file.
+	 * Ranks' configuration.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/ranks.yml</p>
 	 * 
@@ -85,7 +86,7 @@ public enum ConfigurationType {
 	RANKS,
 	
 	/**
-	 * Chat's configuration file.
+	 * Chat's configuration.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/chat.yml</p>
 	 * 
@@ -94,7 +95,7 @@ public enum ConfigurationType {
 	CHAT,
 	
 	/**
-	 * Tablists' configuration file.
+	 * Tablists' configuration.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/tablists.yml</p>
 	 * 
@@ -103,7 +104,7 @@ public enum ConfigurationType {
 	TABLISTS,
 	
 	/**
-	 * Default scoreboard's configuration file.
+	 * Default scoreboard's configuration.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/scoreboards/default.yml</p>
 	 * 
@@ -113,7 +114,7 @@ public enum ConfigurationType {
 	DEFAULT_SCOREBOARD,
 	
 	/**
-	 * Bossbars' configuration file.
+	 * Bossbars' configuration.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/bossbars.yml</p>
 	 * 
@@ -122,7 +123,7 @@ public enum ConfigurationType {
 	BOSSBARS,
 	
 	/**
-	 * Actionbars' configuration file.
+	 * Actionbars' configuration.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/actionbars.yml</p>
 	 * 
@@ -131,7 +132,7 @@ public enum ConfigurationType {
 	ACTIONBARS,
 	
 	/**
-	 * Ads' configuration file.
+	 * Ads' configuration.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/ads.yml</p>
 	 * 
@@ -140,7 +141,7 @@ public enum ConfigurationType {
 	ADS,
 	
 	/**
-	 * F3 server names' configuration file.
+	 * F3 server names' configuration.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/f3-server-names.yml</p>
 	 * 
@@ -149,7 +150,7 @@ public enum ConfigurationType {
 	F3_SERVER_NAMES,
 	
 	/**
-	 * Join/quit modules' configuration file.
+	 * Join/quit modules' configuration.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/join-quit-modules.yml</p>
 	 * 
@@ -158,7 +159,7 @@ public enum ConfigurationType {
 	JOIN_QUIT_MODULES,
 	
 	/**
-	 * Main GUI's configuration file.
+	 * Main GUI's configuration.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/guis/main.yml</p>
 	 * 
@@ -167,7 +168,7 @@ public enum ConfigurationType {
 	MAIN_GUI,
 	
 	/**
-	 * Languages GUI's configuration file.
+	 * Languages GUI's configuration.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/guis/languages.yml</p>
 	 * 
@@ -177,7 +178,7 @@ public enum ConfigurationType {
 	LANGUAGES_GUI,
 	
 	/**
-	 * Chat color GUI's configuration file.
+	 * Chat color GUI's configuration.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/guis/chat-color.yml</p>
 	 * 
@@ -187,7 +188,7 @@ public enum ConfigurationType {
 	CHAT_COLOR_GUI,
 	
 	/**
-	 * Emojis' tone GUI's configuration file.
+	 * Emojis' tone GUI's configuration.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/guis/emojis-tone.yml</p>
 	 * 
@@ -197,7 +198,7 @@ public enum ConfigurationType {
 	EMOJIS_TONE_GUI,
 	
 	/**
-	 * Banlist GUI's configuration file.
+	 * Banlist GUI's configuration.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/guis/banlist.yml</p>
 	 * 
@@ -207,7 +208,7 @@ public enum ConfigurationType {
 	BANLIST_GUI,
 	
 	/**
-	 * Warnlist GUI's configuration file.
+	 * Warnlist GUI's configuration.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/guis/warnlist.yml</p>
 	 * 
@@ -217,7 +218,7 @@ public enum ConfigurationType {
 	WARNLIST_GUI,
 	
 	/**
-	 * Mutelist GUI's configuration file.
+	 * Mutelist GUI's configuration.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/guis/mutelist.yml</p>
 	 * 
@@ -227,7 +228,7 @@ public enum ConfigurationType {
 	MUTELIST_GUI,
 	
 	/**
-	 * Violations GUI's configuration file.
+	 * Violations GUI's configuration.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/guis/violations.yml</p>
 	 * 
@@ -237,7 +238,7 @@ public enum ConfigurationType {
 	VIOLATIONS_GUI,
 	
 	/**
-	 * Player info GUI's configuration file.
+	 * Player info GUI's configuration.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/guis/player-info.yml</p>
 	 * 
@@ -247,7 +248,7 @@ public enum ConfigurationType {
 	PLAYER_INFO_GUI,
 	
 	/**
-	 * Player punishments GUI's configuration file.
+	 * Player punishments GUI's configuration.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/guis/player-punishments.yml</p>
 	 * 
@@ -257,7 +258,7 @@ public enum ConfigurationType {
 	PLAYER_PUNISHMENTS_GUI,
 	
 	/**
-	 * Player violations GUI's configuration file.
+	 * Player violations GUI's configuration.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/guis/player-violations.yml</p>
 	 * 
@@ -267,7 +268,7 @@ public enum ConfigurationType {
 	PLAYER_VIOLATIONS_GUI,
 	
 	/**
-	 * Preferences GUI's configuration file.
+	 * Preferences GUI's configuration.
 	 * 
 	 * <p><strong>Path:</strong> ChatPlugin/guis/preferences.yml</p>
 	 * 
@@ -276,7 +277,7 @@ public enum ConfigurationType {
 	PREFERENCES_GUI,
 	
 	/**
-	 * Violations icons' configuration file.
+	 * Violations icons' configuration.
 	 * 
 	 * <p>This is a special configuration that contains icons displayed by {@link AnticheatIntegration}s
 	 * in the {@link #VIOLATIONS_GUI} and in {@link #PLAYER_VIOLATIONS_GUI}s.</p>
@@ -289,7 +290,7 @@ public enum ConfigurationType {
 	VIOLATIONS_ICONS,
 	
 	/**
-	 * MoTD's configuration file.
+	 * MoTD's configuration.
 	 * 
 	 * <p>Common to both proxy and server implementations.</p>
 	 * 
@@ -300,7 +301,7 @@ public enum ConfigurationType {
 	MOTD,
 	
 	/**
-	 * Discord integration's configuration file.
+	 * Discord integration's configuration.
 	 * 
 	 * <p>Common to both proxy and server implementations.</p>
 	 * 
@@ -311,7 +312,7 @@ public enum ConfigurationType {
 	DISCORD_INTEGRATION,
 	
 	/**
-	 * Telegram integration's configuration file.
+	 * Telegram integration's configuration.
 	 * 
 	 * <p>Common to both proxy and server implementations.</p>
 	 * 
@@ -331,15 +332,15 @@ public enum ConfigurationType {
 	CUSTOM;
 	
 	/**
-	 * Gets this configuration's folder's path.
+	 * Gets this configuration's folder.
 	 * 
-	 * <p>Will return <code>null</code> for files in
-	 * the plugin's folder (not inside any sub-folder)
+	 * <p>Will return <code>null</code> for configurations
+	 * in the plugin's folder (not inside any sub-folder)
 	 * or if <code>this == </code>{@link #CUSTOM}.</p>
 	 * 
-	 * @return Configuration's folder's path
+	 * @return Configuration's folder
 	 */
-	@Nullable(why = "Config may be of type CUSTOM or not contained in any sub-folder")
+	@Nullable(why = "Configuration may be of type CUSTOM or not contained in any sub-folder")
 	public String getFolder() {
 		return this == DEFAULT_SCOREBOARD ? "scoreboards" : this == VIOLATIONS_ICONS || name().contains("GUI") ? "guis" : null;
 	}
@@ -358,16 +359,18 @@ public enum ConfigurationType {
 	}
 	
 	/**
-	 * Gets this configuration's file. The file may not exist.
+	 * Gets this configuration's path.
 	 * 
-	 * <p><strong>Note:</strong> if <code>this == </code>{@link #CUSTOM} this method
-	 * will return a custom.yml file, which is not applicable in most cases.</p>
+	 * <p><strong>Note:</strong> if <code>this == </code>{@link #CUSTOM}
+	 * this method will return a custom.yml file, which is not applicable
+	 * in most cases. Also, the corresponding file may not exist (yet).</p>
 	 * 
-	 * @return Configuration's file
+	 * @return Configuration's path
 	 */
 	@NotNull
-	public File getFile() {
-		return new File(ChatPlugin.getInstance().getDataFolder(), (getFolder() == null ? "" : File.separator + getFolder() + File.separator) + getFileName());
+	public Path toPath() {
+		String folder = getFolder();
+		return ChatPlugin.getInstance().getDataFolder().resolve((folder == null ? "" : folder + File.separator) + getFileName());
 	}
 	
 	/**
@@ -391,7 +394,7 @@ public enum ConfigurationType {
 	 * @return Whether this configuration is available on proxy implementations
 	 */
 	public boolean isAvailableOnProxy() {
-		return this == CONFIG || this == CUSTOM || name().contains("INTEGRATION");
+		return this == CONFIG || this == CUSTOM || name().endsWith("_INTEGRATION");
 	}
 	
 	/**

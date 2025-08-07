@@ -61,7 +61,7 @@ public class GUILayout {
 	
 	protected GUILayout(Configuration configuration) {
 		this(
-				configuration.getFile().getName().substring(0, configuration.getFile().getName().lastIndexOf('.')),
+				configuration.getPath().getFileName().toString().substring(0, configuration.getPath().getFileName().toString().lastIndexOf('.')),
 				configuration.getInt("settings.rows"),
 				new OpenActions(configuration),
 				new SoundAdapter(configuration, "settings.click-sound"),

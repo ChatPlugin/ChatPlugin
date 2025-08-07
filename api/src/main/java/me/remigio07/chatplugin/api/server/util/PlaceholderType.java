@@ -61,7 +61,7 @@ public enum PlaceholderType {
 			"plugin_version", "server_version", "server_version_protocol", "server_nms_version", "server_java_version",
 			"server_id", "server_display_name", "main_language_id", "main_language_display_name",
 			"total_players", "total_bans", "total_warnings", "total_kicks", "total_mutes", "total_staff_bans", "total_staff_warnings", "total_staff_kicks", "total_staff_mutes", "total_anticheat_bans", "total_anticheat_warnings", "total_anticheat_kicks", "total_anticheat_mutes",
-			"max_memory", "total_memory", "used_memory", "free_memory", "total_storage", "used_storage", "free_storage",
+			"max_memory", "total_memory", "used_memory", "free_memory", "total_storage", "used_storage", "free_storage", "unallocated_storage",
 			"tps_1_min", "tps_5_min", "tps_15_min", "tps_1_min_format", "tps_5_min_format", "tps_15_min_format",
 			"mspt_5_sec_avg", "mspt_5_sec_min", "mspt_5_sec_max", "mspt_10_sec_avg", "mspt_10_sec_min", "mspt_10_sec_max", "mspt_1_min_avg", "mspt_1_min_min", "mspt_1_min_max", "mspt_5_sec_avg_format", "mspt_5_sec_min_format", "mspt_5_sec_max_format", "mspt_10_sec_avg_format", "mspt_10_sec_min_format", "mspt_10_sec_max_format", "mspt_1_min_avg_format", "mspt_1_min_min_format", "mspt_1_min_max_format",
 			"server_os_name", "server_os_arch", "server_os_version", "cpu_threads", "active_threads",

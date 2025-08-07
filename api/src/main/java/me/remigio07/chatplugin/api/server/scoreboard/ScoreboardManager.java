@@ -155,7 +155,7 @@ public abstract class ScoreboardManager implements ChatPluginManager {
 	/**
 	 * Reads a scoreboard from the specified configuration.
 	 * 
-	 * <p>The scoreboard's ID is obtained by removing {@link Configuration#getFile()}'s
+	 * <p>The scoreboard's ID is obtained by removing {@link Configuration#getPath()}'s
 	 * extension and has to match {@link #SCOREBOARD_ID_PATTERN}.</p>
 	 * 
 	 * @param configuration Configuration to read

@@ -72,7 +72,7 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 			long now = System.currentTimeMillis();
 			return new SimpleDateFormat(language.getMessage("misc.simple-date-format." + format.name().toLowerCase())).format(new Date(ms + PlayerManager.getInstance().getDisplayedTimeZone().getOffset(now) - TimeZone.getDefault().getOffset(now)));
 		} catch (IllegalArgumentException iae) {
-			LogManager.log("Invalid date format specified at \"{0}\" in {1}: {2}", 2, "misc.simple-date-format." + format.name().toLowerCase(), language.getConfiguration().getFile().getName(), iae.getLocalizedMessage());
+			LogManager.log("Invalid date format specified at \"{0}\" in {1}: {2}", 2, "misc.simple-date-format." + format.name().toLowerCase(), language.getConfiguration().getPath().getFileName().toString(), iae.getLocalizedMessage());
 			return "Invalid date format specified at \"misc.simple-date-format.\"" + format.name().toLowerCase();
 		}
 	}

@@ -15,6 +15,8 @@
 
 package me.remigio07.chatplugin.bootstrap;
 
+import java.io.IOException;
+
 import me.remigio07.chatplugin.api.ChatPlugin;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -30,13 +32,20 @@ public class BungeeCordBootstrapper extends Plugin {
 		instance = this;
 		Environment.currentEnvironment = Environment.BUNGEECORD;
 		
-		JARLibraryLoader.getInstance().initialize(getLogger(), getDataFolder());
+		JARLibraryLoader.getInstance().open(getLogger(), getDataFolder().toPath());
 	}
 	
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onDisable() {
 		ChatPlugin.getInstance().unload();
+		
+		try {
+			JARLibraryLoader.getInstance().close();
+			IsolatedClassLoader.getInstance().close();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
 	}
 	
 	/**

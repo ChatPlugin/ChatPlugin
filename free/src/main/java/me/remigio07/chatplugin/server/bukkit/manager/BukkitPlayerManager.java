@@ -17,6 +17,8 @@ package me.remigio07.chatplugin.server.bukkit.manager;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -119,7 +121,7 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 	@Override
 	public void loadOnlinePlayers() {
 		List<PlayerAdapter> players = PlayerAdapter.getOnlinePlayers();
-		File file = new File(ChatPlugin.getInstance().getDataFolder(), "online-players-data.yml");
+		Path path = ChatPlugin.getInstance().getDataFolder().resolve("files" + File.separator + "online-players-data.yml");
 		
 		if (!players.isEmpty()) {
 			if (IntegrationType.VIAVERSION.isEnabled() && IntegrationType.VIAVERSION.get().getVersion(players.get(0)) == Version.UNSUPPORTED) {
@@ -131,9 +133,9 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 				if (playersVersions.isEmpty()) {
 					String message = null;
 					
-					if (file.exists())
+					if (Files.exists(path))
 						try {
-							Configuration onlinePlayersData = new Configuration(file);
+							Configuration onlinePlayersData = new Configuration(path);
 							
 							onlinePlayersData.load();
 							
@@ -149,7 +151,7 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 						} catch (IOException ioe) {
 							message = ioe.getLocalizedMessage();
 						}
-					else message = file.getPath() + " file does not exist";
+					else message = path.getFileName().toString() + " file does not exist";
 					
 					if (message != null) {
 						LogManager.log("Error occurred while reading online players' data after a server reload: {0}; kicking all players...", 2, message);
@@ -159,7 +161,11 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 					if (getPlayer(player.getUniqueId()) == null && isWorldEnabled(player.getWorld().getName()))
 						loadPlayer(new PlayerAdapter(player));
 			}
-		} file.delete();
+		} try {
+			Files.deleteIfExists(path);
+		} catch (IOException ioe) {
+			LogManager.log("IOException occurred while deleting \"online-players-data.yml\": {0}", 2, ioe.getLocalizedMessage());
+		}
 	}
 	
 	@Override

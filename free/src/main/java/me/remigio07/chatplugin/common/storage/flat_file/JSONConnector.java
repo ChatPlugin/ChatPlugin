@@ -15,11 +15,12 @@
 
 package me.remigio07.chatplugin.common.storage.flat_file;
 
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.InetAddress;
+import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,14 +65,14 @@ public class JSONConnector extends FlatFileConnector {
 		
 		try {
 			for (DataContainer container : DataContainer.values()) {
-				try (FileReader reader = new FileReader(container.getFlatFile())) {
+				try (BufferedReader reader = Files.newBufferedReader(container.getFlatFile())) {
 					jsons.put(container, (JsonObject) Jsoner.deserialize(reader));
-				} catch (JsonException e) {
+				} catch (JsonException jsone) {
 					jsons.put(container, new JsonObject());
 				}
 			}
-		} catch (IOException e) {
-			throw new ChatPluginManagerException(FlatFileManager.getInstance(), e);
+		} catch (IOException ioe) {
+			throw new ChatPluginManagerException(FlatFileManager.getInstance(), ioe);
 		}
 	}
 	
@@ -83,7 +84,7 @@ public class JSONConnector extends FlatFileConnector {
 	}
 	
 	protected void save(DataContainer container) throws IOException {
-		try (FileWriter writer = new FileWriter(container.getFlatFile())) {
+		try (BufferedWriter writer = Files.newBufferedWriter(container.getFlatFile())) {
 			writer.write(Jsoner.prettyPrint(jsons.get(container).toJson()) + "\n");
 		}
 	}

@@ -50,7 +50,7 @@ public class MSPTManagerImpl extends MSPTManager {
 				} catch (IllegalArgumentException iae) {
 					LogManager.log("Invalid maximum MSPT ({0}) set at \"mspt.qualities.{1}\" in config.yml: the number must be at least 0; skipping it.", 2, maximumMSPT, id);
 				}
-			else LogManager.log("Missing translation at \"mspt-qualities.{0}\" in {1}; skipping it.", 2, id, messages.getFile().getName());
+			else LogManager.log("Missing translation at \"mspt-qualities.{0}\" in {1}; skipping it.", 2, id, messages.getPath().getFileName().toString());
 		} if (qualities.isEmpty()) {
 			qualities.add(new MSPTQuality("default-quality", 0));
 			LogManager.log("No MSPT qualities have been found at \"mspt.qualities\" in config.yml.", 1);

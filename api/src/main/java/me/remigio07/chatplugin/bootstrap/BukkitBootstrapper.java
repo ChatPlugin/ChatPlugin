@@ -15,6 +15,8 @@
 
 package me.remigio07.chatplugin.bootstrap;
 
+import java.io.IOException;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
@@ -34,15 +36,22 @@ public class BukkitBootstrapper extends JavaPlugin {
 		
 		try {
 			logger = getLogger();
-		} catch (NoSuchMethodError e) { // older Bukkit versions
+		} catch (NoSuchMethodError nsme) { // older Bukkit versions
 			logger = java.util.logging.Logger.getLogger("ChatPlugin");
-		} JARLibraryLoader.getInstance().initialize(logger, getDataFolder());
+		} JARLibraryLoader.getInstance().open(logger, getDataFolder().toPath());
 	}
 	
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onDisable() {
 		ChatPlugin.getInstance().unload();
+		
+		try {
+			JARLibraryLoader.getInstance().close();
+			IsolatedClassLoader.getInstance().close();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
 	}
 	
 	/**

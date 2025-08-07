@@ -169,7 +169,7 @@ public class GUIManagerImpl extends GUIManager {
 		Icon icon = new Icon(
 				id,
 				IconType.PAGE_SWITCHER_ICONS_IDS.contains(id) ? IconType.PAGE_SWITCHER : IconType.CUSTOM,
-				new MaterialAdapter(configuration.getString(path + ".material", "material ID not found at \"" + path + ".material\" in " + configuration.getFile().getName())),
+				new MaterialAdapter(configuration.getString(path + ".material", "material ID not found at \"" + path + ".material\" in " + configuration.getPath().getFileName().toString())),
 				new ValueContainer<>(amount instanceof String ? amount : ((Integer) amount).shortValue()),
 				configuration.getShort(path + ".damage"),
 				configuration.getBoolean(path + ".keep-open"),

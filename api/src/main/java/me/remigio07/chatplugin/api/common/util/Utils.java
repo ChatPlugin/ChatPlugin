@@ -15,9 +15,12 @@
 
 package me.remigio07.chatplugin.api.common.util;
 
-import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -35,6 +38,7 @@ import org.spongepowered.api.Sponge;
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagers;
+import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.bootstrap.VelocityBootstrapper;
@@ -74,11 +78,11 @@ public class Utils {
 	public static final UUID NIL_UUID = new UUID(0L, 0L);
 	
 	/**
-	 * File that indicates the current drive's main folder.
+	 * Path indicating the current drive's root folder.
 	 * 
-	 * <p><strong>Path:</strong> {@link File#separator}</p>
+	 * <p><strong>Path:</strong> ""</p>
 	 */
-	public static final File MAIN_FOLDER = new File(File.separator);
+	public static final Path ROOT_FOLDER = Paths.get("");
 	
 	/**
 	 * Pattern representing the allowed IPv4s.
@@ -651,21 +655,45 @@ public class Utils {
 	}
 	
 	/**
-	 * Gets the total storage installed on <code>/</code>, in bytes.
+	 * Gets the total storage installed on {@link #ROOT_FOLDER}.
 	 * 
-	 * @return Total storage
+	 * @return Total storage, in bytes
 	 */
 	public static long getTotalStorage() {
-		return MAIN_FOLDER.getTotalSpace();
+		try {
+			return Files.getFileStore(ROOT_FOLDER).getTotalSpace();
+		} catch (IOException ioe) {
+			LogManager.log("IOException occurred while getting the total storage: {0}", 2, ioe.getLocalizedMessage());
+			return -1;
+		}
 	}
 	
 	/**
-	 * Gets the free storage available on <code>/</code>, in bytes.
+	 * Gets the free storage available on {@link #ROOT_FOLDER}.
 	 * 
-	 * @return Free storage
+	 * @return Free storage, in bytes
 	 */
 	public static long getFreeStorage() {
-		return MAIN_FOLDER.getFreeSpace();
+		try {
+			return Files.getFileStore(ROOT_FOLDER).getUsableSpace();
+		} catch (IOException ioe) {
+			LogManager.log("IOException occurred while getting the free storage: {0}", 2, ioe.getLocalizedMessage());
+			return -1;
+		}
+	}
+	
+	/**
+	 * Gets the unallocated storage available on {@link #ROOT_FOLDER}.
+	 * 
+	 * @return Unallocated storage, in bytes
+	 */
+	public static long getUnallocatedStorage() {
+		try {
+			return Files.getFileStore(ROOT_FOLDER).getUnallocatedSpace();
+		} catch (IOException ioe) {
+			LogManager.log("IOException occurred while getting the unallocated storage: {0}", 2, ioe.getLocalizedMessage());
+			return -1;
+		}
 	}
 	
 }

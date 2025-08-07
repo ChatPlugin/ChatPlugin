@@ -9,6 +9,7 @@ import org.bstats.MetricsBase;
 import org.bstats.charts.CustomChart;
 import org.bstats.charts.SimplePie;
 
+import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.integration.ChatPluginIntegration;
 import me.remigio07.chatplugin.api.common.integration.IntegrationManager;
 import me.remigio07.chatplugin.api.common.storage.database.DatabaseManager;
@@ -26,6 +27,7 @@ public class CommonMetrics {
 			metricsBase.setAccessible(true);
 			customCharts.setAccessible(true);
 			((Set<CustomChart>) customCharts.get(metricsBase.get(instance))).addAll(charts
+					.add(new SimplePie("pluginEdition", () -> Utils.isPrivateEdition() ? "Private" : ChatPlugin.getInstance().isPremium() ? "Premium" : "Free"))
 					.add(new SimplePie("databaseStorageMethod", () -> DatabaseManager.getInstance().getMethod().getName()))
 					.add(new SimplePie("enabledIntegrations", () -> range(IntegrationManager.class, (int) IntegrationManager.getInstance().getIntegrations().values().stream().filter(ChatPluginIntegration::isEnabled).count())))
 					.build()

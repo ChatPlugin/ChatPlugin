@@ -133,7 +133,7 @@ public abstract class PingManager implements ChatPluginManager, Runnable {
 	public abstract int getRealTimePing(ChatPluginServerPlayer player);
 	
 	/**
-	 * Establishes what {@link PingQuality} a ping
+	 * Establishes which {@link PingQuality} a ping
 	 * belongs to according to the response time.
 	 * 
 	 * @param ping Ping to check, in milliseconds

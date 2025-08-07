@@ -157,7 +157,7 @@ public class ItemStackAdapter implements Cloneable {
 				ItemMeta meta = ((org.bukkit.inventory.ItemStack) itemStack).getItemMeta();
 				
 				meta.getEnchants().forEach((enchantment, level) -> enchantments.put(EnchantmentAdapter.value(enchantment.getName()), level));
-				meta.getItemFlags().stream().map(itemFlag -> ItemFlagAdapter.valueOf(itemFlag.name())).filter(Objects::nonNull).distinct().forEach(itemFlag -> itemFlags.add(itemFlag));
+				meta.getItemFlags().stream().map(itemFlag -> ItemFlagAdapter.value(itemFlag.name())).filter(Objects::nonNull).distinct().forEach(itemFlag -> itemFlags.add(itemFlag));
 				
 				if (isPlayerHead())
 					skullOwner = ((SkullMeta) meta).getOwner();

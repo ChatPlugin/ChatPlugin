@@ -309,7 +309,8 @@ public class SpongeEventManager extends EventManager implements EventListener<Ev
 			/*
 			 * Sponge does not provide any API to detect the click action, so we have to "calculate" it ourselves.
 			 * 
-			 * logic: https://hub.spigotmc.org/stash/projects/SPIGOT/repos/craftbukkit/browse/nms-patches/net/minecraft/server/network/PlayerConnection.patch#1343-1504
+			 * logic: PlayerConnection#handleContainerClick(PacketPlayInWindowClick) (around line 1300)
+			 * https://hub.spigotmc.org/stash/projects/SPIGOT/repos/craftbukkit/browse/nms-patches/net/minecraft/server/network/PlayerConnection.patch
 			 * 
 			 * some the following statements do not check if the other inventory has free space to receive the moved items.
 			 * this is intentional to keep consistency between the Bukkit and the Sponge implementations.

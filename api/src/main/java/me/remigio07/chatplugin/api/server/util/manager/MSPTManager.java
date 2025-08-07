@@ -178,7 +178,7 @@ public abstract class MSPTManager implements ChatPluginManager, Runnable {
 	public abstract double getMaximumMSPT(MSPTTimeInterval interval);
 	
 	/**
-	 * Establishes what {@link MSPTQuality} a MSPT value belongs to.
+	 * Establishes which {@link MSPTQuality} a MSPT value belongs to.
 	 * 
 	 * @param mspt MSPT to check
 	 * @return Resulting MSPT quality

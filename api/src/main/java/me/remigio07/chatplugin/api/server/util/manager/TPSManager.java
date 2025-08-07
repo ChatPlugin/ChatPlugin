@@ -138,7 +138,7 @@ public abstract class TPSManager implements ChatPluginManager, Runnable {
 	public abstract double getTPS(TPSTimeInterval interval);
 	
 	/**
-	 * Establishes what {@link TPSQuality} a TPS value belongs to.
+	 * Establishes which {@link TPSQuality} a TPS value belongs to.
 	 * 
 	 * @param tps TPS to check
 	 * @return Resulting TPS quality

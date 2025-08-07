@@ -30,7 +30,6 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
  * Manager that handles custom suffixes in the {@link Tablist}.
  * 
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Tablists#custom-suffix">ChatPlugin wiki/Modules/Tablists/Custom suffix</a>
- * @see RenderType
  */
 public abstract class CustomSuffixManager implements ChatPluginManager, Runnable {
 	

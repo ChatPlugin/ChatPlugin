@@ -63,7 +63,8 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Checks if info should be displayed when hovering over a player's rank in the chat.
+	 * Checks if info should be displayed when
+	 * hovering over a player's rank in the chat.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.hover-info.rank.enabled" in {@link ConfigurationType#CHAT}</p>
 	 * 
@@ -74,7 +75,8 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Checks if info should be displayed when hovering over a player's name in the chat.
+	 * Checks if info should be displayed when
+	 * hovering over a player's name in the chat.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.hover-info.player.enabled" in {@link ConfigurationType#CHAT}</p>
 	 * 
@@ -85,7 +87,8 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Checks if text should be displayed when hovering over a URL in the chat.
+	 * Checks if text should be displayed
+	 * when hovering over a URL in the chat.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.hover-info.url.enabled" in {@link ConfigurationType#CHAT}</p>
 	 * 
@@ -96,7 +99,8 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Checks if "https://" should be automatically applied to URLs sent in the chat.
+	 * Checks if "https://" should be automatically
+	 * applied to URLs sent in the chat.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.hover-info.url.default-https" in {@link ConfigurationType#CHAT}</p>
 	 * 
@@ -107,7 +111,8 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Checks if info should be displayed when hovering over a player ping in the chat.
+	 * Checks if info should be displayed when
+	 * hovering over a player ping in the chat.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.hover-info.player-ping.enabled" in {@link ConfigurationType#CHAT}</p>
 	 * 
@@ -118,7 +123,8 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Checks if info should be displayed when hovering over an instant emoji in the chat.
+	 * Checks if info should be displayed when
+	 * hovering over an instant emoji in the chat.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.hover-info.instant-emoji.enabled" in {@link ConfigurationType#CHAT}</p>
 	 * 
@@ -129,7 +135,8 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the click action executed when a player clicks a player's name in the chat.
+	 * Gets the click action executed when a
+	 * player clicks a player's name in the chat.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.hover-info.player.click.action" in {@link ConfigurationType#CHAT}</p>
 	 * 
@@ -152,7 +159,8 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the color that will be applied to valid URLs sent in the chat.
+	 * Gets the color that will be applied
+	 * to valid URLs sent in the chat.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.hover-info.player.color" in {@link ConfigurationType#CHAT}</p>
 	 * 
@@ -175,7 +183,8 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the map of the hovers displayed when hovering over a player's name in the chat.
+	 * Gets the map of the hovers displayed when
+	 * hovering over a player's name in the chat.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.hover-info.player.hovers" in {@link ConfigurationType#CHAT}</p>
 	 * 
@@ -186,7 +195,8 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the map of the hovers displayed when hovering over a URL in the chat.
+	 * Gets the map of the hovers displayed
+	 * when hovering over a URL in the chat.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.hover-info.url.hovers" in {@link ConfigurationType#CHAT}</p>
 	 * 

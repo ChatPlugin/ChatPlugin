@@ -85,7 +85,8 @@ public abstract class Language {
 	 * Gets a message from this language's {@link #getConfiguration()} and translates
 	 * its placeholders using {@link Utils#replaceNumericPlaceholders(String, Object...)}.
 	 * 
-	 * <p>The "{pfx}" placeholder will be translated with the message found at "misc.prefix".</p>
+	 * <p>The "{pfx}" placeholder will be translated
+	 * using the message found at "misc.prefix".</p>
 	 * 
 	 * @param path Message's path
 	 * @param args Optional arguments ({@link Utils#replaceNumericPlaceholders(String, Object...)})

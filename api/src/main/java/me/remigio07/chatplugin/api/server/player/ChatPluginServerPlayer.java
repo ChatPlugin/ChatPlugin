@@ -195,7 +195,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	 * 
 	 * <p>Will return {@link IPLookupManager#getDisabledFeatureConstructor()} if
 	 * <code>!</code>{@link IPLookupManager#isEnabled()} or if <code>!generateIfNull</code>
-	 * and there are no cached IP lookups for this player or if an error occurrs.</p>
+	 * and there are no cached IP lookups for this player or if an error occurs.</p>
 	 * 
 	 * <p>The future is not instantly completed if it is necessary to call
 	 * {@link IPLookupManager#getIPLookup(InetAddress)}. It will take a

@@ -24,7 +24,7 @@ public class IPLookupManagerImpl extends BaseIPLookupManager {
 	public void load() throws ChatPluginManagerException {
 		if (load0()) {
 			if (method == IPLookupMethod.LOCAL)
-				throw new ChatPluginManagerException(this, "LOCAL cannot be selected as IP lookup method on the free version; only REMOTE is allowed.");
+				throw new ChatPluginManagerException(this, "LOCAL cannot be selected as IP lookup method on the free version; only REMOTE is allowed");
 			enabled = true;
 			loadTime = System.currentTimeMillis() - ms;
 		}

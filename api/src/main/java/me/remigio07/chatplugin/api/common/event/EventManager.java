@@ -37,8 +37,8 @@ import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 public abstract class EventManager implements ChatPluginManager {
 	
 	protected static EventManager instance;
-	protected static final String FLOODGATE_ERROR_MESSAGE = "Invalid ChatPlugin-Floodgate configuration: {0} has connected using Floodgate but their name does not start with the \"{1}\" username prefix set at \"{2} "
-			+ "config.yml. This is most likely caused by the setting on the proxy not matching the local one. The proxy and every server under the network should use the same username prefix.";
+	protected static final String FLOODGATE_ERROR_MESSAGE = "Invalid ChatPlugin-Floodgate configuration: {0} has connected using Floodgate but their name does not start with the \"{1}\" username prefix set "
+			+ "at \"{2}\" in config.yml. This is most likely caused by the setting on the proxy not matching the local one. The proxy and every server under the network should use the same username prefix.";
 	protected boolean enabled;
 	protected Map<Class<? extends ChatPluginEvent>, List<EventSubscriber<? extends ChatPluginEvent>>> subscribers = new ConcurrentHashMap<>();
 	protected long loadTime;

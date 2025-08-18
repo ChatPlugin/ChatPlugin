@@ -66,7 +66,7 @@ public class StaffChatManagerImpl extends StaffChatManager {
 		
 		if (staffChatEvent.isCancelled())
 			return;
-		if (ProxyManager.getInstance().isEnabled()) {
+		if (!ProxyManager.getInstance().isEnabled()) {
 			for (ChatPluginPlayer other : PlayerManager.getInstance().getPlayers().values())
 				other.sendMessage(ChatColor.translate(
 						PlaceholderManager.getInstance().translatePlaceholders(

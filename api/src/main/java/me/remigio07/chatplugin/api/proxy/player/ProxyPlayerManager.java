@@ -42,6 +42,7 @@ public abstract class ProxyPlayerManager extends PlayerManager {
 	@Override
 	public void load() throws ChatPluginManagerException {
 		instance = this;
+		long ms = System.currentTimeMillis();
 		
 		if (IntegrationType.FLOODGATE.isEnabled()) {
 			if ((floodgateUsernamePrefix = IntegrationType.FLOODGATE.get().getUsernamePrefix()).isEmpty())
@@ -52,6 +53,7 @@ public abstract class ProxyPlayerManager extends PlayerManager {
 		super.load();
 		
 		enabled = true;
+		loadTime = System.currentTimeMillis() - ms;
 	}
 	
 	@Override

@@ -1,5 +1,5 @@
 /*
- * 	ChatPlugin - A complete yet lightweight plugin which handles just too many features!
+ * 	ChatPlugin - A feature-rich and modular chat ecosystem, lightweight and efficient by design.
  * 	Copyright 2025  Remigio07
  * 	
  * 	This program is distributed in the hope that it will be useful,
@@ -37,7 +37,7 @@ import me.remigio07.chatplugin.api.ChatPlugin;
 		name = "ChatPlugin",
 		version = ChatPlugin.VERSION,
 		url = "https://remigio07.me/chatplugin",
-		description = "A lightweight yet complete plugin which handles just too many features!",
+		description = "A feature-rich and modular chat ecosystem, lightweight and efficient by design.",
 		authors = "Remigio07",
 		dependencies = {
 				@Dependency(

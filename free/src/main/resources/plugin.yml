@@ -4,5 +4,5 @@ version: '${version}'
 api-version: '1.13'
 author: Remigio07
 website: https://remigio07.me/chatplugin
-description: 'A lightweight yet complete plugin which handles just too many features!'
+description: 'A feature-rich and modular chat ecosystem, lightweight and efficient by design.'
 softdepend: [CombatLogX, DiscordSRV, Essentials, floodgate, GadgetsMenu, Geyser-Spigot, LuckPerms, Matrix, MVdWPlaceholderAPI, Negativity, PlaceholderAPI, PlayerParticles, ProtocolSupport, UltraCosmetics, Vault, ViaVersion, Vulcan, WorldGuard]

@@ -38,7 +38,7 @@ if (project.hasProperty('sonatypeUsername') && project.hasProperty('sonatypePass
 				from components.java
 				pom {
 					name = 'ChatPlugin'
-					description = 'A complete yet lightweight plugin which handles just too many features!'
+					description = 'A feature-rich and modular chat ecosystem, lightweight and efficient by design.'
 					url = 'https://remigio07.me/chatplugin'
 					licenses {
 						license {

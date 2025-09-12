@@ -4,7 +4,7 @@
 		"name": "ChatPlugin",
 		"version": "${version}",
 		"url": "https://remigio07.me/chatplugin",
-		"description": "A lightweight yet complete plugin which handles just too many features!",
+		"description": "A feature-rich and modular chat ecosystem, lightweight and efficient by design.",
 		"authorList": ["Remigio07"],
 		"dependencies": [
 			"luckperms@[5.0,5.3]",

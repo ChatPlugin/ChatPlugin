@@ -20,7 +20,7 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 /**
  * Represents an integration handled by the {@link IntegrationManager}.
  * 
- * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Integrations">ChatPlugin wiki/Modules/Integrations</a>
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Integrations#plugin-integrations">ChatPlugin wiki/Modules/Integrations/Plugin integrations</a>
  */
 public interface ChatPluginIntegration {
 	

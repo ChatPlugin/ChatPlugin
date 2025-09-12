@@ -20,9 +20,9 @@ import me.remigio07.chatplugin.api.common.event.telegram.StatusUpdateEvent;
 import me.remigio07.chatplugin.api.common.util.Utils;
 
 /**
- * Represents the Telegram bot handled by the {@link TelegramIntegrationManager}.
+ * Represents the bot handled by the {@link TelegramIntegrationManager}.
  * 
- * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Telegram-integration">ChatPlugin wiki/Modules/Telegram integration</a>
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Integrations#telegram-integration">ChatPlugin wiki/Modules/Integrations/Telegram integration</a>
  */
 public interface TelegramBot {
 	

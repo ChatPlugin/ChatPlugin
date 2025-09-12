@@ -35,7 +35,8 @@ import me.remigio07.chatplugin.api.server.integration.social.SocialIntegration;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
- * Class that contains information about plugins which ChatPlugin can interact with.
+ * Class containing information about
+ * plugins that ChatPlugin can interact with.
  * 
  * @param <T> Integration's interface
  * @see IntegrationManager
@@ -47,12 +48,12 @@ public class IntegrationType<T extends ChatPluginIntegration> extends PseudoEnum
 	private static final Set<Environment> ALL = EnumSet.allOf(Environment.class);
 	
 	/**
-	 * Represents the <a href="https://www.spigotmc.org/resources/combatlogx.31689/">CombatLogX</a> integration.
+	 * Represents the <a href="https://github.com/SirBlobman/CombatLogX">CombatLogX</a> integration.
 	 */
 	public static final IntegrationType<CombatLogIntegration> COMBATLOGX = new IntegrationType<>("CombatLogX", "com.github.sirblobman.combatlogx.CombatPlugin", BUKKIT);
 	
 	/**
-	 * Represents the <a href="https://www.spigotmc.org/resources/discordsrv.18494/">DiscordSRV</a> integration.
+	 * Represents the <a href="https://https//discordsrv.com/">DiscordSRV</a> integration.
 	 */
 	public static final IntegrationType<SocialIntegration> DISCORDSRV = new IntegrationType<>("DiscordSRV", "github.scarsz.discordsrv.DiscordSRV", BUKKIT);
 	
@@ -62,32 +63,32 @@ public class IntegrationType<T extends ChatPluginIntegration> extends PseudoEnum
 	public static final IntegrationType<EconomyIntegration> ESSENTIALSX = new IntegrationType<>("Essentials", "com.earth2me.essentials.Essentials", BUKKIT);
 	
 	/**
-	 * Represents the <a href="https://geysermc.org/wiki/floodgate/">Floodgate</a> integration.
+	 * Represents the <a href="https://geysermc.org/wiki/floodgate">Floodgate</a> integration.
 	 */
 	public static final IntegrationType<MultiPlatformIntegration> FLOODGATE = new IntegrationType<>("Floodgate", "org.geysermc.floodgate.api.FloodgateApi", NO_SPONGE);
 	
 	/**
-	 * Represents the <a href="https://www.gadgetsmenu.net/">GadgetsMenu</a> integration.
+	 * Represents the <a href="https://gadgetsmenu.net">GadgetsMenu</a> integration.
 	 */
 	public static final IntegrationType<CosmeticsIntegration> GADGETSMENU = new IntegrationType<>("GadgetsMenu", "com.yapzhenyie.GadgetsMenu.GadgetsMenu", BUKKIT);
 	
 	/**
-	 * Represents the <a href="https://geysermc.org/wiki/geyser/">Geyser</a> integration.
+	 * Represents the <a href="https://geysermc.org/wiki/geyser">Geyser</a> integration.
 	 */
 	public static final IntegrationType<MultiPlatformIntegration> GEYSER = new IntegrationType<>("Geyser", "org.geysermc.geyser.api.GeyserApi", NO_SPONGE);
 	
 	/**
-	 * Represents the <a href="https://luckperms.net/">LuckPerms</a> integration.
+	 * Represents the <a href="https://luckperms.net">LuckPerms</a> integration.
 	 */
 	public static final IntegrationType<PermissionIntegration> LUCKPERMS = new IntegrationType<>("LuckPerms", "net.luckperms.api.LuckPerms", ALL);
 	
 	/**
-	 * Represents the <a href="https://matrix.rip/">Matrix</a> integration.
+	 * Represents the <a href="https://matrix.rip">Matrix</a> integration.
 	 */
 	public static final IntegrationType<AnticheatIntegration> MATRIX = new IntegrationType<>("Matrix", "me.rerere.matrix.Matrix", BUKKIT);
 	
 	/**
-	 * Represents the <a href="https://www.spigotmc.org/resources/mvdwplaceholderapi.11182/">MVdWPlaceholderAPI</a> integration.
+	 * Represents the <a href="https://github.com/Maximvdw/MVdWPlaceholderAPI">MVdWPlaceholderAPI</a> integration.
 	 */
 	public static final IntegrationType<PlaceholderIntegration> MVDWPLACEHOLDERAPI = new IntegrationType<>("MVdWPlaceholderAPI", "be.maximvdw.placeholderapi.PlaceholderAPI", BUKKIT);
 	
@@ -97,27 +98,27 @@ public class IntegrationType<T extends ChatPluginIntegration> extends PseudoEnum
 	public static final IntegrationType<AnticheatIntegration> NEGATIVITY = new IntegrationType<>("Negativity", "com.elikill58.negativity.universal.Version", EnumSet.of(Environment.BUKKIT, Environment.SPONGE));
 	
 	/**
-	 * Represents the <a href="https://www.spigotmc.org/resources/placeholderapi.6245/">PlaceholderAPI</a> integration.
+	 * Represents the <a href="https://placeholderapi.com">PlaceholderAPI</a> integration.
 	 */
 	public static final IntegrationType<PlaceholderIntegration> PLACEHOLDERAPI = new IntegrationType<>("PlaceholderAPI", "me.clip.placeholderapi.PlaceholderAPI", BUKKIT);
 	
 	/**
-	 * Represents the <a href="https://www.spigotmc.org/resources/playerparticles.40261/">PlayerParticles</a> integration.
+	 * Represents the <a href="https://wiki.rosewooddev.io/PlayerParticles">PlayerParticles</a> integration.
 	 */
 	public static final IntegrationType<CosmeticsIntegration> PLAYERPARTICLES = new IntegrationType<>("PlayerParticles", "dev.esophose.playerparticles.PlayerParticles", BUKKIT);
 	
 	/**
-	 * Represents the <a href="https://www.spigotmc.org/resources/protocolsupport.7201/">ProtocolSupport</a> integration.
+	 * Represents the <a href="https://protocol.support">ProtocolSupport</a> integration.
 	 */
 	public static final IntegrationType<VersionIntegration> PROTOCOLSUPPORT = new IntegrationType<>("ProtocolSupport", "protocolsupport.ProtocolSupport", BUKKIT);
 	
 	/**
-	 * Represents the <a href="https://www.spigotmc.org/resources/1-8-8-1-20-1-ultra-cosmetics-opensource-free.10905/">UltraCosmetics</a> integration.
+	 * Represents the <a href="https://github.com/UltraCosmetics/UltraCosmetics">UltraCosmetics</a> integration.
 	 */
 	public static final IntegrationType<CosmeticsIntegration> ULTRACOSMETICS = new IntegrationType<>("UltraCosmetics", "be.isach.ultracosmetics.UltraCosmetics", BUKKIT);
 	
 	/**
-	 * Represents the <a href="https://www.spigotmc.org/resources/vault.34315/">Vault</a> integration.
+	 * Represents the <a href="https://github.com/milkbowl/Vault">Vault</a> integration.
 	 * 
 	 * <p>This is considered an {@link EconomyIntegration} but it is also a
 	 * {@link PermissionIntegration} used to check permissions internally.</p>
@@ -125,12 +126,12 @@ public class IntegrationType<T extends ChatPluginIntegration> extends PseudoEnum
 	public static final IntegrationType<EconomyIntegration> VAULT = new IntegrationType<>("Vault", "net.milkbowl.vault.Vault", BUKKIT);
 	
 	/**
-	 * Represents the <a href="https://github.com/ViaVersion/ViaVersion">ViaVersion</a> integration.
+	 * Represents the <a href="https://viaversion.com">ViaVersion</a> integration.
 	 */
 	public static final IntegrationType<VersionIntegration> VIAVERSION = new IntegrationType<>("ViaVersion", "com.viaversion.viaversion.api.Via", ALL);
 	
 	/**
-	 * Represents the <a href="https://www.spigotmc.org/resources/vulcan-anti-cheat-advanced-cheat-detection-1-7-1-20-1.83626/">Vulcan</a> integration.
+	 * Represents the <a href="https://vulcanac.net">Vulcan</a> integration.
 	 */
 	public static final IntegrationType<AnticheatIntegration> VULCAN = new IntegrationType<>("Vulcan", "me.frep.vulcan.spigot.VulcanPlugin", BUKKIT);
 	

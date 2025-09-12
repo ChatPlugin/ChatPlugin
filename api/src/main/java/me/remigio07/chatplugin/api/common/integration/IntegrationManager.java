@@ -26,7 +26,7 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 /**
  * Manager that handles {@link ChatPluginIntegration}s.
  * 
- * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Integrations">ChatPlugin wiki/Modules/Integrations</a>
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Integrations#plugin-integrations">ChatPlugin wiki/Modules/Integrations/Plugin integrations</a>
  */
 public abstract class IntegrationManager implements ChatPluginManager {
 	

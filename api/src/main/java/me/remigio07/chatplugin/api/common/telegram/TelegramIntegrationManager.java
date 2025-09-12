@@ -24,7 +24,7 @@ import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 /**
  * Manager that handles the plugin's {@link TelegramBot}.
  * 
- * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Telegram-integration">ChatPlugin wiki/Modules/Telegram integration</a>
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Integrations#telegram-integration">ChatPlugin wiki/Modules/Integrations/Telegram integration</a>
  */
 public abstract class TelegramIntegrationManager implements ChatPluginManager, Runnable {
 	

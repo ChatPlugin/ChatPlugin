@@ -153,7 +153,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("settings.log-command-blocks-commands", true);
 		config.addDefault("settings.truncate-version-string", true);
 		config.addDefault("settings.use-week-timestamp", false);
-		config.addDefault("settings.anticheat-integration.reasons-start-with", Arrays.asList("[Matrix]", "[Vulcan]"));
+		config.addDefault("settings.anticheat-integration.reasons-start-with", Arrays.asList("[Matrix]", "[Vulcan]", "[Anticheat]"));
 		config.addDefault("settings.anticheat-integration.violations-expiration-timeout", "1m");
 		config.addDefault("settings.storage-placeholders-update-timeout", "1m");
 		config.addDefault("settings.floodgate-username-prefix", "");
@@ -970,7 +970,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		defaultScoreboard.addDefault("settings.numbers.custom-text.colors.cycle-timeout", "30s");
 		defaultScoreboard.addDefault("settings.numbers.custom-text.colors.interpolations", 15);
 		defaultScoreboard.addDefault("settings.numbers.custom-text.colors.gradient", Arrays.asList("#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#007FFF", "#0000FF", "#7F00FF"));
-		defaultScoreboard.addDefault("settings.placeholder-types", Arrays.asList("PLAYER", "SERVER", "INTEGRATIONS"));
+		defaultScoreboard.addDefault("settings.placeholder-types", Arrays.asList("PLAYER", "SERVER"));
 		defaultScoreboard.addDefault("titles.values.english", Arrays.asList("&a&lScoreboard", "&c&lScoreboard"));
 		defaultScoreboard.addDefault("titles.values.italian", Arrays.asList("&a&lScoreboard", "&c&lScoreboard"));
 		defaultScoreboard.addDefault("titles.random-order", false);
@@ -2905,7 +2905,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		path = "messages.main.";
 		
 		discordIntegration.addDefault(path + "help.title.text", "Help for ChatPlugin");
-		discordIntegration.addDefault(path + "help.description", "Click [here](https://remigio07.me/chatplugin/wiki/modules/Discord-integration#commands) to visit the wiki with the commands list.");
+		discordIntegration.addDefault(path + "help.description", "Click [here](https://remigio07.me/chatplugin/wiki/modules/Integrations#commands) to visit the wiki with the commands list.");
 		discordIntegration.addDefault(path + "help.thumbnail", "https://live.staticflickr.com/65535/53596116157_d426b5c1c8_o_d.png");
 		discordIntegration.addDefault(path + "help.color", "55FF55");
 		discordIntegration.addDefault(path + "info.title.text", "Info and contacts for ChatPlugin");
@@ -2933,7 +2933,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		discordIntegration.addDefault(path + "info.title.text", "Ban **#{id}**: {player}");
 		discordIntegration.addDefault(path + "info.description", "**Staff member:** {staff_member}\n**Who unbanned:** {who_unbanned}\n**Reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Duration:** {duration}\n**Remaining time:** {remaining_time}\n**Unban date:** {unban_date}\n**Type:** {type}\n**Active:** {active}\n**Scope:** {global}");
-		discordIntegration.addDefault(path + "info.thumbnail", "https://www.mc-heads.net/avatar/{player}");
+		discordIntegration.addDefault(path + "info.thumbnail", "https://mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "info.color", "AA0000");
 		discordIntegration.addDefault(path + "list.title.text", "Banlist");
 		discordIntegration.addDefault(path + "list.description", "**Active bans' IDs:** {bans}.");
@@ -2946,22 +2946,22 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		discordIntegration.addDefault(path + "banned.enabled", true);
 		discordIntegration.addDefault(path + "banned.title.text", "Ban **#{id}**: {player}");
 		discordIntegration.addDefault(path + "banned.description", "**Staff member:** {staff_member}\n**Reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Duration:** {duration}\n**Type:** {type}\n**Scope:** {global}");
-		discordIntegration.addDefault(path + "banned.thumbnail", "https://www.mc-heads.net/avatar/{player}");
+		discordIntegration.addDefault(path + "banned.thumbnail", "https://mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "banned.color", "AA0000");
 		discordIntegration.addDefault(path + "updated.enabled", true);
 		discordIntegration.addDefault(path + "updated.title.text", "Ban **#{id}** updated: {player}");
 		discordIntegration.addDefault(path + "updated.description", "**Staff member:** {staff_member}\n**Reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Duration:** {duration}\n**Type:** {type}\n**Scope:** {global}");
-		discordIntegration.addDefault(path + "updated.thumbnail", "https://www.mc-heads.net/avatar/{player}");
+		discordIntegration.addDefault(path + "updated.thumbnail", "https://mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "updated.color", "AA0000");
 		discordIntegration.addDefault(path + "unbanned.enabled", true);
 		discordIntegration.addDefault(path + "unbanned.title.text", "Unban **#{id}**: {player}");
 		discordIntegration.addDefault(path + "unbanned.description", "**Staff member:** {who_unbanned}\n**Date:** {date}");
-		discordIntegration.addDefault(path + "unbanned.thumbnail", "https://www.mc-heads.net/avatar/{player}");
+		discordIntegration.addDefault(path + "unbanned.thumbnail", "https://mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "unbanned.color", "55FF55");
 		discordIntegration.addDefault(path + "expired.enabled", true);
 		discordIntegration.addDefault(path + "expired.title.text", "Ban **#{id}** expired: {player}");
 		discordIntegration.addDefault(path + "expired.description", "**Date:** {date}");
-		discordIntegration.addDefault(path + "expired.thumbnail", "https://www.mc-heads.net/avatar/{player}");
+		discordIntegration.addDefault(path + "expired.thumbnail", "https://mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "expired.color", "55FF55");
 		discordIntegration.addDefault(path + "unspecified-reason", "Reason not specified.");
 		discordIntegration.addDefault(path + "formats.types.account", "username/UUID");
@@ -2977,7 +2977,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		discordIntegration.addDefault(path + "info.title.text", "Warning **#{id}**: {player}");
 		discordIntegration.addDefault(path + "info.description", "**Staff member:** {staff_member}\n**Who unwarned:** {who_unwarned}\n**Last reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Duration:** {duration}\n**Remaining time:** {remaining_time}\n**Unwarn date:** {unwarn_date}\n**Warnings:** {amount}/{max_warnings}\n**Active:** {active}\n**Scope:** {global}");
-		discordIntegration.addDefault(path + "info.thumbnail", "https://www.mc-heads.net/avatar/{player}");
+		discordIntegration.addDefault(path + "info.thumbnail", "https://mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "info.color", "FF5555");
 		discordIntegration.addDefault(path + "list.title.text", "Warnlist");
 		discordIntegration.addDefault(path + "list.description", "**Active warnings' IDs:** {warnings}.");
@@ -2990,22 +2990,22 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		discordIntegration.addDefault(path + "warned.enabled", true);
 		discordIntegration.addDefault(path + "warned.title.text", "Warning **#{id}**: {player}");
 		discordIntegration.addDefault(path + "warned.description", "**Staff member:** {staff_member}\n**Last reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Duration:** {duration}\n**Warnings:** {amount}/{max_warnings}\n**Scope:** {global}");
-		discordIntegration.addDefault(path + "warned.thumbnail", "https://www.mc-heads.net/avatar/{player}");
+		discordIntegration.addDefault(path + "warned.thumbnail", "https://mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "warned.color", "FF5555");
 		discordIntegration.addDefault(path + "removed.enabled", true);
 		discordIntegration.addDefault(path + "removed.title.text", "Warning **#{id}**: {player}");
 		discordIntegration.addDefault(path + "removed.description", "**Staff member:** {staff_member}\n**Date:** {date}");
-		discordIntegration.addDefault(path + "removed.thumbnail", "https://www.mc-heads.net/avatar/{player}");
+		discordIntegration.addDefault(path + "removed.thumbnail", "https://mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "removed.color", "AA0000");
 		discordIntegration.addDefault(path + "cleared.enabled", true);
 		discordIntegration.addDefault(path + "cleared.title.text", "Cleared **{player}**'s warnings");
 		discordIntegration.addDefault(path + "cleared.description", "**Staff member:** {staff_member}\n**Date:** {date}");
-		discordIntegration.addDefault(path + "cleared.thumbnail", "https://www.mc-heads.net/avatar/{player}");
+		discordIntegration.addDefault(path + "cleared.thumbnail", "https://mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "cleared.color", "AA0000");
 		discordIntegration.addDefault(path + "expired.enabled", true);
 		discordIntegration.addDefault(path + "expired.title.text", "Warning **#{id}** expired: {player}");
 		discordIntegration.addDefault(path + "expired.description", "**Date:** {date}");
-		discordIntegration.addDefault(path + "expired.thumbnail", "https://www.mc-heads.net/avatar/{player}");
+		discordIntegration.addDefault(path + "expired.thumbnail", "https://mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "expired.color", "AA0000");
 		discordIntegration.addDefault(path + "unspecified-reason", "Reason not specified.");
 		discordIntegration.addDefault(path + "formats.active.yes", "active");
@@ -3019,12 +3019,12 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		discordIntegration.addDefault(path + "info.title.text", "Kick **#{id}**: {player}");
 		discordIntegration.addDefault(path + "info.description", "**Staff member:** {staff_member}\n**Reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Type:** {type}");
-		discordIntegration.addDefault(path + "info.thumbnail", "https://www.mc-heads.net/avatar/{player}");
+		discordIntegration.addDefault(path + "info.thumbnail", "https://mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "info.color", "FFAA00");
 		discordIntegration.addDefault(path + "kicked.enabled", true);
 		discordIntegration.addDefault(path + "kicked.title.text", "Kick **#{id}**: {player}");
 		discordIntegration.addDefault(path + "kicked.description", "**Staff member:** {staff_member}\n**Reason:** {reason}\n**Server:** {server}\n**Date:** {date}");
-		discordIntegration.addDefault(path + "kicked.thumbnail", "https://www.mc-heads.net/avatar/{player}");
+		discordIntegration.addDefault(path + "kicked.thumbnail", "https://mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "kicked.color", "FFAA00");
 		discordIntegration.addDefault(path + "unspecified-reason", "Reason not specified.");
 		discordIntegration.addDefault(path + "formats.silent.yes", "yes");
@@ -3034,7 +3034,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		discordIntegration.addDefault(path + "info.title.text", "Mute **#{id}**: {player}");
 		discordIntegration.addDefault(path + "info.description", "**Staff member:** {staff_member}\n**Who unmuted:** {who_unmuted}\n**Reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Duration:** {duration}\n**Remaining time:** {remaining_time}\n**Unmute date:** {unmute_date}\n**Active:** {active}\n**Scope:** {global}");
-		discordIntegration.addDefault(path + "info.thumbnail", "https://www.mc-heads.net/avatar/{player}");
+		discordIntegration.addDefault(path + "info.thumbnail", "https://mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "info.color", "FFFF55");
 		discordIntegration.addDefault(path + "list.title.text", "Mutelist");
 		discordIntegration.addDefault(path + "list.description", "**Active mutes' IDs:** {mutes}.");
@@ -3047,22 +3047,22 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		discordIntegration.addDefault(path + "muted.enabled", true);
 		discordIntegration.addDefault(path + "muted.title.text", "Mute **#{id}**: {player}");
 		discordIntegration.addDefault(path + "muted.description", "**Staff member:** {staff_member}\n**Reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Duration:** {duration}\n**Scope:** {global}");
-		discordIntegration.addDefault(path + "muted.thumbnail", "https://www.mc-heads.net/avatar/{player}");
+		discordIntegration.addDefault(path + "muted.thumbnail", "https://mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "muted.color", "FFFF55");
 		discordIntegration.addDefault(path + "updated.enabled", true);
 		discordIntegration.addDefault(path + "updated.title.text", "Mute **#{id}** updated: {player}");
 		discordIntegration.addDefault(path + "updated.description", "**Staff member:** {staff_member}\n**Reason:** {reason}\n**Server:** {server}\n**Date:** {date}\n**Duration:** {duration}\n**Scope:** {global}");
-		discordIntegration.addDefault(path + "updated.thumbnail", "https://www.mc-heads.net/avatar/{player}");
+		discordIntegration.addDefault(path + "updated.thumbnail", "https://mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "updated.color", "FFFF55");
 		discordIntegration.addDefault(path + "unmuted.enabled", true);
 		discordIntegration.addDefault(path + "unmuted.title.text", "Unmute **#{id}**: {player}");
 		discordIntegration.addDefault(path + "unmuted.description", "**Staff member:** {staff_member}\n**Date:** {date}");
-		discordIntegration.addDefault(path + "unmuted.thumbnail", "https://www.mc-heads.net/avatar/{player}");
+		discordIntegration.addDefault(path + "unmuted.thumbnail", "https://mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "unmuted.color", "55FF55");
 		discordIntegration.addDefault(path + "expired.enabled", true);
 		discordIntegration.addDefault(path + "expired.title.text", "Mute **#{id}** expired: {player}");
 		discordIntegration.addDefault(path + "expired.description", "**Date:** {date}");
-		discordIntegration.addDefault(path + "expired.thumbnail", "https://www.mc-heads.net/avatar/{player}");
+		discordIntegration.addDefault(path + "expired.thumbnail", "https://mc-heads.net/avatar/{player}");
 		discordIntegration.addDefault(path + "expired.color", "55FF55");
 		discordIntegration.addDefault(path + "unspecified-reason", "Reason not specified.");
 		discordIntegration.addDefault(path + "formats.active.yes", "active");
@@ -3175,7 +3175,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		telegramIntegration.addDefault("settings.status.value", "Playing with {online_minecraft} other players.");
 		telegramIntegration.addDefault("settings.status.update-timeout-ms", 30000L);
 		
-		telegramIntegration.addDefault("messages.main.help", "❔ Help for ChatPlugin\n\nClick <a href=\"https://remigio07.me/chatplugin/wiki/modules/Telegram-integration#commands\">here</a> to visit the wiki with the commands list.");
+		telegramIntegration.addDefault("messages.main.help", "❔ Help for ChatPlugin\n\nClick <a href=\"https://remigio07.me/chatplugin/wiki/modules/Integrations#commands-1\">here</a> to visit the wiki with the commands list.");
 		telegramIntegration.addDefault("messages.main.info", "ℹ Info and contacts for ChatPlugin\n\n<strong>Website:</strong> https://remigio07.me/chatplugin\n<strong>GitHub:</strong> https://github.com/ChatPlugin/ChatPlugin\n<strong>Discord:</strong> https://discord.gg/eSnAPhvMTG");
 		telegramIntegration.addDefault("messages.main.status", "ℹ Current server status\n\n<strong>OS:</strong> {os_name} {os_version}, <strong>Java:</strong> {java_version}\n<strong>Environment:</strong> {environment} {environment_version}\n<strong>ChatPlugin:</strong> {chatplugin_version}, <strong>Java Telegram Bot API version:</strong> {java_telegram_bot_api_version}\n<strong>Uptime:</strong> {uptime}\n<strong>Used memory:</strong> {used_memory}/{max_memory} MB\n<strong>Allocated:</strong> {total_memory} MB, <strong>free:</strong> {free_memory} MB\n<strong>Current threads count:</strong> {active_threads}x\n<strong>Used storage:</strong> {used_storage}/{total_storage} GB\n<strong>Free storage:</strong> {free_storage} GB\n<strong>Enabled players:</strong> {enabled_players}x\n<strong>Startup:</strong> {startup_time} ms, <strong>last reload:</strong> {last_reload_time} ms");
 		telegramIntegration.addDefault("messages.main.version", "⚙ Current plugin version\n\n<strong>ChatPlugin version:</strong> {chatplugin_version}\n<strong>Java Telegram Bot API version:</strong> {java_telegram_bot_api_version}");

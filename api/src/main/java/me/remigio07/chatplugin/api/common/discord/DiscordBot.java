@@ -29,9 +29,9 @@ import me.remigio07.chatplugin.api.common.util.adapter.discord.ActivityTypeAdapt
 import me.remigio07.chatplugin.api.common.util.adapter.discord.FieldAdapter;
 
 /**
- * Represents the Discord bot handled by the {@link DiscordIntegrationManager}.
+ * Represents the bot handled by the {@link DiscordIntegrationManager}.
  * 
- * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Discord-integration">ChatPlugin wiki/Modules/Discord integration</a>
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Integrations#discord-integration">ChatPlugin wiki/Modules/Integrations/Discord integration</a>
  */
 public interface DiscordBot {
 	

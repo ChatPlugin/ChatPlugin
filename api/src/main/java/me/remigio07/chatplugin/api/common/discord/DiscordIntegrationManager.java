@@ -26,7 +26,7 @@ import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 /**
  * Manager that handles the plugin's {@link DiscordBot}.
  * 
- * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Discord-integration">ChatPlugin wiki/Modules/Discord integration</a>
+ * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Integrations#discord-integration">ChatPlugin wiki/Modules/Integrations/Discord integration</a>
  */
 public abstract class DiscordIntegrationManager implements ChatPluginManager, Runnable {
 	

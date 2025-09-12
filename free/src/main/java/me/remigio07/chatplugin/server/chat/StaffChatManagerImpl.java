@@ -16,8 +16,6 @@
 package me.remigio07.chatplugin.server.chat;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
-import me.remigio07.chatplugin.api.common.player.ChatPluginPlayer;
-import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
@@ -28,6 +26,7 @@ import me.remigio07.chatplugin.api.server.chat.StaffChatManager;
 import me.remigio07.chatplugin.api.server.event.chat.StaffChatEvent;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
@@ -67,16 +66,17 @@ public class StaffChatManagerImpl extends StaffChatManager {
 		if (staffChatEvent.isCancelled())
 			return;
 		if (!ProxyManager.getInstance().isEnabled()) {
-			for (ChatPluginPlayer other : PlayerManager.getInstance().getPlayers().values())
-				other.sendMessage(ChatColor.translate(
-						PlaceholderManager.getInstance().translatePlaceholders(
-								playerFormat,
-								player,
-								player.getLanguage(),
-								placeholderTypes,
-								false
-								) + message
-						));
+			for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values())
+				if (other.hasPermission("chatplugin.commands.staffchat"))
+					other.sendMessage(ChatColor.translate(
+							PlaceholderManager.getInstance().translatePlaceholders(
+									playerFormat,
+									player,
+									player.getLanguage(),
+									placeholderTypes,
+									false
+									) + message
+							));
 			ChatPlugin.getInstance().sendConsoleMessage(ChatColor.translate(
 					PlaceholderManager.getInstance().translatePlaceholders(
 							playerFormat,
@@ -113,14 +113,15 @@ public class StaffChatManagerImpl extends StaffChatManager {
 		if (staffChatEvent.isCancelled())
 			return;
 		if (!ProxyManager.getInstance().isEnabled()) {
-			for (ChatPluginPlayer player : PlayerManager.getInstance().getPlayers().values())
-				player.sendMessage(ChatColor.translate(
-						PlaceholderManager.getInstance().translateServerPlaceholders(
-								consoleFormat,
-								Language.getMainLanguage(),
-								false
-								) + message
-						));
+			for (ChatPluginServerPlayer player : ServerPlayerManager.getInstance().getPlayers().values())
+				if (player.hasPermission("chatplugin.commands.staffchat"))
+					player.sendMessage(ChatColor.translate(
+							PlaceholderManager.getInstance().translateServerPlaceholders(
+									consoleFormat,
+									Language.getMainLanguage(),
+									false
+									) + message
+							));
 			ChatPlugin.getInstance().sendConsoleMessage(ChatColor.translate(
 					PlaceholderManager.getInstance().translateServerPlaceholders(
 							consoleFormat,

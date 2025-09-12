@@ -19,6 +19,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -47,13 +48,10 @@ public abstract class LogManager implements ChatPluginManager {
 	@Override
 	public void load() throws ChatPluginManagerException {
 		try {
-			if (!Files.exists(file = ChatPlugin.getInstance().getDataFolder().resolve("chatplugin.log"))) {
-				if (!Files.exists(file.getParent())) {
-					Files.createDirectories(file.getParent());
-					logMessage("Fresh installation? Welcome! Generating default files for you. Follow this guide for proper installation: https://remigio07.me/chatplugin/wiki/getting-started/Installation", LogLevel.WARNING);
-				}
-			} else if (Files.size(file) > 10 * MemoryUtils.MEGABYTE.getToBytesRatio())
-				logMessage("Log file chatplugin.log's size is over 10 MB (currently " + MemoryUtils.formatMemory(Files.size(file), MemoryUtils.MEGABYTE) + " MB). This might impact performance. It is recommended to stop the server and rename or delete the file before starting again.", LogLevel.WARNING);
+			if (!Files.exists(file = ChatPlugin.getInstance().getDataFolder().resolve("chatplugin.log")))
+				Files.createFile(file);
+			else if (Files.size(file) > 10 * MemoryUtils.MEGABYTE.getToBytesRatio())
+				logMessage("Log file chatplugin.log's size is over 10 MB (currently " + MemoryUtils.formatMemory(Files.size(file), MemoryUtils.MEGABYTE) + " MB). This might impact performance. It is recommended to stop the server and rename or delete the file before starting again.", LogLevel.WARNING);	
 		} catch (IOException ioe) {
 			throw new ChatPluginManagerException(this, ioe);
 		} enabled = true;
@@ -147,7 +145,7 @@ public abstract class LogManager implements ChatPluginManager {
 	public void writeToFile(String message) {
 		if (file == null)
 			return;
-		try (BufferedWriter writer = Files.newBufferedWriter(file)) {
+		try (BufferedWriter writer = Files.newBufferedWriter(file, StandardOpenOption.APPEND)) {
 			writer.write(dateFormat.format(new Date()) + ChatColor.stripColor(message) + "\n");
 		} catch (IOException ioe) {
 			ioe.printStackTrace();

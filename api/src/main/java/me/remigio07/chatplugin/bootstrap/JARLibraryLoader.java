@@ -27,6 +27,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -47,14 +48,27 @@ public class JARLibraryLoader extends URLClassLoader {
 	
 	void open(Object... args) {
 		try {
-			Path files = ((Path) args[args.length - 1]).resolve("files");
+			Path dataFolder = (Path) args[args.length - 1];
+			Path files = dataFolder.resolve("files");
 			List<URL> jars = getJARs();
 			
-			try (DirectoryStream<Path> stream = Files.newDirectoryStream(files)) {
-				for (Path file : stream)
-					if (file.getFileName().toString().endsWith(".jar.tmp"))
-						Files.delete(file);
-			} for (int i = 0; i < jars.size(); i++) {
+			if (Files.exists(files)) {
+				try (DirectoryStream<Path> stream = Files.newDirectoryStream(files)) {
+					for (Path file : stream)
+						if (file.getFileName().toString().endsWith(".jar.tmp"))
+							Files.delete(file);
+				}
+			} else if (!Files.exists(dataFolder)) {
+				Object logger = args[args.length - 2];
+				
+				logger.getClass().getMethod(logger instanceof Logger ? "warning" : "warn", String.class).invoke(
+						logger,
+						"Fresh installation? Welcome! Generating default files for you. Follow this guide for proper installation: https://remigio07.me/chatplugin/wiki/getting-started/Installation"
+						);
+				Files.createDirectories(files);
+			} else Files.createDirectory(files);
+			
+			for (int i = 0; i < jars.size(); i++) {
 				URL jar = jars.get(i);
 				
 				try (InputStream input = jar.openStream()) {
@@ -73,7 +87,7 @@ public class JARLibraryLoader extends URLClassLoader {
 		}
 	}
 	
-	private List<URL> getJARs() throws IOException {
+	private List<URL> getJARs() {
 		return EDITIONS.stream().map(edition -> getClass().getClassLoader().getResource("ChatPlugin-" + edition.toUpperCase() + ".jar")).filter(Objects::nonNull).collect(Collectors.toList());
 	}
 	

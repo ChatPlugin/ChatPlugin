@@ -216,7 +216,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("ban.banwave.announce", true);
 		config.addDefault("ban.banwave.timeout", "6h");
 		config.addDefault("ban.banwave.delay-ms", 100);
-		config.addDefault("ban.banwave.reasons-start-with", Arrays.asList("[Matrix]", "[Vulcan]"));
+		config.addDefault("ban.banwave.reasons-start-with", Arrays.asList("[Matrix]", "[Vulcan]", "[Anticheat]"));
 		config.addDefault("ban.banwave.commands.start", Arrays.asList());
 		config.addDefault("ban.banwave.commands.end", Arrays.asList());
 		

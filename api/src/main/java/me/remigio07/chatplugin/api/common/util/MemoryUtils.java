@@ -23,24 +23,44 @@ import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationTyp
 public enum MemoryUtils {
 	
 	/**
-	 * Represents a terabyte (1024 * 1024 * 1024 * 1024 bytes).
+	 * Represents a tebibyte.
 	 */
-	TERABYTE(1024 * 1024 * 1024 * 1024, "TB"),
+	TEBIBYTE(1024 * 1024 * 1024 * 1024, "TiB"),
 	
 	/**
-	 * Represents a gigabyte (1024 * 1024 * 1024 bytes).
+	 * Represents a terabyte.
 	 */
-	GIGABYTE(1024 * 1024 * 1024, "GB"),
+	TERABYTE(1000 * 1000 * 1000 * 1000, "TB"),
 	
 	/**
-	 * Represents a megabyte (1024 * 1024 bytes).
+	 * Represents a gigabyte.
 	 */
-	MEGABYTE(1024 * 1024, "MB"),
+	GIBIBYTE(1024 * 1024 * 1024, "GiB"),
 	
 	/**
-	 * Represents a kilobyte (1024 bytes).
+	 * Represents a gigabyte.
 	 */
-	KILOBYTE(1024, "KB"),
+	GIGABYTE(1000 * 1000 * 1000, "GB"),
+	
+	/**
+	 * Represents a mebibyte.
+	 */
+	MEBIBYTE(1024 * 1024, "MiB"),
+	
+	/**
+	 * Represents a megabyte.
+	 */
+	MEGABYTE(1000 * 1000, "MB"),
+	
+	/**
+	 * Represents a kibibyte.
+	 */
+	KIBIBYTE(1024, "KiB"),
+	
+	/**
+	 * Represents a kilobyte.
+	 */
+	KILOBYTE(1000, "KB"),
 	
 	/**
 	 * Represents a byte.
@@ -67,7 +87,7 @@ public enum MemoryUtils {
 	/**
 	 * Gets this unit's string representation.
 	 * 
-	 * <p><strong>Example:</strong> {@link #MEGABYTE} ➝ "MB"</p>
+	 * <p><strong>Example:</strong> {@link #MEBIBYTE} ➝ "MiB"</p>
 	 * 
 	 * @return Unit's string representation
 	 */

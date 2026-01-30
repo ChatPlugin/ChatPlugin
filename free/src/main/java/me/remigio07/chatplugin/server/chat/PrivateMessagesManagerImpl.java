@@ -52,7 +52,6 @@ import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
-import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.server.chat.antispam.AntispamManagerImpl;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import me.remigio07.chatplugin.server.util.Utils;
@@ -84,13 +83,11 @@ public class PrivateMessagesManagerImpl extends PrivateMessagesManager {
 			
 			advancementsEnabled = false;
 		} try {
-			advancementsIconMaterial = new MaterialAdapter(ConfigurationType.CHAT.get().getString("chat.private-messages.advancements.icon.material").toUpperCase());
+			advancementsIconMaterial = new MaterialAdapter(ConfigurationType.CHAT.get().getString("chat.private-messages.advancements.icon.material"));
 		} catch (IllegalArgumentException iae) {
-			String material = Environment.isSponge() || VersionUtils.getVersion().isAtLeast(Version.V1_13) ? "WRITABLE_BOOK" : "BOOK_AND_QUILL";
+			advancementsIconMaterial = new MaterialAdapter("writable_book");
 			
-			LogManager.log("Invalid material (\"{0}\") set at \"chat.private-messages.advancements.icon.material\" in chat.yml; setting to default value of {1}.", 2, ConfigurationType.CHAT.get().getString("chat.private-messages.advancements.icon.material"), material);
-			
-			advancementsIconMaterial = new MaterialAdapter(material);
+			LogManager.log("Invalid material (\"{0}\") set at \"chat.private-messages.advancements.icon.material\" in chat.yml; setting to default value of {1}.", 2, ConfigurationType.CHAT.get().getString("chat.private-messages.advancements.icon.material"), advancementsIconMaterial.getID());
 		} advancementsIconGlowing = ConfigurationType.CHAT.get().getBoolean("chat.private-messages.advancements.icon.glowing");
 		bypassAntispamChecks = new ArrayList<>();
 		

@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.util.UUID;
 import java.util.Map.Entry;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
@@ -67,7 +68,7 @@ public class FillableGUIImpl<T> extends FillableGUI<T> {
 	
 	private void init() {
 		for (Language language : LanguageManager.getInstance().getLanguages())
-			inventories.put(language, Stream.of(new InventoryAdapter(layout.getRows())).collect(Collectors.toCollection(CopyOnWriteArrayList::new)));
+			inventories.put(language, Stream.of(new InventoryAdapter(layout.getRows(), UUID.randomUUID().toString())).collect(Collectors.toCollection(CopyOnWriteArrayList::new)));
 		load();
 	}
 	
@@ -134,7 +135,7 @@ public class FillableGUIImpl<T> extends FillableGUI<T> {
 				InventoryAdapter inventory = getInventory(language, page);
 				
 				if (inventory == null)
-					getInventories(language).add(inventory = new InventoryAdapter(layout.getRows()));
+					getInventories(language).add(inventory = new InventoryAdapter(layout.getRows(), UUID.randomUUID().toString()));
 				if (fillersPerPage != 0)
 					inventory.clear();
 				for (int position = 0; position < getLayout().getSize(); position++) {
@@ -179,7 +180,7 @@ public class FillableGUIImpl<T> extends FillableGUI<T> {
 					
 				}
 			}, 0L);
-		} if (Environment.isBukkit() && inventory.getItem(icon.getPosition()) != null && inventory.getItem(icon.getPosition()).getType() == itemStack.getType())
+		} if (Environment.isBukkit() && inventory.getItem(icon.getPosition()) != null && inventory.getItem(icon.getPosition()).getType().equals(itemStack.getType()))
 			new ItemStackAdapter(inventory.bukkitValue().getItem(icon.getPosition())).importData(itemStack);
 		else inventory.setItem(itemStack, icon.getPosition());
 	}

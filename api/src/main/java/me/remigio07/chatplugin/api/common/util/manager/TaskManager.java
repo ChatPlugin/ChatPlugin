@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.api.common.util.manager;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -29,8 +30,10 @@ import org.bukkit.Bukkit;
 import org.spongepowered.api.Sponge;
 
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
+import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07.chatplugin.bootstrap.Environment;
+import me.remigio07.chatplugin.bootstrap.FabricBootstrapper;
 import me.remigio07.chatplugin.bootstrap.SpongeBootstrapper;
 
 /**
@@ -42,9 +45,9 @@ public abstract class TaskManager implements ChatPluginManager {
 	protected boolean enabled;
 	protected ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 	protected ExecutorService executor = Executors.newCachedThreadPool();
-	protected Map<Long, UUID> syncTasks = new ConcurrentHashMap<>();
+	protected Map<Long, Object> syncTasks = new ConcurrentHashMap<>(); // Bukkit: -1, Sponge: UUID, Fabric: ScheduledFuture<?> (Void)
 	protected Map<Long, ScheduledFuture<?>> asyncTasks = new ConcurrentHashMap<>();
-	protected AtomicLong currentSpongeID = new AtomicLong(), currentAsyncID = new AtomicLong();
+	protected AtomicLong currentSyncID, currentAsyncID = new AtomicLong();
 	protected long loadTime;
 	
 	@Override
@@ -71,12 +74,12 @@ public abstract class TaskManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the synchronous tasks' map.
+	 * Gets the synchronous tasks' set.
 	 * 
-	 * @return Sync tasks' map
+	 * @return Sync tasks' set
 	 */
-	public Map<Long, UUID> getSyncTasks() {
-		return syncTasks;
+	public Set<Long> getSyncTasks() {
+		return syncTasks.keySet();
 	}
 	
 	/**
@@ -89,14 +92,16 @@ public abstract class TaskManager implements ChatPluginManager {
 	}
 	
 	/**
-	 * Gets the current Sponge sync task's ID.
+	 * Gets the current sync task's ID.
 	 * 
-	 * <p>It is only applicable when {@link Environment#isSponge()}.</p>
+	 * <p>Will return <code>null</code> if called when
+	 * <code>!{@link Environment#isSponge()} &amp;&amp; !{@link Environment#isFabric()}</code>.</p>
 	 * 
-	 * @return Current Sponge sync task's ID
+	 * @return Current sync task's ID
 	 */
-	public AtomicLong getNextSpongeID() {
-		return currentSpongeID;
+	@Nullable(why = "Null if !Environment#isSponge && !Environment.isFabric()")
+	public AtomicLong getCurrentSyncID() {
+		return currentSyncID;
 	}
 	
 	/**
@@ -124,11 +129,16 @@ public abstract class TaskManager implements ChatPluginManager {
 	 */
 	public static long runSync(@NotNull Runnable runnable, long delay) {
 		if (Environment.isProxy())
-			throw new UnsupportedOperationException("Synchronous tasks are not available on a " + Environment.getCurrent().getName() + " environment. Bukkit and Sponge only");
+			throw new UnsupportedOperationException("Synchronous tasks are not available on a " + Environment.getCurrent().getName() + " environment");
 		delay = delay < 0 ? 0 : delay;
-		long taskID = Environment.isBukkit() ? (long) BukkitScheduler.runSync(runnable, delay) : instance.currentSpongeID.getAndIncrement();
+		long taskID = Environment.isBukkit() ? (long) BukkitScheduler.runSync(runnable, delay) : instance.currentSyncID.getAndIncrement();
 		
-		instance.syncTasks.put(taskID, Environment.isBukkit() ? UUID.randomUUID() : Sponge.getScheduler().createTaskBuilder().execute(runnable).delayTicks(delay / 50).submit(SpongeBootstrapper.getInstance()).getUniqueId());
+		instance.syncTasks.put(taskID, Environment.isBukkit()
+				? -1
+				: Environment.isSponge()
+				? Sponge.getScheduler().createTaskBuilder().execute(runnable).delayTicks(delay / 50).submit(SpongeBootstrapper.getInstance()).getUniqueId()
+				: instance.scheduler.schedule(() -> FabricBootstrapper.getInstance().getServer().execute(runnable), delay, TimeUnit.MILLISECONDS)
+				);
 		runAsync(() -> instance.syncTasks.remove(taskID), delay);
 		return taskID;
 	}
@@ -171,12 +181,16 @@ public abstract class TaskManager implements ChatPluginManager {
 	 */
 	public static long scheduleSync(@NotNull Runnable runnable, long delay, long period) {
 		if (Environment.isProxy())
-			throw new UnsupportedOperationException("Synchronous tasks are not available on a " + Environment.getCurrent().getName() + " environment. Bukkit and Sponge only");
+			throw new UnsupportedOperationException("Synchronous tasks are not available on a " + Environment.getCurrent().getName() + " environment");
 		delay = delay < 0 ? 0 : delay;
 		period = period < 1 ? 1 : period;
-		long taskID = Environment.isBukkit() ? (long) BukkitScheduler.scheduleSync(runnable, delay, period) : instance.currentSpongeID.getAndIncrement();
+		long taskID = Environment.isBukkit() ? (long) BukkitScheduler.scheduleSync(runnable, delay, period) : instance.currentSyncID.getAndIncrement();
 		
-		instance.syncTasks.put(taskID, Environment.isBukkit() ? UUID.randomUUID() : Sponge.getScheduler().createTaskBuilder().execute(runnable).delayTicks(delay / 50).intervalTicks(period / 50).submit(SpongeBootstrapper.getInstance()).getUniqueId());
+		instance.syncTasks.put(taskID, Environment.isBukkit()
+				? -1
+				: Environment.isSponge()
+				? Sponge.getScheduler().createTaskBuilder().execute(runnable).delayTicks(delay / 50).intervalTicks(period / 50).submit(SpongeBootstrapper.getInstance()).getUniqueId()
+				: instance.scheduler.scheduleAtFixedRate(() -> FabricBootstrapper.getInstance().getServer().execute(runnable), delay, period, TimeUnit.MILLISECONDS));
 		return taskID;
 	}
 	
@@ -220,7 +234,9 @@ public abstract class TaskManager implements ChatPluginManager {
 		if (instance.syncTasks.containsKey(id)) {
 			if (Environment.isBukkit())
 				Bukkit.getScheduler().cancelTask((int) id);
-			else Sponge.getScheduler().getTaskById(instance.syncTasks.get(id)).get().cancel();
+			else if (Environment.isSponge())
+				Sponge.getScheduler().getTaskById((UUID) instance.syncTasks.get(id)).get().cancel();
+			else ((ScheduledFuture<?>) instance.syncTasks.get(id)).cancel(false);
 			instance.syncTasks.remove(id);
 		}
 	}
@@ -253,7 +269,7 @@ public abstract class TaskManager implements ChatPluginManager {
 		return instance;
 	}
 	
-	private static class BukkitScheduler {
+	protected static class BukkitScheduler {
 		
 		public static int runSync(Runnable runnable, long delay) {
 			return Bukkit.getScheduler().runTaskLater(BukkitBootstrapper.getInstance(), runnable, (delay < 0 ? 0 : delay) / 50).getTaskId();
@@ -261,6 +277,10 @@ public abstract class TaskManager implements ChatPluginManager {
 		
 		public static int scheduleSync(Runnable runnable, long delay, long period) {
 			return Bukkit.getScheduler().runTaskTimer(BukkitBootstrapper.getInstance(), runnable, (delay < 0 ? 0 : delay) / 50, (period < 1 ? 1 : period) / 50).getTaskId();
+		}
+		
+		public static void cancelTasks() {
+			Bukkit.getScheduler().cancelTasks(BukkitBootstrapper.getInstance());
 		}
 		
 	}

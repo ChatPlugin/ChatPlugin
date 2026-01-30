@@ -15,7 +15,11 @@
 
 package me.remigio07.chatplugin.api.common.util;
 
+import java.util.Optional;
+
 import org.bukkit.Bukkit;
+import org.spongepowered.api.Platform;
+import org.spongepowered.api.Platform.Component;
 import org.spongepowered.api.Sponge;
 
 import com.velocitypowered.api.network.ProtocolVersion;
@@ -24,9 +28,10 @@ import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationTyp
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.ServerImplementationOnly;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
-import me.remigio07.chatplugin.api.proxy.util.Utils;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.bootstrap.VelocityBootstrapper;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
 import net.md_5.bungee.api.ProxyServer;
 
 /**
@@ -37,6 +42,7 @@ public class VersionUtils {
 	
 	private static Version version;
 	private static String implementationVersion, implementationName, nmsVersion = Utils.NOT_APPLICABLE;
+	private static String[] spongeImplementations = { "§eSponge§6Neo", "§eSponge§6Forge", "§eSponge§fVanilla" };
 	
 	/**
 	 * Initializes this class.
@@ -50,28 +56,40 @@ public class VersionUtils {
 		case BUKKIT:
 			version = Version.getVersion(Bukkit.getBukkitVersion().substring(0, Bukkit.getBukkitVersion().indexOf('-')));
 			implementationVersion = Bukkit.getVersion();
-			implementationName = isArclight() ? "Arclight" : isPurpur() ? "Purpur" : isPaper() ? "Paper" : isSpigot() ? "Spigot" : "Bukkit";
+			implementationName = isArclight() ? "§3Arc§elight" : isPurpur() ? "§5Purpur" : isPaper() ? "§fPaper" : isSpigot() ? "§6Spigot" : "§7Craft§6Bukkit"; // §aFolia
 			
 			if (version != Version.UNSUPPORTED && (!isPaper() || version.isOlderThan(Version.V1_20_5)))
 				nmsVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 			break;
 		case SPONGE:
 			version = Version.getVersion(Sponge.getPlatform().getMinecraftVersion().getName());
-			implementationVersion = Sponge.getPluginManager().getPlugin("spongeapi").get().getVersion().get();
-			implementationName = "Sponge";
+			implementationVersion = Sponge.getPluginManager().getPlugin(Platform.API_ID).get().getVersion().get();
+			implementationName = spongeImplementations[(Sponge.getPlatform().getContainer(Component.IMPLEMENTATION).getId().length() - 9) / 2]; // :)
+			break;
+		case FABRIC:
+			version = Version.getVersion(FabricLoader.getInstance().getRawGameVersion());
+			ModContainer mod = FabricLoader.getInstance().getModContainer("fabric-api").map(Optional::of).orElseGet(() -> FabricLoader.getInstance().getModContainer("fabric")).orElse(null);
+			
+			try {
+				if (mod == null || mod.getMetadata().getVersion().compareTo(net.fabricmc.loader.api.Version.parse("0.28.5")) < 0)
+					throw new ChatPluginManagerException("version utils", "Fabric API (v0.28.5 or newer) is required to run ChatPlugin");
+				implementationVersion = mod.getMetadata().getVersion().getFriendlyString();
+			} catch (Exception vpe) {
+				// never called
+			} implementationName = "§fFabric";
 			break;
 		case BUNGEECORD:
 			version = Version.getVersion((int) ProxyServer.getInstance().getProtocolVersion(), false); // used to be a byte
 			implementationVersion = ProxyServer.getInstance().getVersion();
-			implementationName = isFlameCord() ? "FlameCord" : isWaterfall() ? "Waterfall" : "BungeeCord";
+			implementationName = isFlameCord() ? "§cFlameCord" : isWaterfall() ? "§9Waterfall" : "§6BungeeCord";
 			break;
 		case VELOCITY:
 			version = Version.getVersion(ProtocolVersion.MAXIMUM_VERSION.getName());
 			implementationVersion = VelocityBootstrapper.getInstance().getProxy().getVersion().getVersion();
-			implementationName = "Velocity";
+			implementationName = "§bVelocity";
 			break;
-		} if (version == Version.UNSUPPORTED || version.isOlderThan(Version.V1_8))
-			throw new ChatPluginManagerException("version utils", "This version is not supported. Is ChatPlugin up to date? Compatible versions: 1.8-{0}. Note: snapshots, pre-releases and release candidates are not supported", Version.values()[Version.values().length - 1].getName());
+		} if (version.isOlderThan(Version.V1_8))
+			throw new ChatPluginManagerException("version utils", "This version is older than 1.8. Compatible versions: 1.8-{0}. Support for older versions will be added over time, but it is not a priority", Version.values()[Version.values().length - 2].getName());
 	}
 	
 	/**
@@ -201,11 +219,6 @@ public class VersionUtils {
 	 * Represents a Minecraft: Java Edition <em>release</em>.
 	 */
 	public enum Version { // dates are approximated to the release day's midnight time
-		
-		/**
-		 * Represents an unsupported version.
-		 */
-		UNSUPPORTED(-1, -1),
 		
 		// pre-Netty rewrite
 		
@@ -1016,7 +1029,44 @@ public class VersionUtils {
 		 * <p><strong>Protocol version number:</strong> 772
 		 * <br><strong>Release date:</strong> July 17, 2025</p>
 		 */
-		V1_21_8(772, 1752703200000L, "1.21.7/8");
+		V1_21_8(772, 1752703200000L, "1.21.7/8"),
+		
+		/**
+		 * Version <a href="https://minecraft.wiki/w/Java_Edition_1.21.9">1.21.9</a>.
+		 * 
+		 * <p><strong>Protocol version number:</strong> 773
+		 * <br><strong>Release date:</strong> September 30, 2025</p>
+		 */
+		V1_21_9(773, 1759183200000L, "1.21.9/10"),
+		
+		/**
+		 * Version <a href="https://minecraft.wiki/w/Java_Edition_1.21.10">1.21.10</a>.
+		 * 
+		 * <p><strong>Protocol version number:</strong> 773
+		 * <br><strong>Release date:</strong> October 7, 2025</p>
+		 */
+		V1_21_10(773, 1759788000000L, "1.21.9/10"),
+		
+		/**
+		 * Version <a href="https://minecraft.wiki/w/Java_Edition_1.21.11">1.21.11</a>.
+		 * 
+		 * <p><strong>Protocol version number:</strong> 774
+		 * <br><strong>Release date:</strong> December 9, 2025</p>
+		 */
+		V1_21_11(774, 1765234800000L, "1.21.11"),
+		
+		/**
+		 * Represents an unsupported version.
+		 * 
+		 * <p>This may be used to indicate a new version not yet recognized
+		 * by ChatPlugin, so it is considered the newest of all by
+		 * {@link #isAtLeast(Version)} and {@link #isOlderThan(Version)}.</p>
+		 * 
+		 * <p><strong>Protocol version number:</strong> -1
+		 * <br><strong>Release date:</strong> <em>January 1, 1970</em>
+		 * (<a href="https://en.wikipedia.org/wiki/Unix_time">Unix time</a> = 0 ms)</p>
+		 */
+		UNSUPPORTED(-1, 0);
 		
 		private int protocol;
 		private long releaseDate;
@@ -1046,7 +1096,7 @@ public class VersionUtils {
 		/**
 		 * Gets this version's release date, in milliseconds.
 		 * 
-		 * <p>Will return -1 if <code>this == </code>{@link #UNSUPPORTED}.</p>
+		 * <p>Will return 0 if <code>this == </code>{@link #UNSUPPORTED}.</p>
 		 * 
 		 * @return Version's release date
 		 */
@@ -1060,7 +1110,7 @@ public class VersionUtils {
 		 * @return Version's name
 		 */
 		public String getName() {
-			return name == null ? (name = name().substring(1).replace('_', '.')) : name;
+			return this == UNSUPPORTED ? name() : name == null ? (name = name().substring(1).replace('_', '.')) : name;
 		}
 		
 		/**
@@ -1071,7 +1121,7 @@ public class VersionUtils {
 		 * @return Whether this is a pre-Netty rewrite version
 		 */
 		public boolean isPreNettyRewrite() {
-			return ordinal() != 0 && ordinal() < 22;
+			return ordinal() < 21;
 		}
 		
 		/**

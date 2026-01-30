@@ -24,11 +24,9 @@ import java.util.regex.Pattern;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
-import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.server.language.Language;
-import me.remigio07.chatplugin.api.server.util.GameFeature;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 
 /**
@@ -36,15 +34,6 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
  * 
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Scoreboards">ChatPlugin wiki/Modules/Scoreboards</a>
  */
-@GameFeature(
-		name = "scoreboard",
-		availableOnBukkit = true,
-		availableOnSponge = true,
-		spigotRequired = false,
-		paperRequired = false,
-		minimumBukkitVersion = Version.V1_5,
-		minimumSpongeVersion = Version.V1_8
-		)
 public abstract class ScoreboardManager implements ChatPluginManager {
 	
 	/**

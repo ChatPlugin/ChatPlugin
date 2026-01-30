@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.api.common.util.manager;
 
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.ServerImplementationOnly;
 import me.remigio07.chatplugin.api.server.util.GameFeature;
 import me.remigio07.chatplugin.bootstrap.Environment;
@@ -77,11 +78,11 @@ public interface ChatPluginManager {
 	/**
 	 * Checks if this manager specifies a {@link GameFeature} annotation.
 	 * 
-	 * <p>In that case, if <code>{@link Environment#isProxy()} == false</code>
+	 * <p>In that case, if <code>!{@link Environment#isProxy()}</code>
 	 * ({@link GameFeature}s are not used on proxies), the feature's
 	 * availability on the current environment is checked through three steps:
 	 * 	<ol>
-	 * 		<li>environment compatibility - whether the feature is available on Bukkit/Sponge</li>
+	 * 		<li>environment compatibility - whether the feature is available on Bukkit/Sponge/Fabric</li>
 	 * 		<li>Spigot requirement - whether the feature requires Spigot or a fork; Bukkit only</li>
 	 * 		<li>Paper requirement - whether the feature requires Paper or a fork; Bukkit only</li>
 	 * 		<li>minimum version - the minimum Vanilla version required to run the feature</li>
@@ -107,19 +108,30 @@ public interface ChatPluginManager {
 		String str = null;
 		
 		if (Environment.isBukkit()) {
-			if (!gameFeature.availableOnBukkit())
+			Version minimumBukkitVersion = gameFeature.minimumBukkitVersion();
+			
+			if (minimumBukkitVersion == Version.UNSUPPORTED)
 				str = "Bukkit cannot";
 			else if (gameFeature.spigotRequired() && !VersionUtils.isSpigot())
 				str = "Spigot is required to";
 			else if (gameFeature.paperRequired() && !VersionUtils.isPaper())
 				str = "Paper is required to";
-			else if (VersionUtils.getVersion().ordinal() < gameFeature.minimumBukkitVersion().ordinal())
+			else if (VersionUtils.getVersion().isOlderThan(minimumBukkitVersion))
 				str = "At least Minecraft " + gameFeature.minimumBukkitVersion().toString() + " is required to";
-		} else {
-			if (!gameFeature.availableOnSponge())
+		} else if (Environment.isSponge()) {
+			Version minimumSpongeVersion = gameFeature.minimumSpongeVersion();
+			
+			if (minimumSpongeVersion == Version.UNSUPPORTED)
 				str = "Sponge cannot";
-			else if (VersionUtils.getVersion().ordinal() < gameFeature.minimumSpongeVersion().ordinal())
+			else if (VersionUtils.getVersion().isOlderThan(minimumSpongeVersion))
 				str = "At least Minecraft " + gameFeature.minimumSpongeVersion().toString() + " is required to";
+		} else {
+			Version minimumFabricVersion = gameFeature.minimumFabricVersion();
+			
+			if (minimumFabricVersion == Version.UNSUPPORTED)
+				str = "Fabric cannot";
+			else if (VersionUtils.getVersion().isOlderThan(minimumFabricVersion))
+				str = "At least Minecraft " + gameFeature.minimumFabricVersion().toString() + " is required to";
 		} if (str != null && warnIfUnavailable)
 			LogManager.log(str + " run the " + gameFeature.name() + " module; disabling feature...", 1);
 		return str == null;

@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.server.gui;
 
 import java.util.StringJoiner;
+import java.util.UUID;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -53,7 +54,7 @@ public class SinglePageGUIImpl extends SinglePageGUI {
 	
 	private void init() {
 		for (Language language : LanguageManager.getInstance().getLanguages())
-			inventories.put(language, new InventoryAdapter(layout.getRows()));
+			inventories.put(language, new InventoryAdapter(layout.getRows(), UUID.randomUUID().toString()));
 		load();
 	}
 	
@@ -88,7 +89,7 @@ public class SinglePageGUIImpl extends SinglePageGUI {
 								
 							}
 						}, 0L);
-					} if (Environment.isBukkit() && inventory.getItem(icon.getPosition()) != null && inventory.getItem(icon.getPosition()).getType() == itemStack.getType())
+					} if (Environment.isBukkit() && inventory.getItem(icon.getPosition()) != null && inventory.getItem(icon.getPosition()).getType().equals(itemStack.getType()))
 						new ItemStackAdapter(inventory.bukkitValue().getItem(icon.getPosition())).importData(itemStack);
 					else inventory.setItem(itemStack, icon.getPosition());
 				}

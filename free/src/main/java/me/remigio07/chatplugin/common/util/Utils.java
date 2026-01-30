@@ -228,6 +228,8 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 			return Arrays.asList(Bukkit.getPluginManager().getPlugins()).stream().map(plugin -> new PluginInfo(plugin.getName(), plugin.getDescription().getVersion(), plugin.getDescription().getAuthors(), plugin.isEnabled())).collect(Collectors.toList());
 		case SPONGE:
 			return Sponge.getPluginManager().getPlugins().stream().map(plugin -> new PluginInfo(plugin.getId(), plugin.getVersion().orElse("unknown"), plugin.getAuthors(), true)).collect(Collectors.toList());
+		case FABRIC:
+			return FabricLoader.getInstance().getAllMods().stream().map(mod -> mod.getMetadata()).map(data -> new PluginInfo(data.getName(), data.getVersion().getFriendlyString(), data.getAuthors().stream().map(Person::getName).collect(Collectors.toList()), true)).collect(Collectors.toList());
 		case BUNGEECORD:
 			return ProxyServer.getInstance().getPluginManager().getPlugins().stream().map(plugin -> new PluginInfo(plugin.getDescription().getName(), plugin.getDescription().getVersion(), Arrays.asList(plugin.getDescription().getAuthor()), true)).collect(Collectors.toList());
 		case VELOCITY:

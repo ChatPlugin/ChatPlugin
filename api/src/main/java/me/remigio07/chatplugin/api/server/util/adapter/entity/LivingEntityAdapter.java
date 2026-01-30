@@ -24,9 +24,10 @@ import org.spongepowered.api.entity.living.Living;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.bootstrap.Environment;
+import net.minecraft.entity.LivingEntity;
 
 /**
- * Environment indipendent (Bukkit and Sponge) living entity adapter.
+ * Environment-indipendent (Bukkit, Sponge and Fabric) living entity adapter.
  */
 public class LivingEntityAdapter {
 	
@@ -37,6 +38,7 @@ public class LivingEntityAdapter {
 	 * 	<ul>
 	 * 		<li>{@link org.bukkit.entity.LivingEntity} for Bukkit environments</li>
 	 * 		<li>{@link org.spongepowered.api.entity.living.Living} for Sponge environments</li>
+	 * 		<li>{@link net.minecraft.entity.LivingEntity} for Fabric environments</li>
 	 * 	</ul>
 	 * 
 	 * @param livingEntity Living entity object
@@ -45,16 +47,40 @@ public class LivingEntityAdapter {
 		this.livingEntity = livingEntity;
 	}
 	
+	/**
+	 * Gets the living entity adapted for Bukkit environments.
+	 * 
+	 * @return Bukkit-adapted living entity
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBukkit()}
+	 */
 	public org.bukkit.entity.LivingEntity bukkitValue() {
 		if (Environment.isBukkit())
 			return (org.bukkit.entity.LivingEntity) livingEntity;
 		throw new UnsupportedOperationException("Unable to adapt living entity to a Bukkit's LivingEntity on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
-	public org.spongepowered.api.entity.living.Living spongeValue() {
+	/**
+	 * Gets the living entity adapted for Sponge environments.
+	 * 
+	 * @return Sponge-adapted living entity
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isSponge()}
+	 */
+	public Living spongeValue() {
 		if (Environment.isSponge())
 			return (Living) livingEntity;
 		throw new UnsupportedOperationException("Unable to adapt living entity to a Sponge's Living on a " + Environment.getCurrent().getName() + " environment");
+	}
+	
+	/**
+	 * Gets the living entity adapted for Fabric environments.
+	 * 
+	 * @return Sponge-adapted living entity
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isFabric()}
+	 */
+	public LivingEntity fabricValue() {
+		if (Environment.isFabric())
+			return (LivingEntity) livingEntity;
+		throw new UnsupportedOperationException("Unable to adapt living entity to a Sponge's LivingEntity on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	@Override
@@ -74,7 +100,7 @@ public class LivingEntityAdapter {
 	 */
 	@NotNull
 	public UUID getUUID() {
-		return Environment.isBukkit() ? bukkitValue().getUniqueId() : spongeValue().getUniqueId();
+		return Environment.isBukkit() ? bukkitValue().getUniqueId() : Environment.isSponge() ? spongeValue().getUniqueId() : fabricValue().getUuid();
 	}
 	
 	/**
@@ -87,7 +113,7 @@ public class LivingEntityAdapter {
 	 */
 	@NotNull
 	public String getName() {
-		return Environment.isBukkit() ? bukkitValue().getName() : Utils.deserializeSpongeText(spongeValue().getOrElse(Keys.DISPLAY_NAME, Utils.serializeSpongeText(spongeValue().getType().getName(), false)));
+		return Environment.isBukkit() ? bukkitValue().getName() : Environment.isSponge() ? Utils.toLegacyText(spongeValue().getOrElse(Keys.DISPLAY_NAME, Utils.toSpongeComponent(spongeValue().getType().getName()))) : Utils.toLegacyText(fabricValue().getDisplayName());
 	}
 	
 	/**
@@ -96,7 +122,7 @@ public class LivingEntityAdapter {
 	 * @return Living entity's health
 	 */
 	public double getHealth() {
-		return Environment.isBukkit() ? bukkitValue().getHealth() : spongeValue().health().get();
+		return Environment.isBukkit() ? bukkitValue().getHealth() : Environment.isSponge() ? spongeValue().health().get() : fabricValue().getHealth();
 	}
 	
 	/**
@@ -106,7 +132,7 @@ public class LivingEntityAdapter {
 	 */
 	@SuppressWarnings("deprecation")
 	public double getMaxHealth() {
-		return Environment.isBukkit() ? bukkitValue().getMaxHealth() : spongeValue().maxHealth().get();
+		return Environment.isBukkit() ? bukkitValue().getMaxHealth() : Environment.isSponge() ? spongeValue().maxHealth().get() : fabricValue().getMaxHealth();
 	}
 	
 }

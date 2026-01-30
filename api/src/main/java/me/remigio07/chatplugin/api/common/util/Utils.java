@@ -41,6 +41,7 @@ import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagers;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.bootstrap.Environment;
+import me.remigio07.chatplugin.bootstrap.FabricBootstrapper;
 import me.remigio07.chatplugin.bootstrap.VelocityBootstrapper;
 import net.md_5.bungee.api.ProxyServer;
 
@@ -284,6 +285,8 @@ public class Utils {
 			return Bukkit.getMaxPlayers();
 		case SPONGE:
 			return Sponge.getServer().getMaxPlayers();
+		case FABRIC:
+			return FabricBootstrapper.getInstance().getServer().getMaxPlayerCount();
 		case BUNGEECORD:
 			return ProxyServer.getInstance().getConfigurationAdapter().getInt("player_limit", -1);
 		case VELOCITY:

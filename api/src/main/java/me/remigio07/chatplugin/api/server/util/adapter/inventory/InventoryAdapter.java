@@ -17,13 +17,13 @@ package me.remigio07.chatplugin.api.server.util.adapter.inventory;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.Container;
+import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.property.InventoryDimension;
 import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
@@ -38,27 +38,33 @@ import me.remigio07.chatplugin.api.server.util.adapter.block.MaterialAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.item.ItemStackAdapter;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.bootstrap.SpongeBootstrapper;
+import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.screen.GenericContainerScreenHandler;
+import net.minecraft.screen.ScreenHandler;
 
 /**
- * Environment indipendent (Bukkit and Sponge) inventory adapter.
+ * Environment-indipendent (Bukkit, Sponge and Fabric) inventory adapter.
  */
 public class InventoryAdapter {
 	
 	private ItemStackAdapter[] items;
 	private Object inventory;
 	private int size;
+	private String title;
 	
 	/**
 	 * Constructs an item stack with the given title and rows.
 	 * 
 	 * @param rows Inventory's rows [1 - 6]
+	 * @param title Inventory's title
 	 * @throws IndexOutOfBoundsException If <code>rows &lt; 1 || rows &gt; 6</code>
 	 */
-	public InventoryAdapter(int rows) {
+	public InventoryAdapter(int rows, String title) {
 		if (rows < 1 || rows > 6)
 			throw new IndexOutOfBoundsException("Specified inventory's rows (" + rows + ") are invalid as they are not inside of range 1-6");
 		size = rows * 9;
-		inventory = Environment.isBukkit() ? Bukkit.createInventory(null, size, UUID.randomUUID().toString().replace("-", "")): SpongeInventory.get(rows, UUID.randomUUID().toString().replace("-", ""));
+		this.title = title;
+		inventory = Environment.isBukkit() ? Bukkit.createInventory(null, size, title) : Environment.isSponge() ? SpongeInventory.get(rows, title) : new SimpleInventory(size);
 		items = new ItemStackAdapter[size];
 	}
 	
@@ -80,10 +86,22 @@ public class InventoryAdapter {
 	 * @return Sponge-adapted inventory
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isSponge()}
 	 */
-	public org.spongepowered.api.item.inventory.Inventory spongeValue() {
+	public Inventory spongeValue() {
 		if (Environment.isSponge())
-			return (org.spongepowered.api.item.inventory.Inventory) inventory;
+			return (Inventory) inventory;
 		throw new UnsupportedOperationException("Unable to adapt inventory to a Sponge's Inventory on a " + Environment.getCurrent().getName() + " environment");
+	}
+	
+	/**
+	 * Gets the inventory adapted for Fabric environments.
+	 * 
+	 * @return Fabric-adapted inventory
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isFabric()}
+	 */
+	public SimpleInventory fabricValue() {
+		if (Environment.isFabric())
+			return (SimpleInventory) inventory;
+		throw new UnsupportedOperationException("Unable to adapt inventory to a Fabric's SimpleInventory on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -127,9 +145,11 @@ public class InventoryAdapter {
 	public void setItem(@NotNull ItemStackAdapter itemStack, int position) {
 		if (position < 0 || position > getSize() - 1)
 			return;
-		if (Environment.isSponge())
+		if (Environment.isBukkit())
+			((org.bukkit.inventory.Inventory) inventory).setItem(position, itemStack.bukkitValue());
+		else if (Environment.isSponge())
 			spongeValue().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(position))).set(itemStack.spongeValue());
-		else ((org.bukkit.inventory.Inventory) inventory).setItem(position, itemStack.bukkitValue());
+		else fabricValue().setStack(position, itemStack.fabricValue());
 		
 		items[position] = itemStack;
 	}
@@ -138,9 +158,11 @@ public class InventoryAdapter {
 	 * Clears this inventory.
 	 */
 	public void clear() {
-		if (Environment.isSponge())
+		if (Environment.isBukkit())
+			bukkitValue().clear();
+		else if (Environment.isSponge())
 			spongeValue().clear();
-		else bukkitValue().clear();
+		else fabricValue().clear();
 		
 		items = new ItemStackAdapter[size];
 	}
@@ -155,22 +177,41 @@ public class InventoryAdapter {
 	}
 	
 	/**
+	 * Gets this inventory's title.
+	 * 
+	 * @return Inventory's title
+	 */
+	public String getTitle() { // TODO [for a future setTitle(String)]: can we update the inventory's title on Sponge by setting the InventoryTitle property?
+		return title;
+	}
+	
+	/**
 	 * Gets the list of the loaded players who have this inventory open.
 	 * 
 	 * @return Inventory's viewers
 	 */
 	public List<ChatPluginServerPlayer> getViewers() {
-		return (Environment.isBukkit() ? bukkitValue().getViewers().stream().map(HumanEntity::getUniqueId) : ((Container) inventory).getViewers().stream().map(Player::getUniqueId))
-				.map(viewer -> ServerPlayerManager.getInstance().getPlayer(viewer))
+		if (Environment.isFabric()) {
+			SimpleInventory fabricValue = fabricValue();
+			return ServerPlayerManager.getInstance().getPlayers().values().stream().filter(player -> {
+				ScreenHandler inventory = player.toAdapter().fabricValue().currentScreenHandler;
+				return inventory instanceof GenericContainerScreenHandler && ((GenericContainerScreenHandler) inventory).getInventory().equals(fabricValue);
+				}).collect(Collectors.toList());
+		} return (Environment.isBukkit() ? bukkitValue().getViewers().stream().map(HumanEntity::getUniqueId)
+				: ((Container) inventory).getViewers().stream().map(Player::getUniqueId))
+				.map(ServerPlayerManager.getInstance()::getPlayer)
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
 	}
 	
 	private static class SpongeInventory {
 		
-		public static org.spongepowered.api.item.inventory.Inventory get(int rows, String title) {
-			return org.spongepowered.api.item.inventory.Inventory.builder()
-					.property(InventoryTitle.of(Utils.serializeSpongeText(title, false))).property(InventoryDimension.of(9, rows)).build(SpongeBootstrapper.getInstance());
+		public static Inventory get(int rows, String title) {
+			return Inventory
+					.builder()
+					.property(InventoryTitle.of(Utils.toSpongeComponent(title)))
+					.property(InventoryDimension.of(9, rows))
+					.build(SpongeBootstrapper.getInstance());
 		}
 		
 	}

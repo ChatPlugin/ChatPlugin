@@ -42,9 +42,10 @@ public class ProxyManagerImpl extends ProxyManager {
 		
 		long serverInformationUpdateTimeout = Utils.getTime(ConfigurationType.CONFIG.get().getString("multi-instance-mode.server-information-update-timeout"), false, false);
 		taskIDs[0] = TaskManager.scheduleAsync(() -> {
-			serversInformation.get(serverID)
-			.setOnlinePlayers(PlayerAdapter.getOnlinePlayers().size())
-			.setVanishedPlayers(VanishManager.getInstance().getOnlineServer());
+			if (VanishManager.getInstance() != null)
+				serversInformation.get(serverID)
+				.setOnlinePlayers(PlayerAdapter.getOnlinePlayers().size())
+				.setVanishedPlayers(VanishManager.getInstance().getOnlineServer());
 		}, 1000L, serverInformationUpdateTimeout == -1 || serverInformationUpdateTimeout > 300000L ? 60000L : serverInformationUpdateTimeout);
 	}
 	

@@ -15,15 +15,21 @@
 
 package me.remigio07.chatplugin.api.server.util.adapter.block;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.StringJoiner;
 
-import org.bukkit.block.Block;
 import org.spongepowered.api.block.BlockSnapshot;
 
+import me.remigio07.chatplugin.api.common.util.VersionUtils;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.bootstrap.Environment;
+import net.minecraft.block.Block;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.util.math.BlockPos;
 
 /**
- * Environment indipendent (Bukkit and Sponge) block adapter.
+ * Environment-indipendent (Bukkit, Sponge and Fabric) block adapter.
  */
 public class BlockAdapter {
 	
@@ -35,13 +41,27 @@ public class BlockAdapter {
 	 * 	<ul>
 	 * 		<li>{@link org.bukkit.block.Block} for Bukkit environments</li>
 	 * 		<li>{@link org.spongepowered.api.block.BlockSnapshot} for Sponge environments</li>
+	 * 		<li>{@link BlockAdapter.FabricBlock} for Fabric environments</li>
 	 * 	</ul>
 	 * 
 	 * @param block Block object
 	 */
 	public BlockAdapter(Object block) {
 		this.block = block;
-		type = new MaterialAdapter(Environment.isBukkit() ? bukkitValue().getType().name() : spongeValue().getState().getType().getItem().get().getId().substring(10));
+		String id = null;
+		
+		if (Environment.isBukkit())
+			id = bukkitValue().getType().name();
+		else if (Environment.isSponge())
+			id = spongeValue().getState().getType().getItem().get().getId().substring(10);
+		else if (VersionUtils.getVersion().isOlderThan(Version.V1_19_3))
+			try { // Registry.ITEM.getId(fabricValue().getBlock().asItem()).toString()
+				id = Registry.class.getMethod("method_10221", Object.class).invoke(Registry.class.getField("field_11142").get(null), fabricValue().getBlock().asItem()).toString();
+			} catch (NoSuchMethodException | IllegalAccessException | NoSuchFieldException | InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		else id = Registries.ITEM.getId(fabricValue().getBlock().asItem()).toString();
+		type = new MaterialAdapter(id);
 	}
 	
 	@Override
@@ -60,9 +80,9 @@ public class BlockAdapter {
 	 * @return Bukkit-adapted block
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBukkit()}
 	 */
-	public Block bukkitValue() {
+	public org.bukkit.block.Block bukkitValue() {
 		if (Environment.isBukkit())
-			return (Block) block;
+			return (org.bukkit.block.Block) block;
 		throw new UnsupportedOperationException("Unable to adapt block to a Bukkit's Block on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
@@ -76,6 +96,18 @@ public class BlockAdapter {
 		if (Environment.isSponge())
 			return (BlockSnapshot) block;
 		throw new UnsupportedOperationException("Unable to adapt block to a Sponge's BlockSnapshot on a " + Environment.getCurrent().getName() + " environment");
+	}
+	
+	/**
+	 * Gets the block adapted for Fabric environments.
+	 * 
+	 * @return Fabric-adapted block
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isFabric()}
+	 */
+	public FabricBlock fabricValue() {
+		if (Environment.isFabric())
+			return (FabricBlock) block;
+		throw new UnsupportedOperationException("Unable to adapt block to a Fabric's FabricBlock on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -93,7 +125,7 @@ public class BlockAdapter {
 	 * @return Block's X
 	 */
 	public int getX() {
-		return Environment.isBukkit() ? bukkitValue().getX() : spongeValue().getLocation().get().getBlockX();
+		return Environment.isBukkit() ? bukkitValue().getX() : Environment.isSponge() ? spongeValue().getLocation().get().getBlockX() : fabricValue().getBlockPos().getX();
 	}
 	
 	/**
@@ -102,7 +134,7 @@ public class BlockAdapter {
 	 * @return Block's Y
 	 */
 	public int getY() {
-		return Environment.isBukkit() ? bukkitValue().getY() : spongeValue().getLocation().get().getBlockY();
+		return Environment.isBukkit() ? bukkitValue().getY() : Environment.isSponge() ? spongeValue().getLocation().get().getBlockY() : fabricValue().getBlockPos().getY();
 	}
 	
 	/**
@@ -111,7 +143,50 @@ public class BlockAdapter {
 	 * @return Block's Z
 	 */
 	public int getZ() {
-		return Environment.isBukkit() ? bukkitValue().getZ() : spongeValue().getLocation().get().getBlockZ();
+		return Environment.isBukkit() ? bukkitValue().getZ() : Environment.isSponge() ? spongeValue().getLocation().get().getBlockZ() : fabricValue().getBlockPos().getZ();
+	}
+	
+	/**
+	 * Represents a Fabric block composed of:
+	 * 	<ul>
+	 * 		<li>a {@link net.minecraft.block.Block}</li>
+	 * 		<li>a {@link net.minecraft.util.math.BlockPos}</li>
+	 * 	</ul>
+	 */
+	public static class FabricBlock {
+		
+		private Block block;
+		private BlockPos blockPos;
+		
+		/**
+		 * Constructs a new Fabric block.
+		 * 
+		 * @param block Block's instance
+		 * @param blockPos Block's position
+		 */
+		public FabricBlock(Block block, BlockPos blockPos) {
+			this.block = block;
+			this.blockPos = blockPos;
+		}
+		
+		/**
+		 * Gets this block's instance.
+		 * 
+		 * @return Block's instance
+		 */
+		public Block getBlock() {
+			return block;
+		}
+		
+		/**
+		 * Gets this block's position.
+		 * 
+		 * @return Block's position
+		 */
+		public BlockPos getBlockPos() {
+			return blockPos;
+		}
+		
 	}
 	
 }

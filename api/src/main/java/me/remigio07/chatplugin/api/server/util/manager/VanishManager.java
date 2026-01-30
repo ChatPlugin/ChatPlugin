@@ -21,10 +21,12 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import me.remigio07.chatplugin.api.common.chat.DenyChatReasonHandler;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.server.event.vanish.VanishDisableEvent;
 import me.remigio07.chatplugin.api.server.event.vanish.VanishEnableEvent;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.util.GameFeature;
 
 /**
  * Manager that handles vanished {@link ChatPluginServerPlayer}s and fake players counters.
@@ -32,6 +34,10 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
  * @see #getOnlineWorld(String)
  * @see #getOnlineServer()
  */
+@GameFeature(
+		name = "vanish",
+		minimumFabricVersion = Version.UNSUPPORTED
+		)
 public abstract class VanishManager implements DenyChatReasonHandler {
 	
 	/**

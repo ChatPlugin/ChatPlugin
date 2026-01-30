@@ -23,30 +23,33 @@ public enum Environment {
 	/**
 	 * Bukkit environment.
 	 */
-	BUKKIT("Bukkit", new String[] { "java.util.logging.Logger", "java.io.File" }),
+	BUKKIT("Bukkit"),
 	
 	/**
 	 * Sponge environment.
 	 */
-	SPONGE("Sponge", new String[] { "org.slf4j.Logger", "java.nio.file.Path" }),
+	SPONGE("Sponge"),
+	
+	/**
+	 * Fabric environment.
+	 */
+	FABRIC("Fabric"),
 	
 	/**
 	 * BungeeCord environment.
 	 */
-	BUNGEECORD("BungeeCord", BUKKIT.loadMethodArgsTypes),
+	BUNGEECORD("BungeeCord"),
 	
 	/**
 	 * Velocity environment.
 	 */
-	VELOCITY("Velocity", new String[] { "com.velocitypowered.api.proxy.ProxyServer", "org.slf4j.Logger", "java.nio.file.Path" });
+	VELOCITY("Velocity");
 	
 	static Environment currentEnvironment;
-	String[] loadMethodArgsTypes;
 	private String name;
 	
-	private Environment(String name, String[] loadMethodArgsTypes) {
+	private Environment(String name) {
 		this.name = name;
-		this.loadMethodArgsTypes = loadMethodArgsTypes;
 	}
 	
 	/**
@@ -83,6 +86,15 @@ public enum Environment {
 	 */
 	public static boolean isSponge() {
 		return currentEnvironment == SPONGE;
+	}
+	
+	/**
+	 * Checks if the current environment is Fabric.
+	 * 
+	 * @return Whether Fabric is running
+	 */
+	public static boolean isFabric() {
+		return currentEnvironment == FABRIC;
 	}
 	
 	/**

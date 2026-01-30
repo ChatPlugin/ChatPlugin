@@ -1,8 +1,8 @@
 plugins {
-	id 'com.gradleup.shadow' version '9.0.2'
+	alias(libs.plugins.shadow)
 }
 
-def libsDir = project.projectDir.path + '/libs/'
+def libsDir = "${projectDir}/libs/"
 
 repositories {
 	maven { url = 'https://jitpack.io' }
@@ -15,59 +15,73 @@ repositories {
 }
 
 dependencies {
-	compileOnly project(':api')
-	compileOnly files(libsDir + 'CombatLogX-11.5.0.0.1242.jar')
-	compileOnly files(libsDir + 'GadgetsMenu-4.15.3.jar')
-	compileOnly files(libsDir + 'Matrix-6.8.19.jar')
-	compileOnly files(libsDir + 'MVdWPlaceholderAPI-3.1.1.jar')
-	compileOnly files(libsDir + 'Negativity-2.7.1.jar')
-	compileOnly files(libsDir + 'UltraCosmetics-3.8.jar')
-	compileOnly files(libsDir + 'Vulcan-2.9.0.jar')
-	compileOnly 'org.spongepowered:spongecommon:1.12.2-7.4.7:dev@jar'
-	compileOnly 'net.kyori:adventure-platform-bukkit:4.3.0'
-	compileOnly 'net.kyori:adventure-platform-spongeapi:4.3.0'
-	compileOnly 'com.github.cliftonlabs:json-simple:4.0.1'
-	compileOnly 'com.viaversion:viaversion-api:5.2.2-SNAPSHOT'
-	compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.0'
-	compileOnly 'net.essentialsx:EssentialsX:2.19.0'
-	compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
-	compileOnly 'net.luckperms:api:5.4'
-	compileOnly 'me.clip:placeholderapi:2.11.3'
-	compileOnly 'dev.esophose:playerparticles:8.0'
-	compileOnly 'com.discordsrv:discordsrv:1.27.0'
-	implementation 'org.bstats:bstats-bukkit:3.1.0'
-	implementation 'org.bstats:bstats-sponge:3.1.0'
+	implementation project(':api')
+	implementation project(':mixins')
+	implementation project(':mixins:mixins-1.19')
+	compileOnly files("${libsDir}CombatLogX-11.5.0.0.1242.jar")
+	compileOnly files("${libsDir}GadgetsMenu-4.15.3.jar")
+	compileOnly files("${libsDir}Matrix-6.8.19.jar")
+	compileOnly files("${libsDir}MVdWPlaceholderAPI-3.1.1.jar")
+	compileOnly files("${libsDir}Negativity-2.7.1.jar")
+	compileOnly files("${libsDir}UltraCosmetics-3.8.jar")
+	compileOnly files("${libsDir}Vulcan-2.9.0.jar")
+	compileOnly variantOf(libs.sponge.common) { classifier 'dev' }
+	compileOnly libs.jsonSimple
+	compileOnly libs.discordSRV
+	compileOnly(libs.essentialsX) { exclude group: 'org.yaml'; exclude group: 'org.spigotmc' } // do we need this?
+	compileOnly libs.luckPermsAPI
+	compileOnly libs.placeholderAPI
+	compileOnly libs.playerParticles
+	compileOnly(libs.vaultAPI) { exclude group: 'org.bukkit' }
+	compileOnly libs.viaVersionAPI
+	compileOnly(libs.worldGuardBukkit) { exclude group: 'org.bukkit' }
+	implementation libs.bundles.bstats.server
 }
 
-task assembleFinalJAR(type: Jar) {
-	archiveFileName = 'ChatPlugin-FREE-' + rootProject.version + '.jar'
+task assembleFinalJAR(type: Jar) { // TODO: include MF in correct final jar?
+	archiveFileName = "ChatPlugin-FREE-${rootProject.version}.jar"
 	
-	from project(':api').sourceSets.main.output
-	from shadowJar.archiveFile
+	from zipTree(project(':api').remapJar.archiveFile)
+	from zipTree(project(':mixins').remapJar.archiveFile)
+	from zipTree(project(':mixins:mixins-latest').remapJar.archiveFile)
+	from zipTree(project(':mixins:mixins-1.20.2').remapJar.archiveFile)
+	from zipTree(project(':mixins:mixins-1.19.4').remapJar.archiveFile)
+	from zipTree(project(':mixins:mixins-1.19.1').remapJar.archiveFile)
+	from zipTree(project(':mixins:mixins-1.19').remapJar.archiveFile)
+	from zipTree(project(':mixins:mixins-1.17').remapJar.archiveFile)
+	from zipTree(project(':mixins:mixins-1.16.5').remapJar.archiveFile)
+	from zipTree(project(':mixins:mixins-1.16').remapJar.archiveFile)
+	from remapJar.archiveFile
 	from processResources
-	manifest { attributes(['paperweight-mappings-namespace': 'mojang']) }
 }
 
-jar {
-	archiveFileName = 'ChatPlugin-ORIGINAL.jar'
+remapJar {
+	input = shadowJar.archiveFile
+	archiveFileName = 'ChatPlugin-FREE.jar'
 	
-	from configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
 	finalizedBy assembleFinalJAR
 }
 
 shadowJar {
-	archiveFileName = 'ChatPlugin-FREE.jar'
+	archiveFileName = 'ChatPlugin-SHADOW.jar'
 	
-	from project.configurations.runtimeClasspath.collect { it }
-	exclude(['*.yml', 'mcmod.info'])
+	dependencies {
+		//include(dependency("${group}:.*"))
+		include(dependency('org.bstats:.*'))
+		exclude '/mappings/*'
+	}
 	
-	relocate 'net.kyori.adventure', 'me.remigio07.chatplugin.common.lib.net.kyori.adventure'
-	relocate 'com.github.cliftonlabs.json_simple', 'me.remigio07.chatplugin.common.lib.com.github.cliftonlabs.json_simple'
-	relocate 'org.bstats', 'me.remigio07.chatplugin.common.lib.org.bstats'
+	exclude(['*.yml', 'mcmod.info', 'fabric.mod.json'])
+	relocate(*relocation('com.github.cliftonlabs.json_simple'))
+	relocate(*relocation('org.bstats'))
 }
 
 processResources {
-	filesMatching(['plugin.yml', 'mcmod.info']) {
-		expand 'version': rootProject.version
+	filesMatching(['plugin.yml', 'mcmod.info', 'fabric.mod.json']) {
+		expand(
+			'version': rootProject.version,
+			'fabricLoaderVersion': libs.fabric.loader.get().version
+		)
 	}
 }
+

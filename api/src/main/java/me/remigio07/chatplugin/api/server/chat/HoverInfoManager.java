@@ -33,15 +33,6 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
  * 
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Chat#hover-info">ChatPlugin wiki/Modules/Chat/Hover info</a>
  */
-@GameFeature(
-		name = "hover info",
-		availableOnBukkit = true,
-		availableOnSponge = true,
-		spigotRequired = false,
-		paperRequired = false,
-		minimumBukkitVersion = Version.V1_7_2,
-		minimumSpongeVersion = Version.V1_8
-		)
 public abstract class HoverInfoManager implements ChatPluginManager {
 	
 	protected static HoverInfoManager instance;

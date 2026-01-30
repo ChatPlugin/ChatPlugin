@@ -304,6 +304,11 @@ public enum Library {
 	SLF4J_SIMPLE_PROVIDER("SLF4J Simple Provider", "org.slf4j.impl.SimpleLogger", new Relocation("org.slf4j.impl"), "https://repo1.maven.org/maven2/org/slf4j/slf4j-simple/1.7.36/slf4j-simple-1.7.36.jar", "slf4j-simple-provider.jar", "FD4A5FA54910B5EE561F639C903CF34A"),
 	
 	/**
+	 * Represents the <a href="https://bitbucket.org/snakeyaml/snakeyaml">SnakeYAML</a> library.
+	 */
+	SNAKEYAML("SnakeYAML", "org.snakeyaml.yaml.Yaml", "https://repo1.maven.org/maven2/org/yaml/snakeyaml/2.5/snakeyaml-2.5.jar", "snakeyaml.jar", "8D3B7581DB5C7620DB55183F33A4F2AD"), 
+	
+	/**
 	 * Represents the <a href="https://github.com/xerial/sqlite-jdbc">SQLite JDBC</a> library.
 	 */
 	SQLITE_JDBC("SQLite JDBC", "org.sqlite.JDBC", "https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.47.0.0/sqlite-jdbc-3.47.0.0.jar", "sqlite-driver.jar", "07B66539A5703FA7DEF2D8BBCBC51070");

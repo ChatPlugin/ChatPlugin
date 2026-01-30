@@ -29,20 +29,10 @@ import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.language.LanguageDetector;
-import me.remigio07.chatplugin.api.server.util.GameFeature;
 
 /**
  * Server abstraction of the {@link MoTDManager}.
  */
-@GameFeature(
-		name = "motd",
-		availableOnBukkit = true,
-		availableOnSponge = true,
-		spigotRequired = false,
-		paperRequired = false,
-		minimumBukkitVersion = Version.V1_7_2,
-		minimumSpongeVersion = Version.V1_8
-		)
 public abstract class ServerMoTDManager extends MoTDManager {
 	
 	protected boolean maxPlayersPlusOneEnabled,

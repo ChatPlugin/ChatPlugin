@@ -62,26 +62,30 @@ public class SpongeBootstrapper {
 	private Path dataFolder;
 	
 	/**
-	 * Event automatically called on server startup.
+	 * Event called automatically on server startup.
 	 * 
 	 * @param event Startup event
 	 */
 	@Listener
 	public void onGameStartedServer(GameStartedServerEvent event) {
 		instance = this;
-		Environment.currentEnvironment = Environment.SPONGE;
 		
-		JARLibraryLoader.getInstance().open(logger, dataFolder);
+		JARLibraryLoader.getInstance().open(
+				Environment.currentEnvironment = Environment.SPONGE,
+				logger,
+				dataFolder,
+				null
+				);
 	}
 	
 	/**
-	 * Event automatically called on server shutdown.
+	 * Event called automatically on server shutdown.
 	 * 
 	 * @param event Shutdown event
 	 */
 	@SuppressWarnings("deprecation")
 	@Listener
-	public void onGameStoppedServer(GameStoppedServerEvent event) {
+	public void onGameStoppedServer(GameStoppedServerEvent event) { // should we hide this like Velocity does?
 		ChatPlugin.getInstance().unload();
 		
 		try {

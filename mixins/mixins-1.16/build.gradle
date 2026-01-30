@@ -1,0 +1,9 @@
+dependencies {
+	implementation project(':api')
+	implementation project(':mixins')
+	implementation project(':mixins:mixins-latest')
+	
+	minecraft 'com.mojang:minecraft:1.16'
+	mappings 'net.fabricmc:yarn:1.16+build.4:v2'
+	modImplementation libs.bundles.fabric
+}

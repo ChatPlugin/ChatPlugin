@@ -1,0 +1,8 @@
+dependencies {
+	implementation project(':api')
+	implementation project(':mixins')
+	
+	minecraft libs.minecraft
+	mappings variantOf(libs.yarn) { classifier "v2" }
+	modImplementation libs.bundles.fabric
+}

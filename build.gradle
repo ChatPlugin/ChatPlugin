@@ -1,41 +1,37 @@
 plugins {
 	id 'java'
+	alias(libs.plugins.fabric.loom) apply false
 }
 
 group = 'me.remigio07.chatplugin'
-version = '1.10.4'
+version = libs.versions.chatPlugin.get()
 jar.enabled = false
+ext.relocation = { str -> return [str, "${group}.common.lib.${str}"] }
+
 
 subprojects {
 	apply plugin: 'java'
+	apply plugin: 'fabric-loom'
 	
 	repositories {
-		maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots' }
 		maven { url = 'https://repo.spongepowered.org/repository/maven-public' }
 		maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
 		maven { url = 'https://repo.papermc.io/repository/maven-public' }
 	}
 	
-	dependencies {
-		compileOnly('org.spigotmc:spigot-api:1.21.6-R0.1-SNAPSHOT') {
-			exclude group: 'org.yaml', module: 'snakeyaml'
+	if (!name.contains("mixins")) {
+		dependencies {
+			compileOnly(libs.bundles.serversAPIs) { exclude group: 'org.yaml' }
+			compileOnly libs.snakeYAML
+			minecraft libs.minecraft
+			mappings variantOf(libs.yarn) { classifier "v2" }
+			modImplementation libs.bundles.fabric
 		}
-		compileOnly('org.spongepowered:spongeapi:7.4.0') {
-			exclude group: 'org.yaml', module: 'snakeyaml'
-		}
-		compileOnly('net.md-5:bungeecord-api:1.21-R0.1-SNAPSHOT') {
-			exclude group: 'org.yaml', module: 'snakeyaml'
-		}
-		compileOnly('com.velocitypowered:velocity-api:3.1.1') {
-			exclude group: 'org.yaml', module: 'snakeyaml'
-		}
-		compileOnly 'com.mojang:authlib:1.5.25'
-		compileOnly 'org.yaml:snakeyaml:1.33'
 	}
 	
 	java {
-		sourceCompatibility = 1.8
-		targetCompatibility = 1.8
+		sourceCompatibility = 8
+		targetCompatibility = 8
 	}
 	
 	compileJava {
@@ -43,5 +39,6 @@ subprojects {
 		options.encoding = 'UTF-8'
 	}
 	
+	loom.serverOnlyMinecraftJar()
 	compileTestJava.options.encoding = 'UTF-8'
 }

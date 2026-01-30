@@ -22,14 +22,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
-import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.event.tablist.TablistSendEvent;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.tablist.custom_suffix.CustomSuffixManager;
-import me.remigio07.chatplugin.api.server.util.GameFeature;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 
 /**
@@ -38,15 +36,6 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Tablists">ChatPlugin wiki/Modules/Tablists</a>
  * @see CustomSuffixManager
  */
-@GameFeature(
-		name = "tablist",
-		availableOnBukkit = true,
-		availableOnSponge = true,
-		spigotRequired = false,
-		paperRequired = false,
-		minimumBukkitVersion = Version.V1_8,
-		minimumSpongeVersion = Version.V1_8
-		)
 public abstract class TablistManager implements ChatPluginManager, Runnable {
 	
 	/**

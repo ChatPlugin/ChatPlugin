@@ -46,9 +46,9 @@ public class JARLibraryLoader extends URLClassLoader {
 		super(new URL[0], JARLibraryLoader.class.getClassLoader());
 	}
 	
-	void open(Object... args) {
+	void open(Environment environment, Object... args) {
 		try {
-			Path dataFolder = (Path) args[args.length - 1];
+			Path dataFolder = (Path) args[1];
 			Path files = dataFolder.resolve("files");
 			List<URL> jars = getJARs();
 			
@@ -59,7 +59,7 @@ public class JARLibraryLoader extends URLClassLoader {
 							Files.delete(file);
 				}
 			} else if (!Files.exists(dataFolder)) {
-				Object logger = args[args.length - 2];
+				Object logger = args[0];
 				
 				logger.getClass().getMethod(logger instanceof Logger ? "warning" : "warn", String.class).invoke(
 						logger,
@@ -78,10 +78,7 @@ public class JARLibraryLoader extends URLClassLoader {
 					path.toFile().deleteOnExit();
 					addURL(path.toUri().toURL());
 				}
-			} (Environment.isVelocity()
-					? Class.forName("me.remigio07.chatplugin.ChatPlugin" + EDITIONS.get(jars.size() - 1), true, this).getMethod("load", Object.class, Object.class, Path.class)
-					: Class.forName("me.remigio07.chatplugin.ChatPlugin" + EDITIONS.get(jars.size() - 1), true, this).getMethod("load", Object.class, Path.class)
-					).invoke(null, args);
+			} Class.forName("me.remigio07.chatplugin.ChatPlugin" + EDITIONS.get(jars.size() - 1), true, this).getMethod("load", Object.class, Path.class, Object.class).invoke(null, args);
 		} catch (IOException | ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
 		}

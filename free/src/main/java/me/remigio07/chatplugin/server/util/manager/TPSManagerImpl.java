@@ -15,6 +15,8 @@
 
 package me.remigio07.chatplugin.server.util.manager;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -28,26 +30,35 @@ import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.ChatPluginState;
 import me.remigio07.chatplugin.api.common.util.Utils;
+import me.remigio07.chatplugin.api.common.util.VersionUtils;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.util.manager.TPSManager;
 import me.remigio07.chatplugin.bootstrap.Environment;
+import me.remigio07.chatplugin.bootstrap.FabricBootstrapper;
 import me.remigio07.chatplugin.server.bukkit.BukkitReflection;
+import net.minecraft.server.MinecraftServer;
 
 public class TPSManagerImpl extends TPSManager {
 	
-	private static BlockingQueue<Double> spongeTPS;
+	private static BlockingQueue<Double> queue;
+	private static Method getTickTime;
 	
 	@Override
-	public void load() {
+	public void load() throws ChatPluginManagerException {
 		instance = this;
 		long ms = System.currentTimeMillis();
 		
 		if (!ConfigurationType.CONFIG.get().getBoolean("tps.enabled") || !checkAvailability(true))
 			return;
-		updateTimeout = Utils.getTime(ConfigurationType.CONFIG.get().getString("tps.update-timeout"), false, false);
+		if (!(tpsCapEnabled = ConfigurationType.CONFIG.get().getBoolean("tps.20-tps-cap.enabled")) && Environment.isFabric()) {
+			LogManager.log("The 20 TPS cap at \"tps.20-tps-cap.enabled\" in config.yml is set to false but the server is running on Fabric: this setup is not supported; setting to default value of true.", 1);
+			
+			tpsCapEnabled = true;
+		} updateTimeout = Utils.getTime(ConfigurationType.CONFIG.get().getString("tps.update-timeout"), false, false);
 		Configuration messages = Language.getMainLanguage().getConfiguration();
 		
 		for (String id : ConfigurationType.CONFIG.get().getKeys("tps.qualities")) {
@@ -64,20 +75,26 @@ public class TPSManagerImpl extends TPSManager {
 			LogManager.log("Invalid timestamp (\"{0}\") specified at \"tps.update-timeout\" in config.yml; setting to default value of 5 seconds.", 2, ConfigurationType.CONFIG.get().getString("tps.update-timeout"));
 			
 			updateTimeout = 5000L;
-		} if (Environment.isSponge()) {
+		} if (!Environment.isBukkit()) { // TODO: we could use this method on Bukkit (non-Spigot) too! (and reflection)
+			if (Environment.isFabric() && VersionUtils.getVersion().isOlderThan(Version.V1_20_3))
+				try {
+					getTickTime = MinecraftServer.class.getMethod("method_3830");
+				} catch (NoSuchMethodException nsme) {
+					throw new ChatPluginManagerException(this, nsme);
+				}
 			if (updateTimeout > 900000L) {
 				LogManager.log("Invalid timestamp (\"{0}\") specified at \"tps.update-timeout\" in config.yml: it cannot be more than 15 minutes; setting to default value of 5 seconds.", 2, ConfigurationType.CONFIG.get().getString("tps.update-timeout"));
 				
 				updateTimeout = 5000L;
 			} int capacity = 900000 / (int) updateTimeout;
 			
-			if (spongeTPS != null) {
-				if (spongeTPS.remainingCapacity() + spongeTPS.size() != capacity) {
-					spongeTPS.clear();
+			if (queue != null) {
+				if (queue.remainingCapacity() + queue.size() != capacity) {
+					queue.clear();
 					
-					spongeTPS = new ArrayBlockingQueue<>(capacity);
+					queue = new ArrayBlockingQueue<>(capacity);
 				}
-			} else spongeTPS = new ArrayBlockingQueue<>(capacity);
+			} else queue = new ArrayBlockingQueue<>(capacity);
 		} if (qualities.isEmpty()) {
 			qualities.add(new TPSQuality("default-quality", 0));
 			LogManager.log("No TPS qualities have been found at \"tps.qualities\" in config.yml.", 1);
@@ -90,10 +107,10 @@ public class TPSManagerImpl extends TPSManager {
 	
 	@Override
 	public void unload() throws ChatPluginManagerException {
-		enabled = false;
+		enabled = tpsCapEnabled = false;
 		
-		if (spongeTPS != null && ChatPlugin.getState() != ChatPluginState.RELOADING)
-			spongeTPS.clear();
+		if (queue != null && ChatPlugin.getState() != ChatPluginState.RELOADING)
+			queue.clear();
 		TaskManager.cancelAsync(timerTaskID);
 		qualities.clear();
 		
@@ -105,19 +122,23 @@ public class TPSManagerImpl extends TPSManager {
 	@Override
 	public void run() {
 		if (enabled)
-			if (Environment.isSponge()) {
-				if (spongeTPS.remainingCapacity() == 0)
-					try {
-						spongeTPS.take();
-					} catch (InterruptedException ie) {
-						ie.printStackTrace();
-					}
-				spongeTPS.offer(Sponge.getServer().getTicksPerSecond());
+			if (Environment.isBukkit())
+				recentTPS = ((double[]) (VersionUtils.isPaper() && VersionUtils.getVersion().isAtLeast(Version.V1_21_9) // works from build #50
+						? BukkitReflection.invokeMethod("MinecraftServer", "getTPS", BukkitReflection.invokeMethod("MinecraftServer", "getServer", null))
+						: BukkitReflection.getFieldValue("MinecraftServer", BukkitReflection.invokeMethod("MinecraftServer", "getServer", null), "recentTps", "tps"))).clone();
+			else {
+				try {
+					if (queue.remainingCapacity() == 0)
+						queue.take();
+					queue.offer(Environment.isSponge() ? Sponge.getServer().getTicksPerSecond() : VersionUtils.getVersion().isAtLeast(Version.V1_20_3) ? FabricBootstrapper.getInstance().getServer().getTickManager().getTickRate() : (1000F / (float) getTickTime.invoke(FabricBootstrapper.getInstance().getServer())));
+				} catch (InterruptedException | IllegalAccessException | InvocationTargetException e) {
+					e.printStackTrace();
+				}
 				
-				recentTPS[0] = spongeTPS.stream().skip(spongeTPS.size() - Math.min(spongeTPS.size(), 60000 / updateTimeout)).mapToDouble(d -> d).average().orElse(20);
-				recentTPS[1] = spongeTPS.stream().skip(spongeTPS.size() - Math.min(spongeTPS.size(), 300000 / updateTimeout)).mapToDouble(d -> d).average().orElse(20);
-				recentTPS[2] = spongeTPS.stream().mapToDouble(d -> d).average().orElse(20);
-			} else recentTPS = ((double[]) BukkitReflection.getFieldValue("MinecraftServer", BukkitReflection.invokeMethod("MinecraftServer", "getServer", null), "recentTps")).clone();
+				recentTPS[0] = queue.stream().skip(queue.size() - Math.min(queue.size(), 60000 / updateTimeout)).mapToDouble(d -> d).average().orElse(20);
+				recentTPS[1] = queue.stream().skip(queue.size() - Math.min(queue.size(), 300000 / updateTimeout)).mapToDouble(d -> d).average().orElse(20);
+				recentTPS[2] = queue.stream().mapToDouble(d -> d).average().orElse(20);
+			}
 	}
 	
 	@Override
@@ -141,7 +162,7 @@ public class TPSManagerImpl extends TPSManager {
 	public String formatTPS(double tps, Language language) {
 		boolean over20 = tps > 20;
 		
-		if (over20 && ConfigurationType.CONFIG.get().getBoolean("tps.20-tps-cap.enabled"))
+		if (over20 && tpsCapEnabled)
 			tps = 20D;
 		return getTPSQuality(tps).getColor(language)
 				+ (over20 && ConfigurationType.CONFIG.get().getBoolean("tps.20-tps-cap.add-wildcard") ? "*" : "")

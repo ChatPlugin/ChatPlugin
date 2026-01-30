@@ -16,7 +16,10 @@
 package me.remigio07.chatplugin.api.server.util.adapter.inventory.item;
 
 import java.awt.Color;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -24,16 +27,22 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.SequencedSet;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.EquipmentSlot;
@@ -53,18 +62,21 @@ import org.spongepowered.api.data.manipulator.mutable.item.EnchantmentData;
 import org.spongepowered.api.data.manipulator.mutable.item.LoreData;
 import org.spongepowered.api.data.property.item.UseLimitProperty;
 import org.spongepowered.api.data.type.DyeColor;
-import org.spongepowered.api.item.enchantment.Enchantment;
 import org.spongepowered.api.item.enchantment.EnchantmentType;
-import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.profile.property.ProfileProperty;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.translation.FixedTranslation;
 import org.spongepowered.api.text.translation.Translation;
 
+import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.properties.PropertyMap;
 
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.common.util.UUIDFetcher;
@@ -77,9 +89,33 @@ import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.adapter.block.MaterialAdapter;
 import me.remigio07.chatplugin.bootstrap.Environment;
+import me.remigio07.chatplugin.bootstrap.FabricBootstrapper;
+import me.remigio07.chatplugin.bootstrap.JARLibraryLoader;
+import net.minecraft.component.ComponentChanges;
+import net.minecraft.component.ComponentType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.DyedColorComponent;
+import net.minecraft.component.type.ItemEnchantmentsComponent;
+import net.minecraft.component.type.LoreComponent;
+import net.minecraft.component.type.ProfileComponent;
+import net.minecraft.component.type.TooltipDisplayComponent;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtHelper;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.Unit;
 
 /**
- * Environment indipendent (Bukkit and Sponge) item stack adapter.
+ * Environment-indipendent (Bukkit, Sponge and Fabric) item stack adapter.
  */
 public class ItemStackAdapter implements Cloneable {
 	
@@ -127,14 +163,17 @@ public class ItemStackAdapter implements Cloneable {
 		amount = amount < 0 ? 0 : amount > 64 ? 64 : amount;
 		damage = damage < 0 ? 0 : damage;
 		
-		if (Environment.isSponge()) {
-			itemStack = ItemStack.builder().itemType(type.spongeValue()).quantity(amount).build();
+		if (Environment.isBukkit()) {
+			itemStack = new org.bukkit.inventory.ItemStack(type.bukkitValue(), amount, damage);
 			
-			setDamage(damage);
-		} else itemStack = new org.bukkit.inventory.ItemStack(type.bukkitValue(), amount, damage);
+			if (!Bukkit.getItemFactory().isApplicable(bukkitValue().getItemMeta(), (org.bukkit.inventory.ItemStack) itemStack))
+				itemMeta = false;
+			return;
+		} itemStack = Environment.isSponge()
+				? org.spongepowered.api.item.inventory.ItemStack.builder().itemType(type.spongeValue()).quantity(amount).build()
+				: FabricItemStack.newInstance(type, amount);
 		
-		if (Environment.isBukkit() && !Bukkit.getItemFactory().isApplicable(bukkitValue().getItemMeta(), (org.bukkit.inventory.ItemStack) itemStack))
-			itemMeta = false;
+		setDamage(damage);
 	}
 	
 	/**
@@ -142,11 +181,12 @@ public class ItemStackAdapter implements Cloneable {
 	 * 	<ul>
 	 * 		<li>{@link org.bukkit.inventory.ItemStack} for Bukkit environments</li>
 	 * 		<li>{@link org.spongepowered.api.item.inventory.ItemStack} for Sponge environments</li>
+	 * 		<li>{@link ItemStack} for Fabric environments</li>
 	 * 	</ul>
 	 * 
 	 * @param itemStack Item stack object
 	 */
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({ "deprecation", "unchecked" })
 	public ItemStackAdapter(Object itemStack) {
 		this.itemStack = itemStack;
 		
@@ -157,21 +197,102 @@ public class ItemStackAdapter implements Cloneable {
 				ItemMeta meta = ((org.bukkit.inventory.ItemStack) itemStack).getItemMeta();
 				
 				meta.getEnchants().forEach((enchantment, level) -> enchantments.put(EnchantmentAdapter.value(enchantment.getName()), level));
-				meta.getItemFlags().stream().map(itemFlag -> ItemFlagAdapter.value(itemFlag.name())).filter(Objects::nonNull).distinct().forEach(itemFlag -> itemFlags.add(itemFlag));
+				meta.getItemFlags().stream().map(itemFlag -> ItemFlagAdapter.value(itemFlag.name())).filter(Objects::nonNull).distinct().forEach(itemFlags::add);
 				
 				if (isPlayerHead())
 					skullOwner = ((SkullMeta) meta).getOwner();
 			} else itemMeta = false;
-		} else {
-			type = new MaterialAdapter(((ItemStack) itemStack).getType().getId().substring(10));
+		} else if (Environment.isSponge()) {
+			type = new MaterialAdapter(((org.spongepowered.api.item.inventory.ItemStack) itemStack).getType().getId().substring(10));
 			
 			for (ItemFlagAdapter itemFlag : ItemFlagAdapter.values())
-				if (((ItemStack) itemStack).getOrElse(itemFlag.spongeValue(), false))
+				if (((org.spongepowered.api.item.inventory.ItemStack) itemStack).getOrElse(itemFlag.spongeValue(), false))
 					itemFlags.add(itemFlag);
-			if (!((ItemStack) itemStack).getOrCreate(EnchantmentData.class).get().enchantments().isEmpty())
-				((ItemStack) itemStack).get(EnchantmentData.class).get().enchantments().get().forEach(enchantment -> enchantments.put(EnchantmentAdapter.value(enchantment.getType().getId().substring(10)), enchantment.getLevel()));
+			if (!((org.spongepowered.api.item.inventory.ItemStack) itemStack).getOrCreate(EnchantmentData.class).get().enchantments().isEmpty())
+				((org.spongepowered.api.item.inventory.ItemStack) itemStack).get(EnchantmentData.class).get().enchantments().get().forEach(enchantment -> enchantments.put(EnchantmentAdapter.value(enchantment.getType().getId().substring(10)), enchantment.getLevel()));
 			if (isPlayerHead())
 				spongeValue().get(RepresentedPlayerData.class).ifPresent(player -> player.owner().get().getName().ifPresent(name -> skullOwner = name));
+		} else try {
+			ItemStack fabricValue = (ItemStack) itemStack;
+			type = new MaterialAdapter(VersionUtils.getVersion().isOlderThan(Version.V1_19_3)
+					? Registry.class.getMethod("method_10221", Object.class).invoke(Registry.class.getField("field_11142").get(null), fabricValue.getItem()).toString() // Registry.ITEM.getId(fabricValue.getItem()).toString()
+					: Registries.ITEM.getId(fabricValue.getItem()).toString());
+			
+			if (fabricValue.hasEnchantments()) {
+				if (VersionUtils.getVersion().isAtLeast(Version.V1_20_5)) {
+					ItemEnchantmentsComponent enchantments = fabricValue.getEnchantments();
+					
+					enchantments.getEnchantments().forEach(enchantment -> this.enchantments.put(EnchantmentAdapter.value(enchantment.getIdAsString()), enchantments.getLevel(enchantment)));
+				} else if (VersionUtils.getVersion().isOlderThan(Version.V1_19_3)) {
+					Method getId = Registry.class.getMethod("method_10221", Object.class);
+					Object ENCHANTMENT = Registry.class.getField("field_11160").get(null);
+					
+					for (Entry<Enchantment, Integer> enchantment : ((Map<Enchantment, Integer>) EnchantmentHelper.class.getMethod("method_8222", ItemStack.class).invoke(null, fabricValue)).entrySet()) // EnchantmentHelper.get(fabricValue).entrySet()
+						enchantments.put(EnchantmentAdapter.value(getId.invoke(ENCHANTMENT, enchantment.getKey()).toString()), enchantment.getValue());
+				} else {
+					Registry<Enchantment> ENCHANTMENT = (Registry<Enchantment>) Registries.class.getField("field_41176").get(null);
+					
+					((Map<Enchantment, Integer>) EnchantmentHelper.class.getMethod("method_8222", ItemStack.class).invoke(null, fabricValue)).forEach((enchantment, level) -> enchantments.put(EnchantmentAdapter.value(ENCHANTMENT.getId(enchantment).toString()), level));
+				}
+			} if (VersionUtils.getVersion().isOlderThan(Version.V1_21_5)) {
+				if (VersionUtils.getVersion().isOlderThan(Version.V1_20_5)) {
+					NbtCompound nbt = (NbtCompound) ItemStack.class.getMethod("method_7969").invoke(fabricValue); // fabricValue().getTag()
+					
+					if (nbt != null) {
+						if ((byte) NbtCompound.class.getMethod("method_10540", String.class).invoke(nbt, "HideFlags") == 99) { // nbt.getType("HideFlags") == NbtElement.NUMBER_TYPE
+							int HideFlags = (int) NbtCompound.class.getMethod("method_10550", String.class).invoke(nbt, "HideFlags"); // nbt.getInt("HideFlags)
+							
+							for (ItemFlagAdapter itemFlag : ItemFlagAdapter.values())
+								if ((HideFlags & itemFlag.bitModifierValue()) != 0)
+									itemFlags.add(itemFlag);
+						}
+					}
+				} else {
+					if (!FabricItemStack.New.showInTooltip(fabricValue.getEnchantments(), "field_49390"))
+						itemFlags.add(ItemFlagAdapter.HIDE_ENCHANTMENTS);
+					if (!FabricItemStack.New.showInTooltip(FabricItemStack.New.get(fabricValue, DataComponentTypes.ATTRIBUTE_MODIFIERS), "comp_2394"))
+						itemFlags.add(ItemFlagAdapter.HIDE_ATTRIBUTES);
+					if (!FabricItemStack.New.showInTooltip(FabricItemStack.New.get(fabricValue, DataComponentTypes.UNBREAKABLE), "comp_2417"))
+						itemFlags.add(ItemFlagAdapter.HIDE_UNBREAKABLE);
+					if (!FabricItemStack.New.showInTooltip(FabricItemStack.New.get(fabricValue, DataComponentTypes.CAN_BREAK), "field_49253"))
+						itemFlags.add(ItemFlagAdapter.HIDE_CAN_DESTROY);
+					if (!FabricItemStack.New.showInTooltip(FabricItemStack.New.get(fabricValue, DataComponentTypes.CAN_PLACE_ON), "field_49253"))
+						itemFlags.add(ItemFlagAdapter.HIDE_CAN_BE_PLACED_ON);
+					if (FabricItemStack.New.get(fabricValue, ItemFlagAdapter.HIDE_MISCELLANEOUS.fabricValue()) == Unit.INSTANCE || (VersionUtils.getVersion().isAtLeast(Version.V1_21) && !FabricItemStack.New.showInTooltip(FabricItemStack.New.get(fabricValue, DataComponentTypes.JUKEBOX_PLAYABLE), "comp_2834")))
+						itemFlags.add(ItemFlagAdapter.HIDE_MISCELLANEOUS);
+					if (!FabricItemStack.New.showInTooltip(FabricItemStack.New.get(fabricValue, DataComponentTypes.DYED_COLOR), "comp_2385"))
+						itemFlags.add(ItemFlagAdapter.HIDE_DYE);
+					if (!FabricItemStack.New.showInTooltip(FabricItemStack.New.get(fabricValue, DataComponentTypes.TRIM), "field_49279"))
+						itemFlags.add(ItemFlagAdapter.HIDE_ARMOR_TRIM);
+				}
+			} else {
+				TooltipDisplayComponent tooltipDisplay = fabricValue.get(DataComponentTypes.TOOLTIP_DISPLAY);
+				
+				if (tooltipDisplay != null)
+					for (ItemFlagAdapter itemFlag : ItemFlagAdapter.values())
+						if (itemFlag == ItemFlagAdapter.HIDE_MISCELLANEOUS
+								? FabricItemStack.New.MISCELLANEOUS_COMPONENTS.stream().anyMatch(tooltipDisplay::shouldDisplay)
+								: tooltipDisplay.shouldDisplay(itemFlag.fabricValue()))
+							itemFlags.add(itemFlag);
+			} if (isPlayerHead()) {
+				if (VersionUtils.getVersion().isOlderThan(Version.V1_20_5)) {
+					NbtCompound nbt = (NbtCompound) ItemStack.class.getMethod("method_7969").invoke(fabricValue); // fabricValue().getTag()
+					
+					if (nbt != null) {
+						byte type = (byte) NbtCompound.class.getMethod("method_10540", String.class).invoke(nbt, "SkullOwner"); // nbt.getType("SkullOwner")
+						
+						if (type == 10) { // COMPOUND_TYPE
+							NbtCompound SkullOwner = (NbtCompound) NbtCompound.class.getMethod("method_10562", String.class).invoke(nbt, "SkullOwner"); // nbt.getCompound("SkullOwner")
+							
+							if ((byte) NbtCompound.class.getMethod("method_10540", String.class).invoke(SkullOwner, "Name") == 8) // SkullOwner.getType("Name") == NbtElement.STRING_TYPE
+								skullOwner = (String) NbtCompound.class.getMethod("method_10558", String.class).invoke(SkullOwner, "Name"); // SkullOwner.getString("Name")
+						} else if (type == 8) // STRING_TYPE
+							skullOwner = (String) NbtCompound.class.getMethod("method_10558", String.class).invoke(nbt, "SkullOwner"); // nbt.getString("SkullOwner")
+					}
+				} else FabricItemStack.New.get(fabricValue, DataComponentTypes.PROFILE).getName().ifPresent(owner -> skullOwner = owner);
+			}
+		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | NoSuchFieldException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -192,7 +313,7 @@ public class ItemStackAdapter implements Cloneable {
 				itemStack.setSkullTextureURL(getSkullTextureURL());
 		} else if (isLeatherArmor())
 			itemStack.setLeatherArmorColor(getLeatherArmorColor());
-		itemStack.addItemFlags(itemFlags.toArray(new ItemFlagAdapter[0]));
+		itemStack.addItemFlags(itemFlags.toArray(new ItemFlagAdapter[itemFlags.size()]));
 		return itemStack;
 	}
 	
@@ -222,8 +343,23 @@ public class ItemStackAdapter implements Cloneable {
 	 */
 	public org.spongepowered.api.item.inventory.ItemStack spongeValue() {
 		if (Environment.isSponge())
-			return (ItemStack) itemStack;
+			return (org.spongepowered.api.item.inventory.ItemStack) itemStack;
 		throw new UnsupportedOperationException("Unable to adapt item stack to a Sponge's ItemStack on a " + Environment.getCurrent().getName() + " environment");
+	}
+	
+	/**
+	 * Gets the item stack adapted for Fabric environments.
+	 * 
+	 * <p><strong>Note:</strong> do not modify the returned item stack's
+	 * (meta)data manually. Only use the provided wrapper methods.</p>
+	 * 
+	 * @return Fabric-adapted item stack
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isFabric()}
+	 */
+	public ItemStack fabricValue() {
+		if (Environment.isFabric())
+			return (ItemStack) itemStack;
+		throw new UnsupportedOperationException("Unable to adapt item stack to a Fabric's ItemStack on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -252,7 +388,7 @@ public class ItemStackAdapter implements Cloneable {
 	 * @return Amount of items
 	 */
 	public short getAmount() {
-		return (short) (Environment.isBukkit() ? bukkitValue().getAmount() : spongeValue().getQuantity());
+		return (short) (Environment.isBukkit() ? bukkitValue().getAmount() : Environment.isSponge() ? spongeValue().getQuantity() : fabricValue().getCount());
 	}
 	
 	/**
@@ -264,7 +400,9 @@ public class ItemStackAdapter implements Cloneable {
 	public ItemStackAdapter setAmount(short amount) {
 		if (Environment.isBukkit())
 			bukkitValue().setAmount(amount);
-		else spongeValue().setQuantity(amount);
+		else if (Environment.isSponge())
+			spongeValue().setQuantity(amount);
+		else fabricValue().setCount(amount);
 		return this;
 	}
 	
@@ -274,7 +412,7 @@ public class ItemStackAdapter implements Cloneable {
 	 * @return Item's max durability
 	 */
 	public short getMaxDurability() {
-		return Environment.isBukkit() ? type.bukkitValue().getMaxDurability() : spongeValue().getProperty(UseLimitProperty.class).isPresent() ? spongeValue().getProperty(UseLimitProperty.class).get().getValue().shortValue() : 0;
+		return Environment.isBukkit() ? type.bukkitValue().getMaxDurability() : Environment.isSponge() ? spongeValue().getProperty(UseLimitProperty.class).isPresent() ? spongeValue().getProperty(UseLimitProperty.class).get().getValue().shortValue() : 0 : (short) fabricValue().getMaxDamage();
 	}
 	
 	/**
@@ -282,9 +420,8 @@ public class ItemStackAdapter implements Cloneable {
 	 * 
 	 * @return Item's durability
 	 */
-	@SuppressWarnings("deprecation")
 	public short getDurability() {
-		return (short) (Environment.isBukkit() ? getMaxDurability() - bukkitValue().getDurability() : Integer.valueOf(spongeValue().get(Keys.ITEM_DURABILITY).orElse(0)).shortValue());
+		return Environment.isSponge() ? spongeValue().get(Keys.ITEM_DURABILITY).orElse(0).shortValue() : (short) (getMaxDurability() - getDurability());
 	}
 	
 	/**
@@ -294,7 +431,7 @@ public class ItemStackAdapter implements Cloneable {
 	 * @return This item stack
 	 */
 	public ItemStackAdapter setDurability(short durability) {
-		if (Environment.isBukkit())
+		if (!Environment.isSponge())
 			setDamage((short) (getMaxDurability() - durability));
 		else if (spongeValue().supports(DurabilityData.class))
 			spongeValue().offer(Keys.ITEM_DURABILITY, (int) durability);
@@ -308,7 +445,7 @@ public class ItemStackAdapter implements Cloneable {
 	 */
 	@SuppressWarnings("deprecation")
 	public short getDamage() {
-		return (short) (Environment.isBukkit() ? bukkitValue().getDurability() : spongeValue().supports(DurabilityData.class) ? getMaxDurability() - getDurability() : SpongeItemStack.getDamage(spongeValue()));
+		return (short) (Environment.isBukkit() ? bukkitValue().getDurability() : Environment.isSponge() ? spongeValue().supports(DurabilityData.class) ? getMaxDurability() - getDurability() : SpongeItemStack.getDamage(spongeValue()) : fabricValue().getDamage());
 	}
 	
 	/**
@@ -321,9 +458,11 @@ public class ItemStackAdapter implements Cloneable {
 	public ItemStackAdapter setDamage(short damage) {
 		if (Environment.isBukkit())
 			bukkitValue().setDurability(damage);
-		else if (spongeValue().supports(DurabilityData.class))
-			setDurability((short) (getMaxDurability() - damage));
-		else itemStack = SpongeItemStack.setDamage(spongeValue(), damage);
+		else if (Environment.isSponge())
+			if (spongeValue().supports(DurabilityData.class))
+				setDurability((short) (getMaxDurability() - damage));
+			else itemStack = SpongeItemStack.setDamage(spongeValue(), damage);
+		else fabricValue().setDamage(damage);
 		return this;
 	}
 	
@@ -344,10 +483,18 @@ public class ItemStackAdapter implements Cloneable {
 	 * @return This item stack
 	 */
 	public ItemStackAdapter enchant(EnchantmentAdapter enchantment, int level) {
-		if (Environment.isBukkit())
-			bukkitValue().addUnsafeEnchantment(enchantment.bukkitValue(), level);
-		else SpongeItemStack.enchant(spongeValue(), enchantment.spongeValue(), level);
-		enchantments.put(enchantment, level);
+		if (Environment.isBukkit()) {
+			if (hasItemMeta())
+				bukkitValue().addUnsafeEnchantment(enchantment.bukkitValue(), level);
+		} else if (Environment.isSponge())
+			SpongeItemStack.enchant(spongeValue(), enchantment.spongeValue(), level);
+		else if (VersionUtils.getVersion().isAtLeast(Version.V1_21))
+			fabricValue().addEnchantment(FabricBootstrapper.getInstance().getServer().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getEntry(enchantment.fabricValue()), level);
+		else try {
+			ItemStack.class.getMethod("method_7978", Enchantment.class, int.class).invoke(fabricValue(), enchantment.fabricValue(), level);
+		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+			e.printStackTrace();
+		} enchantments.put(enchantment, level);
 		return this;
 	}
 	
@@ -371,8 +518,20 @@ public class ItemStackAdapter implements Cloneable {
 	public ItemStackAdapter disenchant(EnchantmentAdapter enchantment) {
 		if (Environment.isBukkit())
 			bukkitValue().removeEnchantment(enchantment.bukkitValue());
-		else SpongeItemStack.disenchant(spongeValue(), enchantment.spongeValue());
-		enchantments.remove(enchantment);
+		else if (Environment.isSponge())
+			SpongeItemStack.disenchant(spongeValue(), enchantment.spongeValue());
+		else if (VersionUtils.getVersion().isAtLeast(Version.V1_20_5))
+			fabricValue().getEnchantments().getEnchantments().removeIf(entry -> entry.value().equals(enchantment.fabricValue())); // TODO does this actually remove the enchantment/update the item? also check EnchantmentHelper
+		else try {
+			@SuppressWarnings("unchecked")
+			Map<Enchantment, Integer> enchantments = (Map<Enchantment, Integer>) EnchantmentHelper.class.getMethod("method_8222", ItemStack.class).invoke(null, fabricValue());
+			
+			if (enchantments.remove(enchantment.fabricValue()) != null)
+				EnchantmentHelper.class.getMethod("method_8214", Map.class, ItemStack.class).invoke(null, enchantments, fabricValue());
+			else return this; // skip next remove
+		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+			e.printStackTrace();
+		} enchantments.remove(enchantment);
 		return this;
 	}
 	
@@ -442,9 +601,25 @@ public class ItemStackAdapter implements Cloneable {
 	 * 
 	 * @return Item's display name
 	 */
+	@SuppressWarnings("deprecation")
 	@Nullable(why = "Null when item does not have a display name")
 	public String getDisplayName() {
-		return Environment.isBukkit() ? itemMeta ? bukkitValue().getItemMeta().getDisplayName() : null : spongeValue().getOrCreate(DisplayNameData.class).get().displayName().get().toPlain();
+		if (hasDisplayName()) {
+			if (Environment.isBukkit())
+				return bukkitValue().getItemMeta().getDisplayName();
+			if (Environment.isSponge())
+				return Utils.toLegacyText(spongeValue().get(DisplayNameData.class).get().displayName().get());
+			if (Environment.isFabric()) {
+				if (VersionUtils.getVersion().isOlderThan(Version.V1_20_5))
+					try {
+						// Utils.toLegacyText(new JsonParser().parse(fabricValue().getOrCreateSubTag("display").getString("Name")
+						return (String) Class.forName("me.remigio07.chatplugin.common.util.Utils", false, JARLibraryLoader.getInstance()).getMethod("toLegacyText", String.class).invoke(null, new JsonParser().parse((String) NbtCompound.class.getMethod("method_10558", String.class).invoke(ItemStack.class.getMethod("method_7911", String.class).invoke(fabricValue(), "display"), "Name")));
+					} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | JsonSyntaxException e) {
+						e.printStackTrace();
+					}
+				else return Utils.toLegacyText(fabricValue().getCustomName());
+			}
+		} return null;
 	}
 	
 	/**
@@ -453,7 +628,20 @@ public class ItemStackAdapter implements Cloneable {
 	 * @return Whether this item has a display name
 	 */
 	public boolean hasDisplayName() {
-		return Environment.isBukkit() ? itemMeta ? bukkitValue().getItemMeta().hasDisplayName() : false : spongeValue().getValue(Keys.DISPLAY_NAME).isPresent();
+		try {
+			return Environment.isBukkit()
+					? itemMeta
+					? bukkitValue().getItemMeta().hasDisplayName()
+					: false
+					: Environment.isSponge()
+					? spongeValue().getValue(Keys.DISPLAY_NAME).isPresent()
+					: VersionUtils.getVersion().isOlderThan(Version.V1_20_5)
+					? (boolean) ItemStack.class.getMethod("method_7938").invoke(fabricValue())
+					: fabricValue().getCustomName() != null;
+		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	/**
@@ -468,8 +656,10 @@ public class ItemStackAdapter implements Cloneable {
 		if (Environment.isSponge()) {
 			if (displayName == null)
 				spongeValue().remove(Keys.DISPLAY_NAME);
-			else spongeValue().offer(Keys.DISPLAY_NAME, Utils.serializeSpongeText(displayName, false));
-		} else if (itemMeta) {
+			else spongeValue().offer(Keys.DISPLAY_NAME, Utils.toSpongeComponent(displayName));
+		} else if (Environment.isFabric())
+			FabricItemStack.setDisplayName(fabricValue(), displayName);
+		else if (itemMeta) {
 			ItemMeta meta = bukkitValue().getItemMeta();
 			
 			meta.setDisplayName(displayName);
@@ -486,7 +676,14 @@ public class ItemStackAdapter implements Cloneable {
 	 */
 	@Nullable(why = "Null when item does not have a lore")
 	public List<String> getLore() {
-		return Environment.isBukkit() ? itemMeta ? bukkitValue().getItemMeta().getLore() : null : SpongeItemStack.toStringList(spongeValue().getOrCreate(LoreData.class).get().lore().get());
+		if (hasLore()) {
+			if (Environment.isBukkit())
+				return itemMeta ? bukkitValue().getItemMeta().getLore() : null;
+			if (Environment.isSponge())
+				return SpongeItemStack.toStringList(spongeValue().getOrCreate(LoreData.class).get().lore().get());
+			if (Environment.isFabric())
+				return FabricItemStack.getLore(fabricValue());
+		} return null;
 	}
 	
 	/**
@@ -495,7 +692,18 @@ public class ItemStackAdapter implements Cloneable {
 	 * @return Whether this item has a lore
 	 */
 	public boolean hasLore() {
-		return Environment.isBukkit() ? itemMeta ? bukkitValue().getItemMeta().hasLore() : false : spongeValue().getValue(Keys.ITEM_LORE).isPresent();
+		if (Environment.isBukkit())
+			return itemMeta && bukkitValue().getItemMeta().hasLore();
+		if (Environment.isSponge())
+			return spongeValue().getValue(Keys.ITEM_LORE).isPresent();
+		try {
+			return VersionUtils.getVersion().isOlderThan(Version.V1_20_5) // fabricValue().method_7911("display").method_10540("Lore") not sure about this! - fabricValue().getOrCreateSubTag("display").getType("Lore")
+					? (byte) NbtCompound.class.getMethod("method_10540", String.class).invoke(ItemStack.class.getMethod("method_7911", String.class).invoke(fabricValue(), "display"), "Lore") == 9
+					: FabricItemStack.New.get(fabricValue(), DataComponentTypes.LORE) != null;
+		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	/**
@@ -511,7 +719,9 @@ public class ItemStackAdapter implements Cloneable {
 			if (lore == null)
 				spongeValue().remove(Keys.ITEM_LORE);
 			else spongeValue().offer(Keys.ITEM_LORE, SpongeItemStack.toTextList(lore));
-		} else if (itemMeta) {
+		} else if (Environment.isFabric())
+			FabricItemStack.setLore(fabricValue(), lore);
+		else if (itemMeta) {
 			ItemMeta meta = bukkitValue().getItemMeta();
 			
 			meta.setLore(lore == null ? null : lore.stream().map(line -> line.replace("\n", " ").replace("\r\n", " ").replace("\r", " ")).collect(Collectors.toList()));
@@ -547,9 +757,21 @@ public class ItemStackAdapter implements Cloneable {
 	 */
 	public ItemStackAdapter addItemFlags(ItemFlagAdapter... itemFlags) {
 		for (ItemFlagAdapter itemFlag : itemFlags) {
+			if (!itemFlag.isSupported())
+				itemFlag = ItemFlagAdapter.HIDE_ATTRIBUTES;
 			if (!this.itemFlags.contains(itemFlag)) {
 				if (Environment.isSponge()) {
 					spongeValue().offer(itemFlag.spongeValue(), true);
+				} else if (Environment.isFabric()) {
+					if (VersionUtils.getVersion().isOlderThan(Version.V1_20_5)) {
+						try {
+							NbtCompound nbt = (NbtCompound) ItemStack.class.getMethod("method_7948").invoke(fabricValue()); // fabricValue().getOrCreateNbt()
+							
+							nbt.putInt("HideFlags", (int) NbtCompound.class.getMethod("method_10550", String.class).invoke(nbt, "HideFlags") | itemFlag.bitModifierValue()); // nbt.getInt("HideFlags")
+						} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+							e.printStackTrace();
+						}
+					} else FabricItemStack.New.addItemFlag(fabricValue(), itemFlag);
 				} else if (itemMeta) {
 					ItemMeta meta = bukkitValue().getItemMeta();
 					
@@ -573,6 +795,17 @@ public class ItemStackAdapter implements Cloneable {
 			if (this.itemFlags.contains(itemFlag)) {
 				if (Environment.isSponge()) {
 					spongeValue().remove(itemFlag.spongeValue());
+				} else if (Environment.isFabric()) {
+					if (VersionUtils.getVersion().isOlderThan(Version.V1_20_5)) {
+						try {
+							NbtCompound nbt = (NbtCompound) ItemStack.class.getMethod("method_7969").invoke(fabricValue()); // fabricValue().getNbt()
+							
+							if (nbt != null && (byte) NbtCompound.class.getMethod("method_10540", String.class).invoke(nbt, "HideFlags") == 99) // nbt.getType("HideFlags") == NbtElement.NUMBER_TYPE
+								nbt.putInt("HideFlags", (int) NbtCompound.class.getMethod("method_10550", String.class).invoke(nbt, "HideFlags") & ~itemFlag.bitModifierValue()); // nbt.getInt("HideFlags")
+						} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+							e.printStackTrace();
+						}
+					} else FabricItemStack.New.removeItemFlag(fabricValue(), itemFlag);
 				} else if (itemMeta) {
 					ItemMeta meta = bukkitValue().getItemMeta();
 					
@@ -591,8 +824,19 @@ public class ItemStackAdapter implements Cloneable {
 	 * @return Whether this is a player head
 	 */
 	public boolean isPlayerHead() {
-		String material = type.getID();
-		return material.equals("PLAYER_HEAD") || (material.equals(Environment.isBukkit() ? "SKULL_ITEM" : "SKULL") && getDamage() == 3);
+		switch (type.getID()) {
+		case "minecraft:player_head":
+		case "player_head":
+		case "PLAYER_HEAD":
+			return true;
+		case "minecraft:skull":
+		case "skull":
+		case "SKULL_ITEM":
+		case "SKULL":
+			return getDamage() == 3;
+		default:
+			return false;
+		}
 	}
 	
 	/**
@@ -673,15 +917,22 @@ public class ItemStackAdapter implements Cloneable {
 			ItemMeta meta = bukkitValue().getItemMeta();
 			
 			if (VersionUtils.getVersion().isOlderThan(Version.V1_20_2)) {
-				Class<?> headMeta = meta.getClass();
-				
 				try {
-					Field field = headMeta.getDeclaredField("profile");
+					Field field = meta.getClass().getDeclaredField("profile");
 					
 					field.setAccessible(true);
-					value = Iterables.getFirst(((GameProfile) field.get(meta)).getProperties().get("textures"), null).getValue();
-				} catch (Exception e) {
 					
+					GameProfile profile = (GameProfile) field.get(meta);
+					
+					if (profile != null) {
+						Property property = Iterables.getFirst(((PropertyMap) GameProfile.class.getMethod("getProperties").invoke(profile)).get("textures"), null);
+						
+						if (property != null) // should never be null
+							value = (String) Property.class.getMethod("getValue").invoke(property);
+					}
+				} catch (NoSuchFieldException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+					e.printStackTrace();
+					return null;
 				}
 			} else {
 				PlayerProfile profile = ((SkullMeta) meta).getOwnerProfile();
@@ -693,15 +944,54 @@ public class ItemStackAdapter implements Cloneable {
 						return skin.toExternalForm();
 				} return null;
 			}
-		} else {
+		} else if (Environment.isSponge()) {
 			Multimap<String, ProfileProperty> map = spongeValue().getOrCreate(RepresentedPlayerData.class).get().owner().get().getPropertyMap();
 			
 			if (map != null) {
 				ProfileProperty property = Iterables.getFirst(map.get("textures"), null);
 				
-				if (property != null)
+				if (property != null) // should never be null
 					value = property.getValue();
 			}
+		} else try {
+			if (VersionUtils.getVersion().isOlderThan(Version.V1_20_5)) {
+				NbtCompound nbt = (NbtCompound) ItemStack.class.getMethod("method_7969").invoke(fabricValue()); // fabricValue().getNbt()
+				
+				if (nbt != null && (byte) NbtCompound.class.getMethod("method_10540", String.class).invoke(nbt, "SkullOwner") == 10) { // nbt.getType("SkullOwner") == NbtElement.COMPOUND_TYPE
+					GameProfile profile = (GameProfile) NbtHelper.class.getMethod("method_10683", NbtCompound.class).invoke(null, NbtCompound.class.getMethod("method_10580", String.class).invoke(nbt, "SkullOwner")); // NbtHelper.toGameProfile(nbt)
+					
+					if (profile != null) {
+						if (VersionUtils.getVersion().isAtLeast(Version.V1_20_2)) {
+							Property property = Iterables.getFirst(((PropertyMap) (VersionUtils.getVersion().isAtLeast(Version.V1_21_9)
+									? profile.properties()
+									: GameProfile.class.getMethod("getProperties").invoke(profile)
+									)).get("textures"), null);
+							
+							if (property != null)
+								value = property.value();
+						} else {
+							Property property = Iterables.getFirst(((PropertyMap) GameProfile.class.getMethod("getProperties").invoke(profile)).get("textures"), null);
+							
+							if (property != null)
+								value = (String) Property.class.getMethod("getValue").invoke(property);
+						}
+					}
+				}
+			} else {
+				ProfileComponent profile = FabricItemStack.New.get(fabricValue(), DataComponentTypes.PROFILE);
+				
+				if (profile != null) { // GameProfile became a record in 1.21.9 (AuthLib v7)
+					Property property = Iterables.getFirst((VersionUtils.getVersion().isOlderThan(Version.V1_21_9)
+							? (PropertyMap) GameProfile.class.getMethod("getProperties").invoke(ProfileComponent.class.getMethod("comp_2413").invoke(profile))
+							: profile.getGameProfile().properties()
+							).get("textures"), null);
+					
+					if (property != null)
+						value = property.value();
+				}
+			}
+		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+			e.printStackTrace();
 		} if (value != null)
 			try {
 				value = new String(Base64.getDecoder().decode(value), StandardCharsets.ISO_8859_1);
@@ -731,17 +1021,17 @@ public class ItemStackAdapter implements Cloneable {
 			ItemMeta meta = bukkitValue().getItemMeta();
 			
 			if (VersionUtils.getVersion().isOlderThan(Version.V1_20_2)) {
-				GameProfile profile = uuid == null ? null : new GameProfile(uuid, name);
-				
-				if (skullTextureURL != null)
-					profile.getProperties().put("textures", new Property("textures", new String(Base64.getEncoder().encode(("{textures:{SKIN:{url:\"" + skullTextureURL + "\"}}}").getBytes()), StandardCharsets.ISO_8859_1)));
 				try {
+					GameProfile profile = uuid == null ? null : new GameProfile(uuid, name);
+					
+					if (skullTextureURL != null)
+						((PropertyMap) GameProfile.class.getMethod("getProperties").invoke(profile)).put("textures", new Property("textures", new String(Base64.getEncoder().encode(("{textures:{SKIN:{url:\"" + skullTextureURL + "\"}}}").getBytes()), StandardCharsets.ISO_8859_1)));
 					Field field = meta.getClass().getDeclaredField("profile");
 					
 					field.setAccessible(true);
 					field.set(meta, profile);
 					bukkitValue().setItemMeta(meta);
-				} catch (IllegalAccessException | NoSuchFieldException e) {
+				} catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | NoSuchFieldException e) {
 					LogManager.log("{0} occurred while setting a skull's profile for an item stack: {1}", 2, e.getClass().getSimpleName(), e.getLocalizedMessage());
 				}
 			} else {
@@ -759,13 +1049,15 @@ public class ItemStackAdapter implements Cloneable {
 					LogManager.log("{0} occurred while setting a skull's profile for an item stack: {1}", 2, e.getClass().getSimpleName(), e.getLocalizedMessage());
 				}
 			}
-		} else if (uuid != null) {
-			org.spongepowered.api.profile.GameProfile profile = Sponge.getServer().getGameProfileManager().createProfile(uuid, name);
-			
-			if (skullTextureURL != null)
-				profile.addProperty("textures", ProfileProperty.of("textures", new String(Base64.getEncoder().encode(("{textures:{SKIN:{url:\"" + skullTextureURL + "\"}}}").getBytes()), StandardCharsets.ISO_8859_1)));
-			spongeValue().offer(Keys.REPRESENTED_PLAYER, profile);
-		} else spongeValue().remove(Keys.REPRESENTED_PLAYER);
+		} else if (Environment.isSponge()) {
+			if (uuid != null) {
+				org.spongepowered.api.profile.GameProfile profile = Sponge.getServer().getGameProfileManager().createProfile(uuid, name);
+				
+				if (skullTextureURL != null)
+					profile.addProperty("textures", ProfileProperty.of("textures", new String(Base64.getEncoder().encode(("{textures:{SKIN:{url:\"" + skullTextureURL + "\"}}}").getBytes()), StandardCharsets.ISO_8859_1)));
+				spongeValue().offer(Keys.REPRESENTED_PLAYER, profile);
+			} else spongeValue().remove(Keys.REPRESENTED_PLAYER);
+		} else FabricItemStack.setSkullProfile(fabricValue(), uuid, name, skullTextureURL);
 		return this;
 	}
 	
@@ -775,7 +1067,7 @@ public class ItemStackAdapter implements Cloneable {
 	 * @return Whether this item is a leather armor
 	 */
 	public boolean isLeatherArmor() {
-		return type.getID().contains("LEATHER_");
+		return type.getID().toLowerCase().contains("leather_");
 	}
 	
 	/**
@@ -787,7 +1079,21 @@ public class ItemStackAdapter implements Cloneable {
 	 */
 	@Nullable(why = "Item may not be a leather armor")
 	public Color getLeatherArmorColor() {
-		return isLeatherArmor() ? Environment.isBukkit() ? new Color(((LeatherArmorMeta) bukkitValue().getItemMeta()).getColor().asRGB()) : spongeValue().getOrCreate(DyeableData.class).get().type().get().getColor().asJavaColor() : null;
+		if (isLeatherArmor()) {
+			if (Environment.isBukkit())
+				return new Color(((LeatherArmorMeta) bukkitValue().getItemMeta()).getColor().asRGB());
+			if (Environment.isSponge())
+				return spongeValue().getOrCreate(DyeableData.class).get().type().get().getColor().asJavaColor();
+			if (Environment.isFabric())
+				try {
+					if (VersionUtils.getVersion().isOlderThan(Version.V1_20_5)) {
+						NbtCompound nbt = (NbtCompound) ItemStack.class.getMethod("method_7941").invoke(fabricValue(), "display"); // fabricValue().getSubTag("display")
+						return nbt == null || (byte) NbtCompound.class.getMethod("method_10540", String.class).invoke(nbt, "color") != 99 ? Color.decode("#A06540") : new Color((int) NbtCompound.class.getMethod("method_10550", String.class).invoke(nbt, "color"));
+					} return new Color(FabricItemStack.New.get(fabricValue(), DataComponentTypes.DYED_COLOR).rgb());
+				} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | JsonSyntaxException e) {
+					e.printStackTrace();
+				}
+		} return null;
 	}
 	
 	/**
@@ -810,7 +1116,15 @@ public class ItemStackAdapter implements Cloneable {
 				
 				((LeatherArmorMeta) meta).setColor(org.bukkit.Color.fromRGB(leatherArmorColor.getRed(), leatherArmorColor.getGreen(), leatherArmorColor.getBlue()));
 				bukkitValue().setItemMeta(meta);
-			} else SpongeItemStack.setLeatherArmorColor(spongeValue(), leatherArmorColor);
+			} else if (Environment.isSponge())
+				SpongeItemStack.setLeatherArmorColor(spongeValue(), leatherArmorColor);
+			else if (VersionUtils.getVersion().isOlderThan(Version.V1_20_5)) {
+				try {
+					((NbtCompound) ItemStack.class.getMethod("method_7911", String.class).invoke(fabricValue(), "display")).putInt("color", leatherArmorColor.getRGB());
+				} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+					e.printStackTrace();
+				}
+			} else fabricValue().set(DataComponentTypes.DYED_COLOR, new DyedColorComponent(leatherArmorColor.getRGB()));
 		} return this;
 	}
 	
@@ -828,7 +1142,7 @@ public class ItemStackAdapter implements Cloneable {
 		setDisplayName(other.getDisplayName());
 		setLore(other.getLore());
 		removeItemFlags(ItemFlagAdapter.values());
-		addItemFlags(other.getItemFlags().toArray(new ItemFlagAdapter[0]));
+		addItemFlags(other.getItemFlags().toArray(new ItemFlagAdapter[other.getItemFlags().size()]));
 		
 		if (other.getSkullOwner() != null) {
 			if (!getSkullOwner().equals(other.getSkullOwner()))
@@ -842,24 +1156,24 @@ public class ItemStackAdapter implements Cloneable {
 	
 	private static class SpongeItemStack {
 		
-		public static short getDamage(ItemStack itemStack) {
+		public static short getDamage(org.spongepowered.api.item.inventory.ItemStack itemStack) {
 			return ((Integer) itemStack.toContainer().get(DataQuery.of("UnsafeDamage")).get()).shortValue();
 		}
 		
-		public static ItemStack setDamage(ItemStack itemStack, short damage) {
-			return ItemStack.builder().fromContainer(itemStack.toContainer().set(DataQuery.of("UnsafeDamage"), Integer.valueOf(damage))).build();
+		public static org.spongepowered.api.item.inventory.ItemStack setDamage(org.spongepowered.api.item.inventory.ItemStack itemStack, short damage) {
+			return org.spongepowered.api.item.inventory.ItemStack.builder().fromContainer(itemStack.toContainer().set(DataQuery.of("UnsafeDamage"), Integer.valueOf(damage))).build();
 		}
 		
-		public static void enchant(ItemStack item, EnchantmentType enchantment, int level) {
+		public static void enchant(org.spongepowered.api.item.inventory.ItemStack item, EnchantmentType enchantment, int level) {
 			EnchantmentData data = item.getOrCreate(EnchantmentData.class).get();
 			
-			data.addElement(Enchantment.of(enchantment, level));
+			data.addElement(org.spongepowered.api.item.enchantment.Enchantment.of(enchantment, level));
 			item.offer(data);
 		}
 		
-		public static void disenchant(ItemStack item, EnchantmentType enchantment) {
+		public static void disenchant(org.spongepowered.api.item.inventory.ItemStack item, EnchantmentType enchantment) {
 			EnchantmentData data = item.getOrCreate(EnchantmentData.class).get();
-			List<Enchantment> enchantments = data.enchantments().get();
+			List<org.spongepowered.api.item.enchantment.Enchantment> enchantments = data.enchantments().get();
 			
 			for (int i = 0; i < enchantments.size(); i++)
 				if (enchantments.get(i).getType().equals(enchantment))
@@ -867,7 +1181,7 @@ public class ItemStackAdapter implements Cloneable {
 			item.offer(data);
 		}
 		
-		public static void setLeatherArmorColor(ItemStack item, Color color) {
+		public static void setLeatherArmorColor(org.spongepowered.api.item.inventory.ItemStack item, Color color) {
 			DyeableData data = item.getOrCreate(DyeableData.class).get();
 			String hex = "#" + Integer.toHexString(color.getRGB()).substring(2).toUpperCase();
 			
@@ -898,11 +1212,208 @@ public class ItemStackAdapter implements Cloneable {
 		}
 		
 		public static List<Text> toTextList(List<String> list) {
-			return list.stream().map(string -> Utils.serializeSpongeText(string.replace("\n", " ").replace("\r\n", " ").replace("\r", " "), false)).collect(Collectors.toList());
+			return list.stream().map(string -> Utils.toSpongeComponent(string.replace("\n", " ").replace("\r\n", " ").replace("\r", " "))).collect(Collectors.toList());
 		}
 		
 		public static List<String> toStringList(List<Text> list) {
-			return list.stream().map(Utils::deserializeSpongeText).collect(Collectors.toList());
+			return list.stream().map(Utils::toLegacyText).collect(Collectors.toList());
+		}
+		
+	}
+	
+	private static class FabricItemStack {
+		
+		public static ItemStack newInstance(MaterialAdapter type, short amount) {
+			return new ItemStack(type.fabricValue(), amount);
+		}
+		
+		public static void setDisplayName(ItemStack itemStack, String displayName) {
+			if (VersionUtils.getVersion().isOlderThan(Version.V1_20_5))
+				try {
+					Object text = displayName == null ? null : Utils.toFabricComponent(displayName);
+					
+					if (text != null)
+						text = VersionUtils.getVersion().isOlderThan(Version.V1_16)
+								? net.minecraft.text.Text.class.getMethod("method_10862", Style.class).invoke(text, Style.class.getConstructor().newInstance().withItalic(false))
+								: MutableText.class.getMethod("method_27696", Style.class).invoke(((net.minecraft.text.Text) text).copy(), Style.EMPTY.withItalic(false));
+					ItemStack.class.getMethod("method_7977", net.minecraft.text.Text.class).invoke(itemStack, text);
+				} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+					e.printStackTrace();
+				}
+			else New.setDisplayName(itemStack, displayName);
+		}
+		
+		public static List<String> getLore(ItemStack itemStack) {
+			try {
+				if (VersionUtils.getVersion().isOlderThan(Version.V1_20_5)) {
+					// fabricValue().method_7911("display").method_10554("Lore", 8)
+					// fabricValue().getOrCreateSubTag("display").getList("Lore", NbtElement.STRING_TYPE)
+					NbtList lore = (NbtList) NbtCompound.class.getMethod("method_10554", String.class, int.class).invoke(ItemStack.class.getMethod("method_7911", String.class).invoke(itemStack, "display"), "Lore", 8);
+					List<String> list = new ArrayList<>(lore.size());
+					Method toLegacyText = Class.forName("me.remigio07.chatplugin.common.util.Utils", false, JARLibraryLoader.getInstance()).getMethod("toLegacyText", String.class);
+					
+					for (int i = 0; i < lore.size(); i++)
+						list.add((String) toLegacyText.invoke(null, lore.getString(i)));
+					return list;
+				} return FabricItemStack.New.get(itemStack, DataComponentTypes.LORE).lines().stream().map(Utils::toLegacyText).collect(Collectors.toList());
+			} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+		
+		public static void setLore(ItemStack itemStack, List<String> lore) {
+			if (VersionUtils.getVersion().isOlderThan(Version.V1_20_5))
+				try {
+					NbtCompound nbt = (NbtCompound) ItemStack.class.getMethod("method_7911", String.class).invoke(itemStack, "display");
+					
+					if (lore != null) {
+						NbtList list = new NbtList();
+						
+						for (String line : lore) {
+							Object text = Utils.toFabricComponent(line.replace("\n", " ").replace("\r\n", " ").replace("\r", " "));
+							text = VersionUtils.getVersion().isOlderThan(Version.V1_16)
+									? (net.minecraft.text.Text) net.minecraft.text.Text.class.getMethod("method_10862", Style.class).invoke(text, Style.class.getConstructor().newInstance().withItalic(false))
+									: MutableText.class.getMethod("method_27696", Style.class).invoke(((net.minecraft.text.Text) text).copy(), Style.EMPTY.withItalic(false));
+							Constructor<NbtString> constructor = NbtString.class.getDeclaredConstructor(String.class);
+							
+							constructor.setAccessible(true);
+							list.add(constructor.newInstance(((JsonElement) Class.forName("me.remigio07.chatplugin.server.fabric.ChatPluginFabric", false, JARLibraryLoader.getInstance()).getMethod("toJSON", net.minecraft.text.Text.class).invoke(null, text)).toString()));
+						} nbt.put("Lore", list);
+					} else NbtCompound.class.getMethod("method_10551", String.class).invoke(nbt, "Lore"); // nbt.remove("Lore")
+				} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | ClassNotFoundException | InstantiationException e) {
+					e.printStackTrace();
+				}
+			else itemStack.set(DataComponentTypes.LORE, lore == null ? null : new LoreComponent(lore.stream().map(str -> Utils.toFabricComponent(str.replace("\n", " ").replace("\r\n", " ").replace("\r", " ")).copy().fillStyle(Style.EMPTY.withItalic(false))).collect(Collectors.toList())));
+		}
+		
+		public static void setSkullProfile(ItemStack itemStack, UUID uuid, String name, String skullTextureURL) {
+			try {
+				if (VersionUtils.getVersion().isOlderThan(Version.V1_20_5)) {
+					NbtCompound nbt = (NbtCompound) ItemStack.class.getMethod("method_7948").invoke(itemStack); // itemStack.getOrCreateNbt()
+					
+					if (uuid != null) {
+						GameProfile profile = new GameProfile(uuid, name);
+						
+						if (skullTextureURL != null)
+							((PropertyMap) GameProfile.class.getMethod("getProperties").invoke(profile)).put("textures", new Property("textures", new String(Base64.getEncoder().encode(("{textures:{SKIN:{url:\"" + skullTextureURL + "\"}}}").getBytes()), StandardCharsets.ISO_8859_1)));
+						nbt.put("SkullOwner", (NbtCompound) NbtHelper.class.getMethod("method_10684", NbtCompound.class, GameProfile.class).invoke(null, new NbtCompound(), profile)); // NbtHelper.fromGameProfile(...)
+					} else NbtCompound.class.getMethod("method_10551", String.class).invoke(nbt, "SkullOwner"); // nbt.remove("SkullOwner")
+				} else if (uuid != null)
+					if (VersionUtils.getVersion().isOlderThan(Version.V1_21_9)) {
+						PropertyMap map = PropertyMap.class.getConstructor().newInstance();
+						
+						if (skullTextureURL != null)
+							map.put("textures", new Property("textures", new String(Base64.getEncoder().encode(("{textures:{SKIN:{url:\"" + skullTextureURL + "\"}}}").getBytes()), StandardCharsets.ISO_8859_1)));
+						itemStack.set(DataComponentTypes.PROFILE, ProfileComponent.class.getConstructor(Optional.class, Optional.class, PropertyMap.class).newInstance(Optional.of(name), Optional.of(uuid), map));
+					} else itemStack.set(DataComponentTypes.PROFILE, ProfileComponent.ofStatic(new GameProfile(uuid, name, skullTextureURL == null ? PropertyMap.EMPTY : new PropertyMap(ImmutableListMultimap.of("textures", new Property("textures", new String(Base64.getEncoder().encode(("{textures:{SKIN:{url:\"" + skullTextureURL + "\"}}}").getBytes()), StandardCharsets.ISO_8859_1)))))));
+				else itemStack.remove(DataComponentTypes.PROFILE);
+			} catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		private static class New { // 1.20.5+
+			
+			public static final Set<ComponentType<?>> MISCELLANEOUS_COMPONENTS;
+			
+			static {
+				MISCELLANEOUS_COMPONENTS = VersionUtils.getVersion().isAtLeast(Version.V1_21_5)
+						? Stream.of(ItemFlagAdapter.HIDE_MISCELLANEOUS.getComponents()).map(component -> Registries.DATA_COMPONENT_TYPE.get(Identifier.ofVanilla(component))).filter(Objects::nonNull).collect(Collectors.toSet())
+						: null;
+			}
+			
+			@SuppressWarnings("unchecked")
+			public static <T> T get(ItemStack itemStack, ComponentType<? extends T> component) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+				return VersionUtils.getVersion().isAtLeast(Version.V1_21_5)
+						? itemStack.get(component)
+						: (T) ItemStack.class.getMethod("method_57824", ComponentType.class).invoke(itemStack, component);
+			}
+			
+			public static void setDisplayName(ItemStack itemStack, String displayName) {
+				itemStack.set(DataComponentTypes.CUSTOM_NAME, displayName == null ? null : Utils.toFabricComponent(displayName).copy().fillStyle(Style.EMPTY.withItalic(false)));
+			}
+			
+			public static void addItemFlag(ItemStack itemStack, ItemFlagAdapter itemFlag) {
+				if (VersionUtils.getVersion().isAtLeast(Version.V1_21_5)) {
+					TooltipDisplayComponent tooltip = itemStack.get(DataComponentTypes.TOOLTIP_DISPLAY);
+					SequencedSet<ComponentType<?>> hiddenComponents = new LinkedHashSet<>();
+					
+					if (tooltip != null)
+						hiddenComponents.addAll(tooltip.hiddenComponents());
+					if (itemFlag == ItemFlagAdapter.HIDE_MISCELLANEOUS)
+						hiddenComponents.addAll(MISCELLANEOUS_COMPONENTS);
+					else hiddenComponents.add(itemFlag.fabricValue());
+					itemStack.set(DataComponentTypes.TOOLTIP_DISPLAY, new TooltipDisplayComponent(false, hiddenComponents));
+				} else withShowInTooltip(itemStack, itemFlag, false);
+			}
+			
+			public static void removeItemFlag(ItemStack itemStack, ItemFlagAdapter itemFlag) {
+				if (VersionUtils.getVersion().isAtLeast(Version.V1_21_5)) {
+					TooltipDisplayComponent tooltip = itemStack.get(DataComponentTypes.TOOLTIP_DISPLAY);
+					if (tooltip != null) {
+						SequencedSet<ComponentType<?>> hiddenComponents = new LinkedHashSet<>(tooltip.hiddenComponents());
+						
+						if (itemFlag == ItemFlagAdapter.HIDE_MISCELLANEOUS)
+							hiddenComponents.removeAll(MISCELLANEOUS_COMPONENTS);
+						else hiddenComponents.remove(itemFlag.fabricValue());
+						itemStack.set(DataComponentTypes.TOOLTIP_DISPLAY, new TooltipDisplayComponent(false, hiddenComponents));
+					}
+				} else withShowInTooltip(itemStack, itemFlag, true);
+			}
+			
+			@SuppressWarnings({ "unchecked", "rawtypes" })
+			private static void withShowInTooltip(ItemStack itemStack, ItemFlagAdapter itemFlag, boolean showInTooltip) {
+				ComponentChanges.Builder builder = ComponentChanges.builder();
+				
+				try {
+					if (itemFlag == ItemFlagAdapter.HIDE_ENCHANTMENTS) {
+						if (itemStack.hasEnchantments())
+							builder.add(DataComponentTypes.ENCHANTMENTS, withShowInTooltip(itemStack.getEnchantments(), "method_58449", showInTooltip));
+					} else if (itemFlag == ItemFlagAdapter.HIDE_ATTRIBUTES) {
+						if (itemStack.contains(DataComponentTypes.ATTRIBUTE_MODIFIERS))
+							builder.add(DataComponentTypes.ATTRIBUTE_MODIFIERS, withShowInTooltip(get(itemStack, DataComponentTypes.ATTRIBUTE_MODIFIERS), "method_58423", showInTooltip));
+					} else if (itemFlag == ItemFlagAdapter.HIDE_UNBREAKABLE) {
+						if (itemStack.contains(DataComponentTypes.UNBREAKABLE))
+							builder.add((ComponentType) DataComponentTypes.class.getField("field_49630").get(null), Class.forName("net.minecraft.class_9300").getConstructor(boolean.class).newInstance(showInTooltip));
+					} else if (itemFlag == ItemFlagAdapter.HIDE_CAN_DESTROY) {
+						if (itemStack.contains(DataComponentTypes.CAN_BREAK))
+							builder.add(DataComponentTypes.CAN_BREAK, withShowInTooltip(get(itemStack, DataComponentTypes.CAN_BREAK), "method_58402", showInTooltip));
+					} else if (itemFlag == ItemFlagAdapter.HIDE_CAN_BE_PLACED_ON) {
+						if (itemStack.contains(DataComponentTypes.CAN_PLACE_ON))
+							builder.add(DataComponentTypes.CAN_PLACE_ON, withShowInTooltip(get(itemStack, DataComponentTypes.CAN_PLACE_ON), "method_58402", showInTooltip));
+					} else if (itemFlag == ItemFlagAdapter.HIDE_MISCELLANEOUS) {
+						if (VersionUtils.getVersion().isAtLeast(Version.V1_21))
+							builder.add(DataComponentTypes.JUKEBOX_PLAYABLE, withShowInTooltip(get(itemStack, DataComponentTypes.JUKEBOX_PLAYABLE), "method_60749", showInTooltip));
+						if (showInTooltip)
+							itemStack.remove((ComponentType<Unit>) DataComponentTypes.class.getField("field_49638").get(null));
+						else builder.add((ComponentType<Unit>) DataComponentTypes.class.getField("field_49638").get(null), Unit.INSTANCE);
+					} else if (itemFlag == ItemFlagAdapter.HIDE_DYE) {
+						if (itemStack.contains(DataComponentTypes.DYED_COLOR))
+							builder.add(DataComponentTypes.DYED_COLOR, withShowInTooltip(get(itemStack, DataComponentTypes.DYED_COLOR), "method_58422", showInTooltip));
+					} else if (itemFlag == ItemFlagAdapter.HIDE_ARMOR_TRIM) {
+						if (itemStack.contains(DataComponentTypes.TRIM))
+							builder.add(DataComponentTypes.TRIM, withShowInTooltip(get(itemStack, DataComponentTypes.TRIM), "method_58421", showInTooltip));
+					} itemStack.applyChanges(builder.build());
+				} catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | NoSuchFieldException | IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			@SuppressWarnings("unchecked")
+			private static <T> T withShowInTooltip(T instance, String method, boolean showInTooltip) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+				return (T) instance.getClass().getMethod(method, boolean.class).invoke(instance, showInTooltip);
+			}
+			
+			private static boolean showInTooltip(Object instance, String field) throws NoSuchFieldException, IllegalAccessException, InvocationTargetException {
+				if (instance == null)
+					return true;
+				Field showInTooltip = instance.getClass().getDeclaredField(field);
+				
+				showInTooltip.setAccessible(true);
+				return (boolean) showInTooltip.get(instance);
+			}
+			
 		}
 		
 	}

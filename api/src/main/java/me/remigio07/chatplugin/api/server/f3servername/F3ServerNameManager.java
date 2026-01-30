@@ -39,11 +39,6 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
  */
 @GameFeature(
 		name = "F3 server name",
-		availableOnBukkit = true,
-		availableOnSponge = false,
-		spigotRequired = false,
-		paperRequired = false,
-		minimumBukkitVersion = Version.V1_7_2,
 		minimumSpongeVersion = Version.UNSUPPORTED
 		)
 public abstract class F3ServerNameManager implements ChatPluginManager, Runnable {

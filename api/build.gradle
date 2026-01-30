@@ -1,5 +1,5 @@
 plugins {
-	id 'io.github.crimix.replace-placeholders' version '3.0'
+	alias(libs.plugins.replacePlaceholders)
 }
 
 java {
@@ -8,18 +8,20 @@ java {
 }
 
 javadoc {
-	title = 'ChatPlugin ' + rootProject.version + ' API'
+	title = "ChatPlugin ${rootProject.version} API"
+	def fabricURL = 'https://maven.fabricmc.net/docs/'
+	
 	options.docTitle title
 	options.windowTitle title
 	options.header title
 	options.encoding 'UTF-8'
 	options.charSet 'UTF-8'
 	options.addStringOption 'Xdoclint:all,-missing', '-public'
+	options.links "${fabricURL}yarn-${libs.yarn.get().version}", "${fabricURL}fabric-api-${libs.fabric.api.get().version}", "${fabricURL}fabric-loader-${libs.fabric.loader.get().version}"
 }
 
 replaceSourcePlaceholders {
 	version = rootProject.version
-	
 	enabled true
 	filesToExpand 'me/remigio07/chatplugin/api/ChatPlugin.java'
 	extraProperties 'version'
@@ -40,10 +42,12 @@ if (project.hasProperty('sonatypeUsername') && project.hasProperty('sonatypePass
 					name = 'ChatPlugin'
 					description = 'A feature-rich and modular chat ecosystem, lightweight and efficient by design.'
 					url = 'https://remigio07.me/chatplugin'
+					inceptionYear = '2023'
 					licenses {
 						license {
-							name = 'AGPL-3.0'
+							name = 'AGPL-3.0-or-later'
 							url = 'https://www.gnu.org/licenses/agpl-3.0.en.html'
+							distribution = 'repo'
 						}
 					}
 					developers {
@@ -52,29 +56,37 @@ if (project.hasProperty('sonatypeUsername') && project.hasProperty('sonatypePass
 							name = 'Remigio07'
 							email = 'remigio07@outlook.it'
 							url = 'https://remigio07.me'
-							timezone = 'UTC+01:00 (CET)/UTC+02:00 (CEST)'
-							roles = ['Lead Developer']
+							roles = ['Lead developer', 'Support team']
+							timezone = 'Europe/Rome'
 						}
 					}
 					contributors {
 						contributor {
 							name = 'Keresael'
-							timezone = 'UTC+01:00 (CET)/UTC+02:00 (CEST)'
-							roles = ['Community Manager']
+							roles = ['Community manager', 'Support team']
+							timezone = 'Europe/Rome'
 						}
+						contributor {
+							name = 'Noah Pombas'
+							email = 'info@noahpombas.ch'
+							url = 'https://noahpombas.ch'
+							roles = ['Support team']
+							timezone = 'Europe/Zurich'
+						}
+					}
+					issueManagement {
+						system = 'GitHub'
+						url = 'https://github.com/ChatPlugin/ChatPlugin/issues'
 					}
 					scm {
 						connection = 'scm:git:https://github.com/ChatPlugin/ChatPlugin.git'
 						developerConnection = 'scm:git:git@github.com:ChatPlugin/ChatPlugin.git'
 						url = 'https://github.com/ChatPlugin/ChatPlugin'
 					}
-					issueManagement {
-						system = 'GitHub'
-						url = 'https://github.com/ChatPlugin/ChatPlugin/issues'
-					}
 				}
 			}
 		}
+		
 		repositories {
 			maven {
 				name = 'Central'
@@ -88,7 +100,5 @@ if (project.hasProperty('sonatypeUsername') && project.hasProperty('sonatypePass
 		}
 	}
 	
-	signing {
-		sign publishing.publications.mavenJava
-	}
+	signing.sign publishing.publications.mavenJava
 }

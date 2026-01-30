@@ -22,7 +22,9 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationManager;
@@ -30,25 +32,47 @@ import me.remigio07.chatplugin.api.common.util.Library;
 import me.remigio07.chatplugin.api.common.util.Library.Relocation;
 import me.remigio07.chatplugin.api.common.util.MemoryUtils;
 import me.remigio07.chatplugin.api.common.util.VersionChange;
+import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.bootstrap.IsolatedClassLoader;
 import me.remigio07.chatplugin.bootstrap.JARLibraryLoader;
 
 public class LibrariesUtils {
 	
-	private static IsolatedClassLoader isolatedClassLoader = IsolatedClassLoader.getInstance();
 	private static final char[] HEX_CODES = "0123456789ABCDEF".toCharArray();
+	private static final Set<Library> ISOLATED_LIBRARIES = EnumSet.of(Library.ASM, Library.ASM_COMMONS, Library.JAR_RELOCATOR, Library.H2_DATABASE_ENGINE, Library.SQLITE_JDBC); // what about MySQL?
+	private static IsolatedClassLoader isolatedClassLoader = IsolatedClassLoader.getInstance();
 	
 	public static boolean isLoaded(Library library) {
 		try {
-			Class.forName(library.getClazz(), false, library.getRelocation() == null ? isolatedClassLoader : JARLibraryLoader.getInstance());
+			boolean relocation = library.getRelocation() != null;
+			Class.forName((relocation ? Relocation.PREFIX : "") + library.getClazz(), false, relocation ? JARLibraryLoader.getInstance() : isolatedClassLoader);
 			return true;
 		} catch (ClassNotFoundException cnfe) {
 			return false;
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
+	public static void loadYAMLForFabric() throws ChatPluginManagerException {
+		Library snakeyaml = Library.SNAKEYAML;
+		
+		if (!isLoaded(snakeyaml)) {
+			try {
+				Path path = getPath(snakeyaml);
+				
+				if (!Files.exists(path))
+					download(snakeyaml);
+				JARLibraryLoader.getInstance().load(path);
+			} catch (Throwable t) {
+				throw new ChatPluginManagerException("libraries utils", new LibraryException(t, snakeyaml));
+			}
+		}
+	}
+	
 	public static void load(Library library) throws LibraryException {
+		if (library == Library.SNAKEYAML)
+			throw new UnsupportedOperationException("Use loadYAMLForFabric() instead");
 		if (!isLoaded(library)) {
 			try {
 				Path path = getPath(library);
@@ -58,7 +82,7 @@ public class LibrariesUtils {
 						downloadFreshCopy("Updating {0} library (new plugin version detected)...", 0, library);
 				} else download(library);
 				
-				if (library.getRelocation() == null) // only relocation libraries and database engines
+				if (ISOLATED_LIBRARIES.contains(library))
 					isolatedClassLoader.load(path);
 				else JARLibraryLoader.getInstance().load(path);
 			} catch (Throwable t) {
@@ -67,7 +91,7 @@ public class LibrariesUtils {
 		}
 	}
 	
-	private static void downloadFreshCopy(String message, int logLevel, Library library) throws Throwable {
+	public static void downloadFreshCopy(String message, int logLevel, Library library) throws Throwable {
 		LogManager.log(message, logLevel, library.getName());
 		delete(library);
 		download(library);

@@ -27,11 +27,14 @@ import me.remigio07.chatplugin.api.common.util.annotation.ServerImplementationOn
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 
 /**
- * Annotation used to indicate that a Minecraft feature handled by a {@link ChatPluginManager} is not available under certain circumstances.
+ * Annotation used to indicate that a Minecraft feature handled by a
+ * {@link ChatPluginManager} is not available under certain circumstances.
  * 
- * <p>It should be applied to managers' class declarations and checked through {@link ChatPluginManager#checkAvailability(boolean)}.</p>
+ * <p>It should be applied to managers' class declarations and checked
+ * using {@link ChatPluginManager#checkAvailability(boolean)}.</p>
  * 
- * <p><strong>Note:</strong> the check is processed on the plugin's server implementations only (Bukkit and Sponge).</p>
+ * <p><strong>Note:</strong> the check is processed on the plugin's
+ * server implementations only (Bukkit, Sponge and Fabric).</p>
  */
 @Target(TYPE)
 @Retention(RUNTIME)
@@ -48,51 +51,67 @@ public @interface GameFeature {
 	public String name();
 	
 	/**
-	 * Checks if this feature is available on Bukkit environments.
+	 * Checks if Spigot (or a fork) is required to run this feature.
 	 * 
-	 * @return Whether this feature is available on Bukkit
-	 */
-	public boolean availableOnBukkit();
-	
-	/**
-	 * Checks if this feature is available on Sponge environments.
+	 * <p>This applies to Bukkit environments only.</p>
 	 * 
-	 * @return Whether this feature is available on Sponge
-	 */
-	public boolean availableOnSponge();
-	
-	/**
-	 * Checks if Spigot is required to run this feature.
-	 * 
-	 * <p>Applies to Bukkit environments only.</p>
+	 * <p><strong>Default:</strong> <code>false</code></p>
 	 * 
 	 * @return Whether Spigot is required to run this feature
 	 */
-	public boolean spigotRequired();
+	public boolean spigotRequired() default false;
 	
 	/**
-	 * Checks if Paper is required to run this feature.
+	 * Checks if Paper (or a fork) is required to run this feature.
 	 * 
-	 * <p>Applies to Bukkit environments only.</p>
+	 * <p>This applies to Bukkit environments only.</p>
+	 * 
+	 * <p><strong>Default:</strong> <code>false</code></p>
 	 * 
 	 * @return Whether Paper is required to run this feature
 	 */
-	public boolean paperRequired();
+	public boolean paperRequired() default false;
 	
 	/**
-	 * Gets the minimum Vanilla version required to run this feature on a Bukkit environment.
+	 * Gets the minimum Vanilla version required
+	 * to run this feature on a Bukkit environment.
+	 * 
+	 * <p>Will return {@link Version#UNSUPPORTED} if
+	 * this feature is not supported on Bukkit.</p>
+	 * 
+	 * <p><strong>Default:</strong> {@linkplain Version#V1_8 1.8}</p>
 	 * 
 	 * @return Minimum Vanilla version required to run on Bukkit
 	 */
 	@NotNull
-	public Version minimumBukkitVersion();
+	public Version minimumBukkitVersion() default Version.V1_8;
 	
 	/**
-	 * Gets the minimum Vanilla version required to run this feature on a Sponge environment.
+	 * Gets the minimum Vanilla version required
+	 * to run this feature on a Sponge environment.
+	 * 
+	 * <p>Will return {@link Version#UNSUPPORTED} if
+	 * this feature is not supported on Sponge.</p>
+	 * 
+	 * <p><strong>Default:</strong> {@linkplain Version#V1_8 1.8}</p>
 	 * 
 	 * @return Minimum Vanilla version required to run on Sponge
 	 */
 	@NotNull
-	public Version minimumSpongeVersion();
+	public Version minimumSpongeVersion() default Version.V1_8;
+	
+	/**
+	 * Gets the minimum Vanilla version required
+	 * to run this feature on a Fabric environment.
+	 * 
+	 * <p>Will return {@link Version#UNSUPPORTED} if
+	 * this feature is not supported on Fabric.</p>
+	 * 
+	 * <p><strong>Default:</strong> {@linkplain Version#V1_14 1.14}</p>
+	 * 
+	 * @return Minimum Vanilla version required to run on Fabric
+	 */
+	@NotNull
+	public Version minimumFabricVersion() default Version.V1_14;
 	
 }

@@ -38,7 +38,7 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
- * Environment-indipendent (Bukkit, Sponge, BungeeCord and
+ * Environment-indipendent (Bukkit, Sponge, Fabric, BungeeCord and
  * Velocity) chat color API with 1.16+ hex color codes support.
  * 
  * <p>This class behaves like a special {@link PseudoEnum}, even though
@@ -367,6 +367,21 @@ public class ChatColor {
 		if (Environment.isSponge())
 			return SpongeChatColor.adapt(this);
 		throw new UnsupportedOperationException("Unable to adapt chat color to a Sponge's TextElement on a " + Environment.getCurrent().getName() + " environment");
+	}
+	
+	/**
+	 * Gets the chat color adapted for Fabric environments.
+	 * 
+	 * <p>This method supports hex colors
+	 * (<code>!</code>{@link #isDefaultColor()}).</p>
+	 * 
+	 * @return Fabric-adapted chat color
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isFabric()}
+	 */
+	public net.minecraft.text.TextColor fabricValue() {
+		if (Environment.isFabric())
+			return isDefaultColor() ? net.minecraft.text.TextColor.parse(name.toLowerCase()).getOrThrow() : net.minecraft.text.TextColor.fromRgb(color.getRGB());
+		throw new UnsupportedOperationException("Unable to adapt chat color to a Fabric's TextColor on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**

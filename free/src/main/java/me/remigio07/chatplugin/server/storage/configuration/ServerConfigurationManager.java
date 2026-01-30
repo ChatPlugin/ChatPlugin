@@ -253,8 +253,8 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("ping.qualities.bad", 200);
 		config.addDefault("ping.qualities.unplayable", 201);
 		
-		config.addDefault("tps.enabled", Environment.isSponge() || VersionUtils.isSpigot());
-		config.addDefault("tps.20-tps-cap.enabled", false);
+		config.addDefault("tps.enabled", !Environment.isBukkit() || VersionUtils.isSpigot());
+		config.addDefault("tps.20-tps-cap.enabled", true);
 		config.addDefault("tps.20-tps-cap.add-wildcard", false);
 		config.addDefault("tps.update-timeout", "5s");
 		config.addDefault("tps.qualities.excellent", 19.99);
@@ -273,7 +273,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		config.addDefault("mspt.qualities.bad", 62.5);
 		config.addDefault("mspt.qualities.unplayable", 66.66);
 		
-		config.addDefault("vanish.enabled", true);
+		config.addDefault("vanish.enabled", !Environment.isFabric());
 		config.addDefault("vanish.invisibility", true);
 		
 		config.save();
@@ -757,7 +757,7 @@ public class ServerConfigurationManager extends ConfigurationManager {
 		
 		chat.addDefault("chat.enabled", true);
 		chat.addDefault("chat.event.override", true);
-		chat.addDefault("chat.event.priority", Environment.isBukkit() ? "HIGH" : "LATE");
+		chat.addDefault("chat.event.priority", Environment.isBukkit() ? "HIGH" : "LATE"); // TODO Fabric
 		chat.addDefault("chat.format", "&7«&f{prefix}{tag_name_color}{player}{suffix}&7» &f");
 		chat.addDefault("chat.recognized-tlds", Arrays.asList("com", "net", "org", "me", "io", "edu", "gov", "int", "info", "pro", "xyz", "gg", "dev", "link", "eu", "it", "de", "fr", "es", "br", "jp", "ru", "uk", "co.uk"));
 		chat.addDefault("chat.placeholder-types", Arrays.asList("PLAYER"));

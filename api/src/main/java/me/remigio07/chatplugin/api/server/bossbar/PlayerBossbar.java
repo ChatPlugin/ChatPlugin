@@ -64,7 +64,7 @@ public abstract class PlayerBossbar {
 	 * @return Bossbar's style
 	 */
 	public BossbarStyleAdapter getStyle() {
-		return BossbarStyleAdapter.SOLID;
+		return BossbarStyleAdapter.PROGRESS;
 	}
 	
 	/**

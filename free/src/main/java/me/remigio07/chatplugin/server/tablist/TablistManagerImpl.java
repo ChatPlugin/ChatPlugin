@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.server.tablist;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,6 +44,7 @@ import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.server.bukkit.BukkitReflection;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
+import net.minecraft.network.packet.s2c.play.PlayerListHeaderS2CPacket;
 
 public class TablistManagerImpl extends TablistManager {
 	
@@ -165,31 +167,56 @@ public class TablistManagerImpl extends TablistManager {
 						tablist.getHeader(language, true) == null ? null : PlaceholderManager.getInstance().translatePlaceholders(tablist.getHeader(language, true), player, placeholderTypes),
 						tablist.getFooter(language, true) == null ? null : PlaceholderManager.getInstance().translatePlaceholders(tablist.getFooter(language, true), player, placeholderTypes)
 						);
-			else player.sendPacket(getHeaderFooterPacket(
+			else player.sendPacket(getBukkitPacket(
 					tablist.getHeader(language, true) == null ? null : PlaceholderManager.getInstance().translatePlaceholders(tablist.getHeader(language, true), player, placeholderTypes),
 					tablist.getFooter(language, true) == null ? null : PlaceholderManager.getInstance().translatePlaceholders(tablist.getFooter(language, true), player, placeholderTypes),
 					player
 					));
-		else player.toAdapter().spongeValue().getTabList().setHeaderAndFooter(
-				tablist.getHeader(language, true) == null ? null : Utils.serializeSpongeText(PlaceholderManager.getInstance().translatePlaceholders(tablist.getHeader(language, true), player, placeholderTypes), false),
-				tablist.getFooter(language, true) == null ? null : Utils.serializeSpongeText(PlaceholderManager.getInstance().translatePlaceholders(tablist.getFooter(language, true), player, placeholderTypes), false)
-				);
+		else if (Environment.isSponge())
+			player.toAdapter().spongeValue().getTabList().setHeaderAndFooter(
+					tablist.getHeader(language, true) == null ? null : Utils.toSpongeComponent(PlaceholderManager.getInstance().translatePlaceholders(tablist.getHeader(language, true), player, placeholderTypes)),
+					tablist.getFooter(language, true) == null ? null : Utils.toSpongeComponent(PlaceholderManager.getInstance().translatePlaceholders(tablist.getFooter(language, true), player, placeholderTypes))
+					);
+		else if (VersionUtils.getVersion().isOlderThan(Version.V1_17))
+			player.sendPacket(getFabricPacket(
+					PlaceholderManager.getInstance().translatePlaceholders(tablist.getHeader(language, true), player, placeholderTypes),
+					PlaceholderManager.getInstance().translatePlaceholders(tablist.getFooter(language, true), player, placeholderTypes)
+					));
+		else player.sendPacket(new PlayerListHeaderS2CPacket(
+				Utils.toFabricComponent(PlaceholderManager.getInstance().translatePlaceholders(tablist.getHeader(language, true), player, placeholderTypes)),
+				Utils.toFabricComponent(PlaceholderManager.getInstance().translatePlaceholders(tablist.getFooter(language, true), player, placeholderTypes))
+				));
 	}
 	
-	private Object getHeaderFooterPacket(String header, String footer, ChatPluginServerPlayer player) {
-		if (!enabled)
-			return null;
-		Object packet = null;
-		
+	private Object getBukkitPacket(String header, String footer, ChatPluginServerPlayer player) {
 		try {
-			packet = constructor.newInstance();
+			Object packet = constructor.newInstance();
 			
-			// "a" and "b" need to be attempted before "header" and "footer"
-			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "a", "header").set(packet, BukkitReflection.getIChatBaseComponent("{\"text\":\"" + (header == null ? "" : Jsoner.escape(VersionUtils.getVersion().isAtLeast(Version.V1_13_2) ? header : player.getVersion().isAtLeast(Version.V1_13) ? header : header.replace("\n", "§r\n"))) + "\"}"));
-			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "b", "footer").set(packet, BukkitReflection.getIChatBaseComponent("{\"text\":\"" + (footer == null ? "" : Jsoner.escape(VersionUtils.getVersion().isAtLeast(Version.V1_13_2) ? footer : player.getVersion().isAtLeast(Version.V1_13) ? footer : footer.replace("\n", "§r\n"))) + "\"}"));
+			// "a" and "b" need to be attempted before "header" and "footer" - ...but why the redundant version check?
+			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "a", "header").set(packet, BukkitReflection.toIChatBaseComponent("{\"text\":\"" + (header == null ? "" : Jsoner.escape(VersionUtils.getVersion().isAtLeast(Version.V1_13_2) ? header : player.getVersion().isAtLeast(Version.V1_13) ? header : header.replace("\n", "§r\n"))) + "\"}"));
+			BukkitReflection.getField("PacketPlayOutPlayerListHeaderFooter", "b", "footer").set(packet, BukkitReflection.toIChatBaseComponent("{\"text\":\"" + (footer == null ? "" : Jsoner.escape(VersionUtils.getVersion().isAtLeast(Version.V1_13_2) ? footer : player.getVersion().isAtLeast(Version.V1_13) ? footer : footer.replace("\n", "§r\n"))) + "\"}"));
+			return packet;
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
 			e.printStackTrace();
-		} return packet;
+			return null;
+		}
+	}
+	
+	private Object getFabricPacket(String header, String footer) {
+		try {
+			PlayerListHeaderS2CPacket packet = PlayerListHeaderS2CPacket.class.getConstructor().newInstance();
+			Field headerField = PlayerListHeaderS2CPacket.class.getDeclaredField("field_12683");
+			Field footerField = PlayerListHeaderS2CPacket.class.getDeclaredField("field_12684");
+			
+			headerField.setAccessible(true);
+			footerField.setAccessible(true);
+			headerField.set(packet, Utils.toFabricComponent(header));
+			footerField.set(packet, Utils.toFabricComponent(footer));
+			return packet;
+		} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | NoSuchFieldException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 }

@@ -260,7 +260,7 @@ public abstract class LogManager implements ChatPluginManager {
 		/**
 		 * Represents the Java integrated logger ({@link java.util.logging.Logger}).
 		 * 
-		 * <p>This is used by the Bukkit and BungeeCord implementations of ChatPlugin.</p>
+		 * <p>This is used by the Bukkit, Fabric and BungeeCord implementations of ChatPlugin.</p>
 		 */
 		JAVA,
 		

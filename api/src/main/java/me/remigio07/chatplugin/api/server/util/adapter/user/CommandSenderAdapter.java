@@ -15,30 +15,38 @@
 
 package me.remigio07.chatplugin.api.server.util.adapter.user;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.StringJoiner;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 
+import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.bootstrap.Environment;
+import me.remigio07.chatplugin.bootstrap.FabricBootstrapper;
+import me.remigio07.chatplugin.bootstrap.JARLibraryLoader;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 
 /**
- * Environment indipendent (Bukkit and Sponge) command sender adapter.
+ * Environment-indipendent (Bukkit, Sponge and Fabric) command sender adapter.
  */
 public class CommandSenderAdapter {
 	
 	/**
 	 * Represents the console.
 	 */
-	public static final CommandSenderAdapter CONSOLE = new CommandSenderAdapter(Environment.isBukkit() ? Bukkit.getConsoleSender() : Sponge.getServer().getConsole());
+	public static final CommandSenderAdapter CONSOLE = new CommandSenderAdapter(Environment.isBukkit() ? Bukkit.getConsoleSender() : Environment.isSponge() ? Sponge.getServer().getConsole() : FabricBootstrapper.getInstance().getServer().getCommandSource());
 	private Object commandSender;
 	
 	/**
@@ -46,6 +54,7 @@ public class CommandSenderAdapter {
 	 * 	<ul>
 	 * 		<li>{@link org.bukkit.command.CommandSender} for Bukkit environments</li>
 	 * 		<li>{@link org.spongepowered.api.command.CommandSource} for Sponge environments</li>
+	 * 		<li>{@link net.minecraft.server.command.ServerCommandSource} for Fabric environments</li>
 	 * 	</ul>
 	 * 
 	 * @param commandSender Command sender object
@@ -94,7 +103,7 @@ public class CommandSenderAdapter {
 	 * @return Bukkit-adapted command sender
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBukkit()}
 	 */
-	public org.bukkit.command.CommandSender bukkitValue() {
+	public CommandSender bukkitValue() {
 		if (Environment.isBukkit())
 			return (CommandSender) commandSender;
 		throw new UnsupportedOperationException("Unable to adapt command sender to a Bukkit's CommandSender on a " + Environment.getCurrent().getName() + " environment");
@@ -106,10 +115,22 @@ public class CommandSenderAdapter {
 	 * @return Sponge-adapted command sender
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isSponge()}
 	 */
-	public org.spongepowered.api.command.CommandSource spongeValue() {
+	public CommandSource spongeValue() {
 		if (Environment.isSponge())
 			return (CommandSource) commandSender;
 		throw new UnsupportedOperationException("Unable to adapt command sender to a Sponge's CommandSource on a " + Environment.getCurrent().getName() + " environment");
+	}
+	
+	/**
+	 * Gets the command sender adapted for Fabric environments.
+	 * 
+	 * @return Fabric-adapted command sender
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isFabric()}
+	 */
+	public ServerCommandSource fabricValue() {
+		if (Environment.isFabric())
+			return (ServerCommandSource) commandSender;
+		throw new UnsupportedOperationException("Unable to adapt command sender to a Fabric's ServerCommandSource on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -118,7 +139,7 @@ public class CommandSenderAdapter {
 	 * @return Whether this is the console
 	 */
 	public boolean isConsole() {
-		return CONSOLE.equals(this) || getName().equals("@");
+		return getName().equals("@") || (Environment.isFabric() ? !(fabricValue().getEntity() instanceof ServerPlayerEntity) : CONSOLE.equals(this));
 	}
 	
 	/**
@@ -145,7 +166,7 @@ public class CommandSenderAdapter {
 	 * @return Command sender's name
 	 */
 	public String getName() {
-		return Environment.isBukkit() ? bukkitValue().getName() : spongeValue().getName();
+		return Environment.isBukkit() ? bukkitValue().getName() : Environment.isSponge() ? spongeValue().getName() : fabricValue().getName();
 	}
 	
 	/**
@@ -157,7 +178,10 @@ public class CommandSenderAdapter {
 	 */
 	@Nullable(why = "Sender may not be a player")
 	public UUID getUUID() {
-		return isConsole() ? null : Environment.isBukkit() ? ((org.bukkit.entity.Player) bukkitValue()).getUniqueId() : ((org.spongepowered.api.entity.living.player.Player) spongeValue()).getUniqueId();
+		return isConsole() ? null
+				: Environment.isBukkit() ? ((Player) bukkitValue()).getUniqueId()
+				: Environment.isSponge() ? ((org.spongepowered.api.entity.living.player.Player) spongeValue()).getUniqueId()
+				: fabricValue().getEntity().getUuid();
 	}
 	
 	/**
@@ -167,7 +191,7 @@ public class CommandSenderAdapter {
 	 * @return Whether this command sender has the permission
 	 */
 	public boolean hasPermission(@NotNull String permission) {
-		return Environment.isBukkit() ? bukkitValue().hasPermission(permission) : spongeValue().hasPermission(permission);
+		return Environment.isBukkit() ? bukkitValue().hasPermission(permission) : Environment.isSponge() ? spongeValue().hasPermission(permission) : isConsole() || new PlayerAdapter(fabricValue().getEntity()).hasPermission(permission);
 	}
 	
 	/**
@@ -178,7 +202,13 @@ public class CommandSenderAdapter {
 	public void sendMessage(@NotNull String message) {
 		if (Environment.isBukkit())
 			bukkitValue().sendMessage(message);
-		else spongeValue().sendMessage(Utils.serializeSpongeText(message, false));
+		else if (Environment.isSponge())
+			spongeValue().sendMessage(Utils.toSpongeComponent(message));
+		else try {
+			Class.forName("me.remigio07.chatplugin.server.fabric.ChatPluginFabric", false, JARLibraryLoader.getInstance()).getMethod("sendMessage", ServerCommandSource.class, Text.class).invoke(null, fabricValue(), Utils.toFabricComponent(message));
+		} catch (ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**

@@ -15,12 +15,14 @@
 
 package me.remigio07.chatplugin.api.server.util.adapter.scoreboard;
 
+import org.bukkit.scoreboard.Team;
+
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
- * Environment indipendent (Bukkit and Sponge) team adapter.
+ * Environment-indipendent (Bukkit, Sponge and Fabric) team adapter.
  */
 public class TeamAdapter {
 	
@@ -31,6 +33,7 @@ public class TeamAdapter {
 	 * 	<ul>
 	 * 		<li>{@link org.bukkit.scoreboard.Team} for Bukkit environments</li>
 	 * 		<li>{@link org.spongepowered.api.scoreboard.Team} for Sponge environments</li>
+	 * 		<li>{@link net.minecraft.scoreboard.Team} for Fabric environments</li>
 	 * 	</ul>
 	 * 
 	 * @param team Team object
@@ -45,9 +48,9 @@ public class TeamAdapter {
 	 * @return Bukkit-adapted team
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBukkit()}
 	 */
-	public org.bukkit.scoreboard.Team bukkitValue() {
+	public Team bukkitValue() {
 		if (Environment.isBukkit())
-			return (org.bukkit.scoreboard.Team) team;
+			return (Team) team;
 		throw new UnsupportedOperationException("Unable to adapt team to a Bukkit's Team on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
@@ -64,13 +67,25 @@ public class TeamAdapter {
 	}
 	
 	/**
+	 * Gets the team adapted for Fabric environments.
+	 * 
+	 * @return Fabric-adapted team
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isFabric()}
+	 */
+	public net.minecraft.scoreboard.Team fabricValue() {
+		if (Environment.isFabric())
+			return (net.minecraft.scoreboard.Team) team;
+		throw new UnsupportedOperationException("Unable to adapt team to a Fabric's Team on a " + Environment.getCurrent().getName() + " environment");
+	}
+	
+	/**
 	 * Gets this team's name.
 	 * 
 	 * @return Team's name
 	 */
 	@NotNull
 	public String getName() {
-		return Environment.isBukkit() ? bukkitValue().getName() : spongeValue().getName();
+		return Environment.isBukkit() ? bukkitValue().getName() : Environment.isSponge() ? spongeValue().getName() : fabricValue().getName();
 	}
 	
 	/**
@@ -80,7 +95,7 @@ public class TeamAdapter {
 	 */
 	@NotNull
 	public String getPrefix() {
-		return Environment.isBukkit() ? bukkitValue().getPrefix() : spongeValue().getPrefix().toPlain();
+		return Environment.isBukkit() ? bukkitValue().getPrefix() : Environment.isSponge() ? Utils.toLegacyText(spongeValue().getPrefix()) : Utils.toLegacyText(fabricValue().getPrefix());
 	}
 	
 	/**
@@ -90,7 +105,7 @@ public class TeamAdapter {
 	 */
 	@NotNull
 	public String getSuffix() {
-		return Environment.isBukkit() ? bukkitValue().getSuffix() : spongeValue().getSuffix().toPlain();
+		return Environment.isBukkit() ? bukkitValue().getSuffix() : Environment.isSponge() ? Utils.toLegacyText(spongeValue().getSuffix()) : Utils.toLegacyText(fabricValue().getSuffix());
 	}
 	
 	/**
@@ -101,7 +116,9 @@ public class TeamAdapter {
 	public void setPrefix(@NotNull String prefix) {
 		if (Environment.isBukkit())
 			bukkitValue().setPrefix(prefix);
-		else spongeValue().setPrefix(Utils.serializeSpongeText(prefix, false));
+		else if (Environment.isSponge())
+			spongeValue().setPrefix(Utils.toSpongeComponent(prefix));
+		else fabricValue().setPrefix(Utils.toFabricComponent(prefix));
 	}
 	
 	/**
@@ -112,7 +129,9 @@ public class TeamAdapter {
 	public void setSuffix(@NotNull String suffix) {
 		if (Environment.isBukkit())
 			bukkitValue().setSuffix(suffix);
-		else spongeValue().setSuffix(Utils.serializeSpongeText(suffix, false));
+		else if (Environment.isSponge())
+			spongeValue().setSuffix(Utils.toSpongeComponent(suffix));
+		else fabricValue().setSuffix(Utils.toFabricComponent(suffix));
 	}
 	
 }

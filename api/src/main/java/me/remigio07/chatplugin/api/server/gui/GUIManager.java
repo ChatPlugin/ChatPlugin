@@ -41,15 +41,7 @@ import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
  * 
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/GUIs">ChatPlugin wiki/Modules/GUIs</a>
  */
-@GameFeature(
-		name = "GUI",
-		availableOnBukkit = true,
-		availableOnSponge = true,
-		spigotRequired = false,
-		paperRequired = false,
-		minimumBukkitVersion = Version.V1_8,
-		minimumSpongeVersion = Version.V1_12
-		)
+@GameFeature(name = "GUI", minimumSpongeVersion = Version.V1_12)
 public abstract class GUIManager implements ChatPluginManager {
 	
 	/**

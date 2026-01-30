@@ -33,9 +33,12 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07.chatplugin.bootstrap.Environment;
+import me.remigio07.chatplugin.bootstrap.FabricBootstrapper;
+import net.minecraft.entity.boss.CommandBossBar;
+import net.minecraft.util.Identifier;
 
 /**
- * Environment indipendent (Bukkit and Sponge) bossbar adapter.
+ * Environment-indipendent (Bukkit, Sponge and Fabric) bossbar adapter.
  */
 public class BossbarAdapter {
 	
@@ -47,6 +50,7 @@ public class BossbarAdapter {
 	 * 	<ul>
 	 * 		<li>{@link org.bukkit.boss.BossBar} for Bukkit environments</li>
 	 * 		<li>{@link org.spongepowered.api.boss.ServerBossBar} for Sponge environments</li>
+	 * 		<li>{@link net.minecraft.entity.boss.CommandBossBar} for Fabric environments</li>
 	 * 	</ul>
 	 * 
 	 * @param bossbar Bossbar object
@@ -55,19 +59,21 @@ public class BossbarAdapter {
 		this.bossbar = bossbar;
 	}
 	
-	@Override
-	public String toString() {
-		return "BossbarAdapter{id=" + (id == null ? id : "\"" + id + "\"") + "}";
-	}
-	
 	/**
-	 * Constructs a bossbar adapter with given ID, color and style.
+	 * Constructs a bossbar adapter with given ID.
 	 * 
 	 * @param id Bossbar's ID
 	 */
 	public BossbarAdapter(String id) {
 		this.id = id;
-		bossbar = Environment.isBukkit() ? BukkitBossbar.get(id) : SpongeBossbar.get();
+		bossbar = Environment.isBukkit() ? BukkitBossbar.get(id)
+				: Environment.isSponge() ? SpongeBossbar.get()
+				: FabricBootstrapper.getInstance().getServer().getBossBarManager().add(Identifier.tryParse("chatplugin:" + id.toLowerCase()), Utils.toFabricComponent(""));
+	}
+	
+	@Override
+	public String toString() {
+		return "BossbarAdapter{id=" + (id == null ? id : "\"" + id + "\"") + "}";
 	}
 	
 	/**
@@ -95,6 +101,18 @@ public class BossbarAdapter {
 	}
 	
 	/**
+	 * Gets the bossbar adapted for Fabric environments.
+	 * 
+	 * @return Fabric-adapted bossbar
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isFabric()}
+	 */
+	public CommandBossBar fabricValue() {
+		if (Environment.isFabric())
+			return (CommandBossBar) bossbar;
+		throw new UnsupportedOperationException("Unable to adapt bossbar to a Fabric's CommandBossBar on a " + Environment.getCurrent().getName() + " environment");
+	}
+	
+	/**
 	 * Gets this bossbar's ID.
 	 * 
 	 * <p>Will return <code>null</code> if this adapter was
@@ -114,7 +132,7 @@ public class BossbarAdapter {
 	 */
 	@NotNull
 	public String getTitle() {
-		return Environment.isBukkit() ? bukkitValue().getTitle() : spongeValue().getName().toPlain();
+		return Environment.isBukkit() ? bukkitValue().getTitle() : Environment.isSponge() ? Utils.toLegacyText(spongeValue().getName()) : Utils.toLegacyText(fabricValue().getName());
 	}
 	
 	/**
@@ -125,7 +143,9 @@ public class BossbarAdapter {
 	public void setTitle(@NotNull String title) {
 		if (Environment.isBukkit())
 			bukkitValue().setTitle(title);
-		else spongeValue().setName(Utils.serializeSpongeText(title, false));
+		else if (Environment.isSponge())
+			spongeValue().setName(Utils.toSpongeComponent(title));
+		else fabricValue().setName(Utils.toFabricComponent(title));
 	}
 	
 	/**
@@ -134,7 +154,7 @@ public class BossbarAdapter {
 	 * @return Bossbar's progress (0.0 - 1.0)
 	 */
 	public float getProgress() {
-		return (float) (Environment.isBukkit() ? bukkitValue().getProgress() : spongeValue().getPercent());
+		return Environment.isBukkit() ? (float) bukkitValue().getProgress() : Environment.isSponge() ? spongeValue().getPercent() : fabricValue().getPercent();
 	}
 	
 	/**
@@ -147,7 +167,9 @@ public class BossbarAdapter {
 		
 		if (Environment.isBukkit())
 			bukkitValue().setProgress(progress);
-		else spongeValue().setPercent(progress);
+		else if (Environment.isSponge())
+			spongeValue().setPercent(progress);
+		else fabricValue().setPercent(progress);
 	}
 	
 	/**
@@ -156,7 +178,7 @@ public class BossbarAdapter {
 	 * @return Whether this bossbar is visible
 	 */
 	public boolean isVisible() {
-		return Environment.isBukkit() ? bukkitValue().isVisible() : spongeValue().isVisible();
+		return Environment.isBukkit() ? bukkitValue().isVisible() : Environment.isSponge() ? spongeValue().isVisible() : fabricValue().isVisible();
 	}
 	
 	/**
@@ -167,49 +189,63 @@ public class BossbarAdapter {
 	public void setVisible(boolean visible) {
 		if (Environment.isBukkit())
 			bukkitValue().setVisible(visible);
-		else spongeValue().setVisible(visible);
+		else if (Environment.isSponge())
+			spongeValue().setVisible(visible);
+		else fabricValue().setVisible(visible);
 	}
 	
 	/**
 	 * Gets this bossbar's color.
 	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
+	 * 
 	 * @return Bossbar's color
 	 */
 	@NotNull
 	public BossbarColorAdapter getColor() {
-		return BossbarColorAdapter.value(Environment.isBukkit() ? bukkitValue().getColor().name() : spongeValue().getColor().getId());
+		return BossbarColorAdapter.value(Environment.isBukkit() ? bukkitValue().getColor().name() : Environment.isSponge() ? spongeValue().getColor().getId() : fabricValue().getColor().name());
 	}
 	
 	/**
 	 * Sets this bossbar's color.
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
 	 * 
 	 * @param color Bossbar's color
 	 */
 	public void setColor(@NotNull BossbarColorAdapter color) {
 		if (Environment.isBukkit())
 			bukkitValue().setColor(color.bukkitValue());
-		else spongeValue().setColor(color.spongeValue());
+		else if (Environment.isSponge())
+			spongeValue().setColor(color.spongeValue());
+		else fabricValue().setColor(color.fabricValue());
 	}
 	
 	/**
 	 * Gets this bossbar's style.
 	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
+	 * 
 	 * @return Bossbar's style
 	 */
 	@NotNull
 	public BossbarStyleAdapter getStyle() {
-		return BossbarStyleAdapter.value(Environment.isBukkit() ? bukkitValue().getStyle().name() : spongeValue().getOverlay().getId());
+		return BossbarStyleAdapter.value(Environment.isBukkit() ? bukkitValue().getStyle().name() : Environment.isSponge() ? spongeValue().getOverlay().getId() : fabricValue().getStyle().name());
 	}
 	
 	/**
 	 * Sets this bossbar's style.
+	 * 
+	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
 	 * 
 	 * @param style Bossbar's style
 	 */
 	public void setStyle(@NotNull BossbarStyleAdapter style) {
 		if (Environment.isBukkit())
 			bukkitValue().setStyle(style.bukkitValue());
-		else spongeValue().setOverlay(style.spongeValue());
+		else if (Environment.isSponge())
+			spongeValue().setOverlay(style.spongeValue());
+		else fabricValue().setStyle(style.fabricValue());
 	}
 	
 	/**
@@ -220,7 +256,9 @@ public class BossbarAdapter {
 	public void addPlayer(ChatPluginServerPlayer player) {
 		if (Environment.isBukkit())
 			bukkitValue().addPlayer(player.toAdapter().bukkitValue());
-		else spongeValue().addPlayer(player.toAdapter().spongeValue());
+		else if (Environment.isSponge())
+			spongeValue().addPlayer(player.toAdapter().spongeValue());
+		else fabricValue().addPlayer(player.toAdapter().fabricValue());
 	}
 	
 	/**
@@ -231,7 +269,9 @@ public class BossbarAdapter {
 	public void removePlayer(ChatPluginServerPlayer player) {
 		if (Environment.isBukkit())
 			bukkitValue().removePlayer(player.toAdapter().bukkitValue());
-		else spongeValue().removePlayer(player.toAdapter().spongeValue());
+		else if (Environment.isSponge())
+			spongeValue().removePlayer(player.toAdapter().spongeValue());
+		else fabricValue().removePlayer(player.toAdapter().fabricValue());
 	}
 	
 	/**
@@ -243,6 +283,9 @@ public class BossbarAdapter {
 			
 			if (VersionUtils.getVersion().isAtLeast(Version.V1_13_2))
 				BukkitBossbar.remove(id);
+		} else if (Environment.isFabric()) {
+			fabricValue().getPlayers().forEach(player -> fabricValue().removePlayer(player)); // is this required?
+			FabricBootstrapper.getInstance().getServer().getBossBarManager().remove(fabricValue());
 		} else spongeValue().getPlayers().forEach(player -> spongeValue().removePlayer(player));
 	}
 	

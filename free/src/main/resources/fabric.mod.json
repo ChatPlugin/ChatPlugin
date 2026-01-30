@@ -1,0 +1,65 @@
+{
+	"schemaVersion": 1,
+	"id": "chatplugin",
+	"version": "${version}",
+	"name": "ChatPlugin",
+	"description": "A feature-rich and modular chat ecosystem, lightweight and efficient by design.",
+	"contact": {
+		"homepage": "https://remigio07.me/chatplugin",
+		"issues": "https://github.com/ChatPlugin/ChatPlugin/issues",
+		"sources": "https://github.com/ChatPlugin/ChatPlugin",
+		"discord": "https://discord.gg/eSnAPhvMTG"
+	},
+	"authors": [
+		{
+			"name": "Remigio07",
+			"contact": {
+				"email": "remigio07@outlook.it",
+				"homepage": "https://remigio07.me",
+				"github": "https://github.com/Remigio07",
+				"discord": "remigio07"
+			}
+		}
+	],
+	"contributors": [
+		{
+			"name": "Keresael",
+			"contact": {
+				"github": "https://github.com/Keresael",
+				"discord": "keresael"
+			}
+		},
+		{
+			"name": "Noah Pombas",
+			"contact": {
+				"email": "info@noahpombas.ch",
+				"homepage": "https://noahpombas.ch",
+				"github": "https://github.com/noahpombas-dev",
+				"discord": "noahpombas"
+			}
+		}
+	],
+	"license": "AGPL-3.0-or-later",
+	"icon": "logo.png",
+	"environment": "server",
+	"entrypoints": {
+		"server": ["me.remigio07.chatplugin.bootstrap.FabricBootstrapper"]
+	},
+	"mixins": [
+		"chatplugin.mixins.common.json",
+		"chatplugin.mixins.latest.json",
+		"chatplugin.mixins.1.20.2.json",
+		"chatplugin.mixins.1.19.4.json",
+		"chatplugin.mixins.1.19.1.json",
+		"chatplugin.mixins.1.19.json",
+		"chatplugin.mixins.1.17.json",
+		"chatplugin.mixins.1.16.5.json",
+		"chatplugin.mixins.1.16.json",
+		"chatplugin.mixins.1.14.json"
+	],
+	"depends": {
+		"java": ">=8",
+		"minecraft": ">=1.14",
+		"fabricloader": ">=${fabricLoaderVersion}"
+	}
+}

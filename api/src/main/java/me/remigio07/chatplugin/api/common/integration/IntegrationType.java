@@ -44,7 +44,7 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 public class IntegrationType<T extends ChatPluginIntegration> extends PseudoEnum<IntegrationType<T>> {
 	
 	private static final Set<Environment> BUKKIT = EnumSet.of(Environment.BUKKIT);
-	private static final Set<Environment> NO_SPONGE = EnumSet.of(Environment.BUKKIT, Environment.BUNGEECORD, Environment.VELOCITY);
+	private static final Set<Environment> NO_SPONGE = EnumSet.of(Environment.BUKKIT, Environment.FABRIC, Environment.BUNGEECORD, Environment.VELOCITY);
 	private static final Set<Environment> ALL = EnumSet.allOf(Environment.class);
 	
 	/**

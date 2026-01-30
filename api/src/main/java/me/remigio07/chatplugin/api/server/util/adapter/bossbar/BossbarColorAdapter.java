@@ -31,9 +31,10 @@ import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.bootstrap.Environment;
+import net.minecraft.entity.boss.BossBar.Color;
 
 /**
- * Environment indipendent (Bukkit and Sponge) bossbar color adapter.
+ * Environment-indipendent (Bukkit, Sponge and Fabric) bossbar color adapter.
  * 
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Bossbars#colors">ChatPlugin wiki/Modules/Bossbars/Colors</a>
  */
@@ -94,7 +95,7 @@ public class BossbarColorAdapter extends PseudoEnum<BossbarColorAdapter> {
 	private static int ordinal = 0;
 	private static Map<String, Object> spongeColors;
 	
-	static {
+	static { // TODO improve w/ reflection
 		if (Environment.isSponge())
 			spongeColors = (Map<String, Object>) Stream.of(new Object[][] {
 				{ "BLUE", BossBarColors.BLUE },
@@ -123,7 +124,7 @@ public class BossbarColorAdapter extends PseudoEnum<BossbarColorAdapter> {
 	 */
 	public BarColor bukkitValue() {
 		if (Environment.isBukkit())
-			return this == RANDOM ? BarColor.values()[VersionUtils.getVersion().isAtLeast(Version.V1_9) ? ThreadLocalRandom.current().nextInt(BarColor.values().length) : 2] : BarColor.valueOf(name()); // .values()[2] = PINK
+			return this == RANDOM ? BarColor.values()[VersionUtils.getVersion().isAtLeast(Version.V1_9) ? ThreadLocalRandom.current().nextInt(BarColor.values().length) : 2] : BarColor.valueOf(name());
 		throw new UnsupportedOperationException("Unable to adapt bossbar color to a Bukkit's BarColor on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
@@ -139,8 +140,20 @@ public class BossbarColorAdapter extends PseudoEnum<BossbarColorAdapter> {
 	 */
 	public BossBarColor spongeValue() {
 		if (Environment.isSponge())
-			return (BossBarColor) (this == RANDOM ? new ArrayList<>(spongeColors.values()).get(VersionUtils.getVersion().isAtLeast(Version.V1_9) ? ThreadLocalRandom.current().nextInt(VALUES.length - 1) : 2) : spongeColors.get(name())); // .values().get(2) = PINK
+			return (BossBarColor) (this == RANDOM ? new ArrayList<>(spongeColors.values()).get(VersionUtils.getVersion().isAtLeast(Version.V1_9) ? ThreadLocalRandom.current().nextInt(VALUES.length - 1) : 2) : spongeColors.get(name()));
 		throw new UnsupportedOperationException("Unable to adapt bossbar color to a Sponge's BossBarColor on a " + Environment.getCurrent().getName() + " environment");
+	}
+	
+	/**
+	 * Gets the bossbar color adapted for Fabric environments.
+	 * 
+	 * @return Fabric-adapted bossbar color
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isFabric()}
+	 */
+	public Color fabricValue() {
+		if (Environment.isFabric())
+			return this == RANDOM ? Color.values()[ThreadLocalRandom.current().nextInt(Color.values().length)] : Color.valueOf(name());
+		throw new UnsupportedOperationException("Unable to adapt bossbar color to a Fabric's BossBar.Color on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -150,7 +163,7 @@ public class BossbarColorAdapter extends PseudoEnum<BossbarColorAdapter> {
 	 * @return Whether this bossbar color is supported
 	 */
 	public boolean isSupported() {
-		return this == PINK || this == RANDOM || VersionUtils.getVersion().isAtLeast(Version.V1_9);
+		return Environment.isFabric() || this == PINK || this == RANDOM || VersionUtils.getVersion().isAtLeast(Version.V1_9);
 	}
 	
 	/**
@@ -180,7 +193,7 @@ public class BossbarColorAdapter extends PseudoEnum<BossbarColorAdapter> {
 	 * 	<ul>
 	 * 		<li>case insensitive</li>
 	 * 		<li>returns <code>null</code> instead of throwing {@link IllegalArgumentException}</li>
-	 * 		<li>also recognizes Bukkit- and Sponge-compatible IDs</li>
+	 * 		<li>also recognizes Bukkit-, Sponge- and Fabric-compatible IDs</li>
 	 * 	</ul>
 	 * 
 	 * <p>Will return <code>null</code> if the specified name is invalid.</p>

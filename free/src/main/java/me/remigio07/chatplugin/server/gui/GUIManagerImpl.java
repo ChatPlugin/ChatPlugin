@@ -60,6 +60,7 @@ import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.bukkit.BukkitReflection;
+import net.minecraft.screen.GenericContainerScreenHandler;
 
 public class GUIManagerImpl extends GUIManager {
 	
@@ -192,16 +193,25 @@ public class GUIManagerImpl extends GUIManager {
 	public GUI getOpenGUI(ChatPluginServerPlayer player) {
 		Object spongeTitle = null, inventory = Environment.isBukkit()
 				? BukkitReflection.invokeMethod("InventoryView", "getTopInventory", BukkitReflection.invokeMethod("HumanEntity", "getOpenInventory", player.toAdapter().bukkitValue()))
-				: player.toAdapter().spongeValue().getOpenInventory().orElse(null);
+				: Environment.isSponge()
+				? player.toAdapter().spongeValue().getOpenInventory().orElse(null)
+				: player.toAdapter().fabricValue().currentScreenHandler;
 		
 		if (Environment.isSponge()) {
 			if ((spongeTitle = ((Inventory) inventory).getInventoryProperty(InventoryTitle.class).orElse(null)) == null)
 				return null;
 			spongeTitle = ((InventoryTitle) spongeTitle).getValue().toPlain();
-		} if (inventory != null)
+		} else if (Environment.isFabric() && !(inventory instanceof GenericContainerScreenHandler))
+			return null;
+		if (inventory != null)
 			for (GUI gui : guis)
 				for (InventoryAdapter page : gui instanceof SinglePageGUI ? ((SinglePageGUI) gui).getInventories().values() : ((FillableGUI<?>) gui).getInventories().values().stream().flatMap(List::stream).collect(Collectors.toList()))
-					if (Environment.isBukkit() ? inventory.equals(page.bukkitValue()) : (inventory = page.spongeValue().getInventoryProperty(InventoryTitle.class).orElse(null)) == null ? false : spongeTitle.equals(((InventoryTitle) inventory).getValue().toPlain()))
+					if (Environment.isBukkit()
+							? inventory.equals(page.bukkitValue())
+							: Environment.isSponge()
+							? (inventory = page.spongeValue().getInventoryProperty(InventoryTitle.class).orElse(null)) == null ? false : spongeTitle.equals(((InventoryTitle) inventory).getValue().toPlain())
+							: ((GenericContainerScreenHandler) inventory).getInventory().equals(page.fabricValue())
+							)
 						return gui;
 		return null;
 	}
@@ -210,15 +220,15 @@ public class GUIManagerImpl extends GUIManager {
 		for (String command : commands) {
 			if (command.isEmpty())
 				continue;
-			ClickTypeAdapter ct = null;
+			ClickTypeAdapter adapter = null;
 			
 			for (ClickTypeAdapter other : ClickTypeAdapter.values()) {
 				if (command.startsWith(other.name() + ":")) {
 					command = command.substring(command.indexOf(':') + 1).trim();
-					ct = other;
+					adapter = other;
 					break;
 				}
-			} if (ct == null || ct == clickType) {
+			} if (adapter == null || adapter == clickType) {
 				if (command.startsWith("p:"))
 					player.executeCommand(command.substring(2).trim());
 				else ChatPlugin.getInstance().runConsoleCommand(command.replace("{0}", player.getName()), false);

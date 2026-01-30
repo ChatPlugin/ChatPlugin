@@ -35,13 +35,11 @@ import me.remigio07.chatplugin.api.server.util.GameFeature;
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/MSPT">ChatPlugin wiki/Modules/MSPT</a>
  */
 @GameFeature(
-		name = "mspt",
-		availableOnBukkit = true,
-		availableOnSponge = false,
-		spigotRequired = false,
+		name = "MSPT",
 		paperRequired = true,
 		minimumBukkitVersion = Version.V1_16,
-		minimumSpongeVersion = Version.UNSUPPORTED
+		minimumSpongeVersion = Version.UNSUPPORTED,
+		minimumFabricVersion = Version.UNSUPPORTED
 		)
 public abstract class MSPTManager implements ChatPluginManager, Runnable {
 	

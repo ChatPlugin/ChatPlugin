@@ -22,14 +22,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
-import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.event.actionbar.ActionbarSendEvent;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
-import me.remigio07.chatplugin.api.server.util.GameFeature;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 
 /**
@@ -37,15 +35,6 @@ import me.remigio07.chatplugin.api.server.util.PlaceholderType;
  * 
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Actionbars">ChatPlugin wiki/Modules/Actionbars</a>
  */
-@GameFeature(
-		name = "actionbar",
-		availableOnBukkit = true,
-		availableOnSponge = true,
-		spigotRequired = false,
-		paperRequired = false,
-		minimumBukkitVersion = Version.V1_8,
-		minimumSpongeVersion = Version.V1_11
-		)
 public abstract class ActionbarManager implements ChatPluginManager, Runnable {
 	
 	/**

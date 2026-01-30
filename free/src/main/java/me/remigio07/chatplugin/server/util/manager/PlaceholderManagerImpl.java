@@ -55,7 +55,6 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.util.DateFormat;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
-import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.manager.MSPTManager;
 import me.remigio07.chatplugin.api.server.util.manager.PingManager;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
@@ -63,7 +62,11 @@ import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.api.server.util.manager.TPSManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.bootstrap.Environment;
+import me.remigio07.chatplugin.mixin.extension.EntityExtension;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
+import me.remigio07.chatplugin.server.util.Utils;
+import net.minecraft.stat.Stats;
+import net.minecraft.util.math.Vec3d;
 
 public class PlaceholderManagerImpl extends PlaceholderManager {
 	
@@ -203,17 +206,17 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 		if (input.contains("{ip_address}"))
 			input = input.replace("{ip_address}", player.getIPAddress().getHostAddress());
 		if (input.contains("{health}"))
-			input = input.replace("{health}", String.valueOf((int) (Environment.isBukkit() ? player.toAdapter().bukkitValue().getHealth() : player.toAdapter().spongeValue().health().get())));
+			input = input.replace("{health}", String.valueOf((int) (Environment.isBukkit() ? player.toAdapter().bukkitValue().getHealth() : Environment.isSponge() ? player.toAdapter().spongeValue().health().get() : player.toAdapter().fabricValue().getHealth())));
 		if (input.contains("{max_health}"))
-			input = input.replace("{max_health}", String.valueOf((int) (Environment.isBukkit() ? player.toAdapter().bukkitValue().getHealthScale() : player.toAdapter().spongeValue().maxHealth().get())));
+			input = input.replace("{max_health}", String.valueOf((int) (Environment.isBukkit() ? player.toAdapter().bukkitValue().getHealthScale() : Environment.isSponge() ? player.toAdapter().spongeValue().maxHealth().get() : player.toAdapter().fabricValue().getMaxHealth())));
 		if (input.contains("{food}"))
-			input = input.replace("{food}", String.valueOf(Environment.isBukkit() ? player.toAdapter().bukkitValue().getFoodLevel() : player.toAdapter().spongeValue().foodLevel().get()));
+			input = input.replace("{food}", String.valueOf(Environment.isBukkit() ? player.toAdapter().bukkitValue().getFoodLevel() : Environment.isSponge() ? player.toAdapter().spongeValue().foodLevel().get() : player.toAdapter().fabricValue().getHungerManager().getFoodLevel()));
 		if (input.contains("{level}"))
-			input = input.replace("{level}", String.valueOf(Environment.isBukkit() ? player.toAdapter().bukkitValue().getLevel() : player.toAdapter().spongeValue().get(Keys.EXPERIENCE_LEVEL).orElse(0).intValue()));
+			input = input.replace("{level}", String.valueOf(Environment.isBukkit() ? player.toAdapter().bukkitValue().getLevel() : Environment.isSponge() ? player.toAdapter().spongeValue().get(Keys.EXPERIENCE_LEVEL).orElse(0).intValue() : player.toAdapter().fabricValue().experienceLevel));
 		if (input.contains("{xp}"))
-			input = input.replace("{xp}", String.valueOf(Environment.isBukkit() ? player.toAdapter().bukkitValue().getTotalExperience() : player.toAdapter().spongeValue().get(Keys.TOTAL_EXPERIENCE).orElse(0).intValue()));
+			input = input.replace("{xp}", String.valueOf(Environment.isBukkit() ? player.toAdapter().bukkitValue().getTotalExperience() : Environment.isSponge() ? player.toAdapter().spongeValue().get(Keys.TOTAL_EXPERIENCE).orElse(0).intValue() : player.toAdapter().fabricValue().totalExperience));
 		if (input.contains("{gamemode}"))
-			input = input.replace("{gamemode}", Environment.isBukkit() ? player.toAdapter().bukkitValue().getGameMode().name() : player.toAdapter().spongeValue().gameMode().get().getName()).toLowerCase();
+			input = input.replace("{gamemode}", Environment.isBukkit() ? player.toAdapter().bukkitValue().getGameMode().name() : Environment.isSponge() ? player.toAdapter().spongeValue().gameMode().get().getName() : player.toAdapter().fabricValue().getGameMode().getId()).toLowerCase();
 		if (input.contains("{ping") && PingManager.getInstance().isEnabled())
 			input = PingManager.getInstance().formatPlaceholders(input, player.getPing(), language);
 		if (input.contains("{language_id}"))
@@ -231,7 +234,7 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 		if (input.contains("{last_login}"))
 			input = input.replace("{last_login}", Utils.formatTime(System.currentTimeMillis() - player.getLoginTime(), language, false, true));
 		if (input.contains("{time_played}"))
-			input = input.replace("{time_played}", Utils.formatTime((Environment.isBukkit() ? player.toAdapter().bukkitValue().getStatistic(Statistic.valueOf(VersionUtils.getVersion().getProtocol() < 341 ? "PLAY_ONE_TICK" : "PLAY_ONE_MINUTE")) : player.toAdapter().spongeValue().getStatisticData().get(Keys.STATISTICS).get().get(Statistics.TIME_PLAYED)) / 20 * 1000, language, false, true)); // Sponge v4.2
+			input = input.replace("{time_played}", Utils.formatTime((Environment.isBukkit() ? player.toAdapter().bukkitValue().getStatistic(Statistic.valueOf(VersionUtils.getVersion().getProtocol() < 341 ? "PLAY_ONE_TICK" : "PLAY_ONE_MINUTE")) : Environment.isSponge() ? player.toAdapter().spongeValue().getStatisticData().get(Keys.STATISTICS).get().get(Statistics.TIME_PLAYED) : player.toAdapter().fabricValue().getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.PLAY_TIME))) / 20 * 1000, language, false, true)); // Sponge v4.2
 		if (input.contains("{emojis_tone}") && InstantEmojisManager.getInstance().isEnabled()) {
 			ChatColor tone = player.getEmojisTone() == ChatColor.RESET ? InstantEmojisManager.getInstance().getDefaultTone() : player.getEmojisTone();
 			input = input.replace("{emojis_tone}", (VersionUtils.getVersion().isAtLeast(Version.V1_16) ? tone : tone.getClosestDefaultColor()).toString());
@@ -264,15 +267,15 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 		if (input.contains("{player_anticheat_mutes}"))
 			input = input.replace("{player_anticheat_mutes}", String.valueOf(player.getAnticheatMutes()));
 		if (input.contains("{x}") || input.contains("{y}") || input.contains("{z}") || input.contains("{yaw}") || input.contains("{pitch}")) {
-			Object location = Environment.isBukkit() ? player.toAdapter().bukkitValue().getLocation() : player.toAdapter().spongeValue().getLocation();
-			Object headRotation = Environment.isBukkit() ? null : player.toAdapter().spongeValue().getHeadRotation();
+			Object location = Environment.isBukkit() ? player.toAdapter().bukkitValue().getLocation() : Environment.isSponge() ? player.toAdapter().spongeValue().getLocation() : ((EntityExtension) player.toAdapter().fabricValue()).chatPlugin$getLocation();
+			Object headRotation = Environment.isBukkit() ? null : Environment.isSponge() ? player.toAdapter().spongeValue().getHeadRotation() : new float[] { player.toAdapter().fabricValue().getYaw(), player.toAdapter().fabricValue().getPitch() };
 			
 			input = input
-					.replace("{x}", String.valueOf(Environment.isBukkit() ? ((org.bukkit.Location) location).getBlockX() : ((org.spongepowered.api.world.Location<World>) location).getBlockX()))
-					.replace("{y}", String.valueOf(Environment.isBukkit() ? ((org.bukkit.Location) location).getBlockY() : ((org.spongepowered.api.world.Location<World>) location).getBlockY()))
-					.replace("{z}", String.valueOf(Environment.isBukkit() ? ((org.bukkit.Location) location).getBlockZ() : ((org.spongepowered.api.world.Location<World>) location).getBlockZ()))
-					.replace("{yaw}", String.valueOf(Environment.isBukkit() ? ((org.bukkit.Location) location).getYaw() : ((Vector3d) headRotation).getX()))
-					.replace("{pitch}", String.valueOf(Environment.isBukkit() ? ((org.bukkit.Location) location).getPitch() : ((Vector3d) headRotation).getY()));
+					.replace("{x}", String.valueOf(Environment.isBukkit() ? ((org.bukkit.Location) location).getBlockX() : Environment.isSponge() ? ((org.spongepowered.api.world.Location<World>) location).getBlockX() : (int) Math.floor(((Vec3d) location).getX())))
+					.replace("{y}", String.valueOf(Environment.isBukkit() ? ((org.bukkit.Location) location).getBlockY() : Environment.isSponge() ? ((org.spongepowered.api.world.Location<World>) location).getBlockY() : (int) Math.floor(((Vec3d) location).getY())))
+					.replace("{z}", String.valueOf(Environment.isBukkit() ? ((org.bukkit.Location) location).getBlockZ() : Environment.isSponge() ? ((org.spongepowered.api.world.Location<World>) location).getBlockZ() : (int) Math.floor(((Vec3d) location).getZ())))
+					.replace("{yaw}", String.valueOf(Utils.truncate(Environment.isBukkit() ? ((org.bukkit.Location) location).getYaw() : Environment.isSponge() ? ((Vector3d) headRotation).getX() : ((float[]) headRotation)[0], 2)))
+					.replace("{pitch}", String.valueOf(Utils.truncate(Environment.isBukkit() ? ((org.bukkit.Location) location).getPitch() : Environment.isSponge() ? ((Vector3d) headRotation).getY() : ((float[]) headRotation)[0], 2)));
 		} if (input.contains("{rank") || input.contains("prefix}") || input.contains("suffix}") || input.contains("color}") || input.contains("{rank_description}"))
 			input = player.getRank().formatPlaceholders(player.getChatColor() == ChatColor.RESET ? input : input.replace("{chat_color}", VersionUtils.getVersion().isAtLeast(Version.V1_16) ? player.getChatColor().toString() : player.getChatColor().getClosestDefaultColor().toString()), language);
 		if (input.contains("{isp}") || input.contains("{continent}") || input.contains("{country}") || input.contains("{subdivisions}") || input.contains("{city}")

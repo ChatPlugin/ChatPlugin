@@ -31,9 +31,10 @@ import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.bootstrap.Environment;
+import net.minecraft.entity.boss.BossBar.Style;
 
 /**
- * Environment indipendent (Bukkit and Sponge) bossbar style adapter.
+ * Environment-indipendent (Bukkit, Sponge and Fabric bossbar style adapter.
  * 
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Bossbars#styles">ChatPlugin wiki/Modules/Bossbars/Styles</a>
  */
@@ -44,58 +45,58 @@ public class BossbarStyleAdapter extends PseudoEnum<BossbarStyleAdapter> {
 	 * 
 	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
 	 */
-	public static final BossbarStyleAdapter SEGMENTED_6 = new BossbarStyleAdapter("SEGMENTED_6", "NOTCHED_6");
+	public static final BossbarStyleAdapter NOTCHED_6 = new BossbarStyleAdapter("NOTCHED_6", "SEGMENTED_6");
 	
 	/**
 	 * Displays the bossbar split into 10 segments.
 	 * 
 	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
 	 */
-	public static final BossbarStyleAdapter SEGMENTED_10 = new BossbarStyleAdapter("SEGMENTED_10", "NOTCHED_10");
+	public static final BossbarStyleAdapter NOTCHED_10 = new BossbarStyleAdapter("NOTCHED_10", "SEGMENTED_10");
 	
 	/**
 	 * Displays the bossbar split into 12 segments.
 	 * 
 	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
 	 */
-	public static final BossbarStyleAdapter SEGMENTED_12 = new BossbarStyleAdapter("SEGMENTED_12", "NOTCHED_12");
+	public static final BossbarStyleAdapter NOTCHED_12 = new BossbarStyleAdapter("NOTCHED_12", "SEGMENTED_12");
 	
 	/**
 	 * Displays the bossbar split into 20 segments.
 	 * 
 	 * <p><strong>Minimum version:</strong> {@linkplain Version#V1_9 1.9}</p>
 	 */
-	public static final BossbarStyleAdapter SEGMENTED_20 = new BossbarStyleAdapter("SEGMENTED_20", "NOTCHED_20");
+	public static final BossbarStyleAdapter NOTCHED_20 = new BossbarStyleAdapter("NOTCHED_20", "SEGMENTED_20");
 	
 	/**
 	 * Displays the bossbar as a solid segment.
 	 */
-	public static final BossbarStyleAdapter SOLID = new BossbarStyleAdapter("SOLID", "PROGRESS");
+	public static final BossbarStyleAdapter PROGRESS = new BossbarStyleAdapter("PROGRESS", "SOLID");
 	
 	/**
 	 * Displays a random style.
 	 */
 	public static final BossbarStyleAdapter RANDOM = new BossbarStyleAdapter("RANDOM", "RANDOM");
 	
-	private static final BossbarStyleAdapter[] VALUES = new BossbarStyleAdapter[] { SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20, SOLID, RANDOM };
+	private static final BossbarStyleAdapter[] VALUES = new BossbarStyleAdapter[] { NOTCHED_6, NOTCHED_10, NOTCHED_12, NOTCHED_20, PROGRESS, RANDOM };
 	private static int ordinal = 0;
 	private static Map<String, Object> spongeStyles;
-	private String spongeID;
+	private String bukkitID;
 	
-	static {
+	static { // TODO improve w/ reflection
 		if (Environment.isSponge())
 			spongeStyles = (Map<String, Object>) Stream.of(new Object[][] {
-				{ "SOLID", BossBarOverlays.PROGRESS },
-				{ "SEGMENTED_6", BossBarOverlays.NOTCHED_6 },
-				{ "SEGMENTED_10", BossBarOverlays.NOTCHED_10 },
-				{ "SEGMENTED_12", BossBarOverlays.NOTCHED_12 },
-				{ "SEGMENTED_20", BossBarOverlays.NOTCHED_20 }
+				{ "PROGRESS", BossBarOverlays.PROGRESS },
+				{ "NOTCHED_6", BossBarOverlays.NOTCHED_6 },
+				{ "NOTCHED_10", BossBarOverlays.NOTCHED_10 },
+				{ "NOTCHED_12", BossBarOverlays.NOTCHED_12 },
+				{ "NOTCHED_20", BossBarOverlays.NOTCHED_20 }
 			}).collect(Collectors.toMap(color -> (String) color[0], color -> (Object) color[1], (x, y) -> y, LinkedHashMap::new));
 	}
 	
-	private BossbarStyleAdapter(String name, String spongeID) {
+	private BossbarStyleAdapter(String name, String bukkitID) {
 		super(name, ordinal++);
-		this.spongeID = spongeID;
+		this.bukkitID = bukkitID;
 	}
 	
 	/**
@@ -110,7 +111,7 @@ public class BossbarStyleAdapter extends PseudoEnum<BossbarStyleAdapter> {
 	 */
 	public BarStyle bukkitValue() {
 		if (Environment.isBukkit())
-			return this == RANDOM ? BarStyle.values()[VersionUtils.getVersion().isAtLeast(Version.V1_9) ? ThreadLocalRandom.current().nextInt(BarStyle.values().length) : 4] : BarStyle.valueOf(name()); // .values()[4] = SOLID
+			return this == RANDOM ? BarStyle.values()[VersionUtils.getVersion().isAtLeast(Version.V1_9) ? ThreadLocalRandom.current().nextInt(BarStyle.values().length) : 4] : BarStyle.valueOf(bukkitID);
 		throw new UnsupportedOperationException("Unable to adapt bossbar style to a Bukkit's BarStyle on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
@@ -126,17 +127,29 @@ public class BossbarStyleAdapter extends PseudoEnum<BossbarStyleAdapter> {
 	 */
 	public BossBarOverlay spongeValue() {
 		if (Environment.isSponge())
-			return (BossBarOverlay) (this == RANDOM ? new ArrayList<>(spongeStyles.values()).get(VersionUtils.getVersion().isAtLeast(Version.V1_9) ? ThreadLocalRandom.current().nextInt(VALUES.length - 1) : 0) : spongeStyles.get(name())); // .values().get(0) = SOLID
+			return (BossBarOverlay) (this == RANDOM ? new ArrayList<>(spongeStyles.values()).get(VersionUtils.getVersion().isAtLeast(Version.V1_9) ? ThreadLocalRandom.current().nextInt(VALUES.length - 1) : 0) : spongeStyles.get(name()));
 		throw new UnsupportedOperationException("Unable to adapt bossbar style to a Sponge's BossBarOverlay on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
-	 * Get the corresponding {@link org.spongepowered.api.boss.BossBarOverlays}' ID.
+	 * Gets the bossbar style adapted for Fabric environments.
 	 * 
-	 * @return Sponge corresponding ID
+	 * @return Fabric-adapted bossbar style
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isFabric()}
 	 */
-	public String getSpongeID() {
-		return spongeID;
+	public Style fabricValue() {
+		if (Environment.isFabric())
+			return this == RANDOM ? Style.values()[ThreadLocalRandom.current().nextInt(Style.values().length)] : Style.valueOf(name());
+		throw new UnsupportedOperationException("Unable to adapt bossbar style to a Fabric's BossBar.Style on a " + Environment.getCurrent().getName() + " environment");
+	}
+	
+	/**
+	 * Gets the {@link org.bukkit.boss.BarStyle}-compatible ID.
+	 * 
+	 * @return Bukkit-compatible ID
+	 */
+	public String getBukkitID() {
+		return bukkitID;
 	}
 	
 	/**
@@ -146,7 +159,7 @@ public class BossbarStyleAdapter extends PseudoEnum<BossbarStyleAdapter> {
 	 * @return Whether this bossbar style is supported
 	 */
 	public boolean isSupported() {
-		return this == SOLID || this == RANDOM || VersionUtils.getVersion().isAtLeast(Version.V1_9);
+		return Environment.isFabric() || this == PROGRESS || this == RANDOM || VersionUtils.getVersion().isAtLeast(Version.V1_9);
 	}
 	
 	/**
@@ -176,7 +189,7 @@ public class BossbarStyleAdapter extends PseudoEnum<BossbarStyleAdapter> {
 	 * 	<ul>
 	 * 		<li>case insensitive</li>
 	 * 		<li>returns <code>null</code> instead of throwing {@link IllegalArgumentException}</li>
-	 * 		<li>also recognizes Bukkit- and Sponge-compatible IDs</li>
+	 * 		<li>also recognizes Bukkit-, Sponge- and Fabric-compatible IDs</li>
 	 * 	</ul>
 	 * 
 	 * <p>Will return <code>null</code> if the specified name is invalid.</p>
@@ -190,7 +203,7 @@ public class BossbarStyleAdapter extends PseudoEnum<BossbarStyleAdapter> {
 		name = name.toUpperCase();
 		
 		for (BossbarStyleAdapter value : VALUES)
-			if (value.name().equals(name) || value.getSpongeID().equals(name))
+			if (value.name().equals(name) || value.getBukkitID().equals(name))
 				return value;
 		return null;
 	}

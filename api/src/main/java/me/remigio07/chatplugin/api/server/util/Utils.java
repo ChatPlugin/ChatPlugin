@@ -15,38 +15,28 @@
 
 package me.remigio07.chatplugin.api.server.util;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
-import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.bootstrap.Environment;
+import me.remigio07.chatplugin.bootstrap.JARLibraryLoader;
+import net.minecraft.text.Text;
 
 /**
  * Server utils class.
  */
 public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
-	
-	/**
-	 * Gets a list of the worlds' names.
-	 * 
-	 * @return Worlds' names
-	 */
-	public static List<String> getWorlds() {
-		return (Environment.isBukkit() ? Bukkit.getWorlds().stream().map(world -> world.getName()) : Sponge.getServer().getWorlds().stream().map(org.spongepowered.api.world.World::getName)).collect(Collectors.toList());
-	}
 	
 	/**
 	 * Gets the online players in the specified world.
@@ -145,26 +135,53 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 	}
 	
 	/**
-	 * Serializes the specified input to a Sponge-compatible text.
+	 * Converts the specified Sponge component to legacy text.
 	 * 
-	 * @param input Input text
-	 * @param translate Whether to {@link ChatColor#translate(String)} the text
-	 * @return Sponge-compatible text
+	 * @param spongeComponent Sponge component to convert
+	 * @return Resulting legacy text
 	 */
 	@SuppressWarnings("deprecation")
-	public static Text serializeSpongeText(String input, boolean translate) {
-		return TextSerializers.LEGACY_FORMATTING_CODE.deserialize(translate ? ChatColor.translate(input) : input);
+	public static String toLegacyText(org.spongepowered.api.text.Text spongeComponent) {
+		return TextSerializers.LEGACY_FORMATTING_CODE.serialize(spongeComponent);
 	}
 	
 	/**
-	 * Deserializes the specified input to a plain text.
+	 * Converts the specified Fabric component to legacy text.
 	 * 
-	 * @param input Sponge-compatible text
-	 * @return Plain text
+	 * @param fabricComponent Fabric component to convert
+	 * @return Resulting legacy text
+	 */
+	public static String toLegacyText(Text fabricComponent) {
+		try {
+			return (String) Class.forName("me.remigio07.chatplugin.server.fabric.ChatPluginFabric", false, JARLibraryLoader.getInstance()).getMethod("toLegacyText", Text.class).invoke(null, fabricComponent);
+		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+			throw new IllegalStateException("Unable to call Utils#toLegacyText(Text) as the plugin has not finished loading yet");
+		}
+	}
+	
+	/**
+	 * Converts the specified legacy text to a Sponge component.
+	 * 
+	 * @param legacyText Legacy text to convert
+	 * @return Resulting Sponge component
 	 */
 	@SuppressWarnings("deprecation")
-	public static String deserializeSpongeText(Text input) {
-		return TextSerializers.LEGACY_FORMATTING_CODE.serialize(input);
+	public static org.spongepowered.api.text.Text toSpongeComponent(String legacyText) {
+		return TextSerializers.LEGACY_FORMATTING_CODE.deserialize(legacyText);
+	}
+	
+	/**
+	 * Converts the specified legacy text to a Fabric component.
+	 * 
+	 * @param legacyText Legacy text to convert
+	 * @return Resulting Fabric component
+	 */
+	public static Text toFabricComponent(String legacyText) {
+		try {
+			return (Text) Class.forName("me.remigio07.chatplugin.server.fabric.ChatPluginFabric", false, JARLibraryLoader.getInstance()).getMethod("toFabricComponent", String.class).invoke(null, legacyText);
+		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+			throw new IllegalStateException("Unable to call Utils#toFabricComponent(String) as the plugin has not finished loading yet");
+		}
 	}
 	
 }

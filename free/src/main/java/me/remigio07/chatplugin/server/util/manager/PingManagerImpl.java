@@ -35,6 +35,7 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.server.bukkit.BukkitReflection;
 import me.remigio07.chatplugin.server.bukkit.ChatPluginBukkitPlayer;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 public class PingManagerImpl extends PingManager {
 	
@@ -89,12 +90,25 @@ public class PingManagerImpl extends PingManager {
 	@Deprecated
 	@Override
 	public int getRealTimePing(ChatPluginServerPlayer player) {
-		return player.isOnline() ? Environment.isBukkit() ? VersionUtils.getVersion().isAtLeast(Version.V1_16_5) ? player.toAdapter().bukkitValue().getPing() : (int) BukkitReflection.getFieldValue("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", ((ChatPluginBukkitPlayer) player).getCraftPlayer()), "ping", "e") : player.toAdapter().spongeValue().getConnection().getLatency() : 0;
+		if (player.isOnline()) {
+			if (Environment.isBukkit())
+				return VersionUtils.getVersion().isAtLeast(Version.V1_16_5)
+						? player.toAdapter().bukkitValue().getPing()
+						: (int) BukkitReflection.getFieldValue("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", ((ChatPluginBukkitPlayer) player).getCraftPlayer()), "ping", "e");
+			if (Environment.isSponge())
+				return player.toAdapter().spongeValue().getConnection().getLatency();
+			if (VersionUtils.getVersion().isOlderThan(Version.V1_20_2))
+				try {
+					return (int) ServerPlayerEntity.class.getField("field_13967").get(player.toAdapter().fabricValue());
+				} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			else return player.toAdapter().fabricValue().networkHandler.getLatency();
+		} return 0;
 	}
 	
 	@Override
 	public PingQuality getPingQuality(int ping) {
-		
 		if (ping < 0)
 			throw new IllegalArgumentException("Specified ping is less than 0");
 		for (PingQuality quality : qualities)

@@ -15,12 +15,13 @@
 
 package me.remigio07.chatplugin.api.common.util.adapter.motd;
 
+import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
- * Environment indipendent (Bukkit, Sponge, BungeeCord and Velocity) favicon adapter.
+ * Environment indipendent (Bukkit, Sponge, Fabric, BungeeCord and Velocity) favicon adapter.
  */
-public class FaviconAdapter {
+public class FaviconAdapter { // TODO add Bukkit and Fabric support
 	
 	private Object favicon;
 	
@@ -42,7 +43,7 @@ public class FaviconAdapter {
 	 * Gets the favicon adapted for Sponge environments.
 	 * 
 	 * @return Sponge-adapted favicon
-	 * @throws UnsupportedOperationException If !{@link Environment#isSponge()}
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isSponge()}
 	 */
 	public org.spongepowered.api.network.status.Favicon spongeValue() {
 		if (Environment.isSponge())
@@ -54,10 +55,10 @@ public class FaviconAdapter {
 	 * Gets the favicon adapted for BungeeCord environments.
 	 * 
 	 * @return BungeeCord-adapted favicon
-	 * @throws UnsupportedOperationException If !{@link Environment#isBungeeCord()}
+	 * @throws UnsupportedOperationException If <code>!{@link Environment#isBungeeCord()} &amp;&amp; !{@link VersionUtils#isSpigot()}</code>
 	 */
 	public net.md_5.bungee.api.Favicon bungeeCordValue() {
-		if (Environment.isBungeeCord())
+		if (Environment.isBungeeCord() || VersionUtils.isSpigot())
 			return (net.md_5.bungee.api.Favicon) favicon;
 		throw new UnsupportedOperationException("Unable to adapt favicon to a BungeeCord's Favicon on a " + Environment.getCurrent().getName() + " environment");
 	}
@@ -66,7 +67,7 @@ public class FaviconAdapter {
 	 * Gets the favicon adapted for Velocity environments.
 	 * 
 	 * @return Velocity-adapted favicon
-	 * @throws UnsupportedOperationException If !{@link Environment#isVelocity()}
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isVelocity()}
 	 */
 	public com.velocitypowered.api.util.Favicon velocityValue() {
 		if (Environment.isVelocity())

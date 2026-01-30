@@ -1,0 +1,24 @@
+{
+	"required": true,
+	"package": "me.remigio07.chatplugin.mixin.latest",
+	"plugin": "me.remigio07.chatplugin.mixin.MixinPlugin",
+	"compatibilityLevel": "JAVA_8",
+	"mixins": [
+		"EntityMixin",
+		"FishingBobberEntityMixin",
+		"PlayerManagerMixin",
+		"ScreenHandlerMixin",
+		"ServerCommandSourceMixin",
+		"ServerCommonNetworkHandlerMixin",
+		"ServerHandshakeNetworkHandlerMixin",
+		"ServerLoginNetworkHandlerAccessor",
+		"ServerPlayerEntityMixin",
+		"ServerPlayNetworkHandlerMixin",
+		"ServerQueryNetworkHandlerMixin",
+		"ServerScoreboardMixin",
+		"ServerWorldMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

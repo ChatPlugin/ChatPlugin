@@ -25,7 +25,7 @@ import me.remigio07.chatplugin.api.server.util.adapter.inventory.item.ItemStackA
 import me.remigio07.chatplugin.bootstrap.Environment;
 
 /**
- * Environment indipendent (Bukkit and Sponge) click event adapter.
+ * Environment-indipendent (Bukkit, Sponge and Fabric) click event adapter.
  */
 public class ClickEventAdapter {
 	
@@ -100,7 +100,7 @@ public class ClickEventAdapter {
 	}
 	
 	/**
-	 * Environment indipendent (Bukkit and Sponge) click type adapter.
+	 * Environment-indipendent (Bukkit, Sponge and Fabric) click type adapter.
 	 */
 	public static class ClickTypeAdapter extends PseudoEnum<ClickTypeAdapter> {
 		
@@ -228,7 +228,7 @@ public class ClickEventAdapter {
 	}
 	
 	/**
-	 * Environment indipendent (Bukkit and Sponge) click action adapter.
+	 * Environment-indipendent (Bukkit, Sponge and Fabric) click action adapter.
 	 */
 	public static class ClickActionAdapter extends PseudoEnum<ClickActionAdapter> {
 		
@@ -236,7 +236,7 @@ public class ClickEventAdapter {
 		 * Nothing will happen from the click.
 		 * 
 		 * <p><strong>Note:</strong> There may be cases where nothing
-		 * will happen and this is value is not provided, but it is
+		 * will happen and this value is not provided, but it is
 		 * guaranteed that this value is accurate when given.</p>
 		 */
 		public static final ClickActionAdapter NOTHING = new ClickActionAdapter("NOTHING");

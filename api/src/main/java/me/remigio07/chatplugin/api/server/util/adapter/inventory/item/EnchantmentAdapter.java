@@ -15,10 +15,10 @@
 
 package me.remigio07.chatplugin.api.server.util.adapter.inventory.item;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.enchantments.Enchantment;
 import org.spongepowered.api.item.enchantment.EnchantmentType;
 import org.spongepowered.api.item.enchantment.EnchantmentTypes;
 
@@ -27,11 +27,17 @@ import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.bootstrap.Environment;
+import me.remigio07.chatplugin.bootstrap.FabricBootstrapper;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.util.Identifier;
 
 /**
- * Environment indipendent (Bukkit and Sponge) enchantment adapter.
+ * Environment-indipendent (Bukkit, Sponge and Fabric) enchantment adapter.
  */
-public class EnchantmentAdapter extends PseudoEnum<EnchantmentAdapter> {
+public class EnchantmentAdapter extends PseudoEnum<EnchantmentAdapter> { // TODO: add support for custom enchantments - read them from the registry instead of loading from these fields?
 	
 	/**
 	 * Increases the speed at which a player may mine underwater.
@@ -300,24 +306,24 @@ public class EnchantmentAdapter extends PseudoEnum<EnchantmentAdapter> {
 	/**
 	 * Gets the enchantment adapted for Bukkit environments.
 	 * 
-	 * <p>If the current version does not support this enchantment,
+	 * <p>If {@link VersionUtils#getVersion()} does not support this enchantment,
 	 * the default value of {@link #UNBREAKING} will be returned.</p>
 	 * 
 	 * @return Bukkit-adapted enchantment
 	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBukkit()}
 	 */
 	@SuppressWarnings("deprecation")
-	public Enchantment bukkitValue() {
+	public org.bukkit.enchantments.Enchantment bukkitValue() {
 		if (Environment.isBukkit()) {
-			Enchantment enchantment = Enchantment.getByName(aliases[aliases.length - 1].toUpperCase());
-			return enchantment == null ? Enchantment.UNBREAKING : enchantment;
+			org.bukkit.enchantments.Enchantment enchantment = org.bukkit.enchantments.Enchantment.getByName(aliases[aliases.length - 1].toUpperCase());
+			return enchantment == null ? org.bukkit.enchantments.Enchantment.UNBREAKING : enchantment;
 		} throw new UnsupportedOperationException("Unable to adapt enchantment to a Bukkit's Enchantment on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
 	 * Gets the enchantment adapted for Sponge environments.
 	 * 
-	 * <p>If the current version does not support this enchantment,
+	 * <p>If {@link VersionUtils#getVersion()} does not support this enchantment,
 	 * the default value of {@link #UNBREAKING} will be returned.</p>
 	 * 
 	 * @return Sponge-adapted enchantment
@@ -331,6 +337,31 @@ public class EnchantmentAdapter extends PseudoEnum<EnchantmentAdapter> {
 				return EnchantmentTypes.UNBREAKING;
 			}
 		throw new UnsupportedOperationException("Unable to adapt enchantment to a Sponge's EnchantmentType on a " + Environment.getCurrent().getName() + " environment");
+	}
+	
+	/**
+	 * Gets the enchantment adapted for Fabric environments.
+	 * 
+	 * <p>If {@link VersionUtils#getVersion()} does not support this enchantment,
+	 * the default value of {@link #UNBREAKING} will be returned.</p>
+	 * 
+	 * @return Fabric-adapted enchantment
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isFabric()}
+	 */
+	public Enchantment fabricValue() {
+		if (Environment.isFabric())
+			try {
+				if (VersionUtils.getVersion().isAtLeast(Version.V1_21)) {
+					Registry<net.minecraft.enchantment.Enchantment> registry = FabricBootstrapper.getInstance().getServer().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT);
+					return VersionUtils.getVersion().isAtLeast(Version.V1_21_2) ? registry.get(Identifier.ofVanilla(aliases[0])) : (Enchantment) Registry.class.getMethod("method_10223", Identifier.class).invoke(registry, Identifier.ofVanilla(aliases[0]));
+				} return (Enchantment) Registry.class.getMethod("method_10223", Identifier.class).invoke(VersionUtils.getVersion().isAtLeast(Version.V1_19_3)
+						? Registries.class.getField("field_41176").get(null)
+						: Registry.class.getField("field_11160").get(null),
+						Identifier.tryParse("minecraft:" + aliases[0]));
+			} catch (NoSuchMethodException | IllegalAccessException | NoSuchFieldException | InvocationTargetException e) {
+				return UNBREAKING.fabricValue();
+			}
+		throw new UnsupportedOperationException("Unable to adapt enchantment to a Fabric's Enchantment on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**
@@ -399,7 +430,7 @@ public class EnchantmentAdapter extends PseudoEnum<EnchantmentAdapter> {
 	 * 	<ul>
 	 * 		<li>case insensitive</li>
 	 * 		<li>returns <code>null</code> instead of throwing {@link IllegalArgumentException}</li>
-	 * 		<li>also recognizes Bukkit- and Sponge-compatible IDs</li>
+	 * 		<li>also recognizes Bukkit-, Sponge- and Fabric-compatible IDs</li>
 	 * 	</ul>
 	 * 
 	 * <p>Will return <code>null</code> if the specified name is invalid.</p>

@@ -1,0 +1,52 @@
+[versions]
+chatPlugin = "1.10.5-SNAPSHOT"
+adventure-api = "4.25.0"
+adventure-platform = "4.4.1"
+bstats = "3.1.0"
+
+[libraries]
+spigotAPI = "org.spigotmc:spigot-api:1.21.11-R0.1-SNAPSHOT"
+paperAPI = "io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT"
+sponge-api = "org.spongepowered:spongeapi:7.4.0"
+sponge-common = "org.spongepowered:spongecommon:1.12.2-7.4.7"
+bungeeCordAPI = "net.md-5:bungeecord-api:1.21-R0.4-SNAPSHOT"
+velocityAPI = "com.velocitypowered:velocity-api:3.1.1"
+minecraft = "com.mojang:minecraft:1.21.11"
+yarn = "net.fabricmc:yarn:1.21.11+build.2"
+fabric-loader = "net.fabricmc:fabric-loader:0.18.2"
+fabric-api = "net.fabricmc.fabric-api:fabric-api:0.139.4+1.21.11"
+adventure-platform-bukkit = { module = "net.kyori:adventure-platform-bukkit", version.ref = "adventure-platform" }
+adventure-platform-spongeAPI = { module = "net.kyori:adventure-platform-spongeapi", version.ref = "adventure-platform" }
+adventure-platform-bungeeCord = { module = "net.kyori:adventure-platform-bungeecord", version.ref = "adventure-platform" }
+bstats-bukkit = { module = "org.bstats:bstats-bukkit", version.ref = "bstats" }
+bstats-sponge = { module = "org.bstats:bstats-sponge", version.ref = "bstats" }
+bstats-bungeeCord = { module = "org.bstats:bstats-bungeecord", version.ref = "bstats" }
+bstats-velocity = { module = "org.bstats:bstats-velocity", version.ref = "bstats" }
+snakeYAML = "org.yaml:snakeyaml:1.33"
+jsonSimple = "com.github.cliftonlabs:json-simple:4.0.1"
+mySQLConnectorJ = "com.mysql:mysql-connector-j:9.1.0"
+jda = "net.dv8tion:JDA:5.1.0"
+javaTAR = "javatar:javatar:2.5"
+javaTelegramBotAPI = "com.github.pengrad:java-telegram-bot-api:7.9.1"
+maxmind-dbReader = "com.maxmind.db:maxmind-db:2.1.0"
+maxmind-geoIP2 = "com.maxmind.geoip2:geoip2:2.17.0"
+viaVersionAPI = "com.viaversion:viaversion-api:5.2.2-SNAPSHOT"
+luckPermsAPI = "net.luckperms:api:5.4"
+worldGuardBukkit = "com.sk89q.worldguard:worldguard-bukkit:7.0.0"
+essentialsX = "net.essentialsx:EssentialsX:2.19.0"
+vaultAPI = "com.github.MilkBowl:VaultAPI:1.7"
+placeholderAPI = "me.clip:placeholderapi:2.11.3"
+playerParticles = "dev.esophose:playerparticles:8.0"
+discordSRV = "com.discordsrv:discordsrv:1.27.0"
+
+[bundles]
+serversAPIs = ["spigotAPI", "sponge-api", "bungeeCordAPI", "velocityAPI"]
+fabric = ["fabric-loader", "fabric-api"]
+bstats-server = ["bstats-bukkit", "bstats-sponge"]
+bstats-proxy = ["bstats-bungeeCord", "bstats-velocity"]
+adventure-platform-server = ["adventure-platform-bukkit", "adventure-platform-spongeAPI"]
+
+[plugins]
+fabric-loom = "fabric-loom:1.14-SNAPSHOT"
+replacePlaceholders = "io.github.crimix.replace-placeholders:3.0"
+shadow = "com.gradleup.shadow:9.0.2"

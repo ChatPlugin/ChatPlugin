@@ -20,9 +20,10 @@ import org.spongepowered.api.scoreboard.objective.displaymode.ObjectiveDisplayMo
 
 import me.remigio07.chatplugin.api.common.util.PseudoEnum;
 import me.remigio07.chatplugin.bootstrap.Environment;
+import net.minecraft.scoreboard.ScoreboardCriterion.RenderType;
 
 /**
- * Environment indipendent (Bukkit and Sponge) render type adapter.
+ * Environment indipendent (Bukkit, Sponge and Fabric) render type adapter.
  * 
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/Tablists#render-types">ChatPlugin wiki/Modules/Tablists/Custom suffix/Render types</a>
  * @see CustomSuffixManager
@@ -78,6 +79,18 @@ public class RenderTypeAdapter extends PseudoEnum<RenderTypeAdapter> {
 				return null;
 			}
 		throw new UnsupportedOperationException("Unable to adapt render type to a Sponge's ObjectiveDisplayMode on a " + Environment.getCurrent().getName() + " environment");
+	}
+	
+	/**
+	 * Gets the render type adapted for Fabric environments.
+	 * 
+	 * @return Fabric-adapted render type
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isFabric()}
+	 */
+	public RenderType fabricValue() {
+		if (Environment.isFabric())
+			return RenderType.valueOf(name());
+		throw new UnsupportedOperationException("Unable to adapt render type to a Fabric's RenderType on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**

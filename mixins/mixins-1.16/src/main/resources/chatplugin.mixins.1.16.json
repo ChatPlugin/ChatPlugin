@@ -1,0 +1,18 @@
+{
+	"required": true,
+	"package": "me.remigio07.chatplugin.mixin.v1_16",
+	"plugin": "me.remigio07.chatplugin.mixin.MixinPlugin",
+	"compatibilityLevel": "JAVA_8",
+	"mixins": [
+		"ClientSettingsC2SPacketAccessor",
+		"LivingEntityMixin",
+		"PlayerManagerMixin",
+		"ScreenHandlerMixin",
+		"ServerCommandSourceMixin",
+		"ServerPlayerEntityMixin",
+		"ServerPlayNetworkHandlerMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

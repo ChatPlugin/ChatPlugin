@@ -16,48 +16,58 @@
 package me.remigio07.chatplugin.api.common.util.adapter.user;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.spongepowered.api.Sponge;
 
+import com.mojang.authlib.GameProfile;
+
 import me.remigio07.chatplugin.api.ChatPlugin;
+import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.player.ChatPluginPlayer;
+import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.player.PlayerManager;
+import me.remigio07.chatplugin.api.common.util.VersionUtils;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
-import me.remigio07.chatplugin.api.common.util.text.ChatColor;
-import me.remigio07.chatplugin.api.proxy.util.Utils;
+import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.bootstrap.Environment;
-import me.remigio07.chatplugin.bootstrap.JARLibraryLoader;
+import me.remigio07.chatplugin.bootstrap.FabricBootstrapper;
 import me.remigio07.chatplugin.bootstrap.VelocityBootstrapper;
 import net.md_5.bungee.api.ProxyServer;
+import net.minecraft.network.ClientConnection;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
 
 /**
- * Environment indipendent (Bukkit, Sponge, BungeeCord and Velocity) player adapter.
+ * Environment-indipendent (Bukkit, Sponge, BungeeCord and Velocity) player adapter.
  */
 public class PlayerAdapter {
 	
-	private static Method invokeAdventureMethod;
+	private static final Set<String> FABRIC_PERMISSIONS;
 	private Object player;
 	
 	static {
-		try {
-			invokeAdventureMethod = Class.forName("me.remigio07.chatplugin.ChatPluginPremiumImpl$VelocityAdapter", false, JARLibraryLoader.getInstance()).getMethod("invokeAdventureMethod", Object.class, String.class, String.class);
-		} catch (Throwable t) {
-			// not on Velocity
-		}
+		FABRIC_PERMISSIONS = Environment.isFabric() ? Stream.concat(Stream.of("chatplugin.player-ping"), Stream.of(
+				"chatplugin", "help", "info", "version", "language", "whisper", "reply", "chatchannel",
+				"chatchannel.join", "chatchannel.leave", "chatchannel.switch", "chatchannel.info",
+				"chatchannel.list", "ignore", "ignore.add", "ignore.remove", "ignore.clear", "ignore.list",
+				"ping", "ping.others", "rankinfo", "playerlist", "emojistone", "preferences")
+				.map(str -> "chatplugin.commands." + str))
+				.collect(Collectors.toSet()) : null;
 	}
 	
 	/**
@@ -65,6 +75,7 @@ public class PlayerAdapter {
 	 * 	<ul>
 	 * 		<li>{@link org.bukkit.entity.Player} for Bukkit environments</li>
 	 * 		<li>{@link org.spongepowered.api.entity.living.player.Player} for Sponge environments</li>
+	 * 		<li>{@link net.minecraft.server.network.ServerPlayerEntity} for Fabric environments</li>
 	 * 		<li>{@link net.md_5.bungee.api.connection.ProxiedPlayer} for BungeeCord environments</li>
 	 * 		<li>{@link com.velocitypowered.api.proxy.Player} for Velocity environments</li>
 	 * 	</ul>
@@ -116,7 +127,7 @@ public class PlayerAdapter {
 	 * Gets the player adapted for Bukkit environments.
 	 * 
 	 * @return Bukkit-adapted player
-	 * @throws UnsupportedOperationException If !{@link Environment#isBukkit()}
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBukkit()}
 	 */
 	public org.bukkit.entity.Player bukkitValue() {
 		if (Environment.isBukkit())
@@ -128,7 +139,7 @@ public class PlayerAdapter {
 	 * Gets the player adapted for Sponge environments.
 	 * 
 	 * @return Sponge-adapted player
-	 * @throws UnsupportedOperationException If !{@link Environment#isSponge()}
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isSponge()}
 	 */
 	public org.spongepowered.api.entity.living.player.Player spongeValue() {
 		if (Environment.isSponge())
@@ -137,10 +148,22 @@ public class PlayerAdapter {
 	}
 	
 	/**
+	 * Gets the player adapted for Fabric environments.
+	 * 
+	 * @return Fabric-adapted player
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isFabric()}
+	 */
+	public net.minecraft.server.network.ServerPlayerEntity fabricValue() {
+		if (Environment.isFabric())
+			return (net.minecraft.server.network.ServerPlayerEntity) player;
+		throw new UnsupportedOperationException("Unable to adapt text to a Fabric's ServerPlayerEntity on a " + Environment.getCurrent().getName() + " environment");
+	}
+	
+	/**
 	 * Gets the player adapted for BungeeCord environments.
 	 * 
 	 * @return BungeeCord-adapted player
-	 * @throws UnsupportedOperationException If !{@link Environment#isBungeeCord()}
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBungeeCord()}
 	 */
 	public net.md_5.bungee.api.connection.ProxiedPlayer bungeeCordValue() {
 		if (Environment.isBungeeCord())
@@ -152,7 +175,7 @@ public class PlayerAdapter {
 	 * Gets the player adapted for Velocity environments.
 	 * 
 	 * @return Velocity-adapted player
-	 * @throws UnsupportedOperationException If !{@link Environment#isVelocity()}
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isVelocity()}
 	 */
 	public com.velocitypowered.api.proxy.Player velocityValue() {
 		if (Environment.isVelocity())
@@ -163,7 +186,7 @@ public class PlayerAdapter {
 	/**
 	 * Gets the player adapted as a {@link ChatPluginPlayer} loaded by the {@link PlayerManager}.
 	 * 
-	 * <p>Will return <code>null</code> if !{@link #isLoaded()}.</p>
+	 * <p>Will return <code>null</code> if <code>!</code>{@link #isLoaded()}.</p>
 	 * 
 	 * @return Loaded player
 	 */
@@ -183,6 +206,8 @@ public class PlayerAdapter {
 			return bukkitValue().getUniqueId();
 		case SPONGE:
 			return spongeValue().getUniqueId();
+		case FABRIC:
+			return fabricValue().getUuid();
 		case BUNGEECORD:
 			return bungeeCordValue().getUniqueId();
 		case VELOCITY:
@@ -201,6 +226,8 @@ public class PlayerAdapter {
 			return bukkitValue().getName();
 		case SPONGE:
 			return spongeValue().getName();
+		case FABRIC:
+			return fabricValue().getName().getString();
 		case BUNGEECORD:
 			return bungeeCordValue().getName();
 		case VELOCITY:
@@ -227,6 +254,15 @@ public class PlayerAdapter {
 			break;
 		case SPONGE:
 			address = spongeValue().getConnection().getAddress();
+			break;
+		case FABRIC:
+			if (VersionUtils.getVersion().isOlderThan(Version.V1_19_4)) {
+				try {
+					address = ((ClientConnection) ServerPlayNetworkHandler.class.getField("field_14127").get(fabricValue().networkHandler)).getAddress();
+				} catch (NoSuchFieldException | IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			} else address = fabricValue().networkHandler.getConnectionAddress();
 			break;
 		case BUNGEECORD:
 			address = bungeeCordValue().getSocketAddress();
@@ -259,6 +295,19 @@ public class PlayerAdapter {
 			return bukkitValue().hasPermission(permission);
 		case SPONGE:
 			return spongeValue().hasPermission(permission);
+		case FABRIC:
+			if (IntegrationType.LUCKPERMS.isEnabled())
+				return IntegrationType.LUCKPERMS.get().hasPermission(new OfflinePlayer(this), permission);
+			try {
+				if (FABRIC_PERMISSIONS.contains(permission))
+					return true;
+				return VersionUtils.getVersion().isAtLeast(Version.V1_21_9)
+						? FabricBootstrapper.getInstance().getServer().getPlayerManager().isOperator(fabricValue().getPlayerConfigEntry())
+						: (boolean) net.minecraft.server.PlayerManager.class.getMethod("method_14569", GameProfile.class).invoke(FabricBootstrapper.getInstance().getServer().getPlayerManager(), fabricValue().getGameProfile());
+			} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+				e.printStackTrace();
+				return false;
+			}
 		case BUNGEECORD:
 			return bungeeCordValue().hasPermission(permission);
 		case VELOCITY:
@@ -271,23 +320,24 @@ public class PlayerAdapter {
 	 * 
 	 * @param message Message to send
 	 */
+	@SuppressWarnings("deprecation")
 	public void sendMessage(String message) {
 		switch (Environment.getCurrent()) {
 		case BUKKIT:
-			bukkitValue().sendMessage(ChatColor.translate(message));
+			bukkitValue().sendMessage(message);
 			break;
 		case SPONGE:
-			spongeValue().sendMessage(me.remigio07.chatplugin.api.server.util.Utils.serializeSpongeText(message, true));
+			spongeValue().sendMessage(Utils.toSpongeComponent(message));
+			break;
+		case FABRIC:
+			fabricValue().sendMessage(Utils.toFabricComponent(message));
 			break;
 		case BUNGEECORD:
-			BungeeCordMessages.sendMessage(this, message);
+			bungeeCordValue().sendMessage(message);
 			break;
 		case VELOCITY:
-			try {
-				invokeAdventureMethod.invoke(null, velocityValue(), "sendMessage", message);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				e.printStackTrace();
-			} break;
+			velocityValue().sendMessage(Utils.toAdventureComponent(message));
+			break;
 		}
 	}
 	
@@ -296,23 +346,24 @@ public class PlayerAdapter {
 	 * 
 	 * @param reason Reason to kick the player for
 	 */
+	@SuppressWarnings("deprecation")
 	public void disconnect(String reason) {
 		switch (Environment.getCurrent()) {
 		case BUKKIT:
-			bukkitValue().kickPlayer(ChatColor.translate(reason));
+			bukkitValue().kickPlayer(reason);
 			break;
 		case SPONGE:
-			spongeValue().kick(me.remigio07.chatplugin.api.server.util.Utils.serializeSpongeText(reason, true));
+			spongeValue().kick(Utils.toSpongeComponent(reason));
+			break;
+		case FABRIC:
+			fabricValue().networkHandler.disconnect(Utils.toFabricComponent(reason));
 			break;
 		case BUNGEECORD:
-			BungeeCordMessages.disconnect(this, reason);
+			bungeeCordValue().disconnect(reason);
 			break;
 		case VELOCITY:
-			try {
-				invokeAdventureMethod.invoke(null, velocityValue(), "disconnect", reason);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				e.printStackTrace();
-			} break;
+			velocityValue().disconnect(Utils.toAdventureComponent(reason));
+			break;
 		}
 	}
 	
@@ -334,6 +385,9 @@ public class PlayerAdapter {
 			break;
 		case SPONGE:
 			player = Sponge.getServer().getPlayer(uuid).orElse(null);
+			break;
+		case FABRIC:
+			player = FabricBootstrapper.getInstance().getServer().getPlayerManager().getPlayer(uuid);
 			break;
 		case BUNGEECORD:
 			player = ProxyServer.getInstance().getPlayer(uuid);
@@ -367,6 +421,9 @@ public class PlayerAdapter {
 		case SPONGE:
 			player = Sponge.getServer().getPlayer(name).orElse(null);
 			break;
+		case FABRIC:
+			player = FabricBootstrapper.getInstance().getServer().getPlayerManager().getPlayer(name);
+			break;
 		case BUNGEECORD:
 			player = ProxyServer.getInstance().getPlayer(name);
 			break;
@@ -396,6 +453,9 @@ public class PlayerAdapter {
 		case SPONGE:
 			players = Sponge.getServer().getOnlinePlayers();
 			break;
+		case FABRIC:
+			players = FabricBootstrapper.getInstance().getServer().getPlayerManager().getPlayerList();
+			break;
 		case BUNGEECORD:
 			players = ProxyServer.getInstance().getPlayers();
 			break;
@@ -403,18 +463,6 @@ public class PlayerAdapter {
 			players = VelocityBootstrapper.getInstance().getProxy().getAllPlayers();
 			break;
 		} return players.stream().map(PlayerAdapter::new).collect(Collectors.toList());
-	}
-	
-	private static class BungeeCordMessages {
-		
-		public static void sendMessage(PlayerAdapter player, String message) {
-			player.bungeeCordValue().sendMessage(Utils.serializeBungeeCordText(message));
-		}
-		
-		public static void disconnect(PlayerAdapter player, String reason) {
-			player.bungeeCordValue().disconnect(Utils.serializeBungeeCordText(reason));
-		}
-		
 	}
 	
 }

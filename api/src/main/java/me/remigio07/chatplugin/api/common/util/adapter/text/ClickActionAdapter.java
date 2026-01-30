@@ -21,9 +21,10 @@ import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import net.md_5.bungee.api.chat.ClickEvent.Action;
+import net.minecraft.text.ClickEvent;
 
 /**
- * Represents an action performed on a click event.
+ * Environment-indipendent (Bukkit, Sponge, Fabric, BungeeCord and Velocity) click action adapter.
  */
 public class ClickActionAdapter extends PseudoEnum<ClickActionAdapter> {
 	
@@ -86,22 +87,41 @@ public class ClickActionAdapter extends PseudoEnum<ClickActionAdapter> {
 	}
 	
 	/**
+	 * Gets the click action adapted for Fabric environments.
+	 * 
+	 * <p>If the current version does not support this click action, the
+	 * default value of {@link #SUGGEST_COMMAND} will be returned.</p>
+	 * 
+	 * @return Fabric-adapted click action
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isFabric()}
+	 */
+	public ClickEvent.Action fabricValue() {
+		if (Environment.isFabric())
+			try {
+				return ClickEvent.Action.valueOf(name);
+			} catch (IllegalArgumentException iae) {
+				return ClickEvent.Action.SUGGEST_COMMAND;
+			}
+		throw new UnsupportedOperationException("Unable to adapt click action to a Fabric's ClickEvent.Action on a " + Environment.getCurrent().getName() + " environment");
+	}
+	
+	/**
 	 * Gets the click action adapted for BungeeCord environments.
 	 * 
 	 * <p>If the current version does not support this click action, the
 	 * default value of {@link #SUGGEST_COMMAND} will be returned.</p>
 	 * 
 	 * @return BungeeCord-adapted click action
-	 * @throws UnsupportedOperationException If !{@link Environment#isBungeeCord()}
+	 * @throws UnsupportedOperationException If <code>!{@link Environment#isBungeeCord()} &amp;&amp; !{@link VersionUtils#isSpigot()}</code>
 	 */
-	public net.md_5.bungee.api.chat.ClickEvent.Action bungeeCordValue() {
-		if (Environment.isBungeeCord())
+	public Action bungeeCordValue() {
+		if (Environment.isBungeeCord() || VersionUtils.isSpigot())
 			try {
 				return Action.valueOf(name);
 			} catch (IllegalArgumentException iae) {
 				return Action.SUGGEST_COMMAND;
 			}
-		throw new UnsupportedOperationException("Unable to adapt favicon to a BungeeCord's ClickEvent.Action on a " + Environment.getCurrent().getName() + " environment");
+		throw new UnsupportedOperationException("Unable to adapt click action to a BungeeCord's ClickEvent.Action on a " + Environment.getCurrent().getName() + " environment");
 	}
 	
 	/**

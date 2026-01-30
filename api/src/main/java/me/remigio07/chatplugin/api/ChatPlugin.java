@@ -78,7 +78,8 @@ public abstract class ChatPlugin {
 	
 	/**
 	 * Gets the plugin's data folder in the plugins
-	 * (Bukkit/BungeeCord/Velocity) or mods (Sponge) folder.
+	 * (on Bukkit, BungeeCord and Velocity)
+	 * or mods (on Sponge and Fabric) folder.
 	 * 
 	 * @return Plugin's data folder
 	 */
@@ -174,7 +175,7 @@ public abstract class ChatPlugin {
 	 * @param message Message to send
 	 * @param log Whether to {@link LogManager#writeToFile(String)} the message
 	 */
-	public abstract void sendConsoleMessage(String message, boolean log);
+	public abstract void sendConsoleMessage(String message, boolean log); // standardize (ChatPluginServerPlayer#executeCommand(String)); maybe move it to ChatPluginPlayer?
 	
 	/**
 	 * Prints the beautiful start message.

@@ -57,7 +57,7 @@ public class VelocityBootstrapper {
 	private Path dataFolder;
 	
 	/**
-	 * Constructor automatically called on proxy startup.
+	 * Constructor called automatically on proxy startup.
 	 * 
 	 * @param proxy Current proxy instance
 	 * @param logger ChatPlugin's logger
@@ -72,15 +72,18 @@ public class VelocityBootstrapper {
 	}
 	
 	/**
-	 * Event automatically called on proxy startup.
+	 * Event called automatically on proxy startup.
 	 * 
 	 * @param event Startup event
 	 */
 	@Subscribe
 	public void onProxyInitialize(ProxyInitializeEvent event) {
-		Environment.currentEnvironment = Environment.VELOCITY;
-		
-		JARLibraryLoader.getInstance().open(proxy, logger, dataFolder);
+		JARLibraryLoader.getInstance().open(
+				Environment.currentEnvironment = Environment.VELOCITY,
+				logger,
+				dataFolder,
+				proxy
+				);
 	}
 	
 	/**

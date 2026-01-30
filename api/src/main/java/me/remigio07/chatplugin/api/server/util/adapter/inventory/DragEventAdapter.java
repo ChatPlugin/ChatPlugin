@@ -22,7 +22,7 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.item.ItemStackAdapter;
 
 /**
- * Environment indipendent (Bukkit and Sponge) drag event adapter.
+ * Environment-indipendent (Bukkit, Sponge and Fabric) drag event adapter.
  */
 public class DragEventAdapter {
 	

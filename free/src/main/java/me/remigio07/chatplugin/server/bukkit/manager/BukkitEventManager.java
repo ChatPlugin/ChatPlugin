@@ -16,6 +16,7 @@
 package me.remigio07.chatplugin.server.bukkit.manager;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
@@ -150,7 +151,7 @@ public class BukkitEventManager extends EventManager implements EventExecutor, L
 		Player player = event.getPlayer();
 		ChatPluginServerPlayer serverPlayer = ServerPlayerManager.getInstance().getPlayer(player.getUniqueId());
 		
-		if (event.isCancelled() || serverPlayer == null || !ChatManager.getInstance().isEnabled() || (IntegrationType.GADGETSMENU.isEnabled() && ((GadgetsMenuIntegration) IntegrationType.GADGETSMENU.get()).isRenamingPet(serverPlayer)))
+		if (event.isCancelled() || serverPlayer == null || (IntegrationType.GADGETSMENU.isEnabled() && ((GadgetsMenuIntegration) IntegrationType.GADGETSMENU.get()).isRenamingPet(serverPlayer)))
 			return;
 		String[] args = { event.getMessage(), event.getFormat() };
 		
@@ -214,7 +215,8 @@ public class BukkitEventManager extends EventManager implements EventExecutor, L
 	}
 	
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getPlayer().getUniqueId());
+		UUID uuid = event.getPlayer().getUniqueId();
+		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(uuid);
 		
 		if (player != null) {
 			if (QuitMessageManager.getInstance().isEnabled())
@@ -226,9 +228,9 @@ public class BukkitEventManager extends EventManager implements EventExecutor, L
 				} AnticheatManager.getInstance().clearViolations(player);
 			}, 0L);
 			ServerPlayerManager.getInstance().unloadPlayer(player.getUUID());
-		} ServerPlayerManager.getPlayersVersions().remove(event.getPlayer().getUniqueId());
-		ServerPlayerManager.getPlayersLoginTimes().remove(event.getPlayer().getUniqueId());
-		ServerPlayerManager.getBedrockPlayers().remove(event.getPlayer().getUniqueId());
+		} ServerPlayerManager.getPlayersVersions().remove(uuid);
+		ServerPlayerManager.getPlayersLoginTimes().remove(uuid);
+		ServerPlayerManager.getBedrockPlayers().remove(uuid);
 	}
 	
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
@@ -252,13 +254,16 @@ public class BukkitEventManager extends EventManager implements EventExecutor, L
 							bossbarManager.startLoading(player);
 						else bossbarManager.sendBossbar(bossbarManager.getBossbars().get(bossbarManager.getTimerIndex() == -1 ? 0 : bossbarManager.getTimerIndex()), player);
 					}
-				}
+				} applyScoreboard(ScoreboardEvent.CHANGED_WORLD, event.getPlayer(), event.getFrom().getName());
 			} else { // enabled -> disabled
 				((VanishManagerImpl) VanishManager.getInstance()).update(player, false);
 				playerManager.unloadPlayer(player.getUUID());
 			}
 		} else if (playerManager.isWorldEnabled(event.getPlayer().getWorld().getName()) && !event.getPlayer().hasMetadata("NPC")) // disabled -> enabled
-			TaskManager.runAsync(() -> playerManager.loadPlayer(new PlayerAdapter(event.getPlayer())), 0L);
+			TaskManager.runAsync(() -> {
+				playerManager.loadPlayer(new PlayerAdapter(event.getPlayer()));
+				applyScoreboard(ScoreboardEvent.CHANGED_WORLD, event.getPlayer(), event.getFrom().getName());
+			}, 0L);
 	}
 	
 	public void onInventoryClick(InventoryClickEvent event) {
@@ -315,7 +320,7 @@ public class BukkitEventManager extends EventManager implements EventExecutor, L
 			
 			if (cursor != dragEvent.getCursor())
 				event.setCursor(dragEvent.getCursor().bukkitValue());
-			TaskManager.runSync(() -> player.toAdapter().bukkitValue().updateInventory(), 0L);
+			TaskManager.runSync(() -> player.toAdapter().bukkitValue().updateInventory(), 0L); // what happens if we remove this?
 		}
 	}
 	

@@ -42,38 +42,44 @@ public enum ScoreboardEvent {
 	/**
 	 * Event triggered when a player attacks an entity.
 	 */
-	@EventArguments(types = { LivingEntityAdapter.class, double.class }, descriptions = { "Damaged entity", "Damage dealt" })
-	ENTITY_ATTACK("entity_name", "entity_health", "entity_max_health", "damage", "damage_format"),
+	@EventArguments(types = { LivingEntityAdapter.class, double.class }, descriptions = { "Entity damaged", "Damage dealt" })
+	ENTITY_ATTACK("entity_attack_event_entity_name", "entity_attack_event_entity_health", "entity_attack_event_entity_max_health", "entity_attack_event_damage", "entity_attack_event_damage_format"),
+	
+	/**
+	 * Event triggered when a player kills an entity.
+	 */
+	@EventArguments(types = { LivingEntityAdapter.class, double.class }, descriptions = { "Entity damaged", "Damage dealt" })
+	ENTITY_KILL("entity_kill_event_entity_name", "entity_kill_event_entity_max_health", "entity_kill_event_damage", "entity_kill_event_damage_format"),
 	
 	/**
 	 * Event triggered when a player tags another player.
 	 */
 	@RequiredIntegration(CombatLogIntegration.class)
-	@EventArguments(types = LivingEntityAdapter.class, descriptions = "Damaged opponent")
-	COMBAT_TAG("opponent_name", "opponent_health", "opponent_max_health", "damage", "damage_format"),
+	@EventArguments(types = LivingEntityAdapter.class, descriptions = "Opponent damaged")
+	COMBAT_TAG("combat_tag_event_opponent_name", "combat_tag_event_opponent_health", "combat_tag_event_opponent_max_health", "combat_tag_event_damage", "combat_tag_event_damage_format"),
 	
 	/**
 	 * Event triggered when a player places a block.
 	 */
-	@EventArguments(types = BlockAdapter.class, descriptions = "Related block")
+	@EventArguments(types = BlockAdapter.class, descriptions = "Block placed")
 	BLOCK_PLACE("block_place_event_placed_block_type", "block_place_event_placed_block_x", "block_place_event_placed_block_y", "block_place_event_placed_block_z"),
 	
 	/**
 	 * Event triggered when a player breaks a block.
 	 */
-	@EventArguments(types = BlockAdapter.class, descriptions = "Related block")
+	@EventArguments(types = BlockAdapter.class, descriptions = "Block broken")
 	BLOCK_BREAK("block_break_event_broken_block_type", "block_break_event_broken_block_x", "block_break_event_broken_block_y", "block_break_event_broken_block_z"),
 	
 	/**
 	 * Event triggered when a player changes world.
 	 */
-	@EventArguments(types = String.class, descriptions = "Related old world's name")
+	@EventArguments(types = String.class, descriptions = "Old world's name")
 	CHANGED_WORLD("changed_world_event_old_world"),
 	
 	/**
 	 * Event triggered when a player dies.
 	 */
-	@EventArguments(types = { int.class, int.class, int.class, int.class, int.class }, descriptions = { "Death's location's X coord", "Death's location's Y coord", "Death's location's Z coord", "Dropped xp levels amount", "Dropped items amount" })
+	@EventArguments(types = { int.class, int.class, int.class, int.class, int.class }, descriptions = { "Death location's X coord", "Death location's Y coord", "Death location's Z coord", "Dropped XP levels amount", "Dropped items amount" })
 	DEATH("death_event_x", "death_event_y", "death_event_z", "death_event_dropped_xp", "death_event_dropped_items"),
 	
 	/**
@@ -84,13 +90,13 @@ public enum ScoreboardEvent {
 	/**
 	 * Event triggered when a player enters a bed.
 	 */
-	@EventArguments(types = { int.class, int.class, int.class }, descriptions = { "Bed's location's X coord", "Bed's location's Y coord", "Bed's location's Z coord" })
+	@EventArguments(types = { int.class, int.class, int.class }, descriptions = { "Bed location's X coord", "Bed location's Y coord", "Bed location's Z coord" })
 	BED_ENTER("bed_enter_event_bed_x", "bed_enter_event_bed_y", "bed_enter_event_bed_z"),
 	
 	/**
 	 * Event triggered when a player leaves a bed.
 	 */
-	@EventArguments(types = { int.class, int.class, int.class }, descriptions = { "Bed's location's X coord", "Bed's location's Y coord", "Bed's location's Z coord" })
+	@EventArguments(types = { int.class, int.class, int.class }, descriptions = { "Bed location's X coord", "Bed location's Y coord", "Bed location's Z coord" })
 	BED_LEAVE("bed_leave_event_bed_x", "bed_leave_event_bed_y", "bed_leave_event_bed_z"),
 	
 	/**
@@ -101,7 +107,7 @@ public enum ScoreboardEvent {
 	/**
 	 * Event triggered when a player catches something while fishing.
 	 */
-	@EventArguments(types = { String.class, String.class, int.class }, descriptions = { "Caught entity's type", "Caught entity's name", "Dropped xp levels amount" })
+	@EventArguments(types = { String.class, String.class, int.class }, descriptions = { "Caught entity's type", "Caught entity's name", "Dropped XP levels amount" })
 	FISH("fish_event_caught_type", "fish_event_caught_name", "fish_event_dropped_xp"),
 	
 	/**
@@ -119,7 +125,7 @@ public enum ScoreboardEvent {
 	/**
 	 * Event triggered when a player changes their resource pack's status.
 	 */
-	@EventArguments(types = String.class, descriptions = "Client's response's status")
+	@EventArguments(types = String.class, descriptions = "Client response's status")
 	RESOURCE_PACK_STATUS("resource_pack_status_event_status"),
 	
 	/**

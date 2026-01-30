@@ -236,12 +236,12 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 	}
 	
 	@SuppressWarnings("deprecation")
-	private static Objective registerNewObjective(Scoreboard scoreboard, String name, String criteria) {
-		if (criteria.equals("dummy") || Bukkit.isPrimaryThread())
-			return scoreboard.registerNewObjective(name, criteria);
+	private static Objective registerNewObjective(Scoreboard scoreboard, String name, String criterion) {
+		if (criterion.equals("dummy") || Bukkit.isPrimaryThread())
+			return scoreboard.registerNewObjective(name, criterion);
 		CompletableFuture<Objective> future = new CompletableFuture<>();
 		
-		TaskManager.runSync(() -> future.complete(registerNewObjective(scoreboard, name, criteria)), 0L);
+		TaskManager.runSync(() -> future.complete(registerNewObjective(scoreboard, name, criterion)), 0L);
 		return future.join();
 	}
 	

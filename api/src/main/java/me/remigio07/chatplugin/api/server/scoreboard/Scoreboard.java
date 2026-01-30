@@ -54,11 +54,11 @@ public abstract class Scoreboard {
 	protected List<ChatPluginServerPlayer> players = new CopyOnWriteArrayList<>();
 	
 	static {
-		if (Environment.isBukkit())
+		if (Environment.isSponge())
 			for (int i = 0; i < 15; i++)
-				SCORES[i] = ChatColor.values()[i].toString() + "§r";
+				SCORES[i] = (i == 0 ? "" : SCORES[i - 1]) + "§§";
 		else for (int i = 0; i < 15; i++)
-			SCORES[i] = (i == 0 ? "" : SCORES[i - 1]) + "§§";
+			SCORES[i] = ChatColor.values()[i].toString() + "§r";
 	}
 	
 	/**

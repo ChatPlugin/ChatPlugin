@@ -61,7 +61,6 @@ import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.server.bossbar.NativeBossbar;
 import me.remigio07.chatplugin.server.bossbar.ReflectionBossbar;
-import me.remigio07.chatplugin.server.bukkit.manager.BukkitPlayerManager;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import me.remigio07.chatplugin.server.rank.RankManagerImpl;
 import me.remigio07.chatplugin.server.util.Utils;
@@ -245,6 +244,8 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 		boolean isAtLeastV1_12 = VersionUtils.getVersion().isAtLeast(Version.V1_12);
 		
 		Utils.ensureSync(() -> {
+			if (!other.isOnline())
+				return;
 			try {
 				if (isAtLeastV1_12) {
 					String lastColors = ChatColor.getLastColors(prefix);
@@ -268,9 +269,11 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 		final Team finalTeam = team == null ? scoreboard.registerNewTeam(identifier) : team;
 		
 		Utils.ensureSync(() -> {
+			if (!other.isOnline())
+				return;
 			try {
 				finalTeam.addPlayer(other.toAdapter().bukkitValue());
-			} catch (IllegalStateException ise) {
+			} catch (IllegalStateException ise) { 
 				// safe to ignore
 			}
 		});

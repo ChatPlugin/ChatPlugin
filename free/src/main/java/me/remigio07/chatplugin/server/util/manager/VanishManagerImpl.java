@@ -58,7 +58,7 @@ public class VanishManagerImpl extends VanishManager {
 		instance = this;
 		long ms = System.currentTimeMillis();
 		
-		if (!ConfigurationType.CONFIG.get().getBoolean("vanish.enabled"))
+		if (!ConfigurationType.CONFIG.get().getBoolean("vanish.enabled") || !checkAvailability(true))
 			return;
 		invisibility = ConfigurationType.CONFIG.get().getBoolean("vanish.invisibility");
 		enabled = true;
@@ -82,12 +82,14 @@ public class VanishManagerImpl extends VanishManager {
 		if (event.isCancelled())
 			return;
 		vanished.put(player.getWorld(), Utils.addAndGet(getVanishedList(player.getWorld()), Arrays.asList(player)));
-		Utils.ensureSync(() -> {
+		Utils.ensureSync(() -> { // TODO in the future, do not run this on the next tick to prevent cheaters from knowing who vanishes
 			Object adaptedPlayer = null;
 			
 			if (Environment.isSponge()) {
 				adaptedPlayer = player.toAdapter().spongeValue();
 				
+				if (adaptedPlayer == null) // this as well (merge with one below)
+					return;
 				try { // Sponge v4.2
 					((Player) adaptedPlayer).offer((Key<Value<Boolean>>) Keys.class.getField("INVISIBLE").get(null), true);
 					((Player) adaptedPlayer).offer((Key<Value<Boolean>>) Keys.class.getField("INVISIBILITY_IGNORES_COLLISION").get(null), true);
@@ -99,6 +101,8 @@ public class VanishManagerImpl extends VanishManager {
 				}
 			} else adaptedPlayer = player.toAdapter().bukkitValue();
 			
+			if (adaptedPlayer == null)
+				return;
 			for (ChatPluginServerPlayer other : ServerPlayerManager.getInstance().getPlayers().values()) {
 				if (other.equals(player))
 					continue;

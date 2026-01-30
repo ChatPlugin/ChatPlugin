@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.util.VersionUtils;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
@@ -79,9 +81,20 @@ public class MSPTManagerImpl extends MSPTManager {
 	public void run() {
 		if (enabled) {
 			Object server = BukkitReflection.invokeMethod("MinecraftServer", "getServer", null);
-			double[] times5s = eval(BukkitReflection.invokeMethod("TickTimes", "getTimes", BukkitReflection.getFieldValue("MinecraftServer", server, "tickTimes5s")));
-			double[] times10s = eval(BukkitReflection.invokeMethod("TickTimes", "getTimes", BukkitReflection.getFieldValue("MinecraftServer", server, "tickTimes10s")));
-			double[] times1m = eval(BukkitReflection.invokeMethod("TickTimes", "getTimes", BukkitReflection.getFieldValue("MinecraftServer", server, "tickTimes60s")));
+			double[] times5s;
+			double[] times10s;
+			double[] times1m;
+			
+			if (VersionUtils.getVersion().isAtLeast(Version.V1_21_9)) { // works from build #49
+				times5s = eval(BukkitReflection.getFieldValue("MinecraftServer", server, "tickTimes5s"));
+				times10s = eval(BukkitReflection.getFieldValue("MinecraftServer", server, "tickTimes10s"));
+				times1m = eval(BukkitReflection.getFieldValue("MinecraftServer", server, "tickTimes1m"));
+			} else {
+				times5s = evalOld(BukkitReflection.invokeMethod("TickTimes", "getTimes", BukkitReflection.getFieldValue("MinecraftServer", server, "tickTimes5s")));
+				times10s = evalOld(BukkitReflection.invokeMethod("TickTimes", "getTimes", BukkitReflection.getFieldValue("MinecraftServer", server, "tickTimes10s")));
+				times1m = evalOld(BukkitReflection.invokeMethod("TickTimes", "getTimes", BukkitReflection.getFieldValue("MinecraftServer", server, "tickTimes60s")));
+			}
+			
 			averageMSPT[0] = times5s[0];
 			averageMSPT[1] = times10s[0];
 			averageMSPT[2] = times1m[0];
@@ -94,8 +107,7 @@ public class MSPTManagerImpl extends MSPTManager {
 		}
 	}
 	
-	// https://github.com/PaperMC/Paper/blob/main/paper-server/src/main/java/io/papermc/paper/command/MSPTCommand.java#L84
-	private static double[] eval(Object times) {
+	private static double[] evalOld(Object times) {
 		long min = Integer.MAX_VALUE;
 		long max = 0L;
 		long total = 0L;
@@ -107,6 +119,15 @@ public class MSPTManagerImpl extends MSPTManager {
 				max = value;
 			total += value;
 		} return new double[] { ((double) total / (double) ((long[]) times).length) * 1.0E-6, ((double) min) * 1.0E-6, ((double) max) * 1.0E-6 };
+	}
+	
+	private static double[] eval(Object data) {
+		Object reportData = BukkitReflection.invokeMethod("TickData", "generateTickReport", data, null, System.nanoTime(), BukkitReflection.invokeMethod("TickRateManager", "nanosecondsPerTick", BukkitReflection.invokeMethod("MinecraftServer", "tickRateManager", BukkitReflection.invokeMethod("MinecraftServer", "getServer", null))));
+		
+		if (reportData == null)
+			return new double[] { 0.0, 0.0, 0.0 };
+		Object segmentAll = BukkitReflection.invokeMethod("SegmentedAverage", "segmentAll", BukkitReflection.invokeMethod("TickReportData", "timePerTickData", reportData));
+		return new double[] { (double) BukkitReflection.invokeMethod("SegmentData", "average", segmentAll) * 1.0E-6D, (double) BukkitReflection.invokeMethod("SegmentData", "least", segmentAll) * 1.0E-6D, (double) BukkitReflection.invokeMethod("SegmentData", "greatest", segmentAll) * 1.0E-6D };
 	}
 	
 	@Override

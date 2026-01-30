@@ -62,7 +62,7 @@ public class ChatPluginManagerException extends Exception {
 	/**
 	 * Constructs an exception with the given exception for the specified source.
 	 * 
-	 * @deprecated Internal use only. You should declare what manager is throwing this exception.
+	 * @deprecated Internal use only. You should declare which manager is throwing this exception.
 	 * @param source Exception's source
 	 * @param exception Exception caught by the source
 	 */
@@ -75,7 +75,7 @@ public class ChatPluginManagerException extends Exception {
 	/**
 	 * Constructs an exception with the given error message for the specified source.
 	 * 
-	 * @deprecated Internal use only. You should declare what manager is throwing this exception.
+	 * @deprecated Internal use only. You should declare which manager is throwing this exception.
 	 * @param source The exception's source
 	 * @param message The error message
 	 * @param args Optional arguments ({@link Utils#replaceNumericPlaceholders(String, Object...)})
@@ -94,7 +94,7 @@ public class ChatPluginManagerException extends Exception {
 	 * 
 	 * @return Exception's manager
 	 */
-	@Nullable(why = "Exception may have been initialized using third constructor")
+	@Nullable(why = "Exception may have been initialized using the deprecated constructors")
 	public ChatPluginManager getManager() {
 		return manager;
 	}

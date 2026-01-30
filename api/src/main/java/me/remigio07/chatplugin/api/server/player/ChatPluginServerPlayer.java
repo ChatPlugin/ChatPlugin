@@ -621,6 +621,7 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	 * 
 	 * @return Player's display name
 	 */
+	@NotNull
 	public abstract String getDisplayName();
 	
 	/**

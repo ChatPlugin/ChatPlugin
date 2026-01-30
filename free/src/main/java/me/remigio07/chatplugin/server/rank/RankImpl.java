@@ -76,28 +76,28 @@ public class RankImpl extends Rank {
 		this.displayName = ChatColor.translate(super.displayName = displayName == null ? id : displayName, false);
 	}
 	
-	public void setPrefix(String prefix) { // default: ""
+	public void setPrefix(String prefix) {
 		this.prefix = ChatColor.translate(super.prefix = prefix == null ? "" : prefix, false);
 	}
 	
-	public void setSuffix(String suffix) { // default: ""
+	public void setSuffix(String suffix) {
 		this.suffix = ChatColor.translate(super.suffix = suffix == null ? "" : suffix, false);
 	}
 	
-	public void setTagPrefix(String tagPrefix) { // default: ""
+	public void setTagPrefix(String tagPrefix) {
 		((RankTagImpl) tag).setPrefix(tagPrefix);
 	}
 	
-	public void setTagSuffix(String tagSuffix) { // default: ""
+	public void setTagSuffix(String tagSuffix) {
 		((RankTagImpl) tag).setSuffix(tagSuffix);
 	}
 	
-	public void setTagNameColor(String tagNameColor) { // default: "&f", even if empty
+	public void setTagNameColor(String tagNameColor) {
 		((RankTagImpl) tag).setNameColor(tagNameColor);
 	}
 	
-	public void setChatColor(String chatColor) { // default: "&f", even if empty
-		this.chatColor = ChatColor.translate(super.chatColor = chatColor == null || chatColor.isEmpty() ? "&f" : chatColor, false);
+	public void setChatColor(String chatColor) {
+		this.chatColor = ChatColor.translate(super.chatColor = chatColor == null ? "" : chatColor, false);
 	}
 	
 	public Object getPermission() {
@@ -121,7 +121,7 @@ public class RankImpl extends Rank {
 		}
 		
 		public void setNameColor(String nameColor) {
-			this.nameColor = ChatColor.translate(super.nameColor = nameColor == null || nameColor.isEmpty() ? "&f" : nameColor, false);
+			this.nameColor = ChatColor.translate(super.nameColor = nameColor == null ? "" : nameColor, false);
 		}
 		
 	}

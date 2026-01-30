@@ -68,7 +68,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 
 public class ChatPluginBukkit extends ChatPlugin {
 	
-	private Metrics metrics;
+	protected Metrics metrics;
 	
 	public ChatPluginBukkit() {
 		instance = this;
@@ -94,6 +94,8 @@ public class ChatPluginBukkit extends ChatPlugin {
 				LogManager.log("This server is running a pre-Netty rewrite Minecraft version. Note that this software is {0} old. Even though it is still supported, fixing any bugs is not a priority and a lot of features are not available.", 1, Utils.formatTime(System.currentTimeMillis() - VersionUtils.getVersion().getReleaseDate()));
 			else if (VersionUtils.getVersion().isOlderThan(Version.V1_9))
 				LogManager.log("This server is running an old Minecraft version. Note that this software is {0} old. Even though it is still supported, fixing any bugs is not a priority. It's recommended to upgrade to a newer version.", 1, Utils.formatTime(System.currentTimeMillis() - VersionUtils.getVersion().getReleaseDate()));
+			else if (VersionUtils.getVersion() == Version.UNSUPPORTED)
+				LogManager.log("This server is running an unsupported Minecraft version. Is ChatPlugin up to date? Compatible versions: 1.8-{0}. Note: snapshots, pre-releases and release candidates are not supported. Proceed at your own risk.", 1, Version.values()[Version.values().length - 2].getName());
 			managers.loadManagers();
 			BukkitCommandsHandler.registerCommands();
 			Utils.startUpdateChecker();
@@ -206,6 +208,8 @@ public class ChatPluginBukkit extends ChatPlugin {
 		for (String command : BukkitCommandsHandler.getCommands().keySet()) {
 			PluginCommand bukkitCommand = BukkitCommandsHandler.registerCommand(command);
 			
+			if (bukkitCommand == null)
+				continue;
 			if (command.equals("chatplugin")) {
 				bukkitCommand.setExecutor(new CommandExecutor() {
 					

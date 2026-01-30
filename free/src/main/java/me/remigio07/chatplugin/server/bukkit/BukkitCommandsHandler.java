@@ -67,7 +67,7 @@ public class BukkitCommandsHandler extends CommandsHandler implements TabExecuto
 			commandMapField.setAccessible(true);
 			knownCommandsField.setAccessible(true);
 			
-			commandMap = ((CommandMap) commandMapField.get(Bukkit.getServer()));
+			commandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
 			knownCommands = (Map<String, Command>) knownCommandsField.get(commandMap);
 		} catch (NoSuchMethodException | IllegalAccessException | NoSuchFieldException e) {
 			e.printStackTrace();
@@ -90,13 +90,12 @@ public class BukkitCommandsHandler extends CommandsHandler implements TabExecuto
 	
 	public static PluginCommand registerCommand(String command) {
 		try {
-			BaseCommand[] subcommands = commands.get(command);
-			List<String> aliases = subcommands[subcommands.length - 1].getMainArgs();
+			BaseCommand[] subCommands = commands.get(command);
+			List<String> aliases = subCommands[subCommands.length - 1].getMainArgs().stream().filter(alias -> !disabledCommands.contains(alias)).collect(Collectors.toList());
 			
-			if (disabledCommands.containsAll(aliases))
+			if (aliases.isEmpty())
 				return null;
-			aliases = aliases.stream().filter(alias -> !disabledCommands.contains(alias)).collect(Collectors.toList());
-			PluginCommand bukkitCommand = (PluginCommand) pluginCommandConstructor.newInstance(aliases.get(0), BukkitBootstrapper.getInstance());
+			PluginCommand bukkitCommand = pluginCommandConstructor.newInstance(aliases.get(0), BukkitBootstrapper.getInstance());
 			
 			if (aliases.size() != 1)
 				bukkitCommand.setAliases(aliases.subList(1, aliases.size()));
@@ -178,9 +177,7 @@ public class BukkitCommandsHandler extends CommandsHandler implements TabExecuto
 			label = label.substring(11);
 		for (BaseCommand[] commands : commands.values()) {
 			if (commands[commands.length - 1].getMainArgs().contains(label.toLowerCase())) {
-				for (int i = 0; i < commands.length; i++) {
-					BaseCommand command = commands[i];
-					
+				for (BaseCommand command : commands) {
 					if (command.hasSubCommands() && args.length == 1) {
 						list = command.getTabCompletionArgs(new CommandSenderAdapter(sender), args[0], 0);
 						break;

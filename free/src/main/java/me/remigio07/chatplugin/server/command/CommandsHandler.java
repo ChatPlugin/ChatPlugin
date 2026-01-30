@@ -15,6 +15,7 @@
 
 package me.remigio07.chatplugin.server.command;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +80,7 @@ public abstract class CommandsHandler {
 			total = 0;
 			
 			commands.clear();
-		} disabledCommands = ConfigurationType.CONFIG.get().getStringList("settings.disabled-commands");
+		} (disabledCommands = new ArrayList<>(ConfigurationType.CONFIG.get().getStringList("settings.disabled-commands"))).replaceAll(command -> command.startsWith("/") ? command.substring(1) : command);
 		logCommandBlocksCommands = ConfigurationType.CONFIG.get().getBoolean("settings.log-command-blocks-commands");
 		
 		// main

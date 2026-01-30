@@ -41,11 +41,11 @@ import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
 import me.remigio07.chatplugin.api.server.rank.Rank;
 import me.remigio07.chatplugin.api.server.rank.RankManager;
-import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.adapter.user.CommandSenderAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
 import me.remigio07.chatplugin.server.rank.RankManagerImpl;
+import me.remigio07.chatplugin.server.util.Utils;
 
 public abstract class BaseCommand {
 	

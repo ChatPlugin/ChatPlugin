@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableMap;
 
-import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationMappings;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
@@ -95,7 +94,6 @@ public class RankCommand extends BaseCommand {
 			return true;
 		}
 		
-		@SuppressWarnings("deprecation")
 		@Override
 		public void execute(CommandSenderAdapter sender, Language language, String[] args) {
 			if (args.length > 2) {
@@ -116,11 +114,11 @@ public class RankCommand extends BaseCommand {
 										
 										for (Entry<String, Object> entry : map.entrySet()) {
 											if (i == position + 1)
-												newMap.put(args[1], new ConfigurationMappings(ImmutableMap.of("display-name", args.length == 3 ? args[1] : String.join(" ", Arrays.copyOfRange(args, 3, args.length)))));
+												newMap.put(args[1], ImmutableMap.of("display-name", args.length == 3 ? args[1] : String.join(" ", Arrays.copyOfRange(args, 3, args.length))));
 											newMap.put(entry.getKey(), entry.getValue());
 											i++;
 										} if (position == size - 1)
-											newMap.put(args[1], new ConfigurationMappings(ImmutableMap.of("display-name", args.length == 3 ? args[1] : String.join(" ", Arrays.copyOfRange(args, 3, args.length)))));
+											newMap.put(args[1], ImmutableMap.of("display-name", args.length == 3 ? args[1] : String.join(" ", Arrays.copyOfRange(args, 3, args.length))));
 										ConfigurationType.RANKS.get().set("ranks", newMap);
 										
 										try {

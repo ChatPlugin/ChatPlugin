@@ -32,8 +32,8 @@ public class SpongeCommandsHandler extends CommandsHandler {
 		registerCommands0();
 		
 		for (String command : commands.keySet()) {
-			BaseCommand[] subcommands = commands.get(command);
-			BaseCommand mainCommand = subcommands[subcommands.length - 1];
+			BaseCommand[] subCommands = commands.get(command);
+			BaseCommand mainCommand = subCommands[subCommands.length - 1];
 			
 			if (disabledCommands.containsAll(mainCommand.getMainArgs()))
 				continue;

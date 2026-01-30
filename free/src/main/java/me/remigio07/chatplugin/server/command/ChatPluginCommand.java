@@ -76,6 +76,11 @@ public class ChatPluginCommand extends BaseCommand {
 		}
 		
 		@Override
+		public String getPermission() {
+			return "chatplugin.commands.help";
+		}
+		
+		@Override
 		public boolean isSubCommand() {
 			return true;
 		}
@@ -127,6 +132,11 @@ public class ChatPluginCommand extends BaseCommand {
 		@Override
 		public List<String> getMainArgs() {
 			return Arrays.asList("info", "information", "contact", "contacts", "support");
+		}
+		
+		@Override
+		public String getPermission() {
+			return "chatplugin.commands.info";
 		}
 		
 		@Override
@@ -184,6 +194,11 @@ public class ChatPluginCommand extends BaseCommand {
 		}
 		
 		@Override
+		public String getPermission() {
+			return "chatplugin.commands.language";
+		}
+		
+		@Override
 		public boolean isSubCommand() {
 			return true;
 		}
@@ -237,7 +252,12 @@ public class ChatPluginCommand extends BaseCommand {
 		public List<String> getMainArgs() {
 			return Arrays.asList("reload", "rl", "restart", "reboot");
 		}
-
+		
+		@Override
+		public String getPermission() {
+			return "chatplugin.commands.reload";
+		}
+		
 		@Override
 		public boolean isSubCommand() {
 			return true;
@@ -268,6 +288,11 @@ public class ChatPluginCommand extends BaseCommand {
 		}
 		
 		@Override
+		public String getPermission() {
+			return "chatplugin.commands.status";
+		}
+		
+		@Override
 		public boolean isSubCommand() {
 			return true;
 		}
@@ -293,6 +318,11 @@ public class ChatPluginCommand extends BaseCommand {
 		@Override
 		public List<String> getMainArgs() {
 			return Arrays.asList("debug", "verbose");
+		}
+		
+		@Override
+		public String getPermission() {
+			return "chatplugin.commands.debug";
 		}
 		
 		@Override

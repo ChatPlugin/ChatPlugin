@@ -44,6 +44,8 @@ public interface MultiPlatformIntegration extends ChatPluginIntegration {
 	 * @return Bedrock usernames' prefix
 	 */
 	@NotNull
-	public String getUsernamePrefix();
+	public default String getUsernamePrefix() {
+		return "";
+	}
 	
 }

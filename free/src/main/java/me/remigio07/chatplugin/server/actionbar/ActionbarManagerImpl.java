@@ -18,8 +18,8 @@ package me.remigio07.chatplugin.server.actionbar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.concurrent.ThreadLocalRandom;
 
-import io.netty.util.internal.ThreadLocalRandom;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
@@ -41,7 +41,7 @@ public class ActionbarManagerImpl extends ActionbarManager {
 		instance = this;
 		long ms = System.currentTimeMillis();
 		
-		if (!ConfigurationType.ACTIONBARS.get().getBoolean("actionbars.settings.enabled") || !checkAvailability(true))
+		if (!ConfigurationType.ACTIONBARS.get().getBoolean("actionbars.settings.enabled"))
 			return;
 		randomOrder = ConfigurationType.ACTIONBARS.get().getBoolean("actionbars.settings.random-order");
 		hasPrefix = ConfigurationType.ACTIONBARS.get().getBoolean("actionbars.settings.prefix.enabled");

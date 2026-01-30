@@ -27,7 +27,6 @@ public class NativeBossbar extends PlayerBossbar {
 	
 	public NativeBossbar(ChatPluginServerPlayer player) {
 		super(player);
-		
 		bossbar.addPlayer(player);
 	}
 	

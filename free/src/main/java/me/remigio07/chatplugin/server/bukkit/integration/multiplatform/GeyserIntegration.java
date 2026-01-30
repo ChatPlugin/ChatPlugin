@@ -18,7 +18,6 @@ package me.remigio07.chatplugin.server.bukkit.integration.multiplatform;
 import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.integration.multiplatform.MultiPlatformIntegration;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
-import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.bukkit.integration.ChatPluginBukkitIntegration;
 
@@ -31,11 +30,6 @@ public class GeyserIntegration extends ChatPluginBukkitIntegration<MultiPlatform
 	@Override
 	public boolean isBedrockPlayer(PlayerAdapter player) {
 		return Utils.isGeyserPlayer(player.getUUID());
-	}
-	
-	@Override
-	public @NotNull String getUsernamePrefix() {
-		return "";
 	}
 	
 }

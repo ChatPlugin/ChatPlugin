@@ -139,7 +139,6 @@ public class SpongeReflection {
 		return getInstance(loadedClass, objectsToTypes(args), args);
 	}
 	
-	@SuppressWarnings("all") // ...used to avoid "Unnecessary @SuppressWarnings("deprecation")" for the annotation below when using Java 8 on IDEs like Eclipse
 	public static Object getInstance(String loadedClass, Class<?>[] types, Object... args) {
 		try {
 			Constructor<?> constructor = getLoadedClass(loadedClass).getDeclaredConstructor(types);
@@ -173,7 +172,6 @@ public class SpongeReflection {
 		} return null;
 	}
 	
-	@SuppressWarnings("all") // ...used to avoid "Unnecessary @SuppressWarnings("deprecation")" for the annotation below when using Java 8 on IDEs like Eclipse
 	public static Field getField(String loadedClass, String... attempts) {
 		for (String attempt : attempts) {
 			try {

@@ -39,11 +39,6 @@ public class JavaLogManager extends LogManager {
 	}
 	
 	@Override
-	public void unload() throws ChatPluginManagerException {
-		super.unload();
-	}
-	
-	@Override
 	public void logMessage(String message, LogLevel logLevel, Object... args) {
 		message = Utils.replaceNumericPlaceholders(message, args);
 		

@@ -135,7 +135,6 @@ public abstract class ChatPluginManagers {
 		
 		for (ChatPluginManager manager : Lists.reverse(managers.stream().filter(ChatPluginManager::isEnabled).collect(Collectors.toList())))
 			manager.unload();
-		
 		for (ChatPluginManager manager : managers)
 			if (manager instanceof StorageManager) {
 				StorageManager storageManager = getStorageMethod().isDatabase() ? getDatabaseManager() : getFlatFileManager();

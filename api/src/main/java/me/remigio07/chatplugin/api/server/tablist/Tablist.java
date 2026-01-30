@@ -15,7 +15,7 @@
 
 package me.remigio07.chatplugin.api.server.tablist;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -44,7 +44,7 @@ public class Tablist {
 	private Map<Language, String> footers;
 	
 	private Tablist() {
-		headers = footers = new HashMap<>();
+		headers = footers = Collections.emptyMap();
 	}
 	
 	/**

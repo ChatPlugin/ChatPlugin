@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -71,8 +70,8 @@ public class Debugger {
 		List<PluginInfo> plugins = Utils.getPluginsInfo();
 		
 		sb
-				.append("Environment: ").append(VersionUtils.getImplementationName()).append(' ').append(VersionUtils.getImplementationVersion()).append('\n')
-				.append("Minecraft version: ").append(VersionUtils.getVersion().format()).append(" (protocol: ").append(VersionUtils.getVersion().getProtocol()).append(")\n")
+				.append("Environment: ").append(ChatColor.stripColor(VersionUtils.getImplementationName())).append(' ').append(VersionUtils.getImplementationVersion()).append('\n')
+				.append("Minecraft version: ").append(VersionUtils.getVersion().getName()).append(" (protocol: ").append(VersionUtils.getVersion().getProtocol()).append(")\n")
 				.append("ChatPlugin version: ").append(ChatPlugin.VERSION).append(" (").append(ChatPlugin.getInstance().isPremium() ? "Premium" : "Free").append(")\n")
 				.append('\n')
 				.append("OS: ").append(System.getProperty("os.name")).append(' ').append(System.getProperty("os.version")).append(", ").append(System.getProperty("os.arch")).append('\n')
@@ -85,15 +84,15 @@ public class Debugger {
 				.append("Last reload time: ").append(ChatPlugin.getInstance().getLastReloadTime()).append(" ms\n");
 		
 		if (!Environment.isProxy()) {
-			double[] tps = TPSManager.getInstance().getRecentTPS();
-			
-			sb
-					.append("\nTPS: ")
-					.append(Utils.truncate(tps[0], 2)).append(", ")
-					.append(Utils.truncate(tps[1], 2)).append(", ")
-					.append(Utils.truncate(tps[2], 2)).append('\n');
-			
-			if (MSPTManager.getInstance().isEnabled()) {
+			if (TPSManager.getInstance().isEnabled()) {
+				double[] tps = TPSManager.getInstance().getRecentTPS();
+				
+				sb
+						.append("\nTPS: ")
+						.append(Utils.truncate(tps[0], 2)).append(", ")
+						.append(Utils.truncate(tps[1], 2)).append(", ")
+						.append(Utils.truncate(tps[2], 2)).append('\n');
+			} if (MSPTManager.getInstance().isEnabled()) {
 				double[] avg = MSPTManager.getInstance().getAverageMSPT(), min = MSPTManager.getInstance().getMinimumMSPT(), max = MSPTManager.getInstance().getMaximumMSPT();
 				
 				sb
@@ -113,8 +112,8 @@ public class Debugger {
 				.append("\nStorage:\n")
 				.append(TWO_SPACES).append("used: ").append(MemoryUtils.formatMemory(Utils.getTotalStorage() - Utils.getFreeStorage(), MemoryUtils.GIGABYTE)).append('/').append(MemoryUtils.formatMemory(Utils.getTotalStorage(), MemoryUtils.GIGABYTE)).append(" GB\n")
 				.append(TWO_SPACES).append("unallocated: ").append(MemoryUtils.formatMemory(Utils.getUnallocatedStorage(), MemoryUtils.GIGABYTE)).append(" GB\n")
-				.append(TWO_SPACES).append("free: ").append(MemoryUtils.formatMemory(Utils.getFreeStorage(), MemoryUtils.GIGABYTE)).append(" GB\n")
-				.append("\nPlugins:\n")
+				.append(TWO_SPACES).append("free: ").append(MemoryUtils.formatMemory(Utils.getFreeStorage(), MemoryUtils.GIGABYTE)).append(" GB\n\n")
+				.append(Environment.isSponge() || Environment.isFabric() ? "Mods" : "Plugins").append(":\n")
 				.append(TWO_SPACES).append("amount: ").append(plugins.size()).append('\n')
 				.append(TWO_SPACES).append("values:\n");
 		plugins.stream().forEach(plugin -> sb.append(FOUR_SPACES).append(plugin.getName()).append(plugin.isEnabled() ? "" : "*").append(getSpaces(SPACES - plugin.getName().length() - (plugin.isEnabled() ? 0 : 1))).append(plugin.getVersion()).append(getSpaces(SPACES - plugin.getVersion().length())).append(Utils.getStringFromList(plugin.getAuthors(), false, false)).append('\n'));
@@ -143,7 +142,7 @@ public class Debugger {
 		
 		for (Entry<Field, Object> field : getFields(clazz, ChatPluginManagers.getInstance().getManager(clazz)).entrySet())
 			sb.append(formatVariable(field.getKey())).append(formatValue(field.getValue())).append('\n');
-		return sb.append('\n').toString();
+		return sb.delete(sb.length() - 1, sb.length()).toString();
 	}
 	
 	public static String writeToFile() {
@@ -164,7 +163,6 @@ public class Debugger {
 		}
 	}
 	
-	@SuppressWarnings("all") // ...used to avoid "Unnecessary @SuppressWarnings("deprecation")" for the annotation below when using Java 8 on IDEs like Eclipse
 	public static Map<Field, Object> getFields(Class<? extends ChatPluginManager> clazz, ChatPluginManager manager) {
 		Map<Field, Object> fields = new LinkedHashMap<>();
 		Class<?> managerClass = manager.getClass();
@@ -254,11 +252,10 @@ public class Debugger {
 			return getValue((Collection<?>) object);
 		if (object instanceof Map)
 			return getValue((Map<?, ?>) object);
-		try {
-			return (String) object.getClass().getDeclaredMethod("toString").invoke(object);
-		} catch (NoClassDefFoundError | IllegalArgumentException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-			return (object.getClass().isAnonymousClass() ? object.getClass().getTypeName() : object.getClass().getSimpleName()) + " object";
-		}
+		String toString = object.toString();
+		return toString.equals(object.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(object)))
+				? (object.getClass().isAnonymousClass() ? object.getClass().getTypeName() : object.getClass().getSimpleName()) + " object"
+				: toString;
 	}
 	
 	public static String getArrayValue(Object array) {
@@ -318,11 +315,10 @@ public class Debugger {
 			return formatValue((Collection<?>) object);
 		if (object instanceof Map)
 			return formatValue((Map<?, ?>) object);
-		try {
-			return "§5" + (String) object.getClass().getDeclaredMethod("toString").invoke(object);
-		} catch (NoClassDefFoundError | IllegalArgumentException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-			return "§f" + (object.getClass().isAnonymousClass() ? object.getClass().getTypeName() : object.getClass().getSimpleName()) + " object";
-		}
+		String toString = object.toString();
+		return toString.equals(object.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(object)))
+				? "§f" + (object.getClass().isAnonymousClass() ? object.getClass().getTypeName() : object.getClass().getSimpleName()) + " object"
+				: "§5" + toString;
 	}
 	
 	public static String formatArrayValue(Object array) {

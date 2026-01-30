@@ -21,7 +21,6 @@ import java.util.StringJoiner;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
-import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.language.Language;
@@ -33,13 +32,8 @@ import me.remigio07.chatplugin.api.server.util.GameFeature;
  * @see <a href="https://remigio07.me/chatplugin/wiki/modules/TPS">ChatPlugin wiki/Modules/TPS</a>
  */
 @GameFeature(
-		name = "tps",
-		availableOnBukkit = true,
-		availableOnSponge = true,
-		spigotRequired = true,
-		paperRequired = false,
-		minimumBukkitVersion = Version.V1_8,
-		minimumSpongeVersion = Version.V1_8
+		name = "TPS",
+		spigotRequired = true
 		)
 public abstract class TPSManager implements ChatPluginManager, Runnable {
 	
@@ -53,7 +47,7 @@ public abstract class TPSManager implements ChatPluginManager, Runnable {
 	 */
 	public static final String[] PLACEHOLDERS = { "tps_1_min", "tps_5_min", "tps_15_min", "tps_1_min_format", "tps_5_min_format", "tps_15_min_format" };
 	protected static TPSManager instance;
-	protected boolean enabled;
+	protected boolean enabled, tpsCapEnabled;
 	protected List<TPSQuality> qualities = new CopyOnWriteArrayList<>();
 	protected double[] recentTPS = { 20D, 20D, 20D };
 	protected long updateTimeout, timerTaskID = -1, loadTime;
@@ -66,6 +60,17 @@ public abstract class TPSManager implements ChatPluginManager, Runnable {
 	@Override
 	public boolean isEnabled() {
 		return enabled;
+	}
+	
+	/**
+	 * Checks if the 20 TPS cap is enabled.
+	 * 
+	 * <p><strong>Found at:</strong> "tps.20-tps-cap.enabled" in {@link ConfigurationType#CONFIG}</p>
+	 * 
+	 * @return Whether the 20 TPS cap is enabled
+	 */
+	public boolean isTPSCapEnabled() {
+		return tpsCapEnabled;
 	}
 	
 	/**

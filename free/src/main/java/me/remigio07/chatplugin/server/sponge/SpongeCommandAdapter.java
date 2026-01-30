@@ -64,14 +64,14 @@ public class SpongeCommandAdapter implements CommandCallable {
 				
 				if (sender instanceof Player) {
 					if (senderAdapter.toServerPlayer() == null) {
-						sender.sendMessage(Utils.serializeSpongeText(language.getMessage("misc.disabled-world"), false));
+						sender.sendMessage(Utils.toSpongeComponent(language.getMessage("misc.disabled-world")));
 						return CommandResult.success();
 					}
 				} else if (command instanceof PlayerCommand) {
-					sender.sendMessage(Utils.serializeSpongeText(language.getMessage("misc.only-players"), false));
+					sender.sendMessage(Utils.toSpongeComponent(language.getMessage("misc.only-players")));
 					return CommandResult.success();
 				} if (command.getPermission() != null && !sender.hasPermission(command.getPermission())) {
-					sender.sendMessage(Utils.serializeSpongeText(language.getMessage("misc.no-permission"), false));
+					sender.sendMessage(Utils.toSpongeComponent(language.getMessage("misc.no-permission")));
 					return CommandResult.success();
 				} if (sender instanceof CommandBlockSource) {
 					Location<World> location = ((CommandBlockSource) sender).getLocation();
@@ -87,18 +87,15 @@ public class SpongeCommandAdapter implements CommandCallable {
 	
 	@Override
 	public List<String> getSuggestions(CommandSource sender, String text, Location<World> location) throws CommandException {
-		List<String> list = new ArrayList<>();
+		List<String> list = null;
 		String[] args = text.split(" ");
-		BaseCommand[] commands = CommandsHandler.getCommands().get(command.getName());
 		
 		if (text.endsWith(" ")) {
 			List<String> arrayList = new ArrayList<>(Arrays.asList(args));
 			
 			arrayList.add("");
 			args = arrayList.toArray(new String[0]);
-		} for (int i = 0; i < commands.length; i++) {
-			BaseCommand command = commands[i];
-			
+		} for (BaseCommand command : CommandsHandler.getCommands().get(command.getName())) {
 			if (command.hasSubCommands() && args.length == 1) {
 				list = command.getTabCompletionArgs(new CommandSenderAdapter(sender), args[0], 0);
 				break;
@@ -112,7 +109,7 @@ public class SpongeCommandAdapter implements CommandCallable {
 	
 	@Override
 	public Text getUsage(CommandSource sender) {
-		return Utils.serializeSpongeText(command.getUsage(), false);
+		return Utils.toSpongeComponent(command.getUsage());
 	}
 	
 	@Override

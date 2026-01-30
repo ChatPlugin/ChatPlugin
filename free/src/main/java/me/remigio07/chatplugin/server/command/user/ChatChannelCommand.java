@@ -25,12 +25,13 @@ import me.remigio07.chatplugin.api.server.chat.channel.ChatChannelsManager;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.util.adapter.user.CommandSenderAdapter;
+import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.command.BaseCommand;
 import me.remigio07.chatplugin.server.command.PlayerCommand;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
-import me.remigio07.chatplugin.server.util.Utils;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
 
 public class ChatChannelCommand extends BaseCommand {
 	
@@ -264,14 +265,15 @@ public class ChatChannelCommand extends BaseCommand {
 				for (ChatChannel<?> channel : ChatChannelsManager.getInstance().getChannels()) {
 					ChatPluginServerPlayer player = sender.toServerPlayer();
 					
-					if (player == null)
+					if (player != null)
 						sender.sendMessage(channel.formatPlaceholders(language.getMessage("chat.channel.list.message-format.text"), language));
-					else if (channel.canAccess(player))
-						((BaseChatPluginServerPlayer) sender.toServerPlayer()).sendMessage(
-								Utils.deserializeLegacy(channel.formatPlaceholders(language.getMessage("chat.channel.list.message-format.text"), language), false)
-								.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(channel.formatPlaceholders(language.getMessage("chat.channel.list.message-format.hover"), language), false)))
-								.clickEvent(ClickEvent.runCommand("/chatchannel info " + channel.getID()))
-								);
+					else if (channel.canAccess(player)) {
+						BaseComponent component = Utils.toBungeeCordComponent(channel.formatPlaceholders(language.getMessage("chat.channel.list.message-format.text"), language));
+						
+						component.setHoverEvent(Utils.getHoverEvent(HoverEvent.Action.SHOW_TEXT, channel.formatPlaceholders(language.getMessage("chat.channel.list.message-format.hover"), language)));
+						component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/chatchannel info " + channel.getID()));
+						((BaseChatPluginServerPlayer) sender.toServerPlayer()).sendMessage(component);
+					}
 				}
 			} else sender.sendMessage(language.getMessage("misc.disabled-feature"));
 		}

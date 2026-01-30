@@ -41,12 +41,11 @@ import me.remigio07.chatplugin.api.server.rank.RankManager;
 import me.remigio07.chatplugin.api.server.util.PlaceholderType;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
+import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
-import me.remigio07.chatplugin.server.util.Utils;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.ClickEvent.Action;
-import net.kyori.adventure.text.event.HoverEvent;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
 
 public class AdManagerImpl extends AdManager {
 	
@@ -194,7 +193,7 @@ public class AdManagerImpl extends AdManager {
 		
 		if (event.isCancelled())
 			return;
-		List<TextComponent> components = new ArrayList<>();
+		List<BaseComponent> components = new ArrayList<>();
 		
 		if (player.getVersion().isAtLeast(Version.V1_8)) {
 			String[] lines = ad.getText(language, true).split("\n");
@@ -202,18 +201,18 @@ public class AdManagerImpl extends AdManager {
 			
 			for (int i = 0; i < lines.length; i++)
 				sb.append((hasPrefix && !lines[i].isEmpty() ? prefix + lines[i] : lines[i]) + (i == lines.length - 1 ? "" : "\n"));
-			components.add(Utils.deserializeLegacy(PlaceholderManager.getInstance().translatePlaceholders(sb.toString(), player, placeholderTypes), true));
+			components.add(Utils.toBungeeCordComponent(PlaceholderManager.getInstance().translatePlaceholders(sb.toString(), player, placeholderTypes)));
 		} else for (String line : ad.getText(language, true).split("\n")) // https://bugs.mojang.com/browse/MC-39987
-			components.add(Utils.deserializeLegacy(PlaceholderManager.getInstance().translatePlaceholders(hasPrefix && !line.isEmpty() ? prefix + line : line, player, placeholderTypes), true));
+			components.add(Utils.toBungeeCordComponent(PlaceholderManager.getInstance().translatePlaceholders(hasPrefix && !line.isEmpty() ? prefix + line : line, player, placeholderTypes)));
 		if (ad.getHover(language) != null)
 			for (int i = 0; i < components.size(); i++)
-				components.set(i, components.get(i).hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(PlaceholderManager.getInstance().translatePlaceholders(ad.getHover(language), player, placeholderTypes), true))));
+				components.get(i).setHoverEvent(Utils.getHoverEvent(HoverEvent.Action.SHOW_TEXT, PlaceholderManager.getInstance().translatePlaceholders(ad.getHover(language), player, placeholderTypes)));
 		if (ad.getClickAction() != null && ad.getClickValue(language) != null)
 			for (int i = 0; i < components.size(); i++)
-				components.set(i, components.get(i).clickEvent(ClickEvent.clickEvent(Action.NAMES.value(ad.getClickAction().getID()), ad.getClickValue(language))));
+				components.get(i).setClickEvent(new ClickEvent(ClickEvent.Action.valueOf(ad.getClickAction().name()), ad.getClickValue(language)));
 		if (soundEnabled)
 			player.playSound(sound);
-		((BaseChatPluginServerPlayer) player).sendMessage(components.toArray(new TextComponent[1]));
+		((BaseChatPluginServerPlayer) player).sendMessage(components.toArray(new BaseComponent[components.size()]));
 	}
 	
 }

@@ -31,13 +31,15 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.ItemStack;
 
 import com.google.common.primitives.Primitives;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import me.remigio07.chatplugin.api.common.util.Utils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 
-public class BukkitReflection {
+public class BukkitReflection { // this whole class and SpongeReflection will be improved soon
 	
 	private static String cbPath, nmsPath;
 	private static Map<String, Class<?>> classes = new HashMap<>();
@@ -65,23 +67,111 @@ public class BukkitReflection {
 			classes.put("CraftWorld", clazz);
 			putMethod(clazz, "getHandle");
 			
+			// IChatBaseComponent
+			clazz = atLeast1_17 ? getNMNClass("chat." + (atLeast1_20_5 && VersionUtils.isPaper() ? "Component" : "IChatBaseComponent")) : getNMSClass("IChatBaseComponent");
+			classes.put("IChatBaseComponent", clazz);
+			
+			if (VersionUtils.getVersion().isOlderThan(Version.V1_16_4)) {
+				// ChatSerializer
+				clazz = atLeast1_17 ? getNMNClass("chat." + (atLeast1_20_5 && VersionUtils.isPaper() ? "Component$Serializer" : "IChatBaseComponent$ChatSerializer")) : getNMSClass("IChatBaseComponent$ChatSerializer");
+				classes.put("ChatSerializer", clazz);
+				putMethod(clazz, "fromJson", Arrays.asList(String.class), "a");
+				
+				if (VersionUtils.getVersion().isOlderThan(Version.V1_13))
+					putMethod(clazz, "toJson", Arrays.asList(classes.get("IChatBaseComponent")), "a");
+			}
+			
 			// CraftChatMessage
 			clazz = getCBClass("util.CraftChatMessage");
 			classes.put("CraftChatMessage", clazz);
 			
-			if (VersionUtils.getVersion().isAtLeast(Version.V1_16_4))			
-				putMethod(clazz, "fromJSON", Arrays.asList(String.class));
+			if (VersionUtils.getVersion().isAtLeast(Version.V1_13)) {
+				if (VersionUtils.getVersion().isAtLeast(Version.V1_16_4))
+					putMethod(clazz, "fromJSON", Arrays.asList(String.class));
+				putMethod(clazz, "toJSON", Arrays.asList(classes.get("IChatBaseComponent")));
+			}
 			
 			// MinecraftServer
 			clazz = getNMSClass("MinecraftServer");
 			classes.put("MinecraftServer", clazz);
 			putMethod(clazz, "getServer");
 			
+			// TPS, MSPT
 			if (VersionUtils.isPaper() && VersionUtils.getVersion().isAtLeast(Version.V1_16)) {
-				// TickTimes
-				clazz = getNMSClass("MinecraftServer$TickTimes");
-				classes.put("TickTimes", clazz);
-				putMethod(clazz, "getTimes");
+				if (VersionUtils.getVersion().isAtLeast(Version.V1_21_9)) {
+					putMethod(clazz, "getTPS");
+					putMethod(clazz, "tickRateManager");
+					
+					// TickTime
+					clazz = Class.forName("ca.spottedleaf.moonrise.common.time.TickTime");
+					classes.put("TickTime", clazz);
+					
+					// TickData
+					clazz = Class.forName("ca.spottedleaf.moonrise.common.time.TickData");
+					classes.put("TickData", clazz);
+					putMethod(clazz, "generateTickReport", Arrays.asList(classes.get("TickTime"), long.class, long.class));
+					
+					// TickReportData
+					clazz = Class.forName("ca.spottedleaf.moonrise.common.time.TickData$TickReportData");
+					classes.put("TickReportData", clazz);
+					putMethod(clazz, "timePerTickData");
+					
+					// SegmentedAverage
+					clazz = Class.forName("ca.spottedleaf.moonrise.common.time.TickData$SegmentedAverage");
+					classes.put("SegmentedAverage", clazz);
+					putMethod(clazz, "segmentAll");
+					
+					// SegmentData
+					clazz = Class.forName("ca.spottedleaf.moonrise.common.time.TickData$SegmentData");
+					classes.put("SegmentData", clazz);
+					putMethod(clazz, "average");
+					putMethod(clazz, "least");
+					putMethod(clazz, "greatest");
+					
+					// TickRateManager
+					clazz = Class.forName("net.minecraft.world.TickRateManager");
+					classes.put("TickRateManager", clazz);
+					putMethod(clazz, "nanosecondsPerTick");
+				} else {
+					// TickTimes
+					clazz = getNMSClass("MinecraftServer$TickTimes");
+					classes.put("TickTimes", clazz);
+					putMethod(clazz, "getTimes");
+				}
+			}
+			
+			// older than 1.11, always: PacketPlayOutTitle
+			// older than 1.17, w/o Spigot: PacketPlayOutTitle
+			// at least 1.17, w/o Spigot: ClientboundSetActionBarTextPacket
+			
+			if (VersionUtils.getVersion().isOlderThan(Version.V1_17)) {
+				// PacketPlayOutTitle
+				clazz = getNMSClass("PacketPlayOutTitle");
+				classes.put("PacketPlayOutTitle", clazz);
+				
+				// EnumTitleAction
+				clazz = getNMSClass("PacketPlayOutTitle$EnumTitleAction");
+				classes.put("EnumTitleAction", clazz);
+			} else if (!VersionUtils.isSpigot()) {
+				// ClientboundSetActionBarTextPacket
+				clazz = getNMNClass("protocol.game.ClientboundSetActionBarTextPacket");
+				classes.put("ClientboundSetActionBarTextPacket", clazz);
+			} if (!VersionUtils.isSpigot() || VersionUtils.getVersion().isOlderThan(Version.V1_9_1)) {
+				if (VersionUtils.getVersion().isOlderThan(Version.V1_19)) {
+					// PacketPlayOutChat
+					clazz = atLeast1_17 ? getNMNClass("protocol.game.PacketPlayOutChat") : getNMSClass("PacketPlayOutChat");
+					classes.put("PacketPlayOutChat", clazz);
+					
+					if (VersionUtils.getVersion().isAtLeast(Version.V1_12)) {
+						// ChatMessageType
+						clazz = atLeast1_17 ? getNMNClass("chat.ChatMessageType") : getNMSClass("ChatMessageType");
+						classes.put("ChatMessageType", clazz);
+					}
+				} else {
+					// ClientboundSystemChatPacket
+					clazz = getNMNClass("protocol.game.ClientboundSystemChatPacket");
+					classes.put("ClientboundSystemChatPacket", clazz);
+				}
 			}
 			
 			// Packet
@@ -107,7 +197,7 @@ public class BukkitReflection {
 			classes.put("Player", clazz);
 			putMethod(clazz, "playSound", Arrays.asList(Location.class, classes.get("Sound"), float.class, float.class));
 			
-			if (VersionUtils.getNMSVersion().equals(Utils.NOT_APPLICABLE)) {
+			if (VersionUtils.getNMSVersion().equals(Utils.NOT_APPLICABLE)) { // Paper 1.20.5+
 				// EntityPlayer
 				clazz = getNMSClass("level.ServerPlayer");
 				classes.put("EntityPlayer", clazz);
@@ -135,7 +225,6 @@ public class BukkitReflection {
 						putMethod(clazz, "getText");
 					else putMethod(clazz, "getString");
 					
-					
 					if (VersionUtils.getVersion().isOlderThan(Version.V1_16_4)) {
 						// ChatSerializer
 						clazz = atLeast1_17 ? getNMNClass("chat.IChatBaseComponent$ChatSerializer") : getNMSClass("IChatBaseComponent$ChatSerializer");
@@ -144,7 +233,7 @@ public class BukkitReflection {
 					}
 					
 					// PacketPlayOutOpenWindow
-					clazz = atLeast1_17 ? Class.forName("net.minecraft.network.protocol.game.PacketPlayOutOpenWindow") : getNMSClass("PacketPlayOutOpenWindow");
+					clazz = atLeast1_17 ? getNMNClass("protocol.game.PacketPlayOutOpenWindow") : getNMSClass("PacketPlayOutOpenWindow");
 					classes.put("PacketPlayOutOpenWindow", clazz);
 					
 					if (VersionUtils.getVersion().isAtLeast(Version.V1_14)) {
@@ -420,7 +509,6 @@ public class BukkitReflection {
 		return getInstance(loadedClass, objectsToTypes(args), args);
 	}
 	
-	@SuppressWarnings("all") // ...used to avoid "Unnecessary @SuppressWarnings("deprecation")" for the annotation below when using Java 8 on IDEs like Eclipse
 	public static Object getInstance(String loadedClass, Class<?>[] types, Object... args) {
 		try {
 			Constructor<?> constructor = getLoadedClass(loadedClass).getDeclaredConstructor(types);
@@ -455,7 +543,6 @@ public class BukkitReflection {
 		} return null;
 	}
 	
-	@SuppressWarnings("all") // ...used to avoid "Unnecessary @SuppressWarnings("deprecation")" for the annotation below when using Java 8 on IDEs like Eclipse
 	public static Field getField(String loadedClass, String... attempts) {
 		for (String attempt : attempts) {
 			try {
@@ -502,8 +589,13 @@ public class BukkitReflection {
 		return Class.forName("net.minecraft.network." + path);
 	}
 	
-	public static Object getIChatBaseComponent(String escapedJSON) {
-		return VersionUtils.getVersion().isAtLeast(Version.V1_16_4) ? invokeMethod("CraftChatMessage", "fromJSON", null, escapedJSON) : invokeMethod("ChatSerializer", "fromJson", null, escapedJSON);
+	public static Object toIChatBaseComponent(String json) {
+		return VersionUtils.getVersion().isAtLeast(Version.V1_16_4) ? invokeMethod("CraftChatMessage", "fromJSON", null, json) : invokeMethod("ChatSerializer", "fromJson", null, json);
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static JsonElement toJSON(Object iChatBaseComponent) {
+		return new JsonParser().parse((String) (VersionUtils.getVersion().isAtLeast(Version.V1_13) ? invokeMethod("CraftChatMessage", "toJSON", null, iChatBaseComponent) : invokeMethod("ChatSerializer", "toJson", null, iChatBaseComponent)));
 	}
 	
 }

@@ -39,66 +39,6 @@ public enum Library {
 	ACTIVATION_FRAMEWORK("Activation Framework", "javax.activation.DataSource", new Relocation("com.sun.activation", "javax.activation"), "https://repo1.maven.org/maven2/com/sun/activation/javax.activation/1.2.0/javax.activation-1.2.0.jar", "activation-framework.jar", "BE7C430DF50B330CFFC4848A3ABEDBFB"),
 	
 	/**
-	 * Represents the <a href="https://docs.advntr.dev">Adventure API</a> library.
-	 */
-	ADVENTURE_API("Adventure API", "net.kyori.adventure.Adventure", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-api/4.23.0/adventure-api-4.23.0.jar", "adventure-api.jar", "E026DF57FFF736460C3F71A369E09C81"),
-	
-	/**
-	 * Represents the <a href="https://docs.advntr.dev">Adventure Key</a> library.
-	 */
-	ADVENTURE_KEY("Adventure Key", "net.kyori.adventure.key.Key", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-key/4.23.0/adventure-key-4.23.0.jar", "adventure-key.jar", "6BE0440604D0CFCDAE3258C9F6476A36"),
-	
-	/**
-	 * Represents the <a href="https://docs.advntr.dev">Adventure NBT</a> library.
-	 */
-	ADVENTURE_NBT("Adventure NBT", "net.kyori.adventure.nbt.BinaryTagLike", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-nbt/4.23.0/adventure-nbt-4.23.0.jar", "adventure-nbt.jar", "48A8F6594EBBFDE14D29421E01D9C869"),
-	
-	/**
-	 * Represents the <a href="https://docs.advntr.dev">Adventure Platform API</a> library.
-	 */
-	ADVENTURE_PLATFORM_API("Adventure Platform", "net.kyori.adventure.platform.AudienceProvider", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-api/4.4.0/adventure-platform-api-4.4.0.jar", "adventure-platform-api.jar", "44DB3CACEEFBD9DAA37625AFB2EA8A5D"),
-	
-	/**
-	 * Represents the <a href="https://docs.advntr.dev">Adventure Platform Bukkit</a> library.
-	 */
-	ADVENTURE_PLATFORM_BUKKIT("Adventure Platform Bukkit", "net.kyori.adventure.platform.bukkit.BukkitAudiences", Relocation.KYORI_RELOCATION, "https://remigio07.me/drive/libs/adventure-platform-bukkit-4.4.1-SNAPSHOT.jar", "adventure-platform-bukkit.jar", "B05180C99683FFBD928D6B5BC70862E9"),
-	
-	/**
-	 * Represents the <a href="https://docs.advntr.dev">Adventure Platform Facet</a> library.
-	 */
-	ADVENTURE_PLATFORM_FACET("Adventure Platform Facet", "net.kyori.adventure.platform.facet.Facet", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-facet/4.4.0/adventure-platform-facet-4.4.0.jar", "adventure-platform-facet.jar", "F1C2157458CE8A9EA2AEF4D23B986F11"),
-	
-	/**
-	 * Represents the <a href="https://docs.advntr.dev">Adventure Platform SpongeAPI</a> library.
-	 */
-	ADVENTURE_PLATFORM_SPONGEAPI("Adventure Platform SpongeAPI", "net.kyori.adventure.platform.spongeapi.SpongeAudiences", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-platform-spongeapi/4.4.0/adventure-platform-spongeapi-4.4.0.jar", "adventure-platform-spongeapi.jar", "90D826BE8E3D7B3FD1043A267C19AE5A"),
-	
-	/**
-	 * Represents the <a href="https://docs.advntr.dev">Adventure Text Serializer Gson</a> library.
-	 */
-	ADVENTURE_TEXT_SERIALIZER_GSON("Adventure Text Serializer Gson", "net.kyori.adventure.text.serializer.gson.GsonComponentSerializer", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-text-serializer-gson/4.23.0/adventure-text-serializer-gson-4.23.0.jar", "adventure-text-serializer-gson.jar", "EDE70DD1983DC7E4A4F07205C51346D0"),
-	
-	/**
-	 * Represents the <a href="https://docs.advntr.dev">Adventure Text Serializer Gson Legacy Impl</a> library.
-	 */
-	ADVENTURE_TEXT_SERIALIZER_GSON_LEGACY_IMPL("Adventure Text Serializer Gson Legacy Impl", "net.kyori.adventure.text.serializer.gson.legacyimpl.NBTLegacyHoverEventSerializer", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-text-serializer-gson-legacy-impl/4.23.0/adventure-text-serializer-gson-legacy-impl-4.23.0.jar", "adventure-text-serializer-gson-legacy-impl.jar", "71A67BD4D03E45F3F03E59BCAEAB37A6"),
-	
-	/**
-	 * Represents the <a href="https://docs.advntr.dev">Adventure Text Serializer JSON</a> library.
-	 */
-	ADVENTURE_TEXT_SERIALIZER_JSON("Adventure Text Serializer JSON", "net.kyori.adventure.text.serializer.json.JSONComponentSerializer", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-text-serializer-json/4.23.0/adventure-text-serializer-json-4.23.0.jar", "adventure-text-serializer-json.jar", "1653A0EEE94CF73BB4F459AC0D628652"),
-	
-	/**
-	 * Represents the <a href="https://docs.advntr.dev">Adventure Text Serializer JSON Legacy Impl</a> library.
-	 */
-	ADVENTURE_TEXT_SERIALIZER_JSON_LEGACY_IMPL("Adventure Text Serializer JSON Legacy Impl", "net.kyori.adventure.text.serializer.json.legacyimpl.NBTLegacyHoverEventSerializer", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-text-serializer-json-legacy-impl/4.23.0/adventure-text-serializer-json-legacy-impl-4.23.0.jar", "adventure-text-serializer-json-legacy-impl.jar", "BC2A23AD4612DDD7EADF5E6F7CCFE7FC"),
-	
-	/**
-	 * Represents the <a href="https://docs.advntr.dev">Adventure Text Serializer Legacy</a> library.
-	 */
-	ADVENTURE_TEXT_SERIALIZER_LEGACY("Adventure Text Serializer Legacy", "net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/adventure-text-serializer-legacy/4.23.0/adventure-text-serializer-legacy-4.23.0.jar", "adventure-text-serializer-legacy.jar", "8C95E49B044CAB677C0D794EA1BDC5E2"),
-	
-	/**
 	 * Represents the <a href="https://commons.apache.org/proper/commons-codec/">Apache Commons Codec</a> library.
 	 */
 	APACHE_COMMONS_CODEC("Apache Commons Codec", "org.apache.commons.codec.Charsets", new Relocation("org.apache.commons.codec"), "https://repo1.maven.org/maven2/commons-codec/commons-codec/1.15/commons-codec-1.15.jar", "apache-commons-codec.jar", "303BAF002CE6D382198090AEDD9D79A2"),
@@ -139,6 +79,21 @@ public enum Library {
 	ASM_COMMONS("ASM Commons", "org.objectweb.asm.commons.ClassRemapper", "https://repo1.maven.org/maven2/org/ow2/asm/asm-commons/7.2/asm-commons-7.2.jar", "asm-commons.jar", "321121317A6C6221CC26E8F9EE97022F"),
 	
 	/**
+	 * Represents the <a href="https://github.com/SpigotMC/BungeeCord">BungeeCord Chat</a> library.
+	 */
+	BUNGEECORD_CHAT("BungeeCord Chat", "net.md_5.bungee.api.ChatColor", "https://repo1.maven.org/maven2/net/md-5/bungeecord-chat/1.21-R0.4/bungeecord-chat-1.21-R0.4.jar", "bungeecord-chat.jar", "2E79C81EE7404D526F13ED74715A40FD"),
+	
+	/**
+	 * Represents the <a href="https://github.com/SpigotMC/BungeeCord">BungeeCord Dialog</a> library.
+	 */
+	BUNGEECORD_DIALOG("BungeeCord Dialog", "net.md_5.bungee.api.dialog.Dialog", "https://repo1.maven.org/maven2/net/md-5/bungeecord-dialog/1.21-R0.4/bungeecord-dialog-1.21-R0.4.jar", "bungeecord-dialog.jar", "08C7C156E79793BFCE6A1D92A7B86FD0"),
+	
+	/**
+	 * Represents the <a href="https://github.com/SpigotMC/BungeeCord">BungeeCord Serializer</a> library.
+	 */
+	BUNGEECORD_SERIALIZER("BungeeCord Serializer", "net.md_5.bungee.api.ChatColor", "https://repo1.maven.org/maven2/net/md-5/bungeecord-serializer/1.21-R0.4/bungeecord-serializer-1.21-R0.4.jar", "bungeecord-serializer.jar", "BB87006A2F281FC520CEC566DE14742D"),
+	
+	/**
 	 * Represents the <a href="https://checkerframework.org/">Checker Qual</a> library.
 	 */
 	CHECKER_QUAL("Checker Qual", "org.checkerframework.dataflow.qual.Deterministic", new Relocation("org.checkerframework"), "https://repo1.maven.org/maven2/org/checkerframework/checker-qual/3.21.0/checker-qual-3.21.0.jar", "checker-qual.jar", "275841B506F4B14EAF4E7892329DD26F"),
@@ -147,16 +102,6 @@ public enum Library {
 	 * Represents the <a href="https://errorprone.info/index">Error Prone Annotations</a> library.
 	 */
 	ERROR_PRONE_ANNOTATIONS("Error Prone Annotations", "com.google.errorprone.annotations.Var", new Relocation("com.google.errorprone.annotations"), "https://repo1.maven.org/maven2/com/google/errorprone/error_prone_annotations/2.10.0/error_prone_annotations-2.10.0.jar", "error-prone-annotations.jar", "DF93BD9F00B1D2B1E2CA6317FD8F6DF3"),
-	
-	/**
-	 * Represents the <a href="https://github.com/KyoriPowered/examination">Examination API</a> library.
-	 */
-	EXAMINATION_API("Examination API", "net.kyori.examination.Examinable", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/examination-api/1.3.0/examination-api-1.3.0.jar", "examination-api.jar", "B1887361D811C89CCCA4DBF61B88DEF4"),
-	
-	/**
-	 * Represents the <a href="https://github.com/KyoriPowered/examination">Examination String</a> library.
-	 */
-	EXAMINATION_STRING("Examination String", "net.kyori.examination.string.Strings", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/examination-string/1.3.0/examination-string-1.3.0.jar", "examination-string.jar", "9E4752EA3F53AE45E736C9D8F016F23D"),
 	
 	/**
 	 * Represents the <a href="https://mvnrepository.com/artifact/com.google.guava/failureaccess">Failure Access</a> library.
@@ -176,7 +121,7 @@ public enum Library {
 	/**
 	 * Represents the <a href="https://github.com/google/gson">Gson</a> library.
 	 */
-	GSON("Gson", "com.google.gson.Gson", new Relocation("com.google.json"), "https://repo1.maven.org/maven2/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar", "gson.jar", "DF6097815738CB31FC56391553210843"),
+	GSON("Gson", "com.google.gson.ToNumberPolicy", "https://repo1.maven.org/maven2/com/google/code/gson/gson/2.13.2/gson-2.13.2.jar", "gson.jar", "A2C47E14CE5E956105458FE455F5D542"),
 	
 	/**
 	 * Represents the <a href="https://guava.dev/">Guava</a> library.
@@ -289,11 +234,6 @@ public enum Library {
 	OKIO("Okio", "okio.Source", new Relocation("okio"), "https://repo1.maven.org/maven2/com/squareup/okio/okio-jvm/3.6.0/okio-jvm-3.6.0.jar", "okio.jar", "26370180FF99A7E8A12DCAAC2A70CC6E"),
 	
 	/**
-	 * Represents the <a href="https://github.com/KyoriPowered/option">Option</a> library.
-	 */
-	OPTION("Option", "net.kyori.option.Option", Relocation.KYORI_RELOCATION, "https://repo1.maven.org/maven2/net/kyori/option/1.1.0/option-1.1.0.jar", "option.jar", "39E0C47988FAA590EF8A26182853647C"),
-	
-	/**
 	 * Represents the <a href="https://www.slf4j.org/">SLF4J API</a> library.
 	 */
 	SLF4J_API("SLF4J API", "org.slf4j.IMarkerFactory", new Relocation("org.slf4j"), "https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar", "slf4j-api.jar", "872DA51F5DE7F3923DA4DE871D57FD85"),
@@ -317,7 +257,6 @@ public enum Library {
 	private Relocation relocation;
 	
 	static {
-		Relocation.KYORI_RELOCATION.add(OPTION, JETBRAINS_ANNOTATIONS);
 		JACKSON_DATABIND.getRelocation().add(JACKSON_CORE, JACKSON_ANNOTATIONS);
 		APACHE_HTTPCLIENT.getRelocation().add(APACHE_COMMONS_CODEC, APACHE_COMMONS_LOGGING, APACHE_HTTPCORE);
 		GUAVA.getRelocation().add(FINDBUGS_JSR305, ERROR_PRONE_ANNOTATIONS, FAILURE_ACCESS, J2OBJC_ANNOTATIONS, CHECKER_QUAL);
@@ -419,7 +358,6 @@ public enum Library {
 		 * <p><strong>Value:</strong> "me.remigio07.chatplugin.common.lib."</p>
 		 */
 		public static final String PREFIX = "me.remigio07.chatplugin.common.lib.";
-		private static final Relocation KYORI_RELOCATION = new Relocation("net.kyori.adventure", "net.kyori.examination", "net.kyori.option");
 		private List<String> oldPackages;
 		
 		/**

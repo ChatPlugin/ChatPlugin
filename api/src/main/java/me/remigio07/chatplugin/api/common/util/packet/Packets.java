@@ -78,8 +78,7 @@ public class Packets {
 		 * <p>You can specify <code>null</code> as <code>permission</code>
 		 * if no permission is required to receive the message.</p>
 		 * 
-		 * <p>If <code>json</code> the message will be treated as an
-		 * <a href="https://docs.advntr.dev/serializer/json.html">Adventure JSON message</a>.</p>
+		 * <p>If <code>json</code> the message will be treated as a JSON message.</p>
 		 * 
 		 * <p>This method supports {@link Component}s: the message's content may be
 		 * obtained using {@link ComponentTranslator#createJSON(Component, Object...)}.</p>
@@ -88,7 +87,7 @@ public class Packets {
 		 * @param targets Target player(s) or console
 		 * @param permission Required permission
 		 * @param includeConsole Whether to include the console
-		 * @param json Whether this is an Adventure JSON message
+		 * @param json Whether this is a JSON message
 		 * @param message Message to send
 		 * @return <code>PlayerMessage</code> packet
 		 */
@@ -180,13 +179,15 @@ public class Packets {
 		/**
 		 * Sends a message to the specified chat channel.
 		 * 
+		 * <p>If <code>json</code> the message will be treated as a JSON message.</p>
+		 * 
 		 * @param server Origin server
 		 * @param targetServer Target server
 		 * @param senderUUID Sender's UUID
 		 * @param senderName Sender's name
 		 * @param chatChannelID Chat channel's ID
 		 * @param languageID Language's ID
-		 * @param json Whether this is an Adventure JSON message
+		 * @param json Whether this is a JSON message
 		 * @param message Message to send
 		 * @return <code>ChannelMessage</code> packet
 		 */

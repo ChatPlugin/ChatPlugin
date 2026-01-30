@@ -346,7 +346,7 @@ public class ChatColor {
 	 * if <code>!</code>{@link #isDefaultColor()}.</p>
 	 * 
 	 * @return Bukkit-adapted chat color
-	 * @throws UnsupportedOperationException If !{@link Environment#isBukkit()}
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isBukkit()}
 	 */
 	public org.bukkit.ChatColor bukkitValue() {
 		if (Environment.isBukkit())
@@ -361,7 +361,7 @@ public class ChatColor {
 	 * if <code>!</code>{@link #isDefaultColor()}.</p>
 	 * 
 	 * @return Sponge-adapted chat color
-	 * @throws UnsupportedOperationException If !{@link Environment#isSponge()}
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isSponge()}
 	 */
 	public org.spongepowered.api.text.TextElement spongeValue() {
 		if (Environment.isSponge())
@@ -391,11 +391,11 @@ public class ChatColor {
 	 * (<code>!</code>{@link #isDefaultColor()}).</p>
 	 * 
 	 * @return BungeeCord-adapted chat color
-	 * @throws UnsupportedOperationException If !{@link Environment#isBungeeCord()}
+	 * @throws UnsupportedOperationException If <code>!{@link Environment#isBungeeCord()} &amp;&amp; !{@link VersionUtils#isSpigot()}</code>
 	 */
 	@SuppressWarnings("deprecation")
-	public net.md_5.bungee.api.ChatColor bungeeValue() {
-		if (Environment.isBungeeCord())
+	public net.md_5.bungee.api.ChatColor bungeeCordValue() {
+		if (Environment.isBungeeCord() || VersionUtils.isSpigot())
 			return isDefaultColor() ? net.md_5.bungee.api.ChatColor.valueOf(name) : net.md_5.bungee.api.ChatColor.of(color);
 		throw new UnsupportedOperationException("Unable to adapt chat color to a BungeeCord's ChatColor on a " + Environment.getCurrent().getName() + " environment");
 	}
@@ -407,7 +407,7 @@ public class ChatColor {
 	 * (<code>!</code>{@link #isDefaultColor()}).</p>
 	 * 
 	 * @return Velocity-adapted chat color
-	 * @throws UnsupportedOperationException If !{@link Environment#isVelocity()}
+	 * @throws UnsupportedOperationException If <code>!</code>{@link Environment#isVelocity()}
 	 */
 	public net.kyori.adventure.text.format.TextFormat velocityValue() {
 		if (Environment.isVelocity())

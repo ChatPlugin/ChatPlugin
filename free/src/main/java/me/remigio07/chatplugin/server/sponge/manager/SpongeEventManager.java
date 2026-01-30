@@ -17,6 +17,7 @@ package me.remigio07.chatplugin.server.sponge.manager;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.spongepowered.api.Sponge;
@@ -147,7 +148,7 @@ public class SpongeEventManager extends EventManager implements EventListener<Ev
 			onClickInventory((ClickInventoryEvent) event, ClickTypeAdapter.MIDDLE);
 			break;
 		case "ClickInventoryEvent$NumberPress":
-			onClickInventory((ClickInventoryEvent) event, ClickTypeAdapter.NUMBER_KEY);
+			onClickInventory((ClickInventoryEvent) event, ((ClickInventoryEvent) event).getSlot().get().getInventoryProperty(SlotIndex.class).get().getValue() == 40 ? ClickTypeAdapter.SWAP_OFFHAND : ClickTypeAdapter.NUMBER_KEY);
 			break;
 		case "ClickInventoryEvent$Primary":
 		case "ClickInventoryEvent$Drop$Outside$Primary":
@@ -180,14 +181,14 @@ public class SpongeEventManager extends EventManager implements EventListener<Ev
 		
 		if (event.isCancelled() || serverPlayer == null)
 			return;
-		String[] args = { event.getRawMessage().toPlain(), Utils.deserializeSpongeText(event.getFormatter().format()) };
+		String[] args = { event.getRawMessage().toPlain(), Utils.toLegacyText(event.getFormatter().format()) };
 		
 		if (!((BaseChatManager) ChatManager.getInstance()).handleChatEvent(serverPlayer, args)) {
 			applyScoreboard(ScoreboardEvent.CHAT, player);
 			
 			if (!ChatManager.getInstance().shouldOverrideChatEvent()) {
-				event.setMessage(Utils.serializeSpongeText(args[0], false));
-				event.getFormatter().setHeader(Utils.serializeSpongeText(args[1], false));
+				event.setMessage(Utils.toSpongeComponent(args[0]));
+				event.getFormatter().setHeader(Utils.toSpongeComponent(args[1]));
 				return;
 			}
 		} event.setCancelled(true);
@@ -240,7 +241,8 @@ public class SpongeEventManager extends EventManager implements EventListener<Ev
 	}
 	
 	public void onClientConnection$Disconnect(ClientConnectionEvent.Disconnect event) {
-		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getTargetEntity().getUniqueId());
+		UUID uuid = event.getTargetEntity().getUniqueId();
+		ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(uuid);
 		
 		if (player != null) {
 			if (QuitMessageManager.getInstance().isEnabled())
@@ -252,9 +254,9 @@ public class SpongeEventManager extends EventManager implements EventListener<Ev
 				} AnticheatManager.getInstance().clearViolations(player);
 			}, 0L);
 			ServerPlayerManager.getInstance().unloadPlayer(player.getUUID());
-		} ServerPlayerManager.getPlayersVersions().remove(event.getTargetEntity().getUniqueId());
-		ServerPlayerManager.getPlayersLoginTimes().remove(event.getTargetEntity().getUniqueId());
-		ServerPlayerManager.getBedrockPlayers().remove(event.getTargetEntity().getUniqueId());
+		} ServerPlayerManager.getPlayersVersions().remove(uuid);
+		ServerPlayerManager.getPlayersLoginTimes().remove(uuid);
+		ServerPlayerManager.getBedrockPlayers().remove(uuid);
 	}
 	
 	// Sponge v4.2
@@ -285,13 +287,16 @@ public class SpongeEventManager extends EventManager implements EventListener<Ev
 							bossbarManager.startLoading(player);
 						else bossbarManager.sendBossbar(bossbarManager.getBossbars().get(bossbarManager.getTimerIndex() == -1 ? 0 : bossbarManager.getTimerIndex()), player);
 					}
-				}
+				} applyScoreboard(ScoreboardEvent.CHANGED_WORLD, (Player) event.getTargetEntity(), event.getFromTransform().getExtent().getName());
 			} else { // enabled -> disabled
 				((VanishManagerImpl) VanishManager.getInstance()).update(player, false);
 				playerManager.unloadPlayer(player.getUUID());
 			}
 		} else if (playerManager.isWorldEnabled(event.getTargetEntity().getWorld().getName())) // disabled -> enabled
-			TaskManager.runAsync(() -> playerManager.loadPlayer(new PlayerAdapter(event.getTargetEntity())), 0L);
+			TaskManager.runAsync(() -> {
+				playerManager.loadPlayer(new PlayerAdapter(event.getTargetEntity()));
+				applyScoreboard(ScoreboardEvent.CHANGED_WORLD, (Player) event.getTargetEntity(), event.getFromTransform().getExtent().getName());
+			}, 0L);
 	}
 	
 	public void onClickInventory(ClickInventoryEvent event, ClickTypeAdapter clickType) {
@@ -393,7 +398,7 @@ public class SpongeEventManager extends EventManager implements EventListener<Ev
 			} else if (clickType == ClickTypeAdapter.MIDDLE) {
 				if (cursor.isEmpty() && event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(slot))).peek().isPresent() && player.toAdapter().spongeValue().gameMode().get() == GameModes.CREATIVE)
 					clickAction = ClickActionAdapter.CLONE_STACK;
-			} else if (clickType == ClickTypeAdapter.NUMBER_KEY) {
+			} else if (clickType == ClickTypeAdapter.NUMBER_KEY || clickType == ClickTypeAdapter.SWAP_OFFHAND) {
 				Optional<ItemStack> hotbar = player.toAdapter().spongeValue().getInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(((NumberPress) event).getNumber()))).peek();
 				clickAction = event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(slot))).peek().isPresent()
 						? !hotbar.isPresent() || slot >= gui.getLayout().getSize()
@@ -415,7 +420,7 @@ public class SpongeEventManager extends EventManager implements EventListener<Ev
 					slot = event.getTransactions().get(0).getSlot().getInventoryProperty(SlotIndex.class).get().getValue();
 				if (slot != -1 && !event.getTransactions().get(0).getOriginal().createStack().isEmpty())
 					clickAction = ClickActionAdapter.DROP_ALL_SLOT;
-			} event.setCancelled(gui instanceof SinglePageGUI
+			} event.setCancelled(gui instanceof SinglePageGUI // should we use setCancelled(true) only if the condition is met, like for Bukkit?
 					? ((SinglePageGUI) gui).handleClickEvent(player, new ClickEventAdapter(
 							clickType,
 							clickAction,

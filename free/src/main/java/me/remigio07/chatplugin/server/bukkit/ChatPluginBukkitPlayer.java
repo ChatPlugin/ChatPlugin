@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.sql.SQLException;
-import java.time.Duration;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -66,9 +65,7 @@ import me.remigio07.chatplugin.server.bukkit.manager.BukkitPlayerManager;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import me.remigio07.chatplugin.server.rank.RankManagerImpl;
 import me.remigio07.chatplugin.server.util.Utils;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.title.Title;
-import net.kyori.adventure.title.Title.Times;
+import net.md_5.bungee.api.chat.BaseComponent;
 
 public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
@@ -91,7 +88,6 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	public ChatPluginBukkitPlayer(Player player) {
 		super(new PlayerAdapter(player));
 		this.player = player;
-		audience = BukkitPlayerManager.getAudiences().player(player);
 		rank = ((RankManagerImpl) RankManager.getInstance()).calculateRank(this);
 		version = version == null ? VersionUtils.getVersion() : version;
 		craftPlayer = CraftPlayer.cast(player);
@@ -214,9 +210,8 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	}
 	
 	@Override
-	public void sendMessage(Component... components) {
-		for (Component component : components)
-			audience.sendMessage(component);
+	public void sendMessage(BaseComponent... components) {
+		ChatPluginBukkit.sendMessage(player, false, components);
 	}
 	
 	@Override
@@ -288,16 +283,19 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public void sendTitle(String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-		audience.showTitle(
-				Title.title(Utils.deserializeLegacy(title, true),
-				Utils.deserializeLegacy(subtitle, true),
-				Times.times(Duration.ofMillis(fadeIn), Duration.ofMillis(stay), Duration.ofMillis(fadeOut)))
-				);
+		if (VersionUtils.getVersion().isOlderThan(Version.V1_11)) {
+			sendPacket(BukkitReflection.getInstance("PacketPlayOutTitle", fadeIn / 50, stay / 50, fadeOut / 50));
+			
+			if (title != null)
+				sendPacket(BukkitReflection.getInstance("PacketPlayOutTitle", new Class[] { BukkitReflection.getLoadedClass("EnumTitleAction"), BukkitReflection.getLoadedClass("IChatBaseComponent") }, BukkitReflection.getEnum("EnumTitleAction", 0), ChatPluginBukkit.toBukkitComponent(title)));
+			if (subtitle != null)
+				sendPacket(BukkitReflection.getInstance("PacketPlayOutTitle", new Class[] { BukkitReflection.getLoadedClass("EnumTitleAction"), BukkitReflection.getLoadedClass("IChatBaseComponent") }, BukkitReflection.getEnum("EnumTitleAction", 1), ChatPluginBukkit.toBukkitComponent(subtitle)));
+		} else player.sendTitle(title, subtitle, fadeIn / 50, stay / 50, fadeOut / 50);
 	}
 	
 	@Override
 	public void sendActionbar(String actionbar) {
-		audience.sendActionBar(Utils.deserializeLegacy(actionbar, true));
+		ChatPluginBukkit.sendMessage(player, true, me.remigio07.chatplugin.common.util.Utils.toBungeeCordComponent(actionbar));
 	}
 	
 	@Deprecated

@@ -62,11 +62,8 @@ import me.remigio07.chatplugin.server.join_quit.QuitMessageManagerImpl.QuitPacke
 import me.remigio07.chatplugin.server.sponge.ChatPluginSpongePlayer;
 import me.remigio07.chatplugin.server.util.Utils;
 import me.remigio07.chatplugin.server.util.manager.VanishManagerImpl;
-import net.kyori.adventure.platform.spongeapi.SpongeAudiences;
 
 public class SpongePlayerManager extends ServerPlayerManager {
-	
-	private static SpongeAudiences audiences;
 	
 	@Override
 	public void load() throws ChatPluginManagerException {
@@ -75,8 +72,6 @@ public class SpongePlayerManager extends ServerPlayerManager {
 		
 		super.load();
 		
-		if (audiences == null)
-			audiences = SpongeAudiences.create(Sponge.getPluginManager().getPlugin("chatplugin").get(), Sponge.getGame());
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}
@@ -118,7 +113,7 @@ public class SpongePlayerManager extends ServerPlayerManager {
 				Team team = Team.builder().name("line_" + i).build();
 				
 				scoreboard.registerTeam(team);
-				team.addMember(Utils.serializeSpongeText(me.remigio07.chatplugin.api.server.scoreboard.Scoreboard.SCORES[i], false));
+				team.addMember(Utils.toSpongeComponent(me.remigio07.chatplugin.api.server.scoreboard.Scoreboard.SCORES[i]));
 			} if (ScoreboardManager.getInstance().getScoreboard("default") != null)
 				ScoreboardManager.getInstance().getScoreboard("default").addPlayer(serverPlayer);
 			if (!serverPlayer.isPlayerStored() && ScoreboardManager.getInstance().getScoreboard("first-join-event") != null)
@@ -206,10 +201,6 @@ public class SpongePlayerManager extends ServerPlayerManager {
 		});
 		LogManager.log("Player {0} has been unloaded in {1} ms.", 4, serverPlayer.getName(), ms = System.currentTimeMillis() - ms);
 		return (int) ms;
-	}
-	
-	public static SpongeAudiences getAudiences() {
-		return audiences;
 	}
 	
 }

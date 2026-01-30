@@ -40,15 +40,13 @@ import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
 import me.remigio07.chatplugin.api.server.util.adapter.scoreboard.ObjectiveAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
-import me.remigio07.chatplugin.server.util.Utils;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
+import me.remigio07.chatplugin.common.util.Utils;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
 
 public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer {
 	
-	protected Audience audience;
 	protected boolean playerStored;
 	
 	public BaseChatPluginServerPlayer(PlayerAdapter player) {
@@ -105,10 +103,7 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 					LogManager.log("SQLException occurred while altering database table {0} after version update: {1}", 2, DataContainer.PLAYERS.getDatabaseTableID(), sqle2.getLocalizedMessage());
 				}
 			}
-		} else {
-			chatColor = ChatColor.RESET;
-			emojisTone = ChatColor.RESET;
-		}
+		} else chatColor = emojisTone = ChatColor.RESET;
 	}
 	
 	@Override
@@ -198,14 +193,16 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 	}
 	
 	public void sendLanguageDetectedMessage(Language language) {
-		if (isOnline())
-			sendMessage(Utils.deserializeLegacy(language.getMessage("languages.detected.text", language.getDisplayName()), false)
-					.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(language.getMessage("languages.detected.hover", language.getDisplayName()), false)))
-					.clickEvent(ClickEvent.runCommand("/chatplugin language " + language.getID()))
-					);
+		if (isOnline()) {
+			BaseComponent component = Utils.toBungeeCordComponent(language.getMessage("languages.detected.text", language.getDisplayName()));
+			
+			component.setHoverEvent(Utils.getHoverEvent(HoverEvent.Action.SHOW_TEXT, language.getMessage("languages.detected.hover", language.getDisplayName())));
+			component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/chatplugin language " + language.getID()));
+			sendMessage(component);
+		}
 	}
 	
-	public abstract void sendMessage(Component... components);
+	public abstract void sendMessage(BaseComponent... components);
 	
 	public abstract void updatePlayerListName();
 	

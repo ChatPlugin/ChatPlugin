@@ -24,7 +24,7 @@ import me.remigio07.chatplugin.api.server.chat.InstantEmojisManager.InstantEmoji
 import me.remigio07.chatplugin.api.server.chat.channel.ChatChannel;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
-import net.kyori.adventure.text.TextComponent;
+import net.md_5.bungee.api.chat.BaseComponent;
 
 public abstract class BaseHoverInfoManager extends HoverInfoManager {
 	
@@ -33,7 +33,7 @@ public abstract class BaseHoverInfoManager extends HoverInfoManager {
 		instance = this;
 	}
 	
-	public abstract TextComponent getMessageHoverInfo(
+	public abstract BaseComponent getMessageHoverInfo(
 			ChatPluginServerPlayer player,
 			Language language,
 			String message,
@@ -50,7 +50,7 @@ public abstract class BaseHoverInfoManager extends HoverInfoManager {
 	public static class DummyHoverInfoManager extends BaseHoverInfoManager {
 		
 		@Override
-		public TextComponent getMessageHoverInfo(
+		public BaseComponent getMessageHoverInfo(
 				ChatPluginServerPlayer player,
 				Language language,
 				String message,

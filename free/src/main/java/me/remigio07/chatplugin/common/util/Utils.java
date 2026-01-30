@@ -17,8 +17,10 @@ package me.remigio07.chatplugin.common.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -33,10 +35,17 @@ import javax.net.ssl.HttpsURLConnection;
 import org.bukkit.Bukkit;
 import org.spongepowered.api.Sponge;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
 import me.remigio07.chatplugin.api.ChatPlugin;
+import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationManager;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.Library;
 import me.remigio07.chatplugin.api.common.util.VersionChange;
+import me.remigio07.chatplugin.api.common.util.VersionUtils;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
@@ -45,48 +54,58 @@ import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.bootstrap.JARLibraryLoader;
 import me.remigio07.chatplugin.bootstrap.VelocityBootstrapper;
 import me.remigio07.chatplugin.common.util.text.ComponentTranslatorImpl;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.metadata.Person;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ClickEvent.Action;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.chat.ChatVersion;
+import net.md_5.bungee.chat.ComponentSerializer;
+import net.md_5.bungee.chat.VersionedComponentSerializer;
 
 public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 	
-	public static final Library[] RELOCATION_LIBS = new Library[] {
+	public static final Library[] RELOCATION_LIBS = {
 			Library.ASM,
 			Library.ASM_COMMONS,
 			Library.JAR_RELOCATOR
 			};
-	public static final Library[] ADVENTURE_LIBS = new Library[] {
-			Library.ADVENTURE_API,
-			Library.ADVENTURE_KEY,
-			Library.ADVENTURE_NBT,
-			Library.ADVENTURE_PLATFORM_API,
-			Library.ADVENTURE_PLATFORM_FACET,
-			Library.ADVENTURE_TEXT_SERIALIZER_GSON,
-			Library.ADVENTURE_TEXT_SERIALIZER_GSON_LEGACY_IMPL,
-			Library.ADVENTURE_TEXT_SERIALIZER_JSON,
-			Library.ADVENTURE_TEXT_SERIALIZER_JSON_LEGACY_IMPL,
-			Library.ADVENTURE_TEXT_SERIALIZER_LEGACY,
-			Library.EXAMINATION_API,
-			Library.EXAMINATION_STRING,
-			Library.OPTION,
-			Library.GSON,
-			Library.JETBRAINS_ANNOTATIONS
-	};
+	public static final Library[] BUNGEECORD_LIBS = {
+			Library.BUNGEECORD_CHAT,
+			Library.BUNGEECORD_DIALOG,
+			Library.BUNGEECORD_SERIALIZER,
+			Library.GSON
+			};
+	private static Gson GSON;
 	
 	@SuppressWarnings("deprecation")
 	public static void initUtils() throws ChatPluginManagerException {
 		try {
 			for (Library library : RELOCATION_LIBS)
 				LibrariesUtils.load(library);
-			if (!Environment.isProxy()) {
-				for (Library library : ADVENTURE_LIBS)
+			if (Environment.isFabric() && ConfigurationManager.getInstance().getLastVersionChange() != VersionChange.NULL)
+				try {
+					LibrariesUtils.downloadFreshCopy("Updating {0} library (new plugin version detected)...", 0, Library.SNAKEYAML);
+				} catch (Throwable t) {
+					throw new LibraryException(t, Library.SNAKEYAML);
+				}
+			if (!VersionUtils.isSpigot() && !Environment.isBungeeCord())
+				for (Library library : BUNGEECORD_LIBS)
 					LibrariesUtils.load(library);
-				if (Environment.isBukkit())
-					LibrariesUtils.load(Library.ADVENTURE_PLATFORM_BUKKIT);
-				else if (Environment.isSponge())
-					LibrariesUtils.load(Library.ADVENTURE_PLATFORM_SPONGEAPI);
-			} LibrariesUtils.load(Library.JSON_SIMPLE);
-		} catch (LibraryException e) {
-			throw new ChatPluginManagerException("libraries utils", e.getMessage());
+			LibrariesUtils.load(Library.JSON_SIMPLE);
+			
+			Field gson = ComponentSerializer.class.getDeclaredField("gson");
+			
+			gson.setAccessible(true);
+			
+			GSON = (Gson) gson.get(null);
+		} catch (LibraryException le) {
+			throw new ChatPluginManagerException("libraries utils", le.getMessage());
+		} catch (NoSuchFieldException | IllegalAccessException e) {
+			GSON = VersionedComponentSerializer.getDefault().getGson();
 		} UUIDFetcherImpl.setInstance(new UUIDFetcherImpl());
 		ComponentTranslatorImpl.setInstance(new ComponentTranslatorImpl());
 	}
@@ -100,7 +119,7 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 		}, 0L, 14400000L);
 	}
 	
-	public static String getLatestVersion() {
+	public static String getLatestVersion() { // TODO check this...
 		try (Scanner scanner = new Scanner(new URI("https://api.spigotmc.org/legacy/update.php?resource=115169/~").toURL().openStream())) {
 			if (scanner.hasNext()) {
 				String latestVersion = scanner.next();
@@ -210,18 +229,6 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 		return input.substring(0, length + (stripColor ? input.length() - stripped.length() : 0) - 1) + '…';
 	}
 	
-	public static void debugPrint(List<String> list) {
-		StringBuilder sb = new StringBuilder();
-		for (String str : list)
-			sb.append("\"" + str + "\", ");
-		try {
-			sb.delete(sb.length() - 2, sb.length());
-		} catch (StringIndexOutOfBoundsException e) {
-			System.out.println("empty string");
-			return;
-		} System.out.println("[" + sb.toString() + "]");
-	}
-	
 	public static List<PluginInfo> getPluginsInfo() {
 		switch (Environment.getCurrent()) {
 		case BUKKIT:
@@ -321,6 +328,75 @@ public class Utils extends me.remigio07.chatplugin.api.common.util.Utils {
 				}
 			} else sb.append(delimiter);
 		} return sb.toString();
+	}
+	
+	public static String toLegacyText(BaseComponent bungeeCordComponent) {
+		return BaseComponent.toLegacyText(bungeeCordComponent);
+	}
+	
+	public static String toLegacyText(JsonElement json) {
+		return toLegacyText(toBungeeCordComponent(json));
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static JsonElement toJSON(BaseComponent bungeeCordComponent) {
+		return VersionUtils.getVersion().isAtLeast(Version.V1_21_5)
+				? VersionedComponentSerializer.forVersion(ChatVersion.V1_21_5).toJson(bungeeCordComponent)
+				: new JsonParser().parse(ComponentSerializer.toString(bungeeCordComponent));
+	}
+	
+	public static JsonElement toJSON(String legacyText) {
+		return toJSON(toBungeeCordComponent(legacyText));
+	}
+	
+	public static BaseComponent toBungeeCordComponent(JsonElement json) {
+		return VersionUtils.getVersion().isAtLeast(Version.V1_21_5)
+				? VersionedComponentSerializer.forVersion(ChatVersion.V1_21_5).deserialize(json)
+				: json.isJsonArray()
+				? GSON.fromJson(json, BaseComponent[].class)[0]
+				: GSON.fromJson(json, BaseComponent.class); 
+	}
+	
+	public static BaseComponent toBungeeCordComponent(String legacyText) {
+		return BungeeCordComponent.toBungeeCordComponent(legacyText);
+	}
+	
+	public static HoverEvent getHoverEvent(HoverEvent.Action action, String value) {
+		return BungeeCordComponent.getHoverEvent(action, value);
+	}
+	
+	private static class BungeeCordComponent {
+		
+		@SuppressWarnings("deprecation")
+		public static BaseComponent toBungeeCordComponent(String legacyText) {
+			BaseComponent[] components = TextComponent.fromLegacyText(legacyText);
+			
+			if (components.length == 1)
+				return checkClickEvent(components[0]);
+			return checkClickEvent(new TextComponent(components));
+		}
+		
+		// prevent URISyntaxExceptions when converting to Vanilla components
+		private static BaseComponent checkClickEvent(BaseComponent component) {
+			ClickEvent clickEvent = component.getClickEvent();
+			
+			if (clickEvent != null && clickEvent.getAction() == Action.OPEN_URL)
+				try {
+					new URI(clickEvent.getValue());
+				} catch (URISyntaxException urise) {
+					component.setClickEvent(null);
+				}
+			if (component.getExtra() != null)
+				for (BaseComponent extra : component.getExtra())
+					checkClickEvent(extra);
+			return component;
+		}
+		
+		@SuppressWarnings("deprecation")
+		public static HoverEvent getHoverEvent(HoverEvent.Action action, String value) {
+			return new HoverEvent(action, new BaseComponent[] { toBungeeCordComponent(value) });
+		}
+		
 	}
 	
 }

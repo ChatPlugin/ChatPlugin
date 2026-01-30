@@ -29,7 +29,6 @@ import me.remigio07.chatplugin.api.common.punishment.mute.MuteManager;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
-import me.remigio07.chatplugin.api.common.util.Utils;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.packet.Packets;
@@ -59,10 +58,10 @@ import me.remigio07.chatplugin.api.server.util.URLValidator;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
+import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.chat.antispam.AntispamManagerImpl;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.md_5.bungee.api.chat.BaseComponent;
 
 public abstract class BaseChatManager extends ChatManager {
 	
@@ -218,7 +217,7 @@ public abstract class BaseChatManager extends ChatManager {
 		
 		if (HoverInfoManager.getInstance().isEnabled()) {
 			for (Language language : LanguageManager.getInstance().getLanguages()) {
-				TextComponent text = ((BaseHoverInfoManager) HoverInfoManager.getInstance()).getMessageHoverInfo(player, language, message, channel, urls, pingedPlayers, new HashSet<>(instantEmojis));
+				BaseComponent text = ((BaseHoverInfoManager) HoverInfoManager.getInstance()).getMessageHoverInfo(player, language, message, channel, urls, pingedPlayers, new HashSet<>(instantEmojis));
 				
 				for (ChatPluginServerPlayer other : language.getOnlinePlayers()) {
 					if (!other.getIgnoredPlayers().contains(player)) {
@@ -239,7 +238,7 @@ public abstract class BaseChatManager extends ChatManager {
 							channel.getID(),
 							language.getID(),
 							true,
-							GsonComponentSerializer.gson().serialize(text)
+							Utils.toJSON(text).toString() // FIXME this will not work if the sender and receiver servers are on incompatible versions
 							));
 			}
 		} else {

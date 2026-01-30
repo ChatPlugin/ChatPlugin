@@ -43,6 +43,8 @@ import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.bootstrap.Environment;
 import me.remigio07.chatplugin.bootstrap.FabricBootstrapper;
 import me.remigio07.chatplugin.bootstrap.VelocityBootstrapper;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ProxyServer;
 
 /**
@@ -72,7 +74,7 @@ public class Utils {
 	public static final String USER_AGENT = "Mozilla/5.0 +https://remigio07.me/chatplugin ChatPlugin/" + ChatPlugin.VERSION;
 	
 	/**
-	 * UUID representing the <a href=https://wikipedia.org/wiki/Universally_unique_identifier#Nil_UUID>nil UUID</a>.
+	 * UUID representing the <a href=https://wikipedia.org/wiki/Universally_unique_identifier#Special_values>nil UUID</a>.
 	 * 
 	 * <p><strong>UUID:</strong> "00000000-0000-0000-0000-000000000000"</p>
 	 */
@@ -658,6 +660,26 @@ public class Utils {
 	}
 	
 	/**
+	 * Converts the specified Adventure component to legacy text.
+	 * 
+	 * @param adventureComponent Adventure component to convert
+	 * @return Resulting legacy text
+	 */
+	public static String toLegacyText(Component adventureComponent) {
+		return AdventureComponent.toLegacyText(adventureComponent);
+	}
+	
+	/**
+	 * Converts the specified legacy text to an Adventure component.
+	 * 
+	 * @param legacyText Legacy text to convert
+	 * @return Resulting Adventure component
+	 */
+	public static Component toAdventureComponent(String legacyText) {
+		return AdventureComponent.toAdventureComponent(legacyText);
+	}
+	
+	/**
 	 * Gets the total storage installed on {@link #ROOT_FOLDER}.
 	 * 
 	 * @return Total storage, in bytes
@@ -697,6 +719,18 @@ public class Utils {
 			LogManager.log("IOException occurred while getting the unallocated storage: {0}", 2, ioe.getLocalizedMessage());
 			return -1;
 		}
+	}
+	
+	private static class AdventureComponent {
+		
+		public static Component toAdventureComponent(String legacyText) {
+			return LegacyComponentSerializer.legacySection().deserialize(legacyText);
+		}
+		
+		public static String toLegacyText(Component adventureComponent) {
+			return LegacyComponentSerializer.legacySection().serialize(adventureComponent);
+		}
+		
 	}
 	
 }

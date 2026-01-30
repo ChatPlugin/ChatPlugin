@@ -34,15 +34,11 @@ import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.rank.Rank;
 import me.remigio07.chatplugin.api.server.rank.RankManager;
 import me.remigio07.chatplugin.api.server.util.adapter.user.CommandSenderAdapter;
+import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.chat.BaseHoverInfoManager;
 import me.remigio07.chatplugin.server.command.BaseCommand;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import me.remigio07.chatplugin.server.rank.RankManagerImpl;
-import me.remigio07.chatplugin.server.util.Utils;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.node.NodeType;
@@ -50,6 +46,10 @@ import net.luckperms.api.node.types.DisplayNameNode;
 import net.luckperms.api.node.types.MetaNode;
 import net.luckperms.api.node.types.PrefixNode;
 import net.luckperms.api.node.types.SuffixNode;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class RankCommand extends BaseCommand {
 	
@@ -126,12 +126,13 @@ public class RankCommand extends BaseCommand {
 										try {
 											ConfigurationType.RANKS.get().save();
 											
-											if (sender.isConsole())
-												sender.sendMessage(language.getMessage("commands.rank.added.text", args[1]));
-											else ((BaseChatPluginServerPlayer) sender.toServerPlayer()).sendMessage(Utils.deserializeLegacy(language.getMessage("commands.rank.add.added.text", args[1]), false)
-													.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(language.getMessage("commands.rank.add.added.hover", args[1]), false)))
-													.clickEvent(ClickEvent.runCommand("/chatplugin reload"))
-													);
+											if (sender.isPlayer()) {
+												BaseComponent component = Utils.toBungeeCordComponent(language.getMessage("commands.rank.add.added.text", args[1]));
+												
+												component.setHoverEvent(Utils.getHoverEvent(HoverEvent.Action.SHOW_TEXT, language.getMessage("commands.rank.add.added.hover", args[1])));
+												component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/chatplugin reload"));
+												((BaseChatPluginServerPlayer) sender.toServerPlayer()).sendMessage(component);
+											} else sender.sendMessage(language.getMessage("commands.rank.added.text", args[1]));
 										} catch (IOException ioe) {
 											LogManager.log("IOException occurred while saving ranks.yml: {0}", 2, ioe.getLocalizedMessage());
 										}
@@ -180,12 +181,13 @@ public class RankCommand extends BaseCommand {
 						try {
 							ConfigurationType.RANKS.get().save();
 							
-							if (sender.isConsole())
-								sender.sendMessage(language.getMessage("commands.rank.removed.text", rank.getID()));
-							else ((BaseChatPluginServerPlayer) sender.toServerPlayer()).sendMessage(Utils.deserializeLegacy(language.getMessage("commands.rank.removed.text", rank.getID()), false)
-									.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(language.getMessage("commands.rank.removed.hover", rank.getID()), false)))
-									.clickEvent(ClickEvent.runCommand("/chatplugin reload"))
-									);
+							if (sender.isPlayer()) {
+								BaseComponent component = Utils.toBungeeCordComponent(language.getMessage("commands.rank.removed.text", rank.getID()));
+								
+								component.setHoverEvent(Utils.getHoverEvent(HoverEvent.Action.SHOW_TEXT, language.getMessage("commands.rank.removed.hover", rank.getID())));
+								component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/chatplugin reload"));
+								((BaseChatPluginServerPlayer) sender.toServerPlayer()).sendMessage(component);
+							} else sender.sendMessage(language.getMessage("commands.rank.removed.text", rank.getID()));
 						} catch (IOException ioe) {
 							LogManager.log("IOException occurred while saving ranks.yml: {0}", 2, ioe.getLocalizedMessage());
 						}
@@ -428,7 +430,7 @@ public class RankCommand extends BaseCommand {
 			
 			if (page > -1 && page < pages) {
 				ranks = ranks.subList(page * 8, page == ranks.size() / 8 ? ranks.size() : (page + 1) * 8);
-				TextComponent[] components = new TextComponent[ranks.size()];
+				BaseComponent[] components = new BaseComponent[ranks.size()];
 				String text = language.getMessage("commands.rank.list.message-format.text");
 				String hover = language.getMessage("commands.rank.list.message-format.hover");
 				
@@ -436,30 +438,37 @@ public class RankCommand extends BaseCommand {
 				
 				for (int i = 0; i < ranks.size(); i++) {
 					Rank rank = ranks.get(i);
-					components[i] = Utils.deserializeLegacy(rank.formatPlaceholders(text, language), false)
-							.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(rank.formatPlaceholders(hover, language), false)))
-							.clickEvent(ClickEvent.runCommand("/rank info " + rank.getID()));
+					components[i] = Utils.toBungeeCordComponent(rank.formatPlaceholders(text, language));
+					
+					components[i].setHoverEvent(Utils.getHoverEvent(HoverEvent.Action.SHOW_TEXT, rank.formatPlaceholders(hover, language)));
+					components[i].setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/rank info " + rank.getID()));
 				} sendComponents(sender, components);
 				
 				if (pages > 1) {
 					String[] footer = formatPlaceholders(language.getMessage("page-switcher.footer") + " ", page + 1, pages).split(Pattern.quote("{page_switcher}"));
 					
 					if (footer.length == 2) {
-						TextComponent component = Utils.deserializeLegacy(footer[0], false);
-						TextComponent pageSwitcher = Component.empty();
+						BaseComponent component = Utils.toBungeeCordComponent(footer[0]);
+						BaseComponent pageSwitcher = new TextComponent("§r");
 						boolean hasPreviousPage = page != 0;
 						
-						if (hasPreviousPage)
-							pageSwitcher = pageSwitcher.append(Utils.deserializeLegacy(formatPlaceholders(language.getMessage("page-switcher.previous.text"), page + 1, pages).replace("{previous_page}", String.valueOf(page)), false)
-									.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(formatPlaceholders(language.getMessage("page-switcher.previous.hover"), page + 1, pages).replace("{previous_page}", String.valueOf(page)), false)))
-									.clickEvent(ClickEvent.runCommand("/rank list " + String.valueOf(page)))
-									);
-						if (page != pages - 1)
-							pageSwitcher = (hasPreviousPage ? pageSwitcher.append(Component.space()) : pageSwitcher).append(Utils.deserializeLegacy(formatPlaceholders(language.getMessage("page-switcher.next.text"), page + 1, pages).replace("{next_page}", String.valueOf(page + 2)), false)
-									.hoverEvent(HoverEvent.showText(Utils.deserializeLegacy(formatPlaceholders(language.getMessage("page-switcher.next.hover"), page + 1, pages).replace("{next_page}", String.valueOf(page + 2)), false)))
-									.clickEvent(ClickEvent.runCommand("/rank list " + String.valueOf(page + 2)))
-									);
-						sendComponents(sender, component.append(pageSwitcher).append(Utils.deserializeLegacy(footer[1] == " " ? "" : footer[1], false)));
+						if (hasPreviousPage) {
+							BaseComponent previous = Utils.toBungeeCordComponent(formatPlaceholders(language.getMessage("page-switcher.previous.text"), page + 1, pages).replace("{previous_page}", String.valueOf(page)));
+							
+							previous.setHoverEvent(Utils.getHoverEvent(HoverEvent.Action.SHOW_TEXT, formatPlaceholders(language.getMessage("page-switcher.previous.hover"), page + 1, pages).replace("{previous_page}", String.valueOf(page))));
+							previous.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/rank list " + String.valueOf(page)));
+							pageSwitcher.addExtra(previous);
+						} if (page != pages - 1) {
+							if (hasPreviousPage)
+								pageSwitcher.addExtra(new TextComponent(" "));
+							BaseComponent next = Utils.toBungeeCordComponent(formatPlaceholders(language.getMessage("page-switcher.next.text"), page + 1, pages).replace("{next_page}", String.valueOf(page + 2)));
+							
+							next.setHoverEvent(Utils.getHoverEvent(HoverEvent.Action.SHOW_TEXT, formatPlaceholders(language.getMessage("page-switcher.next.hover"), page + 1, pages).replace("{next_page}", String.valueOf(page + 2))));
+							next.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/rank list " + String.valueOf(page + 2)));
+							pageSwitcher.addExtra(next);
+						} component.addExtra(pageSwitcher);
+						component.addExtra(Utils.toBungeeCordComponent(footer[1] == " " ? "" : footer[1]));
+						sendComponents(sender, component);
 					} else sender.sendMessage(language.getMessage("misc.prefix") + ChatColor.translate(" &cMessage specified at &fpage-switcher.footer &cin &f" + language.getConfiguration().getPath().getFileName().toString() + " &cdoes not contain the &f{page_switcher} &cplaceholder."));
 				}
 			} else sender.sendMessage(formatPlaceholders(language.getMessage("page-switcher.invalid"), page + 1, pages));
@@ -471,10 +480,10 @@ public class RankCommand extends BaseCommand {
 					.replace("{max_page}", String.valueOf(maxPage));
 		}
 		
-		private static void sendComponents(CommandSenderAdapter sender, TextComponent... components) {
+		private static void sendComponents(CommandSenderAdapter sender, BaseComponent... components) {
 			if (sender.isConsole())
-				for (TextComponent component : components)
-					sender.sendMessage(Utils.serializeLegacy(component));
+				for (BaseComponent component : components)
+					sender.sendMessage(Utils.toLegacyText(component));
 			else ((BaseChatPluginServerPlayer) sender.toServerPlayer()).sendMessage(components);
 		}
 		

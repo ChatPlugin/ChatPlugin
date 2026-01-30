@@ -31,6 +31,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.scoreboard.Scoreboard;
 import org.spongepowered.api.scoreboard.Team;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.title.Title;
 
 import com.google.common.collect.Iterables;
@@ -59,6 +60,7 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.rank.RankManager;
 import me.remigio07.chatplugin.api.server.tablist.TablistManager;
+import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.adapter.inventory.InventoryAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.user.SoundAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.PlaceholderManager;
@@ -66,9 +68,7 @@ import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.server.bossbar.NativeBossbar;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import me.remigio07.chatplugin.server.rank.RankManagerImpl;
-import me.remigio07.chatplugin.server.sponge.manager.SpongePlayerManager;
-import me.remigio07.chatplugin.server.util.Utils;
-import net.kyori.adventure.text.Component;
+import net.md_5.bungee.api.chat.BaseComponent;
 
 public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	
@@ -86,7 +86,6 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	public ChatPluginSpongePlayer(Player player) {
 		super(new PlayerAdapter(player));
 		this.player = player;
-		audience = SpongePlayerManager.getAudiences().player(player);
 		rank = ((RankManagerImpl) RankManager.getInstance()).calculateRank(this);
 		version = version == null ? VersionUtils.getVersion() : version;
 		playerConnection = player.getConnection();
@@ -178,8 +177,8 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	public void sendMessage(String message) {
 		if (version.isOlderThan(Version.V1_8)) // https://bugs.mojang.com/browse/MC-39987
 			for (String str : message.split("\n"))
-				player.sendMessage(Utils.serializeSpongeText(str, false));
-		else player.sendMessage(Utils.serializeSpongeText(message, false));
+				player.sendMessage(Utils.toSpongeComponent(str));
+		else player.sendMessage(Utils.toSpongeComponent(message));
 	}
 	
 	@Override
@@ -192,7 +191,7 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	@Override
 	public void disconnect(String reason) {
 		if (Sponge.getServer().isMainThread())
-			player.kick(Utils.serializeSpongeText(reason, true));
+			player.kick(Utils.toSpongeComponent(reason));
 		else TaskManager.runSync(() -> disconnect(reason), 0L);
 	}
 	
@@ -202,9 +201,9 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	}
 	
 	@Override
-	public void sendMessage(Component... components) {
-		for (Component component : components)
-			audience.sendMessage(component);
+	public void sendMessage(BaseComponent... components) {
+		for (BaseComponent component : components)
+			player.sendMessage(ChatPluginSponge.toSpongeComponent(component));
 	}
 	
 	@Override
@@ -247,9 +246,9 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 				if (ChatColor.stripColor(ChatColor.translate(str)).isEmpty())
 					prefix = prefix.substring(0, index) + str + " ";
 			}
-		} team.setPrefix(Utils.serializeSpongeText(prefix.length() > 16 ? me.remigio07.chatplugin.common.util.Utils.abbreviate(prefix, 16, false) : prefix, false));
-		team.setSuffix(Utils.serializeSpongeText(suffix.length() > 16 ? me.remigio07.chatplugin.common.util.Utils.abbreviate(suffix, 16, false) : suffix, false));
-		team.addMember(Utils.serializeSpongeText(other.toAdapter().spongeValue().getName(), false));
+		} team.setPrefix(Utils.toSpongeComponent(prefix.length() > 16 ? me.remigio07.chatplugin.common.util.Utils.abbreviate(prefix, 16, false) : prefix));
+		team.setSuffix(Utils.toSpongeComponent(suffix.length() > 16 ? me.remigio07.chatplugin.common.util.Utils.abbreviate(suffix, 16, false) : suffix));
+		team.addMember(Utils.toSpongeComponent(other.toAdapter().spongeValue().getName()));
 		
 		if (!team.getScoreboard().isPresent())
 			scoreboard.registerTeam(team);
@@ -262,18 +261,18 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 		
 		if (team == null) // specifying the following in orElse(...) would build a team every time
 			team = Team.builder().name(identifier).build();
-		team.addMember(Utils.serializeSpongeText(other.toAdapter().spongeValue().getName(), false));
+		team.addMember(Utils.toSpongeComponent(other.toAdapter().spongeValue().getName()));
 		
 		if (!team.getScoreboard().isPresent())
 			scoreboard.registerTeam(team);
 	}
 	
 	private void setPlayerListName(ChatPluginServerPlayer other) {
-		setPlayerListName(other, Utils.serializeSpongeText(
+		setPlayerListName(other, Utils.toSpongeComponent(
 				PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPlayerNamesPrefix(), other, language, TablistManager.getInstance().getPlaceholderTypes())
 				+ other.getName()
-				+ PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPlayerNamesSuffix(), other, language, TablistManager.getInstance().getPlaceholderTypes()),
-				false));
+				+ PlaceholderManager.getInstance().translatePlaceholders(TablistManager.getInstance().getPlayerNamesSuffix(), other, language, TablistManager.getInstance().getPlaceholderTypes())
+				));
 	}
 	
 	@Override
@@ -286,21 +285,21 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 		// sent separately because of a bug
 		player.sendTitle(Title.builder()
 				.reset()
-				.subtitle(subtitle == null ? null : Utils.serializeSpongeText(subtitle, false))
+				.subtitle(subtitle == null ? null : Utils.toSpongeComponent(subtitle))
 				.fadeIn(fadeIn)
 				.stay(stay)
 				.fadeOut(fadeOut)
 				.build()
 				);
 		player.sendTitle(Title.builder()
-				.title(title == null ? null : Utils.serializeSpongeText(title, false))
+				.title(title == null ? null : Utils.toSpongeComponent(title))
 				.build()
 				);
 	}
 	
 	@Override
 	public void sendActionbar(String actionbar) {
-		audience.sendActionBar(Utils.deserializeLegacy(actionbar, true));
+		player.sendMessage(ChatTypes.ACTION_BAR, Utils.toSpongeComponent(actionbar));
 	}
 	
 	@Deprecated
@@ -348,7 +347,7 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	
 	@Override
 	public String getDisplayName() {
-		 return Utils.deserializeSpongeText(player.getDisplayNameData().displayName().get());
+		 return Utils.toLegacyText(player.getDisplayNameData().displayName().get());
 	}
 	
 	@Override
@@ -384,8 +383,8 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 				.toString();
 	}
 	
-	public void setPlayerListName(ChatPluginServerPlayer other, Text name) {
-		player.getTabList().getEntry(other.getUUID()).get().setDisplayName(name);
+	public void setPlayerListName(ChatPluginServerPlayer other, Text displayName) {
+		player.getTabList().getEntry(other.getUUID()).get().setDisplayName(displayName);
 	}
 	
 }

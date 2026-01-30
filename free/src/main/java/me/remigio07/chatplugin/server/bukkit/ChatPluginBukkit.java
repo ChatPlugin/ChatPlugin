@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -32,7 +33,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+
+import com.google.gson.JsonElement;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.event.plugin.ChatPluginCrashEvent;
@@ -49,6 +53,7 @@ import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
+import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
@@ -57,6 +62,8 @@ import me.remigio07.chatplugin.common.util.manager.JavaLogManager;
 import me.remigio07.chatplugin.server.storage.configuration.ServerConfigurationManager;
 import me.remigio07.chatplugin.server.util.ServerMetrics;
 import me.remigio07.chatplugin.server.util.manager.ChatPluginServerManagers;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.BaseComponent;
 
 public class ChatPluginBukkit extends ChatPlugin {
 	
@@ -283,6 +290,64 @@ public class ChatPluginBukkit extends ChatPlugin {
 	
 	public Metrics getMetrics() {
 		return metrics;
+	}
+	
+	public static String toLegacyText(Object bukkitComponent) {
+		return Utils.toLegacyText(toBungeeCordComponent(bukkitComponent));
+	}
+	
+	public static JsonElement toJSON(Object bukkitComponent) {
+		return BukkitReflection.toJSON(bukkitComponent);
+	}
+	
+	public static Object toBukkitComponent(String legacyText) {
+		return toBukkitComponent(Utils.toBungeeCordComponent(legacyText));
+	}
+	
+	public static Object toBukkitComponent(JsonElement json) {
+		return BukkitReflection.toIChatBaseComponent(json.toString());
+	}
+	
+	public static Object toBukkitComponent(BaseComponent bungeeCordComponent) {
+		return toBukkitComponent(Utils.toJSON(bungeeCordComponent));
+	}
+	
+	public static BaseComponent toBungeeCordComponent(Object bukkitComponent) {
+		return Utils.toBungeeCordComponent(toJSON(bukkitComponent));
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static void sendMessage(Player player, boolean actionbar, BaseComponent... bungeeCordComponents) { // TODO is it possible to send colored actionbars in 1.8-1.10.2?
+		if (VersionUtils.isSpigot() && VersionUtils.getVersion().isAtLeast(Version.V1_9_1))
+			player.spigot().sendMessage(actionbar ? ChatMessageType.ACTION_BAR : ChatMessageType.SYSTEM, bungeeCordComponents);
+		else {
+			ChatPluginServerPlayer serverPlayer = ServerPlayerManager.getInstance().getPlayer(player.getUniqueId());
+			List<Object> packets = new ArrayList<>();
+			
+			for (BaseComponent component : bungeeCordComponents) {
+				packets.add(actionbar
+						? VersionUtils.getVersion().isAtLeast(Version.V1_17)
+								? BukkitReflection.getInstance("ClientboundSetActionBarTextPacket", new Class[] { BukkitReflection.getLoadedClass("IChatBaseComponent") }, toBukkitComponent(component))
+								: VersionUtils.getVersion().isAtLeast(Version.V1_11)
+								? BukkitReflection.getInstance("PacketPlayOutTitle", new Class[] { BukkitReflection.getLoadedClass("EnumTitleAction"), BukkitReflection.getLoadedClass("IChatBaseComponent") }, BukkitReflection.getEnum("EnumTitleAction", 2), toBukkitComponent(component))
+								: BukkitReflection.getInstance("PacketPlayOutChat", new Class[] { BukkitReflection.getLoadedClass("IChatBaseComponent"), byte.class }, toBukkitComponent(component), (byte) 2)
+						: VersionUtils.getVersion().isAtLeast(Version.V1_19)
+						? BukkitReflection.getInstance("ClientboundSystemChatPacket", new Class[] { BukkitReflection.getLoadedClass("IChatBaseComponent"), VersionUtils.getVersion() == Version.V1_19 ? int.class : boolean.class }, toBukkitComponent(component), VersionUtils.getVersion() == Version.V1_19 ? actionbar ? 2 : 1 : actionbar)
+						: BukkitReflection.getInstance("PacketPlayOutChat", VersionUtils.getVersion().isAtLeast(Version.V1_16)
+						? new Class[] { BukkitReflection.getLoadedClass("IChatBaseComponent"), BukkitReflection.getLoadedClass("ChatMessageType"), UUID.class }
+						: VersionUtils.getVersion().isAtLeast(Version.V1_12)
+						? new Class[] { BukkitReflection.getLoadedClass("IChatBaseComponent"), BukkitReflection.getLoadedClass("ChatMessageType") }
+						: new Class[] { BukkitReflection.getLoadedClass("IChatBaseComponent"), byte.class },
+						VersionUtils.getVersion().isAtLeast(Version.V1_16)
+						? new Object[] { toBukkitComponent(component), BukkitReflection.getEnum("ChatMessageType", "SYSTEM"), null }
+						: VersionUtils.getVersion().isAtLeast(Version.V1_12)
+						? new Object[] { toBukkitComponent(component), BukkitReflection.getEnum("ChatMessageType", "SYSTEM") }
+						: new Object[] { toBukkitComponent(component), (byte) 1 })
+						);
+			}if (serverPlayer == null)
+				packets.forEach(packet -> BukkitReflection.invokeMethod("PlayerConnection", "sendPacket", BukkitReflection.getFieldValue("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", BukkitReflection.getLoadedClass("CraftPlayer").cast(player)), "playerConnection", "connection", VersionUtils.getVersion().isAtLeast(Version.V1_20) ? VersionUtils.getVersion().isAtLeast(Version.V1_21_3) ? "f" : "c" : "b"), packet));
+			else packets.forEach(packet -> serverPlayer.sendPacket(packet));
+		}
 	}
 	
 }

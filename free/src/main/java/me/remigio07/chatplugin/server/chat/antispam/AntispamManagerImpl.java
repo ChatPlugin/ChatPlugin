@@ -43,13 +43,12 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.util.URLValidator;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
+import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
-import me.remigio07.chatplugin.server.util.Utils;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class AntispamManagerImpl extends AntispamManager {
 	
@@ -351,42 +350,44 @@ public class AntispamManagerImpl extends AntispamManager {
 		return getCapsLength(message) * 100F / message.length();
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void sendNotification(ChatPluginServerPlayer player, AntispamResult result) {
-		ClickEvent clickEvent = ClickEvent.suggestCommand("/mute " + player.getName() + " ");
+		ClickEvent clickEvent = new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/mute " + player.getName() + " ");
 		
-		if (ProxyManager.getInstance().isEnabled())
+		if (ProxyManager.getInstance().isEnabled()) {
+			BaseComponent component = getComponent(player, result, "chat.antispam.notification-format.text");
+			
+			component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[] { getComponent(player, result, "chat.antispam.notification-format.hover") }));
+			component.setClickEvent(clickEvent);
 			ProxyManager.getInstance().sendPluginMessage(Packets.Messages.playerMessage(
 					"ALL",
 					"ALL LOADED OUTSIDE " + ProxyManager.getInstance().getServerID(),
 					"chatplugin.antispam.notification",
 					true,
 					true,
-					GsonComponentSerializer.gson().serialize(
-							getComponent(player, result, "chat.antispam.notification-format.text")
-							.clickEvent(clickEvent)
-							.hoverEvent(HoverEvent.showText(getComponent(player, result, "chat.antispam.notification-format.hover")))
-							)
+					Utils.toJSON(component).toString() // FIXME this will not work if the sender and receiver servers are on incompatible versions
 					));
-		else ChatPlugin.getInstance().sendConsoleMessage(formatPlaceholders(Language.getMainLanguage().getMessage("chat.antispam.notification-format.text"), player, result), false);
+		} else ChatPlugin.getInstance().sendConsoleMessage(formatPlaceholders(Language.getMainLanguage().getMessage("chat.antispam.notification-format.text"), player, result), false);
 		
 		for (Language language : LanguageManager.getInstance().getLanguages()) {
 			String[] lines = formatPlaceholders(language.getMessage("chat.antispam.notification-format.text"), player, result).split("\n");
-			TextComponent[] components = new TextComponent[lines.length];
-			HoverEvent<Component> hoverEvent = HoverEvent.showText(Utils.deserializeLegacy(formatPlaceholders(language.getMessage("chat.antispam.notification-format.hover"), player, result), false));
+			BaseComponent[] components = new BaseComponent[lines.length];
+			HoverEvent hoverEvent = Utils.getHoverEvent(HoverEvent.Action.SHOW_TEXT, formatPlaceholders(language.getMessage("chat.antispam.notification-format.hover"), player, result));
 			
-			for (int i = 0; i < lines.length; i++)
-				components[i] = Utils.deserializeLegacy(lines[i], false)
-						.clickEvent(clickEvent)
-						.hoverEvent(hoverEvent);
-			for (ChatPluginServerPlayer other : language.getOnlinePlayers()) {
+			for (int i = 0; i < lines.length; i++) {
+				components[i] = Utils.toBungeeCordComponent(lines[i]);
+				
+				components[i].setHoverEvent(hoverEvent);
+				components[i].setClickEvent(clickEvent);
+			} for (ChatPluginServerPlayer other : language.getOnlinePlayers()) {
 				if (other.hasPermission("chatplugin.antispam.notification"))
 					((BaseChatPluginServerPlayer) other).sendMessage(components);
 			}
 		}
 	}
 	
-	private Component getComponent(ChatPluginServerPlayer player, AntispamResult result, String path) {
-		return Component.text(ComponentTranslator.getInstance().createJSON(
+	private BaseComponent getComponent(ChatPluginServerPlayer player, AntispamResult result, String path) {
+		return new TextComponent(ComponentTranslator.getInstance().createJSON(
 				ComponentTranslator.Component.MESSAGE_CUSTOM_PLACEHOLDERS,
 				path,
 				NOTIFICATION_PLACEHOLDERS,

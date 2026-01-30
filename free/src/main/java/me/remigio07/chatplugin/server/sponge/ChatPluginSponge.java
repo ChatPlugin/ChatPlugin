@@ -29,8 +29,12 @@ import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.event.plugin.ChatPluginCrashEvent;
@@ -50,13 +54,13 @@ import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.bootstrap.SpongeBootstrapper;
 import me.remigio07.chatplugin.common.util.manager.SLF4JLogManager;
-import me.remigio07.chatplugin.server.command.BaseCommand;
 import me.remigio07.chatplugin.server.storage.configuration.ServerConfigurationManager;
 import me.remigio07.chatplugin.server.util.manager.ChatPluginServerManagers;
+import net.md_5.bungee.api.chat.BaseComponent;
 
 public class ChatPluginSponge extends ChatPlugin {
-
-	private Metrics metrics;
+	
+	protected Metrics metrics;
 	
 	public ChatPluginSponge() {
 		instance = this;
@@ -80,6 +84,8 @@ public class ChatPluginSponge extends ChatPlugin {
 			
 			if (VersionUtils.getVersion().isOlderThan(Version.V1_9))
 				LogManager.log("This server is running an old Minecraft version. Note that this software is {0} old. Even though it is still supported, fixing any bugs is not a priority. It's recommended to upgrade to a newer version.", 1, me.remigio07.chatplugin.common.util.Utils.formatTime(System.currentTimeMillis() - VersionUtils.getVersion().getReleaseDate()));
+			else if (VersionUtils.getVersion() == Version.UNSUPPORTED)
+				LogManager.log("This server is running an unsupported Minecraft version. Is ChatPlugin up to date? Compatible versions: 1.8-{0}. Note: snapshots, pre-releases and release candidates are not supported. Proceed at your own risk.", 1, Version.V1_12_2.getName());
 			managers.loadManagers();
 			SpongeCommandsHandler.registerCommands();
 			me.remigio07.chatplugin.common.util.Utils.startUpdateChecker();
@@ -148,7 +154,7 @@ public class ChatPluginSponge extends ChatPlugin {
 			state.set(ChatPluginState.UNLOADED);
 			return (int) ms;
 		} catch (NoClassDefFoundError ncdfe) {
-			System.err.println("You cannot replace the plugin JAR while the server is running. Reloads are supported but not in this case; shutting down...");
+			System.err.println("You cannot replace the plugin JAR while the server is running; shutting down...");
 			Sponge.getServer().shutdown();
 		} catch (ChatPluginManagerException cpme) {
 			LogManager.log("{0}; performing recovery...", 2, cpme.getLocalizedMessage());
@@ -163,7 +169,7 @@ public class ChatPluginSponge extends ChatPlugin {
 			
 			@Override
 			public CommandResult process(CommandSource sender, String text) throws CommandException {
-				sender.sendMessage(Utils.serializeSpongeText("&cChatPlugin is disabled because an error occurred.", true));
+				sender.sendMessage(Utils.toSpongeComponent("§cChatPlugin is disabled because an error occurred."));
 				return CommandResult.success();
 			}
 			
@@ -174,7 +180,7 @@ public class ChatPluginSponge extends ChatPlugin {
 			
 			@Override
 			public Text getUsage(CommandSource sender) {
-				return Utils.serializeSpongeText("/chatplugin recover", false);
+				return Utils.toSpongeComponent("/chatplugin recover");
 			}
 			
 			@Override
@@ -194,11 +200,8 @@ public class ChatPluginSponge extends ChatPlugin {
 			
 		};
 		
-		for (String command : SpongeCommandsHandler.getCommands().keySet()) {
-			BaseCommand[] subcommands = SpongeCommandsHandler.getCommands().get(command);
-			BaseCommand mainCommand = subcommands[subcommands.length - 1];
-			
-			if (command.equals("chatplugin"))
+		SpongeCommandsHandler.getCommands().values().stream().map(subcommands -> subcommands[subcommands.length - 1]).forEach(command -> {
+			if (command.getName().equals("chatplugin"))
 				Sponge.getCommandManager().register(SpongeBootstrapper.getInstance(), new CommandCallable() {
 					
 					@Override
@@ -207,16 +210,17 @@ public class ChatPluginSponge extends ChatPlugin {
 						
 						if (args.length == 1 && args[0].equalsIgnoreCase("recover")) {
 							if (sender.hasPermission("chatplugin.commands.recover")) {
-								sender.sendMessage(Utils.serializeSpongeText("&eTrying to recover ChatPlugin... Don't get your hopes up.", true));
-								Sponge.getServer().getOnlinePlayers().forEach(player -> player.kick(Utils.serializeSpongeText("&ePerforming ChatPlugin recovery...", true)));
+								sender.sendMessage(Utils.toSpongeComponent("§eTrying to recover ChatPlugin... Don't get your hopes up."));
+								Sponge.getServer().getOnlinePlayers().forEach(player -> player.kick(Utils.toSpongeComponent("§ePerforming ChatPlugin recovery...")));
 								
 								int startupTime = load((Logger) logger, dataFolder);
 								
-								if (startupTime == -1)
-									sendConsoleMessage("&cFailed to load. Check above for the error message.", false);
-								else sendConsoleMessage("&aChatPlugin has been loaded successfully in &f" + startupTime + " ms&a. You should anyway restart as soon as possible.", false);
-							} else sender.sendMessage(Utils.serializeSpongeText("&cYou do not have the permission to execute this command.", true));
-						} else sender.sendMessage(Utils.serializeSpongeText("&cThe syntax is wrong. Usage: &f/chatplugin recover&c.", true));
+								sendConsoleMessage(startupTime == -1
+										? "§cFailed to load. Check above for the error message."
+										: "§aChatPlugin has been loaded successfully in §f" + startupTime + " ms§a. Regardless, you should restart as soon as possible.",
+										false);
+							} else sender.sendMessage(Utils.toSpongeComponent("§cYou do not have the permission to execute this command."));
+						} else sender.sendMessage(Utils.toSpongeComponent("§cThe syntax is wrong. Usage: §f/chatplugin recover§c."));
 						return CommandResult.success();
 					}
 					
@@ -231,7 +235,7 @@ public class ChatPluginSponge extends ChatPlugin {
 					
 					@Override
 					public Text getUsage(CommandSource source) {
-						return Utils.serializeSpongeText("/chatplugin recover", false);
+						return Utils.toSpongeComponent("/chatplugin recover");
 					}
 					
 					@Override
@@ -249,9 +253,9 @@ public class ChatPluginSponge extends ChatPlugin {
 						return Optional.empty(); // fuck it
 					}
 					
-				}, mainCommand.getMainArgs());
-			else Sponge.getCommandManager().register(SpongeBootstrapper.getInstance(), callable, mainCommand.getMainArgs());
-		} try {
+				}, command.getMainArgs());
+			else Sponge.getCommandManager().register(SpongeBootstrapper.getInstance(), callable, command.getMainArgs());
+		}); try {
 			TaskManager.getInstance().unload();
 			StorageConnector.getInstance().unload();
 			LogManager.log("Recovery performed successfully. You can try to load ChatPlugin using /chatplugin recover, but don't get your hopes up: it may be necessary to restart the server.", 0);
@@ -269,7 +273,7 @@ public class ChatPluginSponge extends ChatPlugin {
 	
 	@Override
 	public void sendConsoleMessage(String message, boolean log) {
-		Sponge.getServer().getConsole().sendMessage(Utils.serializeSpongeText(message, true));
+		Sponge.getServer().getConsole().sendMessage(Utils.toSpongeComponent(message));
 		
 		if (log && LogManager.getInstance() != null)
 			LogManager.getInstance().writeToFile(message);
@@ -279,10 +283,10 @@ public class ChatPluginSponge extends ChatPlugin {
 	public void printStartMessage() {
 		CommandSource console = Sponge.getServer().getConsole();
 		
-		console.sendMessage(Utils.serializeSpongeText( "   &c__  &f__   ", true));
-		console.sendMessage(Utils.serializeSpongeText( "  &c/   &f|__)  &aRunning &cChat&fPlugin &2Free &aversion &f" + VERSION + " &aon &fSponge", true));
-		console.sendMessage(Utils.serializeSpongeText("  &c\\__ &f|     &8Detected server version: " + VersionUtils.getVersion().getName() + " (protocol: " + VersionUtils.getVersion().getProtocol() + ")", true));
-		console.sendMessage(Utils.serializeSpongeText("", false));
+		console.sendMessage(Utils.toSpongeComponent( "   §c__  §f__"));
+		console.sendMessage(Utils.toSpongeComponent( "  §c/   §f|__)  §aRunning §cChat§fPlugin §2Free §aversion §f" + VERSION + " §aon " + VersionUtils.getImplementationName()));
+		console.sendMessage(Utils.toSpongeComponent("  §c\\__ §f|     §8Detected server version: §f" + VersionUtils.getVersion().getName() + " (protocol: " + VersionUtils.getVersion().getProtocol() + ")"));
+		console.sendMessage(Utils.toSpongeComponent(""));
 	}
 	
 	@Override
@@ -299,6 +303,23 @@ public class ChatPluginSponge extends ChatPlugin {
 	
 	public Metrics getMetrics() {
 		return metrics;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static JsonElement toJSON(Text spongeComponent) {
+		return new JsonParser().parse(TextSerializers.JSON.serialize(spongeComponent));
+	}
+	
+	public static Text toSpongeComponent(JsonElement json) {
+		return TextSerializers.JSON.deserialize(json.toString());
+	}
+	
+	public static Text toSpongeComponent(BaseComponent bungeeCordComponent) {
+		return toSpongeComponent(me.remigio07.chatplugin.common.util.Utils.toJSON(bungeeCordComponent));
+	}
+	
+	public static BaseComponent toBungeeCordComponent(Text spongeComponent) {
+		return me.remigio07.chatplugin.common.util.Utils.toBungeeCordComponent(toJSON(spongeComponent));
 	}
 	
 }

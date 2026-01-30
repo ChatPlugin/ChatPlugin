@@ -16,6 +16,8 @@
 package me.remigio07.chatplugin.api.common.storage.configuration;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.attribute.FileAttribute;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -113,6 +115,17 @@ public abstract class ConfigurationManager implements ChatPluginManager {
 		return instance;
 	}
 	
-	protected abstract void addAllDefaults(boolean forceAdd) throws IOException;
+	/**
+	 * Creates a new {@link ConfigurationType#CUSTOM} configuration.
+	 * 
+	 * <p>You may want to {@link Configuration#load()} it after
+	 * calling {@link Configuration#createFile(FileAttribute...)}.</p>
+	 * 
+	 * @param path Configuration's path
+	 * @return New configuration
+	 * @throws IllegalArgumentException If the path does
+	 * not end with ".yml" or ".yaml" (ignoring case)
+	 */
+	public abstract Configuration createConfiguration(Path path);
 	
 }

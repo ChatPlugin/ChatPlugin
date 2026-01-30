@@ -16,23 +16,12 @@
 package me.remigio07.chatplugin.api.common.storage.configuration;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileAttribute;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.DumperOptions.FlowStyle;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.error.YAMLException;
-import org.yaml.snakeyaml.nodes.Node;
-import org.yaml.snakeyaml.representer.Represent;
-import org.yaml.snakeyaml.representer.Representer;
 
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -40,48 +29,11 @@ import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
 /**
  * Represents a YAML configuration handled by the {@link ConfigurationManager}.
  */
-public class Configuration {
+public abstract class Configuration {
 	
 	protected ConfigurationType type;
-	protected Yaml yaml;
 	protected ConfigurationMappings mappings;
 	protected Path path;
-	
-	/**
-	 * Constructs an internal configuration of ChatPlugin.
-	 * 
-	 * @deprecated Internal use only. Use {@link #Configuration(Path)} instead.
-	 * @param type Configuration's type
-	 */
-	@Deprecated
-	public Configuration(ConfigurationType type) {
-		this.type = type;
-		path = type.toPath();
-	}
-	
-	/**
-	 * Constructs a new {@link ConfigurationType#CUSTOM} configuration.
-	 * 
-	 * <p>You may want to {@link #load()} this configuration
-	 * after calling {@link #createFile(FileAttribute...)}.</p>
-	 * 
-	 * @param path Configuration's path
-	 * @throws IllegalArgumentException If the path does
-	 * not end with ".yml" or ".yaml" (ignoring case)
-	 */
-	public Configuration(Path path) {
-		String str = path.toString().toLowerCase();
-		
-		if (str.endsWith(".yml") || str.endsWith(".yaml")) {
-			type = ConfigurationType.CUSTOM;
-			this.path = path;
-		} else throw new IllegalArgumentException("Path " + (path.getNameCount() == 0 ? "<empty path>" : "\"" + path.getFileName().toString() + "\"") + " does not end with \".yml\" or \".yaml\" (ignoring case)");
-	}
-	
-	@Override
-	public String toString() {
-		return "Configuration{path=" + path.toString() + "}";
-	}
 	
 	/**
 	 * Gets this configuration's type.
@@ -91,16 +43,6 @@ public class Configuration {
 	@NotNull
 	public ConfigurationType getType() {
 		return type;
-	}
-	
-	/**
-	 * Gets this configuration's {@link org.yaml.snakeyaml.Yaml} object.
-	 * 
-	 * @return Configuration's YAML object
-	 */
-	@NotNull
-	public Yaml getYAML() {
-		return yaml;
 	}
 	
 	/**
@@ -135,68 +77,6 @@ public class Configuration {
 			if (path.getParent() != null)
 				Files.createDirectories(path.getParent());
 			Files.createFile(path, attributes);
-		}
-	}
-	
-	/**
-	 * Loads mappings from this configuration's file.
-	 * 
-	 * @throws IOException If something goes wrong
-	 * @see #createFile(FileAttribute...)
-	 */
-	@SuppressWarnings({ "deprecation", "unchecked" })
-	public void load() throws IOException {
-		DumperOptions options = new DumperOptions();
-		Map<String, Object> map = null;
-		Representer representer;
-		
-		options.setWidth(250);
-		options.setDefaultFlowStyle(FlowStyle.BLOCK);
-		
-		try {
-			representer = new Representer(options) {{
-				representers.put(ConfigurationMappings.class, new Represent() {
-					
-					@Override
-					public Node representData(Object data) {
-						return represent(((ConfigurationMappings) data).getMappings());
-					}
-					
-				});
-			}};
-		} catch (NoSuchMethodError nsme) { // compatible with older SnakeYAML versions
-			representer = new Representer() {{
-				representers.put(ConfigurationMappings.class, new Represent() {
-					
-					@Override
-					public Node representData(Object data) {
-						return represent(((ConfigurationMappings) data).getMappings());
-					}
-					
-				});
-			}};
-		} yaml = new Yaml(representer, options);
-		
-		if (!Files.exists(path))
-			map = yaml.loadAs("", LinkedHashMap.class);
-		else try (InputStream input = Files.newInputStream(path)) {
-			map = yaml.loadAs(input, LinkedHashMap.class);
-		} catch (YAMLException yamle) {
-			throw new IOException("failed to load " + (path.getNameCount() == 0 ? "<empty path>" : "\"" + path.getFileName().toString() + "\"") + ": " + yamle.getLocalizedMessage(), yamle);
-		} mappings = new ConfigurationMappings(map == null ? new LinkedHashMap<>() : map);
-	}
-	
-	/**
-	 * Saves mappings into this configuration's file.
-	 * 
-	 * @throws IOException If something goes wrong
-	 * @throws IllegalStateException If {@link #load()} has not been called yet
-	 */
-	public void save() throws IOException {
-		if (yaml == null)
-			throw new IllegalStateException("Configuration#load() must be called at least once before saving");
-		try (Writer writer = Files.newBufferedWriter(path)) {
-			yaml.dump(mappings.getMappings(), writer);
 		}
 	}
 	
@@ -634,5 +514,25 @@ public class Configuration {
 	public List<String> translateStringList(String path, @Nullable(why = "Default value may be null") List<String> def, boolean retainNewLines) {
 		return mappings.translateStringList(path, def, retainNewLines);
 	}
+	
+	protected ConfigurationMappings createMappings(Map<String, Object> map) {
+		return new ConfigurationMappings(map);
+	}
+	
+	/**
+	 * Loads mappings from this configuration's file.
+	 * 
+	 * @throws IOException If something goes wrong
+	 * @see #createFile(FileAttribute...)
+	 */
+	public abstract void load() throws IOException;
+	
+	/**
+	 * Saves mappings into this configuration's file.
+	 * 
+	 * @throws IOException If something goes wrong
+	 * @throws IllegalStateException If {@link #load()} has not been called yet
+	 */
+	public abstract void save() throws IOException;
 	
 }

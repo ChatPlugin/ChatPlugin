@@ -130,7 +130,7 @@ commands:
     &eSito web: &fhttps://remigio07.me/chatplugin
     &eGitHub: &fhttps://github.com/ChatPlugin/ChatPlugin
     &eDiscord: &fhttps://discord.gg/eSnAPhvMTG
-  version: '{pfx} &aIn esecuzione &c&lChat&f&lPlugin {0} &fv{1} &adi &9Remigio07 &asu &f{2} {3}&a.'
+  version: '{pfx} &aIn esecuzione &c&lChat&f&lPlugin {0} &fv{1} &adi &9Remigio07 &asu &f{2} &f{3}&a.'
   status: |-
     {pfx} &aStato attuale del server:
     &eVersione del server: &f{server_version} (protocollo: {server_version_protocol})

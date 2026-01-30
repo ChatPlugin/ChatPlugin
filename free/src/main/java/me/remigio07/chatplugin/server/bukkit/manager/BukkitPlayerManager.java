@@ -69,6 +69,7 @@ import me.remigio07.chatplugin.api.server.tablist.custom_suffix.CustomSuffixMana
 import me.remigio07.chatplugin.api.server.tablist.custom_suffix.RenderTypeAdapter;
 import me.remigio07.chatplugin.api.server.util.adapter.scoreboard.ObjectiveAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.VanishManager;
+import me.remigio07.chatplugin.common.storage.configuration.ConfigurationImpl;
 import me.remigio07.chatplugin.server.bukkit.BukkitReflection;
 import me.remigio07.chatplugin.server.bukkit.ChatPluginBukkitPlayer;
 import me.remigio07.chatplugin.server.join_quit.QuitMessageManagerImpl.QuitPacketImpl;
@@ -130,7 +131,7 @@ public class BukkitPlayerManager extends ServerPlayerManager {
 					
 					if (Files.exists(path))
 						try {
-							Configuration onlinePlayersData = new Configuration(path);
+							Configuration onlinePlayersData = new ConfigurationImpl(path);
 							
 							onlinePlayersData.load();
 							

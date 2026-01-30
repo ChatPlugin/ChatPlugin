@@ -20,15 +20,15 @@ import java.util.List;
 import java.util.StringJoiner;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
-import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.server.language.Language;
+import me.remigio07.chatplugin.common.storage.configuration.ConfigurationImpl;
 
 public class LanguageImpl extends Language {
 	
 	public LanguageImpl(String id, String displayName, List<String> countryCodes) {
 		super(id, displayName, countryCodes);
-		configuration = id.equals("english") ? ConfigurationType.MESSAGES.get() : new Configuration(ChatPlugin.getInstance().getDataFolder().resolve("custom-messages" + File.separator + "messages-" + id + ".yml"));
+		configuration = id.equals("english") ? ConfigurationType.MESSAGES.get() : new ConfigurationImpl(ChatPlugin.getInstance().getDataFolder().resolve("custom-messages" + File.separator + "messages-" + id + ".yml"));
 	}
 	
 	@Override

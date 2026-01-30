@@ -39,6 +39,7 @@ import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
 import me.remigio07.chatplugin.api.common.storage.StorageManager;
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
+import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationManager;
 import me.remigio07.chatplugin.api.common.storage.flat_file.FlatFileConnector;
 import me.remigio07.chatplugin.api.common.storage.flat_file.FlatFileManager;
 import me.remigio07.chatplugin.api.common.util.Utils;
@@ -60,7 +61,7 @@ public class YAMLConnector extends FlatFileConnector {
 		
 		try {
 			for (DataContainer container : DataContainer.values()) {
-				Configuration configuration = new Configuration(container.getFlatFile());
+				Configuration configuration = ConfigurationManager.getInstance().createConfiguration(container.getFlatFile());
 				
 				configuration.load();
 				yamls.put(container, configuration);

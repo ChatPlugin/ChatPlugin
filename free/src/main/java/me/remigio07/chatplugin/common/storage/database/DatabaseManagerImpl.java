@@ -36,7 +36,7 @@ public class DatabaseManagerImpl extends DatabaseManager {
 			(connector = new SQLiteConnector()).load();
 			break;
 		case MYSQL:
-			throw new ChatPluginManagerException(this, "MySQL cannot be selected as storage method on the free version; only the following are allowed: H2, SQLITE, YAML, JSON.");
+			throw new ChatPluginManagerException(this, "MySQL cannot be selected as storage method on the free version; only the following are allowed: H2, SQLITE, YAML and JSON.");
 		default:
 			return; // flat-file
 		} try {
@@ -50,11 +50,6 @@ public class DatabaseManagerImpl extends DatabaseManager {
 			throw new ChatPluginManagerException(this, e);
 		} enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
-	}
-	
-	@Override
-	public void unload() throws ChatPluginManagerException {
-		super.unload();
 	}
 	
 }

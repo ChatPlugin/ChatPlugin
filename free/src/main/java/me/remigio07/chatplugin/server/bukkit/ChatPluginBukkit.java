@@ -57,6 +57,7 @@ import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
 import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
+import me.remigio07.chatplugin.common.storage.configuration.ConfigurationImpl;
 import me.remigio07.chatplugin.common.util.Utils;
 import me.remigio07.chatplugin.common.util.manager.JavaLogManager;
 import me.remigio07.chatplugin.server.storage.configuration.ServerConfigurationManager;
@@ -154,7 +155,7 @@ public class ChatPluginBukkit extends ChatPlugin {
 			if (reload)
 				try {
 					Path path = dataFolder.resolve("files" + File.separator + "online-players-data.yml");
-					Configuration onlinePlayersData = new Configuration(path);
+					Configuration onlinePlayersData = new ConfigurationImpl(path);
 					
 					Files.deleteIfExists(path);
 					path.toFile().deleteOnExit();
@@ -217,9 +218,10 @@ public class ChatPluginBukkit extends ChatPlugin {
 								
 								int startupTime = load((Logger) logger, dataFolder);
 								
-								if (startupTime == -1)
-									sendConsoleMessage("§cFailed to load. Check above for the error message.", false);
-								else sendConsoleMessage("§aChatPlugin has been loaded successfully in §f" + startupTime + " ms§a. You should anyway restart as soon as possible.", false);
+								sendConsoleMessage(startupTime == -1
+										? "§cFailed to load. Check above for the error message."
+										: "§aChatPlugin has been loaded successfully in §f" + startupTime + " ms§a. Regardless, you should restart as soon as possible.",
+										false);
 							} else sender.sendMessage("§cYou do not have the permission to execute this command.");
 						} else sender.sendMessage("§cThe syntax is wrong. Usage: §f/chatplugin recover§c.");
 						return true;
@@ -270,10 +272,10 @@ public class ChatPluginBukkit extends ChatPlugin {
 	public void printStartMessage() {
 		CommandSender console = Bukkit.getConsoleSender();
 		
-		console.sendMessage( "   §c__  §f__   ");
-		console.sendMessage( "  §c/   §f|__)  §aRunning §cChat§fPlugin §2Free §aversion §f" + VERSION + " §aon §f" + VersionUtils.getImplementationName());
-		console.sendMessage("  §c\\__ §f|     §8Detected server version: " + VersionUtils.getVersion().getName() + " (protocol: " + VersionUtils.getVersion().getProtocol() + ")");
-		console.sendMessage(" ");
+		console.sendMessage( "   §c__  §f__");
+		console.sendMessage( "  §c/   §f|__)  §aRunning §cChat§fPlugin §2Free §aversion §f" + VERSION + " §aon " + VersionUtils.getImplementationName());
+		console.sendMessage("  §c\\__ §f|     §8Detected server version: §f" + VersionUtils.getVersion().getName() + " (protocol: " + VersionUtils.getVersion().getProtocol() + ")");
+		console.sendMessage("");
 	}
 	
 	@Override

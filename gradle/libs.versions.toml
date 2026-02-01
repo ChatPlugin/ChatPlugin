@@ -1,5 +1,5 @@
 [versions]
-chatPlugin = "1.10.5"
+chatPlugin = "1.10.6"
 adventure-api = "4.25.0"
 adventure-platform = "4.4.1"
 bstats = "3.1.0"

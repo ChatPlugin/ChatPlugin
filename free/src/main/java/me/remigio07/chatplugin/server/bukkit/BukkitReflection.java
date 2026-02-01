@@ -329,11 +329,11 @@ public class BukkitReflection { // this whole class and SpongeReflection will be
 				classes.put("CriterionInstance", clazz);
 				
 				// CriterionTriggerImpossible
-				clazz = atLeast1_17 ? Class.forName("net.minecraft.advancements.critereon." + (atLeast1_20_5 && VersionUtils.isPaper() ? "ImpossibleTrigger" : "CriterionTriggerImpossible"))  : getNMSClass("CriterionTriggerImpossible");
+				clazz = atLeast1_17 ? Class.forName("net.minecraft.advancements.criter" + (VersionUtils.getVersion().isAtLeast(Version.V1_21_11) ? "i" : "e") + "on." + (atLeast1_20_5 && VersionUtils.isPaper() ? "ImpossibleTrigger" : "CriterionTriggerImpossible")) : getNMSClass("CriterionTriggerImpossible");
 				classes.put("CriterionTriggerImpossible", clazz);
 				
 				// CriterionTriggerImpossible$a
-				clazz = atLeast1_17 ? Class.forName("net.minecraft.advancements.critereon." + (atLeast1_20_5 && VersionUtils.isPaper() ? "ImpossibleTrigger$TriggerInstance" : "CriterionTriggerImpossible$a")) : getNMSClass("CriterionTriggerImpossible$a");
+				clazz = atLeast1_17 ? Class.forName("net.minecraft.advancements.criter" + (VersionUtils.getVersion().isAtLeast(Version.V1_21_11) ? "i" : "e") + "on." + (atLeast1_20_5 && VersionUtils.isPaper() ? "ImpossibleTrigger$TriggerInstance" : "CriterionTriggerImpossible$a")) : getNMSClass("CriterionTriggerImpossible$a");
 				classes.put("CriterionTriggerImpossible$a", clazz);
 				
 				// ItemStack

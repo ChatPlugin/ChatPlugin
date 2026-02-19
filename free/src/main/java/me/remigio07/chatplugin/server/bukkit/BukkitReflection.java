@@ -317,7 +317,7 @@ public class BukkitReflection { // this whole class and SpongeReflection will be
 				putMethod(clazz, "grant", Collections.emptyList(), "b");
 				
 				// MinecraftKey
-				clazz = atLeast1_17 ? Class.forName("net.minecraft.resources." + (atLeast1_20_5 && VersionUtils.isPaper() ? "ResourceLocation" : "MinecraftKey")) : getNMSClass("MinecraftKey");
+				clazz = atLeast1_17 ? Class.forName("net.minecraft.resources." + (VersionUtils.getVersion().isAtLeast(Version.V1_21_11) && VersionUtils.isPaper() ? "Identifier" : atLeast1_20_5 && VersionUtils.isPaper() ? "ResourceLocation" : "MinecraftKey")) : getNMSClass("MinecraftKey");
 				classes.put("MinecraftKey", clazz);
 				
 				// Criterion

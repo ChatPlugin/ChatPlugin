@@ -224,8 +224,8 @@ public abstract class DatabaseConnector extends StorageConnector {
 						executeUpdate("DELETE FROM " + DataContainer.IP_ADDRESSES.getDatabaseTableID() + " WHERE id = ?", id.intValue());
 						old++;
 					}
-				} catch (SQLException e) {
-					LogManager.log("SQLException occurred while cleaning old players from the database: {0}", 2, e.getMessage());
+				} catch (SQLException sqle) {
+					LogManager.log("SQLException occurred while cleaning old players from the database: {0}", 2, sqle.getLocalizedMessage());
 				} if (old > 0)
 					LogManager.log("[ASYNC] Cleaned {0} old player{1} from the database in {2} ms.", 4, old, old == 1 ? "" : "s", System.currentTimeMillis() - ms);
 			}, 0L);
@@ -246,15 +246,18 @@ public abstract class DatabaseConnector extends StorageConnector {
 	 */
 	@SuppressWarnings("deprecation")
 	public void checkConnection() {
+		long ms = System.currentTimeMillis();
+		
 		try {
-			if (connection.isClosed() || !connection.isValid(0)) {
+			if (connection.isClosed() || !connection.isValid(5)) { // TODO: use Hikari in the future to avoid checking the validity every time!
 				LogManager.log("Connection to database timed out; reconnecting.", 3);
 				load();
-			} return;
-		} catch (SQLException e) {
-			LogManager.log("SQLException occurred while trying to access the database: {0}", 2, e.getMessage());
-		} catch (ChatPluginManagerException e) {
-			LogManager.log("Error occurred while reloading the database connector after a period of inactivity: {0}", 2, e.getMessage());
+			} else DatabaseManager.getInstance().getPing().set((int) (System.currentTimeMillis() - ms));
+			return;
+		} catch (SQLException sqle) {
+			LogManager.log("SQLException occurred while trying to access the database: {0}", 2, sqle.getLocalizedMessage());
+		} catch (ChatPluginManagerException cpme) {
+			LogManager.log("Error occurred while reloading the database connector after a period of inactivity: {0}", 2, cpme.getLocalizedMessage());
 		} ChatPlugin.getInstance().unload();
 	}
 	
@@ -352,7 +355,7 @@ public abstract class DatabaseConnector extends StorageConnector {
 	public <T> T safeGet(String query, String columnLabel, T def, Object... params) {
 		try {
 			return (T) get(query, columnLabel, Object.class, params);
-		} catch (SQLException e) {
+		} catch (SQLException sqle) {
 			return def;
 		}
 	}
@@ -408,7 +411,7 @@ public abstract class DatabaseConnector extends StorageConnector {
 	public <T> T safeGet(String query, int columnIndex, T def, Object... params) {
 		try {
 			return (T) get(query, columnIndex, Object.class, params);
-		} catch (SQLException e) {
+		} catch (SQLException sqle) {
 			return def;
 		}
 	}

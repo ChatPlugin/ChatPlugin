@@ -18,6 +18,7 @@ package me.remigio07.chatplugin.api.common.storage.database;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.StorageManager;
@@ -30,9 +31,23 @@ import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationTyp
  */
 public abstract class DatabaseManager extends StorageManager {
 	
+	protected AtomicInteger ping = new AtomicInteger(-1); // unused: here to be read by the debugger
+	
 	@Override
 	public DatabaseConnector getConnector() {
 		return (DatabaseConnector) connector;
+	}
+	
+	/**
+	 * Gets the database's ping, in milliseconds.
+	 * 
+	 * <p>It is measured during each {@link DatabaseConnector#checkConnection()}
+	 * call, which occurs automatically before every database request.</p>
+	 * 
+	 * @return Database's ping
+	 */
+	public AtomicInteger getPing() {
+		return ping;
 	}
 	
 	// compatibility with older ChatPlugin versions

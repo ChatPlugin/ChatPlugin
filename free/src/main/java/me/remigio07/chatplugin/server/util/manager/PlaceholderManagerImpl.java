@@ -40,6 +40,7 @@ import me.remigio07.chatplugin.api.common.storage.StorageConnector;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector.WhereCondition;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector.WhereCondition.WhereOperator;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
+import me.remigio07.chatplugin.api.common.storage.database.DatabaseManager;
 import me.remigio07.chatplugin.api.common.util.MemoryUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
@@ -375,6 +376,8 @@ public class PlaceholderManagerImpl extends PlaceholderManager {
 			input = input.replace("{total_anticheat_kicks}", String.valueOf(KickManager.getInstance().getAnticheatStorageCount()));
 		if (input.contains("{total_anticheat_mutes}"))
 			input = input.replace("{total_anticheat_mutes}", String.valueOf(MuteManager.getInstance().getAnticheatStorageCount()));
+		if (input.contains("{database_ping}"))
+			input = input.replace("{database_ping}", DatabaseManager.getInstance() == null ? "-1" : String.valueOf(DatabaseManager.getInstance().getPing().get()));
 		if (input.contains("{tps_") && TPSManager.getInstance().isEnabled())
 			input = TPSManager.getInstance().formatPlaceholders(input, language);
 		if (input.contains("{mspt_") && MSPTManager.getInstance().isEnabled())

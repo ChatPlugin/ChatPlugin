@@ -1063,10 +1063,10 @@ public class VersionUtils {
 		 * {@link #isAtLeast(Version)} and {@link #isOlderThan(Version)}.</p>
 		 * 
 		 * <p><strong>Protocol version number:</strong> -1
-		 * <br><strong>Release date:</strong> <em>January 1, 1970</em>
-		 * (<a href="https://en.wikipedia.org/wiki/Unix_time">Unix time</a> = 0 ms)</p>
+		 * <br><strong>Release date:</strong> <em>end of time, in the far future…</em>
+		 * (<a href="https://en.wikipedia.org/wiki/Unix_time">Unix time</a> = {@link Long#MAX_VALUE} ms)</p>
 		 */
-		UNSUPPORTED(-1, 0);
+		UNSUPPORTED(-1, Long.MAX_VALUE);
 		
 		private int protocol;
 		private long releaseDate;
@@ -1178,7 +1178,7 @@ public class VersionUtils {
 		 * @return Corresponding version
 		 */
 		@NotNull
-		public static Version getVersion(String input) {
+		public static Version getVersion(String input) { // TODO improve this method: remove for? reverse values()? improve logic... the next method, too!
 			Version version = Version.UNSUPPORTED;
 			
 			try {
@@ -1186,7 +1186,7 @@ public class VersionUtils {
 					input = input.substring(0, input.indexOf('/'));
 				if (input.endsWith(".0"))
 					input = input.substring(0, input.lastIndexOf('.'));
-			} catch (IndexOutOfBoundsException e) {
+			} catch (IndexOutOfBoundsException ioobe) {
 				return version;
 			} for (Version value : values())
 				if (input.equals(value.name().substring(1).replace('_', '.'))) {

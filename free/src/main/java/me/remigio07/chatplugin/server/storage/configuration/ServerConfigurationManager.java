@@ -2874,7 +2874,7 @@ public class ServerConfigurationManager extends BaseConfigurationManager {
 		motd.addDefault("motd.outdated-version.hovers.enabled", true);
 		motd.addDefault("motd.outdated-version.hovers.values.english", Arrays.asList("&eVersion &f{version} &eis outdated.\n&f{online_total} &eplayers are currently online."));
 		motd.addDefault("motd.outdated-version.hovers.values.italian", Arrays.asList("&eLa versione &f{version} &eè obsoleta.\n&f{online_total} &egiocatori sono online al momento."));
-		motd.addDefault("motd.outdated-version.version-names.enabled", false);
+		motd.addDefault("motd.outdated-version.version-names.enabled", true);
 		motd.addDefault("motd.outdated-version.version-names.values.english", Arrays.asList("&4Outdated version"));
 		motd.addDefault("motd.outdated-version.version-names.values.italian", Arrays.asList("&4Versione obsoleta"));
 		

@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,7 +14,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
-import javax.net.ssl.HttpsURLConnection;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,7 +28,6 @@ import me.remigio07.chatplugin.api.common.motd.MoTD;
 import me.remigio07.chatplugin.api.common.util.ChatPluginState;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
-import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.motd.ServerMoTDManager;
 import me.remigio07.chatplugin.api.server.util.Utils;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
@@ -61,8 +60,7 @@ public class ServerQueryNetworkHandlerMixin { // 1.19.4-1.21.8
 				&& ServerMoTDManager.getInstance().isEnabled()
 				&& !ProxyManager.getInstance().isEnabled()) {
 			Version chatPlugin$version = Version.getVersion(((ClientConnectionExtension) connection).chatPlugin$getProtocolVersion(), false);
-			InetAddress chatPlugin$ipAddress = connection.getAddress() instanceof InetSocketAddress ? ((InetSocketAddress) connection.getAddress()).getAddress() : InetAddress.getLoopbackAddress();
-			MoTD chatPlugin$motd = ServerMoTDManager.getInstance().getMoTD(chatPlugin$ipAddress, chatPlugin$version);
+			MoTD chatPlugin$motd = ServerMoTDManager.getInstance().getMoTD(connection.getAddress() instanceof InetSocketAddress ? ((InetSocketAddress) connection.getAddress()).getAddress() : InetAddress.getLoopbackAddress(), chatPlugin$version);
 			URL chatPlugin$customIconURL = chatPlugin$motd.getCustomIconURL();
 			ServerMetadata chatPlugin$originalMetadata = FabricBootstrapper.getInstance().getServer().getServerMetadata();
 			ServerMetadata.Favicon chatPlugin$favicon = null;
@@ -70,7 +68,7 @@ public class ServerQueryNetworkHandlerMixin { // 1.19.4-1.21.8
 			if (chatPlugin$motd.isCustomIconDisplayed()) {
 				if (!chatPlugin$favicons.containsKey(chatPlugin$customIconURL)) {
 					try {
-						HttpsURLConnection chatPlugin$connection = (HttpsURLConnection) chatPlugin$customIconURL.openConnection();
+						URLConnection chatPlugin$connection = chatPlugin$customIconURL.openConnection();
 						
 						chatPlugin$connection.setRequestProperty("User-Agent", Utils.USER_AGENT);
 						chatPlugin$connection.setConnectTimeout(5000);
@@ -83,13 +81,13 @@ public class ServerQueryNetworkHandlerMixin { // 1.19.4-1.21.8
 							chatPlugin$favicons.put(chatPlugin$customIconURL, new ServerMetadata.Favicon(chatPlugin$output.toByteArray()));
 						}
 					} catch (IOException chatPlugin$ioe) {
-						LogManager.log("IOException occurred while setting MoTD's favicon: {0}", 2, chatPlugin$ioe.getLocalizedMessage());
+						LogManager.log("IOException occurred while setting the MoTD's favicon: {0}", 2, chatPlugin$ioe.getLocalizedMessage());
 					}
 				} chatPlugin$favicon = chatPlugin$favicons.get(chatPlugin$customIconURL);
 			} return new ServerMetadata(
-					Utils.toFabricComponent(ChatColor.translate(chatPlugin$motd.getDescription())),
-					Optional.of(new ServerMetadata.Players(chatPlugin$motd.getMaxPlayers().value().intValue(), chatPlugin$motd.getOnlinePlayers().value().intValue(), chatPlugin$motd.isHoverDisplayed() ? Stream.of(chatPlugin$motd.getHover().split("\n")).map(ChatColor::translate).map(name -> new GameProfile(Utils.NIL_UUID, name)).collect(Collectors.toList()) : chatPlugin$originalMetadata.players().get().sample())),
-					Optional.of(new ServerMetadata.Version(chatPlugin$motd.isVersionNameDisplayed() ? chatPlugin$motd.getVersionName() : chatPlugin$originalMetadata.version().get().gameVersion(), chatPlugin$version.getProtocol())),
+					Utils.toFabricComponent(chatPlugin$motd.getDescription()),
+					Optional.of(new ServerMetadata.Players(chatPlugin$motd.getMaxPlayers().value().intValue(), chatPlugin$motd.getOnlinePlayers().value().intValue(), chatPlugin$motd.isHoverDisplayed() ? Stream.of(chatPlugin$motd.getHover().split("\n")).map(name -> new GameProfile(Utils.NIL_UUID, name)).collect(Collectors.toList()) : chatPlugin$originalMetadata.players().get().sample())),
+					Optional.of(new ServerMetadata.Version(chatPlugin$motd.isVersionNameDisplayed() ? chatPlugin$motd.getVersionName() : chatPlugin$originalMetadata.version().get().gameVersion(), chatPlugin$motd.isVersionNameDisplayed() ? -1 : chatPlugin$version.getProtocol())),
 					chatPlugin$favicon == null ? chatPlugin$originalMetadata.favicon() : Optional.of(chatPlugin$favicon),
 					FabricBootstrapper.getInstance().getServer().shouldEnforceSecureProfile()
 					);

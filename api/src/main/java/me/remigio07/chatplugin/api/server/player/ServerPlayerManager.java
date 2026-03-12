@@ -288,7 +288,7 @@ public abstract class ServerPlayerManager extends PlayerManager {
 	 * @throws IllegalStateException If {@link ProxyManager#isEnabled()} and this server has not received a
 	 * <code>PlayerJoin</code> packet from the proxy containing information about the specified player's version
 	 * @see ServerPlayerLoadEvent
-	 * @see Packets.JoinQuit#playerJoin(String, UUID, int, boolean, boolean, boolean)
+	 * @see Packets.JoinQuit#playerJoin(String, UUID, Version, boolean, boolean)
 	 */
 	public abstract int loadPlayer(PlayerAdapter player);
 	

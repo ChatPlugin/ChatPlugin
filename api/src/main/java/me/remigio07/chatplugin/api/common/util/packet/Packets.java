@@ -24,6 +24,7 @@ import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.punishment.ban.BanType;
 import me.remigio07.chatplugin.api.common.punishment.kick.KickType;
 import me.remigio07.chatplugin.api.common.util.ValueContainer;
+import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.annotation.Nullable;
@@ -320,8 +321,7 @@ public class Packets {
 		 * 
 		 * @param server Target server
 		 * @param player Player's UUID
-		 * @param versionProtocol Player's version's protocol
-		 * @param versionPreNettyRewrite Whether the player is using a pre-Netty rewrite version
+		 * @param version Player's version
 		 * @param bedrockEdition Whether the player is playing on Bedrock Edition
 		 * @param vanished Whether the player should be vanished and no join message should be sent
 		 * @return <code>PlayerJoin</code> packet
@@ -331,16 +331,15 @@ public class Packets {
 		public static PacketSerializer playerJoin(
 				@NotNull String server,
 				@NotNull UUID player,
-				int versionProtocol,
-				boolean versionPreNettyRewrite,
+				@NotNull Version version,
 				boolean bedrockEdition,
 				boolean vanished
 				) {
 			return new PacketSerializer("PlayerJoin")
 					.writeUTF(server)
 					.writeUUID(player)
-					.writeInt(versionProtocol)
-					.writeBoolean(versionPreNettyRewrite)
+					.writeInt(version.getProtocol())
+					.writeBoolean(version.isPreNettyRewrite())
 					.writeBoolean(bedrockEdition)
 					.writeBoolean(vanished);
 		}
@@ -496,8 +495,7 @@ public class Packets {
 		 * 
 		 * @param server Target server
 		 * @param ipAddress Player's IP address
-		 * @param versionProtocol Player's version's protocol
-		 * @param versionPreNettyRewrite Whether the player is using a pre-Netty rewrite version
+		 * @param version Player's version
 		 * @return <code>MoTDRequest</code> packet
 		 */
 		@SocketChannelPacket
@@ -505,18 +503,17 @@ public class Packets {
 		public static PacketSerializer motdRequest(
 				@NotNull String server,
 				@NotNull InetAddress ipAddress,
-				int versionProtocol,
-				boolean versionPreNettyRewrite
+				@NotNull Version version
 				) {
 			return new PacketSerializer("MoTDRequest")
 					.writeUTF(server)
 					.writeUTF(ipAddress.getHostAddress())
-					.writeInt(versionProtocol)
-					.writeBoolean(versionPreNettyRewrite);
+					.writeInt(version.getProtocol())
+					.writeBoolean(version.isPreNettyRewrite());
 		}
 		
 		/**
-		 * Responds to a {@link #motdRequest(String, InetAddress, int, boolean)}.
+		 * Responds to a {@link #motdRequest(String, InetAddress, Version)}.
 		 * 
 		 * @deprecated Internal use only.
 		 * @param server Target server
@@ -575,8 +572,7 @@ public class Packets {
 		 * @param amount Amount of times the player got flagged
 		 * @param ping Player's ping, in milliseconds
 		 * @param tps Server's ticks per second
-		 * @param versionProtocol Player's version's protocol
-		 * @param versionPreNettyRewrite Whether the player is using a pre-Netty rewrite version
+		 * @param version Player's version
 		 * @param bedrockEdition Whether the player is playing on Bedrock Edition
 		 * @return <code>PlayerViolation</code> packet
 		 */
@@ -591,8 +587,7 @@ public class Packets {
 				int amount,
 				int ping,
 				double tps,
-				int versionProtocol,
-				boolean versionPreNettyRewrite,
+				@NotNull Version version,
 				boolean bedrockEdition
 				) {
 			return new PacketSerializer("PlayerViolation")
@@ -606,8 +601,8 @@ public class Packets {
 					.writeInt(amount)
 					.writeInt(ping)
 					.writeDouble(tps)
-					.writeInt(versionProtocol)
-					.writeBoolean(versionPreNettyRewrite)
+					.writeInt(version.getProtocol())
+					.writeBoolean(version.isPreNettyRewrite())
 					.writeBoolean(bedrockEdition);
 		}
 		

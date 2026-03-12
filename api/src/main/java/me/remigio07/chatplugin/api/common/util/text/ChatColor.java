@@ -566,8 +566,12 @@ public class ChatColor {
 	}
 	
 	/**
-	 * Calls {@link #translate(String, boolean)},
-	 * specifying <code>true</code> as the second argument.
+	 * Translates the specified string.
+	 * 
+	 * <p>New lines are always retained and hex color codes are translated if
+	 * {@link VersionUtils#getVersion()} is {@linkplain Version#V1_16 1.16}
+	 * or newer; otherwise, they are replaced by their
+	 * {@linkplain #getClosestDefaultColor() closest default colors}.</p>
 	 * 
 	 * @param string String to translate
 	 * @return Translated string
@@ -577,23 +581,45 @@ public class ChatColor {
 	}
 	
 	/**
-	 * Translates given string applying default ("&amp;x")
-	 * and hex ("&amp;#rrggbb", "#rrggbb") color codes.
+	 * Translates the specified string.
+	 * 
+	 * <p>Hex color codes are translated if {@link VersionUtils#getVersion()} is
+	 * {@linkplain Version#V1_16 1.16} or newer; otherwise, they are replaced by
+	 * their {@linkplain #getClosestDefaultColor() closest default colors}.</p>
 	 * 
 	 * @param string String to translate
-	 * @param retainNewLines Whether to retain new lines or to replace them with spaces
+	 * @param retainNewLines Whether to retain new lines or replace them with spaces
 	 * @return Translated string
 	 */
 	public static String translate(@NotNull String string, boolean retainNewLines) {
+		return translate(string, retainNewLines, VersionUtils.getVersion());
+	}
+	
+	/**
+	 * Translates the specified string.
+	 * 
+	 * <p>Hex color codes are translated if {@link VersionUtils#getVersion()} and the
+	 * specified version are {@linkplain Version#V1_16 1.16} or newer; otherwise, they are
+	 * replaced by their {@linkplain #getClosestDefaultColor() closest default colors}.</p>
+	 * 
+	 * @param string String to translate
+	 * @param retainNewLines Whether to retain new lines or replace them with spaces
+	 * @param targetVersion Version to consider for hex codes compatibility
+	 * @return Translated string
+	 */
+	public static String translate(@NotNull String string, boolean retainNewLines, Version targetVersion) {
 		String message = string;
+		boolean translateHexCodes = VersionUtils.getVersion().isAtLeast(Version.V1_16) && targetVersion.isAtLeast(Version.V1_16);
 		
-		if (VersionUtils.getVersion().isAtLeast(Version.V1_16)) {
-			for (Pattern pattern : HEX_COLORS) {
-				Matcher matcher = pattern.matcher(message);
+		for (Pattern pattern : HEX_COLORS) {
+			Matcher matcher = pattern.matcher(message);
+			StringBuffer buffer = new StringBuffer();
+			
+			while (matcher.find()) {
+				ChatColor color = of(matcher.group().substring(1));
 				
-				while (matcher.find())
-					matcher = pattern.matcher(message = message.substring(0, matcher.start()) + of(matcher.group().substring(1, matcher.group().length())) + message.substring(matcher.end()));
-			}
+				matcher.appendReplacement(buffer, Matcher.quoteReplacement((translateHexCodes ? color : color.getClosestDefaultColor()).toString()));
+			} message = (matcher.appendTail(buffer)).toString();
 		} char[] array = message.toCharArray();
 		
 		for (int i = 0; i < array.length - 1; i++) {
@@ -601,13 +627,18 @@ public class ChatColor {
 				array[i] = '§';
 				array[i + 1] = Character.toLowerCase(array[i + 1]);
 			}
-		} return retainNewLines ? new String(array) : new String(array).replace("\r\n", " ").replace("\n", " ").replace("\r", " ");
+		} return retainNewLines ? new String(array) : new String(array).replaceAll("\\R", " ");
 	}
 	
 	/**
-	 * Translates given string list.
+	 * Translates the specified string list.
 	 * 
-	 * @param list List to translate
+	 * <p>New lines are always retained and hex color codes are translated if
+	 * {@link VersionUtils#getVersion()} is {@linkplain Version#V1_16 1.16}
+	 * or newer; otherwise, they are replaced by their
+	 * {@linkplain #getClosestDefaultColor() closest default colors}.</p>
+	 * 
+	 * @param list String list to translate
 	 * @return Translated string list
 	 * @see #translate(String)
 	 */
@@ -616,15 +647,36 @@ public class ChatColor {
 	}
 	
 	/**
-	 * Translates given string list.
+	 * Translates the specified string list.
 	 * 
-	 * @param list List to translate
-	 * @param retainNewLines Whether to retain new lines or to replace them with spaces
+	 * <p>Hex color codes are translated if {@link VersionUtils#getVersion()} is
+	 * {@linkplain Version#V1_16 1.16} or newer; otherwise, they are replaced by
+	 * their {@linkplain #getClosestDefaultColor() closest default colors}.</p>
+	 * 
+	 * @param list String list to translate
+	 * @param retainNewLines Whether to retain new lines or replace them with spaces
 	 * @return Translated string list
 	 * @see #translate(String, boolean)
 	 */
 	public static List<String> translate(@NotNull List<String> list, boolean retainNewLines) {
-		return list.stream().map(string -> translate(string, retainNewLines)).collect(Collectors.toList());
+		return translate(list, retainNewLines, Version.UNSUPPORTED);
+	}
+	
+	/**
+	 * Translates the specified string list.
+	 * 
+	 * <p>Hex color codes are translated if {@link VersionUtils#getVersion()} and the
+	 * specified version are {@linkplain Version#V1_16 1.16} or newer; otherwise, they are
+	 * replaced by their {@linkplain #getClosestDefaultColor() closest default colors}.</p>
+	 * 
+	 * @param list String list to translate
+	 * @param retainNewLines Whether to retain new lines or replace them with spaces
+	 * @param targetVersion Version to consider for hex codes compatibility
+	 * @return Translated string list
+	 * @see #translate(String, boolean, Version)
+	 */
+	public static List<String> translate(@NotNull List<String> list, boolean retainNewLines, Version targetVersion) {
+		return list.stream().map(string -> translate(string, retainNewLines, targetVersion)).collect(Collectors.toList());
 	}
 	
 	/**

@@ -41,6 +41,7 @@ public abstract class RankManager implements ChatPluginManager {
 	public static final Pattern RANK_ID_PATTERN = Pattern.compile("^(?!settings$)[a-zA-Z0-9-_+]{2,36}$");
 	protected static RankManager instance;
 	protected boolean enabled, luckPermsMode, sortingEnabled, sortingFromTablistTop;
+	protected RankDetectionMode detectionMode;
 	protected List<Rank> ranks = new ArrayList<>();
 	protected long loadTime;
 	
@@ -89,6 +90,17 @@ public abstract class RankManager implements ChatPluginManager {
 	 */
 	public boolean isSortingFromTablistTop() {
 		return sortingFromTablistTop;
+	}
+	
+	/**
+	 * Gets the mode used to detect players' ranks.
+	 * 
+	 * <p><strong>Found at:</strong> "ranks.settings.detection-mode" in {@link ConfigurationType#RANKS}</p>
+	 * 
+	 * @return Ranks' detection mode
+	 */
+	public RankDetectionMode getDetectionMode() {
+		return detectionMode;
 	}
 	
 	/**

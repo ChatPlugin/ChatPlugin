@@ -143,9 +143,9 @@ public class ChatPluginServerManagers extends ChatPluginManagers {
 		addManager(IPLookupManager.class, new IPLookupManagerImpl());
 		addManager(LocalIPLookupManager.class, new DummyLocalIPLookupManager());
 		addManager(LanguageManager.class, new LanguageManagerImpl());
-		addManager(RankManager.class, new RankManagerImpl());
 		addManager(EventManager.class, Environment.isBukkit() ? new BukkitEventManager() : Environment.isSponge() ? new SpongeEventManager() : new FabricEventManager());
 		addManager(IntegrationManager.class, Environment.isBukkit() ? new BukkitIntegrationManager() : Environment.isSponge() ? new SpongeIntegrationManager() : new FabricIntegrationManager());
+		addManager(RankManager.class, new RankManagerImpl());
 		addManager(AnticheatManager.class, new AnticheatManagerImpl());
 		addManager(VanishManager.class, new VanishManagerImpl());
 		addManager(JoinMessageManager.class, new JoinMessageManagerImpl());

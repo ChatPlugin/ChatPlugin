@@ -708,6 +708,7 @@ public class ServerConfigurationManager extends BaseConfigurationManager {
 		ranks.addDefault("ranks.settings.luckperms-mode", false);
 		ranks.addDefault("ranks.settings.sorting.enabled", true);
 		ranks.addDefault("ranks.settings.sorting.from-tablist-top", true);
+		ranks.addDefault("ranks.settings.detection-mode", "JOIN"); // set to EVENT automatically? we need IntegrationManager loaded though...
 		
 		if (fileMissing) {
 			ranks.addDefault("ranks.default.display-name", "User");

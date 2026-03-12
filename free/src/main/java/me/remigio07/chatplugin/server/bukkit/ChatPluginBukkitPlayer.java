@@ -87,7 +87,9 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	public ChatPluginBukkitPlayer(Player player) {
 		super(new PlayerAdapter(player));
 		this.player = player;
-		rank = ((RankManagerImpl) RankManager.getInstance()).calculateRank(this);
+		
+		setRank(((RankManagerImpl) RankManager.getInstance()).calculateRank(this));
+		
 		version = version == null ? VersionUtils.getVersion() : version;
 		craftPlayer = CraftPlayer.cast(player); // 1.21.6+: g, 1.21.3-1.21.5: f, 1.20-1.21.2: c, else b
 		playerConnection = BukkitReflection.getFieldValue("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", craftPlayer), "playerConnection", "connection", VersionUtils.getVersion().isAtLeast(Version.V1_21_6) ? "g" : VersionUtils.getVersion().isAtLeast(Version.V1_21_3) ? "f" : VersionUtils.getVersion().isAtLeast(Version.V1_20) ? "c" : "b");

@@ -16,35 +16,50 @@
 package me.remigio07.chatplugin.server.rank;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.bukkit.permissions.Permission;
 
+import me.remigio07.chatplugin.api.common.integration.IntegrationType;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.ChatPluginManagerException;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
+import me.remigio07.chatplugin.api.common.util.manager.TaskManager;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.language.LanguageManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
+import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.rank.Rank;
+import me.remigio07.chatplugin.api.server.rank.RankDetectionMode;
 import me.remigio07.chatplugin.api.server.rank.RankManager;
+import me.remigio07.chatplugin.bootstrap.BukkitBootstrapper;
 import me.remigio07.chatplugin.bootstrap.Environment;
+import me.remigio07.chatplugin.bootstrap.FabricBootstrapper;
+import me.remigio07.chatplugin.bootstrap.SpongeBootstrapper;
 import me.remigio07.chatplugin.common.util.Utils;
+import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.cacheddata.CachedMetaData;
+import net.luckperms.api.event.EventSubscription;
+import net.luckperms.api.event.user.UserDataRecalculateEvent;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.query.QueryOptions;
 
 public class RankManagerImpl extends RankManager {
 	
-	public static final String DEFAULT_DESCRIPTION = "&7Default rank description.\n&7Change with &f/rank edit&7!";
+	public static final String DEFAULT_DESCRIPTION = "&7Default rank description.\n&7Edit with &f/rank edit&7!";
 	private static final List<String> PROPERTIES = Arrays.asList(
 			"display-name", "prefix", "suffix", "tag.prefix", "tag.suffix", "tag.name-color",
 			"chat-color", "max-punishment-durations.ban", "max-punishment-durations.mute");
+	private Object lpEventSubscription;
+	private long detectionTaskID;
+	private short detectionCyclesToSkip;
 	
 	@Override
 	public void load() throws ChatPluginManagerException {
@@ -73,13 +88,11 @@ public class RankManagerImpl extends RankManager {
 						ranks.add(new RankImpl(id, ranks.size()));
 					else LogManager.log("Rank ID of LuckPerms' group \"{0}\" does not respect the following pattern: \"{1}\"; skipping it.", 2, id, RANK_ID_PATTERN.pattern());
 				}
-			} catch (NoClassDefFoundError ncdfe) {
-				throw new ChatPluginManagerException(this, "\"ranks.settings.luckperms-mode\" in ranks.yml is set to true but LuckPerms is not installed or running correctly");
+			} catch (NoClassDefFoundError ncdfe) { // TODO remove these checks and add verification in the ChatPluginIntegration loading process
+				throw new ChatPluginManagerException(this, "The LuckPerms mode at \"ranks.settings.luckperms-mode\" in ranks.yml is enabled but LuckPerms is not installed or running correctly");
 			} catch (IllegalStateException ise) {
 				throw new ChatPluginManagerException(this, ise);
-			} if (ranks.isEmpty())
-				throw new ChatPluginManagerException(this, "LuckPerms has no valid groups, at least one is required");
-			if (!ranks.stream().filter(rank -> rank.getID().equals("default")).findAny().isPresent())
+			} if (!ranks.stream().filter(rank -> rank.getID().equals("default")).findAny().isPresent())
 				throw new ChatPluginManagerException(this, "LuckPerms does not have the required \"default\" group loaded");
 		} else {
 			for (String id : ConfigurationType.RANKS.get().getKeys("ranks")) {
@@ -95,16 +108,59 @@ public class RankManagerImpl extends RankManager {
 				else LogManager.log("Rank ID specified at \"ranks.{0}\" in ranks.yml does not respect the following pattern: \"{1}\"; skipping it.", 2, id, RANK_ID_PATTERN.pattern());
 			} if (ranks.isEmpty())
 				throw new ChatPluginManagerException(this, "there are no valid ranks in ranks.yml, at least one is required");
+		} try {
+			detectionMode = RankDetectionMode.valueOf(ConfigurationType.RANKS.get().getString("ranks.settings.detection-mode"));
+			
+			if (detectionMode == RankDetectionMode.EVENT) {
+				lpEventSubscription = LuckPermsProvider.get().getEventBus().subscribe(Environment.isBukkit() ? BukkitBootstrapper.getInstance() : Environment.isSponge() ? SpongeBootstrapper.getInstance() : FabricBootstrapper.getInstance(), UserDataRecalculateEvent.class, event -> {
+					if (!enabled)
+						return;
+					ChatPluginServerPlayer player = ServerPlayerManager.getInstance().getPlayer(event.getUser().getUniqueId());
+					
+					if (player != null)
+						updateRank(player);
+				});
+			} else if (detectionMode == RankDetectionMode.PERIODIC) {
+				if (IntegrationType.LUCKPERMS.isEnabled())
+					LogManager.log("Rank detection mode at \"ranks.settings.detection-mode\" in ranks.yml is set to PERIODIC but LuckPerms is installed. It is recommended to switch to the EVENT detection mode for better performance and instant synchronization of ranks.", 0);
+				detectionTaskID = TaskManager.scheduleAsync(() -> {
+					if (!enabled)
+						return;
+					if (detectionCyclesToSkip == 0) {
+						Collection<ChatPluginServerPlayer> players = ServerPlayerManager.getInstance().getPlayers().values();
+						detectionCyclesToSkip = (short) (players.size() / 50);
+						
+						players.forEach(this::updateRank);
+					} else detectionCyclesToSkip--;
+				}, 5000L, 5000L);
+			} else if (IntegrationType.LUCKPERMS.isEnabled())
+				LogManager.log("Rank detection mode at \"ranks.settings.detection-mode\" in ranks.yml is set to JOIN but LuckPerms is installed. It is recommended to switch to the EVENT detection mode to enable real-time synchronization.", 0);
+		} catch (NoClassDefFoundError ncdfe) {
+			LogManager.log("Rank detection mode at \"ranks.settings.detection-mode\" in ranks.yml is set to EVENT but LuckPerms is not installed or running correctly; setting to default value of JOIN.", 2);
+			
+			detectionMode = RankDetectionMode.JOIN;
+		} catch (IllegalStateException ise) {
+			LogManager.log("Rank detection mode at \"ranks.settings.detection-mode\" in ranks.yml is set to EVENT but: {0}; setting to default value of JOIN.", 2, ise.getMessage());
+			
+			detectionMode = RankDetectionMode.JOIN;
+		} catch (IllegalArgumentException iae) {
+			LogManager.log("Invalid detection mode (\"{0}\") set at \"ranks.settings.detection-mode\" in ranks.yml: only JOIN, EVENT and PERIODIC are allowed; setting to default value of JOIN.", 2, ConfigurationType.RANKS.get().getString("ranks.settings.detection-mode"));
+			
+			detectionMode = RankDetectionMode.JOIN;
 		} loadRanks();
 		
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}
 	
-	/**
-	 * @throws IllegalStateException
-	 */
-	public void loadRanks() {
+	private void updateRank(ChatPluginServerPlayer player) {
+		Rank newRank = calculateRank(player);
+		
+		if (!player.getRank().equals(newRank))
+			((BaseChatPluginServerPlayer) player).setRank(newRank);
+	}
+	
+	public void loadRanks() throws IllegalStateException {
 		long temp;
 		
 		for (Rank rank : ranks) {
@@ -170,23 +226,39 @@ public class RankManagerImpl extends RankManager {
 	@Override
 	public void unload() throws ChatPluginManagerException {
 		enabled = luckPermsMode = sortingEnabled = sortingFromTablistTop = false;
+		detectionMode = null;
 		
 		ranks.clear();
+		
+		if (detectionMode == RankDetectionMode.PERIODIC) {
+			TaskManager.cancelAsync(detectionTaskID);
+			
+			detectionCyclesToSkip = 0;
+		} else if (detectionMode == RankDetectionMode.EVENT)
+			((EventSubscription<?>) lpEventSubscription).close();
 	}
 	
 	public Rank calculateRank(ChatPluginServerPlayer player) {
+		if (luckPermsMode)
+			return calculateLuckPermsRank(player);
 		Rank playerRank = getDefaultRank();
 		
-		if (luckPermsMode)
-			for (Group group : LuckPermsProvider.get().getUserManager().getUser(player.getUUID()).getInheritedGroups(QueryOptions.nonContextual()).stream().sorted((o1, o2) -> {
-				int i = Integer.compare(o2.getWeight().orElse(0), o1.getWeight().orElse(0));
-				return - (i != 0 ? i : o1.getName().compareToIgnoreCase(o2.getName()));
-			}).collect(Collectors.toList()))
-				playerRank = getRank(group.getName());
-		else for (Rank rank : ranks)
+		for (Rank rank : ranks)
 			if (Environment.isBukkit() ? player.toAdapter().bukkitValue().hasPermission((Permission) ((RankImpl) rank).getPermission()) : player.hasPermission("chatplugin.ranks." + rank.getID())) // does Sponge have an equivalent of Bukkit's PermissionDefault? let me know!
 				playerRank = rank;
 		return playerRank;
+	}
+	
+	private Rank calculateLuckPermsRank(ChatPluginServerPlayer player) {
+		return LuckPermsProvider.get().getUserManager().getUser(player.getUUID()).getInheritedGroups(QueryOptions.nonContextual())
+				.stream()
+				.sorted(Comparator
+						.comparingInt((Group group) -> group.getWeight().orElse(0))
+						.reversed()
+						.thenComparing(Group::getName, String.CASE_INSENSITIVE_ORDER)
+						)
+				.map(group -> getRank(group.getName()))
+				.findFirst().orElseGet(this::getDefaultRank);
 	}
 	
 	public static List<String> getProperties() {

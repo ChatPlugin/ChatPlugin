@@ -37,6 +37,7 @@ import me.remigio07.chatplugin.api.server.chat.channel.ChatChannelsManager;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
+import me.remigio07.chatplugin.api.server.rank.Rank;
 import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
 import me.remigio07.chatplugin.api.server.util.adapter.scoreboard.ObjectiveAdapter;
 import me.remigio07.chatplugin.api.server.util.manager.ProxyManager;
@@ -126,6 +127,10 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 		} catch (SQLException | IOException e) {
 			LogManager.log("{0} occurred while setting emojis' tone of {1} in the storage: {2}", 2, e.getClass().getSimpleName(), name, e.getLocalizedMessage());
 		}
+	}
+	
+	public void setRank(Rank rank) {
+		this.rank = rank;
 	}
 	
 	public void setScoreboard(Scoreboard scoreboard) {

@@ -96,7 +96,9 @@ public class ChatPluginFabricPlayer extends BaseChatPluginServerPlayer {
 	public ChatPluginFabricPlayer(ServerPlayerEntity player) {
 		super(new PlayerAdapter(player));
 		this.player = player;
-		rank = ((RankManagerImpl) RankManager.getInstance()).calculateRank(this);
+		
+		setRank(((RankManagerImpl) RankManager.getInstance()).calculateRank(this));
+		
 		version = version == null ? VersionUtils.getVersion() : version;
 		playerConnection = player.networkHandler;
 		StorageConnector storage = StorageConnector.getInstance();

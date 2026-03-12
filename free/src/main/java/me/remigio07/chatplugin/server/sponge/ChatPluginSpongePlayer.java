@@ -86,7 +86,9 @@ public class ChatPluginSpongePlayer extends BaseChatPluginServerPlayer {
 	public ChatPluginSpongePlayer(Player player) {
 		super(new PlayerAdapter(player));
 		this.player = player;
-		rank = ((RankManagerImpl) RankManager.getInstance()).calculateRank(this);
+		
+		setRank(((RankManagerImpl) RankManager.getInstance()).calculateRank(this));
+		
 		version = version == null ? VersionUtils.getVersion() : version;
 		playerConnection = player.getConnection();
 		StorageConnector storage = StorageConnector.getInstance();

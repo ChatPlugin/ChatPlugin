@@ -28,13 +28,11 @@ import com.google.common.collect.ImmutableMap;
 import me.remigio07.chatplugin.api.common.storage.configuration.ConfigurationType;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.common.util.text.ChatColor;
-import me.remigio07.chatplugin.api.server.chat.HoverInfoManager;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.rank.Rank;
 import me.remigio07.chatplugin.api.server.rank.RankManager;
 import me.remigio07.chatplugin.api.server.util.adapter.user.CommandSenderAdapter;
 import me.remigio07.chatplugin.common.util.Utils;
-import me.remigio07.chatplugin.server.chat.BaseHoverInfoManager;
 import me.remigio07.chatplugin.server.command.BaseCommand;
 import me.remigio07.chatplugin.server.player.BaseChatPluginServerPlayer;
 import me.remigio07.chatplugin.server.rank.RankManagerImpl;
@@ -322,9 +320,6 @@ public class RankCommand extends BaseCommand {
 									? language.getMessage("commands.rank.edit.reset", args[2], rank.getID())
 									: language.getMessage("commands.rank.edit.set", args[2], rank.getID(), value.isEmpty() ? "\"\"" : args[2].endsWith("-color") ? value : ChatColor.translate(value, false))
 									);
-							
-							if (HoverInfoManager.getInstance().isEnabled() && args[2].startsWith("descriptions."))
-								((BaseHoverInfoManager) HoverInfoManager.getInstance()).loadRanksDescriptions();
 						} catch (IllegalStateException ise) {
 							sender.sendMessage(language.getMessage("commands.rank.edit.out-of-sync", ise.getMessage()));
 						}

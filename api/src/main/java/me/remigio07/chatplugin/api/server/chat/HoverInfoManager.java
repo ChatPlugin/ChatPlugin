@@ -32,9 +32,9 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	
 	protected static HoverInfoManager instance;
 	protected boolean enabled, rankHoverEnabled, playerHoverEnabled, urlHoverEnabled, defaultHTTPS, playerPingHoverEnabled, instantEmojiHoverEnabled;
-	protected ClickActionAdapter playerClickAction;
-	protected String playerClickValue, urlColor;
-	protected Map<Language, String> playerHovers = new HashMap<>(), urlHovers = new HashMap<>(), instantEmojiHovers = new HashMap<>();
+	protected ClickActionAdapter rankClickAction, playerClickAction;
+	protected String rankClickValue, playerClickValue, urlColor;
+	protected Map<Language, String> rankHovers = new HashMap<>(), playerHovers = new HashMap<>(), urlHovers = new HashMap<>(), instantEmojiHovers = new HashMap<>();
 	protected long loadTime;
 	
 	/**
@@ -121,6 +121,18 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	
 	/**
 	 * Gets the click action executed when a
+	 * player clicks a player's rank in the chat.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.hover-info.rank.click.action" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Action executed when clicking ranks
+	 */
+	public ClickActionAdapter getRankClickAction() {
+		return rankClickAction;
+	}
+	
+	/**
+	 * Gets the click action executed when a
 	 * player clicks a player's name in the chat.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.hover-info.player.click.action" in {@link ConfigurationType#CHAT}</p>
@@ -132,12 +144,24 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	}
 	
 	/**
+	 * Gets the value applied to {@link #getRankClickAction()}
+	 * when a player clicks a player's rank in the chat.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.hover-info.rank.click.value" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Value associated with the rank click action
+	 */
+	public String getRankClickValue() {
+		return rankClickValue;
+	}
+	
+	/**
 	 * Gets the value applied to {@link #getPlayerClickAction()}
 	 * when a player clicks a player's name in the chat.
 	 * 
 	 * <p><strong>Found at:</strong> "chat.hover-info.player.click.value" in {@link ConfigurationType#CHAT}</p>
 	 * 
-	 * @return Value associated with the action executed on click
+	 * @return Value associated with the player click action
 	 */
 	public String getPlayerClickValue() {
 		return playerClickValue;
@@ -153,6 +177,18 @@ public abstract class HoverInfoManager implements ChatPluginManager {
 	 */
 	public String getURLColor() {
 		return urlColor;
+	}
+	
+	/**
+	 * Gets the map of the hovers displayed when
+	 * hovering over a player's rank in the chat.
+	 * 
+	 * <p><strong>Found at:</strong> "chat.hover-info.rank.hovers" in {@link ConfigurationType#CHAT}</p>
+	 * 
+	 * @return Rank hovers
+	 */
+	public Map<Language, String> getRankHovers() {
+		return rankHovers;
 	}
 	
 	/**

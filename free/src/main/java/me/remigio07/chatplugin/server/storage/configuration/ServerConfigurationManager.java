@@ -847,6 +847,10 @@ public class ServerConfigurationManager extends BaseConfigurationManager {
 		
 		chat.addDefault("chat.hover-info.enabled", true);
 		chat.addDefault("chat.hover-info.rank.enabled", true);
+		chat.addDefault("chat.hover-info.rank.click.action", "SUGGEST_COMMAND");
+		chat.addDefault("chat.hover-info.rank.click.value", "/rankinfo {player}");
+		chat.addDefault("chat.hover-info.rank.hovers.english", "&f{rank_description}\n\n&e&oClick for more info!");
+		chat.addDefault("chat.hover-info.rank.hovers.italian", "&f{rank_description}\n\n&e&oClicca per più info!");
 		chat.addDefault("chat.hover-info.player.enabled", true);
 		chat.addDefault("chat.hover-info.player.click.action", "SUGGEST_COMMAND");
 		chat.addDefault("chat.hover-info.player.click.value", "/msg {player} ");

@@ -45,8 +45,6 @@ public abstract class BaseHoverInfoManager extends HoverInfoManager {
 	
 	public abstract void loadChannelsFormats();
 	
-	public abstract void loadRanksDescriptions();
-	
 	public static class DummyHoverInfoManager extends BaseHoverInfoManager {
 		
 		@Override
@@ -64,11 +62,6 @@ public abstract class BaseHoverInfoManager extends HoverInfoManager {
 		
 		@Override
 		public void loadChannelsFormats() {
-			
-		}
-		
-		@Override
-		public void loadRanksDescriptions() {
 			
 		}
 		

@@ -46,6 +46,7 @@ import me.remigio07.chatplugin.api.server.event.player.ServerPlayerUnloadEvent;
 import me.remigio07.chatplugin.api.server.gui.GUIManager;
 import me.remigio07.chatplugin.api.server.gui.PerPlayerGUI;
 import me.remigio07.chatplugin.api.server.join_quit.QuitMessageManager;
+import me.remigio07.chatplugin.api.server.join_quit.ServerLinkManager;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
 import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
@@ -196,6 +197,10 @@ public class FabricPlayerManager extends ServerPlayerManager {
 					serverPlayer.joinChannel(channel);
 			} serverPlayer.switchChannel(ChatChannelsManager.getInstance().getDefaultWritingChannel());
 		}
+		
+		// server links
+		if (ServerLinkManager.getInstance().isEnabled())
+			serverPlayer.sendServerLinks(ServerLinkManager.getInstance().getServerLinks());
 		
 		// quit
 		if (QuitMessageManager.getInstance().isEnabled())

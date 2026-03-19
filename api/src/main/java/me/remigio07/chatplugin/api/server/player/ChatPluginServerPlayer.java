@@ -31,6 +31,7 @@ import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
 import me.remigio07.chatplugin.api.common.util.Utils;
+import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
@@ -48,6 +49,7 @@ import me.remigio07.chatplugin.api.server.chat.channel.data.ChatChannelData;
 import me.remigio07.chatplugin.api.server.event.chat.channel.ChatChannelJoinEvent;
 import me.remigio07.chatplugin.api.server.event.chat.channel.ChatChannelLeaveEvent;
 import me.remigio07.chatplugin.api.server.event.chat.channel.ChatChannelSwitchEvent;
+import me.remigio07.chatplugin.api.server.join_quit.ServerLinkManager.ServerLink;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.rank.Rank;
 import me.remigio07.chatplugin.api.server.scoreboard.Scoreboard;
@@ -570,6 +572,15 @@ public abstract class ChatPluginServerPlayer extends OfflinePlayer implements Ch
 	 * @param actionbar Actionbar to send
 	 */
 	public abstract void sendActionbar(@NotNull String actionbar);
+	
+	/**
+	 * Sends server links to this player.
+	 * 
+	 * @param serverLinks Server links to send
+	 * @throws UnsupportedOperationException If {@link VersionUtils#getVersion()}
+	 * is older than {@linkplain Version#V1_21 1.21}
+	 */
+	public abstract void sendServerLinks(List<ServerLink> serverLinks);
 	
 	/**
 	 * Sends a packet to this player.

@@ -26,6 +26,7 @@ import java.util.StringJoiner;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.ServerLinks;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -47,6 +48,8 @@ import me.remigio07.chatplugin.api.server.bossbar.BossbarManager;
 import me.remigio07.chatplugin.api.server.event.player.PlayerFirstJoinEvent;
 import me.remigio07.chatplugin.api.server.f3servername.F3ServerNameManager;
 import me.remigio07.chatplugin.api.server.join_quit.AccountCheckManager;
+import me.remigio07.chatplugin.api.server.join_quit.ServerLinkManager;
+import me.remigio07.chatplugin.api.server.join_quit.ServerLinkManager.ServerLink;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.language.LanguageDetectionMethod;
 import me.remigio07.chatplugin.api.server.language.LanguageDetector;
@@ -301,6 +304,23 @@ public class ChatPluginBukkitPlayer extends BaseChatPluginServerPlayer {
 	@Override
 	public void sendActionbar(String actionbar) {
 		ChatPluginBukkit.sendMessage(player, true, me.remigio07.chatplugin.common.util.Utils.toBungeeCordComponent(actionbar));
+	}
+	
+	@Override
+	public void sendServerLinks(List<ServerLink> serverLinks) {
+		if (VersionUtils.getVersion().isAtLeast(Version.V1_21)) {
+			ServerLinks links = Bukkit.getServerLinks().copy();
+			
+			links.getLinks().forEach(links::removeLink);
+			
+			for (ServerLink serverLink : serverLinks) {
+				if (serverLink.getType() == ServerLink.Type.CUSTOM) {
+					String displayName = serverLink.getDisplayNames().get(language);
+					
+					links.addLink(PlaceholderManager.getInstance().translatePlaceholders(displayName == null ? serverLink.getDisplayNames().get(Language.getMainLanguage()) : displayName, this, ServerLinkManager.getInstance().getPlaceholderTypes()), serverLink.getURI());
+				} else links.addLink(serverLink.getType().bukkitValue(), serverLink.getURI());
+			} player.sendLinks(links);
+		} else super.sendServerLinks(serverLinks);
 	}
 	
 	@Deprecated

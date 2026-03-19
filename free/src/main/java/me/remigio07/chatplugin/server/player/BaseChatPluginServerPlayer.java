@@ -20,12 +20,14 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import me.remigio07.chatplugin.api.common.player.OfflinePlayer;
 import me.remigio07.chatplugin.api.common.storage.DataContainer;
 import me.remigio07.chatplugin.api.common.storage.PlayersDataType;
 import me.remigio07.chatplugin.api.common.storage.StorageConnector;
 import me.remigio07.chatplugin.api.common.storage.database.DatabaseConnector;
+import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.adapter.user.PlayerAdapter;
 import me.remigio07.chatplugin.api.common.util.annotation.NotNull;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
@@ -34,6 +36,7 @@ import me.remigio07.chatplugin.api.server.bossbar.PlayerBossbar;
 import me.remigio07.chatplugin.api.server.chat.PlayerIgnoreManager;
 import me.remigio07.chatplugin.api.server.chat.PrivateMessagesManager;
 import me.remigio07.chatplugin.api.server.chat.channel.ChatChannelsManager;
+import me.remigio07.chatplugin.api.server.join_quit.ServerLinkManager.ServerLink;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.player.ChatPluginServerPlayer;
 import me.remigio07.chatplugin.api.server.player.ServerPlayerManager;
@@ -105,6 +108,11 @@ public abstract class BaseChatPluginServerPlayer extends ChatPluginServerPlayer 
 				}
 			}
 		} else chatColor = emojisTone = ChatColor.RESET;
+	}
+	
+	@Override
+	public void sendServerLinks(List<ServerLink> serverLinks) {
+		throw new UnsupportedOperationException("Unable to send server links (1.21+) on a " + VersionUtils.getVersion().getName() + " server");
 	}
 	
 	@Override

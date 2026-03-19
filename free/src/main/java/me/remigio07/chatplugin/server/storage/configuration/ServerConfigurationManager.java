@@ -18,6 +18,7 @@ package me.remigio07.chatplugin.server.storage.configuration;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.Collections;
 
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.storage.configuration.Configuration;
@@ -156,7 +157,7 @@ public class ServerConfigurationManager extends BaseConfigurationManager {
 		config.addDefault("settings.storage-placeholders-update-timeout", "1m");
 		config.addDefault("settings.floodgate-username-prefix", "");
 		config.addDefault("settings.enabled-worlds", Arrays.asList("*"));
-		config.addDefault("settings.disabled-commands", Arrays.asList());
+		config.addDefault("settings.disabled-commands", Collections.emptyList());
 		config.addDefault("settings.displayed-memory.unit", "MEGABYTE");
 		config.addDefault("settings.displayed-memory.decimals", 0);
 		config.addDefault("settings.displayed-time-zone", "");
@@ -186,7 +187,7 @@ public class ServerConfigurationManager extends BaseConfigurationManager {
 		config.addDefault("languages.detector.method", "CLIENT_LOCALE");
 		config.addDefault("languages.detector.delay-ms", 5000L);
 		config.addDefault("languages.command.cooldown", "5m");
-		config.addDefault("languages.command.commands", Arrays.asList());
+		config.addDefault("languages.command.commands", Collections.emptyList());
 		config.addDefault("languages.english.display-name", "&fEnglish");
 		config.addDefault("languages.english.country-codes", Arrays.asList("AU", "NZ", "GB", "US"));
 		config.addDefault("languages.italian.display-name", "&fitaliano");
@@ -215,8 +216,8 @@ public class ServerConfigurationManager extends BaseConfigurationManager {
 		config.addDefault("ban.banwave.timeout", "6h");
 		config.addDefault("ban.banwave.delay-ms", 100);
 		config.addDefault("ban.banwave.reasons-start-with", Arrays.asList("[Matrix]", "[Vulcan]", "[Anticheat]"));
-		config.addDefault("ban.banwave.commands.start", Arrays.asList());
-		config.addDefault("ban.banwave.commands.end", Arrays.asList());
+		config.addDefault("ban.banwave.commands.start", Collections.emptyList());
+		config.addDefault("ban.banwave.commands.end", Collections.emptyList());
 		
 		config.addDefault("warning.enabled", true);
 		config.addDefault("warning.default-global", true);
@@ -1141,7 +1142,7 @@ public class ServerConfigurationManager extends BaseConfigurationManager {
 		ads.addDefault("ads.settings.sound.volume", 1F);
 		ads.addDefault("ads.settings.sound.pitch", 1F);
 		ads.addDefault("ads.settings.sending-timeout", "5m");
-		ads.addDefault("ads.settings.placeholder-types", Arrays.asList());
+		ads.addDefault("ads.settings.placeholder-types", Collections.emptyList());
 		
 		if (fileMissing) {
 			ads.addDefault("ads.discord.texts.english", "&e&lJoin our Discord server:\n&b&nstay updated about the new features!\n\n&7&oClick this message to receive the invitation.");
@@ -1243,6 +1244,13 @@ public class ServerConfigurationManager extends BaseConfigurationManager {
 		joinQuitModules.addDefault("join-quit-modules.suggested-version.version", "{server_version}");
 		joinQuitModules.addDefault("join-quit-modules.suggested-version.delay-ms", 10000L);
 		
+		joinQuitModules.addDefault("join-quit-modules.server-links.settings.enabled", false);
+		joinQuitModules.addDefault("join-quit-modules.server-links.settings.placeholder-types", Collections.emptyList());
+		joinQuitModules.addDefault("join-quit-modules.server-links.values.website", "https://remigio07.me/chatplugin");
+		joinQuitModules.addDefault("join-quit-modules.server-links.values.discord.uri", "https://discord.gg/eSnAPhvMTG");
+		joinQuitModules.addDefault("join-quit-modules.server-links.values.discord.display-names.english", "Discord server");
+		joinQuitModules.addDefault("join-quit-modules.server-links.values.discord.display-names.italian", "Server Discord");
+		
 		joinQuitModules.addDefault("join-quit-modules.account-check.enabled", true);
 		joinQuitModules.addDefault("join-quit-modules.account-check.perform-on-first-join", false);
 		joinQuitModules.addDefault("join-quit-modules.account-check.timeout-between-checks-ms", 10);
@@ -1251,13 +1259,13 @@ public class ServerConfigurationManager extends BaseConfigurationManager {
 		if (fileMissing) {
 			joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.2.english", Arrays.asList("staffchat &f{player} &cowns multiple (&f{amount}&c) accounts: &f{accounts}&c."));
 			joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.2.italian", Arrays.asList("staffchat &f{player} &cpossiede accounts multipli (&f{amount}&c): &f{accounts}&c."));
-			joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.3.english", Arrays.asList("tempban {player} 30d Multiple ({amount}) accounts detected: {accounts}. This is an automatic ban. -s"));
-			joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.3.italian", Arrays.asList("tempban {player} 30d Accounts multipli ({amount}) rilevati: {accounts}. Questo è un ban automatico. -s"));
+			joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.3.english", Arrays.asList("tempban {player} 1M Multiple ({amount}) accounts detected: {accounts}. This is an automatic ban. -s"));
+			joinQuitModules.addDefault("join-quit-modules.account-check.punish-commands.3.italian", Arrays.asList("tempban {player} 1M Accounts multipli ({amount}) rilevati: {accounts}. Questo è un ban automatico. -s"));
 		} joinQuitModules.addDefault("join-quit-modules.account-check.ip-lookup.enabled", false);
 		joinQuitModules.addDefault("join-quit-modules.account-check.ip-lookup.max-accuracy-radius-km", 10);
 		joinQuitModules.addDefault("join-quit-modules.account-check.anti-ban-evading-system.enabled", false);
-		joinQuitModules.addDefault("join-quit-modules.account-check.anti-ban-evading-system.commands.english", Arrays.asList("tempban {player} 30d Ban evading of account {account}. This is an automatic ban. -s"));
-		joinQuitModules.addDefault("join-quit-modules.account-check.anti-ban-evading-system.commands.italian", Arrays.asList("tempban {player} 30d Elusione del ban dell'account {account}. Questo è un ban automatico. -s"));
+		joinQuitModules.addDefault("join-quit-modules.account-check.anti-ban-evading-system.commands.english", Arrays.asList("tempban {player} 1M Ban evading of account {account}. This is an automatic ban. -s"));
+		joinQuitModules.addDefault("join-quit-modules.account-check.anti-ban-evading-system.commands.italian", Arrays.asList("tempban {player} 1M Elusione del ban dell'account {account}. Questo è un ban automatico. -s"));
 		
 		joinQuitModules.save();
 	}

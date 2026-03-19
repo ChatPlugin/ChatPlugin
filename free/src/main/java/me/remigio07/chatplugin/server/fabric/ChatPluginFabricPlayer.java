@@ -21,6 +21,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringJoiner;
@@ -41,6 +42,8 @@ import me.remigio07.chatplugin.api.common.util.text.ChatColor;
 import me.remigio07.chatplugin.api.server.bossbar.BossbarManager;
 import me.remigio07.chatplugin.api.server.event.player.PlayerFirstJoinEvent;
 import me.remigio07.chatplugin.api.server.join_quit.AccountCheckManager;
+import me.remigio07.chatplugin.api.server.join_quit.ServerLinkManager;
+import me.remigio07.chatplugin.api.server.join_quit.ServerLinkManager.ServerLink;
 import me.remigio07.chatplugin.api.server.language.Language;
 import me.remigio07.chatplugin.api.server.language.LanguageDetectionMethod;
 import me.remigio07.chatplugin.api.server.language.LanguageDetector;
@@ -65,6 +68,7 @@ import me.remigio07.chatplugin.server.util.Utils;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.common.ServerLinksS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.network.packet.s2c.play.SubtitleS2CPacket;
@@ -77,6 +81,7 @@ import net.minecraft.scoreboard.Team;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
+import net.minecraft.server.ServerLinks;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -309,6 +314,21 @@ public class ChatPluginFabricPlayer extends BaseChatPluginServerPlayer {
 		} else player.sendMessage(Utils.toFabricComponent(actionbar), true);
 	}
 	
+	@Override
+	public void sendServerLinks(List<ServerLink> serverLinks) {
+		if (VersionUtils.getVersion().isAtLeast(Version.V1_21)) {
+			List<ServerLinks.Entry> entries = new ArrayList<>();
+			
+			for (ServerLink serverLink : serverLinks) {
+				if (serverLink.getType() == ServerLink.Type.CUSTOM) {
+					String displayName = serverLink.getDisplayNames().get(language);
+					
+					entries.add(ServerLinks.Entry.create(Utils.toFabricComponent(PlaceholderManager.getInstance().translatePlaceholders(displayName == null ? serverLink.getDisplayNames().get(Language.getMainLanguage()) : displayName, this, ServerLinkManager.getInstance().getPlaceholderTypes())), serverLink.getURI()));
+				} else entries.add(ServerLinks.Entry.create(serverLink.getType().fabricValue(), serverLink.getURI()));
+			} sendPacket(new ServerLinksS2CPacket(new ServerLinks(entries).getLinks()));
+		} else super.sendServerLinks(serverLinks);
+	}
+	
 	@Deprecated
 	@Override
 	public void sendPacket(Object packet) {
@@ -330,7 +350,6 @@ public class ChatPluginFabricPlayer extends BaseChatPluginServerPlayer {
 								Identifier.tryParse("minecraft:" + "generic_9x" + rows)),
 						syncID, playerInventory, inventory.fabricValue(), rows);
 			} catch (NoSuchMethodException | NoSuchFieldException | IllegalAccessException | InvocationTargetException e) {
-				e.printStackTrace();
 				return null;
 			}
 		}, Utils.toFabricComponent(inventory.getTitle())));

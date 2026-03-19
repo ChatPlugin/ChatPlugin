@@ -5,13 +5,13 @@ plugins {
 def libsDir = "${projectDir}/libs/"
 
 repositories {
-	maven { url = 'https://jitpack.io' }
 	maven { url = 'https://repo.viaversion.com' }
 	maven { url = 'https://maven.enginehub.org/repo/' }
 	maven { url = 'https://repo.essentialsx.net/releases/' }
 	maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
 	maven { url = 'https://repo.rosewooddev.io/repository/public/' }
 	maven { url = 'https://nexus.scarsz.me/content/groups/public/' }
+	maven { url = 'https://jitpack.io' }
 }
 
 dependencies {
@@ -41,6 +41,7 @@ dependencies {
 task assembleFinalJAR(type: Jar) { // TODO: include MF in correct final jar?
 	archiveFileName = "ChatPlugin-FREE-${rootProject.version}.jar"
 	
+	manifest { attributes(['paperweight-mappings-namespace': 'mojang']) }
 	from zipTree(project(':api').remapJar.archiveFile)
 	from zipTree(project(':mixins').remapJar.archiveFile)
 	from zipTree(project(':mixins:mixins-latest').remapJar.archiveFile)

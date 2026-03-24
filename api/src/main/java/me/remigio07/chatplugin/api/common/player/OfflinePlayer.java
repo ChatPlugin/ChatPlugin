@@ -335,7 +335,7 @@ public class OfflinePlayer {
 							finalName = UUIDFetcher.getInstance().getName(uuid).get();
 						} else {
 							uuid = UUID.fromString(storageUUID);
-							finalName = StorageConnector.getInstance().select(DataContainer.PLAYERS, "player_name", String.class, new WhereCondition("player_uuid", WhereOperator.EQUAL, uuid));
+							finalName = StorageConnector.getInstance().select(DataContainer.PLAYERS, "player_name", String.class, new WhereCondition("player_uuid", WhereOperator.EQUAL, uuid.toString()));
 						} future.complete(new OfflinePlayer(uuid, finalName));
 					} catch (SQLException | InterruptedException e) {
 						future.completeExceptionally(e);

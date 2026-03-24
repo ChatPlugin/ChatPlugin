@@ -137,7 +137,7 @@ public abstract class DatabaseConnector extends StorageConnector {
 	public List<Integer> getIDs(DataContainer table) throws SQLException {
 		if (table == DataContainer.PUBLIC_MESSAGES || table == DataContainer.PRIVATE_MESSAGES)
 			throw new IllegalArgumentException("Unable to get IDs in table " + table.getDatabaseTableID() + " since that table does not have IDs");
-		return getColumnValues("SELECT " + table.getIDColumn() + " FROM " + table.getDatabaseTableID(), 1, Number.class).stream().map(Integer.class::cast).collect(Collectors.toList());
+		return getColumnValues("SELECT " + table.getIDColumn() + " FROM " + table.getDatabaseTableID(), 1, Number.class).stream().map(Number::intValue).collect(Collectors.toList());
 	}
 	
 	@Override

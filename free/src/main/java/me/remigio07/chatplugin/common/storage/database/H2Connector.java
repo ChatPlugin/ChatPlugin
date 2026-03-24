@@ -191,7 +191,7 @@ public class H2Connector extends DatabaseConnector {
 					+ "`channel_id` VARCHAR(36), "
 					+ "`content` VARCHAR(508) NOT NULL, "
 					+ "`date` BIGINT NOT NULL, "
-					+ "`deny_chat_reason` ENUM('CAPS', 'FLOOD', 'FORMAT', 'IP_ADDRESS', 'MUTE', 'MUTEALL', 'SPAM', 'SWEAR', 'URL', 'VANISH')"
+					+ "`deny_chat_reason` ENUM('CAPS', 'FLOOD', 'FORMAT', 'IP_ADDRESS', 'MUTE', 'SPAM', 'SWEAR', 'URL')"
 					+ ")";
 			break;
 		case PRIVATE_MESSAGES:

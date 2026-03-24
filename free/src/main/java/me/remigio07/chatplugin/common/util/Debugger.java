@@ -167,33 +167,35 @@ public class Debugger {
 		Map<Field, Object> fields = new LinkedHashMap<>();
 		Class<?> managerClass = manager.getClass();
 		
-		while (managerClass != clazz)
+		while (managerClass != clazz) {
 			managerClass = managerClass.getSuperclass();
-		for (Field field : managerClass.getDeclaredFields()) {
-			if (field.getName().startsWith("$"))
-				continue;
-			try {
-				field.get(null);
-			} catch (NoClassDefFoundError ncdfe) {
-				continue;
-			} catch (NullPointerException | IllegalArgumentException | IllegalAccessException e) {
-				@SuppressWarnings("deprecation")
-				boolean accessible = field.isAccessible();
-				
-				if (!accessible)
-					field.setAccessible(true);
-				Object value;
-				
+			
+			for (Field field : managerClass.getDeclaredFields()) {
+				if (field.getName().startsWith("$"))
+					continue;
 				try {
-					value = field.get(manager);
+					field.get(null);
 				} catch (NoClassDefFoundError ncdfe) {
 					continue;
-				} catch (IllegalArgumentException | IllegalAccessException e2) {
-					value = null;
-				} fields.put(field, field.isAnnotationPresent(SensitiveData.class) ? "<hidden>" : value);
-				
-				if (!accessible)
-					field.setAccessible(false);
+				} catch (NullPointerException | IllegalArgumentException | IllegalAccessException e) {
+					@SuppressWarnings("deprecation")
+					boolean accessible = field.isAccessible();
+					
+					if (!accessible)
+						field.setAccessible(true);
+					Object value;
+					
+					try {
+						value = field.get(manager);
+					} catch (NoClassDefFoundError ncdfe) {
+						continue;
+					} catch (IllegalArgumentException | IllegalAccessException e2) {
+						value = null;
+					} fields.put(field, field.isAnnotationPresent(SensitiveData.class) ? "<hidden>" : value);
+					
+					if (!accessible)
+						field.setAccessible(false);
+				}
 			}
 		} return fields;
 	}

@@ -147,8 +147,11 @@ public class ConfigurationMappings {
 	 */
 	@NotNull
 	public List<String> getKeys(String path) {
-		ConfigurationMappings section = getSection(path);
-		return new ArrayList<>(section == null ? Collections.emptyList() : section.getKeys());
+		try {
+			return getSection(path).getKeys();
+		} catch (ClassCastException | NullPointerException e) {
+			return new ArrayList<>(Collections.emptyList());
+		}
 	}
 	
 	/**

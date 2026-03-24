@@ -58,7 +58,7 @@ public class MSPTManagerImpl extends MSPTManager {
 			LogManager.log("No MSPT qualities have been found at \"mspt.qualities\" in config.yml.", 1);
 		} else Collections.sort(qualities);
 		
-		timerTaskID = TaskManager.scheduleAsync(this, 0L, updateTimeout);
+		timerTaskID = TaskManager.scheduleSync(this, 0L, updateTimeout); // TODO use Paper native methods and get back to async behavior
 		enabled = true;
 		loadTime = System.currentTimeMillis() - ms;
 	}
@@ -67,7 +67,7 @@ public class MSPTManagerImpl extends MSPTManager {
 	public void unload() throws ChatPluginManagerException {
 		enabled = false;
 		
-		TaskManager.cancelAsync(timerTaskID);
+		TaskManager.cancelSync(timerTaskID); // TODO here, too
 		qualities.clear();
 		
 		averageMSPT = array();

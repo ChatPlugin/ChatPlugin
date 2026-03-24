@@ -38,7 +38,7 @@ public class ChatPluginFree {
 			new ChatPluginFabric().load((Logger) logger, dataFolder, (MinecraftServer) server);
 			break;
 		default:
-			throw new UnsupportedOperationException("Unable load the proxy plugin on the free version");
+			throw new UnsupportedOperationException("Unable to load the proxy plugin on the free version");
 		}
 	}
 	

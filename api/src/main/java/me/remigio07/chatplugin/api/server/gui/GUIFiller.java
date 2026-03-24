@@ -82,7 +82,7 @@ public interface GUIFiller<T> {
 	public default IconLayout getIconLayout() {
 		try {
 			return getGUI().getLayout().getIconsLayouts().get(0);
-		} catch (IndexOutOfBoundsException e) {
+		} catch (IndexOutOfBoundsException ioobe) {
 			return IconLayout.EMPTY_ICON_LAYOUT;
 		}
 	}

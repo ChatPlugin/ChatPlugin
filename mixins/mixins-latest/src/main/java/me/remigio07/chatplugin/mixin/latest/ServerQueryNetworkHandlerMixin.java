@@ -24,7 +24,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import me.remigio07.chatplugin.api.ChatPlugin;
 import me.remigio07.chatplugin.api.common.motd.MoTD;
 import me.remigio07.chatplugin.api.common.util.ChatPluginState;
-import me.remigio07.chatplugin.api.common.util.VersionUtils;
 import me.remigio07.chatplugin.api.common.util.VersionUtils.Version;
 import me.remigio07.chatplugin.api.common.util.manager.LogManager;
 import me.remigio07.chatplugin.api.server.motd.ServerMoTDManager;

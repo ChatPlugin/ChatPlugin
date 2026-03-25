@@ -325,7 +325,8 @@ public class ChatPluginBukkit extends ChatPlugin {
 	@SuppressWarnings("deprecation")
 	public static void sendMessage(Player player, boolean actionbar, BaseComponent... bungeeCordComponents) { // TODO is it possible to send colored actionbars in 1.8-1.10.2?
 		if (VersionUtils.isSpigot() && VersionUtils.getVersion().isAtLeast(Version.V1_9_1))
-			player.spigot().sendMessage(actionbar ? ChatMessageType.ACTION_BAR : ChatMessageType.SYSTEM, bungeeCordComponents);
+			for (BaseComponent bungeeCordComponent : bungeeCordComponents)
+				player.spigot().sendMessage(actionbar ? ChatMessageType.ACTION_BAR : ChatMessageType.SYSTEM, bungeeCordComponent);
 		else {
 			ChatPluginServerPlayer serverPlayer = ServerPlayerManager.getInstance().getPlayer(player.getUniqueId());
 			List<Object> packets = new ArrayList<>();
@@ -350,7 +351,7 @@ public class ChatPluginBukkit extends ChatPlugin {
 						? new Object[] { toBukkitComponent(component), BukkitReflection.getEnum("ChatMessageType", "SYSTEM") }
 						: new Object[] { toBukkitComponent(component), (byte) 1 })
 						);
-			}if (serverPlayer == null)
+			} if (serverPlayer == null)
 				packets.forEach(packet -> BukkitReflection.invokeMethod("PlayerConnection", "sendPacket", BukkitReflection.getFieldValue("EntityPlayer", BukkitReflection.invokeMethod("CraftPlayer", "getHandle", BukkitReflection.getLoadedClass("CraftPlayer").cast(player)), "playerConnection", "connection", VersionUtils.getVersion().isAtLeast(Version.V1_20) ? VersionUtils.getVersion().isAtLeast(Version.V1_21_3) ? "f" : "c" : "b"), packet));
 			else packets.forEach(packet -> serverPlayer.sendPacket(packet));
 		}
